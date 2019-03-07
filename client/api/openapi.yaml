@@ -1,0 +1,643 @@
+openapi: 3.0.2
+info:
+  contact:
+    url: https://github.com/moov-io/wire
+  description: Moov WIRE () implements an HTTP API for creating, parsing and validating WIRE files.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: WIRE API
+  version: v1
+servers:
+- description: Local development
+  url: http://localhost:8087
+tags:
+- description: |
+    File contains FEDWireMessages of a WIRE File.
+  name: Files
+paths:
+  /ping:
+    get:
+      operationId: ping
+      responses:
+        200:
+          description: Service is running properly
+      summary: Ping the Wire service to check if running
+      tags:
+      - Files
+  /files:
+    get:
+      operationId: getFiles
+      parameters:
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Files'
+          description: A list of File objects
+          headers:
+            X-Total-Count:
+              description: The total number of WIRE files
+              explode: false
+              schema:
+                format: int32
+                type: integer
+              style: simple
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Gets a list of Files
+      tags:
+      - Files
+  /files/create:
+    post:
+      operationId: createFile
+      parameters:
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+        example: a4f88150
+        explode: false
+        in: header
+        name: X-Idempotency-Key
+        required: false
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+          text/plain:
+            schema:
+              description: A plaintext FED WIRE file
+              type: string
+        description: Content of the WIRE file (in json or raw text)
+        required: true
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              explode: false
+              schema:
+                format: uri
+                type: string
+              style: simple
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid File Header Object
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Create a new File object
+      tags:
+      - Files
+  /files/{file_id}:
+    delete:
+      operationId: deleteWIREFile
+      parameters:
+      - description: File ID
+        explode: false
+        in: path
+        name: file_id
+        required: true
+        schema:
+          example: 3f2d23ee214
+          type: string
+        style: simple
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      responses:
+        200:
+          description: Permanently deleted File.
+        404:
+          description: A File with the specified ID was not found.
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Permanently deletes a File and associated Batches. It cannot be undone.
+      tags:
+      - Files
+    get:
+      operationId: getFileByID
+      parameters:
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: File ID
+        explode: false
+        in: path
+        name: file_id
+        required: true
+        schema:
+          example: 3f2d23ee214
+          type: string
+        style: simple
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: A File object for the supplied ID
+        404:
+          description: A resource with the specified ID was not found
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      tags:
+      - Files
+    post:
+      operationId: updateFile
+      parameters:
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+        example: a4f88150
+        explode: false
+        in: header
+        name: X-Idempotency-Key
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: File ID
+        explode: false
+        in: path
+        name: file_id
+        required: true
+        schema:
+          example: 3f2d23ee214
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+        required: true
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              explode: false
+              schema:
+                format: uri
+                type: string
+              style: simple
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Invalid File Header Object
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      tags:
+      - Files
+components:
+  parameters:
+    requestId:
+      description: Optional Request ID allows application developer to trace requests through the systems logs
+      example: rs4f9915
+      explode: false
+      in: header
+      name: X-Request-Id
+      required: false
+      schema:
+        type: string
+      style: simple
+    idempotencyKey:
+      description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      example: a4f88150
+      explode: false
+      in: header
+      name: X-Idempotency-Key
+      required: false
+      schema:
+        type: string
+      style: simple
+  schemas:
+    CreateFile:
+      example:
+        id: 3f2d23ee214
+        fedWireMessage:
+        - tag3600:
+            businessFunctionCode: BTR
+            transactionTypeCode: transactionTypeCode
+          tag2000:
+            amount: "000000100000"
+          tag3100:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          tag1500:
+            testProductionCode: T
+            messageDuplicationCode: messageDuplicationCode
+            userRequestCorrelation: XYZ
+            formatVersion: "30"
+          tag1510:
+            subTypeCode: "00"
+            typeCode: "10"
+          tag1520:
+            inputSource: 'XYZ ABC '
+            inputCycleDate: "20191201"
+            inputSequenceNumber: "000001"
+          tag3400:
+            receiverShortName: 'PREMIER BANK      '
+            receiverABANumber: "091905664"
+        - tag3600:
+            businessFunctionCode: BTR
+            transactionTypeCode: transactionTypeCode
+          tag2000:
+            amount: "000000100000"
+          tag3100:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          tag1500:
+            testProductionCode: T
+            messageDuplicationCode: messageDuplicationCode
+            userRequestCorrelation: XYZ
+            formatVersion: "30"
+          tag1510:
+            subTypeCode: "00"
+            typeCode: "10"
+          tag1520:
+            inputSource: 'XYZ ABC '
+            inputCycleDate: "20191201"
+            inputSequenceNumber: "000001"
+          tag3400:
+            receiverShortName: 'PREMIER BANK      '
+            receiverABANumber: "091905664"
+      properties:
+        id:
+          description: File ID
+          example: 3f2d23ee214
+          type: string
+        fedWireMessage:
+          items:
+            $ref: '#/components/schemas/FEDWireMessage'
+          type: array
+    File:
+      example:
+        id: 3f2d23ee214
+        fedWireMessage:
+        - tag3600:
+            businessFunctionCode: BTR
+            transactionTypeCode: transactionTypeCode
+          tag2000:
+            amount: "000000100000"
+          tag3100:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          tag1500:
+            testProductionCode: T
+            messageDuplicationCode: messageDuplicationCode
+            userRequestCorrelation: XYZ
+            formatVersion: "30"
+          tag1510:
+            subTypeCode: "00"
+            typeCode: "10"
+          tag1520:
+            inputSource: 'XYZ ABC '
+            inputCycleDate: "20191201"
+            inputSequenceNumber: "000001"
+          tag3400:
+            receiverShortName: 'PREMIER BANK      '
+            receiverABANumber: "091905664"
+        - tag3600:
+            businessFunctionCode: BTR
+            transactionTypeCode: transactionTypeCode
+          tag2000:
+            amount: "000000100000"
+          tag3100:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          tag1500:
+            testProductionCode: T
+            messageDuplicationCode: messageDuplicationCode
+            userRequestCorrelation: XYZ
+            formatVersion: "30"
+          tag1510:
+            subTypeCode: "00"
+            typeCode: "10"
+          tag1520:
+            inputSource: 'XYZ ABC '
+            inputCycleDate: "20191201"
+            inputSequenceNumber: "000001"
+          tag3400:
+            receiverShortName: 'PREMIER BANK      '
+            receiverABANumber: "091905664"
+      properties:
+        id:
+          description: File ID
+          example: 3f2d23ee214
+          type: string
+        fedWireMessage:
+          items:
+            $ref: '#/components/schemas/FEDWireMessage'
+          type: array
+      required:
+      - fedWireMessage
+    FEDWireMessage:
+      description: FEDWireMessage
+      example:
+        tag3600:
+          businessFunctionCode: BTR
+          transactionTypeCode: transactionTypeCode
+        tag2000:
+          amount: "000000100000"
+        tag3100:
+          senderABANumber: "091905114"
+          senderShortName: 'MIDWESTONE B&T    '
+        tag1500:
+          testProductionCode: T
+          messageDuplicationCode: messageDuplicationCode
+          userRequestCorrelation: XYZ
+          formatVersion: "30"
+        tag1510:
+          subTypeCode: "00"
+          typeCode: "10"
+        tag1520:
+          inputSource: 'XYZ ABC '
+          inputCycleDate: "20191201"
+          inputSequenceNumber: "000001"
+        tag3400:
+          receiverShortName: 'PREMIER BANK      '
+          receiverABANumber: "091905664"
+      properties:
+        tag1500:
+          $ref: '#/components/schemas/Tag1500'
+        tag1510:
+          $ref: '#/components/schemas/Tag1510'
+        tag1520:
+          $ref: '#/components/schemas/Tag1520'
+        tag2000:
+          $ref: '#/components/schemas/Tag2000'
+        tag3100:
+          $ref: '#/components/schemas/Tag3100'
+        tag3400:
+          $ref: '#/components/schemas/Tag3400'
+        tag3600:
+          $ref: '#/components/schemas/Tag3600'
+      required:
+      - tag1500
+      - tag1510
+      - tag1520
+      - tag2000
+      - tag3100
+      - tag3400
+      - tag3600
+    Tag1500:
+      description: Tag 1500 is Sender Supplied Information
+      example:
+        testProductionCode: T
+        messageDuplicationCode: messageDuplicationCode
+        userRequestCorrelation: XYZ
+        formatVersion: "30"
+      properties:
+        formatVersion:
+          description: |
+            FormatVersion
+            30
+          example: "30"
+          maxLength: 2
+          minLength: 2
+          type: string
+        userRequestCorrelation:
+          description: UserRequestCorrelation
+          example: XYZ
+          maxLength: 8
+          minLength: 8
+          type: string
+        testProductionCode:
+          description: |
+            TestProductionCode
+            T: Test
+            P: Production
+          example: T
+          maxLength: 1
+          minLength: 1
+          type: string
+        messageDuplicationCode:
+          description: |
+            MessageDuplicationCode
+            '': Original Message
+            P: Resend
+          maxLength: 1
+          minLength: 1
+          type: string
+      required:
+      - formatVersion
+      - messageDuplicationCode
+      - testProductionCode
+      - userRequestCorrelation
+    Tag1510:
+      description: Tag 1510 is Type/Subtype
+      example:
+        subTypeCode: "00"
+        typeCode: "10"
+      properties:
+        typeCode:
+          description: TypeCode
+          example: "10"
+          maxLength: 2
+          minLength: 2
+          type: string
+        subTypeCode:
+          description: SubTypeCode
+          example: "00"
+          maxLength: 2
+          minLength: 2
+          type: string
+      required:
+      - subTypeCode
+      - typeCode
+    Tag1520:
+      description: Tag 1520 is Input Message Accountability Data (IMAD)
+      example:
+        inputSource: 'XYZ ABC '
+        inputCycleDate: "20191201"
+        inputSequenceNumber: "000001"
+      properties:
+        inputCycleDate:
+          description: |
+            InputCycleDate
+            CCYYMMDD
+          example: "20191201"
+          maxLength: 8
+          minLength: 8
+          type: string
+        inputSource:
+          description: InputSource
+          example: 'XYZ ABC '
+          maxLength: 8
+          minLength: 8
+          type: string
+        inputSequenceNumber:
+          description: InputSequenceNumber
+          example: "000001"
+          maxLength: 6
+          minLength: 6
+          type: string
+      required:
+      - inputCycleDate
+      - inputSequenceNumber
+      - inputSource
+    Tag2000:
+      description: Tag 2000 is Amount (up to a penny less than $10 billion)
+      example:
+        amount: "000000100000"
+      properties:
+        amount:
+          description: |
+            Amount
+            12 numeric, right-justified with leading zeros, an implied decimal point and no commas;
+            e.g., $12,345.67 becomes 000001234567
+            Can be all zeros for subtype 90
+          example: "000000100000"
+          maxLength: 12
+          minLength: 12
+          type: string
+      required:
+      - amount
+    Tag3100:
+      description: Tag 3100 is Sender DI
+      example:
+        senderABANumber: "091905114"
+        senderShortName: 'MIDWESTONE B&T    '
+      properties:
+        senderABANumber:
+          description: SenderABANumber
+          example: "091905114"
+          maxLength: 9
+          minLength: 9
+          type: string
+        senderShortName:
+          description: SenderShortName
+          example: 'MIDWESTONE B&T    '
+          maxLength: 18
+          minLength: 18
+          type: string
+      required:
+      - senderABANumber
+      - senderShortName
+    Tag3400:
+      description: Tag 3400 is Receiver DI
+      example:
+        receiverShortName: 'PREMIER BANK      '
+        receiverABANumber: "091905664"
+      properties:
+        receiverABANumber:
+          description: ReceiverABANumber
+          example: "091905664"
+          maxLength: 9
+          minLength: 9
+          type: string
+        receiverShortName:
+          description: ReceiverShortName
+          example: 'PREMIER BANK      '
+          maxLength: 18
+          minLength: 18
+          type: string
+      required:
+      - receiverABANumber
+      - receiverShortName
+    Tag3600:
+      description: Tag 3600 is Business Function Code
+      example:
+        businessFunctionCode: BTR
+        transactionTypeCode: transactionTypeCode
+      properties:
+        businessFunctionCode:
+          description: |
+            BusinessFunctionCode
+            BTR: Bank Transfer (Beneficiary is a bank)
+            DRC: Customer or Corporate Drawdown Request
+            CKS: Check Same Day Settlement
+            DRW: Drawdown Payment
+            CTP: Customer Transfer Plus
+            FFR: Fed Funds Returned
+            CTR: Customer Transfer (Beneficiary is a not a bank)
+            FFS: Fed Funds Sold
+            DEP: Deposit to Sender’s Account
+            SVC: Service Message
+            DRB: Bank-to-Bank Drawdown Request
+          example: BTR
+          maxLength: 3
+          minLength: 3
+          type: string
+        transactionTypeCode:
+          description: |-
+            TransactionTypeCode
+            If {3600} is CTR, an optional Transaction Type Code element is permitted;
+            however, the Transaction Type Code 'COV' is not permitted.
+            ToDo: Research This, I don't understand it yet
+          maxLength: 3
+          minLength: 3
+          type: string
+      required:
+      - businessFunctionCode
+    Error:
+      properties:
+        error:
+          description: An error message describing the problem intended for humans.
+          example: Validation error(s) present.
+          type: string
+      required:
+      - error
