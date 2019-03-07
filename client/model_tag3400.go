@@ -9,7 +9,7 @@
 
 package openapi
 
-// Tag 3400 is Receiver DI
+// Tag3400 is Receiver DI
 type Tag3400 struct {
 	// ReceiverABANumber
 	ReceiverABANumber string `json:"receiverABANumber"`

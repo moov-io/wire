@@ -213,37 +213,37 @@ components:
       # ToDo: Consider changing to a the tag description
       description: FEDWireMessage
       properties:
-        senderSuppliedInformation:
-          description: SenderSuppliedInformation {1500}
-          $ref: '#/components/schemas/SenderSuppliedInformation'
-        typeSubtype:
-          description: TypeSubtype {1510}
-          $ref: '#/components/schemas/TypeSubtype'
-        inputMessageAccountabilityData:
-          description: InputMessageAccountabilityData {1520}
-          $ref: '#/components/schemas/InputMessageAccountabilityData'
-        amount:
-          description: Amount {2000}
-          $ref: '#/components/schemas/Amount'
-        senderDI:
-          description: SenderDI {3100}
-          $ref: '#/components/schemas/SenderDI'
-        ReceiverDI:
-          description: ReceiverDI {3400}
-          $ref: '#/components/schemas/ReceiverDI'
-        BusinessFunctionCode:
-          description: BusinessFunctionCode {3600}
-          $ref: '#/components/schemas/BusinessFunctionCode'
+        tag1500:
+          description: Tag1500
+          $ref: '#/components/schemas/Tag1500'
+        tag1510:
+          description: Tag 1510
+          $ref: '#/components/schemas/Tag1510'
+        tag1520:
+          description: Tag1520
+          $ref: '#/components/schemas/Tag1520'
+        tag2000:
+          description: Tag2000
+          $ref: '#/components/schemas/Tag2000'
+        tag3100:
+          description: Tag3100
+          $ref: '#/components/schemas/Tag3100'
+        tag3400:
+          description: Tag3100
+          $ref: '#/components/schemas/Tag3400'
+        tag3600:
+          description: Tag3600
+          $ref: '#/components/schemas/Tag3600'
       required:
-        - SenderSuppliedInformation
-        - TypeSubtype
-        - InputMessageAccountabilityData
-        - Amount
-        - SenderDI
-        - ReceiverDI
-        - BusinessFunctionCode
-    SenderSuppliedInformation:
-      description: SenderSuppliedInformation {1500}
+        - tag1500
+        - tag1510
+        - tag1520
+        - tag2000
+        - tag3100
+        - tag3400
+        - tag3600
+    Tag1500:
+      description: Tag1500 is Sender Supplied Information
       properties:
         formatVersion:
           type: string
@@ -282,8 +282,8 @@ components:
         - userRequestCorrelation
         - testProductionCode
         - messageDuplicationCode
-    TypeSubtype:
-      description: TypeSubtype {1510}
+    Tag1510:
+      description: Tag1510 is Type/Subtype
       properties:
         typeCode:
           type: string
@@ -300,8 +300,8 @@ components:
       required:
         - typeCode
         - subTypeCode
-    InputMessageAccountabilityData:
-      description: Input Message Accountability Data (IMAD) {1520}
+    Tag1520:
+      description: Tag1520 is Input Message Accountability Data (IMAD)
       properties:
         inputCycleDate:
           type: string
@@ -327,8 +327,8 @@ components:
         - inputCycleDate
         - inputSource
         - inputSequenceNumber
-    Amount:
-      description: Amount (up to a penny less than $10 billion) {2000}
+    Tag2000:
+      description: Tag2000 is Amount (up to a penny less than $10 billion)
       properties:
         amount:
           type: string
@@ -342,8 +342,8 @@ components:
           example: '000000100000'
       required:
         - amount
-    SenderDI:
-      description: SenderDI {3100}
+    Tag3100:
+      description: Tag3100 is Sender DI
       properties:
         senderABANumber:
           type: string
@@ -360,8 +360,8 @@ components:
       required:
         - senderABANumber
         - senderShortName
-    ReceiverDI:
-      description: Receiver DI {3400}
+    Tag3400:
+      description: Tag3400 is Receiver DI
       properties:
         receiverABANumber:
           type: string
@@ -378,8 +378,8 @@ components:
       required:
         - receiverABANumber
         - receiverShortName
-    BusinessFunctionCode:
-      description: BusinessFunctionCode {3600}
+    Tag3600:
+      description: Tag3600 is Business Function Code
       properties:
         businessFunctionCode:
           type: string

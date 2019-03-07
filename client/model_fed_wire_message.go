@@ -11,11 +11,11 @@ package openapi
 
 // FEDWireMessage
 type FedWireMessage struct {
-	Tag1500 Tag1500 `json:"tag1500"`
-	Tag1510 Tag1510 `json:"tag1510"`
-	Tag1520 Tag1520 `json:"tag1520"`
-	Tag2000 Tag2000 `json:"tag2000"`
-	Tag3100 Tag3100 `json:"tag3100"`
-	Tag3400 Tag3400 `json:"tag3400"`
-	Tag3600 Tag3600 `json:"tag3600"`
+	SenderSuppliedInformation SenderSuppliedInformation `json:"senderSuppliedInformation,omitempty"`
+	TypeSubtype TypeSubtype `json:"typeSubtype,omitempty"`
+	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData,omitempty"`
+	Amount Amount `json:"amount,omitempty"`
+	SenderDI SenderDi `json:"senderDI,omitempty"`
+	ReceiverDI ReceiverDi `json:"ReceiverDI"`
+	BusinessFunctionCode BusinessFunctionCode `json:"BusinessFunctionCode"`
 }

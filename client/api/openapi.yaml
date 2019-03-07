@@ -278,50 +278,50 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - tag3600:
+        - BusinessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          tag2000:
+          amount:
             amount: "000000100000"
-          tag3100:
+          typeSubtype:
+            subTypeCode: "00"
+            typeCode: "10"
+          senderDI:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
-          tag1500:
+          senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
-          tag1510:
-            subTypeCode: "00"
-            typeCode: "10"
-          tag1520:
+          inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          tag3400:
+          ReceiverDI:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - tag3600:
+        - BusinessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          tag2000:
+          amount:
             amount: "000000100000"
-          tag3100:
+          typeSubtype:
+            subTypeCode: "00"
+            typeCode: "10"
+          senderDI:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
-          tag1500:
+          senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
-          tag1510:
-            subTypeCode: "00"
-            typeCode: "10"
-          tag1520:
+          inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          tag3400:
+          ReceiverDI:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
       properties:
@@ -337,50 +337,50 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - tag3600:
+        - BusinessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          tag2000:
+          amount:
             amount: "000000100000"
-          tag3100:
+          typeSubtype:
+            subTypeCode: "00"
+            typeCode: "10"
+          senderDI:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
-          tag1500:
+          senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
-          tag1510:
-            subTypeCode: "00"
-            typeCode: "10"
-          tag1520:
+          inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          tag3400:
+          ReceiverDI:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - tag3600:
+        - BusinessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          tag2000:
+          amount:
             amount: "000000100000"
-          tag3100:
+          typeSubtype:
+            subTypeCode: "00"
+            typeCode: "10"
+          senderDI:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
-          tag1500:
+          senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
-          tag1510:
-            subTypeCode: "00"
-            typeCode: "10"
-          tag1520:
+          inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          tag3400:
+          ReceiverDI:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
       properties:
@@ -397,54 +397,54 @@ components:
     FEDWireMessage:
       description: FEDWireMessage
       example:
-        tag3600:
+        BusinessFunctionCode:
           businessFunctionCode: BTR
           transactionTypeCode: transactionTypeCode
-        tag2000:
+        amount:
           amount: "000000100000"
-        tag3100:
+        typeSubtype:
+          subTypeCode: "00"
+          typeCode: "10"
+        senderDI:
           senderABANumber: "091905114"
           senderShortName: 'MIDWESTONE B&T    '
-        tag1500:
+        senderSuppliedInformation:
           testProductionCode: T
           messageDuplicationCode: messageDuplicationCode
           userRequestCorrelation: XYZ
           formatVersion: "30"
-        tag1510:
-          subTypeCode: "00"
-          typeCode: "10"
-        tag1520:
+        inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
           inputSequenceNumber: "000001"
-        tag3400:
+        ReceiverDI:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
       properties:
-        tag1500:
-          $ref: '#/components/schemas/Tag1500'
-        tag1510:
-          $ref: '#/components/schemas/Tag1510'
-        tag1520:
-          $ref: '#/components/schemas/Tag1520'
-        tag2000:
-          $ref: '#/components/schemas/Tag2000'
-        tag3100:
-          $ref: '#/components/schemas/Tag3100'
-        tag3400:
-          $ref: '#/components/schemas/Tag3400'
-        tag3600:
-          $ref: '#/components/schemas/Tag3600'
+        senderSuppliedInformation:
+          $ref: '#/components/schemas/SenderSuppliedInformation'
+        typeSubtype:
+          $ref: '#/components/schemas/TypeSubtype'
+        inputMessageAccountabilityData:
+          $ref: '#/components/schemas/InputMessageAccountabilityData'
+        amount:
+          $ref: '#/components/schemas/Amount'
+        senderDI:
+          $ref: '#/components/schemas/SenderDI'
+        ReceiverDI:
+          $ref: '#/components/schemas/ReceiverDI'
+        BusinessFunctionCode:
+          $ref: '#/components/schemas/BusinessFunctionCode'
       required:
-      - tag1500
-      - tag1510
-      - tag1520
-      - tag2000
-      - tag3100
-      - tag3400
-      - tag3600
-    Tag1500:
-      description: Tag 1500 is Sender Supplied Information
+      - Amount
+      - BusinessFunctionCode
+      - InputMessageAccountabilityData
+      - ReceiverDI
+      - SenderDI
+      - SenderSuppliedInformation
+      - TypeSubtype
+    SenderSuppliedInformation:
+      description: SenderSuppliedInformation {1500}
       example:
         testProductionCode: T
         messageDuplicationCode: messageDuplicationCode
@@ -487,8 +487,8 @@ components:
       - messageDuplicationCode
       - testProductionCode
       - userRequestCorrelation
-    Tag1510:
-      description: Tag 1510 is Type/Subtype
+    TypeSubtype:
+      description: TypeSubtype {1510}
       example:
         subTypeCode: "00"
         typeCode: "10"
@@ -508,8 +508,8 @@ components:
       required:
       - subTypeCode
       - typeCode
-    Tag1520:
-      description: Tag 1520 is Input Message Accountability Data (IMAD)
+    InputMessageAccountabilityData:
+      description: Input Message Accountability Data (IMAD) {1520}
       example:
         inputSource: 'XYZ ABC '
         inputCycleDate: "20191201"
@@ -539,8 +539,8 @@ components:
       - inputCycleDate
       - inputSequenceNumber
       - inputSource
-    Tag2000:
-      description: Tag 2000 is Amount (up to a penny less than $10 billion)
+    Amount:
+      description: Amount (up to a penny less than $10 billion) {2000}
       example:
         amount: "000000100000"
       properties:
@@ -556,8 +556,8 @@ components:
           type: string
       required:
       - amount
-    Tag3100:
-      description: Tag 3100 is Sender DI
+    SenderDI:
+      description: SenderDI {3100}
       example:
         senderABANumber: "091905114"
         senderShortName: 'MIDWESTONE B&T    '
@@ -577,8 +577,8 @@ components:
       required:
       - senderABANumber
       - senderShortName
-    Tag3400:
-      description: Tag 3400 is Receiver DI
+    ReceiverDI:
+      description: Receiver DI {3400}
       example:
         receiverShortName: 'PREMIER BANK      '
         receiverABANumber: "091905664"
@@ -598,8 +598,8 @@ components:
       required:
       - receiverABANumber
       - receiverShortName
-    Tag3600:
-      description: Tag 3600 is Business Function Code
+    BusinessFunctionCode:
+      description: BusinessFunctionCode {3600}
       example:
         businessFunctionCode: BTR
         transactionTypeCode: transactionTypeCode

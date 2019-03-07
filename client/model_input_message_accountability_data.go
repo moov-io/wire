@@ -9,8 +9,8 @@
 
 package openapi
 
-// Tag1520 is Input Message Accountability Data (IMAD)
-type Tag1520 struct {
+// Input Message Accountability Data (IMAD) {1520}
+type InputMessageAccountabilityData struct {
 	// InputCycleDate CCYYMMDD 
 	InputCycleDate string `json:"inputCycleDate"`
 	// InputSource

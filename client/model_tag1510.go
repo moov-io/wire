@@ -9,7 +9,7 @@
 
 package openapi
 
-// Tag 1510 is Type/Subtype
+// Tag1510 is Type/Subtype
 type Tag1510 struct {
 	// TypeCode
 	TypeCode string `json:"typeCode"`

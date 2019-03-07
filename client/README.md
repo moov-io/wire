@@ -41,17 +41,17 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [Amount](docs/Amount.md)
+ - [BusinessFunctionCode](docs/BusinessFunctionCode.md)
  - [CreateFile](docs/CreateFile.md)
  - [Error](docs/Error.md)
  - [FedWireMessage](docs/FedWireMessage.md)
  - [File](docs/File.md)
- - [Tag1500](docs/Tag1500.md)
- - [Tag1510](docs/Tag1510.md)
- - [Tag1520](docs/Tag1520.md)
- - [Tag2000](docs/Tag2000.md)
- - [Tag3100](docs/Tag3100.md)
- - [Tag3400](docs/Tag3400.md)
- - [Tag3600](docs/Tag3600.md)
+ - [InputMessageAccountabilityData](docs/InputMessageAccountabilityData.md)
+ - [ReceiverDi](docs/ReceiverDi.md)
+ - [SenderDi](docs/SenderDi.md)
+ - [SenderSuppliedInformation](docs/SenderSuppliedInformation.md)
+ - [TypeSubtype](docs/TypeSubtype.md)
 
 
 ## Documentation For Authorization

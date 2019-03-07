@@ -9,10 +9,10 @@
 
 package openapi
 
-// Tag3100 is Sender DI
-type Tag3100 struct {
-	// SenderABANumber
-	SenderABANumber string `json:"senderABANumber"`
-	// SenderShortName
-	SenderShortName string `json:"senderShortName"`
+// TypeSubtype {1510}
+type TypeSubtype struct {
+	// TypeCode
+	TypeCode string `json:"typeCode"`
+	// SubTypeCode
+	SubTypeCode string `json:"subTypeCode"`
 }

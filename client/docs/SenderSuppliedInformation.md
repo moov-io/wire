@@ -1,0 +1,13 @@
+# SenderSuppliedInformation
+
+## Properties
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**FormatVersion** | **string** | FormatVersion 30  | 
+**UserRequestCorrelation** | **string** | UserRequestCorrelation | 
+**TestProductionCode** | **string** | TestProductionCode T: Test P: Production  | 
+**MessageDuplicationCode** | **string** | MessageDuplicationCode &#39;&#39;: Original Message P: Resend  | 
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
+
+
