@@ -9,8 +9,8 @@
 
 package openapi
 
-// SenderDI {3100}
-type SenderDi struct {
+// SenderDepositoryInstitution {3100}
+type SenderDepositoryInstitution struct {
 	// SenderABANumber
 	SenderABANumber string `json:"senderABANumber"`
 	// SenderShortName

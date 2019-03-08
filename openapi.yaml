@@ -210,38 +210,41 @@ components:
       required:
         - fedWireMessage
     FEDWireMessage:
-      # ToDo: Consider changing to a the tag description
       description: FEDWireMessage
       properties:
         senderSuppliedInformation:
           description: SenderSuppliedInformation {1500}
           $ref: '#/components/schemas/SenderSuppliedInformation'
-        typeSubtype:
-          description: TypeSubtype {1510}
-          $ref: '#/components/schemas/TypeSubtype'
+        typeSubType:
+          description: TypeSubType {1510}
+          $ref: '#/components/schemas/TypeSubType'
         inputMessageAccountabilityData:
           description: InputMessageAccountabilityData {1520}
           $ref: '#/components/schemas/InputMessageAccountabilityData'
         amount:
           description: Amount {2000}
           $ref: '#/components/schemas/Amount'
-        senderDI:
-          description: SenderDI {3100}
-          $ref: '#/components/schemas/SenderDI'
-        ReceiverDI:
-          description: ReceiverDI {3400}
-          $ref: '#/components/schemas/ReceiverDI'
-        BusinessFunctionCode:
+        senderDepositoryInstitution:
+          description: SenderDepositoryInstitution {3100}
+          $ref: '#/components/schemas/SenderDepositoryInstitution'
+        receiverDepositoryInstitution:
+          description: ReceiverDepositoryInstitution {3400}
+          $ref: '#/components/schemas/ReceiverDepositoryInstitution'
+        businessFunctionCode:
           description: BusinessFunctionCode {3600}
           $ref: '#/components/schemas/BusinessFunctionCode'
+        # ToDo: Other Transfer Information
+        intermediaryFinancialInstitution:
+          description: IntermediaryFinancialInstitution {3400}
+          $ref: '#/components/schemas/IntermediaryFinancialInstitution'
       required:
-        - SenderSuppliedInformation
-        - TypeSubtype
-        - InputMessageAccountabilityData
-        - Amount
-        - SenderDI
-        - ReceiverDI
-        - BusinessFunctionCode
+        - senderSuppliedInformation
+        - typeSubType
+        - inputMessageAccountabilityData
+        - amount
+        - senderDepositoryInstitution
+        - receiverDepositoryInstitution
+        - businessFunctionCode
     SenderSuppliedInformation:
       description: SenderSuppliedInformation {1500}
       properties:
@@ -282,7 +285,7 @@ components:
         - userRequestCorrelation
         - testProductionCode
         - messageDuplicationCode
-    TypeSubtype:
+    TypeSubType:
       description: TypeSubtype {1510}
       properties:
         typeCode:
@@ -342,8 +345,8 @@ components:
           example: '000000100000'
       required:
         - amount
-    SenderDI:
-      description: SenderDI {3100}
+    SenderDepositoryInstitution:
+      description: SenderDepositoryInstitution {3100}
       properties:
         senderABANumber:
           type: string
@@ -360,8 +363,8 @@ components:
       required:
         - senderABANumber
         - senderShortName
-    ReceiverDI:
-      description: Receiver DI {3400}
+    ReceiverDepositoryInstitution:
+      description: Receiver DepositoryInstitution {3400}
       properties:
         receiverABANumber:
           type: string
@@ -411,6 +414,20 @@ components:
           example: '   '
       required:
         - businessFunctionCode
+    IntermediaryFinancialInstitution:
+      description: IntermediaryFinancialInstitution
+      properties:
+        idCode:
+          type: string
+          minLength: 1
+          maxLength: 1
+          description: |-
+            ID Code
+            B: SWIFT Bank Identifier Code (BIC)
+            C: CHIPS Participant
+            D: Demand Deposit Account (DDA) Number
+            F: Fed Routing Number
+            U: CHIPS Identifier
     Error:
       required:
         - error

@@ -9,8 +9,8 @@
 
 package openapi
 
-// Receiver DI {3400}
-type ReceiverDi struct {
+// Receiver DepositoryInstitution {3400}
+type ReceiverDepositoryInstitution struct {
 	// ReceiverABANumber
 	ReceiverABANumber string `json:"receiverABANumber"`
 	// ReceiverShortName

@@ -278,50 +278,54 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - BusinessFunctionCode:
+        - amount:
+            amount: "000000100000"
+          businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          amount:
-            amount: "000000100000"
-          typeSubtype:
+          intermediaryFinancialInstitution:
+            idCode: idCode
+          typeSubType:
             subTypeCode: "00"
             typeCode: "10"
-          senderDI:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
           senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          ReceiverDI:
+          receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - BusinessFunctionCode:
+        - amount:
+            amount: "000000100000"
+          businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          amount:
-            amount: "000000100000"
-          typeSubtype:
+          intermediaryFinancialInstitution:
+            idCode: idCode
+          typeSubType:
             subTypeCode: "00"
             typeCode: "10"
-          senderDI:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
           senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          ReceiverDI:
+          receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
       properties:
@@ -337,50 +341,54 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - BusinessFunctionCode:
+        - amount:
+            amount: "000000100000"
+          businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          amount:
-            amount: "000000100000"
-          typeSubtype:
+          intermediaryFinancialInstitution:
+            idCode: idCode
+          typeSubType:
             subTypeCode: "00"
             typeCode: "10"
-          senderDI:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
           senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          ReceiverDI:
+          receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - BusinessFunctionCode:
+        - amount:
+            amount: "000000100000"
+          businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
-          amount:
-            amount: "000000100000"
-          typeSubtype:
+          intermediaryFinancialInstitution:
+            idCode: idCode
+          typeSubType:
             subTypeCode: "00"
             typeCode: "10"
-          senderDI:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
           senderSuppliedInformation:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
             userRequestCorrelation: XYZ
             formatVersion: "30"
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
-          ReceiverDI:
+          receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
       properties:
@@ -397,52 +405,56 @@ components:
     FEDWireMessage:
       description: FEDWireMessage
       example:
-        BusinessFunctionCode:
-          businessFunctionCode: BTR
-          transactionTypeCode: transactionTypeCode
         amount:
           amount: "000000100000"
-        typeSubtype:
+        businessFunctionCode:
+          businessFunctionCode: BTR
+          transactionTypeCode: transactionTypeCode
+        intermediaryFinancialInstitution:
+          idCode: idCode
+        typeSubType:
           subTypeCode: "00"
           typeCode: "10"
-        senderDI:
-          senderABANumber: "091905114"
-          senderShortName: 'MIDWESTONE B&T    '
         senderSuppliedInformation:
           testProductionCode: T
           messageDuplicationCode: messageDuplicationCode
           userRequestCorrelation: XYZ
           formatVersion: "30"
+        senderDepositoryInstitution:
+          senderABANumber: "091905114"
+          senderShortName: 'MIDWESTONE B&T    '
         inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
           inputSequenceNumber: "000001"
-        ReceiverDI:
+        receiverDepositoryInstitution:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
       properties:
         senderSuppliedInformation:
           $ref: '#/components/schemas/SenderSuppliedInformation'
-        typeSubtype:
-          $ref: '#/components/schemas/TypeSubtype'
+        typeSubType:
+          $ref: '#/components/schemas/TypeSubType'
         inputMessageAccountabilityData:
           $ref: '#/components/schemas/InputMessageAccountabilityData'
         amount:
           $ref: '#/components/schemas/Amount'
-        senderDI:
-          $ref: '#/components/schemas/SenderDI'
-        ReceiverDI:
-          $ref: '#/components/schemas/ReceiverDI'
-        BusinessFunctionCode:
+        senderDepositoryInstitution:
+          $ref: '#/components/schemas/SenderDepositoryInstitution'
+        receiverDepositoryInstitution:
+          $ref: '#/components/schemas/ReceiverDepositoryInstitution'
+        businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
+        intermediaryFinancialInstitution:
+          $ref: '#/components/schemas/IntermediaryFinancialInstitution'
       required:
-      - Amount
-      - BusinessFunctionCode
-      - InputMessageAccountabilityData
-      - ReceiverDI
-      - SenderDI
-      - SenderSuppliedInformation
-      - TypeSubtype
+      - amount
+      - businessFunctionCode
+      - inputMessageAccountabilityData
+      - receiverDepositoryInstitution
+      - senderDepositoryInstitution
+      - senderSuppliedInformation
+      - typeSubType
     SenderSuppliedInformation:
       description: SenderSuppliedInformation {1500}
       example:
@@ -487,7 +499,7 @@ components:
       - messageDuplicationCode
       - testProductionCode
       - userRequestCorrelation
-    TypeSubtype:
+    TypeSubType:
       description: TypeSubtype {1510}
       example:
         subTypeCode: "00"
@@ -556,8 +568,8 @@ components:
           type: string
       required:
       - amount
-    SenderDI:
-      description: SenderDI {3100}
+    SenderDepositoryInstitution:
+      description: SenderDepositoryInstitution {3100}
       example:
         senderABANumber: "091905114"
         senderShortName: 'MIDWESTONE B&T    '
@@ -577,8 +589,8 @@ components:
       required:
       - senderABANumber
       - senderShortName
-    ReceiverDI:
-      description: Receiver DI {3400}
+    ReceiverDepositoryInstitution:
+      description: Receiver DepositoryInstitution {3400}
       example:
         receiverShortName: 'PREMIER BANK      '
         receiverABANumber: "091905664"
@@ -633,6 +645,22 @@ components:
           type: string
       required:
       - businessFunctionCode
+    IntermediaryFinancialInstitution:
+      description: IntermediaryFinancialInstitution
+      example:
+        idCode: idCode
+      properties:
+        idCode:
+          description: |-
+            ID Code
+            B: SWIFT Bank Identifier Code (BIC)
+            C: CHIPS Participant
+            D: Demand Deposit Account (DDA) Number
+            F: Fed Routing Number
+            U: CHIPS Identifier
+          maxLength: 1
+          minLength: 1
+          type: string
     Error:
       properties:
         error:

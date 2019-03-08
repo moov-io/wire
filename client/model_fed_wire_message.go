@@ -11,11 +11,12 @@ package openapi
 
 // FEDWireMessage
 type FedWireMessage struct {
-	SenderSuppliedInformation SenderSuppliedInformation `json:"senderSuppliedInformation,omitempty"`
-	TypeSubtype TypeSubtype `json:"typeSubtype,omitempty"`
-	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData,omitempty"`
-	Amount Amount `json:"amount,omitempty"`
-	SenderDI SenderDi `json:"senderDI,omitempty"`
-	ReceiverDI ReceiverDi `json:"ReceiverDI"`
-	BusinessFunctionCode BusinessFunctionCode `json:"BusinessFunctionCode"`
+	SenderSuppliedInformation SenderSuppliedInformation `json:"senderSuppliedInformation"`
+	TypeSubType TypeSubType `json:"typeSubType"`
+	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData"`
+	Amount Amount `json:"amount"`
+	SenderDepositoryInstitution SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
+	ReceiverDepositoryInstitution ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
+	BusinessFunctionCode BusinessFunctionCode `json:"businessFunctionCode"`
+	IntermediaryFinancialInstitution IntermediaryFinancialInstitution `json:"intermediaryFinancialInstitution,omitempty"`
 }

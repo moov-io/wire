@@ -10,7 +10,7 @@
 package openapi
 
 // TypeSubtype {1510}
-type TypeSubtype struct {
+type TypeSubType struct {
 	// TypeCode
 	TypeCode string `json:"typeCode"`
 	// SubTypeCode

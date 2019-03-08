@@ -48,10 +48,11 @@ Class | Method | HTTP request | Description
  - [FedWireMessage](docs/FedWireMessage.md)
  - [File](docs/File.md)
  - [InputMessageAccountabilityData](docs/InputMessageAccountabilityData.md)
- - [ReceiverDi](docs/ReceiverDi.md)
- - [SenderDi](docs/SenderDi.md)
+ - [IntermediaryFinancialInstitution](docs/IntermediaryFinancialInstitution.md)
+ - [ReceiverDepositoryInstitution](docs/ReceiverDepositoryInstitution.md)
+ - [SenderDepositoryInstitution](docs/SenderDepositoryInstitution.md)
  - [SenderSuppliedInformation](docs/SenderSuppliedInformation.md)
- - [TypeSubtype](docs/TypeSubtype.md)
+ - [TypeSubType](docs/TypeSubType.md)
 
 
 ## Documentation For Authorization
