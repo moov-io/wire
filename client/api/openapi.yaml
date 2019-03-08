@@ -280,18 +280,40 @@ components:
         fedWireMessage:
         - amount:
             amount: "000000100000"
+          beneficiaryFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          beneficiary:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
           intermediaryFinancialInstitution:
-            idCode: idCode
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           typeSubType:
-            subTypeCode: "00"
+            subTypeCode: "10"
             typeCode: "10"
           senderSuppliedInformation:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            userRequestCorrelation: XYZ
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
             formatVersion: "30"
           senderDepositoryInstitution:
             senderABANumber: "091905114"
@@ -305,18 +327,40 @@ components:
             receiverABANumber: "091905664"
         - amount:
             amount: "000000100000"
+          beneficiaryFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          beneficiary:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
           intermediaryFinancialInstitution:
-            idCode: idCode
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           typeSubType:
-            subTypeCode: "00"
+            subTypeCode: "10"
             typeCode: "10"
           senderSuppliedInformation:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            userRequestCorrelation: XYZ
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
             formatVersion: "30"
           senderDepositoryInstitution:
             senderABANumber: "091905114"
@@ -343,18 +387,40 @@ components:
         fedWireMessage:
         - amount:
             amount: "000000100000"
+          beneficiaryFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          beneficiary:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
           intermediaryFinancialInstitution:
-            idCode: idCode
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           typeSubType:
-            subTypeCode: "00"
+            subTypeCode: "10"
             typeCode: "10"
           senderSuppliedInformation:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            userRequestCorrelation: XYZ
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
             formatVersion: "30"
           senderDepositoryInstitution:
             senderABANumber: "091905114"
@@ -368,18 +434,40 @@ components:
             receiverABANumber: "091905664"
         - amount:
             amount: "000000100000"
+          beneficiaryFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          beneficiary:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
           intermediaryFinancialInstitution:
-            idCode: idCode
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           typeSubType:
-            subTypeCode: "00"
+            subTypeCode: "10"
             typeCode: "10"
           senderSuppliedInformation:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            userRequestCorrelation: XYZ
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
             formatVersion: "30"
           senderDepositoryInstitution:
             senderABANumber: "091905114"
@@ -407,18 +495,40 @@ components:
       example:
         amount:
           amount: "000000100000"
+        beneficiaryFinancialInstitution:
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
+        beneficiary:
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
         businessFunctionCode:
           businessFunctionCode: BTR
           transactionTypeCode: transactionTypeCode
         intermediaryFinancialInstitution:
-          idCode: idCode
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
         typeSubType:
-          subTypeCode: "00"
+          subTypeCode: "10"
           typeCode: "10"
         senderSuppliedInformation:
           testProductionCode: T
-          messageDuplicationCode: messageDuplicationCode
-          userRequestCorrelation: XYZ
+          messageDuplicationCode: ' '
+          userRequestCorrelation: TESTDATA
           formatVersion: "30"
         senderDepositoryInstitution:
           senderABANumber: "091905114"
@@ -446,7 +556,11 @@ components:
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
         intermediaryFinancialInstitution:
-          $ref: '#/components/schemas/IntermediaryFinancialInstitution'
+          $ref: '#/components/schemas/FinancialInstitution'
+        beneficiaryFinancialInstitution:
+          $ref: '#/components/schemas/FinancialInstitution'
+        beneficiary:
+          $ref: '#/components/schemas/Personal'
       required:
       - amount
       - businessFunctionCode
@@ -459,8 +573,8 @@ components:
       description: SenderSuppliedInformation {1500}
       example:
         testProductionCode: T
-        messageDuplicationCode: messageDuplicationCode
-        userRequestCorrelation: XYZ
+        messageDuplicationCode: ' '
+        userRequestCorrelation: TESTDATA
         formatVersion: "30"
       properties:
         formatVersion:
@@ -473,26 +587,30 @@ components:
           type: string
         userRequestCorrelation:
           description: UserRequestCorrelation
-          example: XYZ
+          example: TESTDATA
           maxLength: 8
           minLength: 8
           type: string
         testProductionCode:
           description: |
             TestProductionCode
-            T: Test
-            P: Production
+            * `T` - Test
+            * `P` - Production
+          enum:
+          - T
+          - P
           example: T
           maxLength: 1
-          minLength: 1
           type: string
         messageDuplicationCode:
           description: |
             MessageDuplicationCode
-            '': Original Message
-            P: Resend
+            * ` ` - Original Message
+            * `P` - Resend
+          enum:
+          - ' '
+          - P
           maxLength: 1
-          minLength: 1
           type: string
       required:
       - formatVersion
@@ -502,21 +620,13 @@ components:
     TypeSubType:
       description: TypeSubtype {1510}
       example:
-        subTypeCode: "00"
+        subTypeCode: "10"
         typeCode: "10"
       properties:
         typeCode:
-          description: TypeCode
-          example: "10"
-          maxLength: 2
-          minLength: 2
-          type: string
+          $ref: '#/components/schemas/TypeCodeEnum'
         subTypeCode:
-          description: SubTypeCode
-          example: "00"
-          maxLength: 2
-          minLength: 2
-          type: string
+          $ref: '#/components/schemas/SubTypeCodeEnum'
       required:
       - subTypeCode
       - typeCode
@@ -617,23 +727,7 @@ components:
         transactionTypeCode: transactionTypeCode
       properties:
         businessFunctionCode:
-          description: |
-            BusinessFunctionCode
-            BTR: Bank Transfer (Beneficiary is a bank)
-            DRC: Customer or Corporate Drawdown Request
-            CKS: Check Same Day Settlement
-            DRW: Drawdown Payment
-            CTP: Customer Transfer Plus
-            FFR: Fed Funds Returned
-            CTR: Customer Transfer (Beneficiary is a not a bank)
-            FFS: Fed Funds Sold
-            DEP: Deposit to Sender’s Account
-            SVC: Service Message
-            DRB: Bank-to-Bank Drawdown Request
-          example: BTR
-          maxLength: 3
-          minLength: 3
-          type: string
+          $ref: '#/components/schemas/BusinessFunctionCodeEnum'
         transactionTypeCode:
           description: |-
             TransactionTypeCode
@@ -645,21 +739,165 @@ components:
           type: string
       required:
       - businessFunctionCode
-    IntermediaryFinancialInstitution:
-      description: IntermediaryFinancialInstitution
+    FinancialInstitution:
+      description: FinancialInstitution {4000, 4100}
       example:
-        idCode: idCode
+        identificationCode: B
+        identifier: identifier
+        address:
+          addressLineTwo: addressLineTwo
+          addressLineOne: addressLineOne
+          addressLineThree: addressLineThree
+        name: name
       properties:
-        idCode:
-          description: |-
-            ID Code
-            B: SWIFT Bank Identifier Code (BIC)
-            C: CHIPS Participant
-            D: Demand Deposit Account (DDA) Number
-            F: Fed Routing Number
-            U: CHIPS Identifier
-          maxLength: 1
-          minLength: 1
+        identificationCode:
+          $ref: '#/components/schemas/FIIdentificationCodeEnum'
+        identifier:
+          description: Identifier
+          maxLength: 34
+          type: string
+        name:
+          description: Name
+          maxLength: 35
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - address
+      - identificationCode
+      - identifier
+      - name
+    Personal:
+      description: FinancialInstitution {4200}
+      example:
+        identificationCode: B
+        identifier: identifier
+        address:
+          addressLineTwo: addressLineTwo
+          addressLineOne: addressLineOne
+          addressLineThree: addressLineThree
+        name: name
+      properties:
+        identificationCode:
+          $ref: '#/components/schemas/PersonalIdentificationCodeEnum'
+        identifier:
+          description: Identifier
+          maxLength: 34
+          type: string
+        name:
+          description: Name
+          maxLength: 35
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - address
+      - identificationCode
+      - identifier
+      - name
+    TypeCodeEnum:
+      description: |
+        TypeCode:
+        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank). * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York. * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
+      enum:
+      - "10"
+      - "15"
+      - "16"
+      example: "10"
+      maxLength: 2
+      type: string
+    SubTypeCodeEnum:
+      description: |
+        SubTypeCode:
+        * `00` - Basic Funds Transfer - A basic value funds transfer. * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day. * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal. * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day. * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer. * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party. * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit. * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit. * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
+      enum:
+      - "0"
+      - "1"
+      - "2"
+      - "7"
+      - "8.0"
+      - "31"
+      - "32"
+      - "33"
+      - "90"
+      example: "10"
+      maxLength: 2
+      type: string
+    BusinessFunctionCodeEnum:
+      description: |
+        BusinessFunctionCode
+        * `BTR` - Bank Transfer (Beneficiary is a bank)
+        * `DRC` - Customer or Corporate Drawdown Request
+        * `CKS` - Check Same Day Settlement
+        * `DRW` - Drawdown Payment
+        * `CTP` - Customer Transfer Plus
+        * `FFR` - Fed Funds Returned
+        * `CTR` - Customer Transfer (Beneficiary is a not a bank)
+        * `FFS` - Fed Funds Sold
+        * `DEP` - Deposit to Sender’s Account
+        * `SVC` - Service Message
+        * `DRB` - Bank-to-Bank Drawdown Request
+      enum:
+      - BTR
+      - DRC
+      - CKS
+      - DRW
+      - CTP
+      - FFR
+      - CTR
+      - FFS
+      - DEP
+      - SVC
+      - DRB
+      example: BTR
+      maxLength: 3
+      type: string
+    FIIdentificationCodeEnum:
+      description: |
+        IdentificationCode:
+        * `B` - SWIFT Bank Identifier Code (BIC) * `C` - CHIPS Participant * `D` - Demand Deposit Account (DDA) Number * `F` - Fed Routing Number * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number * `U` - CHIPS Identifier
+      enum:
+      - B
+      - C
+      - D
+      - F
+      - T
+      - U
+      example: B
+      maxLength: 1
+      type: string
+    PersonalIdentificationCodeEnum:
+      description: |
+        IdentificationCode:
+        * `1` - Passport Number * `2` - Tax Identification Number * `3` - Driver’s License Number * `4` - Alien Registration Number * `5` - Corporate Identification * `9` - Other Identification
+      enum:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "9"
+      example: B
+      maxLength: 1
+      type: string
+    Address:
+      description: Address
+      example:
+        addressLineTwo: addressLineTwo
+        addressLineOne: addressLineOne
+        addressLineThree: addressLineThree
+      properties:
+        addressLineOne:
+          description: AddressLineOne
+          maxLength: 35
+          type: string
+        addressLineTwo:
+          description: AddressLineTwo
+          maxLength: 35
+          type: string
+        addressLineThree:
+          description: AddressLineThree
+          maxLength: 35
           type: string
     Error:
       properties:

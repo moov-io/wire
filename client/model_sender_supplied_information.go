@@ -15,8 +15,8 @@ type SenderSuppliedInformation struct {
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation
 	UserRequestCorrelation string `json:"userRequestCorrelation"`
-	// TestProductionCode T: Test P: Production 
+	// TestProductionCode * `T` - Test * `P` - Production 
 	TestProductionCode string `json:"testProductionCode"`
-	// MessageDuplicationCode '': Original Message P: Resend 
+	// MessageDuplicationCode * ` ` - Original Message * `P` - Resend 
 	MessageDuplicationCode string `json:"messageDuplicationCode"`
 }

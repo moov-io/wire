@@ -8,9 +8,12 @@
  */
 
 package openapi
+// TypeCode : Type Code: * `10` - Funds Transfer * `15` - Foreign Transfer * `16` - Settlement Transfer 
+type TypeCode string
 
-// TypeSubtype {1510}
-type TypeSubType struct {
-	TypeCode TypeCodeEnum `json:"typeCode"`
-	SubTypeCode SubTypeCodeEnum `json:"subTypeCode"`
-}
+// List of TypeCode
+const (
+	_10 TypeCode = "10"
+	_15 TypeCode = "15"
+	_16 TypeCode = "16"
+)

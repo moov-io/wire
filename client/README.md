@@ -41,17 +41,24 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [Address](docs/Address.md)
  - [Amount](docs/Amount.md)
  - [BusinessFunctionCode](docs/BusinessFunctionCode.md)
+ - [BusinessFunctionCodeEnum](docs/BusinessFunctionCodeEnum.md)
  - [CreateFile](docs/CreateFile.md)
  - [Error](docs/Error.md)
  - [FedWireMessage](docs/FedWireMessage.md)
+ - [FiIdentificationCodeEnum](docs/FiIdentificationCodeEnum.md)
  - [File](docs/File.md)
+ - [FinancialInstitution](docs/FinancialInstitution.md)
  - [InputMessageAccountabilityData](docs/InputMessageAccountabilityData.md)
- - [IntermediaryFinancialInstitution](docs/IntermediaryFinancialInstitution.md)
+ - [Personal](docs/Personal.md)
+ - [PersonalIdentificationCodeEnum](docs/PersonalIdentificationCodeEnum.md)
  - [ReceiverDepositoryInstitution](docs/ReceiverDepositoryInstitution.md)
  - [SenderDepositoryInstitution](docs/SenderDepositoryInstitution.md)
  - [SenderSuppliedInformation](docs/SenderSuppliedInformation.md)
+ - [SubTypeCodeEnum](docs/SubTypeCodeEnum.md)
+ - [TypeCodeEnum](docs/TypeCodeEnum.md)
  - [TypeSubType](docs/TypeSubType.md)
 
 

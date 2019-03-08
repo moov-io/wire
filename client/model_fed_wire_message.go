@@ -18,5 +18,7 @@ type FedWireMessage struct {
 	SenderDepositoryInstitution SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
 	ReceiverDepositoryInstitution ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
 	BusinessFunctionCode BusinessFunctionCode `json:"businessFunctionCode"`
-	IntermediaryFinancialInstitution IntermediaryFinancialInstitution `json:"intermediaryFinancialInstitution,omitempty"`
+	IntermediaryFinancialInstitution FinancialInstitution `json:"intermediaryFinancialInstitution,omitempty"`
+	BeneficiaryFinancialInstitution FinancialInstitution `json:"beneficiaryFinancialInstitution,omitempty"`
+	Beneficiary Personal `json:"beneficiary,omitempty"`
 }

@@ -239,10 +239,7 @@ components:
           description: IntermediaryFinancialInstitution {4000}
         beneficiaryFinancialInstitution:
           $ref: '#/components/schemas/FinancialInstitution'
-          description: BeneficiaryFinancialInstitution {4100}
-        beneficiary:
-          $ref: '#/components/schemas/Personal'
-          description: Beneficiary {4200}
+          description: BeneficiaryFinancialInstitution {4000}
       required:
         - senderSuppliedInformation
         - typeSubType
@@ -267,28 +264,24 @@ components:
           minLength: 8
           maxLength: 8
           description: UserRequestCorrelation
-          example: 'TESTDATA'
+          example: 'XYZ'
         testProductionCode:
           type: string
+          minLength: 1
           maxLength: 1
           description: |
             TestProductionCode
-            * `T` - Test
-            * `P` - Production
-          enum:
-            - T
-            - P
+            T: Test
+            P: Production
           example: 'T'
         messageDuplicationCode:
           type: string
+          minLength: 1
           maxLength: 1
           description: |
             MessageDuplicationCode
-            * ` ` - Original Message
-            * `P` - Resend
-          enum:
-            - ' '
-            - P
+            '': Original Message
+            P: Resend
           example: ''
       required:
         - formatVersion
@@ -299,11 +292,17 @@ components:
       description: TypeSubtype {1510}
       properties:
         typeCode:
+          type: string
+          minLength: 2
+          maxLength: 2
           description: TypeCode
-          $ref: '#/components/schemas/TypeCodeEnum'
+          example: '10'
         subTypeCode:
+          type: string
+          minLength: 2
+          maxLength: 2
           description: SubTypeCode
-          $ref: '#/components/schemas/SubTypeCodeEnum'
+          example: '00'
       required:
         - typeCode
         - subTypeCode
@@ -389,8 +388,23 @@ components:
       description: BusinessFunctionCode {3600}
       properties:
         businessFunctionCode:
-          description: BusinessFunctionCode
-          $ref: '#/components/schemas/BusinessFunctionCodeEnum'
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: |
+            BusinessFunctionCode
+            BTR: Bank Transfer (Beneficiary is a bank)
+            DRC: Customer or Corporate Drawdown Request
+            CKS: Check Same Day Settlement
+            DRW: Drawdown Payment
+            CTP: Customer Transfer Plus
+            FFR: Fed Funds Returned
+            CTR: Customer Transfer (Beneficiary is a not a bank)
+            FFS: Fed Funds Sold
+            DEP: Deposit to Sender’s Account
+            SVC: Service Message
+            DRB: Bank-to-Bank Drawdown Request
+          example: 'BTR'
         transactionTypeCode:
           type: string
           minLength: 3
@@ -404,11 +418,11 @@ components:
       required:
         - businessFunctionCode
     FinancialInstitution:
-      description: FinancialInstitution {4000, 4100}
+      description: FinancialInstitution
       properties:
-        identificationCode:
-          description: Identification Code
-          $ref: '#/components/schemas/FIIdentificationCodeEnum'
+        IDCode:
+          description: ID Code
+          $ref: '#/components/schemas/IDCode'
         identifier:
           type: string
           maxLength: 34
@@ -421,112 +435,12 @@ components:
           description: Address
           $ref: '#/components/schemas/Address'
       required:
-        - identificationCode
+        - idCode
         - identifier
         - name
         - address
-    Personal:
-      description: FinancialInstitution {4200}
-      properties:
-        identificationCode:
-          description: Identification Code
-          $ref: '#/components/schemas/PersonalIdentificationCodeEnum'
-        identifier:
-          type: string
-          maxLength: 34
-          description: Identifier
-        name:
-          type: string
-          maxLength: 35
-          description: Name
-        address:
-          description: Address
-          $ref: '#/components/schemas/Address'
-      required:
-        - identificationCode
-        - identifier
-        - name
-        - address
-    TypeCodeEnum:
+    IDCode:
       type: string
-      maxLength: 2
-      description: >
-        TypeCode:
-
-        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
-        * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
-        * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
-      enum:
-        - 10
-        - 15
-        - 16
-      example: '10'
-    SubTypeCodeEnum:
-      type: string
-      maxLength: 2
-      description: >
-        SubTypeCode:
-
-        * `00` - Basic Funds Transfer - A basic value funds transfer.
-        * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
-        * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
-        * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
-        * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
-        * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
-        * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
-        * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
-        * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
-      enum:
-        - 00
-        - 01
-        - 02
-        - 07
-        - 08
-        - 31
-        - 32
-        - 33
-        - 90
-      example: '10'
-    BusinessFunctionCodeEnum:
-      type: string
-      maxLength: 3
-      description: |
-        BusinessFunctionCode
-        * `BTR` - Bank Transfer (Beneficiary is a bank)
-        * `DRC` - Customer or Corporate Drawdown Request
-        * `CKS` - Check Same Day Settlement
-        * `DRW` - Drawdown Payment
-        * `CTP` - Customer Transfer Plus
-        * `FFR` - Fed Funds Returned
-        * `CTR` - Customer Transfer (Beneficiary is a not a bank)
-        * `FFS` - Fed Funds Sold
-        * `DEP` - Deposit to Sender’s Account
-        * `SVC` - Service Message
-        * `DRB` - Bank-to-Bank Drawdown Request
-      enum:
-        - BTR
-        - DRC
-        - CKS
-        - DRW
-        - CTP
-        - FFR
-        - CTR
-        - FFS
-        - DEP
-        - SVC
-        - DRB
-      example: 'BTR'
-    FIIdentificationCodeEnum:
-      type: string
-      description: >
-        IdentificationCode:
-
-        * `B` - SWIFT Bank Identifier Code (BIC)
-        * `C` - CHIPS Participant
-        * `D` - Demand Deposit Account (DDA) Number
-        * `F` - Fed Routing Number
-        * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
-        * `U` - CHIPS Identifier
       enum:
         - B
         - C
@@ -534,28 +448,27 @@ components:
         - F
         - T
         - U
-      maxLength: 1
-      example: 'B'
-    PersonalIdentificationCodeEnum:
-      type: string
-      description: >
-        IdentificationCode:
-
-        * `1` - Passport Number
-        * `2` - Tax Identification Number
-        * `3` - Driver’s License Number
-        * `4` - Alien Registration Number
-        * `5` - Corporate Identification
-        * `9` - Other Identification
-      enum:
         - 1
         - 2
         - 3
         - 4
         - 5
         - 9
-      maxLength: 1
-      example: 'B'
+      description: |
+        Identification Code
+
+        * `B` - SWIFT Bank Identifier Code (BIC)
+        * `C` - CHIPS Participant
+        * `D` - Demand Deposit Account (DDA) Number
+        * `F` - Fed Routing Number
+        * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
+        * `U` - CHIPS Identifier
+        * `1` - Passport Number
+        * `2` - Tax Identification Number
+        * `3` - Driver’s License Number
+        * `4` - Alien Registration Number
+        * `5` - Corporate Identification
+        * `9` - Other Identification
     Address:
       description: Address
       properties:
