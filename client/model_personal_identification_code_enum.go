@@ -8,7 +8,7 @@
  */
 
 package openapi
-// PersonalIdentificationCodeEnum : IdentificationCode: * `1` - Passport Number * `2` - Tax Identification Number * `3` - Driver’s License Number * `4` - Alien Registration Number * `5` - Corporate Identification * `9` - Other Identification 
+// PersonalIdentificationCodeEnum : IdentificationCode:  * `1` - Passport Number * `2` - Tax Identification Number * `3` - Driver’s License Number * `4` - Alien Registration Number * `5` - Corporate Identification * `9` - Other Identification 
 type PersonalIdentificationCodeEnum string
 
 // List of PersonalIdentificationCodeEnum

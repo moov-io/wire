@@ -212,9 +212,9 @@ components:
     FEDWireMessage:
       description: FEDWireMessage
       properties:
-        senderSuppliedInformation:
-          $ref: '#/components/schemas/SenderSuppliedInformation'
-          description: SenderSuppliedInformation {1500}
+        senderSuppliedInfo:
+          $ref: '#/components/schemas/SenderSuppliedInfo'
+          description: SenderSuppliedInfo {1500}
         typeSubType:
           $ref: '#/components/schemas/TypeSubType'
           description: TypeSubType {1510}
@@ -233,7 +233,7 @@ components:
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
           description: BusinessFunctionCode {3600}
-        # ToDo: Other Transfer Information
+        # ToDo: Other Transfer Info
         intermediaryFinancialInstitution:
           $ref: '#/components/schemas/FinancialInstitution'
           description: IntermediaryFinancialInstitution {4000}
@@ -243,16 +243,111 @@ components:
         beneficiary:
           $ref: '#/components/schemas/Personal'
           description: Beneficiary {4200}
+        referenceForBeneficiary:
+          description: ReferenceForBeneficiary {4320}
+          type: string
+          maxLength: 16
+          example: 'Test Data'
+        accountDebitedDrawdown:
+          $ref: '#/components/schemas/AccountDebitedDrawdown'
+          description: AccountDebitedDrawdown {4400}
+        originator:
+          $ref: '#/components/schemas/Personal'
+          description: Originator {5000}
+        originatorOptionF:
+          description: OriginatorOptionF {5010}
+        originatorFinancialInstitution:
+          $ref: '#/components/schemas/FinancialInstitution'
+          description: OriginatorFinancialInstitution {5100}
+        instructingFinancialInstitution:
+          $ref: '#/components/schemas/FinancialInstitution'
+          description: InstructingFinancialInstitution {5200}
+        accountCreditedDrawdown:
+          $ref: '#/components/schemas/AccountCreditedDrawdown'
+          description: AccountCreditedDrawdown {5400}
+        originatorToBeneficiaryInfo:
+          $ref: '#/components/schemas/OriginatorToBeneficiaryInfo'
+          description: OriginatorToBeneficiaryInfo {6000}
+        receiverFinancialInstitutionInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+          description: ReceiverFinancialInstitutionInfo {6100}
+        drawdownDebitAccountAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+          description: DrawdownDebitAccountAdviceInfo {6110}
+        intermediaryFinancialInstitutionInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+          description: IntermediaryFinancialInstitutionInfo {6200}
+        intermediaryFinacialInstitutionAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+          description: IntermediaryFinacialInstitutionAdviceInfo {6210}
+        beneficiaryFinancialInstitutionInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+          description: BeneficiaryFinancialInstitutionInfo {6300}
+        beneficiaryFinancialInstitutionAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+          description: BeneficiaryFinacialInstitutionAdviceInfo {6310}
+        beneficiaryInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+          description: BeneficiaryInfo {6400}
+        beneficiaryAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+          description: BeneficiaryAdviceInfo {6410}
+        paymentMethodToBeneficiary:
+          description: PaymentMethodToBeneficiary
+          properties:
+            paymentMethod:
+              type: string
+              description: PaymentMethod
+              enum:
+                - CHECK
+              example: 'CHECK'
+            AdditionalInfo:
+              type: string
+              maxLength: 35
+              example: "For goods and services"
+        additionalFIToFIInfo:
+          description: AdditionalFIToFIInfo
+          properties:
+            lineOne:
+              type: string
+              maxLength: 35
+              description: LineOne
+              example: 'Line One'
+            lineTwo:
+              type: string
+              maxLength: 35
+              description: LineTwo
+              example: 'Line Two'
+            lineThree:
+              type: string
+              maxLength: 35
+              description: LineThree
+              example: 'Line Three'
+            lineFour:
+              type: string
+              maxLength: 35
+              description: LineFour
+              example: 'Line Four'
+            lineFive:
+              type: string
+              maxLength: 35
+              description: LineFive
+              example: 'Line Five'
+            lineSix:
+              type: string
+              maxLength: 35
+              description: LineSix
+              example: 'Line Six'
       required:
-        - senderSuppliedInformation
+        - senderSuppliedInfo
         - typeSubType
         - inputMessageAccountabilityData
         - amount
         - senderDepositoryInstitution
         - receiverDepositoryInstitution
         - businessFunctionCode
-    SenderSuppliedInformation:
-      description: SenderSuppliedInformation {1500}
+    SenderSuppliedInfo:
+      description: SenderSuppliedInfo {1500}
       properties:
         formatVersion:
           type: string
@@ -447,10 +542,154 @@ components:
         - identifier
         - name
         - address
+    AccountDebitedDrawdown:
+      properties:
+        identificationCode:
+          type: string
+          maxLength: 1
+          description: |
+            Identification Code
+            * `D` - Debit
+          enum:
+            - D
+          example: 'D'
+        identifier:
+          type: string
+          maxLength: 34
+          description: Identifier
+        name:
+          type: string
+          maxLength: 35
+          description: Name
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address'
+      required:
+        - identificationCode
+        - identifier
+        - name
+    AccountCreditedDrawdown:
+      properties:
+        identificationCode:
+          type: string
+          maxLength: 1
+          description: |
+            Identification Code
+            * `C` - Credit
+          enum:
+            - C
+          example: 'C'
+        identifier:
+          type: string
+          maxLength: 34
+          description: Identifier
+        name:
+          type: string
+          maxLength: 35
+          description: Name
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address'
+      required:
+        - identificationCode
+        - identifier
+        - name
+    OriginatorToBeneficiaryInfo:
+        description: OriginatorToBeneficiaryInfo
+        properties:
+          lineOne:
+            type: string
+            maxLength: 35
+            description: LineOne
+          lineTwo:
+            type: string
+            maxLength: 35
+            description: LineTwo
+          lineThree:
+            type: string
+            maxLength: 35
+            description: LineThree
+          lineFour:
+            type: string
+            maxLength: 35
+            description: LineFour
+    FIToFIInfo:
+      description: FinancialInstitutionToFinancialInstitutionInfo
+      properties:
+        lineOne:
+          type: string
+          maxLength: 30
+          description: LineOne
+        lineTwo:
+          type: string
+          maxLength: 33
+          description: LineTwo
+        lineThree:
+          type: string
+          maxLength: 33
+          description: LineThree
+        lineFour:
+          type: string
+          maxLength: 33
+          description: LineFour
+        lineFive:
+          type: string
+          maxLength: 33
+          description: LineFive
+        lineSix:
+          type: string
+          maxLength: 33
+          description: LineSix
+    AdviceInfo:
+      description: DrawdownDebitAccountAdviceInfo
+      properties:
+        adviceCode:
+          $ref: '#/components/schemas/AdviceCodeEnum'
+          description: AdviceCode
+        lineOne:
+          type: string
+          maxLength: 26
+          description: LineOne
+        lineTwo:
+          type: string
+          maxLength: 33
+          description: LineTwo
+        lineThree:
+          type: string
+          maxLength: 33
+          description: LineThree
+        lineFour:
+          type: string
+          maxLength: 33
+          description: LineFour
+        lineFive:
+          type: string
+          maxLength: 33
+          description: LineFive
+        lineSix:
+          type: string
+          maxLength: 33
+          description: LineSix
+    Address:
+      description: Address
+      properties:
+        addressLineOne:
+          type: string
+          maxLength: 35
+          description: AddressLineOne
+        addressLineTwo:
+          type: string
+          maxLength: 35
+          description: AddressLineTwo
+        addressLineThree:
+          type: string
+          maxLength: 35
+          description: AddressLineThree
+  # enumerations
     TypeCodeEnum:
       type: string
       maxLength: 2
-      description: >
+      description: |
         TypeCode:
 
         * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
@@ -464,7 +703,7 @@ components:
     SubTypeCodeEnum:
       type: string
       maxLength: 2
-      description: >
+      description: |
         SubTypeCode:
 
         * `00` - Basic Funds Transfer - A basic value funds transfer.
@@ -518,7 +757,7 @@ components:
       example: 'BTR'
     FIIdentificationCodeEnum:
       type: string
-      description: >
+      description: |
         IdentificationCode:
 
         * `B` - SWIFT Bank Identifier Code (BIC)
@@ -538,7 +777,7 @@ components:
       example: 'B'
     PersonalIdentificationCodeEnum:
       type: string
-      description: >
+      description: |
         IdentificationCode:
 
         * `1` - Passport Number
@@ -556,21 +795,24 @@ components:
         - 9
       maxLength: 1
       example: 'B'
-    Address:
-      description: Address
-      properties:
-        addressLineOne:
-          type: string
-          maxLength: 35
-          description: AddressLineOne
-        addressLineTwo:
-          type: string
-          maxLength: 35
-          description: AddressLineTwo
-        addressLineThree:
-          type: string
-          maxLength: 35
-          description: AddressLineThree
+    AdviceCodeEnum:
+      type: string
+      description: |
+        AdviceCode
+
+        * `HLD - Hold
+        * `LTR` - Letter
+        * `PHN` - Phone
+        * `TLX` - Telex
+        * `WRE` - Wire
+
+        *
+      enum:
+        - HLD
+        - LTR
+        - PHN
+        - TLX
+        - WRE
     Error:
       required:
         - error

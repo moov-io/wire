@@ -8,7 +8,7 @@
  */
 
 package openapi
-// FiIdentificationCodeEnum : IdentificationCode: * `B` - SWIFT Bank Identifier Code (BIC) * `C` - CHIPS Participant * `D` - Demand Deposit Account (DDA) Number * `F` - Fed Routing Number * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number * `U` - CHIPS Identifier 
+// FiIdentificationCodeEnum : IdentificationCode:  * `B` - SWIFT Bank Identifier Code (BIC) * `C` - CHIPS Participant * `D` - Demand Deposit Account (DDA) Number * `F` - Fed Routing Number * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number * `U` - CHIPS Identifier 
 type FiIdentificationCodeEnum string
 
 // List of FIIdentificationCodeEnum

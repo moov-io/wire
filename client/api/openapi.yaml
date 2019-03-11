@@ -278,8 +278,84 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - amount:
+        - originatorToBeneficiaryInfo:
+            lineTwo: lineTwo
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          senderSuppliedInfo:
+            testProductionCode: T
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
+            formatVersion: "30"
+          beneficiaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originator:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryFinancialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          referenceForBeneficiary: Test Data
+          accountCreditedDrawdown:
+            identificationCode: C
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinacialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originatorOptionF: ""
+          additionalFIToFIInfo: '{}'
+          beneficiaryAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          amount:
             amount: "000000100000"
+          accountDebitedDrawdown:
+            identificationCode: D
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          instructingFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -296,6 +372,13 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          receiverFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -310,14 +393,36 @@ components:
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
-          senderSuppliedInformation:
-            testProductionCode: T
-            messageDuplicationCode: ' '
-            userRequestCorrelation: TESTDATA
-            formatVersion: "30"
-          senderDepositoryInstitution:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+          drawdownDebitAccountAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          beneficiaryInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          paymentMethodToBeneficiary: '{}'
+          originatorFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -325,8 +430,84 @@ components:
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - amount:
+        - originatorToBeneficiaryInfo:
+            lineTwo: lineTwo
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          senderSuppliedInfo:
+            testProductionCode: T
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
+            formatVersion: "30"
+          beneficiaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originator:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryFinancialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          referenceForBeneficiary: Test Data
+          accountCreditedDrawdown:
+            identificationCode: C
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinacialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originatorOptionF: ""
+          additionalFIToFIInfo: '{}'
+          beneficiaryAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          amount:
             amount: "000000100000"
+          accountDebitedDrawdown:
+            identificationCode: D
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          instructingFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -343,6 +524,13 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          receiverFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -357,14 +545,36 @@ components:
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
-          senderSuppliedInformation:
-            testProductionCode: T
-            messageDuplicationCode: ' '
-            userRequestCorrelation: TESTDATA
-            formatVersion: "30"
-          senderDepositoryInstitution:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+          drawdownDebitAccountAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          beneficiaryInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          paymentMethodToBeneficiary: '{}'
+          originatorFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -385,8 +595,84 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - amount:
+        - originatorToBeneficiaryInfo:
+            lineTwo: lineTwo
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          senderSuppliedInfo:
+            testProductionCode: T
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
+            formatVersion: "30"
+          beneficiaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originator:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryFinancialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          referenceForBeneficiary: Test Data
+          accountCreditedDrawdown:
+            identificationCode: C
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinacialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originatorOptionF: ""
+          additionalFIToFIInfo: '{}'
+          beneficiaryAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          amount:
             amount: "000000100000"
+          accountDebitedDrawdown:
+            identificationCode: D
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          instructingFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -403,6 +689,13 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          receiverFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -417,14 +710,36 @@ components:
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
-          senderSuppliedInformation:
-            testProductionCode: T
-            messageDuplicationCode: ' '
-            userRequestCorrelation: TESTDATA
-            formatVersion: "30"
-          senderDepositoryInstitution:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+          drawdownDebitAccountAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          beneficiaryInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          paymentMethodToBeneficiary: '{}'
+          originatorFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -432,8 +747,84 @@ components:
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - amount:
+        - originatorToBeneficiaryInfo:
+            lineTwo: lineTwo
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          senderSuppliedInfo:
+            testProductionCode: T
+            messageDuplicationCode: ' '
+            userRequestCorrelation: TESTDATA
+            formatVersion: "30"
+          beneficiaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originator:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          senderDepositoryInstitution:
+            senderABANumber: "091905114"
+            senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryFinancialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          referenceForBeneficiary: Test Data
+          accountCreditedDrawdown:
+            identificationCode: C
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinacialInstitutionAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          originatorOptionF: ""
+          additionalFIToFIInfo: '{}'
+          beneficiaryAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          amount:
             amount: "000000100000"
+          accountDebitedDrawdown:
+            identificationCode: D
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          instructingFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -450,6 +841,13 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          receiverFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -464,14 +862,36 @@ components:
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
-          senderSuppliedInformation:
-            testProductionCode: T
-            messageDuplicationCode: ' '
-            userRequestCorrelation: TESTDATA
-            formatVersion: "30"
-          senderDepositoryInstitution:
-            senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+          drawdownDebitAccountAdviceInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          beneficiaryInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
+          paymentMethodToBeneficiary: '{}'
+          originatorFinancialInstitution:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
+          intermediaryFinancialInstitutionInfo:
+            lineTwo: lineTwo
+            lineFive: lineFive
+            lineSix: lineSix
+            lineOne: lineOne
+            lineFour: lineFour
+            lineThree: lineThree
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -493,8 +913,84 @@ components:
     FEDWireMessage:
       description: FEDWireMessage
       example:
+        originatorToBeneficiaryInfo:
+          lineTwo: lineTwo
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
+        senderSuppliedInfo:
+          testProductionCode: T
+          messageDuplicationCode: ' '
+          userRequestCorrelation: TESTDATA
+          formatVersion: "30"
+        beneficiaryFinancialInstitutionInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
+        originator:
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
+        senderDepositoryInstitution:
+          senderABANumber: "091905114"
+          senderShortName: 'MIDWESTONE B&T    '
+        beneficiaryFinancialInstitutionAdviceInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
+        referenceForBeneficiary: Test Data
+        accountCreditedDrawdown:
+          identificationCode: C
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
+        intermediaryFinacialInstitutionAdviceInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
+        originatorOptionF: ""
+        additionalFIToFIInfo: '{}'
+        beneficiaryAdviceInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
         amount:
           amount: "000000100000"
+        accountDebitedDrawdown:
+          identificationCode: D
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
+        instructingFinancialInstitution:
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
         beneficiaryFinancialInstitution:
           identificationCode: B
           identifier: identifier
@@ -511,6 +1007,13 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
+        receiverFinancialInstitutionInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
         businessFunctionCode:
           businessFunctionCode: BTR
           transactionTypeCode: transactionTypeCode
@@ -525,14 +1028,36 @@ components:
         typeSubType:
           subTypeCode: "10"
           typeCode: "10"
-        senderSuppliedInformation:
-          testProductionCode: T
-          messageDuplicationCode: ' '
-          userRequestCorrelation: TESTDATA
-          formatVersion: "30"
-        senderDepositoryInstitution:
-          senderABANumber: "091905114"
-          senderShortName: 'MIDWESTONE B&T    '
+        drawdownDebitAccountAdviceInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
+        beneficiaryInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
+        paymentMethodToBeneficiary: '{}'
+        originatorFinancialInstitution:
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
+        intermediaryFinancialInstitutionInfo:
+          lineTwo: lineTwo
+          lineFive: lineFive
+          lineSix: lineSix
+          lineOne: lineOne
+          lineFour: lineFour
+          lineThree: lineThree
         inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
@@ -541,8 +1066,8 @@ components:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
       properties:
-        senderSuppliedInformation:
-          $ref: '#/components/schemas/SenderSuppliedInformation'
+        senderSuppliedInfo:
+          $ref: '#/components/schemas/SenderSuppliedInfo'
         typeSubType:
           $ref: '#/components/schemas/TypeSubType'
         inputMessageAccountabilityData:
@@ -561,16 +1086,97 @@ components:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiary:
           $ref: '#/components/schemas/Personal'
+        referenceForBeneficiary:
+          description: ReferenceForBeneficiary {4320}
+          example: Test Data
+          maxLength: 16
+          type: string
+        accountDebitedDrawdown:
+          $ref: '#/components/schemas/AccountDebitedDrawdown'
+        originator:
+          $ref: '#/components/schemas/Personal'
+        originatorOptionF:
+          description: OriginatorOptionF {5010}
+        originatorFinancialInstitution:
+          $ref: '#/components/schemas/FinancialInstitution'
+        instructingFinancialInstitution:
+          $ref: '#/components/schemas/FinancialInstitution'
+        accountCreditedDrawdown:
+          $ref: '#/components/schemas/AccountCreditedDrawdown'
+        originatorToBeneficiaryInfo:
+          $ref: '#/components/schemas/OriginatorToBeneficiaryInfo'
+        receiverFinancialInstitutionInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+        drawdownDebitAccountAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+        intermediaryFinancialInstitutionInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+        intermediaryFinacialInstitutionAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+        beneficiaryFinancialInstitutionInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+        beneficiaryFinancialInstitutionAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+        beneficiaryInfo:
+          $ref: '#/components/schemas/FIToFIInfo'
+        beneficiaryAdviceInfo:
+          $ref: '#/components/schemas/AdviceInfo'
+        paymentMethodToBeneficiary:
+          description: PaymentMethodToBeneficiary
+          properties:
+            paymentMethod:
+              description: PaymentMethod
+              enum:
+              - CHECK
+              example: CHECK
+              type: string
+            AdditionalInfo:
+              example: For goods and services
+              maxLength: 35
+              type: string
+        additionalFIToFIInfo:
+          description: AdditionalFIToFIInfo
+          properties:
+            lineOne:
+              description: LineOne
+              example: Line One
+              maxLength: 35
+              type: string
+            lineTwo:
+              description: LineTwo
+              example: Line Two
+              maxLength: 35
+              type: string
+            lineThree:
+              description: LineThree
+              example: Line Three
+              maxLength: 35
+              type: string
+            lineFour:
+              description: LineFour
+              example: Line Four
+              maxLength: 35
+              type: string
+            lineFive:
+              description: LineFive
+              example: Line Five
+              maxLength: 35
+              type: string
+            lineSix:
+              description: LineSix
+              example: Line Six
+              maxLength: 35
+              type: string
       required:
       - amount
       - businessFunctionCode
       - inputMessageAccountabilityData
       - receiverDepositoryInstitution
       - senderDepositoryInstitution
-      - senderSuppliedInformation
+      - senderSuppliedInfo
       - typeSubType
-    SenderSuppliedInformation:
-      description: SenderSuppliedInformation {1500}
+    SenderSuppliedInfo:
+      description: SenderSuppliedInfo {1500}
       example:
         testProductionCode: T
         messageDuplicationCode: ' '
@@ -795,10 +1401,192 @@ components:
       - identificationCode
       - identifier
       - name
+    AccountDebitedDrawdown:
+      example:
+        identificationCode: D
+        identifier: identifier
+        address:
+          addressLineTwo: addressLineTwo
+          addressLineOne: addressLineOne
+          addressLineThree: addressLineThree
+        name: name
+      properties:
+        identificationCode:
+          description: |
+            Identification Code
+            * `D` - Debit
+          enum:
+          - D
+          example: D
+          maxLength: 1
+          type: string
+        identifier:
+          description: Identifier
+          maxLength: 34
+          type: string
+        name:
+          description: Name
+          maxLength: 35
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - identificationCode
+      - identifier
+      - name
+    AccountCreditedDrawdown:
+      example:
+        identificationCode: C
+        identifier: identifier
+        address:
+          addressLineTwo: addressLineTwo
+          addressLineOne: addressLineOne
+          addressLineThree: addressLineThree
+        name: name
+      properties:
+        identificationCode:
+          description: |
+            Identification Code
+            * `C` - Credit
+          enum:
+          - C
+          example: C
+          maxLength: 1
+          type: string
+        identifier:
+          description: Identifier
+          maxLength: 34
+          type: string
+        name:
+          description: Name
+          maxLength: 35
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - identificationCode
+      - identifier
+      - name
+    OriginatorToBeneficiaryInfo:
+      description: OriginatorToBeneficiaryInfo
+      example:
+        lineTwo: lineTwo
+        lineOne: lineOne
+        lineFour: lineFour
+        lineThree: lineThree
+      properties:
+        lineOne:
+          description: LineOne
+          maxLength: 35
+          type: string
+        lineTwo:
+          description: LineTwo
+          maxLength: 35
+          type: string
+        lineThree:
+          description: LineThree
+          maxLength: 35
+          type: string
+        lineFour:
+          description: LineFour
+          maxLength: 35
+          type: string
+    FIToFIInfo:
+      description: FinancialInstitutionToFinancialInstitutionInfo
+      example:
+        lineTwo: lineTwo
+        lineFive: lineFive
+        lineSix: lineSix
+        lineOne: lineOne
+        lineFour: lineFour
+        lineThree: lineThree
+      properties:
+        lineOne:
+          description: LineOne
+          maxLength: 30
+          type: string
+        lineTwo:
+          description: LineTwo
+          maxLength: 33
+          type: string
+        lineThree:
+          description: LineThree
+          maxLength: 33
+          type: string
+        lineFour:
+          description: LineFour
+          maxLength: 33
+          type: string
+        lineFive:
+          description: LineFive
+          maxLength: 33
+          type: string
+        lineSix:
+          description: LineSix
+          maxLength: 33
+          type: string
+    AdviceInfo:
+      description: DrawdownDebitAccountAdviceInfo
+      example:
+        lineTwo: lineTwo
+        lineFive: lineFive
+        lineSix: lineSix
+        lineOne: lineOne
+        lineFour: lineFour
+        lineThree: lineThree
+      properties:
+        adviceCode:
+          $ref: '#/components/schemas/AdviceCodeEnum'
+        lineOne:
+          description: LineOne
+          maxLength: 26
+          type: string
+        lineTwo:
+          description: LineTwo
+          maxLength: 33
+          type: string
+        lineThree:
+          description: LineThree
+          maxLength: 33
+          type: string
+        lineFour:
+          description: LineFour
+          maxLength: 33
+          type: string
+        lineFive:
+          description: LineFive
+          maxLength: 33
+          type: string
+        lineSix:
+          description: LineSix
+          maxLength: 33
+          type: string
+    Address:
+      description: Address
+      example:
+        addressLineTwo: addressLineTwo
+        addressLineOne: addressLineOne
+        addressLineThree: addressLineThree
+      properties:
+        addressLineOne:
+          description: AddressLineOne
+          maxLength: 35
+          type: string
+        addressLineTwo:
+          description: AddressLineTwo
+          maxLength: 35
+          type: string
+        addressLineThree:
+          description: AddressLineThree
+          maxLength: 35
+          type: string
     TypeCodeEnum:
       description: |
         TypeCode:
-        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank). * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York. * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
+
+        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
+        * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
+        * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
       enum:
       - "10"
       - "15"
@@ -809,7 +1597,16 @@ components:
     SubTypeCodeEnum:
       description: |
         SubTypeCode:
-        * `00` - Basic Funds Transfer - A basic value funds transfer. * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day. * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal. * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day. * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer. * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party. * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit. * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit. * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
+
+        * `00` - Basic Funds Transfer - A basic value funds transfer.
+        * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
+        * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
+        * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
+        * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
+        * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
+        * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
+        * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
+        * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
       enum:
       - "0"
       - "1"
@@ -855,7 +1652,13 @@ components:
     FIIdentificationCodeEnum:
       description: |
         IdentificationCode:
-        * `B` - SWIFT Bank Identifier Code (BIC) * `C` - CHIPS Participant * `D` - Demand Deposit Account (DDA) Number * `F` - Fed Routing Number * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number * `U` - CHIPS Identifier
+
+        * `B` - SWIFT Bank Identifier Code (BIC)
+        * `C` - CHIPS Participant
+        * `D` - Demand Deposit Account (DDA) Number
+        * `F` - Fed Routing Number
+        * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
+        * `U` - CHIPS Identifier
       enum:
       - B
       - C
@@ -869,7 +1672,13 @@ components:
     PersonalIdentificationCodeEnum:
       description: |
         IdentificationCode:
-        * `1` - Passport Number * `2` - Tax Identification Number * `3` - Driver’s License Number * `4` - Alien Registration Number * `5` - Corporate Identification * `9` - Other Identification
+
+        * `1` - Passport Number
+        * `2` - Tax Identification Number
+        * `3` - Driver’s License Number
+        * `4` - Alien Registration Number
+        * `5` - Corporate Identification
+        * `9` - Other Identification
       enum:
       - "1"
       - "2"
@@ -880,25 +1689,24 @@ components:
       example: B
       maxLength: 1
       type: string
-    Address:
-      description: Address
-      example:
-        addressLineTwo: addressLineTwo
-        addressLineOne: addressLineOne
-        addressLineThree: addressLineThree
-      properties:
-        addressLineOne:
-          description: AddressLineOne
-          maxLength: 35
-          type: string
-        addressLineTwo:
-          description: AddressLineTwo
-          maxLength: 35
-          type: string
-        addressLineThree:
-          description: AddressLineThree
-          maxLength: 35
-          type: string
+    AdviceCodeEnum:
+      description: |
+        AdviceCode
+
+        * `HLD - Hold
+        * `LTR` - Letter
+        * `PHN` - Phone
+        * `TLX` - Telex
+        * `WRE` - Wire
+
+        *
+      enum:
+      - HLD
+      - LTR
+      - PHN
+      - TLX
+      - WRE
+      type: string
     Error:
       properties:
         error:
