@@ -278,23 +278,35 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - originatorToBeneficiaryInfo:
-            lineTwo: lineTwo
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+        - orderingInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          currencyInstructedAmount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          localInstrument:
+            localInstrumentCode: ANSI
+            proprietaryCode: WJD786363
+          originatorToBeneficiaryInfo:
+            lineTwo: Line Two
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSuppliedInfo:
             testProductionCode: T
             messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          unstructuredAddendaInfo:
+            addendaInfo: Payment for goods
+            addendaLength: "0987"
           originator:
             identificationCode: B
             identifier: identifier
@@ -306,6 +318,9 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           beneficiaryFinancialInstitutionAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -313,6 +328,9 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          institutionAccount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           referenceForBeneficiary: Test Data
           accountCreditedDrawdown:
             identificationCode: C
@@ -329,8 +347,21 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          exchangeRate: "1.2345"
+          orderingCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          instructedAmount:
+            amount: amount
+            currencyCode: USD
           originatorOptionF: ""
-          additionalFIToFIInfo: '{}'
+          additionalFIToFIInfo:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           beneficiaryAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -348,6 +379,7 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          senderReference: Reference
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -356,6 +388,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          charges:
+            sendersChargesOne: USD1234,56
+            sendersChargesFour: USD1234,56
+            sendersChargesThree: USD1234,56
+            chargeDetails: B
+            sendersChargesTwo: USD1234,56
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -373,12 +411,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           receiverFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -401,13 +439,18 @@ components:
             lineFour: lineFour
             lineThree: lineThree
           beneficiaryInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          paymentMethodToBeneficiary: '{}'
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          intermediaryInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          paymentMethodToBeneficiary:
+            AdditionalInfo: For goods and services
+            paymentMethod: CHECK
           originatorFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -416,13 +459,17 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          previousMessageIdentifier: previousMessageIdentifier
           intermediaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          remittanceInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -430,23 +477,38 @@ components:
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - originatorToBeneficiaryInfo:
-            lineTwo: lineTwo
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+          senderToReceiverInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+        - orderingInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          currencyInstructedAmount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          localInstrument:
+            localInstrumentCode: ANSI
+            proprietaryCode: WJD786363
+          originatorToBeneficiaryInfo:
+            lineTwo: Line Two
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSuppliedInfo:
             testProductionCode: T
             messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          unstructuredAddendaInfo:
+            addendaInfo: Payment for goods
+            addendaLength: "0987"
           originator:
             identificationCode: B
             identifier: identifier
@@ -458,6 +520,9 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           beneficiaryFinancialInstitutionAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -465,6 +530,9 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          institutionAccount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           referenceForBeneficiary: Test Data
           accountCreditedDrawdown:
             identificationCode: C
@@ -481,8 +549,21 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          exchangeRate: "1.2345"
+          orderingCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          instructedAmount:
+            amount: amount
+            currencyCode: USD
           originatorOptionF: ""
-          additionalFIToFIInfo: '{}'
+          additionalFIToFIInfo:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           beneficiaryAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -500,6 +581,7 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          senderReference: Reference
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -508,6 +590,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          charges:
+            sendersChargesOne: USD1234,56
+            sendersChargesFour: USD1234,56
+            sendersChargesThree: USD1234,56
+            chargeDetails: B
+            sendersChargesTwo: USD1234,56
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -525,12 +613,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           receiverFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -553,13 +641,18 @@ components:
             lineFour: lineFour
             lineThree: lineThree
           beneficiaryInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          paymentMethodToBeneficiary: '{}'
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          intermediaryInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          paymentMethodToBeneficiary:
+            AdditionalInfo: For goods and services
+            paymentMethod: CHECK
           originatorFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -568,13 +661,17 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          previousMessageIdentifier: previousMessageIdentifier
           intermediaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          remittanceInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -582,6 +679,9 @@ components:
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
+          senderToReceiverInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
       properties:
         id:
           description: File ID
@@ -595,23 +695,35 @@ components:
       example:
         id: 3f2d23ee214
         fedWireMessage:
-        - originatorToBeneficiaryInfo:
-            lineTwo: lineTwo
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+        - orderingInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          currencyInstructedAmount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          localInstrument:
+            localInstrumentCode: ANSI
+            proprietaryCode: WJD786363
+          originatorToBeneficiaryInfo:
+            lineTwo: Line Two
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSuppliedInfo:
             testProductionCode: T
             messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          unstructuredAddendaInfo:
+            addendaInfo: Payment for goods
+            addendaLength: "0987"
           originator:
             identificationCode: B
             identifier: identifier
@@ -623,6 +735,9 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           beneficiaryFinancialInstitutionAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -630,6 +745,9 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          institutionAccount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           referenceForBeneficiary: Test Data
           accountCreditedDrawdown:
             identificationCode: C
@@ -646,8 +764,21 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          exchangeRate: "1.2345"
+          orderingCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          instructedAmount:
+            amount: amount
+            currencyCode: USD
           originatorOptionF: ""
-          additionalFIToFIInfo: '{}'
+          additionalFIToFIInfo:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           beneficiaryAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -665,6 +796,7 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          senderReference: Reference
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -673,6 +805,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          charges:
+            sendersChargesOne: USD1234,56
+            sendersChargesFour: USD1234,56
+            sendersChargesThree: USD1234,56
+            chargeDetails: B
+            sendersChargesTwo: USD1234,56
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -690,12 +828,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           receiverFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -718,13 +856,18 @@ components:
             lineFour: lineFour
             lineThree: lineThree
           beneficiaryInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          paymentMethodToBeneficiary: '{}'
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          intermediaryInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          paymentMethodToBeneficiary:
+            AdditionalInfo: For goods and services
+            paymentMethod: CHECK
           originatorFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -733,13 +876,17 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          previousMessageIdentifier: previousMessageIdentifier
           intermediaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          remittanceInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -747,23 +894,38 @@ components:
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
-        - originatorToBeneficiaryInfo:
-            lineTwo: lineTwo
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+          senderToReceiverInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+        - orderingInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          currencyInstructedAmount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          localInstrument:
+            localInstrumentCode: ANSI
+            proprietaryCode: WJD786363
+          originatorToBeneficiaryInfo:
+            lineTwo: Line Two
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSuppliedInfo:
             testProductionCode: T
             messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          unstructuredAddendaInfo:
+            addendaInfo: Payment for goods
+            addendaLength: "0987"
           originator:
             identificationCode: B
             identifier: identifier
@@ -775,6 +937,9 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           beneficiaryFinancialInstitutionAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -782,6 +947,9 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          institutionAccount:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           referenceForBeneficiary: Test Data
           accountCreditedDrawdown:
             identificationCode: C
@@ -798,8 +966,21 @@ components:
             lineOne: lineOne
             lineFour: lineFour
             lineThree: lineThree
+          exchangeRate: "1.2345"
+          orderingCustomer:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          instructedAmount:
+            amount: amount
+            currencyCode: USD
           originatorOptionF: ""
-          additionalFIToFIInfo: '{}'
+          additionalFIToFIInfo:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           beneficiaryAdviceInfo:
             lineTwo: lineTwo
             lineFive: lineFive
@@ -817,6 +998,7 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          senderReference: Reference
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -825,6 +1007,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          charges:
+            sendersChargesOne: USD1234,56
+            sendersChargesFour: USD1234,56
+            sendersChargesThree: USD1234,56
+            chargeDetails: B
+            sendersChargesTwo: USD1234,56
           beneficiaryFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -842,12 +1030,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           receiverFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -870,13 +1058,18 @@ components:
             lineFour: lineFour
             lineThree: lineThree
           beneficiaryInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          paymentMethodToBeneficiary: '{}'
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          intermediaryInstitution:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
+          paymentMethodToBeneficiary:
+            AdditionalInfo: For goods and services
+            paymentMethod: CHECK
           originatorFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -885,13 +1078,17 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
+          previousMessageIdentifier: previousMessageIdentifier
           intermediaryFinancialInstitutionInfo:
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          remittanceInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -899,6 +1096,9 @@ components:
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
+          senderToReceiverInfo:
+            swiftLine: '{}'
+            swiftFieldTag: SWIFT
       properties:
         id:
           description: File ID
@@ -913,23 +1113,35 @@ components:
     FEDWireMessage:
       description: FEDWireMessage
       example:
+        orderingInstitution:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
+        currencyInstructedAmount:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
+        localInstrument:
+          localInstrumentCode: ANSI
+          proprietaryCode: WJD786363
         originatorToBeneficiaryInfo:
-          lineTwo: lineTwo
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         senderSuppliedInfo:
           testProductionCode: T
           messageDuplicationCode: ' '
           userRequestCorrelation: TESTDATA
           formatVersion: "30"
         beneficiaryFinancialInstitutionInfo:
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
+        unstructuredAddendaInfo:
+          addendaInfo: Payment for goods
+          addendaLength: "0987"
         originator:
           identificationCode: B
           identifier: identifier
@@ -941,6 +1153,9 @@ components:
         senderDepositoryInstitution:
           senderABANumber: "091905114"
           senderShortName: 'MIDWESTONE B&T    '
+        beneficiaryCustomer:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
         beneficiaryFinancialInstitutionAdviceInfo:
           lineTwo: lineTwo
           lineFive: lineFive
@@ -948,6 +1163,9 @@ components:
           lineOne: lineOne
           lineFour: lineFour
           lineThree: lineThree
+        institutionAccount:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
         referenceForBeneficiary: Test Data
         accountCreditedDrawdown:
           identificationCode: C
@@ -964,8 +1182,21 @@ components:
           lineOne: lineOne
           lineFour: lineFour
           lineThree: lineThree
+        exchangeRate: "1.2345"
+        orderingCustomer:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
+        instructedAmount:
+          amount: amount
+          currencyCode: USD
         originatorOptionF: ""
-        additionalFIToFIInfo: '{}'
+        additionalFIToFIInfo:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         beneficiaryAdviceInfo:
           lineTwo: lineTwo
           lineFive: lineFive
@@ -983,6 +1214,7 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
+        senderReference: Reference
         instructingFinancialInstitution:
           identificationCode: B
           identifier: identifier
@@ -991,6 +1223,12 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
+        charges:
+          sendersChargesOne: USD1234,56
+          sendersChargesFour: USD1234,56
+          sendersChargesThree: USD1234,56
+          chargeDetails: B
+          sendersChargesTwo: USD1234,56
         beneficiaryFinancialInstitution:
           identificationCode: B
           identifier: identifier
@@ -1008,12 +1246,12 @@ components:
             addressLineThree: addressLineThree
           name: name
         receiverFinancialInstitutionInfo:
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         businessFunctionCode:
           businessFunctionCode: BTR
           transactionTypeCode: transactionTypeCode
@@ -1036,13 +1274,18 @@ components:
           lineFour: lineFour
           lineThree: lineThree
         beneficiaryInfo:
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
-        paymentMethodToBeneficiary: '{}'
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
+        intermediaryInstitution:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
+        paymentMethodToBeneficiary:
+          AdditionalInfo: For goods and services
+          paymentMethod: CHECK
         originatorFinancialInstitution:
           identificationCode: B
           identifier: identifier
@@ -1051,13 +1294,17 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
+        previousMessageIdentifier: previousMessageIdentifier
         intermediaryFinancialInstitutionInfo:
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
+        remittanceInfo:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
         inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
@@ -1065,6 +1312,9 @@ components:
         receiverDepositoryInstitution:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
+        senderToReceiverInfo:
+          swiftLine: '{}'
+          swiftFieldTag: SWIFT
       properties:
         senderSuppliedInfo:
           $ref: '#/components/schemas/SenderSuppliedInfo'
@@ -1080,6 +1330,30 @@ components:
           $ref: '#/components/schemas/ReceiverDepositoryInstitution'
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
+        senderReference:
+          description: SenderReference
+          example: Reference
+          maxLength: 16
+          type: string
+        previousMessageIdentifier:
+          description: PreviousMessageIdentifier
+          maxLength: 22
+          type: string
+        localInstrument:
+          $ref: '#/components/schemas/LocalInstrument'
+        charges:
+          $ref: '#/components/schemas/Charges'
+        instructedAmount:
+          $ref: '#/components/schemas/InstructedAmount'
+        exchangeRate:
+          description: |
+            ExchangeRate
+
+            Must contain at least one numeric character and only one decimal comma marker
+            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+          example: "1.2345"
+          maxLength: 12
+          type: string
         intermediaryFinancialInstitution:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiaryFinancialInstitution:
@@ -1122,51 +1396,27 @@ components:
         beneficiaryAdviceInfo:
           $ref: '#/components/schemas/AdviceInfo'
         paymentMethodToBeneficiary:
-          description: PaymentMethodToBeneficiary
-          properties:
-            paymentMethod:
-              description: PaymentMethod
-              enum:
-              - CHECK
-              example: CHECK
-              type: string
-            AdditionalInfo:
-              example: For goods and services
-              maxLength: 35
-              type: string
+          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
         additionalFIToFIInfo:
-          description: AdditionalFIToFIInfo
-          properties:
-            lineOne:
-              description: LineOne
-              example: Line One
-              maxLength: 35
-              type: string
-            lineTwo:
-              description: LineTwo
-              example: Line Two
-              maxLength: 35
-              type: string
-            lineThree:
-              description: LineThree
-              example: Line Three
-              maxLength: 35
-              type: string
-            lineFour:
-              description: LineFour
-              example: Line Four
-              maxLength: 35
-              type: string
-            lineFive:
-              description: LineFive
-              example: Line Five
-              maxLength: 35
-              type: string
-            lineSix:
-              description: LineSix
-              example: Line Six
-              maxLength: 35
-              type: string
+          $ref: '#/components/schemas/AdditionalFIToFIInfo'
+        currencyInstructedAmount:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        orderingCustomer:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        orderingInstitution:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        intermediaryInstitution:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        institutionAccount:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        beneficiaryCustomer:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        remittanceInfo:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        senderToReceiverInfo:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+        unstructuredAddendaInfo:
+          $ref: '#/components/schemas/UnstructuredAddendaInfo'
       required:
       - amount
       - businessFunctionCode
@@ -1470,59 +1720,69 @@ components:
     OriginatorToBeneficiaryInfo:
       description: OriginatorToBeneficiaryInfo
       example:
-        lineTwo: lineTwo
-        lineOne: lineOne
-        lineFour: lineFour
-        lineThree: lineThree
+        lineTwo: Line Two
+        lineOne: Line One
+        lineFour: Line Four
+        lineThree: Line Three
       properties:
         lineOne:
           description: LineOne
+          example: Line One
           maxLength: 35
           type: string
         lineTwo:
           description: LineTwo
+          example: Line Two
           maxLength: 35
           type: string
         lineThree:
           description: LineThree
+          example: Line Three
           maxLength: 35
           type: string
         lineFour:
           description: LineFour
+          example: Line Four
           maxLength: 35
           type: string
     FIToFIInfo:
-      description: FinancialInstitutionToFinancialInstitutionInfo
+      description: FIToFIInfo
       example:
-        lineTwo: lineTwo
-        lineFive: lineFive
-        lineSix: lineSix
-        lineOne: lineOne
-        lineFour: lineFour
-        lineThree: lineThree
+        lineTwo: Line Two
+        lineFive: Line Five
+        lineSix: Line Six
+        lineOne: Line One
+        lineFour: Line Four
+        lineThree: Line Three
       properties:
         lineOne:
           description: LineOne
+          example: Line One
           maxLength: 30
           type: string
         lineTwo:
           description: LineTwo
+          example: Line Two
           maxLength: 33
           type: string
         lineThree:
           description: LineThree
+          example: Line Three
           maxLength: 33
           type: string
         lineFour:
           description: LineFour
+          example: Line Four
           maxLength: 33
           type: string
         lineFive:
           description: LineFive
+          example: Line Five
           maxLength: 33
           type: string
         lineSix:
           description: LineSix
+          example: Line Six
           maxLength: 33
           type: string
     AdviceInfo:
@@ -1561,6 +1821,222 @@ components:
           description: LineSix
           maxLength: 33
           type: string
+    PaymentMethodToBeneficiary:
+      example:
+        AdditionalInfo: For goods and services
+        paymentMethod: CHECK
+      properties:
+        paymentMethod:
+          description: PaymentMethod
+          enum:
+          - CHECK
+          example: CHECK
+          type: string
+        AdditionalInfo:
+          example: For goods and services
+          maxLength: 35
+          type: string
+    AdditionalFIToFIInfo:
+      example:
+        lineTwo: Line Two
+        lineFive: Line Five
+        lineSix: Line Six
+        lineOne: Line One
+        lineFour: Line Four
+        lineThree: Line Three
+      properties:
+        lineOne:
+          description: LineOne
+          example: Line One
+          maxLength: 35
+          type: string
+        lineTwo:
+          description: LineTwo
+          example: Line Two
+          maxLength: 35
+          type: string
+        lineThree:
+          description: LineThree
+          example: Line Three
+          maxLength: 35
+          type: string
+        lineFour:
+          description: LineFour
+          example: Line Four
+          maxLength: 35
+          type: string
+        lineFive:
+          description: LineFive
+          example: Line Five
+          maxLength: 35
+          type: string
+        lineSix:
+          description: LineSix
+          example: Line Six
+          maxLength: 35
+          type: string
+    CoverPaymentInfo:
+      description: CoverPaymentInfo
+      example:
+        swiftLine: '{}'
+        swiftFieldTag: SWIFT
+      properties:
+        swiftFieldTag:
+          description: SwiftFieldTag
+          example: SWIFT
+          maxLength: 5
+          type: string
+        swiftLine:
+          description: SwiftLine
+          properties:
+            swiftLineOne:
+              description: SwiftLineOne
+              example: Swift Line One
+              maxLength: 35
+              type: string
+            swiftLineTwo:
+              description: SwiftLineTwo
+              example: Swift Line Two
+              maxLength: 35
+              type: string
+            swiftLineThree:
+              description: SwiftLineThree
+              example: Swift Line Three
+              maxLength: 35
+              type: string
+            swiftLineFour:
+              description: SwiftLineFour
+              example: Swift Line Four
+              maxLength: 35
+              type: string
+            swiftLineFive:
+              description: SwiftLineFive
+              example: Swift Line Five
+              maxLength: 35
+              type: string
+            swiftLineSix:
+              description: SwiftLineSix
+              example: Swift Line Six
+              maxLength: 35
+              type: string
+    UnstructuredAddendaInfo:
+      example:
+        addendaInfo: Payment for goods
+        addendaLength: "0987"
+      properties:
+        addendaLength:
+          description: |
+            AddendaLength
+
+            Addenda Length must be numeric, padded with leading zeros if less than four characters and must equal length
+            of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
+            Addenda Length must be 0987).
+          example: "0987"
+          maxLength: 4
+          type: string
+        addendaInfo:
+          description: AddendaInfo
+          example: Payment for goods
+          maxLength: 8994
+          type: string
+    SenderReference:
+      description: SenderReference
+      example: Reference
+      maxLength: 16
+      type: string
+    PreviousMessageIdentifier:
+      description: PreviousMessageIdentifier
+      maxLength: 22
+      type: string
+    Charges:
+      example:
+        sendersChargesOne: USD1234,56
+        sendersChargesFour: USD1234,56
+        sendersChargesThree: USD1234,56
+        chargeDetails: B
+        sendersChargesTwo: USD1234,56
+      properties:
+        chargeDetails:
+          $ref: '#/components/schemas/ChargeDetailsEnum'
+        sendersChargesOne:
+          description: |
+            SendersChargesOne
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: USD1234,56
+          maxLength: 15
+          type: string
+        sendersChargesTwo:
+          description: |
+            SendersChargesTwo
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: USD1234,56
+          maxLength: 15
+          type: string
+        sendersChargesThree:
+          description: |
+            SendersChargesThree
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: USD1234,56
+          maxLength: 15
+          type: string
+        sendersChargesFour:
+          description: |
+            SendersChargesFour
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: USD1234,56
+          maxLength: 15
+          type: string
+    LocalInstrument:
+      example:
+        localInstrumentCode: ANSI
+        proprietaryCode: WJD786363
+      properties:
+        localInstrumentCode:
+          $ref: '#/components/schemas/LocalInstrumentEnum'
+        proprietaryCode:
+          description: ProprietaryCode
+          example: WJD786363
+          maxLength: 35
+          type: string
+    InstructedAmount:
+      example:
+        amount: amount
+        currencyCode: USD
+      properties:
+        currencyCode:
+          description: CurrencyCode
+          example: USD
+          maxLength: 3
+          type: string
+        amount:
+          description: |
+            Amount
+
+            Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
+            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
+          maxLength: 15
+          type: string
+    ExchangeRate:
+      description: |
+        ExchangeRate
+
+        Must contain at least one numeric character and only one decimal comma marker
+        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+      example: "1.2345"
+      maxLength: 12
+      type: string
     Address:
       description: Address
       example:
@@ -1706,6 +2182,46 @@ components:
       - PHN
       - TLX
       - WRE
+      type: string
+    LocalInstrumentEnum:
+      description: |
+        LocalInstrument
+        * `ANSI` - ANSI X12 format
+        * `COVS` - Sequence B Cover Payment Structured
+        * `GXML` - General XML format
+        * `IXML` - ISO 20022 XML formaT
+        * `NARR` - Narrative Text
+        * `PROP` - Proprietary Local Instrument Code
+        * `RMTS` - Remittance Information Structured
+        * `RRMT` - Related Remittance Information
+        * `S820` - STP 820 format
+        * `SWIF` - SWIFT field 70 (Remittance Information)
+        * `UEDI` - UN/EDIFACT format
+      enum:
+      - ANSI
+      - COVS
+      - GXML
+      - IXML
+      - NARR
+      - PROP
+      - RMTS
+      - RRMT
+      - S820
+      - SWIF
+      - UEDI
+      example: ANSI
+      maxLength: 4
+      type: string
+    ChargeDetailsEnum:
+      description: |
+        ChargeDetails
+        * `B` - Beneficiary
+        * `S` - Shared
+      enum:
+      - B
+      - S
+      example: B
+      maxLength: 1
       type: string
     Error:
       properties:

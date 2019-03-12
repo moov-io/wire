@@ -186,6 +186,7 @@ paths:
           description: Permanently deleted File.
         '404':
           description: A File with the specified ID was not found.
+# ToDo: Review all properties to see whether 'Info' is needed or if that can be removed
 components:
   schemas:
     CreateFile:
@@ -233,7 +234,25 @@ components:
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
           description: BusinessFunctionCode {3600}
-        # ToDo: Other Transfer Info
+        # ToDo: Payment Notification
+        senderReference:
+          $ref: '#/components/schemas/SenderReference'
+          description: SenderReference {3320}
+        previousMessageIdentifier:
+          $ref: '#/components/schemas/PreviousMessageIdentifier'
+          description: PreviousMessageIdentifier {3500}
+        localInstrument:
+          $ref: '#/components/schemas/LocalInstrument'
+          description: LocalInstrument {3610}
+        charges:
+          $ref: '#/components/schemas/Charges'
+          description: Charges {3700}
+        instructedAmount:
+          $ref: '#/components/schemas/InstructedAmount'
+          description: InstructedAmount {3710}
+        exchangeRate:
+          $ref: '#/components/schemas/ExchangeRate'
+          description: ExchangeRate {3720}
         intermediaryFinancialInstitution:
           $ref: '#/components/schemas/FinancialInstitution'
           description: IntermediaryFinancialInstitution {4000}
@@ -293,51 +312,38 @@ components:
           $ref: '#/components/schemas/AdviceInfo'
           description: BeneficiaryAdviceInfo {6410}
         paymentMethodToBeneficiary:
-          description: PaymentMethodToBeneficiary
-          properties:
-            paymentMethod:
-              type: string
-              description: PaymentMethod
-              enum:
-                - CHECK
-              example: 'CHECK'
-            AdditionalInfo:
-              type: string
-              maxLength: 35
-              example: "For goods and services"
+          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
+          description: PaymentMethodToBeneficiary {6420}
         additionalFIToFIInfo:
-          description: AdditionalFIToFIInfo
-          properties:
-            lineOne:
-              type: string
-              maxLength: 35
-              description: LineOne
-              example: 'Line One'
-            lineTwo:
-              type: string
-              maxLength: 35
-              description: LineTwo
-              example: 'Line Two'
-            lineThree:
-              type: string
-              maxLength: 35
-              description: LineThree
-              example: 'Line Three'
-            lineFour:
-              type: string
-              maxLength: 35
-              description: LineFour
-              example: 'Line Four'
-            lineFive:
-              type: string
-              maxLength: 35
-              description: LineFive
-              example: 'Line Five'
-            lineSix:
-              type: string
-              maxLength: 35
-              description: LineSix
-              example: 'Line Six'
+          $ref: '#/components/schemas/AdditionalFIToFIInfo'
+          description: AdditionalFIToFIInfo {6500}
+        currencyInstructedAmount:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: CurrencyInstructedAmount {7033}
+        orderingCustomer:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: OrderingCustomer {7050}
+        orderingInstitution:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: OrderingInstitution {7052}
+        intermediaryInstitution:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: IntermediaryInstitution {7056}
+        institutionAccount:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: InstitutionAccount {7057}
+        beneficiaryCustomer:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: BeneficiaryCustomer {7059}
+        remittanceInfo:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: RemittanceInformation {7070}
+        senderToReceiverInfo:
+          $ref: '#/components/schemas/CoverPaymentInfo'
+          description: SenderToReceiverInfo {7072}
+        unstructuredAddendaInfo:
+          $ref: '#/components/schemas/UnstructuredAddendaInfo'
+          description: UnstructuredAddendaInfo {8200}
       required:
         - senderSuppliedInfo
         - typeSubType
@@ -601,45 +607,55 @@ components:
             type: string
             maxLength: 35
             description: LineOne
+            example: 'Line One'
           lineTwo:
             type: string
             maxLength: 35
             description: LineTwo
+            example: 'Line Two'
           lineThree:
             type: string
             maxLength: 35
             description: LineThree
+            example: 'Line Three'
           lineFour:
             type: string
             maxLength: 35
             description: LineFour
+            example: 'Line Four'
     FIToFIInfo:
-      description: FinancialInstitutionToFinancialInstitutionInfo
+      description: FIToFIInfo
       properties:
         lineOne:
           type: string
           maxLength: 30
           description: LineOne
+          example: 'Line One'
         lineTwo:
           type: string
           maxLength: 33
           description: LineTwo
+          example: 'Line Two'
         lineThree:
           type: string
           maxLength: 33
           description: LineThree
+          example: 'Line Three'
         lineFour:
           type: string
           maxLength: 33
           description: LineFour
+          example: 'Line Four'
         lineFive:
           type: string
           maxLength: 33
           description: LineFive
+          example: 'Line Five'
         lineSix:
           type: string
           maxLength: 33
           description: LineSix
+          example: 'Line Six'
     AdviceInfo:
       description: DrawdownDebitAccountAdviceInfo
       properties:
@@ -670,6 +686,198 @@ components:
           type: string
           maxLength: 33
           description: LineSix
+    PaymentMethodToBeneficiary:
+      properties:
+        paymentMethod:
+          type: string
+          description: PaymentMethod
+          enum:
+            - CHECK
+          example: 'CHECK'
+        AdditionalInfo:
+          type: string
+          maxLength: 35
+          example: "For goods and services"
+    AdditionalFIToFIInfo:
+      properties:
+        lineOne:
+          type: string
+          maxLength: 35
+          description: LineOne
+          example: 'Line One'
+        lineTwo:
+          type: string
+          maxLength: 35
+          description: LineTwo
+          example: 'Line Two'
+        lineThree:
+          type: string
+          maxLength: 35
+          description: LineThree
+          example: 'Line Three'
+        lineFour:
+          type: string
+          maxLength: 35
+          description: LineFour
+          example: 'Line Four'
+        lineFive:
+          type: string
+          maxLength: 35
+          description: LineFive
+          example: 'Line Five'
+        lineSix:
+          type: string
+          maxLength: 35
+          description: LineSix
+          example: 'Line Six'
+    CoverPaymentInfo:
+      description: CoverPaymentInfo
+      properties:
+        swiftFieldTag:
+          type: string
+          maxLength: 5
+          description: SwiftFieldTag
+          example: 'SWIFT'
+        swiftLine:
+              description: SwiftLine
+              properties:
+                swiftLineOne:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineOne
+                  example: 'Swift Line One'
+                swiftLineTwo:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineTwo
+                  example: 'Swift Line Two'
+                swiftLineThree:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineThree
+                  example: 'Swift Line Three'
+                swiftLineFour:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineFour
+                  example: 'Swift Line Four'
+                swiftLineFive:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineFive
+                  example: 'Swift Line Five'
+                swiftLineSix:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineSix
+                  example: 'Swift Line Six'
+    UnstructuredAddendaInfo:
+      properties:
+        addendaLength:
+          type: string
+          maxLength: 4
+          description: |
+            AddendaLength
+
+            Addenda Length must be numeric, padded with leading zeros if less than four characters and must equal length
+            of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
+            Addenda Length must be 0987).
+          example: '0987'
+        addendaInfo:
+          type: string
+          maxLength: 8994
+          description: AddendaInfo
+          example: 'Payment for goods'
+    SenderReference:
+      type: string
+      maxLength: 16
+      description: SenderReference
+      example: 'Reference'
+    PreviousMessageIdentifier:
+      type: string
+      maxLength: 22
+      description: PreviousMessageIdentifier
+      # ToDo: find previousMessageIdentifier example
+      example: ''
+    Charges:
+      properties:
+        chargeDetails:
+          $ref: '#/components/schemas/ChargeDetailsEnum'
+          description: ChargeDetails
+        sendersChargesOne:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesOne
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+        sendersChargesTwo:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesTwo
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+        sendersChargesThree:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesThree
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+        sendersChargesFour:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesFour
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+    LocalInstrument:
+      properties:
+        localInstrumentCode:
+          $ref: '#/components/schemas/LocalInstrumentEnum'
+          description: LocalInstrumentCode
+        proprietaryCode:
+          type: string
+          maxLength: 35
+          description: ProprietaryCode
+          example: 'WJD786363'
+    InstructedAmount:
+      properties:
+        currencyCode:
+          type: string
+          maxLength: 3
+          description: CurrencyCode
+          example: 'USD'
+        amount:
+          type: string
+          maxLength: 15
+          description: |
+            Amount
+
+            Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
+            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
+    ExchangeRate:
+      type: string
+      maxLength: 12
+      description: |
+        ExchangeRate
+
+        Must contain at least one numeric character and only one decimal comma marker
+        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+      example: '1.2345'
     Address:
       description: Address
       properties:
@@ -813,6 +1021,46 @@ components:
         - PHN
         - TLX
         - WRE
+    LocalInstrumentEnum:
+      type: string
+      maxLength: 4
+      description: |
+        LocalInstrument
+        * `ANSI` - ANSI X12 format
+        * `COVS` - Sequence B Cover Payment Structured
+        * `GXML` - General XML format
+        * `IXML` - ISO 20022 XML formaT
+        * `NARR` - Narrative Text
+        * `PROP` - Proprietary Local Instrument Code
+        * `RMTS` - Remittance Information Structured
+        * `RRMT` - Related Remittance Information
+        * `S820` - STP 820 format
+        * `SWIF` - SWIFT field 70 (Remittance Information)
+        * `UEDI` - UN/EDIFACT format
+      enum:
+        - ANSI
+        - COVS
+        - GXML
+        - IXML
+        - NARR
+        - PROP
+        - RMTS
+        - RRMT
+        - S820
+        - SWIF
+        - UEDI
+      example: 'ANSI'
+    ChargeDetailsEnum:
+      type: string
+      maxLength: 1
+      description: |
+        ChargeDetails
+        * `B` - Beneficiary
+        * `S` - Shared
+      enum:
+        - B
+        - S
+      example: 'B'
     Error:
       required:
         - error

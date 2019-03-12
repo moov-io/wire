@@ -9,8 +9,7 @@
 
 package openapi
 
-// FIToFIInfo
-type FiToFiInfo struct {
+type AdditionalFiToFiInfo struct {
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo

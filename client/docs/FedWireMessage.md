@@ -10,6 +10,12 @@ Name | Type | Description | Notes
 **SenderDepositoryInstitution** | [**SenderDepositoryInstitution**](SenderDepositoryInstitution.md) |  | 
 **ReceiverDepositoryInstitution** | [**ReceiverDepositoryInstitution**](ReceiverDepositoryInstitution.md) |  | 
 **BusinessFunctionCode** | [**BusinessFunctionCode**](BusinessFunctionCode.md) |  | 
+**SenderReference** | **string** | SenderReference | [optional] 
+**PreviousMessageIdentifier** | **string** | PreviousMessageIdentifier | [optional] 
+**LocalInstrument** | [**LocalInstrument**](LocalInstrument.md) |  | [optional] 
+**Charges** | [**Charges**](Charges.md) |  | [optional] 
+**InstructedAmount** | [**InstructedAmount**](InstructedAmount.md) |  | [optional] 
+**ExchangeRate** | **string** | ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345).  | [optional] 
 **IntermediaryFinancialInstitution** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **BeneficiaryFinancialInstitution** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **Beneficiary** | [**Personal**](Personal.md) |  | [optional] 
@@ -29,8 +35,17 @@ Name | Type | Description | Notes
 **BeneficiaryFinancialInstitutionAdviceInfo** | [**AdviceInfo**](AdviceInfo.md) |  | [optional] 
 **BeneficiaryInfo** | [**FiToFiInfo**](FIToFIInfo.md) |  | [optional] 
 **BeneficiaryAdviceInfo** | [**AdviceInfo**](AdviceInfo.md) |  | [optional] 
-**PaymentMethodToBeneficiary** | [**map[string]interface{}**](map[string]interface{}.md) | PaymentMethodToBeneficiary | [optional] 
-**AdditionalFIToFIInfo** | [**map[string]interface{}**](map[string]interface{}.md) | AdditionalFIToFIInfo | [optional] 
+**PaymentMethodToBeneficiary** | [**PaymentMethodToBeneficiary**](PaymentMethodToBeneficiary.md) |  | [optional] 
+**AdditionalFIToFIInfo** | [**AdditionalFiToFiInfo**](AdditionalFIToFIInfo.md) |  | [optional] 
+**CurrencyInstructedAmount** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**OrderingCustomer** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**OrderingInstitution** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**IntermediaryInstitution** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**InstitutionAccount** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**BeneficiaryCustomer** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**RemittanceInfo** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**SenderToReceiverInfo** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
+**UnstructuredAddendaInfo** | [**UnstructuredAddendaInfo**](UnstructuredAddendaInfo.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

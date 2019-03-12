@@ -18,6 +18,15 @@ type FedWireMessage struct {
 	SenderDepositoryInstitution SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
 	ReceiverDepositoryInstitution ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
 	BusinessFunctionCode BusinessFunctionCode `json:"businessFunctionCode"`
+	// SenderReference
+	SenderReference string `json:"senderReference,omitempty"`
+	// PreviousMessageIdentifier
+	PreviousMessageIdentifier string `json:"previousMessageIdentifier,omitempty"`
+	LocalInstrument LocalInstrument `json:"localInstrument,omitempty"`
+	Charges Charges `json:"charges,omitempty"`
+	InstructedAmount InstructedAmount `json:"instructedAmount,omitempty"`
+	// ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345). 
+	ExchangeRate string `json:"exchangeRate,omitempty"`
 	IntermediaryFinancialInstitution FinancialInstitution `json:"intermediaryFinancialInstitution,omitempty"`
 	BeneficiaryFinancialInstitution FinancialInstitution `json:"beneficiaryFinancialInstitution,omitempty"`
 	Beneficiary Personal `json:"beneficiary,omitempty"`
@@ -39,8 +48,15 @@ type FedWireMessage struct {
 	BeneficiaryFinancialInstitutionAdviceInfo AdviceInfo `json:"beneficiaryFinancialInstitutionAdviceInfo,omitempty"`
 	BeneficiaryInfo FiToFiInfo `json:"beneficiaryInfo,omitempty"`
 	BeneficiaryAdviceInfo AdviceInfo `json:"beneficiaryAdviceInfo,omitempty"`
-	// PaymentMethodToBeneficiary
-	PaymentMethodToBeneficiary map[string]interface{} `json:"paymentMethodToBeneficiary,omitempty"`
-	// AdditionalFIToFIInfo
-	AdditionalFIToFIInfo map[string]interface{} `json:"additionalFIToFIInfo,omitempty"`
+	PaymentMethodToBeneficiary PaymentMethodToBeneficiary `json:"paymentMethodToBeneficiary,omitempty"`
+	AdditionalFIToFIInfo AdditionalFiToFiInfo `json:"additionalFIToFIInfo,omitempty"`
+	CurrencyInstructedAmount CoverPaymentInfo `json:"currencyInstructedAmount,omitempty"`
+	OrderingCustomer CoverPaymentInfo `json:"orderingCustomer,omitempty"`
+	OrderingInstitution CoverPaymentInfo `json:"orderingInstitution,omitempty"`
+	IntermediaryInstitution CoverPaymentInfo `json:"intermediaryInstitution,omitempty"`
+	InstitutionAccount CoverPaymentInfo `json:"institutionAccount,omitempty"`
+	BeneficiaryCustomer CoverPaymentInfo `json:"beneficiaryCustomer,omitempty"`
+	RemittanceInfo CoverPaymentInfo `json:"remittanceInfo,omitempty"`
+	SenderToReceiverInfo CoverPaymentInfo `json:"senderToReceiverInfo,omitempty"`
+	UnstructuredAddendaInfo UnstructuredAddendaInfo `json:"unstructuredAddendaInfo,omitempty"`
 }

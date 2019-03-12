@@ -43,12 +43,16 @@ Class | Method | HTTP request | Description
 
  - [AccountCreditedDrawdown](docs/AccountCreditedDrawdown.md)
  - [AccountDebitedDrawdown](docs/AccountDebitedDrawdown.md)
+ - [AdditionalFiToFiInfo](docs/AdditionalFiToFiInfo.md)
  - [Address](docs/Address.md)
  - [AdviceCodeEnum](docs/AdviceCodeEnum.md)
  - [AdviceInfo](docs/AdviceInfo.md)
  - [Amount](docs/Amount.md)
  - [BusinessFunctionCode](docs/BusinessFunctionCode.md)
  - [BusinessFunctionCodeEnum](docs/BusinessFunctionCodeEnum.md)
+ - [ChargeDetailsEnum](docs/ChargeDetailsEnum.md)
+ - [Charges](docs/Charges.md)
+ - [CoverPaymentInfo](docs/CoverPaymentInfo.md)
  - [CreateFile](docs/CreateFile.md)
  - [Error](docs/Error.md)
  - [FedWireMessage](docs/FedWireMessage.md)
@@ -57,7 +61,11 @@ Class | Method | HTTP request | Description
  - [File](docs/File.md)
  - [FinancialInstitution](docs/FinancialInstitution.md)
  - [InputMessageAccountabilityData](docs/InputMessageAccountabilityData.md)
+ - [InstructedAmount](docs/InstructedAmount.md)
+ - [LocalInstrument](docs/LocalInstrument.md)
+ - [LocalInstrumentEnum](docs/LocalInstrumentEnum.md)
  - [OriginatorToBeneficiaryInfo](docs/OriginatorToBeneficiaryInfo.md)
+ - [PaymentMethodToBeneficiary](docs/PaymentMethodToBeneficiary.md)
  - [Personal](docs/Personal.md)
  - [PersonalIdentificationCodeEnum](docs/PersonalIdentificationCodeEnum.md)
  - [ReceiverDepositoryInstitution](docs/ReceiverDepositoryInstitution.md)
@@ -66,6 +74,7 @@ Class | Method | HTTP request | Description
  - [SubTypeCodeEnum](docs/SubTypeCodeEnum.md)
  - [TypeCodeEnum](docs/TypeCodeEnum.md)
  - [TypeSubType](docs/TypeSubType.md)
+ - [UnstructuredAddendaInfo](docs/UnstructuredAddendaInfo.md)
 
 
 ## Documentation For Authorization
