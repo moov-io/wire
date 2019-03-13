@@ -187,6 +187,7 @@ paths:
         '404':
           description: A File with the specified ID was not found.
 # ToDo: Review all properties to see whether 'Info' is needed or if that can be removed
+# ToDo: Review what can be consolidated?
 components:
   schemas:
     CreateFile:
@@ -346,6 +347,42 @@ components:
         unstructuredAddendaInfo:
           $ref: '#/components/schemas/UnstructuredAddendaInfo'
           description: UnstructuredAddendaInfo {8200}
+        relatedRemittanceInformation:
+          $ref: '#/components/schemas/RelatedRemittanceInformation'
+          description: RelatedRemittanceInformation {8250}
+        remittanceOriginator:
+          $ref: '#/components/schemas/RemittanceOriginator'
+          description: RemittanceOriginator {8300}
+        remittanceBeneficiary:
+            $ref: '#/components/schemas/RemittanceBeneficiary'
+            description: RemittanceBeneficiary {8350}
+        primaryRemittanceDocumentInfo:
+            $ref: '#/components/schemas/PrimaryRemittanceDocumentInfo'
+            description: PrimaryRemittanceDocumentInfo {8400}
+        actualAmountPaid:
+          $ref: '#/components/schemas/RemittanceAmount'
+          description: ActualAmountPaid {8450}
+        grossAmountRemittanceDocument:
+          $ref: '#/components/schemas/RemittanceAmount'
+          description: GrossAmountRemittanceDocument {8500}
+        amountNegotiatedDiscount:
+          $ref: '#/components/schemas/RemittanceAmount'
+          description: AmountNegotiatedDiscount {8550}
+        adjustmentInfo:
+          $ref: '#/components/schemas/AdjustmentInfo'
+          description: AdjustmentInfo {8600}
+        dateRemittanceDocument:
+          $ref: '#/components/schemas/DateRemittanceDocument'
+          description: DateRemittanceDocument {8650}
+        secondaryRemittanceDocumentInfo:
+          $ref: '#/components/schemas/SecondaryRemittanceDocumentInfo'
+          description: SecondaryRemittanceDocumentInfo
+        remittanceFreeText:
+          $ref: '#/components/schemas/RemittanceFreeText'
+          description: RemittanceFreeText {8750}
+        serviceMessageInfo:
+          $ref: '#/components/schemas/ServiceMessageInfo'
+          description: ServiceMessageInformation
       required:
         - senderSuppliedInfo
         - typeSubType
@@ -506,6 +543,76 @@ components:
           example: '   '
       required:
         - businessFunctionCode
+    LocalInstrument:
+      properties:
+        localInstrumentCode:
+          $ref: '#/components/schemas/LocalInstrumentEnum'
+          description: LocalInstrumentCode
+        proprietaryCode:
+          type: string
+          maxLength: 35
+          description: ProprietaryCode
+          example: 'WJD786363'
+    PaymentNotification:
+      properties:
+        paymentNotificationIndicator:
+          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
+          description: PaymentNotificationIndicator
+        contactNotificationElectronicAddress:
+          type: string
+          maxLength: 2048
+          description: ContactNotificationElectronicAddress
+          example: 'https://moov.io/'
+        contactName:
+          type: string
+          maxLength: 140
+          description: ContactName
+          example: 'Wade Arnold'
+        contactPhoneNumber:
+          type: string
+          maxLength: 35
+          description: ContactPhoneNumber
+          example: '555-555-5555'
+        contactMobileNumber:
+          type: string
+          maxLength: 35
+          description: ContactMobileNumber
+          example: '555.555.555'
+        faxNumber:
+          type: string
+          maxLength: 35
+          description: FaxNumber
+          example: '555.555.5555'
+        endToEndIdentification:
+          type: string
+          maxLength: 35
+          description: EndtoEndIdentification
+          #ToDo Review
+          example: 'WireTransfer 10001'
+    InstructedAmount:
+      properties:
+        currencyCode:
+          type: string
+          maxLength: 3
+          description: CurrencyCode
+          example: 'USD'
+        amount:
+          type: string
+          maxLength: 15
+          description: |
+            Amount
+
+            Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
+            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
+    ExchangeRate:
+      type: string
+      maxLength: 12
+      description: |
+        ExchangeRate
+
+        Must contain at least one numeric character and only one decimal comma marker
+        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+      example: '1.2345'
     FinancialInstitution:
       description: FinancialInstitution {4000, 4100}
       properties:
@@ -846,26 +953,50 @@ components:
             characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
             marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
           example: 'USD1234,56'
-    LocalInstrument:
+    RelatedRemittanceInformation:
       properties:
-        localInstrumentCode:
-          $ref: '#/components/schemas/LocalInstrumentEnum'
-          description: LocalInstrumentCode
-        proprietaryCode:
+        remittanceIdentification:
           type: string
           maxLength: 35
-          description: ProprietaryCode
-          example: 'WJD786363'
-    PaymentNotification:
-      properties:
-        paymentNotificationIndicator:
-          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
-          description: PaymentNotificationIndicator
-        contactNotificationElectronicAddress:
+          description: RemittanceIdentification
+          example: 'Remittance Identification'
+        remittanceLocationMethod:
+          $ref: '#/components/schemas/RemittanceLocationMethodEnum'
+          description: RemittanceLocationMethodEnum
+        remittanceLocationElctronicAddress:
           type: string
           maxLength: 2048
-          description: ContactNotificationElectronicAddress
-          example: 'https://moov.io/'
+          description: RemittanceLocationElectronicAddress (E-mail or URL address)
+          example: 'https://moov.io'
+        remittanceData:
+          $ref: '#/components/schemas/RemittanceData'
+          description: RemittanceData
+    RemittanceOriginator:
+      properties:
+        identificationType:
+          $ref: '#/components/schemas/IdentificationTypeEnum'
+          description: identificationType
+        identificationCode:
+          $ref: '#/components/schemas/IdentificationCodeEnum'
+          description: identificationCode
+        identificationNumber:
+          type: string
+          maxLength: 35
+          description: IdentificationNumber
+          example: '192827828'
+        identificationNumberIssuer:
+          type: string
+          maxLength: 35
+          description: IdentificationNumberIssuer
+          example: 'Identification Number Issuer'
+        dateAndBirthPlace:
+          type: string
+          maxLength: 82
+          description: DateAndfBirthPlace
+          example: '03062013 Chester'
+        remittanceData:
+          $ref: '#/components/schemas/RemittanceDemographic'
+          description: RemittanceDemographic
         contactName:
           type: string
           maxLength: 140
@@ -875,47 +1006,321 @@ components:
           type: string
           maxLength: 35
           description: ContactPhoneNumber
-          example: '555-555-5555'
+          example: '555.555.5555'
         contactMobileNumber:
           type: string
           maxLength: 35
           description: ContactMobileNumber
-          example: '555.555.555'
-        faxNumber:
-          type: string
-          maxLength: 35
-          description: FaxNumber
           example: '555.555.5555'
-        endToEndIdentification:
+        contactFaxNumber:
           type: string
           maxLength: 35
-          description: EndtoEndIdentification
-          #ToDo Review
-          example: 'WireTransfer 10001'
-    InstructedAmount:
+          description: ContactFaxNumber
+          example: '555.555.5555'
+        contactElectronicAddress:
+          type: string
+          maxLength: 2048
+          description: ContactElectronicAddress ( i.e., E-mail or URL address)
+          example: 'https://moov.io'
+        contactOtherInformation:
+          type: string
+          maxLength: 35
+          description: ContactOtherInformation
+          example: 'Contact Other Information'
+    RemittanceBeneficiary:
       properties:
-        currencyCode:
+        identificationType:
+          $ref: '#/components/schemas/IdentificationTypeEnum'
+          description: identificationType
+        identificationCode:
+          $ref: '#/components/schemas/IdentificationCodeEnum'
+          description: identificationCode
+        identificationNumber:
+          type: string
+          maxLength: 35
+          description: IdentificationNumber
+          example: '192827828'
+        identificationNumberIssuer:
+          type: string
+          maxLength: 35
+          description: IdentificationNumberIssuer
+          example: 'Identification Number Issuer'
+        dateAndBirthPlace:
+          type: string
+          maxLength: 82
+          description: DateAndfBirthPlace
+          example: '03062013 Chester'
+        remittanceData:
+          $ref: '#/components/schemas/RemittanceDemographic'
+          description: RemittanceDemographi
+    RemittanceData:
+      properties:
+        name:
+          type: string
+          maxLength: 140
+          description: Name
+          example: 'Wade Arnold'
+        addressType:
+          $ref: '#/components/schemas/AddressTypeEnum'
+          description: AddressType
+        department:
+          type: string
+          maxLength: 70
+          description: Department
+          example: 'Buildings'
+        subDepartment:
+          type: string
+          maxLength: 70
+          description: SubDepartment
+          example: 'Service'
+        streetName:
+          type: string
+          maxLength: 70
+          description: StreetName
+          example: 'Street Way Boulevard'
+        buildingNumber:
+          type: string
+          maxLength: 16
+          description: BuildingNumber
+          example: '1A'
+        postCode:
+          type: string
+          maxLength: 16
+          description: PostCode
+          example: '19465'
+        townName:
+          type: string
+          maxLength: 35
+          description: TownName
+          example: 'Any Town'
+        countrySubDivisionState:
+          type: string
+          maxLength: 35
+          description: CountrySubDivisionState
+          example: 'PA'
+        country:
+          type: string
+          maxLength: 2
+          description: Country
+          example: 'US'
+        addressLine1:
+          type: string
+          maxLength: 70
+          description: AddressLineOne
+          example: 'AddressLineOne'
+        addressLineTwo:
+          type: string
+          maxLength: 70
+          description: AddressLineTwo
+          example: 'AddressLineTwo'
+        addressLineThree:
+          type: string
+          maxLength: 70
+          description: AddressLineThree
+          example: 'AddressLineThree'
+        addressLineFour:
+          type: string
+          maxLength: 70
+          description: AddressLineFour
+          example: 'AddressLineFour'
+        addressLineFive:
+          type: string
+          maxLength: 70
+          description: AddressLineFive
+          example: 'AddressLineFive'
+        addressLineSix:
+          type: string
+          maxLength: 70
+          description: AddressLineSix
+          example: 'AddressLineSix'
+        addressLineSeven:
+          type: string
+          maxLength: 70
+          description: AddressLineSeven
+          example: 'AddressLineSeven'
+        countryOfResidence:
+          type: string
+          maxLength: 2
+          description: CountryOfResidence
+          example: 'US'
+    PrimaryRemittanceDocumentInfo:
+      properties:
+        documentTypeCode:
+          $ref: '#/components/schemas/DocumentTypeCodeEnum'
+          description: DocumentTypeCodeEnum
+        proprietaryDocumentTypeCode:
+          type: string
+          maxLength: 35
+          description: ProprietaryDocumentTypeCode
+          example: 'Proprietary Code'
+        documentIdentificationNumber:
+          type: string
+          maxLength: 35
+          description: DocumentIdentificationNumber
+          example: 'DOCUMENT 292828'
+        issuer:
+          type: string
+          maxLength: 35
+          description: Issuer
+          example: 'Remittance Issuer'
+    RemittanceAmount:
+      properties:
+        currenyCode:
           type: string
           maxLength: 3
           description: CurrencyCode
           example: 'USD'
         amount:
           type: string
-          maxLength: 15
+          minLength: 19
+          maxLength: 19
           description: |
             Amount
+            Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
+            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Amount must be greater than zero (i.e., at least .01).
+          example: '1234.56789'
+    DateRemittanceDocument:
+      properties:
+        dateRemittanceDocument:
+          type: string
+          maxLength: 8
+          description: DateRemittanceDocument CCYYMMDD
+          example: '20190401'
+    RemittanceFreeText:
+      properties:
+        lineOne:
+          type: string
+          maxLength: 140
+          description: LineOne
+          example: 'Line One Text'
+        lineTwo:
+          type: string
+          maxLength: 140
+          description: LineTwo
+          example: 'Line Two Text'
+        lineThree:
+          type: string
+          maxLength: 140
+          description: LineThree
+          example: 'Line Three Text'
+    AdjustmentInfo:
+      $ref: '#/components/schemas/AdjustmentInfoEnum'
+      description: AdjustmentInfo {8600}
+      properties:
+        creditDebitIndicator:
+          type: string
+          maxLength: 4
+          description: |
+            CreditDebitIndicator
 
-            Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
-            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
-    ExchangeRate:
-      type: string
-      maxLength: 12
-      description: |
-        ExchangeRate
-
-        Must contain at least one numeric character and only one decimal comma marker
-        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-      example: '1.2345'
+            * `CRDT` - Credit
+            * `DBIT` - Debit
+          enum:
+            - CRDT
+            - DBIT
+          example: 'DBIT'
+        currenyCode:
+          type: string
+          maxLength: 3
+          description: CurrencyCode
+          example: 'USD'
+        amount:
+          type: string
+          minLength: 19
+          maxLength: 19
+          description: |
+            Amount
+            Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
+            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Amount must be greater than zero (i.e., at least .01).
+          example: '1234.56789'
+        additionalInfo:
+          type: string
+          maxLength: 140
+          description: AdditionalInfo
+          example: 'Additional Info'
+    SecondaryRemittanceDocumentInfo:
+      $ref: '#/components/schemas/SecondaryRemittanceDocumentInfoEnum'
+      description: SecondaryRemittanceDocumentInfo
+      properties:
+        proprietaryDocumentTypeCode:
+          type: string
+          maxLength: 35
+          description: proprietaryDocumentTypeCode
+          example: 'Proprietary'
+        documentIdentificationNumber:
+          type: string
+          maxLength: 35
+          description: documentIdentificationNumber
+          example: 'Document2'
+        issuer:
+          type: string
+          maxLength: 35
+          description: Issuer
+          example: 'Issuer'
+    ServiceMessageInfo:
+      properties:
+        lineOne:
+          type: string
+          maxLength: 35
+          description: LineOne
+          example: 'Line One Text'
+        lineTwo:
+          type: string
+          maxLength: 35
+          description: LineTwo
+          example: 'Line Two Text'
+        lineThree:
+          type: string
+          maxLength: 35
+          description: LineThree
+          example: 'Line Three Text'
+        lineFour:
+          type: string
+          maxLength: 35
+          description: LineFour
+          example: 'Line Four Text'
+        lineFive:
+          type: string
+          maxLength: 35
+          description: LineFive
+          example: 'Line Five Text'
+        lineSix:
+          type: string
+          maxLength: 35
+          description: LineSix
+          example: 'Line Six Text'
+        lineSeven:
+          type: string
+          maxLength: 35
+          description: LineSeven
+          example: 'Line Seven Text'
+        lineEight:
+          type: string
+          maxLength: 35
+          description: LineEight
+          example: 'Line Eight Text'
+        lineNine:
+          type: string
+          maxLength: 35
+          description: LineNine
+          example: 'Line Nine Text'
+        lineTen:
+          type: string
+          maxLength: 35
+          description: LineTen
+          example: 'Line Ten Text'
+        lineEleven:
+          type: string
+          maxLength: 35
+          description: LineEleven
+          example: 'Line Eleven Text'
+        lineTwelve:
+          type: string
+          maxLength: 35
+          description: LineTwelve
+          example: 'Line Twelve Text'
     Address:
       description: Address
       properties:
@@ -1059,6 +1464,7 @@ components:
         - PHN
         - TLX
         - WRE
+      example: 'HLD'
     LocalInstrumentEnum:
       type: string
       maxLength: 4
@@ -1119,6 +1525,178 @@ components:
         - 8
         - 9
       example: '1'
+    RemittanceLocationMethodEnum:
+      type: string
+      maxLength: 4
+      description: |
+        RemittanceLocationMethod
+
+        * `EDIC` - Electronic Data Interchange
+        * `EMAL` - Email
+        * `FAXI` - Fax
+        * `POST` - Postal services
+        * `SMS` - Short Message Service (text)
+        * `URI` - Uniform Resource Identifier
+      enum:
+        - EDIC
+        - EMAL
+        - FAXI
+        - POST
+        - SMS
+        - URI
+      example: 'EDIC'
+    AddressTypeEnum:
+      type: string
+      maxLength: 4
+      description: |
+        addressType
+
+        * `ADDR` - Complete Postal Address
+        * `BIZZ` - Business Address
+        * `DLVY` - Delivery Address
+        * `HOME` - Home Address
+        * `MLTO` - Mail Address
+        * `PBOX` - Post Office Box
+      enum:
+        - ADDR
+        - BIZZ
+        - DLVY
+        - HOME
+        - MLTO
+        - PBOX
+      example: 'ADDR'
+    IdentificationTypeEnum:
+      type: string
+      maxLength: 2
+      description: |
+        IdentificationType
+
+        * `OI` - Organization ID
+        * `PI` - Private ID
+      enum:
+        - OI
+        - PI
+      example: 'OI'
+    IdentificationCodeEnum:
+      type: string
+      maxLength: 4
+      description: |
+        IdentificationCode
+
+        Organization Identification Codes
+
+        * `BANK` - Bank Party Identification
+        * `CUST` - Customer Number
+        * `DUNS` - Data Universal Number System (Dun & Bradstreet)
+        * `EMPL` - Employer Identification Number
+        * `GS1G` - Global Location Number
+        * `PROP` - Proprietary Identification Number
+        * `SWBB` - SWIFT BIC or BEI
+        * `TXID` - Tax Identification Number
+
+        Private Identification Codes
+
+        * `ARNU` - Alien Registration Number
+        * `CCPT` - Passport Number
+        * `CUST` - Customer Number
+        * `DPOB` - Date & Place of Birth
+        * `DRLC` - Driver’s License Number
+        * `EMPL` - Employee Identification Number
+        * `NIDN` - National Identity Number
+        * `PROP` - Proprietary Identification Number
+        * `SOSE` - Social Security Number
+        * `TXID` - Tax Identification Number
+      example: 'BANK'
+    DocumentTypeCodeEnum:
+        type: string
+        maxLength: 4
+        description: |
+          DocumentTypeCode
+
+          * `AROI` - Accounts Receivable Open Item
+          * `BOLD` - Bill of Lading Shipping Notice
+          * `CINV` - Commercial Invoice
+          * `CMCN` - Commercial Contract
+          * `CNFA` - Credit Note Related to Financial Adjustment
+          * `CREN` - Credit Note
+          * `DEBN` - Debit Note
+          * `DISP` - Dispatch Advice
+          * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice
+          * `MSIN` - Metered Service Invoice
+          * `PROP` - Proprietary Document Type
+          * `PUOR` - Purchase Order
+          * `SBIN` - Self Billed Invoice
+          * `SOAC` - Statement of Account
+          * `TSUT` - Trade Services Utility Transaction VCHR Voucher
+        enum:
+          - AROI
+          - BOLD
+          - CINV
+          - CMCN
+          - CNFA
+          - CREN
+          - DEBN
+          - DISP
+          - DNFA
+          - MSIN
+          - PROP
+          - PUOR
+          - SBIN
+          - SOAC
+          - TSUT
+        example:  'AROI'
+    AdjustmentInfoEnum:
+      type: string
+      maxLength: 4
+      description: |
+        AdjustmentInfo
+
+        * `01` - Pricing Error
+        * `03` - Extension Error
+        * `04` - Item Not Accepted (Damaged)
+        * `05` - Item Not Accepted (Quality)
+        * `06` - Quantity Contested 07   Incorrect Product
+        * `11` - Returns (Damaged)
+        * `12` - Returns (Quality)
+        * `59` - Item Not Received
+        * `75` - Total Order Not Received
+        * `81` - Credit as Agreed
+        * `CM` - Covered by Credit Memo
+      enum:
+        - 01
+        - 03
+        - 04
+        - 05
+        - 06
+        - 11
+        - 12
+        - 59
+        - 75
+        - 81
+        - CM
+      example: 'CM'
+    SecondaryRemittanceDocumentInfoEnum:
+      type: string
+      maxLength: 4
+      description: |
+        SecondaryRemittanceDocumentInfo
+
+        * `AROI` - Accounts Receivable Open Item
+        * `DISP` - Dispatch Advice
+        * `FXDR` - Foreign Exchange Deal Reference
+        * `PROP` - Proprietary Document Type PUOR Purchase Order
+        * `RADM` - Remittance Advice Message
+        * `RPIN` - Related Payment Instruction
+        * `SCOR1` - Structured Communication Reference VCHR Voucher
+      enum:
+        - AROI
+        - DISP
+        - FXDR
+        - PROP
+        - RADM
+        - RPIN
+        - SCOR1
+      example: 'AROI'
     Error:
       required:
         - error

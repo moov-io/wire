@@ -47,6 +47,18 @@ Name | Type | Description | Notes
 **RemittanceInfo** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
 **SenderToReceiverInfo** | [**CoverPaymentInfo**](CoverPaymentInfo.md) |  | [optional] 
 **UnstructuredAddendaInfo** | [**UnstructuredAddendaInfo**](UnstructuredAddendaInfo.md) |  | [optional] 
+**RelatedRemittanceInformation** | [**RelatedRemittanceInformation**](RelatedRemittanceInformation.md) |  | [optional] 
+**RemittanceOriginator** | [**RemittanceOriginator**](RemittanceOriginator.md) |  | [optional] 
+**RemittanceBeneficiary** | [**RemittanceBeneficiary**](RemittanceBeneficiary.md) |  | [optional] 
+**PrimaryRemittanceDocumentInfo** | [**PrimaryRemittanceDocumentInfo**](PrimaryRemittanceDocumentInfo.md) |  | [optional] 
+**ActualAmountPaid** | [**RemittanceAmount**](RemittanceAmount.md) |  | [optional] 
+**GrossAmountRemittanceDocument** | [**RemittanceAmount**](RemittanceAmount.md) |  | [optional] 
+**AmountNegotiatedDiscount** | [**RemittanceAmount**](RemittanceAmount.md) |  | [optional] 
+**AdjustmentInfo** | [**AdjustmentInfoEnum**](AdjustmentInfoEnum.md) |  | [optional] 
+**DateRemittanceDocument** | [**DateRemittanceDocument**](DateRemittanceDocument.md) |  | [optional] 
+**SecondaryRemittanceDocumentInfo** | [**SecondaryRemittanceDocumentInfoEnum**](SecondaryRemittanceDocumentInfoEnum.md) |  | [optional] 
+**RemittanceFreeText** | [**RemittanceFreeText**](RemittanceFreeText.md) |  | [optional] 
+**ServiceMessageInfo** | [**ServiceMessageInfo**](ServiceMessageInfo.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

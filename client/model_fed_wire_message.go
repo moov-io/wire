@@ -60,4 +60,16 @@ type FedWireMessage struct {
 	RemittanceInfo CoverPaymentInfo `json:"remittanceInfo,omitempty"`
 	SenderToReceiverInfo CoverPaymentInfo `json:"senderToReceiverInfo,omitempty"`
 	UnstructuredAddendaInfo UnstructuredAddendaInfo `json:"unstructuredAddendaInfo,omitempty"`
+	RelatedRemittanceInformation RelatedRemittanceInformation `json:"relatedRemittanceInformation,omitempty"`
+	RemittanceOriginator RemittanceOriginator `json:"remittanceOriginator,omitempty"`
+	RemittanceBeneficiary RemittanceBeneficiary `json:"remittanceBeneficiary,omitempty"`
+	PrimaryRemittanceDocumentInfo PrimaryRemittanceDocumentInfo `json:"primaryRemittanceDocumentInfo,omitempty"`
+	ActualAmountPaid RemittanceAmount `json:"actualAmountPaid,omitempty"`
+	GrossAmountRemittanceDocument RemittanceAmount `json:"grossAmountRemittanceDocument,omitempty"`
+	AmountNegotiatedDiscount RemittanceAmount `json:"amountNegotiatedDiscount,omitempty"`
+	AdjustmentInfo AdjustmentInfoEnum `json:"adjustmentInfo,omitempty"`
+	DateRemittanceDocument DateRemittanceDocument `json:"dateRemittanceDocument,omitempty"`
+	SecondaryRemittanceDocumentInfo SecondaryRemittanceDocumentInfoEnum `json:"secondaryRemittanceDocumentInfo,omitempty"`
+	RemittanceFreeText RemittanceFreeText `json:"remittanceFreeText,omitempty"`
+	ServiceMessageInfo ServiceMessageInfo `json:"serviceMessageInfo,omitempty"`
 }
