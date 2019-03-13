@@ -380,6 +380,14 @@ components:
               addressLineThree: addressLineThree
             name: name
           senderReference: Reference
+          paymentNotification:
+            contactMobileNumber: 555.555.555
+            contactName: Wade Arnold
+            faxNumber: 555.555.5555
+            contactPhoneNumber: 555-555-5555
+            paymentNotificationIndicator: "1"
+            contactNotificationElectronicAddress: https://moov.io/
+            endToEndIdentification: WireTransfer 10001
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -582,6 +590,14 @@ components:
               addressLineThree: addressLineThree
             name: name
           senderReference: Reference
+          paymentNotification:
+            contactMobileNumber: 555.555.555
+            contactName: Wade Arnold
+            faxNumber: 555.555.5555
+            contactPhoneNumber: 555-555-5555
+            paymentNotificationIndicator: "1"
+            contactNotificationElectronicAddress: https://moov.io/
+            endToEndIdentification: WireTransfer 10001
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -797,6 +813,14 @@ components:
               addressLineThree: addressLineThree
             name: name
           senderReference: Reference
+          paymentNotification:
+            contactMobileNumber: 555.555.555
+            contactName: Wade Arnold
+            faxNumber: 555.555.5555
+            contactPhoneNumber: 555-555-5555
+            paymentNotificationIndicator: "1"
+            contactNotificationElectronicAddress: https://moov.io/
+            endToEndIdentification: WireTransfer 10001
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -999,6 +1023,14 @@ components:
               addressLineThree: addressLineThree
             name: name
           senderReference: Reference
+          paymentNotification:
+            contactMobileNumber: 555.555.555
+            contactName: Wade Arnold
+            faxNumber: 555.555.5555
+            contactPhoneNumber: 555-555-5555
+            paymentNotificationIndicator: "1"
+            contactNotificationElectronicAddress: https://moov.io/
+            endToEndIdentification: WireTransfer 10001
           instructingFinancialInstitution:
             identificationCode: B
             identifier: identifier
@@ -1215,6 +1247,14 @@ components:
             addressLineThree: addressLineThree
           name: name
         senderReference: Reference
+        paymentNotification:
+          contactMobileNumber: 555.555.555
+          contactName: Wade Arnold
+          faxNumber: 555.555.5555
+          contactPhoneNumber: 555-555-5555
+          paymentNotificationIndicator: "1"
+          contactNotificationElectronicAddress: https://moov.io/
+          endToEndIdentification: WireTransfer 10001
         instructingFinancialInstitution:
           identificationCode: B
           identifier: identifier
@@ -1341,6 +1381,8 @@ components:
           type: string
         localInstrument:
           $ref: '#/components/schemas/LocalInstrument'
+        paymentNotification:
+          $ref: '#/components/schemas/PaymentNotification'
         charges:
           $ref: '#/components/schemas/Charges'
         instructedAmount:
@@ -2010,6 +2052,48 @@ components:
           example: WJD786363
           maxLength: 35
           type: string
+    PaymentNotification:
+      example:
+        contactMobileNumber: 555.555.555
+        contactName: Wade Arnold
+        faxNumber: 555.555.5555
+        contactPhoneNumber: 555-555-5555
+        paymentNotificationIndicator: "1"
+        contactNotificationElectronicAddress: https://moov.io/
+        endToEndIdentification: WireTransfer 10001
+      properties:
+        paymentNotificationIndicator:
+          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
+        contactNotificationElectronicAddress:
+          description: ContactNotificationElectronicAddress
+          example: https://moov.io/
+          maxLength: 2048
+          type: string
+        contactName:
+          description: ContactName
+          example: Wade Arnold
+          maxLength: 140
+          type: string
+        contactPhoneNumber:
+          description: ContactPhoneNumber
+          example: 555-555-5555
+          maxLength: 35
+          type: string
+        contactMobileNumber:
+          description: ContactMobileNumber
+          example: 555.555.555
+          maxLength: 35
+          type: string
+        faxNumber:
+          description: FaxNumber
+          example: 555.555.5555
+          maxLength: 35
+          type: string
+        endToEndIdentification:
+          description: EndtoEndIdentification
+          example: WireTransfer 10001
+          maxLength: 35
+          type: string
     InstructedAmount:
       example:
         amount: amount
@@ -2221,6 +2305,26 @@ components:
       - B
       - S
       example: B
+      maxLength: 1
+      type: string
+    PaymentNotificationIndicatorEnum:
+      description: |
+        PaymentNotificationIndicator
+
+        * `0 - 6` - Reserved for market practice conventions.
+        * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+      enum:
+      - "0"
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+      - "5"
+      - "6"
+      - "7"
+      - "8"
+      - "9"
+      example: "1"
       maxLength: 1
       type: string
     Error:

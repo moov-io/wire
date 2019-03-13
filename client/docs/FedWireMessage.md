@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **SenderReference** | **string** | SenderReference | [optional] 
 **PreviousMessageIdentifier** | **string** | PreviousMessageIdentifier | [optional] 
 **LocalInstrument** | [**LocalInstrument**](LocalInstrument.md) |  | [optional] 
+**PaymentNotification** | [**PaymentNotification**](PaymentNotification.md) |  | [optional] 
 **Charges** | [**Charges**](Charges.md) |  | [optional] 
 **InstructedAmount** | [**InstructedAmount**](InstructedAmount.md) |  | [optional] 
 **ExchangeRate** | **string** | ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345).  | [optional] 

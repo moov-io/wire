@@ -23,6 +23,7 @@ type FedWireMessage struct {
 	// PreviousMessageIdentifier
 	PreviousMessageIdentifier string `json:"previousMessageIdentifier,omitempty"`
 	LocalInstrument LocalInstrument `json:"localInstrument,omitempty"`
+	PaymentNotification PaymentNotification `json:"paymentNotification,omitempty"`
 	Charges Charges `json:"charges,omitempty"`
 	InstructedAmount InstructedAmount `json:"instructedAmount,omitempty"`
 	// ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345). 

@@ -66,6 +66,8 @@ Class | Method | HTTP request | Description
  - [LocalInstrumentEnum](docs/LocalInstrumentEnum.md)
  - [OriginatorToBeneficiaryInfo](docs/OriginatorToBeneficiaryInfo.md)
  - [PaymentMethodToBeneficiary](docs/PaymentMethodToBeneficiary.md)
+ - [PaymentNotification](docs/PaymentNotification.md)
+ - [PaymentNotificationIndicatorEnum](docs/PaymentNotificationIndicatorEnum.md)
  - [Personal](docs/Personal.md)
  - [PersonalIdentificationCodeEnum](docs/PersonalIdentificationCodeEnum.md)
  - [ReceiverDepositoryInstitution](docs/ReceiverDepositoryInstitution.md)

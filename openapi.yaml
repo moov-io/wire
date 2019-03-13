@@ -234,7 +234,6 @@ components:
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
           description: BusinessFunctionCode {3600}
-        # ToDo: Payment Notification
         senderReference:
           $ref: '#/components/schemas/SenderReference'
           description: SenderReference {3320}
@@ -244,6 +243,9 @@ components:
         localInstrument:
           $ref: '#/components/schemas/LocalInstrument'
           description: LocalInstrument {3610}
+        paymentNotification:
+          $ref: '#/components/schemas/PaymentNotification'
+          description: PaymentNotification {3620}
         charges:
           $ref: '#/components/schemas/Charges'
           description: Charges {3700}
@@ -854,6 +856,42 @@ components:
           maxLength: 35
           description: ProprietaryCode
           example: 'WJD786363'
+    PaymentNotification:
+      properties:
+        paymentNotificationIndicator:
+          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
+          description: PaymentNotificationIndicator
+        contactNotificationElectronicAddress:
+          type: string
+          maxLength: 2048
+          description: ContactNotificationElectronicAddress
+          example: 'https://moov.io/'
+        contactName:
+          type: string
+          maxLength: 140
+          description: ContactName
+          example: 'Wade Arnold'
+        contactPhoneNumber:
+          type: string
+          maxLength: 35
+          description: ContactPhoneNumber
+          example: '555-555-5555'
+        contactMobileNumber:
+          type: string
+          maxLength: 35
+          description: ContactMobileNumber
+          example: '555.555.555'
+        faxNumber:
+          type: string
+          maxLength: 35
+          description: FaxNumber
+          example: '555.555.5555'
+        endToEndIdentification:
+          type: string
+          maxLength: 35
+          description: EndtoEndIdentification
+          #ToDo Review
+          example: 'WireTransfer 10001'
     InstructedAmount:
       properties:
         currencyCode:
@@ -1061,6 +1099,26 @@ components:
         - B
         - S
       example: 'B'
+    PaymentNotificationIndicatorEnum:
+      type: string
+      maxLength: 1
+      description: |
+        PaymentNotificationIndicator
+
+        * `0 - 6` - Reserved for market practice conventions.
+        * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+      enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+        - 7
+        - 8
+        - 9
+      example: '1'
     Error:
       required:
         - error
