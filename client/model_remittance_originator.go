@@ -30,6 +30,6 @@ type RemittanceOriginator struct {
 	ContactFaxNumber string `json:"contactFaxNumber,omitempty"`
 	// ContactElectronicAddress ( i.e., E-mail or URL address)
 	ContactElectronicAddress string `json:"contactElectronicAddress,omitempty"`
-	// ContactOtherInformation
-	ContactOtherInformation string `json:"contactOtherInformation,omitempty"`
+	// ContactOther
+	ContactOther string `json:"contactOther,omitempty"`
 }

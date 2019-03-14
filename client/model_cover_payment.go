@@ -9,8 +9,10 @@
 
 package openapi
 
-type PaymentMethodToBeneficiary struct {
-	// PaymentMethod
-	PaymentMethod string `json:"paymentMethod,omitempty"`
-	Additional string `json:"Additional,omitempty"`
+// CoverPayment
+type CoverPayment struct {
+	// SwiftFieldTag
+	SwiftFieldTag string `json:"swiftFieldTag,omitempty"`
+	// SwiftLine
+	SwiftLine map[string]interface{} `json:"swiftLine,omitempty"`
 }

@@ -1,4 +1,4 @@
-# SenderSuppliedInfo
+# SenderSupplied
 
 ## Properties
 Name | Type | Description | Notes

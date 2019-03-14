@@ -11,7 +11,11 @@ package openapi
 
 // FEDWireMessage
 type FedWireMessage struct {
-	SenderSuppliedInfo SenderSuppliedInfo `json:"senderSuppliedInfo"`
+	MessageDisposition MessageDisposition `json:"messageDisposition,omitempty"`
+	ReceiptTimeStamp ReceiptTimeStamp `json:"receiptTimeStamp,omitempty"`
+	OutputMessageAccountabilityData OutputMessageAccountabilityData `json:"outputMessageAccountabilityData,omitempty"`
+	Error FedWireError `json:"error,omitempty"`
+	SenderSupplied SenderSupplied `json:"senderSupplied"`
 	TypeSubType TypeSubType `json:"typeSubType"`
 	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData"`
 	Amount Amount `json:"amount"`
@@ -28,7 +32,7 @@ type FedWireMessage struct {
 	InstructedAmount InstructedAmount `json:"instructedAmount,omitempty"`
 	// ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345). 
 	ExchangeRate string `json:"exchangeRate,omitempty"`
-	IntermediaryFinancialInstitution FinancialInstitution `json:"intermediaryFinancialInstitution,omitempty"`
+	BeneficiaryIntermediaryFinancialInstitution FinancialInstitution `json:"beneficiaryIntermediaryFinancialInstitution,omitempty"`
 	BeneficiaryFinancialInstitution FinancialInstitution `json:"beneficiaryFinancialInstitution,omitempty"`
 	Beneficiary Personal `json:"beneficiary,omitempty"`
 	// ReferenceForBeneficiary {4320}
@@ -40,36 +44,36 @@ type FedWireMessage struct {
 	OriginatorFinancialInstitution FinancialInstitution `json:"originatorFinancialInstitution,omitempty"`
 	InstructingFinancialInstitution FinancialInstitution `json:"instructingFinancialInstitution,omitempty"`
 	AccountCreditedDrawdown AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`
-	OriginatorToBeneficiaryInfo OriginatorToBeneficiaryInfo `json:"originatorToBeneficiaryInfo,omitempty"`
-	ReceiverFinancialInstitutionInfo FiToFiInfo `json:"receiverFinancialInstitutionInfo,omitempty"`
-	DrawdownDebitAccountAdviceInfo AdviceInfo `json:"drawdownDebitAccountAdviceInfo,omitempty"`
-	IntermediaryFinancialInstitutionInfo FiToFiInfo `json:"intermediaryFinancialInstitutionInfo,omitempty"`
-	IntermediaryFinacialInstitutionAdviceInfo AdviceInfo `json:"intermediaryFinacialInstitutionAdviceInfo,omitempty"`
-	BeneficiaryFinancialInstitutionInfo FiToFiInfo `json:"beneficiaryFinancialInstitutionInfo,omitempty"`
-	BeneficiaryFinancialInstitutionAdviceInfo AdviceInfo `json:"beneficiaryFinancialInstitutionAdviceInfo,omitempty"`
-	BeneficiaryInfo FiToFiInfo `json:"beneficiaryInfo,omitempty"`
-	BeneficiaryAdviceInfo AdviceInfo `json:"beneficiaryAdviceInfo,omitempty"`
+	OriginatorToBeneficiary OriginatorToBeneficiary `json:"originatorToBeneficiary,omitempty"`
+	ReceiverFinancialInstitution FiToFi `json:"receiverFinancialInstitution,omitempty"`
+	DrawdownDebitAccountAdvice Advice `json:"drawdownDebitAccountAdvice,omitempty"`
+	IntermediaryFinancialInstitution FiToFi `json:"intermediaryFinancialInstitution,omitempty"`
+	IntermediaryFinacialInstitutionAdvice Advice `json:"intermediaryFinacialInstitutionAdvice,omitempty"`
+	OriginatorBeneficiaryFinancialInstitution FiToFi `json:"originatorBeneficiaryFinancialInstitution,omitempty"`
+	OriginatorBeneficiaryFinancialInstitutionAdvice Advice `json:"originatorBeneficiaryFinancialInstitutionAdvice,omitempty"`
+	OriginatorBeneficiary FiToFi `json:"originatorBeneficiary,omitempty"`
+	BeneficiaryAdvice Advice `json:"beneficiaryAdvice,omitempty"`
 	PaymentMethodToBeneficiary PaymentMethodToBeneficiary `json:"paymentMethodToBeneficiary,omitempty"`
-	AdditionalFIToFIInfo AdditionalFiToFiInfo `json:"additionalFIToFIInfo,omitempty"`
-	CurrencyInstructedAmount CoverPaymentInfo `json:"currencyInstructedAmount,omitempty"`
-	OrderingCustomer CoverPaymentInfo `json:"orderingCustomer,omitempty"`
-	OrderingInstitution CoverPaymentInfo `json:"orderingInstitution,omitempty"`
-	IntermediaryInstitution CoverPaymentInfo `json:"intermediaryInstitution,omitempty"`
-	InstitutionAccount CoverPaymentInfo `json:"institutionAccount,omitempty"`
-	BeneficiaryCustomer CoverPaymentInfo `json:"beneficiaryCustomer,omitempty"`
-	RemittanceInfo CoverPaymentInfo `json:"remittanceInfo,omitempty"`
-	SenderToReceiverInfo CoverPaymentInfo `json:"senderToReceiverInfo,omitempty"`
-	UnstructuredAddendaInfo UnstructuredAddendaInfo `json:"unstructuredAddendaInfo,omitempty"`
-	RelatedRemittanceInformation RelatedRemittanceInformation `json:"relatedRemittanceInformation,omitempty"`
+	AdditionalFIToFI AdditionalFiToFi `json:"additionalFIToFI,omitempty"`
+	CurrencyInstructedAmount CoverPayment `json:"currencyInstructedAmount,omitempty"`
+	OrderingCustomer CoverPayment `json:"orderingCustomer,omitempty"`
+	OrderingInstitution CoverPayment `json:"orderingInstitution,omitempty"`
+	IntermediaryInstitution CoverPayment `json:"intermediaryInstitution,omitempty"`
+	InstitutionAccount CoverPayment `json:"institutionAccount,omitempty"`
+	BeneficiaryCustomer CoverPayment `json:"beneficiaryCustomer,omitempty"`
+	Remittance CoverPayment `json:"remittance,omitempty"`
+	SenderToReceiver CoverPayment `json:"senderToReceiver,omitempty"`
+	UnstructuredAddenda UnstructuredAddenda `json:"unstructuredAddenda,omitempty"`
+	RelatedRemittance RelatedRemittance `json:"relatedRemittance,omitempty"`
 	RemittanceOriginator RemittanceOriginator `json:"remittanceOriginator,omitempty"`
 	RemittanceBeneficiary RemittanceBeneficiary `json:"remittanceBeneficiary,omitempty"`
-	PrimaryRemittanceDocumentInfo PrimaryRemittanceDocumentInfo `json:"primaryRemittanceDocumentInfo,omitempty"`
+	PrimaryRemittanceDocument PrimaryRemittanceDocument `json:"primaryRemittanceDocument,omitempty"`
 	ActualAmountPaid RemittanceAmount `json:"actualAmountPaid,omitempty"`
 	GrossAmountRemittanceDocument RemittanceAmount `json:"grossAmountRemittanceDocument,omitempty"`
 	AmountNegotiatedDiscount RemittanceAmount `json:"amountNegotiatedDiscount,omitempty"`
-	AdjustmentInfo AdjustmentInfoEnum `json:"adjustmentInfo,omitempty"`
+	Adjustment AdjustmentEnum `json:"adjustment,omitempty"`
 	DateRemittanceDocument DateRemittanceDocument `json:"dateRemittanceDocument,omitempty"`
-	SecondaryRemittanceDocumentInfo SecondaryRemittanceDocumentInfoEnum `json:"secondaryRemittanceDocumentInfo,omitempty"`
+	SecondaryRemittanceDocument SecondaryRemittanceDocumentEnum `json:"secondaryRemittanceDocument,omitempty"`
 	RemittanceFreeText RemittanceFreeText `json:"remittanceFreeText,omitempty"`
-	ServiceMessageInfo ServiceMessageInfo `json:"serviceMessageInfo,omitempty"`
+	ServiceMessage ServiceMessage `json:"serviceMessage,omitempty"`
 }

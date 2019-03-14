@@ -9,8 +9,8 @@
 
 package openapi
 
-// SenderSuppliedInfo {1500}
-type SenderSuppliedInfo struct {
+// SenderSupplied {1500}
+type SenderSupplied struct {
 	// FormatVersion 30 
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation

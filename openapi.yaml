@@ -186,7 +186,6 @@ paths:
           description: Permanently deleted File.
         '404':
           description: A File with the specified ID was not found.
-# ToDo: Review all properties to see whether 'Info' is needed or if that can be removed
 # ToDo: Review what can be consolidated?
 components:
   schemas:
@@ -214,9 +213,22 @@ components:
     FEDWireMessage:
       description: FEDWireMessage
       properties:
-        senderSuppliedInfo:
-          $ref: '#/components/schemas/SenderSuppliedInfo'
-          description: SenderSuppliedInfo {1500}
+        # TAGS 1100, 1110, 1120, 1130 is information Appended by the Fedwire Funds Service
+        messageDisposition:
+          $ref: '#/components/schemas/MessageDisposition'
+          description: MessageDisposition {1100}
+        receiptTimeStamp:
+          $ref: '#/components/schemas/ReceiptTimeStamp'
+          description: ReceiptTimeStamp {1110}
+        outputMessageAccountabilityData:
+          $ref: '#/components/schemas/OutputMessageAccountabilityData'
+          description: OutputMessageAccountabilityData {1120}
+        error:
+          $ref: '#/components/schemas/FEDWireError'
+          description: Error {1130}
+        senderSupplied:
+          $ref: '#/components/schemas/SenderSupplied'
+          description: SenderSupplied {1500}
         typeSubType:
           $ref: '#/components/schemas/TypeSubType'
           description: TypeSubType {1510}
@@ -256,7 +268,7 @@ components:
         exchangeRate:
           $ref: '#/components/schemas/ExchangeRate'
           description: ExchangeRate {3720}
-        intermediaryFinancialInstitution:
+        beneficiaryIntermediaryFinancialInstitution:
           $ref: '#/components/schemas/FinancialInstitution'
           description: IntermediaryFinancialInstitution {4000}
         beneficiaryFinancialInstitution:
@@ -287,78 +299,78 @@ components:
         accountCreditedDrawdown:
           $ref: '#/components/schemas/AccountCreditedDrawdown'
           description: AccountCreditedDrawdown {5400}
-        originatorToBeneficiaryInfo:
-          $ref: '#/components/schemas/OriginatorToBeneficiaryInfo'
-          description: OriginatorToBeneficiaryInfo {6000}
-        receiverFinancialInstitutionInfo:
-          $ref: '#/components/schemas/FIToFIInfo'
-          description: ReceiverFinancialInstitutionInfo {6100}
-        drawdownDebitAccountAdviceInfo:
-          $ref: '#/components/schemas/AdviceInfo'
-          description: DrawdownDebitAccountAdviceInfo {6110}
-        intermediaryFinancialInstitutionInfo:
-          $ref: '#/components/schemas/FIToFIInfo'
-          description: IntermediaryFinancialInstitutionInfo {6200}
-        intermediaryFinacialInstitutionAdviceInfo:
-          $ref: '#/components/schemas/AdviceInfo'
-          description: IntermediaryFinacialInstitutionAdviceInfo {6210}
-        beneficiaryFinancialInstitutionInfo:
-          $ref: '#/components/schemas/FIToFIInfo'
-          description: BeneficiaryFinancialInstitutionInfo {6300}
-        beneficiaryFinancialInstitutionAdviceInfo:
-          $ref: '#/components/schemas/AdviceInfo'
-          description: BeneficiaryFinacialInstitutionAdviceInfo {6310}
-        beneficiaryInfo:
-          $ref: '#/components/schemas/FIToFIInfo'
-          description: BeneficiaryInfo {6400}
-        beneficiaryAdviceInfo:
-          $ref: '#/components/schemas/AdviceInfo'
-          description: BeneficiaryAdviceInfo {6410}
+        originatorToBeneficiary:
+          $ref: '#/components/schemas/OriginatorToBeneficiary'
+          description: OriginatorToBeneficiary {6000}
+        receiverFinancialInstitution:
+          $ref: '#/components/schemas/FIToFI'
+          description: ReceiverFinancialInstitution {6100}
+        drawdownDebitAccountAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: DrawdownDebitAccountAdvice {6110}
+        intermediaryFinancialInstitution:
+          $ref: '#/components/schemas/FIToFI'
+          description: IntermediaryFinancialInstitution {6200}
+        intermediaryFinacialInstitutionAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: IntermediaryFinacialInstitutionAdvice {6210}
+        originatorBeneficiaryFinancialInstitution:
+          $ref: '#/components/schemas/FIToFI'
+          description: BeneficiaryFinancialInstitution {6300}
+        originatorBeneficiaryFinancialInstitutionAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: BeneficiaryFinacialInstitutionAdvice {6310}
+        originatorBeneficiary:
+          $ref: '#/components/schemas/FIToFI'
+          description: Beneficiary {6400}
+        beneficiaryAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: BeneficiaryAdvice {6410}
         paymentMethodToBeneficiary:
           $ref: '#/components/schemas/PaymentMethodToBeneficiary'
           description: PaymentMethodToBeneficiary {6420}
-        additionalFIToFIInfo:
-          $ref: '#/components/schemas/AdditionalFIToFIInfo'
-          description: AdditionalFIToFIInfo {6500}
+        additionalFIToFI:
+          $ref: '#/components/schemas/AdditionalFIToFI'
+          description: AdditionalFIToFI {6500}
         currencyInstructedAmount:
-          $ref: '#/components/schemas/CoverPaymentInfo'
+          $ref: '#/components/schemas/CoverPayment'
           description: CurrencyInstructedAmount {7033}
         orderingCustomer:
-          $ref: '#/components/schemas/CoverPaymentInfo'
+          $ref: '#/components/schemas/CoverPayment'
           description: OrderingCustomer {7050}
         orderingInstitution:
-          $ref: '#/components/schemas/CoverPaymentInfo'
+          $ref: '#/components/schemas/CoverPayment'
           description: OrderingInstitution {7052}
         intermediaryInstitution:
-          $ref: '#/components/schemas/CoverPaymentInfo'
+          $ref: '#/components/schemas/CoverPayment'
           description: IntermediaryInstitution {7056}
         institutionAccount:
-          $ref: '#/components/schemas/CoverPaymentInfo'
+          $ref: '#/components/schemas/CoverPayment'
           description: InstitutionAccount {7057}
         beneficiaryCustomer:
-          $ref: '#/components/schemas/CoverPaymentInfo'
+          $ref: '#/components/schemas/CoverPayment'
           description: BeneficiaryCustomer {7059}
-        remittanceInfo:
-          $ref: '#/components/schemas/CoverPaymentInfo'
-          description: RemittanceInformation {7070}
-        senderToReceiverInfo:
-          $ref: '#/components/schemas/CoverPaymentInfo'
-          description: SenderToReceiverInfo {7072}
-        unstructuredAddendaInfo:
-          $ref: '#/components/schemas/UnstructuredAddendaInfo'
-          description: UnstructuredAddendaInfo {8200}
-        relatedRemittanceInformation:
-          $ref: '#/components/schemas/RelatedRemittanceInformation'
-          description: RelatedRemittanceInformation {8250}
+        remittance:
+          $ref: '#/components/schemas/CoverPayment'
+          description: Remittance {7070}
+        senderToReceiver:
+          $ref: '#/components/schemas/CoverPayment'
+          description: SenderToReceiver {7072}
+        unstructuredAddenda:
+          $ref: '#/components/schemas/UnstructuredAddenda'
+          description: UnstructuredAddenda {8200}
+        relatedRemittance:
+          $ref: '#/components/schemas/RelatedRemittance'
+          description: RelatedRemittance {8250}
         remittanceOriginator:
           $ref: '#/components/schemas/RemittanceOriginator'
           description: RemittanceOriginator {8300}
         remittanceBeneficiary:
             $ref: '#/components/schemas/RemittanceBeneficiary'
             description: RemittanceBeneficiary {8350}
-        primaryRemittanceDocumentInfo:
-            $ref: '#/components/schemas/PrimaryRemittanceDocumentInfo'
-            description: PrimaryRemittanceDocumentInfo {8400}
+        primaryRemittanceDocument:
+            $ref: '#/components/schemas/PrimaryRemittanceDocument'
+            description: PrimaryRemittanceDocument {8400}
         actualAmountPaid:
           $ref: '#/components/schemas/RemittanceAmount'
           description: ActualAmountPaid {8450}
@@ -368,31 +380,99 @@ components:
         amountNegotiatedDiscount:
           $ref: '#/components/schemas/RemittanceAmount'
           description: AmountNegotiatedDiscount {8550}
-        adjustmentInfo:
-          $ref: '#/components/schemas/AdjustmentInfo'
-          description: AdjustmentInfo {8600}
+        adjustment:
+          $ref: '#/components/schemas/Adjustment'
+          description: Adjustment {8600}
         dateRemittanceDocument:
           $ref: '#/components/schemas/DateRemittanceDocument'
           description: DateRemittanceDocument {8650}
-        secondaryRemittanceDocumentInfo:
-          $ref: '#/components/schemas/SecondaryRemittanceDocumentInfo'
-          description: SecondaryRemittanceDocumentInfo
+        secondaryRemittanceDocument:
+          $ref: '#/components/schemas/SecondaryRemittanceDocument'
+          description: SecondaryRemittanceDocument
         remittanceFreeText:
           $ref: '#/components/schemas/RemittanceFreeText'
           description: RemittanceFreeText {8750}
-        serviceMessageInfo:
-          $ref: '#/components/schemas/ServiceMessageInfo'
-          description: ServiceMessageInformation
+        serviceMessage:
+          $ref: '#/components/schemas/ServiceMessage'
+          description: ServiceMessage
       required:
-        - senderSuppliedInfo
+        - senderSupplied
         - typeSubType
         - inputMessageAccountabilityData
         - amount
         - senderDepositoryInstitution
         - receiverDepositoryInstitution
         - businessFunctionCode
-    SenderSuppliedInfo:
-      description: SenderSuppliedInfo {1500}
+    MessageDisposition:
+      properties:
+        formatVersion:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: |
+            FormatVersion
+            30
+          example: '30'
+        testProductionCode:
+          $ref: '#/components/schemas/TestProductionCodeEnum'
+          description: TestProductionCode
+        messageDuplicationCode:
+          $ref: '#/components/schemas/MessageDuplicationEnum'
+          description: MessageDuplicationCode
+    ReceiptTimeStamp:
+      properties:
+        receiptDate:
+          $ref: '#/components/schemas/DateMMDD'
+          description: ReceiptDate
+        receiptTime:
+          $ref: '#/components/schemas/TimeHHMM'
+          description: ReceiptTime
+        receiptApplicationIdentification:
+          type: string
+          maxLength: 4
+          description: 'ApplicationIdentification'
+          example: 'RB11'
+    OutputMessageAccountabilityData:
+      properties:
+        outputCycleDate:
+          type: string
+          minLength: 8
+          maxLength: 8
+          description: OutputCycleDate (CCYYMMDD)
+          example: '20190401'
+        outputDestinationID:
+          type: string
+          maxLength: 8
+          description: OutputDestinationID
+          example: '12345678'
+        outputDate:
+          $ref: '#/components/schemas/DateMMDD'
+          description: OutputDate
+        outputTime:
+          $ref: '#/components/schemas/TimeHHMM'
+          description: OutputTime
+        outputFRBApplicationIdentification:
+          type: string
+          maxLength: 4
+          description: 'OutputFRBApplicationIdentification'
+          example: 'OB11'
+    FEDWireError:
+       properties:
+         errorCategory:
+           $ref: '#/components/schemas/ErrorCategoryEnum'
+           description: ErrorCategory
+         errorCode:
+           type: string
+           maxLength: 3
+           description: ErrorCode
+           example: 'E99'
+         errorDescription:
+           type: string
+           maxLength: 35
+           description: ErrorDescription
+           example: 'Data Error'
+    SenderSupplied:
+      description: SenderSupplied {1500}
       properties:
         formatVersion:
           type: string
@@ -409,27 +489,14 @@ components:
           description: UserRequestCorrelation
           example: 'TESTDATA'
         testProductionCode:
-          type: string
-          maxLength: 1
-          description: |
-            TestProductionCode
-            * `T` - Test
-            * `P` - Production
-          enum:
-            - T
-            - P
-          example: 'T'
+          $ref: '#/components/schemas/TestProductionCodeEnum'
+          description: TestProductionCode
         messageDuplicationCode:
-          type: string
-          maxLength: 1
-          description: |
-            MessageDuplicationCode
-            * ` ` - Original Message
-            * `P` - Resend
-          enum:
-            - ' '
-            - P
-          example: ''
+          $ref: '#/components/schemas/MessageDuplicationEnum'
+          description: MessageDuplicationCode
+        messageStatusIndicator:
+          $ref: '#/components/schemas/MessageStatusIndicator'
+          description: MessageStatusIndicator
       required:
         - formatVersion
         - userRequestCorrelation
@@ -709,8 +776,8 @@ components:
         - identificationCode
         - identifier
         - name
-    OriginatorToBeneficiaryInfo:
-        description: OriginatorToBeneficiaryInfo
+    OriginatorToBeneficiary:
+        description: OriginatorToBeneficiary
         properties:
           lineOne:
             type: string
@@ -732,8 +799,8 @@ components:
             maxLength: 35
             description: LineFour
             example: 'Line Four'
-    FIToFIInfo:
-      description: FIToFIInfo
+    FIToFI:
+      description: FIToFI
       properties:
         lineOne:
           type: string
@@ -765,8 +832,8 @@ components:
           maxLength: 33
           description: LineSix
           example: 'Line Six'
-    AdviceInfo:
-      description: DrawdownDebitAccountAdviceInfo
+    Advice:
+      description: DrawdownDebitAccountAdvice
       properties:
         adviceCode:
           $ref: '#/components/schemas/AdviceCodeEnum'
@@ -803,11 +870,11 @@ components:
           enum:
             - CHECK
           example: 'CHECK'
-        AdditionalInfo:
+        Additional:
           type: string
           maxLength: 35
           example: "For goods and services"
-    AdditionalFIToFIInfo:
+    AdditionalFIToFI:
       properties:
         lineOne:
           type: string
@@ -839,8 +906,8 @@ components:
           maxLength: 35
           description: LineSix
           example: 'Line Six'
-    CoverPaymentInfo:
-      description: CoverPaymentInfo
+    CoverPayment:
+      description: CoverPayment
       properties:
         swiftFieldTag:
           type: string
@@ -880,7 +947,7 @@ components:
                   maxLength: 35
                   description: SwiftLineSix
                   example: 'Swift Line Six'
-    UnstructuredAddendaInfo:
+    UnstructuredAddenda:
       properties:
         addendaLength:
           type: string
@@ -892,10 +959,10 @@ components:
             of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
             Addenda Length must be 0987).
           example: '0987'
-        addendaInfo:
+        addenda:
           type: string
           maxLength: 8994
-          description: AddendaInfo
+          description: Addenda
           example: 'Payment for goods'
     SenderReference:
       type: string
@@ -953,7 +1020,7 @@ components:
             characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
             marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
           example: 'USD1234,56'
-    RelatedRemittanceInformation:
+    RelatedRemittance:
       properties:
         remittanceIdentification:
           type: string
@@ -1022,11 +1089,11 @@ components:
           maxLength: 2048
           description: ContactElectronicAddress ( i.e., E-mail or URL address)
           example: 'https://moov.io'
-        contactOtherInformation:
+        contactOther:
           type: string
           maxLength: 35
-          description: ContactOtherInformation
-          example: 'Contact Other Information'
+          description: ContactOther
+          example: 'Contact Other'
     RemittanceBeneficiary:
       properties:
         identificationType:
@@ -1143,7 +1210,7 @@ components:
           maxLength: 2
           description: CountryOfResidence
           example: 'US'
-    PrimaryRemittanceDocumentInfo:
+    PrimaryRemittanceDocument:
       properties:
         documentTypeCode:
           $ref: '#/components/schemas/DocumentTypeCodeEnum'
@@ -1204,9 +1271,9 @@ components:
           maxLength: 140
           description: LineThree
           example: 'Line Three Text'
-    AdjustmentInfo:
-      $ref: '#/components/schemas/AdjustmentInfoEnum'
-      description: AdjustmentInfo {8600}
+    Adjustment:
+      $ref: '#/components/schemas/AdjustmentEnum'
+      description: Adjustment {8600}
       properties:
         creditDebitIndicator:
           type: string
@@ -1240,9 +1307,9 @@ components:
           maxLength: 140
           description: AdditionalInfo
           example: 'Additional Info'
-    SecondaryRemittanceDocumentInfo:
-      $ref: '#/components/schemas/SecondaryRemittanceDocumentInfoEnum'
-      description: SecondaryRemittanceDocumentInfo
+    SecondaryRemittanceDocument:
+      $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+      description: SecondaryRemittanceDocument
       properties:
         proprietaryDocumentTypeCode:
           type: string
@@ -1259,7 +1326,7 @@ components:
           maxLength: 35
           description: Issuer
           example: 'Issuer'
-    ServiceMessageInfo:
+    ServiceMessage:
       properties:
         lineOne:
           type: string
@@ -1336,7 +1403,78 @@ components:
           type: string
           maxLength: 35
           description: AddressLineThree
+    DateMMDD:
+      properties:
+       date:
+        type: string
+        minLength: 4
+        maxLength: 4
+        description: |
+          Date
+
+          MMDD, based on the calendar date
+        example: '0401'
+    TimeHHMM:
+      properties:
+        receiptTime:
+          type: string
+          minLength: 4
+          maxLength: 4
+          description: |
+            ReceiptTime
+
+            HHMM, based on a 24-hour clock, Eastern Time
+          example: '1305'
+  # ToDo: Review ENUM's
   # enumerations
+    TestProductionCodeEnum:
+      type: string
+      maxLength: 1
+      description: |
+        TestProductionCode
+
+        * `T` - Test
+        * `P` - Production
+      enum:
+        - T
+        - P
+      example: 'T'
+    MessageDuplicationCodeEnum:
+      type: string
+      maxLength: 1
+      description: |
+        MessageDuplicationCode
+
+        * ` ` - Original Message
+        * `R` - Retrieval of an original message
+        * `P` - Resend
+      enum:
+        - ' '
+        - R
+        - P
+      example: ''
+    MessageStatusIndicator:
+      type: string
+      maxLength: 1
+      description: |
+        Message Status Indicator
+
+        Outgoing Messages
+        * `0` - In process or Intercepted
+        * `2` - Successful with Accounting (Value)
+        * `3` - Rejected due to Error Condition
+        * `7` - Successful without Accounting (Non-Value)
+
+        Incoming Messages
+        * `N` - Successful with Accounting (Value)
+        * `S` - Successful without Accounting (Non-Value)
+      enum:
+        - 0
+        - 2
+        - 3
+        - 7
+        - N
+        - S
     TypeCodeEnum:
       type: string
       maxLength: 2
@@ -1645,11 +1783,11 @@ components:
           - SOAC
           - TSUT
         example:  'AROI'
-    AdjustmentInfoEnum:
+    AdjustmentEnum:
       type: string
       maxLength: 4
       description: |
-        AdjustmentInfo
+        Adjustment
 
         * `01` - Pricing Error
         * `03` - Extension Error
@@ -1675,11 +1813,11 @@ components:
         - 81
         - CM
       example: 'CM'
-    SecondaryRemittanceDocumentInfoEnum:
+    SecondaryRemittanceDocumentEnum:
       type: string
       maxLength: 4
       description: |
-        SecondaryRemittanceDocumentInfo
+        SecondaryRemittanceDocument
 
         * `AROI` - Accounts Receivable Open Item
         * `DISP` - Dispatch Advice
@@ -1697,6 +1835,25 @@ components:
         - RPIN
         - SCOR1
       example: 'AROI'
+    ErrorCategoryEnum:
+      type: string
+      maxLength: 1
+      description: |
+
+        * `E` - Data Error
+        * `F` - Insufficient Balance
+        * `H` - Accountability Error
+        * `I` - In Process or Intercepted
+        * `W` - Cutoff Hour Error
+        * `X` - Duplicate IMAD
+      enum:
+        - E
+        - F
+        - H
+        - I
+        - W
+        - X
+      example: 'E'
     Error:
       required:
         - error

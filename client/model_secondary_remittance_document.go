@@ -9,8 +9,5 @@
 
 package openapi
 
-type PaymentMethodToBeneficiary struct {
-	// PaymentMethod
-	PaymentMethod string `json:"paymentMethod,omitempty"`
-	Additional string `json:"Additional,omitempty"`
+type SecondaryRemittanceDocument struct {
 }
