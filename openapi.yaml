@@ -268,12 +268,12 @@ components:
         exchangeRate:
           $ref: '#/components/schemas/ExchangeRate'
           description: ExchangeRate {3720}
-        beneficiaryIntermediaryFinancialInstitution:
+        beneficiaryIntermediaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
-          description: IntermediaryFinancialInstitution {4000}
-        beneficiaryFinancialInstitution:
+          description: IntermediaryFI {4000}
+        beneficiaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
-          description: BeneficiaryFinancialInstitution {4100}
+          description: BeneficiaryFI {4100}
         beneficiary:
           $ref: '#/components/schemas/Personal'
           description: Beneficiary {4200}
@@ -290,25 +290,25 @@ components:
           description: Originator {5000}
         originatorOptionF:
           description: OriginatorOptionF {5010}
-        originatorFinancialInstitution:
+        originatorFI:
           $ref: '#/components/schemas/FinancialInstitution'
-          description: OriginatorFinancialInstitution {5100}
-        instructingFinancialInstitution:
+          description: OriginatorFI {5100}
+        instructingFI:
           $ref: '#/components/schemas/FinancialInstitution'
-          description: InstructingFinancialInstitution {5200}
+          description: InstructingFI {5200}
         accountCreditedDrawdown:
           $ref: '#/components/schemas/AccountCreditedDrawdown'
           description: AccountCreditedDrawdown {5400}
         originatorToBeneficiary:
           $ref: '#/components/schemas/OriginatorToBeneficiary'
           description: OriginatorToBeneficiary {6000}
-        receiverFinancialInstitution:
+        receiverFI:
           $ref: '#/components/schemas/FIToFI'
-          description: ReceiverFinancialInstitution {6100}
+          description: ReceiverFI {6100}
         drawdownDebitAccountAdvice:
           $ref: '#/components/schemas/Advice'
           description: DrawdownDebitAccountAdvice {6110}
-        intermediaryFinancialInstitution:
+        intermediaryFI:
           $ref: '#/components/schemas/FIToFI'
           description: IntermediaryFinancialInstitution {6200}
         intermediaryFinacialInstitutionAdvice:

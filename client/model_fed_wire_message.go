@@ -32,8 +32,8 @@ type FedWireMessage struct {
 	InstructedAmount InstructedAmount `json:"instructedAmount,omitempty"`
 	// ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345). 
 	ExchangeRate string `json:"exchangeRate,omitempty"`
-	BeneficiaryIntermediaryFinancialInstitution FinancialInstitution `json:"beneficiaryIntermediaryFinancialInstitution,omitempty"`
-	BeneficiaryFinancialInstitution FinancialInstitution `json:"beneficiaryFinancialInstitution,omitempty"`
+	BeneficiaryIntermediaryFI FinancialInstitution `json:"beneficiaryIntermediaryFI,omitempty"`
+	BeneficiaryFI FinancialInstitution `json:"beneficiaryFI,omitempty"`
 	Beneficiary Personal `json:"beneficiary,omitempty"`
 	// ReferenceForBeneficiary {4320}
 	ReferenceForBeneficiary string `json:"referenceForBeneficiary,omitempty"`
@@ -41,13 +41,13 @@ type FedWireMessage struct {
 	Originator Personal `json:"originator,omitempty"`
 	// OriginatorOptionF {5010}
 	OriginatorOptionF map[string]interface{} `json:"originatorOptionF,omitempty"`
-	OriginatorFinancialInstitution FinancialInstitution `json:"originatorFinancialInstitution,omitempty"`
-	InstructingFinancialInstitution FinancialInstitution `json:"instructingFinancialInstitution,omitempty"`
+	OriginatorFI FinancialInstitution `json:"originatorFI,omitempty"`
+	InstructingFI FinancialInstitution `json:"instructingFI,omitempty"`
 	AccountCreditedDrawdown AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`
 	OriginatorToBeneficiary OriginatorToBeneficiary `json:"originatorToBeneficiary,omitempty"`
-	ReceiverFinancialInstitution FiToFi `json:"receiverFinancialInstitution,omitempty"`
+	ReceiverFI FiToFi `json:"receiverFI,omitempty"`
 	DrawdownDebitAccountAdvice Advice `json:"drawdownDebitAccountAdvice,omitempty"`
-	IntermediaryFinancialInstitution FiToFi `json:"intermediaryFinancialInstitution,omitempty"`
+	IntermediaryFI FiToFi `json:"intermediaryFI,omitempty"`
 	IntermediaryFinacialInstitutionAdvice Advice `json:"intermediaryFinacialInstitutionAdvice,omitempty"`
 	OriginatorBeneficiaryFinancialInstitution FiToFi `json:"originatorBeneficiaryFinancialInstitution,omitempty"`
 	OriginatorBeneficiaryFinancialInstitutionAdvice Advice `json:"originatorBeneficiaryFinancialInstitutionAdvice,omitempty"`
