@@ -317,21 +317,21 @@ FilesApiService Gets a list of Files
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *GetFilesOpts - Optional Parameters:
  * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
-@return Files
+@return []File
 */
 
 type GetFilesOpts struct {
 	XRequestId optional.String
 }
 
-func (a *FilesApiService) GetFiles(ctx context.Context, localVarOptionals *GetFilesOpts) (Files, *http.Response, error) {
+func (a *FilesApiService) GetFiles(ctx context.Context, localVarOptionals *GetFilesOpts) ([]File, *http.Response, error) {
 	var (
 		localVarHttpMethod   = strings.ToUpper("Get")
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
 		localVarFileBytes    []byte
-		localVarReturnValue  Files
+		localVarReturnValue  []File
 	)
 
 	// create path and map variables
@@ -383,7 +383,7 @@ func (a *FilesApiService) GetFiles(ctx context.Context, localVarOptionals *GetFi
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v Files
+			var v []File
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"))
 			if err != nil {
 				newErr.error = err.Error()

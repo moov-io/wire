@@ -210,6 +210,10 @@ components:
             $ref: '#/components/schemas/FEDWireMessage'
       required:
         - fedWireMessage
+    Files:
+      type: array
+      items:
+        $ref: '#/components/schemas/File'
     FEDWireMessage:
       description: FEDWireMessage
       properties:
@@ -417,7 +421,7 @@ components:
           $ref: '#/components/schemas/TestProductionCodeEnum'
           description: TestProductionCode
         messageDuplicationCode:
-          $ref: '#/components/schemas/MessageDuplicationEnum'
+          $ref: '#/components/schemas/MessageDuplicationCodeEnum'
           description: MessageDuplicationCode
     ReceiptTimeStamp:
       properties:
@@ -492,7 +496,7 @@ components:
           $ref: '#/components/schemas/TestProductionCodeEnum'
           description: TestProductionCode
         messageDuplicationCode:
-          $ref: '#/components/schemas/MessageDuplicationEnum'
+          $ref: '#/components/schemas/MessageDuplicationCodeEnum'
           description: MessageDuplicationCode
         messageStatusIndicator:
           $ref: '#/components/schemas/MessageStatusIndicator'
@@ -1062,8 +1066,8 @@ components:
           description: DateAndfBirthPlace
           example: '03062013 Chester'
         remittanceData:
-          $ref: '#/components/schemas/RemittanceDemographic'
-          description: RemittanceDemographic
+          $ref: '#/components/schemas/RemittanceData'
+          description: RemittanceData
         contactName:
           type: string
           maxLength: 140
@@ -1118,8 +1122,8 @@ components:
           description: DateAndfBirthPlace
           example: '03062013 Chester'
         remittanceData:
-          $ref: '#/components/schemas/RemittanceDemographic'
-          description: RemittanceDemographi
+          $ref: '#/components/schemas/RemittanceData'
+          description: RemittanceData
     RemittanceData:
       properties:
         name:
@@ -1448,10 +1452,9 @@ components:
         * ` ` - Original Message
         * `R` - Retrieval of an original message
         * `P` - Resend
-      enum:
-        - ' '
-        - R
-        - P
+#      enum:
+#        - R
+#        - P
       example: ''
     MessageStatusIndicator:
       type: string
@@ -1468,13 +1471,13 @@ components:
         Incoming Messages
         * `N` - Successful with Accounting (Value)
         * `S` - Successful without Accounting (Non-Value)
-      enum:
-        - 0
-        - 2
-        - 3
-        - 7
-        - N
-        - S
+#      enum:
+#        - 0
+#        - 2
+#        - 3
+#        - 7
+#        - N
+#        - S
     TypeCodeEnum:
       type: string
       maxLength: 2
@@ -1555,13 +1558,13 @@ components:
         * `F` - Fed Routing Number
         * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
         * `U` - CHIPS Identifier
-      enum:
-        - B
-        - C
-        - D
-        - F
-        - T
-        - U
+#      enum:
+#        - B
+#        - C
+#        - D
+#        - F
+#        - T
+#        - U
       maxLength: 1
       example: 'B'
     PersonalIdentificationCodeEnum:
@@ -1575,13 +1578,13 @@ components:
         * `4` - Alien Registration Number
         * `5` - Corporate Identification
         * `9` - Other Identification
-      enum:
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
-        - 9
+#      enum:
+#        - 1
+#        - 2
+#        - 3
+#        - 4
+#        - 5
+#        - 9
       maxLength: 1
       example: 'B'
     AdviceCodeEnum:
@@ -1639,9 +1642,9 @@ components:
         ChargeDetails
         * `B` - Beneficiary
         * `S` - Shared
-      enum:
-        - B
-        - S
+#      enum:
+#        - B
+#        - S
       example: 'B'
     PaymentNotificationIndicatorEnum:
       type: string
@@ -1651,17 +1654,17 @@ components:
 
         * `0 - 6` - Reserved for market practice conventions.
         * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
-      enum:
-        - 0
-        - 1
-        - 2
-        - 3
-        - 4
-        - 5
-        - 6
-        - 7
-        - 8
-        - 9
+#      enum:
+#        - 0
+#        - 1
+#        - 2
+#        - 3
+#        - 4
+#        - 5
+#        - 6
+#        - 7
+#        - 8
+#        - 9
       example: '1'
     RemittanceLocationMethodEnum:
       type: string
@@ -1766,22 +1769,22 @@ components:
           * `SBIN` - Self Billed Invoice
           * `SOAC` - Statement of Account
           * `TSUT` - Trade Services Utility Transaction VCHR Voucher
-        enum:
-          - AROI
-          - BOLD
-          - CINV
-          - CMCN
-          - CNFA
-          - CREN
-          - DEBN
-          - DISP
-          - DNFA
-          - MSIN
-          - PROP
-          - PUOR
-          - SBIN
-          - SOAC
-          - TSUT
+#        enum:
+#          - AROI
+#          - BOLD
+#          - CINV
+#          - CMCN
+#          - CNFA
+#          - CREN
+#          - DEBN
+#          - DISP
+#          - DNFA
+#          - MSIN
+#          - PROP
+#          - PUOR
+#          - SBIN
+#          - SOAC
+#          - TSUT
         example:  'AROI'
     AdjustmentEnum:
       type: string
@@ -1800,18 +1803,18 @@ components:
         * `75` - Total Order Not Received
         * `81` - Credit as Agreed
         * `CM` - Covered by Credit Memo
-      enum:
-        - 01
-        - 03
-        - 04
-        - 05
-        - 06
-        - 11
-        - 12
-        - 59
-        - 75
-        - 81
-        - CM
+#      enum:
+#        - 01
+#        - 03
+#        - 04
+#        - 05
+#        - 06
+#        - 11
+#        - 12
+#        - 59
+#        - 75
+#        - 81
+#        - CM
       example: 'CM'
     SecondaryRemittanceDocumentEnum:
       type: string
@@ -1826,14 +1829,14 @@ components:
         * `RADM` - Remittance Advice Message
         * `RPIN` - Related Payment Instruction
         * `SCOR1` - Structured Communication Reference VCHR Voucher
-      enum:
-        - AROI
-        - DISP
-        - FXDR
-        - PROP
-        - RADM
-        - RPIN
-        - SCOR1
+#      enum:
+#        - AROI
+#        - DISP
+#        - FXDR
+#        - PROP
+#        - RADM
+#        - RPIN
+#        - SCOR1
       example: 'AROI'
     ErrorCategoryEnum:
       type: string
@@ -1846,13 +1849,13 @@ components:
         * `I` - In Process or Intercepted
         * `W` - Cutoff Hour Error
         * `X` - Duplicate IMAD
-      enum:
-        - E
-        - F
-        - H
-        - I
-        - W
-        - X
+#      enum:
+#        - E
+#        - F
+#        - H
+#        - I
+#        - W
+#        - X
       example: 'E'
     Error:
       required:

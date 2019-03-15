@@ -11,7 +11,8 @@ package openapi
 
 // FinancialInstitution {4200}
 type Personal struct {
-	IdentificationCode PersonalIdentificationCodeEnum `json:"identificationCode"`
+	// IdentificationCode:  * `1` - Passport Number * `2` - Tax Identification Number * `3` - Driver’s License Number * `4` - Alien Registration Number * `5` - Corporate Identification * `9` - Other Identification 
+	IdentificationCode string `json:"identificationCode"`
 	// Identifier
 	Identifier string `json:"identifier"`
 	// Name

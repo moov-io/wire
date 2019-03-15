@@ -19,7 +19,7 @@ type RemittanceOriginator struct {
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
 	// DateAndfBirthPlace
 	DateAndBirthPlace string `json:"dateAndBirthPlace,omitempty"`
-	RemittanceData RemittanceDemographic `json:"remittanceData,omitempty"`
+	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 	// ContactName
 	ContactName string `json:"contactName,omitempty"`
 	// ContactPhoneNumber

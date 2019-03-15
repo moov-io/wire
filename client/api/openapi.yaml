@@ -313,7 +313,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
             identificationCode: C
@@ -381,13 +381,32 @@ components:
           remittanceBeneficiary:
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
+            messageStatusIndicator: messageStatusIndicator
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -527,7 +546,25 @@ components:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
@@ -627,7 +664,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
             identificationCode: C
@@ -695,13 +732,32 @@ components:
           remittanceBeneficiary:
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
+            messageStatusIndicator: messageStatusIndicator
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -841,7 +897,25 @@ components:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
@@ -954,7 +1028,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
             identificationCode: C
@@ -1022,13 +1096,32 @@ components:
           remittanceBeneficiary:
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
+            messageStatusIndicator: messageStatusIndicator
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -1168,7 +1261,25 @@ components:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
@@ -1268,7 +1379,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
             identificationCode: C
@@ -1336,13 +1447,32 @@ components:
           remittanceBeneficiary:
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: '{}'
+            messageDuplicationCode: messageDuplicationCode
+            messageStatusIndicator: messageStatusIndicator
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -1482,7 +1612,25 @@ components:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
             dateAndBirthPlace: 03062013 Chester
-            remittanceData: '{}'
+            remittanceData:
+              country: US
+              townName: Any Town
+              addressType: ADDR
+              addressLineFive: AddressLineFive
+              subDepartment: Service
+              addressLineSix: AddressLineSix
+              countryOfResidence: US
+              streetName: Street Way Boulevard
+              addressLineTwo: AddressLineTwo
+              countrySubDivisionState: PA
+              name: Wade Arnold
+              buildingNumber: 1A
+              addressLine1: AddressLineOne
+              postCode: "19465"
+              department: Buildings
+              addressLineThree: AddressLineThree
+              addressLineFour: AddressLineFour
+              addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
@@ -1558,6 +1706,10 @@ components:
           type: array
       required:
       - fedWireMessage
+    Files:
+      items:
+        $ref: '#/components/schemas/File'
+      type: array
     FEDWireMessage:
       description: FEDWireMessage
       example:
@@ -1596,7 +1748,7 @@ components:
           dateRemittanceDocument: "20190401"
         messageDisposition:
           testProductionCode: T
-          messageDuplicationCode: '{}'
+          messageDuplicationCode: messageDuplicationCode
           formatVersion: "30"
         accountCreditedDrawdown:
           identificationCode: C
@@ -1664,13 +1816,32 @@ components:
         remittanceBeneficiary:
           identificationCode: BANK
           dateAndBirthPlace: 03062013 Chester
-          remittanceData: '{}'
+          remittanceData:
+            country: US
+            townName: Any Town
+            addressType: ADDR
+            addressLineFive: AddressLineFive
+            subDepartment: Service
+            addressLineSix: AddressLineSix
+            countryOfResidence: US
+            streetName: Street Way Boulevard
+            addressLineTwo: AddressLineTwo
+            countrySubDivisionState: PA
+            name: Wade Arnold
+            buildingNumber: 1A
+            addressLine1: AddressLineOne
+            postCode: "19465"
+            department: Buildings
+            addressLineThree: AddressLineThree
+            addressLineFour: AddressLineFour
+            addressLineSeven: AddressLineSeven
           identificationNumber: "192827828"
           identificationType: OI
           identificationNumberIssuer: Identification Number Issuer
         senderSupplied:
           testProductionCode: T
-          messageDuplicationCode: '{}'
+          messageDuplicationCode: messageDuplicationCode
+          messageStatusIndicator: messageStatusIndicator
           userRequestCorrelation: TESTDATA
           formatVersion: "30"
         beneficiary:
@@ -1810,7 +1981,25 @@ components:
           contactMobileNumber: 555.555.5555
           identificationCode: BANK
           dateAndBirthPlace: 03062013 Chester
-          remittanceData: '{}'
+          remittanceData:
+            country: US
+            townName: Any Town
+            addressType: ADDR
+            addressLineFive: AddressLineFive
+            subDepartment: Service
+            addressLineSix: AddressLineSix
+            countryOfResidence: US
+            streetName: Street Way Boulevard
+            addressLineTwo: AddressLineTwo
+            countrySubDivisionState: PA
+            name: Wade Arnold
+            buildingNumber: 1A
+            addressLine1: AddressLineOne
+            postCode: "19465"
+            department: Buildings
+            addressLineThree: AddressLineThree
+            addressLineFour: AddressLineFour
+            addressLineSeven: AddressLineSeven
           contactName: Wade Arnold
           contactFaxNumber: 555.555.5555
           identificationNumber: "192827828"
@@ -2002,11 +2191,39 @@ components:
         amountNegotiatedDiscount:
           $ref: '#/components/schemas/RemittanceAmount'
         adjustment:
-          $ref: '#/components/schemas/AdjustmentEnum'
+          description: |
+            Adjustment
+
+            * `01` - Pricing Error
+            * `03` - Extension Error
+            * `04` - Item Not Accepted (Damaged)
+            * `05` - Item Not Accepted (Quality)
+            * `06` - Quantity Contested 07   Incorrect Product
+            * `11` - Returns (Damaged)
+            * `12` - Returns (Quality)
+            * `59` - Item Not Received
+            * `75` - Total Order Not Received
+            * `81` - Credit as Agreed
+            * `CM` - Covered by Credit Memo
+          example: CM
+          maxLength: 4
+          type: string
         dateRemittanceDocument:
           $ref: '#/components/schemas/DateRemittanceDocument'
         secondaryRemittanceDocument:
-          $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+          description: |
+            SecondaryRemittanceDocument
+
+            * `AROI` - Accounts Receivable Open Item
+            * `DISP` - Dispatch Advice
+            * `FXDR` - Foreign Exchange Deal Reference
+            * `PROP` - Proprietary Document Type PUOR Purchase Order
+            * `RADM` - Remittance Advice Message
+            * `RPIN` - Related Payment Instruction
+            * `SCOR1` - Structured Communication Reference VCHR Voucher
+          example: AROI
+          maxLength: 4
+          type: string
         remittanceFreeText:
           $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
@@ -2022,7 +2239,7 @@ components:
     MessageDisposition:
       example:
         testProductionCode: T
-        messageDuplicationCode: '{}'
+        messageDuplicationCode: messageDuplicationCode
         formatVersion: "30"
       properties:
         formatVersion:
@@ -2036,7 +2253,14 @@ components:
         testProductionCode:
           $ref: '#/components/schemas/TestProductionCodeEnum'
         messageDuplicationCode:
-          $ref: '#/components/schemas/MessageDuplicationEnum'
+          description: |
+            MessageDuplicationCode
+
+            * ` ` - Original Message
+            * `R` - Retrieval of an original message
+            * `P` - Resend
+          maxLength: 1
+          type: string
     ReceiptTimeStamp:
       example:
         receiptTime:
@@ -2091,7 +2315,17 @@ components:
         errorCode: E99
       properties:
         errorCategory:
-          $ref: '#/components/schemas/ErrorCategoryEnum'
+          description: |2
+
+            * `E` - Data Error
+            * `F` - Insufficient Balance
+            * `H` - Accountability Error
+            * `I` - In Process or Intercepted
+            * `W` - Cutoff Hour Error
+            * `X` - Duplicate IMAD
+          example: E
+          maxLength: 1
+          type: string
         errorCode:
           description: ErrorCode
           example: E99
@@ -2106,7 +2340,8 @@ components:
       description: SenderSupplied {1500}
       example:
         testProductionCode: T
-        messageDuplicationCode: '{}'
+        messageDuplicationCode: messageDuplicationCode
+        messageStatusIndicator: messageStatusIndicator
         userRequestCorrelation: TESTDATA
         formatVersion: "30"
       properties:
@@ -2127,9 +2362,29 @@ components:
         testProductionCode:
           $ref: '#/components/schemas/TestProductionCodeEnum'
         messageDuplicationCode:
-          $ref: '#/components/schemas/MessageDuplicationEnum'
+          description: |
+            MessageDuplicationCode
+
+            * ` ` - Original Message
+            * `R` - Retrieval of an original message
+            * `P` - Resend
+          maxLength: 1
+          type: string
         messageStatusIndicator:
-          $ref: '#/components/schemas/MessageStatusIndicator'
+          description: |
+            Message Status Indicator
+
+            Outgoing Messages
+            * `0` - In process or Intercepted
+            * `2` - Successful with Accounting (Value)
+            * `3` - Rejected due to Error Condition
+            * `7` - Successful without Accounting (Non-Value)
+
+            Incoming Messages
+            * `N` - Successful with Accounting (Value)
+            * `S` - Successful without Accounting (Non-Value)
+          maxLength: 1
+          type: string
       required:
       - formatVersion
       - messageDuplicationCode
@@ -2280,7 +2535,14 @@ components:
         endToEndIdentification: WireTransfer 10001
       properties:
         paymentNotificationIndicator:
-          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
+          description: |
+            PaymentNotificationIndicator
+
+            * `0 - 6` - Reserved for market practice conventions.
+            * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+          example: "1"
+          maxLength: 1
+          type: string
         contactNotificationElectronicAddress:
           description: ContactNotificationElectronicAddress
           example: https://moov.io/
@@ -2350,7 +2612,18 @@ components:
         name: name
       properties:
         identificationCode:
-          $ref: '#/components/schemas/FIIdentificationCodeEnum'
+          description: |
+            IdentificationCode:
+
+            * `B` - SWIFT Bank Identifier Code (BIC)
+            * `C` - CHIPS Participant
+            * `D` - Demand Deposit Account (DDA) Number
+            * `F` - Fed Routing Number
+            * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
+            * `U` - CHIPS Identifier
+          example: B
+          maxLength: 1
+          type: string
         identifier:
           description: Identifier
           maxLength: 34
@@ -2378,7 +2651,18 @@ components:
         name: name
       properties:
         identificationCode:
-          $ref: '#/components/schemas/PersonalIdentificationCodeEnum'
+          description: |
+            IdentificationCode:
+
+            * `1` - Passport Number
+            * `2` - Tax Identification Number
+            * `3` - Driver’s License Number
+            * `4` - Alien Registration Number
+            * `5` - Corporate Identification
+            * `9` - Other Identification
+          example: B
+          maxLength: 1
+          type: string
         identifier:
           description: Identifier
           maxLength: 34
@@ -2701,7 +2985,13 @@ components:
         sendersChargesTwo: USD1234,56
       properties:
         chargeDetails:
-          $ref: '#/components/schemas/ChargeDetailsEnum'
+          description: |
+            ChargeDetails
+            * `B` - Beneficiary
+            * `S` - Shared
+          example: B
+          maxLength: 1
+          type: string
         sendersChargesOne:
           description: |
             SendersChargesOne
@@ -2786,7 +3076,25 @@ components:
         contactMobileNumber: 555.555.5555
         identificationCode: BANK
         dateAndBirthPlace: 03062013 Chester
-        remittanceData: '{}'
+        remittanceData:
+          country: US
+          townName: Any Town
+          addressType: ADDR
+          addressLineFive: AddressLineFive
+          subDepartment: Service
+          addressLineSix: AddressLineSix
+          countryOfResidence: US
+          streetName: Street Way Boulevard
+          addressLineTwo: AddressLineTwo
+          countrySubDivisionState: PA
+          name: Wade Arnold
+          buildingNumber: 1A
+          addressLine1: AddressLineOne
+          postCode: "19465"
+          department: Buildings
+          addressLineThree: AddressLineThree
+          addressLineFour: AddressLineFour
+          addressLineSeven: AddressLineSeven
         contactName: Wade Arnold
         contactFaxNumber: 555.555.5555
         identificationNumber: "192827828"
@@ -2844,7 +3152,7 @@ components:
           maxLength: 82
           type: string
         remittanceData:
-          $ref: '#/components/schemas/RemittanceDemographic'
+          $ref: '#/components/schemas/RemittanceData'
         contactName:
           description: ContactName
           example: Wade Arnold
@@ -2879,7 +3187,25 @@ components:
       example:
         identificationCode: BANK
         dateAndBirthPlace: 03062013 Chester
-        remittanceData: '{}'
+        remittanceData:
+          country: US
+          townName: Any Town
+          addressType: ADDR
+          addressLineFive: AddressLineFive
+          subDepartment: Service
+          addressLineSix: AddressLineSix
+          countryOfResidence: US
+          streetName: Street Way Boulevard
+          addressLineTwo: AddressLineTwo
+          countrySubDivisionState: PA
+          name: Wade Arnold
+          buildingNumber: 1A
+          addressLine1: AddressLineOne
+          postCode: "19465"
+          department: Buildings
+          addressLineThree: AddressLineThree
+          addressLineFour: AddressLineFour
+          addressLineSeven: AddressLineSeven
         identificationNumber: "192827828"
         identificationType: OI
         identificationNumberIssuer: Identification Number Issuer
@@ -2932,7 +3258,7 @@ components:
           maxLength: 82
           type: string
         remittanceData:
-          $ref: '#/components/schemas/RemittanceDemographic'
+          $ref: '#/components/schemas/RemittanceData'
     RemittanceData:
       example:
         country: US
@@ -3049,7 +3375,27 @@ components:
         issuer: Remittance Issuer
       properties:
         documentTypeCode:
-          $ref: '#/components/schemas/DocumentTypeCodeEnum'
+          description: |
+            DocumentTypeCode
+
+            * `AROI` - Accounts Receivable Open Item
+            * `BOLD` - Bill of Lading Shipping Notice
+            * `CINV` - Commercial Invoice
+            * `CMCN` - Commercial Contract
+            * `CNFA` - Credit Note Related to Financial Adjustment
+            * `CREN` - Credit Note
+            * `DEBN` - Debit Note
+            * `DISP` - Dispatch Advice
+            * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice
+            * `MSIN` - Metered Service Invoice
+            * `PROP` - Proprietary Document Type
+            * `PUOR` - Purchase Order
+            * `SBIN` - Self Billed Invoice
+            * `SOAC` - Statement of Account
+            * `TSUT` - Trade Services Utility Transaction VCHR Voucher
+          example: AROI
+          maxLength: 4
+          type: string
         proprietaryDocumentTypeCode:
           description: ProprietaryDocumentTypeCode
           example: Proprietary Code
@@ -3258,10 +3604,6 @@ components:
         * ` ` - Original Message
         * `R` - Retrieval of an original message
         * `P` - Resend
-      enum:
-      - ' '
-      - R
-      - P
       maxLength: 1
       type: string
     MessageStatusIndicator:
@@ -3277,13 +3619,6 @@ components:
         Incoming Messages
         * `N` - Successful with Accounting (Value)
         * `S` - Successful without Accounting (Non-Value)
-      enum:
-      - "0"
-      - "2"
-      - "3"
-      - "7"
-      - N
-      - S
       maxLength: 1
       type: string
     TypeCodeEnum:
@@ -3365,13 +3700,6 @@ components:
         * `F` - Fed Routing Number
         * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
         * `U` - CHIPS Identifier
-      enum:
-      - B
-      - C
-      - D
-      - F
-      - T
-      - U
       example: B
       maxLength: 1
       type: string
@@ -3385,13 +3713,6 @@ components:
         * `4` - Alien Registration Number
         * `5` - Corporate Identification
         * `9` - Other Identification
-      enum:
-      - "1"
-      - "2"
-      - "3"
-      - "4"
-      - "5"
-      - "9"
       example: B
       maxLength: 1
       type: string
@@ -3448,9 +3769,6 @@ components:
         ChargeDetails
         * `B` - Beneficiary
         * `S` - Shared
-      enum:
-      - B
-      - S
       example: B
       maxLength: 1
       type: string
@@ -3460,17 +3778,6 @@ components:
 
         * `0 - 6` - Reserved for market practice conventions.
         * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
-      enum:
-      - "0"
-      - "1"
-      - "2"
-      - "3"
-      - "4"
-      - "5"
-      - "6"
-      - "7"
-      - "8"
-      - "9"
       example: "1"
       maxLength: 1
       type: string
@@ -3575,22 +3882,6 @@ components:
         * `SBIN` - Self Billed Invoice
         * `SOAC` - Statement of Account
         * `TSUT` - Trade Services Utility Transaction VCHR Voucher
-      enum:
-      - AROI
-      - BOLD
-      - CINV
-      - CMCN
-      - CNFA
-      - CREN
-      - DEBN
-      - DISP
-      - DNFA
-      - MSIN
-      - PROP
-      - PUOR
-      - SBIN
-      - SOAC
-      - TSUT
       example: AROI
       maxLength: 4
       type: string
@@ -3609,18 +3900,6 @@ components:
         * `75` - Total Order Not Received
         * `81` - Credit as Agreed
         * `CM` - Covered by Credit Memo
-      enum:
-      - "1"
-      - "3"
-      - "4"
-      - "5"
-      - "6"
-      - "11"
-      - "12"
-      - "59"
-      - "75"
-      - "81"
-      - CM
       example: CM
       maxLength: 4
       type: string
@@ -3635,14 +3914,6 @@ components:
         * `RADM` - Remittance Advice Message
         * `RPIN` - Related Payment Instruction
         * `SCOR1` - Structured Communication Reference VCHR Voucher
-      enum:
-      - AROI
-      - DISP
-      - FXDR
-      - PROP
-      - RADM
-      - RPIN
-      - SCOR1
       example: AROI
       maxLength: 4
       type: string
@@ -3655,13 +3926,6 @@ components:
         * `I` - In Process or Intercepted
         * `W` - Cutoff Hour Error
         * `X` - Duplicate IMAD
-      enum:
-      - E
-      - F
-      - H
-      - I
-      - W
-      - X
       example: E
       maxLength: 1
       type: string

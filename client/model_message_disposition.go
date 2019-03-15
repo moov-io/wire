@@ -13,5 +13,6 @@ type MessageDisposition struct {
 	// FormatVersion 30 
 	FormatVersion string `json:"formatVersion,omitempty"`
 	TestProductionCode TestProductionCodeEnum `json:"testProductionCode,omitempty"`
-	MessageDuplicationCode MessageDuplicationEnum `json:"messageDuplicationCode,omitempty"`
+	// MessageDuplicationCode  * ` ` - Original Message * `R` - Retrieval of an original message * `P` - Resend 
+	MessageDuplicationCode string `json:"messageDuplicationCode,omitempty"`
 }

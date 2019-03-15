@@ -71,9 +71,11 @@ type FedWireMessage struct {
 	ActualAmountPaid RemittanceAmount `json:"actualAmountPaid,omitempty"`
 	GrossAmountRemittanceDocument RemittanceAmount `json:"grossAmountRemittanceDocument,omitempty"`
 	AmountNegotiatedDiscount RemittanceAmount `json:"amountNegotiatedDiscount,omitempty"`
-	Adjustment AdjustmentEnum `json:"adjustment,omitempty"`
+	// Adjustment  * `01` - Pricing Error * `03` - Extension Error * `04` - Item Not Accepted (Damaged) * `05` - Item Not Accepted (Quality) * `06` - Quantity Contested 07   Incorrect Product * `11` - Returns (Damaged) * `12` - Returns (Quality) * `59` - Item Not Received * `75` - Total Order Not Received * `81` - Credit as Agreed * `CM` - Covered by Credit Memo 
+	Adjustment string `json:"adjustment,omitempty"`
 	DateRemittanceDocument DateRemittanceDocument `json:"dateRemittanceDocument,omitempty"`
-	SecondaryRemittanceDocument SecondaryRemittanceDocumentEnum `json:"secondaryRemittanceDocument,omitempty"`
+	// SecondaryRemittanceDocument  * `AROI` - Accounts Receivable Open Item * `DISP` - Dispatch Advice * `FXDR` - Foreign Exchange Deal Reference * `PROP` - Proprietary Document Type PUOR Purchase Order * `RADM` - Remittance Advice Message * `RPIN` - Related Payment Instruction * `SCOR1` - Structured Communication Reference VCHR Voucher 
+	SecondaryRemittanceDocument string `json:"secondaryRemittanceDocument,omitempty"`
 	RemittanceFreeText RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	ServiceMessage ServiceMessage `json:"serviceMessage,omitempty"`
 }

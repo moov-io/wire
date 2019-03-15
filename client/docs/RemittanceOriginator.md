@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **IdentificationNumber** | **string** | IdentificationNumber | [optional] 
 **IdentificationNumberIssuer** | **string** | IdentificationNumberIssuer | [optional] 
 **DateAndBirthPlace** | **string** | DateAndfBirthPlace | [optional] 
-**RemittanceData** | [**RemittanceDemographic**](RemittanceDemographic.md) |  | [optional] 
+**RemittanceData** | [**RemittanceData**](RemittanceData.md) |  | [optional] 
 **ContactName** | **string** | ContactName | [optional] 
 **ContactPhoneNumber** | **string** | ContactPhoneNumber | [optional] 
 **ContactMobileNumber** | **string** | ContactMobileNumber | [optional] 

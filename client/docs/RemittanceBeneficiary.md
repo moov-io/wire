@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **IdentificationNumber** | **string** | IdentificationNumber | [optional] 
 **IdentificationNumberIssuer** | **string** | IdentificationNumberIssuer | [optional] 
 **DateAndBirthPlace** | **string** | DateAndfBirthPlace | [optional] 
-**RemittanceData** | [**RemittanceDemographic**](RemittanceDemographic.md) |  | [optional] 
+**RemittanceData** | [**RemittanceData**](RemittanceData.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
