@@ -1,0 +1,1883 @@
+openapi: 3.0.2
+info:
+  description: Moov WIRE () implements an HTTP API for creating, parsing and validating WIRE files.
+  version: v1
+  title: WIRE API
+  contact:
+    url: https://github.com/moov-io/wire
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: http://localhost:8087
+    description: Local development
+
+tags:
+  - name: Files
+    description: |
+      File contains FEDWireMessages of a WIRE File.
+
+paths:
+  /ping:
+    get:
+      tags:
+        - Files
+      summary: Ping the Wire service to check if running
+      operationId: ping
+      responses:
+        '200':
+          description: Service is running properly
+  /files:
+    get:
+      tags:
+        - Files
+      summary: Gets a list of Files
+      operationId: getFiles
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/requestId'
+      responses:
+        '200':
+          description: A list of File objects
+          headers:
+            X-Total-Count:
+              description: The total number of WIRE files
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Files'
+  /files/create:
+    post:
+      tags:
+        - Files
+      summary: Create a new File object
+      operationId: createFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/requestId'
+        - $ref: '#/components/parameters/idempotencyKey'
+      requestBody:
+        description: Content of the WIRE file (in json or raw text)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+          text/plain:
+            schema:
+              description: A plaintext FED WIRE file
+              type: string
+              example:
+      responses:
+        '201':
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: "Invalid File Header Object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /files/{file_id}:
+    get:
+      tags:
+        - Files
+      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      operationId: getFileByID
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/requestId'
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: A File object for the supplied ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '404':
+          description: A resource with the specified ID was not found
+    post:
+      tags:
+        - Files
+      summary: Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      operationId: updateFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/requestId'
+        - $ref: '#/components/parameters/idempotencyKey'
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFile'
+      responses:
+        '201':
+          description: A JSON object containing a new File
+          headers:
+            Location:
+              description: The location of the new resource
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: "Invalid File Header Object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Files
+      summary: Permanently deletes a File and associated Batches. It cannot be undone.
+      operationId: deleteWIREFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - $ref: '#/components/parameters/requestId'
+      responses:
+        '200':
+          description: Permanently deleted File.
+        '404':
+          description: A File with the specified ID was not found.
+# ToDo: Revisit enum's re: OpenAPITools/openapi-generator#535
+components:
+  schemas:
+    CreateFile:
+      properties:
+        id:
+          type: string
+          description: File ID
+          example: 3f2d23ee214
+        fedWireMessage:
+          type: array
+          items:
+            $ref: '#/components/schemas/FEDWireMessage'
+    File:
+      properties:
+        id:
+          type: string
+          description: File ID
+          example: 3f2d23ee214
+        fedWireMessage:
+          items:
+            $ref: '#/components/schemas/FEDWireMessage'
+      required:
+        - fedWireMessage
+    Files:
+      type: array
+      items:
+        $ref: '#/components/schemas/File'
+    FEDWireMessage:
+      description: FEDWireMessage
+      properties:
+        # TAGS 1100, 1110, 1120, 1130 is information Appended by the Fedwire Funds Service
+        messageDisposition:
+          $ref: '#/components/schemas/MessageDisposition'
+          description: MessageDisposition {1100}
+        receiptTimeStamp:
+          $ref: '#/components/schemas/ReceiptTimeStamp'
+          description: ReceiptTimeStamp {1110}
+        outputMessageAccountabilityData:
+          $ref: '#/components/schemas/OutputMessageAccountabilityData'
+          description: OutputMessageAccountabilityData {1120}
+        error:
+          $ref: '#/components/schemas/FEDWireError'
+          description: Error {1130}
+        senderSupplied:
+          $ref: '#/components/schemas/SenderSupplied'
+          description: SenderSupplied {1500}
+        typeSubType:
+          $ref: '#/components/schemas/TypeSubType'
+          description: TypeSubType {1510}
+        inputMessageAccountabilityData:
+          $ref: '#/components/schemas/InputMessageAccountabilityData'
+          description: InputMessageAccountabilityData {1520}
+        amount:
+          $ref: '#/components/schemas/Amount'
+          description: Amount {2000}
+        senderDepositoryInstitution:
+          $ref: '#/components/schemas/SenderDepositoryInstitution'
+          description: SenderDepositoryInstitution {3100}
+        receiverDepositoryInstitution:
+          $ref: '#/components/schemas/ReceiverDepositoryInstitution'
+          description: ReceiverDepositoryInstitution {3400}
+        businessFunctionCode:
+          $ref: '#/components/schemas/BusinessFunctionCode'
+          description: BusinessFunctionCode {3600}
+        senderReference:
+          $ref: '#/components/schemas/SenderReference'
+          description: SenderReference {3320}
+        previousMessageIdentifier:
+          $ref: '#/components/schemas/PreviousMessageIdentifier'
+          description: PreviousMessageIdentifier {3500}
+        localInstrument:
+          $ref: '#/components/schemas/LocalInstrument'
+          description: LocalInstrument {3610}
+        paymentNotification:
+          $ref: '#/components/schemas/PaymentNotification'
+          description: PaymentNotification {3620}
+        charges:
+          $ref: '#/components/schemas/Charges'
+          description: Charges {3700}
+        instructedAmount:
+          $ref: '#/components/schemas/InstructedAmount'
+          description: InstructedAmount {3710}
+        exchangeRate:
+          $ref: '#/components/schemas/ExchangeRate'
+          description: ExchangeRate {3720}
+        beneficiaryIntermediaryFI:
+          $ref: '#/components/schemas/FinancialInstitution'
+          description: IntermediaryFI {4000}
+        beneficiaryFI:
+          $ref: '#/components/schemas/FinancialInstitution'
+          description: BeneficiaryFI {4100}
+        beneficiary:
+          $ref: '#/components/schemas/Personal'
+          description: Beneficiary {4200}
+        referenceForBeneficiary:
+          description: ReferenceForBeneficiary {4320}
+          type: string
+          maxLength: 16
+          example: 'Test Data'
+        accountDebitedDrawdown:
+          $ref: '#/components/schemas/AccountDebitedDrawdown'
+          description: AccountDebitedDrawdown {4400}
+        originator:
+          $ref: '#/components/schemas/Personal'
+          description: Originator {5000}
+        originatorOptionF:
+          description: OriginatorOptionF {5010}
+        originatorFI:
+          $ref: '#/components/schemas/FinancialInstitution'
+          description: OriginatorFI {5100}
+        instructingFI:
+          $ref: '#/components/schemas/FinancialInstitution'
+          description: InstructingFI {5200}
+        accountCreditedDrawdown:
+          $ref: '#/components/schemas/AccountCreditedDrawdown'
+          description: AccountCreditedDrawdown {5400}
+        originatorToBeneficiary:
+          $ref: '#/components/schemas/OriginatorToBeneficiary'
+          description: OriginatorToBeneficiary {6000}
+        receiverFI:
+          $ref: '#/components/schemas/FIToFI'
+          description: ReceiverFI {6100}
+        drawdownDebitAccountAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: DrawdownDebitAccountAdvice {6110}
+        intermediaryFI:
+          $ref: '#/components/schemas/FIToFI'
+          description: IntermediaryFinancialInstitution {6200}
+        intermediaryFinacialInstitutionAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: IntermediaryFinacialInstitutionAdvice {6210}
+        originatorBeneficiaryFinancialInstitution:
+          $ref: '#/components/schemas/FIToFI'
+          description: BeneficiaryFinancialInstitution {6300}
+        originatorBeneficiaryFinancialInstitutionAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: BeneficiaryFinacialInstitutionAdvice {6310}
+        originatorBeneficiary:
+          $ref: '#/components/schemas/FIToFI'
+          description: Beneficiary {6400}
+        beneficiaryAdvice:
+          $ref: '#/components/schemas/Advice'
+          description: BeneficiaryAdvice {6410}
+        paymentMethodToBeneficiary:
+          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
+          description: PaymentMethodToBeneficiary {6420}
+        additionalFIToFI:
+          $ref: '#/components/schemas/AdditionalFIToFI'
+          description: AdditionalFIToFI {6500}
+        currencyInstructedAmount:
+          $ref: '#/components/schemas/CoverPayment'
+          description: CurrencyInstructedAmount {7033}
+        orderingCustomer:
+          $ref: '#/components/schemas/CoverPayment'
+          description: OrderingCustomer {7050}
+        orderingInstitution:
+          $ref: '#/components/schemas/CoverPayment'
+          description: OrderingInstitution {7052}
+        intermediaryInstitution:
+          $ref: '#/components/schemas/CoverPayment'
+          description: IntermediaryInstitution {7056}
+        institutionAccount:
+          $ref: '#/components/schemas/CoverPayment'
+          description: InstitutionAccount {7057}
+        beneficiaryCustomer:
+          $ref: '#/components/schemas/CoverPayment'
+          description: BeneficiaryCustomer {7059}
+        remittance:
+          $ref: '#/components/schemas/CoverPayment'
+          description: Remittance {7070}
+        senderToReceiver:
+          $ref: '#/components/schemas/CoverPayment'
+          description: SenderToReceiver {7072}
+        unstructuredAddenda:
+          $ref: '#/components/schemas/UnstructuredAddenda'
+          description: UnstructuredAddenda {8200}
+        relatedRemittance:
+          $ref: '#/components/schemas/RelatedRemittance'
+          description: RelatedRemittance {8250}
+        remittanceOriginator:
+          $ref: '#/components/schemas/RemittanceOriginator'
+          description: RemittanceOriginator {8300}
+        remittanceBeneficiary:
+            $ref: '#/components/schemas/RemittanceBeneficiary'
+            description: RemittanceBeneficiary {8350}
+        primaryRemittanceDocument:
+            $ref: '#/components/schemas/PrimaryRemittanceDocument'
+            description: PrimaryRemittanceDocument {8400}
+        actualAmountPaid:
+          $ref: '#/components/schemas/RemittanceAmount'
+          description: ActualAmountPaid {8450}
+        grossAmountRemittanceDocument:
+          $ref: '#/components/schemas/RemittanceAmount'
+          description: GrossAmountRemittanceDocument {8500}
+        amountNegotiatedDiscount:
+          $ref: '#/components/schemas/RemittanceAmount'
+          description: AmountNegotiatedDiscount {8550}
+        adjustment:
+          $ref: '#/components/schemas/Adjustment'
+          description: Adjustment {8600}
+        dateRemittanceDocument:
+          $ref: '#/components/schemas/DateRemittanceDocument'
+          description: DateRemittanceDocument {8650}
+        secondaryRemittanceDocument:
+          $ref: '#/components/schemas/SecondaryRemittanceDocument'
+          description: SecondaryRemittanceDocument
+        remittanceFreeText:
+          $ref: '#/components/schemas/RemittanceFreeText'
+          description: RemittanceFreeText {8750}
+        serviceMessage:
+          $ref: '#/components/schemas/ServiceMessage'
+          description: ServiceMessage
+      required:
+        - senderSupplied
+        - typeSubType
+        - inputMessageAccountabilityData
+        - amount
+        - senderDepositoryInstitution
+        - receiverDepositoryInstitution
+        - businessFunctionCode
+    MessageDisposition:
+      properties:
+        formatVersion:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: |
+            FormatVersion
+            30
+          example: '30'
+        testProductionCode:
+          $ref: '#/components/schemas/TestProductionCodeEnum'
+          description: TestProductionCode
+        messageDuplicationCode:
+          $ref: '#/components/schemas/MessageDuplicationCodeEnum'
+          description: MessageDuplicationCode
+    ReceiptTimeStamp:
+      properties:
+        receiptDate:
+          $ref: '#/components/schemas/DateMMDD'
+          description: ReceiptDate
+        receiptTime:
+          $ref: '#/components/schemas/TimeHHMM'
+          description: ReceiptTime
+        receiptApplicationIdentification:
+          type: string
+          maxLength: 4
+          description: 'ApplicationIdentification'
+          example: 'RB11'
+    OutputMessageAccountabilityData:
+      properties:
+        outputCycleDate:
+          type: string
+          minLength: 8
+          maxLength: 8
+          description: OutputCycleDate (CCYYMMDD)
+          example: '20190401'
+        outputDestinationID:
+          type: string
+          maxLength: 8
+          description: OutputDestinationID
+          example: '12345678'
+        outputDate:
+          $ref: '#/components/schemas/DateMMDD'
+          description: OutputDate
+        outputTime:
+          $ref: '#/components/schemas/TimeHHMM'
+          description: OutputTime
+        outputFRBApplicationIdentification:
+          type: string
+          maxLength: 4
+          description: 'OutputFRBApplicationIdentification'
+          example: 'OB11'
+    FEDWireError:
+       properties:
+         errorCategory:
+           $ref: '#/components/schemas/ErrorCategoryEnum'
+           description: ErrorCategory
+         errorCode:
+           type: string
+           maxLength: 3
+           description: ErrorCode
+           example: 'E99'
+         errorDescription:
+           type: string
+           maxLength: 35
+           description: ErrorDescription
+           example: 'Data Error'
+    SenderSupplied:
+      description: SenderSupplied {1500}
+      properties:
+        formatVersion:
+          type: string
+          minLength: 2
+          maxLength: 2
+          description: |
+            FormatVersion
+            30
+          example: '30'
+        userRequestCorrelation:
+          type: string
+          minLength: 8
+          maxLength: 8
+          description: UserRequestCorrelation
+          example: 'TESTDATA'
+        testProductionCode:
+          $ref: '#/components/schemas/TestProductionCodeEnum'
+          description: TestProductionCode
+        messageDuplicationCode:
+          $ref: '#/components/schemas/MessageDuplicationCodeEnum'
+          description: MessageDuplicationCode
+        messageStatusIndicator:
+          $ref: '#/components/schemas/MessageStatusIndicator'
+          description: MessageStatusIndicator
+      required:
+        - formatVersion
+        - userRequestCorrelation
+        - testProductionCode
+        - messageDuplicationCode
+    TypeSubType:
+      description: TypeSubtype {1510}
+      properties:
+        typeCode:
+          description: TypeCode
+          $ref: '#/components/schemas/TypeCodeEnum'
+        subTypeCode:
+          description: SubTypeCode
+          $ref: '#/components/schemas/SubTypeCodeEnum'
+      required:
+        - typeCode
+        - subTypeCode
+    InputMessageAccountabilityData:
+      description: Input Message Accountability Data (IMAD) {1520}
+      properties:
+        inputCycleDate:
+          type: string
+          minLength: 8
+          maxLength: 8
+          description: |
+            InputCycleDate
+            CCYYMMDD
+          example: 20191201
+        inputSource:
+          type: string
+          minLength: 8
+          maxLength: 8
+          description: InputSource
+          example: 'XYZ ABC '
+        inputSequenceNumber:
+          type: string
+          minLength: 6
+          maxLength: 6
+          description: InputSequenceNumber
+          example: '000001'
+      required:
+        - inputCycleDate
+        - inputSource
+        - inputSequenceNumber
+    Amount:
+      description: Amount (up to a penny less than $10 billion) {2000}
+      properties:
+        amount:
+          type: string
+          minLength: 12
+          maxLength: 12
+          description: |
+            Amount
+            12 numeric, right-justified with leading zeros, an implied decimal point and no commas;
+            e.g., $12,345.67 becomes 000001234567
+            Can be all zeros for subtype 90
+          example: '000000100000'
+      required:
+        - amount
+    SenderDepositoryInstitution:
+      description: SenderDepositoryInstitution {3100}
+      properties:
+        senderABANumber:
+          type: string
+          minLength: 9
+          maxLength: 9
+          description: SenderABANumber
+          example: '091905114'
+        senderShortName:
+          type: string
+          minLength: 18
+          maxLength: 18
+          description: SenderShortName
+          example: 'MIDWESTONE B&T    '
+      required:
+        - senderABANumber
+        - senderShortName
+    ReceiverDepositoryInstitution:
+      description: Receiver DepositoryInstitution {3400}
+      properties:
+        receiverABANumber:
+          type: string
+          minLength: 9
+          maxLength: 9
+          description: ReceiverABANumber
+          example: '091905664'
+        receiverShortName:
+          type: string
+          minLength: 18
+          maxLength: 18
+          description: ReceiverShortName
+          example: 'PREMIER BANK      '
+      required:
+        - receiverABANumber
+        - receiverShortName
+    BusinessFunctionCode:
+      description: BusinessFunctionCode {3600}
+      properties:
+        businessFunctionCode:
+          description: BusinessFunctionCode
+          $ref: '#/components/schemas/BusinessFunctionCodeEnum'
+        transactionTypeCode:
+          type: string
+          minLength: 3
+          maxLength: 3
+          description: |-
+            TransactionTypeCode
+            If {3600} is CTR, an optional Transaction Type Code element is permitted;
+            however, the Transaction Type Code 'COV' is not permitted.
+            ToDo: Research This, I don't understand it yet
+          example: '   '
+      required:
+        - businessFunctionCode
+    LocalInstrument:
+      properties:
+        localInstrumentCode:
+          $ref: '#/components/schemas/LocalInstrumentEnum'
+          description: LocalInstrumentCode
+        proprietaryCode:
+          type: string
+          maxLength: 35
+          description: ProprietaryCode
+          example: 'WJD786363'
+    PaymentNotification:
+      properties:
+        paymentNotificationIndicator:
+          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
+          description: PaymentNotificationIndicator
+        contactNotificationElectronicAddress:
+          type: string
+          maxLength: 2048
+          description: ContactNotificationElectronicAddress
+          example: 'https://moov.io/'
+        contactName:
+          type: string
+          maxLength: 140
+          description: ContactName
+          example: 'Wade Arnold'
+        contactPhoneNumber:
+          type: string
+          maxLength: 35
+          description: ContactPhoneNumber
+          example: '555-555-5555'
+        contactMobileNumber:
+          type: string
+          maxLength: 35
+          description: ContactMobileNumber
+          example: '555.555.555'
+        faxNumber:
+          type: string
+          maxLength: 35
+          description: FaxNumber
+          example: '555.555.5555'
+        endToEndIdentification:
+          type: string
+          maxLength: 35
+          description: EndtoEndIdentification
+          #ToDo Review
+          example: 'WireTransfer 10001'
+    InstructedAmount:
+      properties:
+        currencyCode:
+          type: string
+          maxLength: 3
+          description: CurrencyCode
+          example: 'USD'
+        amount:
+          type: string
+          maxLength: 15
+          description: |
+            Amount
+
+            Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
+            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
+    ExchangeRate:
+      type: string
+      maxLength: 12
+      description: |
+        ExchangeRate
+
+        Must contain at least one numeric character and only one decimal comma marker
+        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+      example: '1.2345'
+    FinancialInstitution:
+      description: FinancialInstitution {4000, 4100}
+      properties:
+        identificationCode:
+          description: Identification Code
+          $ref: '#/components/schemas/FIIdentificationCodeEnum'
+        identifier:
+          type: string
+          maxLength: 34
+          description: Identifier
+        name:
+          type: string
+          maxLength: 35
+          description: Name
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address'
+      required:
+        - identificationCode
+        - identifier
+        - name
+        - address
+    Personal:
+      description: FinancialInstitution {4200}
+      properties:
+        identificationCode:
+          description: Identification Code
+          $ref: '#/components/schemas/PersonalIdentificationCodeEnum'
+        identifier:
+          type: string
+          maxLength: 34
+          description: Identifier
+        name:
+          type: string
+          maxLength: 35
+          description: Name
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address'
+      required:
+        - identificationCode
+        - identifier
+        - name
+        - address
+    AccountDebitedDrawdown:
+      properties:
+        identificationCode:
+          type: string
+          maxLength: 1
+          description: |
+            Identification Code
+            * `D` - Debit
+          enum:
+            - D
+          example: 'D'
+        identifier:
+          type: string
+          maxLength: 34
+          description: Identifier
+        name:
+          type: string
+          maxLength: 35
+          description: Name
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address'
+      required:
+        - identificationCode
+        - identifier
+        - name
+    AccountCreditedDrawdown:
+      properties:
+        identificationCode:
+          type: string
+          maxLength: 1
+          description: |
+            Identification Code
+            * `C` - Credit
+          enum:
+            - C
+          example: 'C'
+        identifier:
+          type: string
+          maxLength: 34
+          description: Identifier
+        name:
+          type: string
+          maxLength: 35
+          description: Name
+        address:
+          description: Address
+          $ref: '#/components/schemas/Address'
+      required:
+        - identificationCode
+        - identifier
+        - name
+    OriginatorToBeneficiary:
+        description: OriginatorToBeneficiary
+        properties:
+          lineOne:
+            type: string
+            maxLength: 35
+            description: LineOne
+            example: 'Line One'
+          lineTwo:
+            type: string
+            maxLength: 35
+            description: LineTwo
+            example: 'Line Two'
+          lineThree:
+            type: string
+            maxLength: 35
+            description: LineThree
+            example: 'Line Three'
+          lineFour:
+            type: string
+            maxLength: 35
+            description: LineFour
+            example: 'Line Four'
+    FIToFI:
+      description: FIToFI
+      properties:
+        lineOne:
+          type: string
+          maxLength: 30
+          description: LineOne
+          example: 'Line One'
+        lineTwo:
+          type: string
+          maxLength: 33
+          description: LineTwo
+          example: 'Line Two'
+        lineThree:
+          type: string
+          maxLength: 33
+          description: LineThree
+          example: 'Line Three'
+        lineFour:
+          type: string
+          maxLength: 33
+          description: LineFour
+          example: 'Line Four'
+        lineFive:
+          type: string
+          maxLength: 33
+          description: LineFive
+          example: 'Line Five'
+        lineSix:
+          type: string
+          maxLength: 33
+          description: LineSix
+          example: 'Line Six'
+    Advice:
+      description: DrawdownDebitAccountAdvice
+      properties:
+        adviceCode:
+          $ref: '#/components/schemas/AdviceCodeEnum'
+          description: AdviceCode
+        lineOne:
+          type: string
+          maxLength: 26
+          description: LineOne
+        lineTwo:
+          type: string
+          maxLength: 33
+          description: LineTwo
+        lineThree:
+          type: string
+          maxLength: 33
+          description: LineThree
+        lineFour:
+          type: string
+          maxLength: 33
+          description: LineFour
+        lineFive:
+          type: string
+          maxLength: 33
+          description: LineFive
+        lineSix:
+          type: string
+          maxLength: 33
+          description: LineSix
+    PaymentMethodToBeneficiary:
+      properties:
+        paymentMethod:
+          type: string
+          description: PaymentMethod
+          enum:
+            - CHECK
+          example: 'CHECK'
+        Additional:
+          type: string
+          maxLength: 35
+          example: "For goods and services"
+    AdditionalFIToFI:
+      properties:
+        lineOne:
+          type: string
+          maxLength: 35
+          description: LineOne
+          example: 'Line One'
+        lineTwo:
+          type: string
+          maxLength: 35
+          description: LineTwo
+          example: 'Line Two'
+        lineThree:
+          type: string
+          maxLength: 35
+          description: LineThree
+          example: 'Line Three'
+        lineFour:
+          type: string
+          maxLength: 35
+          description: LineFour
+          example: 'Line Four'
+        lineFive:
+          type: string
+          maxLength: 35
+          description: LineFive
+          example: 'Line Five'
+        lineSix:
+          type: string
+          maxLength: 35
+          description: LineSix
+          example: 'Line Six'
+    CoverPayment:
+      description: CoverPayment
+      properties:
+        swiftFieldTag:
+          type: string
+          maxLength: 5
+          description: SwiftFieldTag
+          example: 'SWIFT'
+        swiftLine:
+              description: SwiftLine
+              properties:
+                swiftLineOne:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineOne
+                  example: 'Swift Line One'
+                swiftLineTwo:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineTwo
+                  example: 'Swift Line Two'
+                swiftLineThree:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineThree
+                  example: 'Swift Line Three'
+                swiftLineFour:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineFour
+                  example: 'Swift Line Four'
+                swiftLineFive:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineFive
+                  example: 'Swift Line Five'
+                swiftLineSix:
+                  type: string
+                  maxLength: 35
+                  description: SwiftLineSix
+                  example: 'Swift Line Six'
+    UnstructuredAddenda:
+      properties:
+        addendaLength:
+          type: string
+          maxLength: 4
+          description: |
+            AddendaLength
+
+            Addenda Length must be numeric, padded with leading zeros if less than four characters and must equal length
+            of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
+            Addenda Length must be 0987).
+          example: '0987'
+        addenda:
+          type: string
+          maxLength: 8994
+          description: Addenda
+          example: 'Payment for goods'
+    SenderReference:
+      type: string
+      maxLength: 16
+      description: SenderReference
+      example: 'Reference'
+    PreviousMessageIdentifier:
+      type: string
+      maxLength: 22
+      description: PreviousMessageIdentifier
+      # ToDo: find previousMessageIdentifier example
+      example: ''
+    Charges:
+      properties:
+        chargeDetails:
+          $ref: '#/components/schemas/ChargeDetailsEnum'
+          description: ChargeDetails
+        sendersChargesOne:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesOne
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+        sendersChargesTwo:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesTwo
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+        sendersChargesThree:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesThree
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+        sendersChargesFour:
+          type: string
+          maxLength: 15
+          description: |
+            SendersChargesFour
+
+            The first three characters must contain an alpha currency code (e.g., USD).  The remaining
+            characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+            marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+          example: 'USD1234,56'
+    RelatedRemittance:
+      properties:
+        remittanceIdentification:
+          type: string
+          maxLength: 35
+          description: RemittanceIdentification
+          example: 'Remittance Identification'
+        remittanceLocationMethod:
+          $ref: '#/components/schemas/RemittanceLocationMethodEnum'
+          description: RemittanceLocationMethodEnum
+        remittanceLocationElctronicAddress:
+          type: string
+          maxLength: 2048
+          description: RemittanceLocationElectronicAddress (E-mail or URL address)
+          example: 'https://moov.io'
+        remittanceData:
+          $ref: '#/components/schemas/RemittanceData'
+          description: RemittanceData
+    RemittanceOriginator:
+      properties:
+        identificationType:
+          $ref: '#/components/schemas/IdentificationTypeEnum'
+          description: identificationType
+        identificationCode:
+          $ref: '#/components/schemas/IdentificationCodeEnum'
+          description: identificationCode
+        identificationNumber:
+          type: string
+          maxLength: 35
+          description: IdentificationNumber
+          example: '192827828'
+        identificationNumberIssuer:
+          type: string
+          maxLength: 35
+          description: IdentificationNumberIssuer
+          example: 'Identification Number Issuer'
+        dateAndBirthPlace:
+          type: string
+          maxLength: 82
+          description: DateAndfBirthPlace
+          example: '03062013 Chester'
+        remittanceData:
+          $ref: '#/components/schemas/RemittanceData'
+          description: RemittanceData
+        contactName:
+          type: string
+          maxLength: 140
+          description: ContactName
+          example: 'Wade Arnold'
+        contactPhoneNumber:
+          type: string
+          maxLength: 35
+          description: ContactPhoneNumber
+          example: '555.555.5555'
+        contactMobileNumber:
+          type: string
+          maxLength: 35
+          description: ContactMobileNumber
+          example: '555.555.5555'
+        contactFaxNumber:
+          type: string
+          maxLength: 35
+          description: ContactFaxNumber
+          example: '555.555.5555'
+        contactElectronicAddress:
+          type: string
+          maxLength: 2048
+          description: ContactElectronicAddress ( i.e., E-mail or URL address)
+          example: 'https://moov.io'
+        contactOther:
+          type: string
+          maxLength: 35
+          description: ContactOther
+          example: 'Contact Other'
+    RemittanceBeneficiary:
+      properties:
+        identificationType:
+          $ref: '#/components/schemas/IdentificationTypeEnum'
+          description: identificationType
+        identificationCode:
+          $ref: '#/components/schemas/IdentificationCodeEnum'
+          description: identificationCode
+        identificationNumber:
+          type: string
+          maxLength: 35
+          description: IdentificationNumber
+          example: '192827828'
+        identificationNumberIssuer:
+          type: string
+          maxLength: 35
+          description: IdentificationNumberIssuer
+          example: 'Identification Number Issuer'
+        dateAndBirthPlace:
+          type: string
+          maxLength: 82
+          description: DateAndfBirthPlace
+          example: '03062013 Chester'
+        remittanceData:
+          $ref: '#/components/schemas/RemittanceData'
+          description: RemittanceData
+    RemittanceData:
+      properties:
+        name:
+          type: string
+          maxLength: 140
+          description: Name
+          example: 'Wade Arnold'
+        addressType:
+          $ref: '#/components/schemas/AddressTypeEnum'
+          description: AddressType
+        department:
+          type: string
+          maxLength: 70
+          description: Department
+          example: 'Buildings'
+        subDepartment:
+          type: string
+          maxLength: 70
+          description: SubDepartment
+          example: 'Service'
+        streetName:
+          type: string
+          maxLength: 70
+          description: StreetName
+          example: 'Street Way Boulevard'
+        buildingNumber:
+          type: string
+          maxLength: 16
+          description: BuildingNumber
+          example: '1A'
+        postCode:
+          type: string
+          maxLength: 16
+          description: PostCode
+          example: '19465'
+        townName:
+          type: string
+          maxLength: 35
+          description: TownName
+          example: 'Any Town'
+        countrySubDivisionState:
+          type: string
+          maxLength: 35
+          description: CountrySubDivisionState
+          example: 'PA'
+        country:
+          type: string
+          maxLength: 2
+          description: Country
+          example: 'US'
+        addressLine1:
+          type: string
+          maxLength: 70
+          description: AddressLineOne
+          example: 'AddressLineOne'
+        addressLineTwo:
+          type: string
+          maxLength: 70
+          description: AddressLineTwo
+          example: 'AddressLineTwo'
+        addressLineThree:
+          type: string
+          maxLength: 70
+          description: AddressLineThree
+          example: 'AddressLineThree'
+        addressLineFour:
+          type: string
+          maxLength: 70
+          description: AddressLineFour
+          example: 'AddressLineFour'
+        addressLineFive:
+          type: string
+          maxLength: 70
+          description: AddressLineFive
+          example: 'AddressLineFive'
+        addressLineSix:
+          type: string
+          maxLength: 70
+          description: AddressLineSix
+          example: 'AddressLineSix'
+        addressLineSeven:
+          type: string
+          maxLength: 70
+          description: AddressLineSeven
+          example: 'AddressLineSeven'
+        countryOfResidence:
+          type: string
+          maxLength: 2
+          description: CountryOfResidence
+          example: 'US'
+    PrimaryRemittanceDocument:
+      properties:
+        documentTypeCode:
+          $ref: '#/components/schemas/DocumentTypeCodeEnum'
+          description: DocumentTypeCodeEnum
+        proprietaryDocumentTypeCode:
+          type: string
+          maxLength: 35
+          description: ProprietaryDocumentTypeCode
+          example: 'Proprietary Code'
+        documentIdentificationNumber:
+          type: string
+          maxLength: 35
+          description: DocumentIdentificationNumber
+          example: 'DOCUMENT 292828'
+        issuer:
+          type: string
+          maxLength: 35
+          description: Issuer
+          example: 'Remittance Issuer'
+    RemittanceAmount:
+      properties:
+        currenyCode:
+          type: string
+          maxLength: 3
+          description: CurrencyCode
+          example: 'USD'
+        amount:
+          type: string
+          minLength: 19
+          maxLength: 19
+          description: |
+            Amount
+            Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
+            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Amount must be greater than zero (i.e., at least .01).
+          example: '1234.56789'
+    DateRemittanceDocument:
+      properties:
+        dateRemittanceDocument:
+          type: string
+          maxLength: 8
+          description: DateRemittanceDocument CCYYMMDD
+          example: '20190401'
+    RemittanceFreeText:
+      properties:
+        lineOne:
+          type: string
+          maxLength: 140
+          description: LineOne
+          example: 'Line One Text'
+        lineTwo:
+          type: string
+          maxLength: 140
+          description: LineTwo
+          example: 'Line Two Text'
+        lineThree:
+          type: string
+          maxLength: 140
+          description: LineThree
+          example: 'Line Three Text'
+    Adjustment:
+      $ref: '#/components/schemas/AdjustmentEnum'
+      description: Adjustment {8600}
+      properties:
+        creditDebitIndicator:
+          type: string
+          maxLength: 4
+          description: |
+            CreditDebitIndicator
+
+            * `CRDT` - Credit
+            * `DBIT` - Debit
+          enum:
+            - CRDT
+            - DBIT
+          example: 'DBIT'
+        currenyCode:
+          type: string
+          maxLength: 3
+          description: CurrencyCode
+          example: 'USD'
+        amount:
+          type: string
+          minLength: 19
+          maxLength: 19
+          description: |
+            Amount
+            Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
+            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Amount must be greater than zero (i.e., at least .01).
+          example: '1234.56789'
+        additionalInfo:
+          type: string
+          maxLength: 140
+          description: AdditionalInfo
+          example: 'Additional Info'
+    SecondaryRemittanceDocument:
+      $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+      description: SecondaryRemittanceDocument
+      properties:
+        proprietaryDocumentTypeCode:
+          type: string
+          maxLength: 35
+          description: proprietaryDocumentTypeCode
+          example: 'Proprietary'
+        documentIdentificationNumber:
+          type: string
+          maxLength: 35
+          description: documentIdentificationNumber
+          example: 'Document2'
+        issuer:
+          type: string
+          maxLength: 35
+          description: Issuer
+          example: 'Issuer'
+    ServiceMessage:
+      properties:
+        lineOne:
+          type: string
+          maxLength: 35
+          description: LineOne
+          example: 'Line One Text'
+        lineTwo:
+          type: string
+          maxLength: 35
+          description: LineTwo
+          example: 'Line Two Text'
+        lineThree:
+          type: string
+          maxLength: 35
+          description: LineThree
+          example: 'Line Three Text'
+        lineFour:
+          type: string
+          maxLength: 35
+          description: LineFour
+          example: 'Line Four Text'
+        lineFive:
+          type: string
+          maxLength: 35
+          description: LineFive
+          example: 'Line Five Text'
+        lineSix:
+          type: string
+          maxLength: 35
+          description: LineSix
+          example: 'Line Six Text'
+        lineSeven:
+          type: string
+          maxLength: 35
+          description: LineSeven
+          example: 'Line Seven Text'
+        lineEight:
+          type: string
+          maxLength: 35
+          description: LineEight
+          example: 'Line Eight Text'
+        lineNine:
+          type: string
+          maxLength: 35
+          description: LineNine
+          example: 'Line Nine Text'
+        lineTen:
+          type: string
+          maxLength: 35
+          description: LineTen
+          example: 'Line Ten Text'
+        lineEleven:
+          type: string
+          maxLength: 35
+          description: LineEleven
+          example: 'Line Eleven Text'
+        lineTwelve:
+          type: string
+          maxLength: 35
+          description: LineTwelve
+          example: 'Line Twelve Text'
+    Address:
+      description: Address
+      properties:
+        addressLineOne:
+          type: string
+          maxLength: 35
+          description: AddressLineOne
+        addressLineTwo:
+          type: string
+          maxLength: 35
+          description: AddressLineTwo
+        addressLineThree:
+          type: string
+          maxLength: 35
+          description: AddressLineThree
+    DateMMDD:
+      properties:
+       date:
+        type: string
+        minLength: 4
+        maxLength: 4
+        description: |
+          Date
+
+          MMDD, based on the calendar date
+        example: '0401'
+    TimeHHMM:
+      properties:
+        receiptTime:
+          type: string
+          minLength: 4
+          maxLength: 4
+          description: |
+            ReceiptTime
+
+            HHMM, based on a 24-hour clock, Eastern Time
+          example: '1305'
+  # ToDo: Review ENUM's
+  # enumerations
+    TestProductionCodeEnum:
+      type: string
+      maxLength: 1
+      description: |
+        TestProductionCode
+
+        * `T` - Test
+        * `P` - Production
+      enum:
+        - T
+        - P
+      example: 'T'
+    MessageDuplicationCodeEnum:
+      type: string
+      maxLength: 1
+      description: |
+        MessageDuplicationCode
+
+        * ` ` - Original Message
+        * `R` - Retrieval of an original message
+        * `P` - Resend
+#      enum:
+#        - R
+#        - P
+      example: ''
+    MessageStatusIndicator:
+      type: string
+      maxLength: 1
+      description: |
+        Message Status Indicator
+
+        Outgoing Messages
+        * `0` - In process or Intercepted
+        * `2` - Successful with Accounting (Value)
+        * `3` - Rejected due to Error Condition
+        * `7` - Successful without Accounting (Non-Value)
+
+        Incoming Messages
+        * `N` - Successful with Accounting (Value)
+        * `S` - Successful without Accounting (Non-Value)
+#      enum:
+#        - 0
+#        - 2
+#        - 3
+#        - 7
+#        - N
+#        - S
+    TypeCodeEnum:
+      type: string
+      maxLength: 2
+      description: |
+        TypeCode:
+
+        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
+        * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
+        * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
+      enum:
+        - 10
+        - 15
+        - 16
+      example: '10'
+    SubTypeCodeEnum:
+      type: string
+      maxLength: 2
+      description: |
+        SubTypeCode:
+
+        * `00` - Basic Funds Transfer - A basic value funds transfer.
+        * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
+        * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
+        * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
+        * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
+        * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
+        * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
+        * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
+        * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
+      enum:
+        - 00
+        - 01
+        - 02
+        - 07
+        - 08
+        - 31
+        - 32
+        - 33
+        - 90
+      example: '10'
+    BusinessFunctionCodeEnum:
+      type: string
+      maxLength: 3
+      description: |
+        BusinessFunctionCode
+        * `BTR` - Bank Transfer (Beneficiary is a bank)
+        * `DRC` - Customer or Corporate Drawdown Request
+        * `CKS` - Check Same Day Settlement
+        * `DRW` - Drawdown Payment
+        * `CTP` - Customer Transfer Plus
+        * `FFR` - Fed Funds Returned
+        * `CTR` - Customer Transfer (Beneficiary is a not a bank)
+        * `FFS` - Fed Funds Sold
+        * `DEP` - Deposit to Sender’s Account
+        * `SVC` - Service Message
+        * `DRB` - Bank-to-Bank Drawdown Request
+      enum:
+        - BTR
+        - DRC
+        - CKS
+        - DRW
+        - CTP
+        - FFR
+        - CTR
+        - FFS
+        - DEP
+        - SVC
+        - DRB
+      example: 'BTR'
+    FIIdentificationCodeEnum:
+      type: string
+      description: |
+        IdentificationCode:
+
+        * `B` - SWIFT Bank Identifier Code (BIC)
+        * `C` - CHIPS Participant
+        * `D` - Demand Deposit Account (DDA) Number
+        * `F` - Fed Routing Number
+        * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
+        * `U` - CHIPS Identifier
+#      enum:
+#        - B
+#        - C
+#        - D
+#        - F
+#        - T
+#        - U
+      maxLength: 1
+      example: 'B'
+    PersonalIdentificationCodeEnum:
+      type: string
+      description: |
+        IdentificationCode:
+
+        * `1` - Passport Number
+        * `2` - Tax Identification Number
+        * `3` - Driver’s License Number
+        * `4` - Alien Registration Number
+        * `5` - Corporate Identification
+        * `9` - Other Identification
+#      enum:
+#        - 1
+#        - 2
+#        - 3
+#        - 4
+#        - 5
+#        - 9
+      maxLength: 1
+      example: 'B'
+    AdviceCodeEnum:
+      type: string
+      description: |
+        AdviceCode
+
+        * `HLD - Hold
+        * `LTR` - Letter
+        * `PHN` - Phone
+        * `TLX` - Telex
+        * `WRE` - Wire
+
+        *
+      enum:
+        - HLD
+        - LTR
+        - PHN
+        - TLX
+        - WRE
+      example: 'HLD'
+    LocalInstrumentEnum:
+      type: string
+      maxLength: 4
+      description: |
+        LocalInstrument
+        * `ANSI` - ANSI X12 format
+        * `COVS` - Sequence B Cover Payment Structured
+        * `GXML` - General XML format
+        * `IXML` - ISO 20022 XML formaT
+        * `NARR` - Narrative Text
+        * `PROP` - Proprietary Local Instrument Code
+        * `RMTS` - Remittance Information Structured
+        * `RRMT` - Related Remittance Information
+        * `S820` - STP 820 format
+        * `SWIF` - SWIFT field 70 (Remittance Information)
+        * `UEDI` - UN/EDIFACT format
+      enum:
+        - ANSI
+        - COVS
+        - GXML
+        - IXML
+        - NARR
+        - PROP
+        - RMTS
+        - RRMT
+        - S820
+        - SWIF
+        - UEDI
+      example: 'ANSI'
+    ChargeDetailsEnum:
+      type: string
+      maxLength: 1
+      description: |
+        ChargeDetails
+        * `B` - Beneficiary
+        * `S` - Shared
+#      enum:
+#        - B
+#        - S
+      example: 'B'
+    PaymentNotificationIndicatorEnum:
+      type: string
+      maxLength: 1
+      description: |
+        PaymentNotificationIndicator
+
+        * `0 - 6` - Reserved for market practice conventions.
+        * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+#      enum:
+#        - 0
+#        - 1
+#        - 2
+#        - 3
+#        - 4
+#        - 5
+#        - 6
+#        - 7
+#        - 8
+#        - 9
+      example: '1'
+    RemittanceLocationMethodEnum:
+      type: string
+      maxLength: 4
+      description: |
+        RemittanceLocationMethod
+
+        * `EDIC` - Electronic Data Interchange
+        * `EMAL` - Email
+        * `FAXI` - Fax
+        * `POST` - Postal services
+        * `SMS` - Short Message Service (text)
+        * `URI` - Uniform Resource Identifier
+      enum:
+        - EDIC
+        - EMAL
+        - FAXI
+        - POST
+        - SMS
+        - URI
+      example: 'EDIC'
+    AddressTypeEnum:
+      type: string
+      maxLength: 4
+      description: |
+        addressType
+
+        * `ADDR` - Complete Postal Address
+        * `BIZZ` - Business Address
+        * `DLVY` - Delivery Address
+        * `HOME` - Home Address
+        * `MLTO` - Mail Address
+        * `PBOX` - Post Office Box
+      enum:
+        - ADDR
+        - BIZZ
+        - DLVY
+        - HOME
+        - MLTO
+        - PBOX
+      example: 'ADDR'
+    IdentificationTypeEnum:
+      type: string
+      maxLength: 2
+      description: |
+        IdentificationType
+
+        * `OI` - Organization ID
+        * `PI` - Private ID
+      enum:
+        - OI
+        - PI
+      example: 'OI'
+    IdentificationCodeEnum:
+      type: string
+      maxLength: 4
+      description: |
+        IdentificationCode
+
+        Organization Identification Codes
+
+        * `BANK` - Bank Party Identification
+        * `CUST` - Customer Number
+        * `DUNS` - Data Universal Number System (Dun & Bradstreet)
+        * `EMPL` - Employer Identification Number
+        * `GS1G` - Global Location Number
+        * `PROP` - Proprietary Identification Number
+        * `SWBB` - SWIFT BIC or BEI
+        * `TXID` - Tax Identification Number
+
+        Private Identification Codes
+
+        * `ARNU` - Alien Registration Number
+        * `CCPT` - Passport Number
+        * `CUST` - Customer Number
+        * `DPOB` - Date & Place of Birth
+        * `DRLC` - Driver’s License Number
+        * `EMPL` - Employee Identification Number
+        * `NIDN` - National Identity Number
+        * `PROP` - Proprietary Identification Number
+        * `SOSE` - Social Security Number
+        * `TXID` - Tax Identification Number
+      example: 'BANK'
+    DocumentTypeCodeEnum:
+        type: string
+        maxLength: 4
+        description: |
+          DocumentTypeCode
+
+          * `AROI` - Accounts Receivable Open Item
+          * `BOLD` - Bill of Lading Shipping Notice
+          * `CINV` - Commercial Invoice
+          * `CMCN` - Commercial Contract
+          * `CNFA` - Credit Note Related to Financial Adjustment
+          * `CREN` - Credit Note
+          * `DEBN` - Debit Note
+          * `DISP` - Dispatch Advice
+          * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice
+          * `MSIN` - Metered Service Invoice
+          * `PROP` - Proprietary Document Type
+          * `PUOR` - Purchase Order
+          * `SBIN` - Self Billed Invoice
+          * `SOAC` - Statement of Account
+          * `TSUT` - Trade Services Utility Transaction VCHR Voucher
+#        enum:
+#          - AROI
+#          - BOLD
+#          - CINV
+#          - CMCN
+#          - CNFA
+#          - CREN
+#          - DEBN
+#          - DISP
+#          - DNFA
+#          - MSIN
+#          - PROP
+#          - PUOR
+#          - SBIN
+#          - SOAC
+#          - TSUT
+        example:  'AROI'
+    AdjustmentEnum:
+      type: string
+      maxLength: 4
+      description: |
+        Adjustment
+
+        * `01` - Pricing Error
+        * `03` - Extension Error
+        * `04` - Item Not Accepted (Damaged)
+        * `05` - Item Not Accepted (Quality)
+        * `06` - Quantity Contested 07   Incorrect Product
+        * `11` - Returns (Damaged)
+        * `12` - Returns (Quality)
+        * `59` - Item Not Received
+        * `75` - Total Order Not Received
+        * `81` - Credit as Agreed
+        * `CM` - Covered by Credit Memo
+#      enum:
+#        - 01
+#        - 03
+#        - 04
+#        - 05
+#        - 06
+#        - 11
+#        - 12
+#        - 59
+#        - 75
+#        - 81
+#        - CM
+      example: 'CM'
+    SecondaryRemittanceDocumentEnum:
+      type: string
+      maxLength: 4
+      description: |
+        SecondaryRemittanceDocument
+
+        * `AROI` - Accounts Receivable Open Item
+        * `DISP` - Dispatch Advice
+        * `FXDR` - Foreign Exchange Deal Reference
+        * `PROP` - Proprietary Document Type PUOR Purchase Order
+        * `RADM` - Remittance Advice Message
+        * `RPIN` - Related Payment Instruction
+        * `SCOR1` - Structured Communication Reference VCHR Voucher
+#      enum:
+#        - AROI
+#        - DISP
+#        - FXDR
+#        - PROP
+#        - RADM
+#        - RPIN
+#        - SCOR1
+      example: 'AROI'
+    ErrorCategoryEnum:
+      type: string
+      maxLength: 1
+      description: |
+
+        * `E` - Data Error
+        * `F` - Insufficient Balance
+        * `H` - Accountability Error
+        * `I` - In Process or Intercepted
+        * `W` - Cutoff Hour Error
+        * `X` - Duplicate IMAD
+#      enum:
+#        - E
+#        - F
+#        - H
+#        - I
+#        - W
+#        - X
+      example: 'E'
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: An error message describing the problem intended for humans.
+          example: Validation error(s) present.
+  parameters:
+    requestId:
+      in: header
+      name: X-Request-Id
+      description: Optional Request ID allows application developer to trace requests through the systems logs
+      example: rs4f9915
+      schema:
+        type: string
+    idempotencyKey:
+      in: header
+      name: X-Idempotency-Key
+      description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      example: a4f88150
+      required: false
+      schema:
+        type: string
