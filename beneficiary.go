@@ -9,8 +9,8 @@ import "strings"
 type Beneficiary struct {
 	// tag
 	tag string
-	// Financial Institution
-	FinancialInstitution FinancialInstitution `json:"FinancialInstitution,omitempty"`
+	// Personal
+	Personal Personal `json:"personal,omitempty"`
 
 	// validator is composed for data validation
 	validator

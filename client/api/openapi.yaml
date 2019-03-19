@@ -2642,7 +2642,7 @@ components:
       - identifier
       - name
     Personal:
-      description: FinancialInstitution
+      description: Personal
       example:
         identificationCode: B
         identifier: identifier

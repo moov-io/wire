@@ -705,7 +705,7 @@ components:
         - name
         - address
     Personal:
-      description: FinancialInstitution
+      description: Personal
       properties:
         identificationCode:
           description: Identification Code
