@@ -9,7 +9,7 @@
 
 package openapi
 
-// Address
+// Address is the address
 type Address struct {
 	// AddressLineOne
 	AddressLineOne string `json:"addressLineOne,omitempty"`

@@ -474,7 +474,7 @@ components:
            description: ErrorDescription
            example: 'Data Error'
     SenderSupplied:
-      description: SenderSupplied {1500}
+      description: SenderSupplied
       properties:
         formatVersion:
           type: string
@@ -505,7 +505,7 @@ components:
         - testProductionCode
         - messageDuplicationCode
     TypeSubType:
-      description: TypeSubtype {1510}
+      description: TypeSubtype is the type and sub type codes
       properties:
         typeCode:
           description: TypeCode
@@ -559,7 +559,7 @@ components:
       required:
         - amount
     SenderDepositoryInstitution:
-      description: SenderDepositoryInstitution is a sender depository institution
+      description: SenderDepositoryInstitution is the receiver depository institution
       properties:
         senderABANumber:
           type: string
@@ -577,7 +577,7 @@ components:
         - senderABANumber
         - senderShortName
     ReceiverDepositoryInstitution:
-      description: Receiver DepositoryInstitution
+      description: ReceiverDepositoryInstitution is the receiver depository institution
       properties:
         receiverABANumber:
           type: string
@@ -595,7 +595,7 @@ components:
         - receiverABANumber
         - receiverShortName
     BusinessFunctionCode:
-      description: BusinessFunctionCode {3600}
+      description: BusinessFunctionCode is the business function code
       properties:
         businessFunctionCode:
           description: BusinessFunctionCode
@@ -683,7 +683,7 @@ components:
         (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
       example: '1.2345'
     FinancialInstitution:
-      description: FinancialInstitution
+      description: FinancialInstitution is financial institution demographic information
       properties:
         identificationCode:
           description: Identification Code
@@ -705,7 +705,7 @@ components:
         - name
         - address
     Personal:
-      description: Personal
+      description: Personal is personal demographic information
       properties:
         identificationCode:
           description: Identification Code
@@ -1398,7 +1398,7 @@ components:
           description: LineTwelve
           example: 'Line Twelve Text'
     Address:
-      description: Address
+      description: Address is the address
       properties:
         addressLineOne:
           type: string

@@ -9,7 +9,7 @@
 
 package openapi
 
-// SenderSupplied {1500}
+// SenderSupplied
 type SenderSupplied struct {
 	// FormatVersion 30 
 	FormatVersion string `json:"formatVersion"`

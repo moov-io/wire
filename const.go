@@ -32,6 +32,8 @@ const (
 	TagBeneficiaryReference = "{4320}"
 	// TagTagAccountDebitedDrawdown is AccountDebitedDrawdown
 	TagAccountDebitedDrawdown = "{4400}"
+	// TagOriginator is Originator
+	TagOriginator = "{5000}"
 
 	// ToDo: Additional Tags
 	// TagSenderReference is SenderReference

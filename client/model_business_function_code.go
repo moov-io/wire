@@ -9,7 +9,7 @@
 
 package openapi
 
-// BusinessFunctionCode {3600}
+// BusinessFunctionCode is the business function code
 type BusinessFunctionCode struct {
 	BusinessFunctionCode BusinessFunctionCodeEnum `json:"businessFunctionCode"`
 	// TransactionTypeCode If {3600} is CTR, an optional Transaction Type Code element is permitted; however, the Transaction Type Code 'COV' is not permitted. ToDo: Research This, I don't understand it yet

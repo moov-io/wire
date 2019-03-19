@@ -2339,7 +2339,7 @@ components:
           maxLength: 35
           type: string
     SenderSupplied:
-      description: SenderSupplied {1500}
+      description: SenderSupplied
       example:
         testProductionCode: T
         messageDuplicationCode: messageDuplicationCode
@@ -2393,7 +2393,7 @@ components:
       - testProductionCode
       - userRequestCorrelation
     TypeSubType:
-      description: TypeSubtype {1510}
+      description: TypeSubtype is the type and sub type codes
       example:
         subTypeCode: "10"
         typeCode: "10"
@@ -2454,7 +2454,7 @@ components:
       required:
       - amount
     SenderDepositoryInstitution:
-      description: SenderDepositoryInstitution is a sender depository institution
+      description: SenderDepositoryInstitution is the receiver depository institution
       example:
         senderABANumber: "091905114"
         senderShortName: 'MIDWESTONE B&T    '
@@ -2475,7 +2475,7 @@ components:
       - senderABANumber
       - senderShortName
     ReceiverDepositoryInstitution:
-      description: Receiver DepositoryInstitution
+      description: ReceiverDepositoryInstitution is the receiver depository institution
       example:
         receiverShortName: 'PREMIER BANK      '
         receiverABANumber: "091905664"
@@ -2496,7 +2496,7 @@ components:
       - receiverABANumber
       - receiverShortName
     BusinessFunctionCode:
-      description: BusinessFunctionCode {3600}
+      description: BusinessFunctionCode is the business function code
       example:
         businessFunctionCode: BTR
         transactionTypeCode: transactionTypeCode
@@ -2603,7 +2603,7 @@ components:
       maxLength: 12
       type: string
     FinancialInstitution:
-      description: FinancialInstitution
+      description: FinancialInstitution is financial institution demographic information
       example:
         identificationCode: B
         identifier: identifier
@@ -2642,7 +2642,7 @@ components:
       - identifier
       - name
     Personal:
-      description: Personal
+      description: Personal is personal demographic information
       example:
         identificationCode: B
         identifier: identifier
@@ -3552,7 +3552,7 @@ components:
           maxLength: 35
           type: string
     Address:
-      description: Address
+      description: Address is the address
       example:
         addressLineTwo: addressLineTwo
         addressLineOne: addressLineOne
