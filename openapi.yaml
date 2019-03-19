@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-
+# ToDO: Update Schema descriptions
 servers:
   - url: http://localhost:8087
     description: Local development
@@ -281,11 +281,9 @@ components:
         beneficiary:
           $ref: '#/components/schemas/Personal'
           description: Beneficiary {4200}
-        referenceForBeneficiary:
-          description: ReferenceForBeneficiary {4320}
-          type: string
-          maxLength: 16
-          example: 'Test Data'
+        beneficiaryReference:
+          $ref: '#/components/schemas/BeneficiaryReference'
+          description: BeneficiaryReference {4320}
         accountDebitedDrawdown:
           $ref: '#/components/schemas/AccountDebitedDrawdown'
           description: AccountDebitedDrawdown {4400}
@@ -519,7 +517,7 @@ components:
         - typeCode
         - subTypeCode
     InputMessageAccountabilityData:
-      description: Input Message Accountability Data (IMAD) {1520}
+      description: InputMessageAccountabilityData (IMAD)
       properties:
         inputCycleDate:
           type: string
@@ -546,7 +544,7 @@ components:
         - inputSource
         - inputSequenceNumber
     Amount:
-      description: Amount (up to a penny less than $10 billion) {2000}
+      description: Amount is an amount up to a penny less than $10 billion
       properties:
         amount:
           type: string
@@ -561,7 +559,7 @@ components:
       required:
         - amount
     SenderDepositoryInstitution:
-      description: SenderDepositoryInstitution {3100}
+      description: SenderDepositoryInstitution is a sender depository institution
       properties:
         senderABANumber:
           type: string
@@ -579,7 +577,7 @@ components:
         - senderABANumber
         - senderShortName
     ReceiverDepositoryInstitution:
-      description: Receiver DepositoryInstitution {3400}
+      description: Receiver DepositoryInstitution
       properties:
         receiverABANumber:
           type: string
@@ -685,7 +683,7 @@ components:
         (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
       example: '1.2345'
     FinancialInstitution:
-      description: FinancialInstitution {4000, 4100}
+      description: FinancialInstitution
       properties:
         identificationCode:
           description: Identification Code
@@ -707,7 +705,7 @@ components:
         - name
         - address
     Personal:
-      description: FinancialInstitution {4200}
+      description: FinancialInstitution
       properties:
         identificationCode:
           description: Identification Code
@@ -728,6 +726,13 @@ components:
         - identifier
         - name
         - address
+    BeneficiaryReference:
+      properties:
+          beneficiaryReference:
+            type: string
+            maxLength: 16
+            example: 'Test Data'
+            description: BeneficiaryReference
     AccountDebitedDrawdown:
       properties:
         identificationCode:

@@ -22,6 +22,16 @@ const (
 	TagReceiverDepositoryInstitution = "{3400}"
 	// TagBusinessFunctionCode is BusinessFunctionCode
 	TagBusinessFunctionCode = "{3600}"
+	// TagBeneficiaryIntermediaryFI is BeneficiaryIntermediaryFI
+	TagBeneficiaryIntermediaryFI = "{4000}"
+	// TagBeneficiaryFI is BeneficiaryFI
+	TagBeneficiaryFI = "{4100}"
+	// TagBeneficiary is Beneficiary
+	TagBeneficiary = "{4200}"
+	// TagBeneficiaryReference  is BeneficiaryReference
+	TagBeneficiaryReference = "{4320}"
+	// TagTagAccountDebitedDrawdown is AccountDebitedDrawdown
+	TagAccountDebitedDrawdown = "{4400}"
 
 	// ToDo: Additional Tags
 	// TagSenderReference is SenderReference

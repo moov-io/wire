@@ -40,7 +40,7 @@ func (bfc *BusinessFunctionCode) Parse(record string) {
 // String writes BusinessFunctionCode
 func (bfc *BusinessFunctionCode) String() string {
 	var buf strings.Builder
-	//ToDo: Check on separator
+	//ToDo: Separator
 	buf.Grow(12)
 	buf.WriteString(bfc.tag)
 	return buf.String()

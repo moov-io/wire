@@ -9,7 +9,7 @@
 
 package openapi
 
-// SenderDepositoryInstitution {3100}
+// SenderDepositoryInstitution is a sender depository institution
 type SenderDepositoryInstitution struct {
 	// SenderABANumber
 	SenderABANumber string `json:"senderABANumber"`

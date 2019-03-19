@@ -35,8 +35,7 @@ type FedWireMessage struct {
 	BeneficiaryIntermediaryFI FinancialInstitution `json:"beneficiaryIntermediaryFI,omitempty"`
 	BeneficiaryFI FinancialInstitution `json:"beneficiaryFI,omitempty"`
 	Beneficiary Personal `json:"beneficiary,omitempty"`
-	// ReferenceForBeneficiary {4320}
-	ReferenceForBeneficiary string `json:"referenceForBeneficiary,omitempty"`
+	BeneficiaryReference BeneficiaryReference `json:"beneficiaryReference,omitempty"`
 	AccountDebitedDrawdown AccountDebitedDrawdown `json:"accountDebitedDrawdown,omitempty"`
 	Originator Personal `json:"originator,omitempty"`
 	// OriginatorOptionF {5010}

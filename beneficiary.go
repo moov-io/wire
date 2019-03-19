@@ -6,14 +6,11 @@ package wire
 
 import "strings"
 
-// TypeSubType {1510}
-type TypeSubType struct {
+type Beneficiary struct {
 	// tag
 	tag string
-	// TypeCode
-	TypeCode string `json:"typeCode"`
-	// SubTypeCode
-	SubTypeCode string `json:"subTypeCode"`
+	// Financial Institution
+	FinancialInstitution FinancialInstitution `json:"FinancialInstitution,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -21,34 +18,34 @@ type TypeSubType struct {
 	converters
 }
 
-// NewTypeSubType returns a new TypeSubType
-func NewTypeSubType() TypeSubType {
-	tst := TypeSubType{
-		tag: TagTypeSubType,
+// NewBeneficiary returns a new Beneficiary
+func NewBeneficiary() Beneficiary  {
+	b := Beneficiary {
+		tag: TagBeneficiary,
 	}
-	return tst
+	return b
 }
 
-// Parse takes the input string and parses the TypeSubType values
+// Parse takes the input string and parses the Beneficiary values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (tst *TypeSubType) Parse(record string) {
+func (b *Beneficiary) Parse(record string) {
 }
 
-// String writes TypeSubType
-func (tst *TypeSubType) String() string {
+// String writes Beneficiary
+func (b *Beneficiary) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(10)
-	buf.WriteString(tst.tag)
+	buf.Grow(175)
+	buf.WriteString(b.tag)
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on TypeSubType and returns an error if not Validated
+// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (tst *TypeSubType) Validate() error {
-	if err := tst.fieldInclusion(); err != nil {
+func (b *Beneficiary) Validate() error {
+	if err := b.fieldInclusion(); err != nil {
 		return err
 	}
 	return nil
@@ -56,6 +53,6 @@ func (tst *TypeSubType) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (tst *TypeSubType) fieldInclusion() error {
+func (b *Beneficiary) fieldInclusion() error {
 	return nil
 }

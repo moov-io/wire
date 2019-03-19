@@ -24,7 +24,7 @@ Name | Type | Description | Notes
 **BeneficiaryIntermediaryFI** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **BeneficiaryFI** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **Beneficiary** | [**Personal**](Personal.md) |  | [optional] 
-**ReferenceForBeneficiary** | **string** | ReferenceForBeneficiary {4320} | [optional] 
+**BeneficiaryReference** | [**BeneficiaryReference**](BeneficiaryReference.md) |  | [optional] 
 **AccountDebitedDrawdown** | [**AccountDebitedDrawdown**](AccountDebitedDrawdown.md) |  | [optional] 
 **Originator** | [**Personal**](Personal.md) |  | [optional] 
 **OriginatorOptionF** | [**map[string]interface{}**](map[string]interface{}.md) | OriginatorOptionF {5010} | [optional] 

@@ -41,7 +41,7 @@ func (imad *InputMessageAccountabilityData) Parse(record string) {
 // String writes InputMessageAccountabilityData
 func (imad *InputMessageAccountabilityData) String() string {
 	var buf strings.Builder
-	// ToDo: Check on separator
+	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(imad.tag)
 	return buf.String()

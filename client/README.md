@@ -50,6 +50,7 @@ Class | Method | HTTP request | Description
  - [Advice](docs/Advice.md)
  - [AdviceCodeEnum](docs/AdviceCodeEnum.md)
  - [Amount](docs/Amount.md)
+ - [BeneficiaryReference](docs/BeneficiaryReference.md)
  - [BusinessFunctionCode](docs/BusinessFunctionCode.md)
  - [BusinessFunctionCodeEnum](docs/BusinessFunctionCodeEnum.md)
  - [Charges](docs/Charges.md)

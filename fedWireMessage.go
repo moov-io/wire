@@ -4,8 +4,12 @@
 
 package wire
 
+//ToDo: omitEmpty
+
 // FedWireMessage is a FedWire Message
 type FedWireMessage struct {
+	// ID
+	ID string `json:"id"`
 	// SenderSuppliedInformation
 	SenderSuppliedInformation SenderSuppliedInformation `json:"senderSuppliedInformation"`
 	// TypeSubType
@@ -17,9 +21,17 @@ type FedWireMessage struct {
 	// SenderDepositoryInstitution
 	SenderDI SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
 	// ReceiverDepositoryInstitution
-	ReceiverDI ReceiverDepositoryInstitution `json:"ReceiverDepositoryInstitution"`
+	ReceiverDI ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
 	// BusinessFunctionCode
-	BusinessFunctionCode BusinessFunctionCode `json:"BusinessFunctionCode"`
+	BusinessFunctionCode BusinessFunctionCode `json:"businessFunctionCode"`
+	// BeneficiaryIntermediaryFI
+	BeneficiaryIntermediaryFI BeneficiaryIntermediaryFI  `json:"beneficiaryIntermediaryFI"`
+	// BeneficiaryFI
+	BeneficiaryFI BeneficiaryFI  `json:"beneficiaryFI"`
+	// Beneficiary
+	Beneficiary Beneficiary  `json:"beneficiary, "`
+	// BeneficiaryReference
+	BeneficiaryReference BeneficiaryReference `json:"beneficiaryReference, omitEmpty"`
 }
 
 // NewFedWireMessage returns a new FedWireMessage

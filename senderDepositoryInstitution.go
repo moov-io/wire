@@ -39,7 +39,7 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) {
 // String writes SenderDepositoryInstitution
 func (sdi *SenderDepositoryInstitution) String() string {
 	var buf strings.Builder
-	// ToDo: Check on separator
+	// ToDo: Separator
 	buf.Grow(33)
 	buf.WriteString(sdi.tag)
 	return buf.String()

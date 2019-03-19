@@ -503,10 +503,11 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -854,10 +855,11 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -1218,10 +1220,11 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -1569,10 +1572,11 @@ components:
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -1938,10 +1942,11 @@ components:
         senderDepositoryInstitution:
           senderABANumber: "091905114"
           senderShortName: 'MIDWESTONE B&T    '
+        beneficiaryReference:
+          beneficiaryReference: Test Data
         institutionAccount:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
-        referenceForBeneficiary: Test Data
         originatorFI:
           identificationCode: B
           identifier: identifier
@@ -2119,11 +2124,8 @@ components:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiary:
           $ref: '#/components/schemas/Personal'
-        referenceForBeneficiary:
-          description: ReferenceForBeneficiary {4320}
-          example: Test Data
-          maxLength: 16
-          type: string
+        beneficiaryReference:
+          $ref: '#/components/schemas/BeneficiaryReference'
         accountDebitedDrawdown:
           $ref: '#/components/schemas/AccountDebitedDrawdown'
         originator:
@@ -2404,7 +2406,7 @@ components:
       - subTypeCode
       - typeCode
     InputMessageAccountabilityData:
-      description: Input Message Accountability Data (IMAD) {1520}
+      description: InputMessageAccountabilityData (IMAD)
       example:
         inputSource: 'XYZ ABC '
         inputCycleDate: "20191201"
@@ -2435,7 +2437,7 @@ components:
       - inputSequenceNumber
       - inputSource
     Amount:
-      description: Amount (up to a penny less than $10 billion) {2000}
+      description: Amount is an amount up to a penny less than $10 billion
       example:
         amount: "000000100000"
       properties:
@@ -2452,7 +2454,7 @@ components:
       required:
       - amount
     SenderDepositoryInstitution:
-      description: SenderDepositoryInstitution {3100}
+      description: SenderDepositoryInstitution is a sender depository institution
       example:
         senderABANumber: "091905114"
         senderShortName: 'MIDWESTONE B&T    '
@@ -2473,7 +2475,7 @@ components:
       - senderABANumber
       - senderShortName
     ReceiverDepositoryInstitution:
-      description: Receiver DepositoryInstitution {3400}
+      description: Receiver DepositoryInstitution
       example:
         receiverShortName: 'PREMIER BANK      '
         receiverABANumber: "091905664"
@@ -2601,7 +2603,7 @@ components:
       maxLength: 12
       type: string
     FinancialInstitution:
-      description: FinancialInstitution {4000, 4100}
+      description: FinancialInstitution
       example:
         identificationCode: B
         identifier: identifier
@@ -2640,7 +2642,7 @@ components:
       - identifier
       - name
     Personal:
-      description: FinancialInstitution {4200}
+      description: FinancialInstitution
       example:
         identificationCode: B
         identifier: identifier
@@ -2678,6 +2680,15 @@ components:
       - identificationCode
       - identifier
       - name
+    BeneficiaryReference:
+      example:
+        beneficiaryReference: Test Data
+      properties:
+        beneficiaryReference:
+          description: BeneficiaryReference
+          example: Test Data
+          maxLength: 16
+          type: string
     AccountDebitedDrawdown:
       example:
         identificationCode: D

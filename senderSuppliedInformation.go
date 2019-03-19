@@ -46,7 +46,7 @@ func (ssi *SenderSuppliedInformation) Parse(record string) {
 // String writes SenderSuppliedInformation
 func (ssi *SenderSuppliedInformation) String() string {
 	var buf strings.Builder
-	// ToDo: Check on separator
+	// ToDo: Separator
 	buf.Grow(18)
 	buf.WriteString(ssi.tag)
 	return buf.String()
