@@ -14,8 +14,8 @@ Name | Type | Description | Notes
 **SenderDepositoryInstitution** | [**SenderDepositoryInstitution**](SenderDepositoryInstitution.md) |  | 
 **ReceiverDepositoryInstitution** | [**ReceiverDepositoryInstitution**](ReceiverDepositoryInstitution.md) |  | 
 **BusinessFunctionCode** | [**BusinessFunctionCode**](BusinessFunctionCode.md) |  | 
-**SenderReference** | **string** | SenderReference | [optional] 
-**PreviousMessageIdentifier** | **string** | PreviousMessageIdentifier | [optional] 
+**SenderReference** | [**SenderReference**](SenderReference.md) |  | [optional] 
+**PreviousMessageIdentifier** | [**PreviousMessageIdentifier**](PreviousMessageIdentifier.md) |  | [optional] 
 **LocalInstrument** | [**LocalInstrument**](LocalInstrument.md) |  | [optional] 
 **PaymentNotification** | [**PaymentNotification**](PaymentNotification.md) |  | [optional] 
 **Charges** | [**Charges**](Charges.md) |  | [optional] 
@@ -27,7 +27,7 @@ Name | Type | Description | Notes
 **BeneficiaryReference** | [**BeneficiaryReference**](BeneficiaryReference.md) |  | [optional] 
 **AccountDebitedDrawdown** | [**AccountDebitedDrawdown**](AccountDebitedDrawdown.md) |  | [optional] 
 **Originator** | [**Personal**](Personal.md) |  | [optional] 
-**OriginatorOptionF** | [**map[string]interface{}**](map[string]interface{}.md) | OriginatorOptionF {5010} | [optional] 
+**OriginatorOptionF** | [**OriginatorOptionF**](OriginatorOptionF.md) |  | [optional] 
 **OriginatorFI** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **InstructingFI** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **AccountCreditedDrawdown** | [**AccountCreditedDrawdown**](AccountCreditedDrawdown.md) |  | [optional] 

@@ -4,7 +4,7 @@
 
 package wire
 
-// Address
+// Address is 3 lines of address information
 type Address struct {
 	// AddressLineOne
 	AddressLineOne string `json:"addressLineOne,omitempty"`

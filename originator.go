@@ -6,6 +6,7 @@ package wire
 
 import "strings"
 
+// Originator is the originator of the wire
 type Originator struct {
 	// tag
 	tag string
@@ -53,7 +54,7 @@ func (o *Originator) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (bo*Originator) fieldInclusion() error {
+func (o *Originator) fieldInclusion() error {
 	return nil
 }
 

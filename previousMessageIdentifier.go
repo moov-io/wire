@@ -6,12 +6,12 @@ package wire
 
 import "strings"
 
-// BeneficiaryReference is a reference for the beneficiary
-type BeneficiaryReference struct {
+// PreviousMessageIdentifier is the PreviousMessageIdentifier of the wire
+type PreviousMessageIdentifier struct {
 	// tag
 	tag string
-	// BeneficiaryReference
-	BeneficiaryReference string `json:"beneficiaryReference,omitempty"`
+	// PreviousMessageIdentifier
+	PreviousMessageIdentifier string `json:"PreviousMessageIdentifier,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -19,34 +19,34 @@ type BeneficiaryReference struct {
 	converters
 }
 
-// NewBeneficiaryReference returns a new BeneficiaryReference
-func NewBeneficiaryReference() BeneficiaryReference  {
-	br := BeneficiaryReference {
-		tag: TagBeneficiaryReference,
+// NewPreviousMessageIdentifier returns a new PreviousMessageIdentifier
+func NewPreviousMessageIdentifier() PreviousMessageIdentifier  {
+	pmi := PreviousMessageIdentifier {
+		tag: TagPreviousMessageIdentifier,
 	}
-	return br
+	return pmi
 }
 
-// Parse takes the input string and parses the BeneficiaryReference values
+// Parse takes the input string and parses the PreviousMessageIdentifier values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (br *BeneficiaryReference) Parse(record string) {
+func (pmi *PreviousMessageIdentifier) Parse(record string) {
 }
 
-// String writes BeneficiaryReference
-func (br *BeneficiaryReference) String() string {
+// String writes PreviousMessageIdentifier
+func (pmi *PreviousMessageIdentifier) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(16)
-	buf.WriteString(br.tag)
+	buf.Grow(22)
+	buf.WriteString(pmi.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (br *BeneficiaryReference) Validate() error {
-	if err := br.fieldInclusion(); err != nil {
+func (pmi *PreviousMessageIdentifier) Validate() error {
+	if err := pmi.fieldInclusion(); err != nil {
 		return err
 	}
 	return nil
@@ -54,7 +54,7 @@ func (br *BeneficiaryReference) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (br *BeneficiaryReference) fieldInclusion() error {
+func (pmi *PreviousMessageIdentifier) fieldInclusion() error {
 	return nil
 }
 

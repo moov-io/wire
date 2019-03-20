@@ -293,12 +293,12 @@ components:
             lineThree: Line Three
           originatorBeneficiaryFinancialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           receiverFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -316,13 +316,7 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            drawdownCreditAccountNumber: "121042882"
           exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
@@ -332,20 +326,20 @@ components:
             currencyCode: USD
           beneficiaryAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           drawdownDebitAccountAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -440,7 +434,8 @@ components:
           paymentMethodToBeneficiary:
             Additional: For goods and services
             paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
@@ -531,18 +526,23 @@ components:
             currenyCode: USD
           intermediaryFinacialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
@@ -592,7 +592,8 @@ components:
               addressLineThree: addressLineThree
             name: name
           secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          senderReference:
+            senderReference: Reference
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
@@ -645,12 +646,12 @@ components:
             lineThree: Line Three
           originatorBeneficiaryFinancialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           receiverFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -668,13 +669,7 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            drawdownCreditAccountNumber: "121042882"
           exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
@@ -684,20 +679,20 @@ components:
             currencyCode: USD
           beneficiaryAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           drawdownDebitAccountAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -792,7 +787,8 @@ components:
           paymentMethodToBeneficiary:
             Additional: For goods and services
             paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
@@ -883,18 +879,23 @@ components:
             currenyCode: USD
           intermediaryFinacialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
@@ -944,7 +945,8 @@ components:
               addressLineThree: addressLineThree
             name: name
           secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          senderReference:
+            senderReference: Reference
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
@@ -1010,12 +1012,12 @@ components:
             lineThree: Line Three
           originatorBeneficiaryFinancialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           receiverFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -1033,13 +1035,7 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            drawdownCreditAccountNumber: "121042882"
           exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
@@ -1049,20 +1045,20 @@ components:
             currencyCode: USD
           beneficiaryAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           drawdownDebitAccountAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1157,7 +1153,8 @@ components:
           paymentMethodToBeneficiary:
             Additional: For goods and services
             paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
@@ -1248,18 +1245,23 @@ components:
             currenyCode: USD
           intermediaryFinacialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
@@ -1309,7 +1311,8 @@ components:
               addressLineThree: addressLineThree
             name: name
           secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          senderReference:
+            senderReference: Reference
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
@@ -1362,12 +1365,12 @@ components:
             lineThree: Line Three
           originatorBeneficiaryFinancialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           receiverFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -1385,13 +1388,7 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            drawdownCreditAccountNumber: "121042882"
           exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
@@ -1401,20 +1398,20 @@ components:
             currencyCode: USD
           beneficiaryAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           drawdownDebitAccountAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1509,7 +1506,8 @@ components:
           paymentMethodToBeneficiary:
             Additional: For goods and services
             paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
@@ -1600,18 +1598,23 @@ components:
             currenyCode: USD
           intermediaryFinacialInstitutionAdvice:
             adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
             contactMobileNumber: 555.555.5555
             identificationCode: BANK
@@ -1661,7 +1664,8 @@ components:
               addressLineThree: addressLineThree
             name: name
           secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          senderReference:
+            senderReference: Reference
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
@@ -1732,12 +1736,12 @@ components:
           lineThree: Line Three
         originatorBeneficiaryFinancialInstitutionAdvice:
           adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         receiverFI:
           lineTwo: Line Two
           lineFive: Line Five
@@ -1755,13 +1759,7 @@ components:
           messageDuplicationCode: messageDuplicationCode
           formatVersion: "30"
         accountCreditedDrawdown:
-          identificationCode: C
-          identifier: identifier
-          address:
-            addressLineTwo: addressLineTwo
-            addressLineOne: addressLineOne
-            addressLineThree: addressLineThree
-          name: name
+          drawdownCreditAccountNumber: "121042882"
         exchangeRate: "1.2345"
         orderingCustomer:
           swiftLine: '{}'
@@ -1771,20 +1769,20 @@ components:
           currencyCode: USD
         beneficiaryAdvice:
           adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         drawdownDebitAccountAdvice:
           adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         remittance:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
@@ -1879,7 +1877,8 @@ components:
         paymentMethodToBeneficiary:
           Additional: For goods and services
           paymentMethod: CHECK
-        previousMessageIdentifier: previousMessageIdentifier
+        previousMessageIdentifier:
+          previousMessageIdentifier: previousMessageIdentifier
         adjustment: CM
         inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
@@ -1970,18 +1969,23 @@ components:
           currenyCode: USD
         intermediaryFinacialInstitutionAdvice:
           adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         originatorToBeneficiary:
           lineTwo: Line Two
           lineOne: Line One
           lineFour: Line Four
           lineThree: Line Three
-        originatorOptionF: ""
+        originatorOptionF:
+          lineTwo: 3/US/NEW YORK, NY 10000
+          name: 1/SMITH JOHN
+          lineOne: 2/123 MAIN STREET
+          lineThree: 7/111-22-3456
+          partyIdentifier: /123456
         remittanceOriginator:
           contactMobileNumber: 555.555.5555
           identificationCode: BANK
@@ -2031,7 +2035,8 @@ components:
             addressLineThree: addressLineThree
           name: name
         secondaryRemittanceDocument: AROI
-        senderReference: Reference
+        senderReference:
+          senderReference: Reference
         primaryRemittanceDocument:
           documentIdentificationNumber: DOCUMENT 292828
           documentTypeCode: AROI
@@ -2093,14 +2098,9 @@ components:
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
         senderReference:
-          description: SenderReference
-          example: Reference
-          maxLength: 16
-          type: string
+          $ref: '#/components/schemas/SenderReference'
         previousMessageIdentifier:
-          description: PreviousMessageIdentifier
-          maxLength: 22
-          type: string
+          $ref: '#/components/schemas/PreviousMessageIdentifier'
         localInstrument:
           $ref: '#/components/schemas/LocalInstrument'
         paymentNotification:
@@ -2131,7 +2131,7 @@ components:
         originator:
           $ref: '#/components/schemas/Personal'
         originatorOptionF:
-          description: OriginatorOptionF {5010}
+          $ref: '#/components/schemas/OriginatorOptionF'
         originatorFI:
           $ref: '#/components/schemas/FinancialInstitution'
         instructingFI:
@@ -2515,6 +2515,7 @@ components:
       required:
       - businessFunctionCode
     LocalInstrument:
+      description: LocalInstrument is the local instrument
       example:
         localInstrumentCode: ANSI
         proprietaryCode: WJD786363
@@ -2527,6 +2528,7 @@ components:
           maxLength: 35
           type: string
     PaymentNotification:
+      description: PaymentNotification is the payment notification
       example:
         contactMobileNumber: 555.555.555
         contactName: Wade Arnold
@@ -2576,6 +2578,7 @@ components:
           maxLength: 35
           type: string
     InstructedAmount:
+      description: InstructedAmount is the instructed amount
       example:
         amount: amount
         currencyCode: USD
@@ -2690,6 +2693,7 @@ components:
           maxLength: 16
           type: string
     AccountDebitedDrawdown:
+      description: AccountDebitedDrawdown is the account which is debited in a drawdown
       example:
         identificationCode: D
         identifier: identifier
@@ -2722,39 +2726,79 @@ components:
       - identificationCode
       - identifier
       - name
-    AccountCreditedDrawdown:
+    OriginatorOptionF:
+      description: OptionF is originator option F
       example:
-        identificationCode: C
-        identifier: identifier
-        address:
-          addressLineTwo: addressLineTwo
-          addressLineOne: addressLineOne
-          addressLineThree: addressLineThree
-        name: name
+        lineTwo: 3/US/NEW YORK, NY 10000
+        name: 1/SMITH JOHN
+        lineOne: 2/123 MAIN STREET
+        lineThree: 7/111-22-3456
+        partyIdentifier: /123456
       properties:
-        identificationCode:
-          description: |
-            Identification Code
-            * `C` - Credit
-          enum:
-          - C
-          example: C
-          maxLength: 1
-          type: string
-        identifier:
-          description: Identifier
-          maxLength: 34
-          type: string
-        name:
-          description: Name
+        partyIdentifier:
+          description: "PartyIdentifier\n\nMust be one of the following two formats:\n\
+            1.\t/Account Number (slash followed by at least one valid non-space character:\
+            \  e.g., /123456)\n\n2.\tUnique Identifier/ (4 character code followed\
+            \ by a slash and at least one valid non-space character:\n   e.g., SOSE/123-456-789)\n\
+            ARNU: Alien Registration Number\nCCPT: Passport Number\nCUST: Customer\
+            \ Identification Number  DRLC/    Driver’s License Number  EMPL/    Employer\
+            \ Number\nNIDN: National Identify Number  SOSE/    Social Security Number\n\
+            TXID: Tax Identification Number\n"
+          example: /123456
           maxLength: 35
           type: string
-        address:
-          $ref: '#/components/schemas/Address'
-      required:
-      - identificationCode
-      - identifier
-      - name
+        name:
+          description: |
+            Name
+
+            Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+            e.g., 1/SMITH JOHN.
+          example: 1/SMITH JOHN
+          maxLength: 35
+          type: string
+        lineOne:
+          description: "LineOne\n\nFormat: Must begin with one of the following Line\
+            \ Codes followed by a slash and\nat least one valid non-space character.\n\
+            1\tName\n2\tAddress\n3\tCountry and Town\n4\tDate of Birth\n5\tPlace of\
+            \ Birth\n6\tCustomer Identification Number\n7\tNational Identity Number\n\
+            8\tAdditional Information\n\nFor example:\n2/123 MAIN STREET\n3/US/NEW\
+            \ YORK, NY 10000\n7/111-22-3456\n"
+          example: 2/123 MAIN STREET
+          maxLength: 35
+          type: string
+        lineTwo:
+          description: "LineTwo\n\nFormat: Must begin with one of the following Line\
+            \ Codes followed by a slash and\nat least one valid non-space character.\n\
+            1\tName\n2\tAddress\n3\tCountry and Town\n4\tDate of Birth\n5\tPlace of\
+            \ Birth\n6\tCustomer Identification Number\n7\tNational Identity Number\n\
+            8\tAdditional Information\n\nFor example:\n2/123 MAIN STREET\n3/US/NEW\
+            \ YORK, NY 10000\n7/111-22-3456\n"
+          example: 3/US/NEW YORK, NY 10000
+          maxLength: 35
+          type: string
+        lineThree:
+          description: "LineThree\n\nFormat: Must begin with one of the following\
+            \ Line Codes followed by a slash and\nat least one valid non-space character.\n\
+            1\tName\n2\tAddress\n3\tCountry and Town\n4\tDate of Birth\n5\tPlace of\
+            \ Birth\n6\tCustomer Identification Number\n7\tNational Identity Number\n\
+            8\tAdditional Information\n\nFor example:\n2/123 MAIN STREET\n3/US/NEW\
+            \ YORK, NY 10000\n7/111-22-3456\n"
+          example: 7/111-22-3456
+          maxLength: 35
+          type: string
+    AccountCreditedDrawdown:
+      description: AccountCreditedDrawdown is the account which is credited in a drawdown
+      example:
+        drawdownCreditAccountNumber: "121042882"
+      properties:
+        drawdownCreditAccountNumber:
+          description: |
+            DrawdownCreditAccountNumber
+
+            9 character ABA
+          example: "121042882"
+          maxLength: 9
+          type: string
     OriginatorToBeneficiary:
       description: OriginatorToBeneficiary
       example:
@@ -2827,37 +2871,43 @@ components:
       description: DrawdownDebitAccountAdvice
       example:
         adviceCode: HLD
-        lineTwo: lineTwo
-        lineFive: lineFive
-        lineSix: lineSix
-        lineOne: lineOne
-        lineFour: lineFour
-        lineThree: lineThree
+        lineTwo: Line Two
+        lineFive: Line Five
+        lineSix: Line Six
+        lineOne: Line One
+        lineFour: Line Four
+        lineThree: Line Three
       properties:
         adviceCode:
           $ref: '#/components/schemas/AdviceCodeEnum'
         lineOne:
           description: LineOne
+          example: Line One
           maxLength: 26
           type: string
         lineTwo:
           description: LineTwo
+          example: Line Two
           maxLength: 33
           type: string
         lineThree:
           description: LineThree
+          example: Line Three
           maxLength: 33
           type: string
         lineFour:
           description: LineFour
+          example: Line Four
           maxLength: 33
           type: string
         lineFive:
           description: LineFive
+          example: Line Five
           maxLength: 33
           type: string
         lineSix:
           description: LineSix
+          example: Line Six
           maxLength: 33
           type: string
     PaymentMethodToBeneficiary:
@@ -2979,14 +3029,24 @@ components:
           maxLength: 8994
           type: string
     SenderReference:
-      description: SenderReference
-      example: Reference
-      maxLength: 16
-      type: string
+      description: SenderReference is sender reference
+      example:
+        senderReference: Reference
+      properties:
+        senderReference:
+          description: SenderReference
+          example: Reference
+          maxLength: 16
+          type: string
     PreviousMessageIdentifier:
-      description: PreviousMessageIdentifier
-      maxLength: 22
-      type: string
+      description: PreviousMessageIdentifier is the identifier for a previous message
+      example:
+        previousMessageIdentifier: previousMessageIdentifier
+      properties:
+        previousMessageIdentifier:
+          description: PreviousMessageIdentifier
+          maxLength: 22
+          type: string
     Charges:
       example:
         sendersChargesOne: USD1234,56

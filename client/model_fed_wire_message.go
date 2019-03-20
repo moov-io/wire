@@ -22,10 +22,8 @@ type FedWireMessage struct {
 	SenderDepositoryInstitution SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
 	ReceiverDepositoryInstitution ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
 	BusinessFunctionCode BusinessFunctionCode `json:"businessFunctionCode"`
-	// SenderReference
-	SenderReference string `json:"senderReference,omitempty"`
-	// PreviousMessageIdentifier
-	PreviousMessageIdentifier string `json:"previousMessageIdentifier,omitempty"`
+	SenderReference SenderReference `json:"senderReference,omitempty"`
+	PreviousMessageIdentifier PreviousMessageIdentifier `json:"previousMessageIdentifier,omitempty"`
 	LocalInstrument LocalInstrument `json:"localInstrument,omitempty"`
 	PaymentNotification PaymentNotification `json:"paymentNotification,omitempty"`
 	Charges Charges `json:"charges,omitempty"`
@@ -38,8 +36,7 @@ type FedWireMessage struct {
 	BeneficiaryReference BeneficiaryReference `json:"beneficiaryReference,omitempty"`
 	AccountDebitedDrawdown AccountDebitedDrawdown `json:"accountDebitedDrawdown,omitempty"`
 	Originator Personal `json:"originator,omitempty"`
-	// OriginatorOptionF {5010}
-	OriginatorOptionF map[string]interface{} `json:"originatorOptionF,omitempty"`
+	OriginatorOptionF OriginatorOptionF `json:"originatorOptionF,omitempty"`
 	OriginatorFI FinancialInstitution `json:"originatorFI,omitempty"`
 	InstructingFI FinancialInstitution `json:"instructingFI,omitempty"`
 	AccountCreditedDrawdown AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`

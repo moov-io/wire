@@ -9,6 +9,7 @@
 
 package openapi
 
+// InstructedAmount is the instructed amount
 type InstructedAmount struct {
 	// CurrencyCode
 	CurrencyCode string `json:"currencyCode,omitempty"`

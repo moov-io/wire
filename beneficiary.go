@@ -6,6 +6,7 @@ package wire
 
 import "strings"
 
+// Beneficiary is the beneficiary of the wire
 type Beneficiary struct {
 	// tag
 	tag string

@@ -6,6 +6,7 @@ package wire
 
 import "strings"
 
+// BeneficiaryFI is the financial institution of the beneficiary
 type BeneficiaryFI struct {
 	// tag
 	tag string

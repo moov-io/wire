@@ -6,6 +6,7 @@ package wire
 
 import "strings"
 
+// AccountDebitedDrawdown is the account which is debited in a drawdown
 type AccountDebitedDrawdown struct {
 	// tag
 	tag string

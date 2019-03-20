@@ -22,6 +22,10 @@ const (
 	TagReceiverDepositoryInstitution = "{3400}"
 	// TagBusinessFunctionCode is BusinessFunctionCode
 	TagBusinessFunctionCode = "{3600}"
+	// TagSenderReference is SenderReference
+	TagSenderReference = "{3320}"
+	// TagPreviousMessageIdentifier is PreviousMessageIdentifier
+	TagPreviousMessageIdentifier = "{3500}"
 	// TagBeneficiaryIntermediaryFI is BeneficiaryIntermediaryFI
 	TagBeneficiaryIntermediaryFI = "{4000}"
 	// TagBeneficiaryFI is BeneficiaryFI
@@ -30,20 +34,23 @@ const (
 	TagBeneficiary = "{4200}"
 	// TagBeneficiaryReference  is BeneficiaryReference
 	TagBeneficiaryReference = "{4320}"
-	// TagTagAccountDebitedDrawdown is AccountDebitedDrawdown
+	// TagAccountDebitedDrawdown is AccountDebitedDrawdown
 	TagAccountDebitedDrawdown = "{4400}"
 	// TagOriginator is Originator
 	TagOriginator = "{5000}"
+	// TagOriginatorOptionF is OriginatorOptionF
+	TagOriginatorOptionF = "{5010}"
+	// TagOriginatorFI is OriginatingFI
+	TagOriginatorFI = "{5100}"
+	// TagInstructingFI is InstructingFI
+	TagInstructingFI = "{5200}"
+	// TagAccountCreditedDrawdown is AccountCreditedDrawdown
+	TagAccountCreditedDrawdown = "{5400}"
+	// TagOriginatorToBeneficiary is OriginatorToBeneficiary
+	TagOriginatorToBeneficiary = "{6000}"
+
 
 	// ToDo: Additional Tags
-	// TagSenderReference is SenderReference
-	// TagSenderReference = 3320
-	// 3000
-	// 4200
-	// 5000
-	// 6000, etc...
-
-	// TagSenderSuppliedInformation
 
 	// FormatVersion designates the FEDWIRE message format version
 	FormatVersion = "30"

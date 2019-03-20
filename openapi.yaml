@@ -291,6 +291,7 @@ components:
           $ref: '#/components/schemas/Personal'
           description: Originator {5000}
         originatorOptionF:
+          $ref: '#/components/schemas/OriginatorOptionF'
           description: OriginatorOptionF {5010}
         originatorFI:
           $ref: '#/components/schemas/FinancialInstitution'
@@ -613,6 +614,7 @@ components:
       required:
         - businessFunctionCode
     LocalInstrument:
+      description: LocalInstrument is the local instrument
       properties:
         localInstrumentCode:
           $ref: '#/components/schemas/LocalInstrumentEnum'
@@ -623,6 +625,7 @@ components:
           description: ProprietaryCode
           example: 'WJD786363'
     PaymentNotification:
+      description: PaymentNotification is the payment notification
       properties:
         paymentNotificationIndicator:
           $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
@@ -659,6 +662,7 @@ components:
           #ToDo Review
           example: 'WireTransfer 10001'
     InstructedAmount:
+      description: InstructedAmount is the instructed amount
       properties:
         currencyCode:
           type: string
@@ -734,6 +738,7 @@ components:
             example: 'Test Data'
             description: BeneficiaryReference
     AccountDebitedDrawdown:
+      description: AccountDebitedDrawdown is the account which is debited in a drawdown
       properties:
         identificationCode:
           type: string
@@ -759,32 +764,115 @@ components:
         - identificationCode
         - identifier
         - name
-    AccountCreditedDrawdown:
+    OriginatorOptionF:
+      description: OptionF is originator option F
       properties:
-        identificationCode:
+        partyIdentifier:
           type: string
-          maxLength: 1
+          maxLength: 35
           description: |
-            Identification Code
-            * `C` - Credit
-          enum:
-            - C
-          example: 'C'
-        identifier:
-          type: string
-          maxLength: 34
-          description: Identifier
+            PartyIdentifier
+
+            Must be one of the following two formats:
+            1.	/Account Number (slash followed by at least one valid non-space character:  e.g., /123456)
+
+            2.	Unique Identifier/ (4 character code followed by a slash and at least one valid non-space character:
+               e.g., SOSE/123-456-789)
+            ARNU: Alien Registration Number
+            CCPT: Passport Number
+            CUST: Customer Identification Number  DRLC/    Driver’s License Number  EMPL/    Employer Number
+            NIDN: National Identify Number  SOSE/    Social Security Number
+            TXID: Tax Identification Number
+          example: '/123456'
         name:
           type: string
           maxLength: 35
-          description: Name
-        address:
-          description: Address
-          $ref: '#/components/schemas/Address'
-      required:
-        - identificationCode
-        - identifier
-        - name
+          description: |
+            Name
+
+            Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+            e.g., 1/SMITH JOHN.
+          example: '1/SMITH JOHN'
+        lineOne:
+          type: string
+          maxLength: 35
+          description: |
+            LineOne
+
+            Format: Must begin with one of the following Line Codes followed by a slash and
+            at least one valid non-space character.
+            1	Name
+            2	Address
+            3	Country and Town
+            4	Date of Birth
+            5	Place of Birth
+            6	Customer Identification Number
+            7	National Identity Number
+            8	Additional Information
+
+            For example:
+            2/123 MAIN STREET
+            3/US/NEW YORK, NY 10000
+            7/111-22-3456
+
+          example: '2/123 MAIN STREET'
+        lineTwo:
+          type: string
+          maxLength: 35
+          description: |
+            LineTwo
+
+            Format: Must begin with one of the following Line Codes followed by a slash and
+            at least one valid non-space character.
+            1	Name
+            2	Address
+            3	Country and Town
+            4	Date of Birth
+            5	Place of Birth
+            6	Customer Identification Number
+            7	National Identity Number
+            8	Additional Information
+
+            For example:
+            2/123 MAIN STREET
+            3/US/NEW YORK, NY 10000
+            7/111-22-3456
+
+          example: '3/US/NEW YORK, NY 10000'
+        lineThree:
+          type: string
+          maxLength: 35
+          description: |
+            LineThree
+
+            Format: Must begin with one of the following Line Codes followed by a slash and
+            at least one valid non-space character.
+            1	Name
+            2	Address
+            3	Country and Town
+            4	Date of Birth
+            5	Place of Birth
+            6	Customer Identification Number
+            7	National Identity Number
+            8	Additional Information
+
+            For example:
+            2/123 MAIN STREET
+            3/US/NEW YORK, NY 10000
+            7/111-22-3456
+
+          example: '7/111-22-3456'
+    AccountCreditedDrawdown:
+      description: AccountCreditedDrawdown is the account which is credited in a drawdown
+      properties:
+        drawdownCreditAccountNumber:
+          type: string
+          maxLength: 9
+          description: |
+            DrawdownCreditAccountNumber
+
+            9 character ABA
+          example: '121042882'
     OriginatorToBeneficiary:
         description: OriginatorToBeneficiary
         properties:
@@ -851,26 +939,32 @@ components:
           type: string
           maxLength: 26
           description: LineOne
+          example: 'Line One'
         lineTwo:
           type: string
           maxLength: 33
           description: LineTwo
+          example: 'Line Two'
         lineThree:
           type: string
           maxLength: 33
           description: LineThree
+          example: 'Line Three'
         lineFour:
           type: string
           maxLength: 33
           description: LineFour
+          example: 'Line Four'
         lineFive:
           type: string
           maxLength: 33
           description: LineFive
+          example: 'Line Five'
         lineSix:
           type: string
           maxLength: 33
           description: LineSix
+          example: 'Line Six'
     PaymentMethodToBeneficiary:
       properties:
         paymentMethod:
@@ -974,15 +1068,21 @@ components:
           description: Addenda
           example: 'Payment for goods'
     SenderReference:
-      type: string
-      maxLength: 16
-      description: SenderReference
-      example: 'Reference'
+      description: SenderReference is sender reference
+      properties:
+        senderReference:
+          type: string
+          maxLength: 16
+          description: SenderReference
+          example: 'Reference'
     PreviousMessageIdentifier:
-      type: string
-      maxLength: 22
-      description: PreviousMessageIdentifier
-      # ToDo: find previousMessageIdentifier example
+      description: PreviousMessageIdentifier is the identifier for a previous message
+      properties:
+        previousMessageIdentifier:
+          type: string
+          maxLength: 22
+          description: PreviousMessageIdentifier
+          # ToDo: find previousMessageIdentifier example
       example: ''
     Charges:
       properties:
