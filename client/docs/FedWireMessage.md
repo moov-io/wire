@@ -20,7 +20,7 @@ Name | Type | Description | Notes
 **PaymentNotification** | [**PaymentNotification**](PaymentNotification.md) |  | [optional] 
 **Charges** | [**Charges**](Charges.md) |  | [optional] 
 **InstructedAmount** | [**InstructedAmount**](InstructedAmount.md) |  | [optional] 
-**ExchangeRate** | **string** | ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345).  | [optional] 
+**ExchangeRate** | [**ExchangeRate**](ExchangeRate.md) |  | [optional] 
 **BeneficiaryIntermediaryFI** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **BeneficiaryFI** | [**FinancialInstitution**](FinancialInstitution.md) |  | [optional] 
 **Beneficiary** | [**Personal**](Personal.md) |  | [optional] 

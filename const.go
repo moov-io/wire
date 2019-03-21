@@ -5,7 +5,7 @@
 package wire
 
 // ToDo: Evaluate use of {}
-// To Do see if we want these constants
+// ToDo: see if we want these constants
 
 const (
 	// TagSenderSuppliedInformation is SenderSuppliedInformation
@@ -22,10 +22,22 @@ const (
 	TagReceiverDepositoryInstitution = "{3400}"
 	// TagBusinessFunctionCode is BusinessFunctionCode
 	TagBusinessFunctionCode = "{3600}"
+
 	// TagSenderReference is SenderReference
 	TagSenderReference = "{3320}"
 	// TagPreviousMessageIdentifier is PreviousMessageIdentifier
 	TagPreviousMessageIdentifier = "{3500}"
+	// TagLocalInstrument is LocalInstrument
+	TagLocalInstrument = "{3610}"
+	// TagPaymentNotification is PaymentNotification
+	TagPaymentNotification = "{3620}"
+	// TagCharges is Charges
+	TagCharges = "{3700}"
+	// TagInstructedAmount is InstructedAmount
+	TagInstructedAmount = "{3710}"
+	// TagExchangeRate is ExchangeRate
+	TagExchangeRate = "{3720}"
+
 	// TagBeneficiaryIntermediaryFI is BeneficiaryIntermediaryFI
 	TagBeneficiaryIntermediaryFI = "{4000}"
 	// TagBeneficiaryFI is BeneficiaryFI
@@ -36,6 +48,8 @@ const (
 	TagBeneficiaryReference = "{4320}"
 	// TagAccountDebitedDrawdown is AccountDebitedDrawdown
 	TagAccountDebitedDrawdown = "{4400}"
+
+
 	// TagOriginator is Originator
 	TagOriginator = "{5000}"
 	// TagOriginatorOptionF is OriginatorOptionF
@@ -48,7 +62,6 @@ const (
 	TagAccountCreditedDrawdown = "{5400}"
 	// TagOriginatorToBeneficiary is OriginatorToBeneficiary
 	TagOriginatorToBeneficiary = "{6000}"
-
 
 	// ToDo: Additional Tags
 

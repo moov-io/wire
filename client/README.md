@@ -59,6 +59,7 @@ Class | Method | HTTP request | Description
  - [DateMmdd](docs/DateMmdd.md)
  - [DateRemittanceDocument](docs/DateRemittanceDocument.md)
  - [Error](docs/Error.md)
+ - [ExchangeRate](docs/ExchangeRate.md)
  - [FedWireError](docs/FedWireError.md)
  - [FedWireMessage](docs/FedWireMessage.md)
  - [FiToFi](docs/FiToFi.md)

@@ -28,8 +28,7 @@ type FedWireMessage struct {
 	PaymentNotification PaymentNotification `json:"paymentNotification,omitempty"`
 	Charges Charges `json:"charges,omitempty"`
 	InstructedAmount InstructedAmount `json:"instructedAmount,omitempty"`
-	// ExchangeRate  Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345). 
-	ExchangeRate string `json:"exchangeRate,omitempty"`
+	ExchangeRate ExchangeRate `json:"exchangeRate,omitempty"`
 	BeneficiaryIntermediaryFI FinancialInstitution `json:"beneficiaryIntermediaryFI,omitempty"`
 	BeneficiaryFI FinancialInstitution `json:"beneficiaryFI,omitempty"`
 	Beneficiary Personal `json:"beneficiary,omitempty"`

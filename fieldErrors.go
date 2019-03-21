@@ -12,11 +12,14 @@ import (
 var (
 	// Errors specific to validation
 
-	//ErrTypeCode is given when there's an invalid tag {1510} TypeCode
-	ErrTypeCode = errors.New("is an invalid Type Code")
-	//ErrSubTypeCode is given when there's an invalid tag {1510} SubTypeCode
-	ErrSubTypeCode = errors.New("is an invalid SubType Code")
-
+	//ErrTypeCode is returned when there's an invalid TypeCode tag {1510}
+	ErrTypeCode = errors.New("is an invalid type code")
+	//ErrSubTypeCode is returned when there's an invalid SubTypeCode tag {1510}
+	ErrSubTypeCode = errors.New("is an invalid sub type Code")
+	// ErrLocalInstrumentCode is returned when there is an invalid LocalInstrumentCode tag {3610}
+	ErrLocalInstrumentCode = errors.New("is an invalid local instrument Code")
+	// ErrPaymentNotificationIndicator is returned when there is an invalid PaymentNotificationIndicator {3620}
+	ErrPaymentNotificationIndicator = errors.New("is an invalid payment notification indicator")
 	// FileHeader errors
 
 	// ErrRecordSize is given when there's an invalid record size

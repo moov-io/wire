@@ -658,7 +658,7 @@ components:
         endToEndIdentification:
           type: string
           maxLength: 35
-          description: EndtoEndIdentification
+          description: EndToEndIdentification
           #ToDo Review
           example: 'WireTransfer 10001'
     InstructedAmount:
@@ -678,14 +678,17 @@ components:
             Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
             (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
     ExchangeRate:
-      type: string
-      maxLength: 12
-      description: |
-        ExchangeRate
+      description: ExchangeRate is the exchange rate
+      properties:
+        exchangeRate:
+          type: string
+          maxLength: 12
+          description: |
+            ExchangeRate is the exchange rate
 
-        Must contain at least one numeric character and only one decimal comma marker
-        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-      example: '1.2345'
+            Must contain at least one numeric character and only one decimal comma marker
+            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+          example: '1.2345'
     FinancialInstitution:
       description: FinancialInstitution is financial institution demographic information
       properties:
@@ -1716,6 +1719,7 @@ components:
       maxLength: 4
       description: |
         LocalInstrument
+
         * `ANSI` - ANSI X12 format
         * `COVS` - Sequence B Cover Payment Structured
         * `GXML` - General XML format

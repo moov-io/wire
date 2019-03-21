@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **ContactPhoneNumber** | **string** | ContactPhoneNumber | [optional] 
 **ContactMobileNumber** | **string** | ContactMobileNumber | [optional] 
 **FaxNumber** | **string** | FaxNumber | [optional] 
-**EndToEndIdentification** | **string** | EndtoEndIdentification | [optional] 
+**EndToEndIdentification** | **string** | EndToEndIdentification | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

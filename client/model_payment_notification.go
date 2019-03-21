@@ -23,6 +23,6 @@ type PaymentNotification struct {
 	ContactMobileNumber string `json:"contactMobileNumber,omitempty"`
 	// FaxNumber
 	FaxNumber string `json:"faxNumber,omitempty"`
-	// EndtoEndIdentification
+	// EndToEndIdentification
 	EndToEndIdentification string `json:"endToEndIdentification,omitempty"`
 }

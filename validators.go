@@ -47,3 +47,45 @@ func (v *validator) isSubTypeCode(code string) error {
 	}
 	return ErrSubTypeCode
 }
+
+func (v *validator) isLocalInstrumentCode(code string) error {
+	switch code {
+	case
+		// ANSI X12 format
+		"ANSI",
+		// Sequence B Cover Payment Structured
+		"COVS",
+		// General XML format
+		"GXML",
+		// ISO 20022 XML formaT
+		"IXML",
+		// Narrative Text
+		"NARR",
+		// Proprietary Local Instrument Code
+		"PROP",
+		//  Remittance Information Structured
+		"RMTS",
+		// Related Remittance Information
+		"RRMT",
+		// STP 820 format
+		"S820",
+		// SWIFT field 70
+		"SWIF",
+		// UN/EDIFACT format
+		"UEDI":
+		return nil
+	}
+	return ErrLocalInstrumentCode
+}
+
+func (v *validator) isPaymentNotificationIndicator(code string) error {
+	switch code {
+	case
+		// * `0 - 6` - Reserved for market practice conventions.
+		"0", "1", "2", "3", "4", "5", "6",
+		// * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+		"7", "8", "9":
+		return nil
+	}
+	return ErrPaymentNotificationIndicator
+}

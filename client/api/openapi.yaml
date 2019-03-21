@@ -317,7 +317,8 @@ components:
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
-          exchangeRate: "1.2345"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -670,7 +671,8 @@ components:
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
-          exchangeRate: "1.2345"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1036,7 +1038,8 @@ components:
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
-          exchangeRate: "1.2345"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1389,7 +1392,8 @@ components:
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
-          exchangeRate: "1.2345"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1760,7 +1764,8 @@ components:
           formatVersion: "30"
         accountCreditedDrawdown:
           drawdownCreditAccountNumber: "121042882"
-        exchangeRate: "1.2345"
+        exchangeRate:
+          exchangeRate: "1.2345"
         orderingCustomer:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
@@ -2110,14 +2115,7 @@ components:
         instructedAmount:
           $ref: '#/components/schemas/InstructedAmount'
         exchangeRate:
-          description: |
-            ExchangeRate
-
-            Must contain at least one numeric character and only one decimal comma marker
-            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-          example: "1.2345"
-          maxLength: 12
-          type: string
+          $ref: '#/components/schemas/ExchangeRate'
         beneficiaryIntermediaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiaryFI:
@@ -2573,7 +2571,7 @@ components:
           maxLength: 35
           type: string
         endToEndIdentification:
-          description: EndtoEndIdentification
+          description: EndToEndIdentification
           example: WireTransfer 10001
           maxLength: 35
           type: string
@@ -2597,14 +2595,19 @@ components:
           maxLength: 15
           type: string
     ExchangeRate:
-      description: |
-        ExchangeRate
+      description: ExchangeRate is the exchange rate
+      example:
+        exchangeRate: "1.2345"
+      properties:
+        exchangeRate:
+          description: |
+            ExchangeRate is the exchange rate
 
-        Must contain at least one numeric character and only one decimal comma marker
-        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-      example: "1.2345"
-      maxLength: 12
-      type: string
+            Must contain at least one numeric character and only one decimal comma marker
+            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+          example: "1.2345"
+          maxLength: 12
+          type: string
     FinancialInstitution:
       description: FinancialInstitution is financial institution demographic information
       example:
@@ -3809,6 +3812,7 @@ components:
     LocalInstrumentEnum:
       description: |
         LocalInstrument
+
         * `ANSI` - ANSI X12 format
         * `COVS` - Sequence B Cover Payment Structured
         * `GXML` - General XML format
