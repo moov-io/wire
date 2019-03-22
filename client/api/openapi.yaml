@@ -281,17 +281,13 @@ components:
         - orderingInstitution:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fipaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
+          fibeneficiaryAdvice:
             adviceCode: HLD
             lineTwo: Line Two
             lineFive: Line Five
@@ -299,7 +295,7 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          receiverFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -325,22 +321,6 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -352,13 +332,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -398,6 +371,14 @@ components:
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -432,9 +413,6 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
@@ -501,6 +479,20 @@ components:
             senderShortName: 'MIDWESTONE B&T    '
           beneficiaryReference:
             beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiadditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -512,27 +504,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
             currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -582,6 +559,14 @@ components:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -595,14 +580,36 @@ components:
           secondaryRemittanceDocument: AROI
           senderReference:
             senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
             currenyCode: USD
@@ -622,30 +629,19 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
         - orderingInstitution:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fipaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
+          fibeneficiaryAdvice:
             adviceCode: HLD
             lineTwo: Line Two
             lineFive: Line Five
@@ -653,7 +649,7 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          receiverFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -679,22 +675,6 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -706,13 +686,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -752,6 +725,14 @@ components:
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -786,9 +767,6 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
@@ -855,6 +833,20 @@ components:
             senderShortName: 'MIDWESTONE B&T    '
           beneficiaryReference:
             beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiadditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -866,27 +858,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
             currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -936,6 +913,14 @@ components:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -949,14 +934,36 @@ components:
           secondaryRemittanceDocument: AROI
           senderReference:
             senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
             currenyCode: USD
@@ -976,13 +983,6 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
@@ -1002,17 +1002,13 @@ components:
         - orderingInstitution:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fipaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
+          fibeneficiaryAdvice:
             adviceCode: HLD
             lineTwo: Line Two
             lineFive: Line Five
@@ -1020,7 +1016,7 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          receiverFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -1046,22 +1042,6 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1073,13 +1053,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -1119,6 +1092,14 @@ components:
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -1153,9 +1134,6 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
@@ -1222,6 +1200,20 @@ components:
             senderShortName: 'MIDWESTONE B&T    '
           beneficiaryReference:
             beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiadditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1233,27 +1225,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
             currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -1303,6 +1280,14 @@ components:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -1316,14 +1301,36 @@ components:
           secondaryRemittanceDocument: AROI
           senderReference:
             senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
             currenyCode: USD
@@ -1343,30 +1350,19 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
         - orderingInstitution:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fipaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
+          fibeneficiaryAdvice:
             adviceCode: HLD
             lineTwo: Line Two
             lineFive: Line Five
@@ -1374,7 +1370,7 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          receiverFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -1400,22 +1396,6 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           remittance:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1427,13 +1407,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -1473,6 +1446,14 @@ components:
             identificationNumber: "192827828"
             identificationType: OI
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -1507,9 +1488,6 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
           adjustment: CM
@@ -1576,6 +1554,20 @@ components:
             senderShortName: 'MIDWESTONE B&T    '
           beneficiaryReference:
             beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiadditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
@@ -1587,27 +1579,12 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
             currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -1657,6 +1634,14 @@ components:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -1670,14 +1655,36 @@ components:
           secondaryRemittanceDocument: AROI
           senderReference:
             senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
             swiftLine: '{}'
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
             currenyCode: USD
@@ -1697,13 +1704,6 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
@@ -1728,17 +1728,13 @@ components:
         orderingInstitution:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
+        fipaymentMethodToBeneficiary:
+          Additional: For goods and services
+          paymentMethod: CHECK
         localInstrument:
           localInstrumentCode: ANSI
           proprietaryCode: WJD786363
-        intermediaryFI:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
-        originatorBeneficiaryFinancialInstitutionAdvice:
+        fibeneficiaryAdvice:
           adviceCode: HLD
           lineTwo: Line Two
           lineFive: Line Five
@@ -1746,7 +1742,7 @@ components:
           lineOne: Line One
           lineFour: Line Four
           lineThree: Line Three
-        receiverFI:
+        fiBeneficiaryFI:
           lineTwo: Line Two
           lineFive: Line Five
           lineSix: Line Six
@@ -1772,22 +1768,6 @@ components:
         instructedAmount:
           amount: amount
           currencyCode: USD
-        beneficiaryAdvice:
-          adviceCode: HLD
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
-        drawdownDebitAccountAdvice:
-          adviceCode: HLD
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         remittance:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
@@ -1799,13 +1779,6 @@ components:
           paymentNotificationIndicator: "1"
           contactNotificationElectronicAddress: https://moov.io/
           endToEndIdentification: WireTransfer 10001
-        additionalFIToFI:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         outputMessageAccountabilityData:
           outputFRBApplicationIdentification: OB11
           outputDate:
@@ -1845,6 +1818,14 @@ components:
           identificationNumber: "192827828"
           identificationType: OI
           identificationNumberIssuer: Identification Number Issuer
+        fiIntermediaryFIAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         senderSupplied:
           testProductionCode: T
           messageDuplicationCode: messageDuplicationCode
@@ -1879,9 +1860,6 @@ components:
           receiptDate:
             date: "0401"
           receiptApplicationIdentification: RB11
-        paymentMethodToBeneficiary:
-          Additional: For goods and services
-          paymentMethod: CHECK
         previousMessageIdentifier:
           previousMessageIdentifier: previousMessageIdentifier
         adjustment: CM
@@ -1948,6 +1926,20 @@ components:
           senderShortName: 'MIDWESTONE B&T    '
         beneficiaryReference:
           beneficiaryReference: Test Data
+        fiIntermediaryFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
+        fiadditionalFIToFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         institutionAccount:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
@@ -1959,27 +1951,12 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
-        originatorBeneficiary:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         unstructuredAddenda:
           addenda: Payment for goods
           addendaLength: "0987"
         amountNegotiatedDiscount:
           amount: "1234.56789"
           currenyCode: USD
-        intermediaryFinacialInstitutionAdvice:
-          adviceCode: HLD
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         originatorToBeneficiary:
           lineTwo: Line Two
           lineOne: Line One
@@ -2029,6 +2006,14 @@ components:
           lineTwo: Line Two Text
           lineOne: Line One Text
           lineThree: Line Three Text
+        fiDrawdownDebitAccountAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         amount:
           amount: "000000100000"
         accountDebitedDrawdown:
@@ -2042,14 +2027,36 @@ components:
         secondaryRemittanceDocument: AROI
         senderReference:
           senderReference: Reference
+        fiBeneficiaryFIAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         primaryRemittanceDocument:
           documentIdentificationNumber: DOCUMENT 292828
           documentTypeCode: AROI
           proprietaryDocumentTypeCode: Proprietary Code
           issuer: Remittance Issuer
+        fiBeneficiary:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         senderToReceiver:
           swiftLine: '{}'
           swiftFieldTag: SWIFT
+        fiReceiverFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         grossAmountRemittanceDocument:
           amount: "1234.56789"
           currenyCode: USD
@@ -2069,13 +2076,6 @@ components:
           lineTwelve: Line Twelve Text
           lineThree: Line Three Text
           lineSeven: Line Seven Text
-        originatorBeneficiaryFinancialInstitution:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         receiverDepositoryInstitution:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
@@ -2138,25 +2138,25 @@ components:
           $ref: '#/components/schemas/AccountCreditedDrawdown'
         originatorToBeneficiary:
           $ref: '#/components/schemas/OriginatorToBeneficiary'
-        receiverFI:
+        fiReceiverFI:
           $ref: '#/components/schemas/FIToFI'
-        drawdownDebitAccountAdvice:
+        fiDrawdownDebitAccountAdvice:
           $ref: '#/components/schemas/Advice'
-        intermediaryFI:
+        fiIntermediaryFI:
           $ref: '#/components/schemas/FIToFI'
-        intermediaryFinacialInstitutionAdvice:
+        fiIntermediaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-        originatorBeneficiaryFinancialInstitution:
+        fiBeneficiaryFI:
           $ref: '#/components/schemas/FIToFI'
-        originatorBeneficiaryFinancialInstitutionAdvice:
+        fiBeneficiaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-        originatorBeneficiary:
+        fiBeneficiary:
           $ref: '#/components/schemas/FIToFI'
-        beneficiaryAdvice:
+        fibeneficiaryAdvice:
           $ref: '#/components/schemas/Advice'
-        paymentMethodToBeneficiary:
+        fipaymentMethodToBeneficiary:
           $ref: '#/components/schemas/PaymentMethodToBeneficiary'
-        additionalFIToFI:
+        fiadditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
         currencyInstructedAmount:
           $ref: '#/components/schemas/CoverPayment'
@@ -2871,7 +2871,7 @@ components:
           maxLength: 33
           type: string
     Advice:
-      description: DrawdownDebitAccountAdvice
+      description: Advice
       example:
         adviceCode: HLD
         lineTwo: Line Two

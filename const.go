@@ -54,16 +54,37 @@ const (
 	TagOriginator = "{5000}"
 	// TagOriginatorOptionF is OriginatorOptionF
 	TagOriginatorOptionF = "{5010}"
-	// TagOriginatorFI is OriginatingFI
+	// TagOriginatorFI is OriginatorFI
 	TagOriginatorFI = "{5100}"
 	// TagInstructingFI is InstructingFI
 	TagInstructingFI = "{5200}"
 	// TagAccountCreditedDrawdown is AccountCreditedDrawdown
 	TagAccountCreditedDrawdown = "{5400}"
+
+
 	// TagOriginatorToBeneficiary is OriginatorToBeneficiary
 	TagOriginatorToBeneficiary = "{6000}"
+	// TagFIReceiverFI is FIReceiverFI
+	TagFIReceiverFI = "{6100}"
+	// TagFIDrawdownDebitAccountAdvice is FIDrawdownDebitAccountAdvice
+	TagFIDrawdownDebitAccountAdvice = "{6110}"
+	// TagFIIntermediaryFI is FIIntermediaryFI
+	TagFIIntermediaryFI = "{6200}"
+	// TagFIIntermediaryFIAdvice is FIIntermediaryFIAdvice
+	TagFIIntermediaryFIAdvice = "{6210}"
+	// TagFIBeneficiaryFI is FIBeneficiaryFI
+	TagFIBeneficiaryFI = "{6300}"
+	// TagFIBeneficiaryFIAdvice is FIBeneficiaryFIAdvice
+	TagFIBeneficiaryFIAdvice = "{6310}"
+	// TagFIBeneficiary is FIBeneficiary
+	TagFIBeneficiary = "{6400}"
+	// TagFIBeneficiaryAdvice is FIBeneficiaryAdvice
+	TagFIBeneficiaryAdvice = "{6410}"
+	// TagFIPaymentMethodToBeneficiary is FIPaymentMethodToBeneficiary
+	TagFIPaymentMethodToBeneficiary = "{6420}"
+	// TagFIAdditionalFIToFI is FIAdditionalFIToFI
+	TagFIAdditionalFIToFI = "{6500}"
 
-	// ToDo: Additional Tags
 
 	// FormatVersion designates the FEDWIRE message format version
 	FormatVersion = "30"

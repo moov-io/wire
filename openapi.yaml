@@ -305,36 +305,36 @@ components:
         originatorToBeneficiary:
           $ref: '#/components/schemas/OriginatorToBeneficiary'
           description: OriginatorToBeneficiary {6000}
-        receiverFI:
+        fiReceiverFI:
           $ref: '#/components/schemas/FIToFI'
-          description: ReceiverFI {6100}
-        drawdownDebitAccountAdvice:
+          description: FIReceiverFI {6100}
+        fiDrawdownDebitAccountAdvice:
           $ref: '#/components/schemas/Advice'
-          description: DrawdownDebitAccountAdvice {6110}
-        intermediaryFI:
+          description: FIDrawdownDebitAccountAdvice {6110}
+        fiIntermediaryFI:
           $ref: '#/components/schemas/FIToFI'
-          description: IntermediaryFinancialInstitution {6200}
-        intermediaryFinacialInstitutionAdvice:
+          description: FIIntermediaryFinancialInstitution {6200}
+        fiIntermediaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-          description: IntermediaryFinacialInstitutionAdvice {6210}
-        originatorBeneficiaryFinancialInstitution:
+          description: FIIntermediaryFinacialInstitutionAdvice {6210}
+        fiBeneficiaryFI:
           $ref: '#/components/schemas/FIToFI'
-          description: BeneficiaryFinancialInstitution {6300}
-        originatorBeneficiaryFinancialInstitutionAdvice:
+          description: FIBeneficiaryFinancialInstitution {6300}
+        fiBeneficiaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-          description: BeneficiaryFinacialInstitutionAdvice {6310}
-        originatorBeneficiary:
+          description: FIBeneficiaryFinacialInstitutionAdvice {6310}
+        fiBeneficiary:
           $ref: '#/components/schemas/FIToFI'
-          description: Beneficiary {6400}
-        beneficiaryAdvice:
+          description: FIBeneficiary {6400}
+        fibeneficiaryAdvice:
           $ref: '#/components/schemas/Advice'
-          description: BeneficiaryAdvice {6410}
-        paymentMethodToBeneficiary:
+          description: FIBeneficiaryAdvice {6410}
+        fipaymentMethodToBeneficiary:
           $ref: '#/components/schemas/PaymentMethodToBeneficiary'
-          description: PaymentMethodToBeneficiary {6420}
-        additionalFIToFI:
+          description: FIPaymentMethodToBeneficiary {6420}
+        fiadditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
-          description: AdditionalFIToFI {6500}
+          description: FIAdditionalFIToFI {6500}
         currencyInstructedAmount:
           $ref: '#/components/schemas/CoverPayment'
           description: CurrencyInstructedAmount {7033}
@@ -933,7 +933,7 @@ components:
           description: LineSix
           example: 'Line Six'
     Advice:
-      description: DrawdownDebitAccountAdvice
+      description: Advice
       properties:
         adviceCode:
           $ref: '#/components/schemas/AdviceCodeEnum'

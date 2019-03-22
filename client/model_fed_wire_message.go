@@ -40,16 +40,16 @@ type FedWireMessage struct {
 	InstructingFI FinancialInstitution `json:"instructingFI,omitempty"`
 	AccountCreditedDrawdown AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`
 	OriginatorToBeneficiary OriginatorToBeneficiary `json:"originatorToBeneficiary,omitempty"`
-	ReceiverFI FiToFi `json:"receiverFI,omitempty"`
-	DrawdownDebitAccountAdvice Advice `json:"drawdownDebitAccountAdvice,omitempty"`
-	IntermediaryFI FiToFi `json:"intermediaryFI,omitempty"`
-	IntermediaryFinacialInstitutionAdvice Advice `json:"intermediaryFinacialInstitutionAdvice,omitempty"`
-	OriginatorBeneficiaryFinancialInstitution FiToFi `json:"originatorBeneficiaryFinancialInstitution,omitempty"`
-	OriginatorBeneficiaryFinancialInstitutionAdvice Advice `json:"originatorBeneficiaryFinancialInstitutionAdvice,omitempty"`
-	OriginatorBeneficiary FiToFi `json:"originatorBeneficiary,omitempty"`
-	BeneficiaryAdvice Advice `json:"beneficiaryAdvice,omitempty"`
-	PaymentMethodToBeneficiary PaymentMethodToBeneficiary `json:"paymentMethodToBeneficiary,omitempty"`
-	AdditionalFIToFI AdditionalFiToFi `json:"additionalFIToFI,omitempty"`
+	FiReceiverFI FiToFi `json:"fiReceiverFI,omitempty"`
+	FiDrawdownDebitAccountAdvice Advice `json:"fiDrawdownDebitAccountAdvice,omitempty"`
+	FiIntermediaryFI FiToFi `json:"fiIntermediaryFI,omitempty"`
+	FiIntermediaryFIAdvice Advice `json:"fiIntermediaryFIAdvice,omitempty"`
+	FiBeneficiaryFI FiToFi `json:"fiBeneficiaryFI,omitempty"`
+	FiBeneficiaryFIAdvice Advice `json:"fiBeneficiaryFIAdvice,omitempty"`
+	FiBeneficiary FiToFi `json:"fiBeneficiary,omitempty"`
+	FibeneficiaryAdvice Advice `json:"fibeneficiaryAdvice,omitempty"`
+	FipaymentMethodToBeneficiary PaymentMethodToBeneficiary `json:"fipaymentMethodToBeneficiary,omitempty"`
+	FiadditionalFIToFI AdditionalFiToFi `json:"fiadditionalFIToFI,omitempty"`
 	CurrencyInstructedAmount CoverPayment `json:"currencyInstructedAmount,omitempty"`
 	OrderingCustomer CoverPayment `json:"orderingCustomer,omitempty"`
 	OrderingInstitution CoverPayment `json:"orderingInstitution,omitempty"`
