@@ -9,11 +9,12 @@
 
 package openapi
 
+// RelatedRemittance
 type RelatedRemittance struct {
 	// RemittanceIdentification
 	RemittanceIdentification string `json:"remittanceIdentification,omitempty"`
 	RemittanceLocationMethod RemittanceLocationMethodEnum `json:"remittanceLocationMethod,omitempty"`
 	// RemittanceLocationElectronicAddress (E-mail or URL address)
-	RemittanceLocationElctronicAddress string `json:"remittanceLocationElctronicAddress,omitempty"`
+	RemittanceLocationElectronicAddress string `json:"remittanceLocationElectronicAddress,omitempty"`
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 }

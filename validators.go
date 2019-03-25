@@ -42,7 +42,7 @@ func (v *validator) isSubTypeCode(code string) error {
 		RequestCredit,
 		FundsTransferRequestCredit,
 		RefusalRequestCredit,
-		ServiceMessage:
+		SSIServiceMessage:
 		return nil
 	}
 	return ErrSubTypeCode

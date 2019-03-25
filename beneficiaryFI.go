@@ -43,7 +43,7 @@ func (bfi *BeneficiaryFI) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on BeneficiaryFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (bfi *BeneficiaryFI) Validate() error {
 	if err := bfi.fieldInclusion(); err != nil {

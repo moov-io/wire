@@ -6,12 +6,12 @@ package wire
 
 import "strings"
 
-// SenderReference is the SenderReference of the wire
-type SenderReference struct {
+// SenderToReceiver is the remittance information
+type SenderToReceiver struct {
 	// tag
 	tag string
-	// SenderReference
-	SenderReference string `json:"senderReference,omitempty"`
+	// CoverPayment is CoverPayment
+	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -19,33 +19,33 @@ type SenderReference struct {
 	converters
 }
 
-// NewSenderReference returns a new SenderReference
-func NewSenderReference() SenderReference  {
-	sr := SenderReference {
-		tag: TagSenderReference,
+// NewSenderToReceiver returns a new SenderToReceiver
+func NewSenderToReceiver() SenderToReceiver  {
+	sr := SenderToReceiver {
+		tag: TagSenderToReceiver,
 	}
 	return sr
 }
 
-// Parse takes the input string and parses the SenderReference values
+// Parse takes the input string and parses the SenderToReceiver values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sr *SenderReference) Parse(record string) {
+func (sr *SenderToReceiver) Parse(record string) {
 }
 
-// String writes SenderReference
-func (sr *SenderReference) String() string {
+// String writes SenderToReceiver
+func (sr *SenderToReceiver) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(16)
+	buf.Grow(215)
 	buf.WriteString(sr.tag)
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on SenderReference and returns an error if not Validated
+// Validate performs WIRE format rule checks on SenderToReceiver and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (sr *SenderReference) Validate() error {
+func (sr *SenderToReceiver) Validate() error {
 	if err := sr.fieldInclusion(); err != nil {
 		return err
 	}
@@ -54,6 +54,6 @@ func (sr *SenderReference) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (sr *SenderReference) fieldInclusion() error {
+func (sr *SenderToReceiver) fieldInclusion() error {
 	return nil
 }

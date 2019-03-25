@@ -49,7 +49,6 @@ const (
 	// TagAccountDebitedDrawdown is AccountDebitedDrawdown
 	TagAccountDebitedDrawdown = "{4400}"
 
-
 	// TagOriginator is Originator
 	TagOriginator = "{5000}"
 	// TagOriginatorOptionF is OriginatorOptionF
@@ -85,6 +84,35 @@ const (
 	// TagFIAdditionalFIToFI is FIAdditionalFIToFI
 	TagFIAdditionalFIToFI = "{6500}"
 
+	// TagCurrencyInstructedAmount is CurrencyInstructedAmount
+	TagCurrencyInstructedAmount = "{7033}"
+	// TagOrderingCustomer is OrderingCustomer
+	TagOrderingCustomer = "{7050}"
+	// TagOrderingInstitution is OrderingInstitution
+	TagOrderingInstitution = "{7052}"
+	// TagIntermediaryInstitution is IntermediaryInstitution
+	TagIntermediaryInstitution = "{7056}"
+	// TagInstitutionAccount is InstitutionAccount
+	TagInstitutionAccount = "{7057}"
+	// TagBeneficiaryCustomer is BeneficiaryCustomer
+	TagBeneficiaryCustomer = "{7059}"
+	// TagRemittanceInformation is RemittanceInformation
+	TagRemittanceInformation = "{7070}"
+	// TagSenderToReceiver is SenderToReceiver
+	TagSenderToReceiver = "{7072}"
+
+	// TagUnstructuredAddenda is UnstructuredAddenda
+	TagUnstructuredAddenda = "{8200}"
+
+	// TagRelatedRemittance is RelatedRemittance
+	TagRelatedRemittance = "{8250}"
+	// TagRemittanceOriginator is RemittanceOriginator
+	TagRemittanceOriginator = "{8300}"
+	// TagRemittanceBeneficiary is RemittanceBeneficiary
+	TagRemittanceBeneficiary = "{8350}"
+
+	// TagServiceMessage is ServiceMessage
+	TagServiceMessage = "{9000}"
 
 	// FormatVersion designates the FEDWIRE message format version
 	FormatVersion = "30"
@@ -138,7 +166,7 @@ const (
 	// RefusalRequestCredit is SenderSuppliedInformation {1510} SubTypeCode which designates a non-value message
 	// indicating refusal to honor a subtype 31 request for credit.
 	RefusalRequestCredit = "33"
-	// ServiceMessage is SenderSuppliedInformation {1510} SubTypeCode which designates a non-value message used to
+	// SSIServiceMessage is SenderSuppliedInformation {1510} SubTypeCode which designates a non-value message used to
 	// communicate questions and information that is not covered by a specific subtype.
-	ServiceMessage = "90"
+	SSIServiceMessage = "90"
 )

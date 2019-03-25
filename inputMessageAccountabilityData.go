@@ -47,7 +47,7 @@ func (imad *InputMessageAccountabilityData) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on the TAG {} and returns an error if not Validated
+// Validate performs WIRE format rule checks on InputMessageAccountabilityData and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (imad *InputMessageAccountabilityData) Validate() error {
 	if err := imad.fieldInclusion(); err != nil {

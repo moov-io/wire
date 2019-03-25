@@ -1020,39 +1020,36 @@ components:
           maxLength: 5
           description: SwiftFieldTag
           example: 'SWIFT'
-        swiftLine:
-              description: SwiftLine
-              properties:
-                swiftLineOne:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineOne
-                  example: 'Swift Line One'
-                swiftLineTwo:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineTwo
-                  example: 'Swift Line Two'
-                swiftLineThree:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineThree
-                  example: 'Swift Line Three'
-                swiftLineFour:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineFour
-                  example: 'Swift Line Four'
-                swiftLineFive:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineFive
-                  example: 'Swift Line Five'
-                swiftLineSix:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineSix
-                  example: 'Swift Line Six'
+        swiftLineOne:
+          type: string
+          maxLength: 35
+          description: SwiftLineOne
+          example: 'Swift Line One'
+        swiftLineTwo:
+          type: string
+          maxLength: 35
+          description: SwiftLineTwo
+          example: 'Swift Line Two'
+        swiftLineThree:
+          type: string
+          maxLength: 35
+          description: SwiftLineThree
+          example: 'Swift Line Three'
+        swiftLineFour:
+          type: string
+          maxLength: 35
+          description: SwiftLineFour
+          example: 'Swift Line Four'
+        swiftLineFive:
+          type: string
+          maxLength: 35
+          description: SwiftLineFive
+          example: 'Swift Line Five'
+        swiftLineSix:
+          type: string
+          maxLength: 35
+          description: SwiftLineSix
+          example: 'Swift Line Six'
     UnstructuredAddenda:
       properties:
         addendaLength:
@@ -1133,6 +1130,7 @@ components:
             marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
           example: 'USD1234,56'
     RelatedRemittance:
+      description: RelatedRemittance
       properties:
         remittanceIdentification:
           type: string
@@ -1142,7 +1140,7 @@ components:
         remittanceLocationMethod:
           $ref: '#/components/schemas/RemittanceLocationMethodEnum'
           description: RemittanceLocationMethodEnum
-        remittanceLocationElctronicAddress:
+        remittanceLocationElectronicAddress:
           type: string
           maxLength: 2048
           description: RemittanceLocationElectronicAddress (E-mail or URL address)
@@ -1151,13 +1149,14 @@ components:
           $ref: '#/components/schemas/RemittanceData'
           description: RemittanceData
     RemittanceOriginator:
+      description: RemittanceOriginator
       properties:
         identificationType:
           $ref: '#/components/schemas/IdentificationTypeEnum'
-          description: identificationType
+          description: IdentificationType
         identificationCode:
           $ref: '#/components/schemas/IdentificationCodeEnum'
-          description: identificationCode
+          description: IdentificationCode
         identificationNumber:
           type: string
           maxLength: 35
@@ -1171,7 +1170,7 @@ components:
         dateAndBirthPlace:
           type: string
           maxLength: 82
-          description: DateAndfBirthPlace
+          description: DateAndBirthPlace
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'

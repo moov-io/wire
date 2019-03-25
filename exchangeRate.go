@@ -44,7 +44,7 @@ func (er*ExchangeRate) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on ExchangeRate and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (er *ExchangeRate) Validate() error {
 	if err := er.fieldInclusion(); err != nil {

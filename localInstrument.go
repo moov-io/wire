@@ -45,7 +45,7 @@ func (li *LocalInstrument) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on LocalInstrument and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (li *LocalInstrument) Validate() error {
 	if err := li.fieldInclusion(); err != nil {

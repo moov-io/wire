@@ -279,7 +279,12 @@ components:
         id: 3f2d23ee214
         fedWireMessage:
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fipaymentMethodToBeneficiary:
             Additional: For goods and services
@@ -303,7 +308,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -316,13 +326,23 @@ components:
           exchangeRate:
             exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           paymentNotification:
             contactMobileNumber: 555.555.555
@@ -405,7 +425,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -421,7 +446,12 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           currencyInstructedAmount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -432,7 +462,6 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
@@ -454,6 +483,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -494,7 +524,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           originatorFI:
             identificationCode: B
@@ -601,7 +636,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fiReceiverFI:
             lineTwo: Line Two
@@ -633,7 +673,12 @@ components:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fipaymentMethodToBeneficiary:
             Additional: For goods and services
@@ -657,7 +702,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -670,13 +720,23 @@ components:
           exchangeRate:
             exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           paymentNotification:
             contactMobileNumber: 555.555.555
@@ -759,7 +819,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -775,7 +840,12 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           currencyInstructedAmount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -786,7 +856,6 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
@@ -808,6 +877,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -848,7 +918,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           originatorFI:
             identificationCode: B
@@ -955,7 +1030,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fiReceiverFI:
             lineTwo: Line Two
@@ -1000,7 +1080,12 @@ components:
         id: 3f2d23ee214
         fedWireMessage:
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fipaymentMethodToBeneficiary:
             Additional: For goods and services
@@ -1024,7 +1109,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -1037,13 +1127,23 @@ components:
           exchangeRate:
             exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           paymentNotification:
             contactMobileNumber: 555.555.555
@@ -1126,7 +1226,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -1142,7 +1247,12 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           currencyInstructedAmount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -1153,7 +1263,6 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
@@ -1175,6 +1284,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -1215,7 +1325,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           originatorFI:
             identificationCode: B
@@ -1322,7 +1437,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fiReceiverFI:
             lineTwo: Line Two
@@ -1354,7 +1474,12 @@ components:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fipaymentMethodToBeneficiary:
             Additional: For goods and services
@@ -1378,7 +1503,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -1391,13 +1521,23 @@ components:
           exchangeRate:
             exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           paymentNotification:
             contactMobileNumber: 555.555.555
@@ -1480,7 +1620,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -1496,7 +1641,12 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           currencyInstructedAmount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -1507,7 +1657,6 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
@@ -1529,6 +1678,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -1569,7 +1719,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           originatorFI:
             identificationCode: B
@@ -1676,7 +1831,12 @@ components:
             lineFour: Line Four
             lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           fiReceiverFI:
             lineTwo: Line Two
@@ -1726,7 +1886,12 @@ components:
       description: FEDWireMessage
       example:
         orderingInstitution:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         fipaymentMethodToBeneficiary:
           Additional: For goods and services
@@ -1750,7 +1915,12 @@ components:
           lineFour: Line Four
           lineThree: Line Three
         beneficiaryCustomer:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         dateRemittanceDocument:
           dateRemittanceDocument: "20190401"
@@ -1763,13 +1933,23 @@ components:
         exchangeRate:
           exchangeRate: "1.2345"
         orderingCustomer:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         instructedAmount:
           amount: amount
           currencyCode: USD
         remittance:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         paymentNotification:
           contactMobileNumber: 555.555.555
@@ -1852,7 +2032,12 @@ components:
             addressLineThree: addressLineThree
           name: name
         intermediaryInstitution:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         receiptTimeStamp:
           receiptTime:
@@ -1868,7 +2053,12 @@ components:
           inputCycleDate: "20191201"
           inputSequenceNumber: "000001"
         currencyInstructedAmount:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         instructingFI:
           identificationCode: B
@@ -1879,7 +2069,6 @@ components:
             addressLineThree: addressLineThree
           name: name
         relatedRemittance:
-          remittanceLocationElctronicAddress: https://moov.io
           remittanceData:
             country: US
             townName: Any Town
@@ -1901,6 +2090,7 @@ components:
             addressLineSeven: AddressLineSeven
           remittanceIdentification: Remittance Identification
           remittanceLocationMethod: EDIC
+          remittanceLocationElectronicAddress: https://moov.io
         beneficiaryIntermediaryFI:
           identificationCode: B
           identifier: identifier
@@ -1941,7 +2131,12 @@ components:
           lineFour: Line Four
           lineThree: Line Three
         institutionAccount:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         originatorFI:
           identificationCode: B
@@ -2048,7 +2243,12 @@ components:
           lineFour: Line Four
           lineThree: Line Three
         senderToReceiver:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         fiReceiverFI:
           lineTwo: Line Two
@@ -2970,7 +3170,12 @@ components:
     CoverPayment:
       description: CoverPayment
       example:
-        swiftLine: '{}'
+        swiftLineFour: Swift Line Four
+        swiftLineOne: Swift Line One
+        swiftLineFive: Swift Line Five
+        swiftLineThree: Swift Line Three
+        swiftLineSix: Swift Line Six
+        swiftLineTwo: Swift Line Two
         swiftFieldTag: SWIFT
       properties:
         swiftFieldTag:
@@ -2978,39 +3183,36 @@ components:
           example: SWIFT
           maxLength: 5
           type: string
-        swiftLine:
-          description: SwiftLine
-          properties:
-            swiftLineOne:
-              description: SwiftLineOne
-              example: Swift Line One
-              maxLength: 35
-              type: string
-            swiftLineTwo:
-              description: SwiftLineTwo
-              example: Swift Line Two
-              maxLength: 35
-              type: string
-            swiftLineThree:
-              description: SwiftLineThree
-              example: Swift Line Three
-              maxLength: 35
-              type: string
-            swiftLineFour:
-              description: SwiftLineFour
-              example: Swift Line Four
-              maxLength: 35
-              type: string
-            swiftLineFive:
-              description: SwiftLineFive
-              example: Swift Line Five
-              maxLength: 35
-              type: string
-            swiftLineSix:
-              description: SwiftLineSix
-              example: Swift Line Six
-              maxLength: 35
-              type: string
+        swiftLineOne:
+          description: SwiftLineOne
+          example: Swift Line One
+          maxLength: 35
+          type: string
+        swiftLineTwo:
+          description: SwiftLineTwo
+          example: Swift Line Two
+          maxLength: 35
+          type: string
+        swiftLineThree:
+          description: SwiftLineThree
+          example: Swift Line Three
+          maxLength: 35
+          type: string
+        swiftLineFour:
+          description: SwiftLineFour
+          example: Swift Line Four
+          maxLength: 35
+          type: string
+        swiftLineFive:
+          description: SwiftLineFive
+          example: Swift Line Five
+          maxLength: 35
+          type: string
+        swiftLineSix:
+          description: SwiftLineSix
+          example: Swift Line Six
+          maxLength: 35
+          type: string
     UnstructuredAddenda:
       example:
         addenda: Payment for goods
@@ -3107,8 +3309,8 @@ components:
           maxLength: 15
           type: string
     RelatedRemittance:
+      description: RelatedRemittance
       example:
-        remittanceLocationElctronicAddress: https://moov.io
         remittanceData:
           country: US
           townName: Any Town
@@ -3130,6 +3332,7 @@ components:
           addressLineSeven: AddressLineSeven
         remittanceIdentification: Remittance Identification
         remittanceLocationMethod: EDIC
+        remittanceLocationElectronicAddress: https://moov.io
       properties:
         remittanceIdentification:
           description: RemittanceIdentification
@@ -3138,7 +3341,7 @@ components:
           type: string
         remittanceLocationMethod:
           $ref: '#/components/schemas/RemittanceLocationMethodEnum'
-        remittanceLocationElctronicAddress:
+        remittanceLocationElectronicAddress:
           description: RemittanceLocationElectronicAddress (E-mail or URL address)
           example: https://moov.io
           maxLength: 2048
@@ -3146,6 +3349,7 @@ components:
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
     RemittanceOriginator:
+      description: RemittanceOriginator
       example:
         contactMobileNumber: 555.555.5555
         identificationCode: BANK
@@ -3221,7 +3425,7 @@ components:
           maxLength: 35
           type: string
         dateAndBirthPlace:
-          description: DateAndfBirthPlace
+          description: DateAndBirthPlace
           example: 03062013 Chester
           maxLength: 82
           type: string

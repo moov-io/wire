@@ -43,7 +43,7 @@ func (ba *FIDrawdownDebitAccountAdvice) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on BeneficiaryDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on FIDrawdownDebitAccountAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (ba *FIDrawdownDebitAccountAdvice) Validate() error {
 	if err := ba.fieldInclusion(); err != nil {

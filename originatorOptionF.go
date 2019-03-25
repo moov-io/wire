@@ -103,7 +103,7 @@ func (oof *OriginatorOptionF) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on OriginatorOptionF and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (oof *OriginatorOptionF) Validate() error {
 	if err := oof.fieldInclusion(); err != nil {

@@ -46,7 +46,7 @@ func (ia *InstructedAmount) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on InstructedAmount and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (ia *InstructedAmount) Validate() error {
 	if err := ia.fieldInclusion(); err != nil {

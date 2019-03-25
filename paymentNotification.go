@@ -57,7 +57,7 @@ func (pn *PaymentNotification) String() string {
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on ReceiverDepositoryInstitution and returns an error if not Validated
+// Validate performs WIRE format rule checks on PaymentNotification and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (pn *PaymentNotification) Validate() error {
 	if err := pn.fieldInclusion(); err != nil {
