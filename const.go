@@ -110,6 +110,8 @@ const (
 	TagRemittanceOriginator = "{8300}"
 	// TagRemittanceBeneficiary is RemittanceBeneficiary
 	TagRemittanceBeneficiary = "{8350}"
+	// TagPrimaryRemittanceDocument is PrimaryRemittanceDocument
+	TagPrimaryRemittanceDocument = "{8400}"
 
 	// TagServiceMessage is ServiceMessage
 	TagServiceMessage = "{9000}"
