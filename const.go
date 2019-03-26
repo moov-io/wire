@@ -8,6 +8,16 @@ package wire
 // ToDo: see if we want these constants
 
 const (
+
+	// TagMessageDisposition is MessageDisposition
+	TagMessageDisposition = "{1100}"
+	// TagReceiptTimeStamp is ReceiptTimeStamp
+	TagReceiptTimeStamp = "{1110}"
+	// TagOutputMessageAccountabilityData is OutputMessageAccountabilityData
+	TagOutputMessageAccountabilityData = "{1120}"
+	// TagErrorWire  is ErrorWire
+	TagErrorWire = "{1130}"
+
 	// TagSenderSuppliedInformation is SenderSuppliedInformation
 	TagSenderSuppliedInformation  = "{1500}"
 	// TagTypeSubType is TypeSubType

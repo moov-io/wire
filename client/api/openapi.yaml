@@ -307,6 +307,10 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -505,10 +509,6 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
@@ -710,6 +710,10 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -908,10 +912,6 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
@@ -1126,6 +1126,10 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1324,10 +1328,6 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
@@ -1529,6 +1529,10 @@ components:
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1727,10 +1731,6 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
@@ -1950,6 +1950,10 @@ components:
           lineOne: Line One
           lineFour: Line Four
           lineThree: Line Three
+        errorWire:
+          errorDescription: Data Error
+          errorCategory: E
+          errorCode: E99
         beneficiaryCustomer:
           swiftLineFour: Swift Line Four
           swiftLineOne: Swift Line One
@@ -2148,10 +2152,6 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
-        error:
-          errorDescription: Data Error
-          errorCategory: E
-          errorCode: E99
         senderDepositoryInstitution:
           senderABANumber: "091905114"
           senderShortName: 'MIDWESTONE B&T    '
@@ -2331,7 +2331,7 @@ components:
           $ref: '#/components/schemas/ReceiptTimeStamp'
         outputMessageAccountabilityData:
           $ref: '#/components/schemas/OutputMessageAccountabilityData'
-        error:
+        errorWire:
           $ref: '#/components/schemas/FEDWireError'
         senderSupplied:
           $ref: '#/components/schemas/SenderSupplied'

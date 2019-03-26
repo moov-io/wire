@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 **MessageDisposition** | [**MessageDisposition**](MessageDisposition.md) |  | [optional] 
 **ReceiptTimeStamp** | [**ReceiptTimeStamp**](ReceiptTimeStamp.md) |  | [optional] 
 **OutputMessageAccountabilityData** | [**OutputMessageAccountabilityData**](OutputMessageAccountabilityData.md) |  | [optional] 
-**Error** | [**FedWireError**](FEDWireError.md) |  | [optional] 
+**ErrorWire** | [**FedWireError**](FEDWireError.md) |  | [optional] 
 **SenderSupplied** | [**SenderSupplied**](SenderSupplied.md) |  | 
 **TypeSubType** | [**TypeSubType**](TypeSubType.md) |  | 
 **InputMessageAccountabilityData** | [**InputMessageAccountabilityData**](InputMessageAccountabilityData.md) |  | 

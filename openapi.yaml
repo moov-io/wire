@@ -227,7 +227,7 @@ components:
         outputMessageAccountabilityData:
           $ref: '#/components/schemas/OutputMessageAccountabilityData'
           description: OutputMessageAccountabilityData {1120}
-        error:
+        errorWire:
           $ref: '#/components/schemas/FEDWireError'
           description: Error {1130}
         senderSupplied:

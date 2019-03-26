@@ -14,7 +14,7 @@ type FedWireMessage struct {
 	MessageDisposition MessageDisposition `json:"messageDisposition,omitempty"`
 	ReceiptTimeStamp ReceiptTimeStamp `json:"receiptTimeStamp,omitempty"`
 	OutputMessageAccountabilityData OutputMessageAccountabilityData `json:"outputMessageAccountabilityData,omitempty"`
-	Error FedWireError `json:"error,omitempty"`
+	ErrorWire FedWireError `json:"errorWire,omitempty"`
 	SenderSupplied SenderSupplied `json:"senderSupplied"`
 	TypeSubType TypeSubType `json:"typeSubType"`
 	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData"`
