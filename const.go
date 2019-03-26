@@ -112,6 +112,21 @@ const (
 	TagRemittanceBeneficiary = "{8350}"
 	// TagPrimaryRemittanceDocument is PrimaryRemittanceDocument
 	TagPrimaryRemittanceDocument = "{8400}"
+	// TagActualAmountPaid is ActualAmountPaid
+	TagActualAmountPaid = "{8450}"
+	// TagGrossAmountRemittanceDocument is GrossAmountRemittanceDocument
+	TagGrossAmountRemittanceDocument = "{8500}"
+	// TagAmountNegotiatedDiscount is AmountNegotiatedDiscount
+	TagAmountNegotiatedDiscount = "{8550}"
+	// TagAdjustment is Adjustment
+	TagAdjustment = "{8600}"
+	// TagDateRemittanceDocument is DateRemittanceDocument
+	TagDateRemittanceDocument = "{8650}"
+	// TagSecondaryRemittanceDocument is SecondaryRemittanceDocument
+	TagSecondaryRemittanceDocument = "{8700}"
+
+	//TagRemittanceFreeText is RemittanceFreeText
+	TagRemittanceFreeText = "{8750}"
 
 	// TagServiceMessage is ServiceMessage
 	TagServiceMessage = "{9000}"

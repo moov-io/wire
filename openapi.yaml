@@ -1342,8 +1342,9 @@ components:
           description: Issuer
           example: 'Remittance Issuer'
     RemittanceAmount:
+      description: RemittanceAmount
       properties:
-        currenyCode:
+        currencyCode:
           type: string
           maxLength: 3
           description: CurrencyCode
@@ -1383,9 +1384,11 @@ components:
           description: LineThree
           example: 'Line Three Text'
     Adjustment:
-      $ref: '#/components/schemas/AdjustmentEnum'
-      description: Adjustment {8600}
+      description: Adjustment
       properties:
+        adjustmentReasonCode:
+          $ref: '#/components/schemas/AdjustmentEnum'
+          description: AdjustmentReasonCode
         creditDebitIndicator:
           type: string
           maxLength: 4
@@ -1398,7 +1401,7 @@ components:
             - CRDT
             - DBIT
           example: 'DBIT'
-        currenyCode:
+        currencyCode:
           type: string
           maxLength: 3
           description: CurrencyCode
@@ -1419,9 +1422,11 @@ components:
           description: AdditionalInfo
           example: 'Additional Info'
     SecondaryRemittanceDocument:
-      $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
       description: SecondaryRemittanceDocument
       properties:
+        documentTypeCode:
+          $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+          description:
         proprietaryDocumentTypeCode:
           type: string
           maxLength: 35

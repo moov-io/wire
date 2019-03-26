@@ -440,7 +440,12 @@ components:
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -544,7 +549,7 @@ components:
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -589,7 +594,7 @@ components:
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
@@ -612,7 +617,11 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
           senderReference:
             senderReference: Reference
           fiBeneficiaryFIAdvice:
@@ -652,7 +661,7 @@ components:
             lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -834,7 +843,12 @@ components:
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -938,7 +952,7 @@ components:
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -983,7 +997,7 @@ components:
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
@@ -1006,7 +1020,11 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
           senderReference:
             senderReference: Reference
           fiBeneficiaryFIAdvice:
@@ -1046,7 +1064,7 @@ components:
             lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -1241,7 +1259,12 @@ components:
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -1345,7 +1368,7 @@ components:
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -1390,7 +1413,7 @@ components:
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
@@ -1413,7 +1436,11 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
           senderReference:
             senderReference: Reference
           fiBeneficiaryFIAdvice:
@@ -1453,7 +1480,7 @@ components:
             lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -1635,7 +1662,12 @@ components:
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
@@ -1739,7 +1771,7 @@ components:
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
@@ -1784,7 +1816,7 @@ components:
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
@@ -1807,7 +1839,11 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
           senderReference:
             senderReference: Reference
           fiBeneficiaryFIAdvice:
@@ -1847,7 +1883,7 @@ components:
             lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -2047,7 +2083,12 @@ components:
           receiptApplicationIdentification: RB11
         previousMessageIdentifier:
           previousMessageIdentifier: previousMessageIdentifier
-        adjustment: CM
+        adjustment:
+          amount: "1234.56789"
+          additionalInfo: Additional Info
+          creditDebitIndicator: DBIT
+          currencyCode: USD
+          adjustmentReasonCode: CM
         inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
@@ -2151,7 +2192,7 @@ components:
           addendaLength: "0987"
         amountNegotiatedDiscount:
           amount: "1234.56789"
-          currenyCode: USD
+          currencyCode: USD
         originatorToBeneficiary:
           lineTwo: Line Two
           lineOne: Line One
@@ -2196,7 +2237,7 @@ components:
           identificationNumberIssuer: Identification Number Issuer
         actualAmountPaid:
           amount: "1234.56789"
-          currenyCode: USD
+          currencyCode: USD
         remittanceFreeText:
           lineTwo: Line Two Text
           lineOne: Line One Text
@@ -2219,7 +2260,11 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
-        secondaryRemittanceDocument: AROI
+        secondaryRemittanceDocument:
+          documentIdentificationNumber: Document2
+          documentTypeCode: AROI
+          proprietaryDocumentTypeCode: Proprietary
+          issuer: Issuer
         senderReference:
           senderReference: Reference
         fiBeneficiaryFIAdvice:
@@ -2259,7 +2304,7 @@ components:
           lineThree: Line Three
         grossAmountRemittanceDocument:
           amount: "1234.56789"
-          currenyCode: USD
+          currencyCode: USD
         typeSubType:
           subTypeCode: "10"
           typeCode: "10"
@@ -2391,39 +2436,11 @@ components:
         amountNegotiatedDiscount:
           $ref: '#/components/schemas/RemittanceAmount'
         adjustment:
-          description: |
-            Adjustment
-
-            * `01` - Pricing Error
-            * `03` - Extension Error
-            * `04` - Item Not Accepted (Damaged)
-            * `05` - Item Not Accepted (Quality)
-            * `06` - Quantity Contested 07   Incorrect Product
-            * `11` - Returns (Damaged)
-            * `12` - Returns (Quality)
-            * `59` - Item Not Received
-            * `75` - Total Order Not Received
-            * `81` - Credit as Agreed
-            * `CM` - Covered by Credit Memo
-          example: CM
-          maxLength: 4
-          type: string
+          $ref: '#/components/schemas/Adjustment'
         dateRemittanceDocument:
           $ref: '#/components/schemas/DateRemittanceDocument'
         secondaryRemittanceDocument:
-          description: |
-            SecondaryRemittanceDocument
-
-            * `AROI` - Accounts Receivable Open Item
-            * `DISP` - Dispatch Advice
-            * `FXDR` - Foreign Exchange Deal Reference
-            * `PROP` - Proprietary Document Type PUOR Purchase Order
-            * `RADM` - Remittance Advice Message
-            * `RPIN` - Related Payment Instruction
-            * `SCOR1` - Structured Communication Reference VCHR Voucher
-          example: AROI
-          maxLength: 4
-          type: string
+          $ref: '#/components/schemas/SecondaryRemittanceDocument'
         remittanceFreeText:
           $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
@@ -3690,11 +3707,12 @@ components:
           maxLength: 35
           type: string
     RemittanceAmount:
+      description: RemittanceAmount
       example:
         amount: "1234.56789"
-        currenyCode: USD
+        currencyCode: USD
       properties:
-        currenyCode:
+        currencyCode:
           description: CurrencyCode
           example: USD
           maxLength: 3
@@ -3740,9 +3758,101 @@ components:
           maxLength: 140
           type: string
     Adjustment:
-      $ref: '#/components/schemas/AdjustmentEnum'
+      description: Adjustment
+      example:
+        amount: "1234.56789"
+        additionalInfo: Additional Info
+        creditDebitIndicator: DBIT
+        currencyCode: USD
+        adjustmentReasonCode: CM
+      properties:
+        adjustmentReasonCode:
+          description: |
+            Adjustment
+
+            * `01` - Pricing Error
+            * `03` - Extension Error
+            * `04` - Item Not Accepted (Damaged)
+            * `05` - Item Not Accepted (Quality)
+            * `06` - Quantity Contested 07   Incorrect Product
+            * `11` - Returns (Damaged)
+            * `12` - Returns (Quality)
+            * `59` - Item Not Received
+            * `75` - Total Order Not Received
+            * `81` - Credit as Agreed
+            * `CM` - Covered by Credit Memo
+          example: CM
+          maxLength: 4
+          type: string
+        creditDebitIndicator:
+          description: |
+            CreditDebitIndicator
+
+            * `CRDT` - Credit
+            * `DBIT` - Debit
+          enum:
+          - CRDT
+          - DBIT
+          example: DBIT
+          maxLength: 4
+          type: string
+        currencyCode:
+          description: CurrencyCode
+          example: USD
+          maxLength: 3
+          type: string
+        amount:
+          description: |
+            Amount
+            Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
+            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Amount must be greater than zero (i.e., at least .01).
+          example: "1234.56789"
+          maxLength: 19
+          minLength: 19
+          type: string
+        additionalInfo:
+          description: AdditionalInfo
+          example: Additional Info
+          maxLength: 140
+          type: string
     SecondaryRemittanceDocument:
-      $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+      description: SecondaryRemittanceDocument
+      example:
+        documentIdentificationNumber: Document2
+        documentTypeCode: AROI
+        proprietaryDocumentTypeCode: Proprietary
+        issuer: Issuer
+      properties:
+        documentTypeCode:
+          description: |
+            SecondaryRemittanceDocument
+
+            * `AROI` - Accounts Receivable Open Item
+            * `DISP` - Dispatch Advice
+            * `FXDR` - Foreign Exchange Deal Reference
+            * `PROP` - Proprietary Document Type PUOR Purchase Order
+            * `RADM` - Remittance Advice Message
+            * `RPIN` - Related Payment Instruction
+            * `SCOR1` - Structured Communication Reference VCHR Voucher
+          example: AROI
+          maxLength: 4
+          type: string
+        proprietaryDocumentTypeCode:
+          description: proprietaryDocumentTypeCode
+          example: Proprietary
+          maxLength: 35
+          type: string
+        documentIdentificationNumber:
+          description: documentIdentificationNumber
+          example: Document2
+          maxLength: 35
+          type: string
+        issuer:
+          description: Issuer
+          example: Issuer
+          maxLength: 35
+          type: string
     ServiceMessage:
       example:
         lineNine: Line Nine Text

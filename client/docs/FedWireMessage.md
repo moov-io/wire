@@ -58,9 +58,9 @@ Name | Type | Description | Notes
 **ActualAmountPaid** | [**RemittanceAmount**](RemittanceAmount.md) |  | [optional] 
 **GrossAmountRemittanceDocument** | [**RemittanceAmount**](RemittanceAmount.md) |  | [optional] 
 **AmountNegotiatedDiscount** | [**RemittanceAmount**](RemittanceAmount.md) |  | [optional] 
-**Adjustment** | **string** | Adjustment  * &#x60;01&#x60; - Pricing Error * &#x60;03&#x60; - Extension Error * &#x60;04&#x60; - Item Not Accepted (Damaged) * &#x60;05&#x60; - Item Not Accepted (Quality) * &#x60;06&#x60; - Quantity Contested 07   Incorrect Product * &#x60;11&#x60; - Returns (Damaged) * &#x60;12&#x60; - Returns (Quality) * &#x60;59&#x60; - Item Not Received * &#x60;75&#x60; - Total Order Not Received * &#x60;81&#x60; - Credit as Agreed * &#x60;CM&#x60; - Covered by Credit Memo  | [optional] 
+**Adjustment** | [**Adjustment**](Adjustment.md) |  | [optional] 
 **DateRemittanceDocument** | [**DateRemittanceDocument**](DateRemittanceDocument.md) |  | [optional] 
-**SecondaryRemittanceDocument** | **string** | SecondaryRemittanceDocument  * &#x60;AROI&#x60; - Accounts Receivable Open Item * &#x60;DISP&#x60; - Dispatch Advice * &#x60;FXDR&#x60; - Foreign Exchange Deal Reference * &#x60;PROP&#x60; - Proprietary Document Type PUOR Purchase Order * &#x60;RADM&#x60; - Remittance Advice Message * &#x60;RPIN&#x60; - Related Payment Instruction * &#x60;SCOR1&#x60; - Structured Communication Reference VCHR Voucher  | [optional] 
+**SecondaryRemittanceDocument** | [**SecondaryRemittanceDocument**](SecondaryRemittanceDocument.md) |  | [optional] 
 **RemittanceFreeText** | [**RemittanceFreeText**](RemittanceFreeText.md) |  | [optional] 
 **ServiceMessage** | [**ServiceMessage**](ServiceMessage.md) |  | [optional] 
 
