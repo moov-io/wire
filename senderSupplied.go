@@ -6,8 +6,8 @@ package wire
 
 import "strings"
 
-// SenderSuppliedInformation {1500}
-type SenderSuppliedInformation struct {
+// SenderSupplied {1500}
+type SenderSupplied struct {
 	// tag
 	tag string
 	// FormatVersion 30
@@ -25,37 +25,37 @@ type SenderSuppliedInformation struct {
 	converters
 }
 
-// NewSenderSuppliedInformation returns a new SenderSuppliedInformation
-func NewSenderSuppliedInformation() SenderSuppliedInformation {
-	ssi := SenderSuppliedInformation{
-		tag: TagSenderSuppliedInformation,
+// NewSenderSupplied returns a new SenderSupplied
+func NewSenderSupplied() SenderSupplied {
+	ss := SenderSupplied{
+		tag: TagSenderSupplied,
 		FormatVersion: FormatVersion,
 		TestProductionCode: EnvironmentTest,
 		MessageDuplicationCode: MessageDuplicationOriginal,
 	}
-	return ssi
+	return ss
 }
 
-// Parse takes the input string and parses the SenderSuppliedInformation values
+// Parse takes the input string and parses the SenderSupplied values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ssi *SenderSuppliedInformation) Parse(record string) {
+func (ss *SenderSupplied) Parse(record string) {
 }
 
-// String writes SenderSuppliedInformation
-func (ssi *SenderSuppliedInformation) String() string {
+// String writes SenderSupplied
+func (ss *SenderSupplied) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(18)
-	buf.WriteString(ssi.tag)
+	buf.WriteString(ss.tag)
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on SenderSuppliedInformation and returns an error if not Validated
+// Validate performs WIRE format rule checks on SenderSupplied and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (ssi *SenderSuppliedInformation) Validate() error {
-	if err := ssi.fieldInclusion(); err != nil {
+func (ss *SenderSupplied) Validate() error {
+	if err := ss.fieldInclusion(); err != nil {
 		return err
 	}
 /*		if ssi.FormatVersion != FormatVersion {
@@ -66,6 +66,6 @@ func (ssi *SenderSuppliedInformation) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ssi *SenderSuppliedInformation) fieldInclusion() error {
+func (ss *SenderSupplied) fieldInclusion() error {
 	return nil
 }

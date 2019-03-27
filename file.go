@@ -1,8 +1,12 @@
 package wire
 
+// ToDo:  Do we want tag to be exportable
+// ToDo:  Do we want ID for each type?
+
 // File contains the structures of a parsed WIRE File.
 type File struct {
 	ID string `json:"id"`
+	FedWireMessage FedWireMessage `json:"fedWireMessage"`
 }
 
 // Create will tabulate and assemble an WIRE file into a valid state.

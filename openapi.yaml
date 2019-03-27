@@ -198,7 +198,7 @@ components:
         fedWireMessage:
           type: array
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
     File:
       properties:
         id:
@@ -207,16 +207,20 @@ components:
           example: 3f2d23ee214
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
       required:
         - fedWireMessage
     Files:
       type: array
       items:
         $ref: '#/components/schemas/File'
-    FEDWireMessage:
-      description: FEDWireMessage
+    FedWireMessage:
+      description: FedWireMessage
       properties:
+        id:
+          type: string
+          description: FedWireMessage ID
+          example: 3f2d23ee214
         # TAGS 1100, 1110, 1120, 1130 is information Appended by the Fedwire Funds Service
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
@@ -228,7 +232,7 @@ components:
           $ref: '#/components/schemas/OutputMessageAccountabilityData'
           description: OutputMessageAccountabilityData {1120}
         errorWire:
-          $ref: '#/components/schemas/FEDWireError'
+          $ref: '#/components/schemas/ErrorWire'
           description: Error {1130}
         senderSupplied:
           $ref: '#/components/schemas/SenderSupplied'
@@ -326,13 +330,13 @@ components:
         fiBeneficiary:
           $ref: '#/components/schemas/FIToFI'
           description: FIBeneficiary {6400}
-        fibeneficiaryAdvice:
+        fiBeneficiaryAdvice:
           $ref: '#/components/schemas/Advice'
           description: FIBeneficiaryAdvice {6410}
-        fipaymentMethodToBeneficiary:
-          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
+        fiPaymentMethodToBeneficiary:
+          $ref: '#/components/schemas/FIPaymentMethodToBeneficiary'
           description: FIPaymentMethodToBeneficiary {6420}
-        fiadditionalFIToFI:
+        fiAdditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
           description: FIAdditionalFIToFI {6500}
         currencyInstructedAmount:
@@ -459,7 +463,8 @@ components:
           maxLength: 4
           description: 'OutputFRBApplicationIdentification'
           example: 'OB11'
-    FEDWireError:
+    ErrorWire:
+       description:  ErrorWire
        properties:
          errorCategory:
            $ref: '#/components/schemas/ErrorCategoryEnum'
@@ -968,7 +973,7 @@ components:
           maxLength: 33
           description: LineSix
           example: 'Line Six'
-    PaymentMethodToBeneficiary:
+    FIPaymentMethodToBeneficiary:
       properties:
         paymentMethod:
           type: string

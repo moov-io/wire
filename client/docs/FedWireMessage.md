@@ -3,10 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Id** | **string** | FedWireMessage ID | [optional] 
 **MessageDisposition** | [**MessageDisposition**](MessageDisposition.md) |  | [optional] 
 **ReceiptTimeStamp** | [**ReceiptTimeStamp**](ReceiptTimeStamp.md) |  | [optional] 
 **OutputMessageAccountabilityData** | [**OutputMessageAccountabilityData**](OutputMessageAccountabilityData.md) |  | [optional] 
-**ErrorWire** | [**FedWireError**](FEDWireError.md) |  | [optional] 
+**ErrorWire** | [**ErrorWire**](ErrorWire.md) |  | [optional] 
 **SenderSupplied** | [**SenderSupplied**](SenderSupplied.md) |  | 
 **TypeSubType** | [**TypeSubType**](TypeSubType.md) |  | 
 **InputMessageAccountabilityData** | [**InputMessageAccountabilityData**](InputMessageAccountabilityData.md) |  | 
@@ -39,9 +40,9 @@ Name | Type | Description | Notes
 **FiBeneficiaryFI** | [**FiToFi**](FIToFI.md) |  | [optional] 
 **FiBeneficiaryFIAdvice** | [**Advice**](Advice.md) |  | [optional] 
 **FiBeneficiary** | [**FiToFi**](FIToFI.md) |  | [optional] 
-**FibeneficiaryAdvice** | [**Advice**](Advice.md) |  | [optional] 
-**FipaymentMethodToBeneficiary** | [**PaymentMethodToBeneficiary**](PaymentMethodToBeneficiary.md) |  | [optional] 
-**FiadditionalFIToFI** | [**AdditionalFiToFi**](AdditionalFIToFI.md) |  | [optional] 
+**FiBeneficiaryAdvice** | [**Advice**](Advice.md) |  | [optional] 
+**FiPaymentMethodToBeneficiary** | [**FiPaymentMethodToBeneficiary**](FIPaymentMethodToBeneficiary.md) |  | [optional] 
+**FiAdditionalFIToFI** | [**AdditionalFiToFi**](AdditionalFIToFI.md) |  | [optional] 
 **CurrencyInstructedAmount** | [**CoverPayment**](CoverPayment.md) |  | [optional] 
 **OrderingCustomer** | [**CoverPayment**](CoverPayment.md) |  | [optional] 
 **OrderingInstitution** | [**CoverPayment**](CoverPayment.md) |  | [optional] 

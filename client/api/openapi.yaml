@@ -286,20 +286,9 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          fipaymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          fibeneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -340,6 +329,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
+          id: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -348,6 +338,21 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -454,6 +459,9 @@ components:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -515,13 +523,6 @@ components:
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          fiadditionalFIToFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -689,20 +690,9 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          fipaymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          fibeneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -743,6 +733,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
+          id: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -751,6 +742,21 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -857,6 +863,9 @@ components:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -918,13 +927,6 @@ components:
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          fiadditionalFIToFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -1091,7 +1093,7 @@ components:
           type: string
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
           type: array
     File:
       example:
@@ -1105,20 +1107,9 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          fipaymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          fibeneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -1159,6 +1150,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
+          id: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1167,6 +1159,21 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -1273,6 +1280,9 @@ components:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1334,13 +1344,6 @@ components:
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          fiadditionalFIToFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -1508,20 +1511,9 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          fipaymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          fibeneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
@@ -1562,6 +1554,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
+          id: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1570,6 +1563,21 @@ components:
             swiftLineSix: Swift Line Six
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -1676,6 +1684,9 @@ components:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            Additional: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1737,13 +1748,6 @@ components:
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
-          fiadditionalFIToFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
@@ -1910,7 +1914,7 @@ components:
           type: string
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
           type: array
       required:
       - fedWireMessage
@@ -1918,8 +1922,8 @@ components:
       items:
         $ref: '#/components/schemas/File'
       type: array
-    FEDWireMessage:
-      description: FEDWireMessage
+    FedWireMessage:
+      description: FedWireMessage
       example:
         orderingInstitution:
           swiftLineFour: Swift Line Four
@@ -1929,20 +1933,9 @@ components:
           swiftLineSix: Swift Line Six
           swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
-        fipaymentMethodToBeneficiary:
-          Additional: For goods and services
-          paymentMethod: CHECK
         localInstrument:
           localInstrumentCode: ANSI
           proprietaryCode: WJD786363
-        fibeneficiaryAdvice:
-          adviceCode: HLD
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         fiBeneficiaryFI:
           lineTwo: Line Two
           lineFive: Line Five
@@ -1983,6 +1976,7 @@ components:
         instructedAmount:
           amount: amount
           currencyCode: USD
+        id: 3f2d23ee214
         remittance:
           swiftLineFour: Swift Line Four
           swiftLineOne: Swift Line One
@@ -1991,6 +1985,21 @@ components:
           swiftLineSix: Swift Line Six
           swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
+        fiBeneficiaryAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
+        fiAdditionalFIToFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         paymentNotification:
           contactMobileNumber: 555.555.555
           contactName: Wade Arnold
@@ -2097,6 +2106,9 @@ components:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
           inputSequenceNumber: "000001"
+        fiPaymentMethodToBeneficiary:
+          Additional: For goods and services
+          paymentMethod: CHECK
         currencyInstructedAmount:
           swiftLineFour: Swift Line Four
           swiftLineOne: Swift Line One
@@ -2158,13 +2170,6 @@ components:
         beneficiaryReference:
           beneficiaryReference: Test Data
         fiIntermediaryFI:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
-        fiadditionalFIToFI:
           lineTwo: Line Two
           lineFive: Line Five
           lineSix: Line Six
@@ -2325,6 +2330,10 @@ components:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
       properties:
+        id:
+          description: FedWireMessage ID
+          example: 3f2d23ee214
+          type: string
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
         receiptTimeStamp:
@@ -2332,7 +2341,7 @@ components:
         outputMessageAccountabilityData:
           $ref: '#/components/schemas/OutputMessageAccountabilityData'
         errorWire:
-          $ref: '#/components/schemas/FEDWireError'
+          $ref: '#/components/schemas/ErrorWire'
         senderSupplied:
           $ref: '#/components/schemas/SenderSupplied'
         typeSubType:
@@ -2397,11 +2406,11 @@ components:
           $ref: '#/components/schemas/Advice'
         fiBeneficiary:
           $ref: '#/components/schemas/FIToFI'
-        fibeneficiaryAdvice:
+        fiBeneficiaryAdvice:
           $ref: '#/components/schemas/Advice'
-        fipaymentMethodToBeneficiary:
-          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
-        fiadditionalFIToFI:
+        fiPaymentMethodToBeneficiary:
+          $ref: '#/components/schemas/FIPaymentMethodToBeneficiary'
+        fiAdditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
         currencyInstructedAmount:
           $ref: '#/components/schemas/CoverPayment'
@@ -2525,7 +2534,8 @@ components:
           example: OB11
           maxLength: 4
           type: string
-    FEDWireError:
+    ErrorWire:
+      description: ErrorWire
       example:
         errorDescription: Data Error
         errorCategory: E
@@ -3130,7 +3140,7 @@ components:
           example: Line Six
           maxLength: 33
           type: string
-    PaymentMethodToBeneficiary:
+    FIPaymentMethodToBeneficiary:
       example:
         Additional: For goods and services
         paymentMethod: CHECK

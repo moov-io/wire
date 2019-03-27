@@ -11,7 +11,7 @@ type FIBeneficiaryFI struct {
 	// tag
 	tag string
 	// Financial Institution
-	FIToFI FIToFI `json:"fiToFI,omitempty"`
+	FIToFI FiToFi `json:"fiToFI,omitempty"`
 
 	// validator is composed for data validation
 	validator

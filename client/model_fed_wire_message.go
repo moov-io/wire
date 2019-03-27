@@ -9,12 +9,14 @@
 
 package openapi
 
-// FEDWireMessage
+// FedWireMessage
 type FedWireMessage struct {
+	// FedWireMessage ID
+	Id string `json:"id,omitempty"`
 	MessageDisposition MessageDisposition `json:"messageDisposition,omitempty"`
 	ReceiptTimeStamp ReceiptTimeStamp `json:"receiptTimeStamp,omitempty"`
 	OutputMessageAccountabilityData OutputMessageAccountabilityData `json:"outputMessageAccountabilityData,omitempty"`
-	ErrorWire FedWireError `json:"errorWire,omitempty"`
+	ErrorWire ErrorWire `json:"errorWire,omitempty"`
 	SenderSupplied SenderSupplied `json:"senderSupplied"`
 	TypeSubType TypeSubType `json:"typeSubType"`
 	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData"`
@@ -47,9 +49,9 @@ type FedWireMessage struct {
 	FiBeneficiaryFI FiToFi `json:"fiBeneficiaryFI,omitempty"`
 	FiBeneficiaryFIAdvice Advice `json:"fiBeneficiaryFIAdvice,omitempty"`
 	FiBeneficiary FiToFi `json:"fiBeneficiary,omitempty"`
-	FibeneficiaryAdvice Advice `json:"fibeneficiaryAdvice,omitempty"`
-	FipaymentMethodToBeneficiary PaymentMethodToBeneficiary `json:"fipaymentMethodToBeneficiary,omitempty"`
-	FiadditionalFIToFI AdditionalFiToFi `json:"fiadditionalFIToFI,omitempty"`
+	FiBeneficiaryAdvice Advice `json:"fiBeneficiaryAdvice,omitempty"`
+	FiPaymentMethodToBeneficiary FiPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
+	FiAdditionalFIToFI AdditionalFiToFi `json:"fiAdditionalFIToFI,omitempty"`
 	CurrencyInstructedAmount CoverPayment `json:"currencyInstructedAmount,omitempty"`
 	OrderingCustomer CoverPayment `json:"orderingCustomer,omitempty"`
 	OrderingInstitution CoverPayment `json:"orderingInstitution,omitempty"`

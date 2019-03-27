@@ -91,8 +91,8 @@ const (
 	TagFIBeneficiaryAdvice = "{6410}"
 	// TagFIPaymentMethodToBeneficiary is FIPaymentMethodToBeneficiary
 	TagFIPaymentMethodToBeneficiary = "{6420}"
-	// TagFIAdditionalFIToFI is FIAdditionalFIToFI
-	TagFIAdditionalFIToFI = "{6500}"
+	// TagFIAdditionalFiToFi is FIAdditionalFiToFi
+	TagFIAdditionalFiToFi = "{6500}"
 
 	// TagCurrencyInstructedAmount is CurrencyInstructedAmount
 	TagCurrencyInstructedAmount = "{7033}"
