@@ -20,8 +20,8 @@ type DateRemittanceDocument struct {
 }
 
 // NewDateRemittanceDocument returns a new DateRemittanceDocument
-func NewDateRemittanceDocument() DateRemittanceDocument  {
-	drd := DateRemittanceDocument {
+func NewDateRemittanceDocument() DateRemittanceDocument {
+	drd := DateRemittanceDocument{
 		tag: TagDateRemittanceDocument,
 	}
 	return drd

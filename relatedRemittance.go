@@ -26,8 +26,8 @@ type RelatedRemittance struct {
 }
 
 // NewRelatedRemittance returns a new RelatedRemittance
-func NewRelatedRemittance() RelatedRemittance  {
-	rr := RelatedRemittance {
+func NewRelatedRemittance() RelatedRemittance {
+	rr := RelatedRemittance{
 		tag: TagRelatedRemittance,
 	}
 	return rr

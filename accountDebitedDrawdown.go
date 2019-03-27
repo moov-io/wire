@@ -15,7 +15,7 @@ type AccountDebitedDrawdown struct {
 	// Identifier
 	Identifier string `json:"identifier"`
 	// Name
-	Name string `json:"name"`
+	Name    string  `json:"name"`
 	Address Address `json:"address,omitempty"`
 
 	// validator is composed for data validation
@@ -25,8 +25,8 @@ type AccountDebitedDrawdown struct {
 }
 
 // NewAccountDebitedDrawdown returns a new AccountDebitedDrawdown
-func NewAccountDebitedDrawdown() AccountDebitedDrawdown  {
-	debitDD := AccountDebitedDrawdown {
+func NewAccountDebitedDrawdown() AccountDebitedDrawdown {
+	debitDD := AccountDebitedDrawdown{
 		tag: TagAccountDebitedDrawdown,
 	}
 	return debitDD

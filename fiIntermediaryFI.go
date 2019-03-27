@@ -57,5 +57,3 @@ func (ifi *FIIntermediaryFI) Validate() error {
 func (ifi *FIIntermediaryFI) fieldInclusion() error {
 	return nil
 }
-
-

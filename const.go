@@ -19,7 +19,7 @@ const (
 	TagErrorWire = "{1130}"
 
 	// TagSenderSuppliedInformation is SenderSuppliedInformation
-	TagSenderSuppliedInformation  = "{1500}"
+	TagSenderSuppliedInformation = "{1500}"
 	// TagTypeSubType is TypeSubType
 	TagTypeSubType = "{1510}"
 	// TagInputMessageAccountabilityData is InputMessageAccountabilityData (IMAD)
@@ -69,7 +69,6 @@ const (
 	TagInstructingFI = "{5200}"
 	// TagAccountCreditedDrawdown is AccountCreditedDrawdown
 	TagAccountCreditedDrawdown = "{5400}"
-
 
 	// TagOriginatorToBeneficiary is OriginatorToBeneficiary
 	TagOriginatorToBeneficiary = "{6000}"

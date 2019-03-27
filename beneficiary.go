@@ -20,8 +20,8 @@ type Beneficiary struct {
 }
 
 // NewBeneficiary returns a new Beneficiary
-func NewBeneficiary() Beneficiary  {
-	b := Beneficiary {
+func NewBeneficiary() Beneficiary {
+	b := Beneficiary{
 		tag: TagBeneficiary,
 	}
 	return b

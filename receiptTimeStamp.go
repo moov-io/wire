@@ -24,8 +24,8 @@ type ReceiptTimeStamp struct {
 }
 
 // NewReceiptTimeStamp returns a new ReceiptTimeStamp
-func NewReceiptTimeStamp() ReceiptTimeStamp  {
-	rts := ReceiptTimeStamp {
+func NewReceiptTimeStamp() ReceiptTimeStamp {
+	rts := ReceiptTimeStamp{
 		tag: TagReceiptTimeStamp,
 	}
 	return rts

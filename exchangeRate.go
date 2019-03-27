@@ -21,8 +21,8 @@ type ExchangeRate struct {
 }
 
 // NewExchangeRate returns a new ExchangeRate
-func NewExchangeRate() ExchangeRate  {
-	er := ExchangeRate {
+func NewExchangeRate() ExchangeRate {
+	er := ExchangeRate{
 		tag: TagExchangeRate,
 	}
 	return er
@@ -36,7 +36,7 @@ func (er *ExchangeRate) Parse(record string) {
 }
 
 // String writes ExchangeRate
-func (er*ExchangeRate) String() string {
+func (er *ExchangeRate) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(12)

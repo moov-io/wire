@@ -34,8 +34,8 @@ type PaymentNotification struct {
 }
 
 // NewPaymentNotification returns a new PaymentNotification
-func NewPaymentNotification() PaymentNotification  {
-	pn := PaymentNotification {
+func NewPaymentNotification() PaymentNotification {
+	pn := PaymentNotification{
 		tag: TagPaymentNotification,
 	}
 	return pn
@@ -71,4 +71,3 @@ func (pn *PaymentNotification) Validate() error {
 func (pn *PaymentNotification) fieldInclusion() error {
 	return nil
 }
-

@@ -11,7 +11,7 @@ type RemittanceBeneficiary struct {
 	// tag
 	tag string
 	// IdentificationType is identification type
-	IdentificationType string`json:"identificationType,omitempty"`
+	IdentificationType string `json:"identificationType,omitempty"`
 	// IdentificationCode  Organization Identification Codes  * `BANK` - Bank Party Identification * `CUST` - Customer Number * `DUNS` - Data Universal Number System (Dun & Bradstreet) * `EMPL` - Employer Identification Number * `GS1G` - Global Location Number * `PROP` - Proprietary Identification Number * `SWBB` - SWIFT BIC or BEI * `TXID` - Tax Identification Number  Private Identification Codes  * `ARNU` - Alien Registration Number * `CCPT` - Passport Number * `CUST` - Customer Number * `DPOB` - Date & Place of Birth * `DRLC` - Driver’s License Number * `EMPL` - Employee Identification Number * `NIDN` - National Identity Number * `PROP` - Proprietary Identification Number * `SOSE` - Social Security Number * `TXID` - Tax Identification Number
 	IdentificationCode string `json:"identificationCode,omitempty"`
 	// IdentificationNumber
@@ -19,8 +19,8 @@ type RemittanceBeneficiary struct {
 	// IdentificationNumberIssuer
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
 	// DateAndfBirthPlace
-	DateAndBirthPlace string `json:"dateAndBirthPlace,omitempty"`
-	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
+	DateAndBirthPlace string         `json:"dateAndBirthPlace,omitempty"`
+	RemittanceData    RemittanceData `json:"remittanceData,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -29,8 +29,8 @@ type RemittanceBeneficiary struct {
 }
 
 // NewRemittanceBeneficiary returns a new RemittanceBeneficiary
-func NewRemittanceBeneficiary() RemittanceBeneficiary  {
-	rb := RemittanceBeneficiary {
+func NewRemittanceBeneficiary() RemittanceBeneficiary {
+	rb := RemittanceBeneficiary{
 		tag: TagRemittanceBeneficiary,
 	}
 	return rb

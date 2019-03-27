@@ -6,7 +6,7 @@ package wire
 
 // Advice is financial institution advice information
 type Advice struct {
-	AdviceCode string`json:"adviceCode,omitempty"`
+	AdviceCode string `json:"adviceCode,omitempty"`
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo
@@ -20,4 +20,3 @@ type Advice struct {
 	// LineSix
 	LineSix string `json:"lineSix,omitempty"`
 }
-

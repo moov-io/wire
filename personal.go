@@ -11,6 +11,6 @@ type Personal struct {
 	// Identifier
 	Identifier string `json:"identifier"`
 	// Name
-	Name string `json:"name"`
+	Name    string  `json:"name"`
 	Address Address `json:"address"`
 }

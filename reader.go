@@ -26,8 +26,6 @@ type Reader struct {
 	tagName string
 }
 
-
-
 // Read reads each line of the FED Wire file and defines which parser to use based
 // on the first character of each line. It also enforces FED Wire formatting rules and returns
 // the appropriate error if issues are found.
@@ -38,14 +36,16 @@ func (r *Reader) Read() (File, error) {
 		line := r.scanner.Text()
 		r.lineNum++
 
-/*		lineLength := len(line)
+		/*		lineLength := len(line)
 
-		// ToDo: Adjust below stump code
-		if lineLength < 5 {
-			msg := fmt.Sprintf(msgRecordLength, lineLength)
-			err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
-			return r.File, r.error(err)
-		}*/
+				// ToDo: Adjust below stump code
+				if lineLength < 5 {
+					msg := fmt.Sprintf(msgRecordLength, lineLength)
+					err := &FileError{FieldName: "RecordLength", Value: strconv.Itoa(lineLength), Msg: msg}
+					return r.File, r.error(err)
+				}*/
+
+		// ToDo: parseLine or parseTag?
 
 		r.line = line
 		if err := r.parseLine(); err != nil {
@@ -57,6 +57,13 @@ func (r *Reader) Read() (File, error) {
 }
 
 func (r *Reader) parseLine() error {
+
+	// ToDo:  For each type check length based on the tag
+
+	return nil
+}
+
+func (r *Reader) parseTag() error {
 
 	// ToDo:  For each type check length based on the tag
 

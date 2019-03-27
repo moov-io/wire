@@ -57,4 +57,3 @@ func (ba *FIBeneficiaryAdvice) Validate() error {
 func (ba *FIBeneficiaryAdvice) fieldInclusion() error {
 	return nil
 }
-

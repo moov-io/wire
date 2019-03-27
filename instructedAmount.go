@@ -23,8 +23,8 @@ type InstructedAmount struct {
 }
 
 // NewInstructedAmount returns a new InstructedAmount
-func NewInstructedAmount() InstructedAmount  {
-	ia := InstructedAmount {
+func NewInstructedAmount() InstructedAmount {
+	ia := InstructedAmount{
 		tag: TagInstructedAmount,
 	}
 	return ia
@@ -60,6 +60,3 @@ func (ia *InstructedAmount) Validate() error {
 func (ia *InstructedAmount) fieldInclusion() error {
 	return nil
 }
-
-
-

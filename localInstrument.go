@@ -22,8 +22,8 @@ type LocalInstrument struct {
 }
 
 // NewLocalInstrument returns a new LocalInstrument
-func NewLocalInstrument() LocalInstrument  {
-	li := LocalInstrument {
+func NewLocalInstrument() LocalInstrument {
+	li := LocalInstrument{
 		tag: TagLocalInstrument,
 	}
 	return li
@@ -59,4 +59,3 @@ func (li *LocalInstrument) Validate() error {
 func (li *LocalInstrument) fieldInclusion() error {
 	return nil
 }
-

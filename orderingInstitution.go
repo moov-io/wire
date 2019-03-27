@@ -20,8 +20,8 @@ type OrderingInstitution struct {
 }
 
 // NewOrderingInstitution returns a new OrderingInstitution
-func NewOrderingInstitution() OrderingInstitution  {
-	oi := OrderingInstitution {
+func NewOrderingInstitution() OrderingInstitution {
+	oi := OrderingInstitution{
 		tag: TagOrderingInstitution,
 	}
 	return oi

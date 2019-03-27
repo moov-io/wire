@@ -20,8 +20,8 @@ type InstructingFI struct {
 }
 
 // NewInstructingFI returns a new InstructingFI
-func NewInstructingFI() InstructingFI  {
-	ifi := InstructingFI {
+func NewInstructingFI() InstructingFI {
+	ifi := InstructingFI{
 		tag: TagInstructingFI,
 	}
 	return ifi

@@ -57,6 +57,3 @@ func (ifia *FIIntermediaryFIAdvice) Validate() error {
 func (ifia *FIIntermediaryFIAdvice) fieldInclusion() error {
 	return nil
 }
-
-
-

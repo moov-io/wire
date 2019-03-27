@@ -20,8 +20,8 @@ type SenderToReceiver struct {
 }
 
 // NewSenderToReceiver returns a new SenderToReceiver
-func NewSenderToReceiver() SenderToReceiver  {
-	sr := SenderToReceiver {
+func NewSenderToReceiver() SenderToReceiver {
+	sr := SenderToReceiver{
 		tag: TagSenderToReceiver,
 	}
 	return sr

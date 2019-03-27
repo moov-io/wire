@@ -28,9 +28,9 @@ type SenderSupplied struct {
 // NewSenderSupplied returns a new SenderSupplied
 func NewSenderSupplied() SenderSupplied {
 	ss := SenderSupplied{
-		tag: TagSenderSupplied,
-		FormatVersion: FormatVersion,
-		TestProductionCode: EnvironmentTest,
+		tag:                    TagSenderSupplied,
+		FormatVersion:          FormatVersion,
+		TestProductionCode:     EnvironmentTest,
 		MessageDuplicationCode: MessageDuplicationOriginal,
 	}
 	return ss
@@ -58,9 +58,9 @@ func (ss *SenderSupplied) Validate() error {
 	if err := ss.fieldInclusion(); err != nil {
 		return err
 	}
-/*		if ssi.FormatVersion != FormatVersion {
-		return fieldError("FormatVersion", NewErrFormatVersion(30), ssi.FormatVersion)
-	}*/
+	/*		if ssi.FormatVersion != FormatVersion {
+			return fieldError("FormatVersion", NewErrFormatVersion(30), ssi.FormatVersion)
+		}*/
 	return nil
 }
 

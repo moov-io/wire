@@ -20,8 +20,8 @@ type InstitutionAccount struct {
 }
 
 // NewInstitutionAccount returns a new InstitutionAccount
-func NewInstitutionAccount() InstitutionAccount  {
-	ia := InstitutionAccount {
+func NewInstitutionAccount() InstitutionAccount {
+	ia := InstitutionAccount{
 		tag: TagInstitutionAccount,
 	}
 	return ia

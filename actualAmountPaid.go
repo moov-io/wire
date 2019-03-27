@@ -20,8 +20,8 @@ type ActualAmountPaid struct {
 }
 
 // NewActualAmountPaid returns a new ActualAmountPaid
-func NewActualAmountPaid() ActualAmountPaid  {
-	aap := ActualAmountPaid {
+func NewActualAmountPaid() ActualAmountPaid {
+	aap := ActualAmountPaid{
 		tag: TagActualAmountPaid,
 	}
 	return aap

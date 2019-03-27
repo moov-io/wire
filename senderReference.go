@@ -20,8 +20,8 @@ type SenderReference struct {
 }
 
 // NewSenderReference returns a new SenderReference
-func NewSenderReference() SenderReference  {
-	sr := SenderReference {
+func NewSenderReference() SenderReference {
+	sr := SenderReference{
 		tag: TagSenderReference,
 	}
 	return sr

@@ -20,8 +20,8 @@ type FIAdditionalFiToFi struct {
 }
 
 // NewFIAdditionalFiToFi returns a new FIAdditionalFiToFi
-func NewFIAdditionalFiToFi() FIAdditionalFiToFi  {
-	additional := FIAdditionalFiToFi {
+func NewFIAdditionalFiToFi() FIAdditionalFiToFi {
+	additional := FIAdditionalFiToFi{
 		tag: TagFIAdditionalFiToFi,
 	}
 	return additional

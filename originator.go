@@ -20,8 +20,8 @@ type Originator struct {
 }
 
 // NewOriginator returns a new Originator
-func NewOriginator() Originator  {
-	o := Originator {
+func NewOriginator() Originator {
+	o := Originator{
 		tag: TagOriginator,
 	}
 	return o
@@ -57,4 +57,3 @@ func (o *Originator) Validate() error {
 func (o *Originator) fieldInclusion() error {
 	return nil
 }
-

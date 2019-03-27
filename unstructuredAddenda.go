@@ -22,8 +22,8 @@ type UnstructuredAddenda struct {
 }
 
 // NewUnstructuredAddenda returns a new UnstructuredAddenda
-func NewUnstructuredAddenda() UnstructuredAddenda  {
-	ua := UnstructuredAddenda {
+func NewUnstructuredAddenda() UnstructuredAddenda {
+	ua := UnstructuredAddenda{
 		tag: TagUnstructuredAddenda,
 	}
 	return ua

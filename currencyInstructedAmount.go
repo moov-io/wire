@@ -20,8 +20,8 @@ type CurrencyInstructedAmount struct {
 }
 
 // NewCurrencyInstructedAmount returns a new CurrencyInstructedAmount
-func NewCurrencyInstructedAmount() CurrencyInstructedAmount  {
-	cia := CurrencyInstructedAmount {
+func NewCurrencyInstructedAmount() CurrencyInstructedAmount {
+	cia := CurrencyInstructedAmount{
 		tag: TagCurrencyInstructedAmount,
 	}
 	return cia

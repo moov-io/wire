@@ -20,8 +20,8 @@ type FIReceiverFI struct {
 }
 
 // NewFIReceiverFI returns a new FIReceiverFI
-func NewFIReceiverFI() FIReceiverFI  {
-	rfi := FIReceiverFI {
+func NewFIReceiverFI() FIReceiverFI {
+	rfi := FIReceiverFI{
 		tag: TagFIReceiverFI,
 	}
 	return rfi
@@ -57,4 +57,3 @@ func (rfi *FIReceiverFI) Validate() error {
 func (rfi *FIReceiverFI) fieldInclusion() error {
 	return nil
 }
-

@@ -42,8 +42,8 @@ type ServiceMessage struct {
 }
 
 // NewServiceMessage returns a new ServiceMessage
-func NewServiceMessage() ServiceMessage  {
-	sm := ServiceMessage {
+func NewServiceMessage() ServiceMessage {
+	sm := ServiceMessage{
 		tag: TagServiceMessage,
 	}
 	return sm

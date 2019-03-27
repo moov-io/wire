@@ -20,8 +20,8 @@ type BeneficiaryReference struct {
 }
 
 // NewBeneficiaryReference returns a new BeneficiaryReference
-func NewBeneficiaryReference() BeneficiaryReference  {
-	br := BeneficiaryReference {
+func NewBeneficiaryReference() BeneficiaryReference {
+	br := BeneficiaryReference{
 		tag: TagBeneficiaryReference,
 	}
 	return br
@@ -57,4 +57,3 @@ func (br *BeneficiaryReference) Validate() error {
 func (br *BeneficiaryReference) fieldInclusion() error {
 	return nil
 }
-

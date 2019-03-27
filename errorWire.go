@@ -24,8 +24,8 @@ type ErrorWire struct {
 }
 
 // NewErrorWire returns a new ErrorWire
-func NewErrorWire() ErrorWire  {
-	we := ErrorWire {
+func NewErrorWire() ErrorWire {
+	we := ErrorWire{
 		tag: TagErrorWire,
 	}
 	return we

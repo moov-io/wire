@@ -20,8 +20,8 @@ type RemittanceInformation struct {
 }
 
 // NewRemittanceInformation returns a new RemittanceInformation
-func NewRemittanceInformation() RemittanceInformation  {
-	ri := RemittanceInformation {
+func NewRemittanceInformation() RemittanceInformation {
+	ri := RemittanceInformation{
 		tag: TagRemittanceInformation,
 	}
 	return ri

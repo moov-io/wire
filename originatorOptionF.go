@@ -80,8 +80,8 @@ type OriginatorOptionF struct {
 }
 
 // NewOriginatorOptionF returns a new OriginatorOptionF
-func NewOriginatorOptionF() OriginatorOptionF  {
-	oof := OriginatorOptionF {
+func NewOriginatorOptionF() OriginatorOptionF {
+	oof := OriginatorOptionF{
 		tag: TagOriginatorOptionF,
 	}
 	return oof
@@ -117,5 +117,3 @@ func (oof *OriginatorOptionF) Validate() error {
 func (oof *OriginatorOptionF) fieldInclusion() error {
 	return nil
 }
-
-

@@ -24,8 +24,8 @@ type RemittanceFreeText struct {
 }
 
 // NewRemittanceFreeText returns a new RemittanceFreeText
-func NewRemittanceFreeText() RemittanceFreeText  {
-	rft := RemittanceFreeText {
+func NewRemittanceFreeText() RemittanceFreeText {
+	rft := RemittanceFreeText{
 		tag: TagRemittanceFreeText,
 	}
 	return rft

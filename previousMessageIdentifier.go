@@ -20,8 +20,8 @@ type PreviousMessageIdentifier struct {
 }
 
 // NewPreviousMessageIdentifier returns a new PreviousMessageIdentifier
-func NewPreviousMessageIdentifier() PreviousMessageIdentifier  {
-	pmi := PreviousMessageIdentifier {
+func NewPreviousMessageIdentifier() PreviousMessageIdentifier {
+	pmi := PreviousMessageIdentifier{
 		tag: TagPreviousMessageIdentifier,
 	}
 	return pmi
@@ -57,4 +57,3 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 func (pmi *PreviousMessageIdentifier) fieldInclusion() error {
 	return nil
 }
-

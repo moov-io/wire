@@ -26,8 +26,8 @@ type Adjustment struct {
 }
 
 // NewAdjustment returns a new Adjustment
-func NewAdjustment() Adjustment  {
-	adj := Adjustment {
+func NewAdjustment() Adjustment {
+	adj := Adjustment{
 		tag: TagAdjustment,
 	}
 	return adj

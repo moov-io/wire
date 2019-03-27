@@ -20,8 +20,8 @@ type FIBeneficiaryFI struct {
 }
 
 // NewFIBeneficiaryFI returns a new FIBeneficiaryFI
-func NewFIBeneficiaryFI() FIBeneficiaryFI  {
-	bfi := FIBeneficiaryFI {
+func NewFIBeneficiaryFI() FIBeneficiaryFI {
+	bfi := FIBeneficiaryFI{
 		tag: TagFIBeneficiaryFI,
 	}
 	return bfi

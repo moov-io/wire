@@ -24,8 +24,8 @@ type MessageDisposition struct {
 }
 
 // NewMessageDisposition returns a new MessageDisposition
-func NewMessageDisposition() MessageDisposition  {
-	md := MessageDisposition {
+func NewMessageDisposition() MessageDisposition {
+	md := MessageDisposition{
 		tag: TagMessageDisposition,
 	}
 	return md

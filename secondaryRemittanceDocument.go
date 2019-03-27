@@ -26,8 +26,8 @@ type SecondaryRemittanceDocument struct {
 }
 
 // NewSecondaryRemittanceDocument returns a new SecondaryRemittanceDocument
-func NewSecondaryRemittanceDocument() SecondaryRemittanceDocument  {
-	srd := SecondaryRemittanceDocument {
+func NewSecondaryRemittanceDocument() SecondaryRemittanceDocument {
+	srd := SecondaryRemittanceDocument{
 		tag: TagSecondaryRemittanceDocument,
 	}
 	return srd

@@ -5,7 +5,7 @@ package wire
 
 // File contains the structures of a parsed WIRE File.
 type File struct {
-	ID string `json:"id"`
+	ID             string         `json:"id"`
 	FedWireMessage FedWireMessage `json:"fedWireMessage"`
 }
 

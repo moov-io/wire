@@ -20,8 +20,8 @@ type OrderingCustomer struct {
 }
 
 // NewOrderingCustomer returns a new OrderingCustomer
-func NewOrderingCustomer() OrderingCustomer  {
-	oc := OrderingCustomer {
+func NewOrderingCustomer() OrderingCustomer {
+	oc := OrderingCustomer{
 		tag: TagOrderingCustomer,
 	}
 	return oc

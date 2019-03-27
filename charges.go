@@ -36,8 +36,8 @@ type Charges struct {
 }
 
 // NewCharges returns a new Charges
-func NewCharges() Charges  {
-	c := Charges {
+func NewCharges() Charges {
+	c := Charges{
 		tag: TagCharges,
 	}
 	return c
@@ -73,5 +73,3 @@ func (c *Charges) Validate() error {
 func (c *Charges) fieldInclusion() error {
 	return nil
 }
-
-

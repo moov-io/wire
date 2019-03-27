@@ -17,7 +17,7 @@ type OutputMessageAccountabilityData struct {
 	// OutputDate is the output date
 	OutputDate string `json:"outputDate,omitempty"`
 	// OutputTime is OutputTime
-	OutputTime string`json:"outputTime,omitempty"`
+	OutputTime string `json:"outputTime,omitempty"`
 	// OutputFRBApplicationIdentification
 	OutputFRBApplicationIdentification string `json:"outputFRBApplicationIdentification,omitempty"`
 
@@ -28,8 +28,8 @@ type OutputMessageAccountabilityData struct {
 }
 
 // NewOutputMessageAccountabilityData returns a new OutputMessageAccountabilityData
-func NewOutputMessageAccountabilityData() OutputMessageAccountabilityData  {
-	omad := OutputMessageAccountabilityData {
+func NewOutputMessageAccountabilityData() OutputMessageAccountabilityData {
+	omad := OutputMessageAccountabilityData{
 		tag: TagOutputMessageAccountabilityData,
 	}
 	return omad

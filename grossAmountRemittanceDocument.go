@@ -20,8 +20,8 @@ type GrossAmountRemittanceDocument struct {
 }
 
 // NewGrossAmountRemittanceDocument returns a new GrossAmountRemittanceDocument
-func NewGrossAmountRemittanceDocument() GrossAmountRemittanceDocument  {
-	gard := GrossAmountRemittanceDocument {
+func NewGrossAmountRemittanceDocument() GrossAmountRemittanceDocument {
+	gard := GrossAmountRemittanceDocument{
 		tag: TagGrossAmountRemittanceDocument,
 	}
 	return gard

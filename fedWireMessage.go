@@ -83,11 +83,11 @@ type FedWireMessage struct {
 	// FiBeneficiary
 	FiBeneficiary FiToFi `json:"fiBeneficiary,omitempty"`
 	// FiBeneficiaryAdvic
-	FiBeneficiaryAdvice Advice `json:"fibeneficiaryAdvice,omitempty"`
+	FiBeneficiaryAdvice Advice `json:"fiBeneficiaryAdvice,omitempty"`
 	// FiPaymentMethodToBeneficiary
-	FiPaymentMethodToBeneficiary FIPaymentMethodToBeneficiary `json:"fipaymentMethodToBeneficiary,omitempty"`
+	FiPaymentMethodToBeneficiary FIPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
 	// FiAdditionalFiToFi
-	FiAdditionalFiToFi AdditionalFiToFi `json:"fiadditionalFiToFi,omitempty"`
+	FiAdditionalFiToFi AdditionalFiToFi `json:"fiAdditionalFiToFi,omitempty"`
 	// CurrencyInstructedAmount
 	CurrencyInstructedAmount CoverPayment `json:"currencyInstructedAmount,omitempty"`
 	// OrderingCustomer
@@ -130,8 +130,6 @@ type FedWireMessage struct {
 	RemittanceFreeText RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	// ServiceMessage
 	ServiceMessage ServiceMessage `json:"serviceMessage,omitempty"`
-
-
 }
 
 // NewFedWireMessage returns a new FedWireMessage
