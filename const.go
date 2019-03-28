@@ -18,8 +18,8 @@ const (
 	// TagErrorWire  is ErrorWire
 	TagErrorWire = "{1130}"
 
-	// TagSenderSuppliedInformation is SenderSuppliedInformation
-	TagSenderSuppliedInformation = "{1500}"
+	// TagSenderSupplied is SenderSuppliedInformation
+	TagSenderSupplied = "{1500}"
 	// TagTypeSubType is TypeSubType
 	TagTypeSubType = "{1510}"
 	// TagInputMessageAccountabilityData is InputMessageAccountabilityData (IMAD)

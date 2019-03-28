@@ -17,17 +17,37 @@ var (
 // TagWrongLengthErr is the error given when a Tag is the wrong length
 type TagWrongLengthErr struct {
 	Message string
+	TagLength int
 	Length  int
 }
 
 // NewTagWrongLengthErr creates a new error of the TagWrongLengthErr type
-func NewTagWrongLengthErr(length int) TagWrongLengthErr {
+func NewTagWrongLengthErr(tagLength, length int) TagWrongLengthErr {
 	return TagWrongLengthErr{
-		Message: fmt.Sprintf("must be %d characters and found %d", length),
+		Message: fmt.Sprintf("must be %d characters and found %d", tagLength, length),
+		TagLength: tagLength,
 		Length:  length,
 	}
 }
 
 func (e TagWrongLengthErr) Error() string {
+	return e.Message
+}
+
+// ErrInvalidTag is the error given when a tag is invalid
+type ErrInvalidTag struct {
+	Message string
+	Type    string
+}
+
+// NewErrInvalidTag creates a new error of the ErrInvalidTag type
+func NewErrInvalidTag(tag string) ErrInvalidTag {
+	return ErrInvalidTag{
+		Message: fmt.Sprintf("%s is an unknown tag", tag),
+		Type:    tag,
+	}
+}
+
+func (e ErrInvalidTag) Error() string {
 	return e.Message
 }

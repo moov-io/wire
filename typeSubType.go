@@ -33,13 +33,15 @@ func NewTypeSubType() TypeSubType {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (tst *TypeSubType) Parse(record string) {
+func (tst *TypeSubType) Parse(tag string) {
+	tst.tag = tst.parseStringField(tag[:6])
+	tst.TypeCode = tst.parseStringField(tag[6:8])
+	tst.SubTypeCode = tst.parseStringField(tag[8:10])
 }
 
 // String writes TypeSubType
 func (tst *TypeSubType) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(10)
 	buf.WriteString(tst.tag)
 	return buf.String()
@@ -50,6 +52,12 @@ func (tst *TypeSubType) String() string {
 func (tst *TypeSubType) Validate() error {
 	if err := tst.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := tst.isTypeCode(tst.TypeCode); err != nil {
+		return fieldError("TypeCode", err, tst.TypeCode)
+	}
+	if err := tst.isSubTypeCode(tst.SubTypeCode); err != nil {
+		return fieldError("SubTypeCode", err, tst.SubTypeCode)
 	}
 	return nil
 }

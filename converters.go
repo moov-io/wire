@@ -11,6 +11,11 @@ import (
 // converters handles golang to WIRE type Converters
 type converters struct{}
 
+func (c *converters) parseStringField(r string) (s string) {
+	s = strings.TrimSpace(r)
+	return s
+}
+
 /*// alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.
 func (c *converters) alphaField(s string, max uint) string {
 	ln := uint(len(s))

@@ -11,129 +11,164 @@ type FedWireMessage struct {
 	// ID
 	ID string `json:"id"`
 	// MessageDisposition
-	MessageDisposition MessageDisposition `json:"messageDisposition,omitempty"`
+	MessageDisposition *MessageDisposition `json:"messageDisposition,omitempty"`
 	// ReceiptTimeStamp
-	ReceiptTimeStamp ReceiptTimeStamp `json:"receiptTimeStamp,omitempty"`
+	ReceiptTimeStamp *ReceiptTimeStamp `json:"receiptTimeStamp,omitempty"`
 	// OutputMessageAccountabilityData (OMAD)
-	OutputMessageAccountabilityData OutputMessageAccountabilityData `json:"outputMessageAccountabilityData,omitempty"`
+	OutputMessageAccountabilityData *OutputMessageAccountabilityData `json:"outputMessageAccountabilityData,omitempty"`
 	// ErrorWire
-	ErrorWire ErrorWire `json:"errorWire,omitempty"`
+	ErrorWire *ErrorWire `json:"errorWire,omitempty"`
 	// SenderSuppliedInformation
-	SenderSupplied SenderSupplied `json:"senderSupplied"`
+	SenderSupplied *SenderSupplied `json:"senderSupplied"`
 	// TypeSubType
-	TypeSubType TypeSubType `json:"typeSubType"`
+	TypeSubType *TypeSubType `json:"typeSubType"`
 	// InputMessageAccountabilityData (IMAD)
-	InputMessageAccountabilityData InputMessageAccountabilityData `json:"inputMessageAccountabilityData"`
+	InputMessageAccountabilityData *InputMessageAccountabilityData `json:"inputMessageAccountabilityData"`
 	// Amount (up to a penny less than $10 billion)
-	Amount Amount `json:"amount"`
+	Amount *Amount `json:"amount"`
 	// SenderDepositoryInstitution
-	SenderDepositoryInstitution SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
+	SenderDepositoryInstitution *SenderDepositoryInstitution `json:"senderDepositoryInstitution"`
 	// ReceiverDepositoryInstitution
-	ReceiverDepositoryInstitution ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
+	ReceiverDepositoryInstitution *ReceiverDepositoryInstitution `json:"receiverDepositoryInstitution"`
 	// BusinessFunctionCode
-	BusinessFunctionCode BusinessFunctionCode `json:"businessFunctionCode"`
+	BusinessFunctionCode *BusinessFunctionCode `json:"businessFunctionCode"`
 	// SenderReference
-	SenderReference SenderReference `json:"senderReference,omitempty"`
+	SenderReference *SenderReference `json:"senderReference,omitempty"`
 	// PreviousMessageIdentifier
-	PreviousMessageIdentifier PreviousMessageIdentifier `json:"previousMessageIdentifier,omitempty"`
+	PreviousMessageIdentifier *PreviousMessageIdentifier `json:"previousMessageIdentifier,omitempty"`
 	// LocalInstrument
-	LocalInstrument LocalInstrument `json:"localInstrument,omitempty"`
+	LocalInstrument *LocalInstrument `json:"localInstrument,omitempty"`
 	// PaymentNotification
-	PaymentNotification PaymentNotification `json:"paymentNotification,omitempty"`
+	PaymentNotification *PaymentNotification `json:"paymentNotification,omitempty"`
 	// Charges
-	Charges Charges `json:"charges,omitempty"`
+	Charges *Charges `json:"charges,omitempty"`
 	// InstructedAmount
-	InstructedAmount InstructedAmount `json:"instructedAmount,omitempty"`
+	InstructedAmount *InstructedAmount `json:"instructedAmount,omitempty"`
 	// ExchangeRate
-	ExchangeRate ExchangeRate `json:"exchangeRate,omitempty"`
+	ExchangeRate *ExchangeRate `json:"exchangeRate,omitempty"`
 	// BeneficiaryIntermediaryFI
-	BeneficiaryIntermediaryFI FinancialInstitution `json:"beneficiaryIntermediaryFI,omitempty"`
+	BeneficiaryIntermediaryFI *FinancialInstitution `json:"beneficiaryIntermediaryFI,omitempty"`
 	// BeneficiaryFI
-	BeneficiaryFI FinancialInstitution `json:"beneficiaryFI,omitempty"`
+	BeneficiaryFI *FinancialInstitution `json:"beneficiaryFI,omitempty"`
 	// Beneficiary
-	Beneficiary Personal `json:"beneficiary,omitempty"`
+	Beneficiary *Personal `json:"beneficiary,omitempty"`
 	// BeneficiaryReference
-	BeneficiaryReference BeneficiaryReference `json:"beneficiaryReference,omitempty"`
+	BeneficiaryReference *BeneficiaryReference `json:"beneficiaryReference,omitempty"`
 	// AccountDebitedDrawdown
-	AccountDebitedDrawdown AccountDebitedDrawdown `json:"accountDebitedDrawdown,omitempty"`
+	AccountDebitedDrawdown *AccountDebitedDrawdown `json:"accountDebitedDrawdown,omitempty"`
 	// Originator
-	Originator Personal `json:"originator,omitempty"`
+	Originator *Personal `json:"originator,omitempty"`
 	// OriginatorOptionF
-	OriginatorOptionF OriginatorOptionF `json:"originatorOptionF,omitempty"`
+	OriginatorOptionF *OriginatorOptionF `json:"originatorOptionF,omitempty"`
 	// OriginatorFI
-	OriginatorFI FinancialInstitution `json:"originatorFI,omitempty"`
+	OriginatorFI *FinancialInstitution `json:"originatorFI,omitempty"`
 	// InstructingFI
-	InstructingFI FinancialInstitution `json:"instructingFI,omitempty"`
+	InstructingFI *FinancialInstitution `json:"instructingFI,omitempty"`
 	// AccountCreditedDrawdown
-	AccountCreditedDrawdown AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`
+	AccountCreditedDrawdown *AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`
 	// OriginatorToBeneficiary
-	OriginatorToBeneficiary OriginatorToBeneficiary `json:"originatorToBeneficiary,omitempty"`
+	OriginatorToBeneficiary *OriginatorToBeneficiary `json:"originatorToBeneficiary,omitempty"`
 	// FiReceiverFI
-	FiReceiverFI FiToFi `json:"fiReceiverFI,omitempty"`
+	FiReceiverFI *FiToFi `json:"fiReceiverFI,omitempty"`
 	// FiDrawdownDebitAccountAdvice
-	FiDrawdownDebitAccountAdvice Advice `json:"fiDrawdownDebitAccountAdvice,omitempty"`
+	FiDrawdownDebitAccountAdvice *Advice `json:"fiDrawdownDebitAccountAdvice,omitempty"`
 	// FiIntermediaryFI
-	FiIntermediaryFI FiToFi `json:"fiIntermediaryFI,omitempty"`
+	FiIntermediaryFI *FiToFi `json:"fiIntermediaryFI,omitempty"`
 	// FiIntermediaryFIAdvice
-	FiIntermediaryFIAdvice Advice `json:"fiIntermediaryFIAdvice,omitempty"`
+	FiIntermediaryFIAdvice *Advice `json:"fiIntermediaryFIAdvice,omitempty"`
 	// FiBeneficiaryFI
-	FiBeneficiaryFI FiToFi `json:"fiBeneficiaryFI,omitempty"`
+	FiBeneficiaryFI *FiToFi `json:"fiBeneficiaryFI,omitempty"`
 	// FiBeneficiaryFIAdvice
-	FiBeneficiaryFIAdvice Advice `json:"fiBeneficiaryFIAdvice,omitempty"`
+	FiBeneficiaryFIAdvice *Advice `json:"fiBeneficiaryFIAdvice,omitempty"`
 	// FiBeneficiary
-	FiBeneficiary FiToFi `json:"fiBeneficiary,omitempty"`
+	FiBeneficiary *FiToFi `json:"fiBeneficiary,omitempty"`
 	// FiBeneficiaryAdvic
-	FiBeneficiaryAdvice Advice `json:"fiBeneficiaryAdvice,omitempty"`
+	FiBeneficiaryAdvice *Advice `json:"fiBeneficiaryAdvice,omitempty"`
 	// FiPaymentMethodToBeneficiary
-	FiPaymentMethodToBeneficiary FIPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
+	FiPaymentMethodToBeneficiary *FIPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
 	// FiAdditionalFiToFi
-	FiAdditionalFiToFi AdditionalFiToFi `json:"fiAdditionalFiToFi,omitempty"`
+	FiAdditionalFiToFi *AdditionalFiToFi `json:"fiAdditionalFiToFi,omitempty"`
 	// CurrencyInstructedAmount
-	CurrencyInstructedAmount CoverPayment `json:"currencyInstructedAmount,omitempty"`
+	CurrencyInstructedAmount *CoverPayment `json:"currencyInstructedAmount,omitempty"`
 	// OrderingCustomer
-	OrderingCustomer CoverPayment `json:"orderingCustomer,omitempty"`
+	OrderingCustomer *CoverPayment `json:"orderingCustomer,omitempty"`
 	// OrderingInstitution
-	OrderingInstitution CoverPayment `json:"orderingInstitution,omitempty"`
+	OrderingInstitution *CoverPayment `json:"orderingInstitution,omitempty"`
 	// IntermediaryInstitution
-	IntermediaryInstitution CoverPayment `json:"intermediaryInstitution,omitempty"`
+	IntermediaryInstitution *CoverPayment `json:"intermediaryInstitution,omitempty"`
 	// InstitutionAccount
-	InstitutionAccount CoverPayment `json:"institutionAccount,omitempty"`
+	InstitutionAccount *CoverPayment `json:"institutionAccount,omitempty"`
 	// BeneficiaryCustomer
-	BeneficiaryCustomer CoverPayment `json:"beneficiaryCustomer,omitempty"`
+	BeneficiaryCustomer *CoverPayment `json:"beneficiaryCustomer,omitempty"`
 	// Remittance
-	Remittance CoverPayment `json:"remittance,omitempty"`
+	Remittance *CoverPayment `json:"remittance,omitempty"`
 	// SenderToReceiver
-	SenderToReceiver CoverPayment `json:"senderToReceiver,omitempty"`
+	SenderToReceiver *CoverPayment `json:"senderToReceiver,omitempty"`
 	// UnstructuredAddenda
-	UnstructuredAddenda UnstructuredAddenda `json:"unstructuredAddenda,omitempty"`
+	UnstructuredAddenda *UnstructuredAddenda `json:"unstructuredAddenda,omitempty"`
 	// RelatedRemittance
-	RelatedRemittance RelatedRemittance `json:"relatedRemittance,omitempty"`
+	RelatedRemittance *RelatedRemittance `json:"relatedRemittance,omitempty"`
 	// RemittanceOriginator
-	RemittanceOriginator RemittanceOriginator `json:"remittanceOriginator,omitempty"`
+	RemittanceOriginator *RemittanceOriginator `json:"remittanceOriginator,omitempty"`
 	// RemittanceBeneficiary
-	RemittanceBeneficiary RemittanceBeneficiary `json:"remittanceBeneficiary,omitempty"`
+	RemittanceBeneficiary *RemittanceBeneficiary `json:"remittanceBeneficiary,omitempty"`
 	// PrimaryRemittanceDocument
-	PrimaryRemittanceDocument PrimaryRemittanceDocument `json:"primaryRemittanceDocument,omitempty"`
+	PrimaryRemittanceDocument *PrimaryRemittanceDocument `json:"primaryRemittanceDocument,omitempty"`
 	// ActualAmountPaid
-	ActualAmountPaid RemittanceAmount `json:"actualAmountPaid,omitempty"`
+	ActualAmountPaid *RemittanceAmount `json:"actualAmountPaid,omitempty"`
 	// GrossAmountRemittanceDocument
-	GrossAmountRemittanceDocument RemittanceAmount `json:"grossAmountRemittanceDocument,omitempty"`
+	GrossAmountRemittanceDocument *RemittanceAmount `json:"grossAmountRemittanceDocument,omitempty"`
 	// AmountNegotiatedDiscount
-	AmountNegotiatedDiscount RemittanceAmount `json:"amountNegotiatedDiscount,omitempty"`
+	AmountNegotiatedDiscount *RemittanceAmount `json:"amountNegotiatedDiscount,omitempty"`
 	// Adjustment
-	Adjustment Adjustment `json:"adjustment,omitempty"`
+	Adjustment *Adjustment `json:"adjustment,omitempty"`
 	// DateRemittanceDocument
-	DateRemittanceDocument DateRemittanceDocument `json:"dateRemittanceDocument,omitempty"`
+	DateRemittanceDocument *DateRemittanceDocument `json:"dateRemittanceDocument,omitempty"`
 	// SecondaryRemittanceDocument
-	SecondaryRemittanceDocument SecondaryRemittanceDocument `json:"secondaryRemittanceDocument,omitempty"`
+	SecondaryRemittanceDocument *SecondaryRemittanceDocument `json:"secondaryRemittanceDocument,omitempty"`
 	// RemittanceFreeText
-	RemittanceFreeText RemittanceFreeText `json:"remittanceFreeText,omitempty"`
+	RemittanceFreeText *RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	// ServiceMessage
-	ServiceMessage ServiceMessage `json:"serviceMessage,omitempty"`
+	ServiceMessage *ServiceMessage `json:"serviceMessage,omitempty"`
 }
 
 // NewFedWireMessage returns a new FedWireMessage
 func NewFedWireMessage() FedWireMessage {
 	fwm := FedWireMessage{}
 	return fwm
+}
+
+// verify checks basic valid NACHA batch rules. Assumes properly parsed records. This does not mean it is a valid batch as validity is tied to each batch type
+func (fwm *FedWireMessage) verify() error {
+	// ToDo: Add errors
+
+	if fwm.SenderSupplied == nil {
+		return nil
+	}
+
+	if fwm.TypeSubType == nil {
+		return nil
+	}
+
+	if fwm.InputMessageAccountabilityData == nil {
+		return nil
+	}
+
+	if fwm.Amount == nil {
+		return nil
+	}
+
+	if fwm.SenderDepositoryInstitution == nil {
+		return nil
+	}
+
+	if fwm.ReceiverDepositoryInstitution == nil {
+		return nil
+	}
+
+	if fwm.BusinessFunctionCode == nil {
+		return nil
+	}
+
+	return nil
 }

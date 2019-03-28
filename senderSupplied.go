@@ -40,13 +40,17 @@ func NewSenderSupplied() SenderSupplied {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ss *SenderSupplied) Parse(record string) {
+func (ss *SenderSupplied) Parse(tag string) {
+	ss.tag = ss.parseStringField(tag[:6])
+	ss.FormatVersion = ss.parseStringField(tag[6:8])
+	ss.UserRequestCorrelation = ss.parseStringField(tag[8:16])
+	ss.TestProductionCode = ss.parseStringField(tag[16:17])
+	ss.MessageDuplicationCode = ss.parseStringField(tag[17:18])
 }
 
 // String writes SenderSupplied
 func (ss *SenderSupplied) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(18)
 	buf.WriteString(ss.tag)
 	return buf.String()
@@ -58,14 +62,26 @@ func (ss *SenderSupplied) Validate() error {
 	if err := ss.fieldInclusion(); err != nil {
 		return err
 	}
-	/*		if ssi.FormatVersion != FormatVersion {
-			return fieldError("FormatVersion", NewErrFormatVersion(30), ssi.FormatVersion)
-		}*/
+	if ss.FormatVersion != FormatVersion {
+		return fieldError("FormatVersion", ErrFormatVersion, ss.FormatVersion)
+	}
+	if err := ss.isAlphanumeric(ss.UserRequestCorrelation); err != nil {
+		return fieldError("UserRequestCorrelation", err, ss.UserRequestCorrelation)
+	}
+	if err := ss.isTestProductionCode(ss.TestProductionCode); err != nil {
+		return fieldError("TestProductionCode", err, ss.TestProductionCode)
+	}
+	if err := ss.isMessageDuplicationCode(ss.MessageDuplicationCode); err != nil {
+		return fieldError("MessageDuplicationCode", err, ss.MessageDuplicationCode)
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ss *SenderSupplied) fieldInclusion() error {
+	if ss.UserRequestCorrelation == "" {
+		return fieldError("UserRequestCorrelation", ErrFieldRequired, ss.UserRequestCorrelation)
+	}
 	return nil
 }

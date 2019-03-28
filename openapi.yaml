@@ -464,7 +464,7 @@ components:
           description: 'OutputFRBApplicationIdentification'
           example: 'OB11'
     ErrorWire:
-       description:  ErrorWire
+       description: ErrorWire
        properties:
          errorCategory:
            $ref: '#/components/schemas/ErrorCategoryEnum'
