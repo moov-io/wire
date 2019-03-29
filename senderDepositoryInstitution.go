@@ -33,14 +33,16 @@ func NewSenderDepositoryInstitution() SenderDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sdi *SenderDepositoryInstitution) Parse(record string) {
+func (sdi *SenderDepositoryInstitution) Parse(tag string) {
+	sdi.tag = tag[:6]
+	sdi.SenderABANumber = sdi.parseStringField(tag[6:15])
+	sdi.SenderShortName = sdi.parseStringField(tag[15:33])
 }
 
 // String writes SenderDepositoryInstitution
 func (sdi *SenderDepositoryInstitution) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
-	buf.Grow(33)
+	buf.Grow(39)
 	buf.WriteString(sdi.tag)
 	return buf.String()
 }
@@ -51,11 +53,23 @@ func (sdi *SenderDepositoryInstitution) Validate() error {
 	if err := sdi.fieldInclusion(); err != nil {
 		return err
 	}
+	if err := sdi.isNumeric(sdi.SenderABANumber); err != nil {
+		return fieldError("SenderABANumber", ErrNonNumeric, sdi.SenderABANumber)
+	}
+	if err := sdi.isAlphanumeric(sdi.SenderShortName); err != nil {
+		return fieldError("SenderShortName", ErrNonNumeric, sdi.SenderShortName)
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
+	if sdi.SenderABANumber == "" {
+		return fieldError("SenderABANumber", ErrFieldRequired, sdi.SenderABANumber)
+	}
+	if sdi.SenderShortName == "" {
+		return fieldError("SenderShortName", ErrFieldRequired, sdi.SenderShortName)
+	}
 	return nil
 }

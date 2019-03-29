@@ -15,6 +15,7 @@ import (
 var (
 	upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	alphanumericRegex      = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	numericRegex           = regexp.MustCompile(`[^0-9]`)
 )
 
 // validator is common validation and formatting of golang types to WIRE type strings
@@ -25,6 +26,15 @@ func (v *validator) isAlphanumeric(s string) error {
 	if alphanumericRegex.MatchString(s) {
 		// ^[ A-Za-z0-9_@./#&+-]*$/
 		return ErrNonAlphanumeric
+	}
+	return nil
+}
+
+// isNumeric checks if a string only contains ASCII numeric (0-9) characters
+func (v *validator) isNumeric(s string) error {
+	if numericRegex.MatchString(s) {
+		// [^ 0-9]
+		return ErrNonNumeric
 	}
 	return nil
 }
@@ -119,6 +129,34 @@ func (v *validator) isMessageDuplicationCode(code string) error {
 		return nil
 	}
 	return ErrMessageDuplicationCode
+}
+
+func (v *validator) isBusinessFunctionCode(code string) error {
+	switch code {
+	case
+		BankTransfer,
+		CheckSameDaySettlement,
+		CustomerTransferPlus,
+		CustomerTransfer,
+		DepositSendersAccount,
+		BankDrawdownRequest,
+		CustomerCorporateDrawdownRequest,
+		DrawdownPayment,
+		FEDFundsReturned,
+		FEDFundsSold:
+		return nil
+	}
+	return ErrBusinessFunctionCode
+}
+
+func (v *validator) isTransactionTypeCode(code string) error {
+	// ToDo: Find what the Transaction Type Codes are
+	switch code {
+	case
+		"":
+		return nil
+	}
+	return ErrTransactionTypeCode
 }
 
 // isCentury validates a 2 digit century 20-29

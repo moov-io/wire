@@ -195,4 +195,27 @@ const (
 	// SSIServiceMessage is SenderSuppliedInformation {1510} SubTypeCode which designates a non-value message used to
 	// communicate questions and information that is not covered by a specific subtype.
 	SSIServiceMessage = "90"
+
+	// TagBusinessFunctionCode BusinessFunctionCode
+
+	// BankTransfer is a bank transfer (beneficiary is a bank)
+	BankTransfer = "BTR"
+	// CheckSameDaySettlement is a check with same day settlement
+	CheckSameDaySettlement = "CKS"
+	// CustomerTransferPlus is a customer transfer plus
+	CustomerTransferPlus = "CTP"
+	// CustomerTransfer beneficiary is a not a bank
+	CustomerTransfer = "CTR"
+	// DepositSendersAccount is a deposit to a senders account
+	DepositSendersAccount = "DEP"
+	// BankDrawdownRequest is a bank to bank drawdown request
+	BankDrawdownRequest = "DRB"
+	// CustomerCorporateDrawdownRequest is a customer or corporate drawdown request
+	CustomerCorporateDrawdownRequest = "DRC"
+	// DrawdownPayment is a drawdown payment
+	DrawdownPayment = "DRW"
+	// FEDFundsReturned is FED funds returned
+	FEDFundsReturned = "FFR"
+	// FEDFundsSold is FED funds sold
+	FEDFundsSold = "FFS"
 )

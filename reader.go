@@ -57,7 +57,6 @@ func (r *Reader) Read() (File, error) {
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		r.lineNum++
-		// ToDo: Line length check?
 		// ToDo: File length Check?
 		r.line = line
 		if err := r.parseLine(); err != nil {
@@ -102,8 +101,6 @@ func (r *Reader) parseLine() error {
 	}
 	return nil
 }
-
-// ToDo:  For each type check length based on the tag
 
 /*func (r *Reader) parse() error {
 	return nil
@@ -150,6 +147,10 @@ func (r *Reader) parseInputMessageAccountabilityData() error {
 
 func (r *Reader) parseAmount() error {
 	r.tagName = "Amount"
+	if len(r.line) != 18 {
+		r.errors.Add(r.parseError(NewTagWrongLengthErr(18, len(r.line))))
+		return r.errors
+	}
 	r.File.FedWireMessage.Amount.Parse(r.line)
 	if err := r.File.FedWireMessage.Amount.Validate(); err != nil {
 		return r.parseError(err)
@@ -159,6 +160,10 @@ func (r *Reader) parseAmount() error {
 
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
+	if len(r.line) != 39 {
+		r.errors.Add(r.parseError(NewTagWrongLengthErr(39, len(r.line))))
+		return r.errors
+	}
 	r.File.FedWireMessage.SenderDepositoryInstitution.Parse(r.line)
 	if err := r.File.FedWireMessage.SenderDepositoryInstitution.Validate(); err != nil {
 		return r.parseError(err)

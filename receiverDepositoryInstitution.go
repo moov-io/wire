@@ -33,13 +33,15 @@ func NewReceiverDepositoryInstitution() ReceiverDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rdi *ReceiverDepositoryInstitution) Parse(record string) {
+func (rdi *ReceiverDepositoryInstitution) Parse(tag string) {
+	rdi.tag = tag[:6]
+	rdi.ReceiverABANumber = rdi.parseStringField(tag[6:15])
+	rdi.ReceiverShortName = rdi.parseStringField(tag[15:33])
 }
 
 // String writes ReceiverDepositoryInstitution
 func (rdi *ReceiverDepositoryInstitution) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(33)
 	buf.WriteString(rdi.tag)
 	return buf.String()
@@ -51,11 +53,23 @@ func (rdi *ReceiverDepositoryInstitution) Validate() error {
 	if err := rdi.fieldInclusion(); err != nil {
 		return err
 	}
+	if err := rdi.isNumeric(rdi.ReceiverABANumber); err != nil {
+		return fieldError("ReceiverABANumber", ErrNonNumeric, rdi.ReceiverABANumber)
+	}
+	if err := rdi.isAlphanumeric(rdi.ReceiverShortName); err != nil {
+		return fieldError("ReceiverShortName", ErrNonNumeric, rdi.ReceiverShortName)
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
+	if rdi.ReceiverABANumber == "" {
+		return fieldError("ReceiveABANumber", ErrFieldRequired, rdi.ReceiverABANumber)
+	}
+	if rdi.ReceiverShortName == "" {
+		return fieldError("ReceiverShortName", ErrFieldRequired, rdi.ReceiverShortName)
+	}
 	return nil
 }

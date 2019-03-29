@@ -34,13 +34,15 @@ func NewBusinessFunctionCode() BusinessFunctionCode {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfc *BusinessFunctionCode) Parse(record string) {
+func (bfc *BusinessFunctionCode) Parse(tag string) {
+	bfc.tag = tag[:6]
+	bfc.BusinessFunctionCode = bfc.parseStringField(tag[6:9])
+	bfc.TransactionTypeCode = bfc.parseStringField(tag[9:12])
 }
 
 // String writes BusinessFunctionCode
 func (bfc *BusinessFunctionCode) String() string {
 	var buf strings.Builder
-	//ToDo: Separator
 	buf.Grow(12)
 	buf.WriteString(bfc.tag)
 	return buf.String()
@@ -52,11 +54,25 @@ func (bfc *BusinessFunctionCode) Validate() error {
 	if err := bfc.fieldInclusion(); err != nil {
 		return err
 	}
+	if err := bfc.isBusinessFunctionCode(bfc.BusinessFunctionCode); err != nil {
+		return fieldError("BusinessFunctionCode", err, bfc.BusinessFunctionCode)
+	}
+	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
+		return fieldError("TransactionTypeCode", err, bfc.TransactionTypeCode)
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (bfc *BusinessFunctionCode) fieldInclusion() error {
+
+	if bfc.BusinessFunctionCode == "" {
+		return fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode)
+	}
+	//ToDo: "" may be allowed
+	/*	if bfc.TransactionTypeCode == "" {
+		return fieldError("TransactionTypeCode", ErrFieldRequired, bfc.TransactionTypeCode)
+	}*/
 	return nil
 }

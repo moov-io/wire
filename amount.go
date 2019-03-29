@@ -31,7 +31,9 @@ func NewAmount() Amount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (a *Amount) Parse(s string) {
+func (a *Amount) Parse(tag string) {
+	a.tag = tag[:6]
+	a.Amount = a.parseStringField(tag[6:18])
 }
 
 // String writes Amount
@@ -47,6 +49,10 @@ func (a *Amount) String() string {
 func (a *Amount) Validate() error {
 	if err := a.fieldInclusion(); err != nil {
 		return err
+	}
+	// ToDo:  Amount cannot be all zero's except if SubType = 90
+	if err := a.isNumeric(a.Amount); err != nil {
+		return fieldError("Amount", ErrNonNumeric, a.Amount)
 	}
 	return nil
 }
