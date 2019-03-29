@@ -47,63 +47,64 @@ type FedWireMessage struct {
 	// ExchangeRate
 	ExchangeRate *ExchangeRate `json:"exchangeRate,omitempty"`
 	// BeneficiaryIntermediaryFI
-	BeneficiaryIntermediaryFI *FinancialInstitution `json:"beneficiaryIntermediaryFI,omitempty"`
+	BeneficiaryIntermediaryFI *BeneficiaryIntermediaryFI `json:"beneficiaryIntermediaryFI,omitempty"`
 	// BeneficiaryFI
-	BeneficiaryFI *FinancialInstitution `json:"beneficiaryFI,omitempty"`
+	BeneficiaryFI *BeneficiaryFI `json:"beneficiaryFI,omitempty"`
 	// Beneficiary
-	Beneficiary *Personal `json:"beneficiary,omitempty"`
+	Beneficiary *Beneficiary `json:"beneficiary,omitempty"`
 	// BeneficiaryReference
 	BeneficiaryReference *BeneficiaryReference `json:"beneficiaryReference,omitempty"`
 	// AccountDebitedDrawdown
 	AccountDebitedDrawdown *AccountDebitedDrawdown `json:"accountDebitedDrawdown,omitempty"`
 	// Originator
-	Originator *Personal `json:"originator,omitempty"`
+	Originator *Originator `json:"originator,omitempty"`
 	// OriginatorOptionF
 	OriginatorOptionF *OriginatorOptionF `json:"originatorOptionF,omitempty"`
 	// OriginatorFI
-	OriginatorFI *FinancialInstitution `json:"originatorFI,omitempty"`
+	OriginatorFI *OriginatorFI `json:"originatorFI,omitempty"`
 	// InstructingFI
-	InstructingFI *FinancialInstitution `json:"instructingFI,omitempty"`
+	InstructingFI *InstructingFI `json:"instructingFI,omitempty"`
 	// AccountCreditedDrawdown
 	AccountCreditedDrawdown *AccountCreditedDrawdown `json:"accountCreditedDrawdown,omitempty"`
 	// OriginatorToBeneficiary
 	OriginatorToBeneficiary *OriginatorToBeneficiary `json:"originatorToBeneficiary,omitempty"`
 	// FiReceiverFI
-	FiReceiverFI *FiToFi `json:"fiReceiverFI,omitempty"`
+	FIReceiverFI *FIReceiverFI `json:"fiReceiverFI,omitempty"`
 	// FiDrawdownDebitAccountAdvice
-	FiDrawdownDebitAccountAdvice *Advice `json:"fiDrawdownDebitAccountAdvice,omitempty"`
+	FIDrawdownDebitAccountAdvice *FIDrawdownDebitAccountAdvice `json:"fiDrawdownDebitAccountAdvice,omitempty"`
 	// FiIntermediaryFI
-	FiIntermediaryFI *FiToFi `json:"fiIntermediaryFI,omitempty"`
+	FIIntermediaryFI *FIIntermediaryFI `json:"fiIntermediaryFI,omitempty"`
 	// FiIntermediaryFIAdvice
-	FiIntermediaryFIAdvice *Advice `json:"fiIntermediaryFIAdvice,omitempty"`
+	FIIntermediaryFIAdvice *FIIntermediaryFIAdvice `json:"fiIntermediaryFIAdvice,omitempty"`
 	// FiBeneficiaryFI
-	FiBeneficiaryFI *FiToFi `json:"fiBeneficiaryFI,omitempty"`
+	FIBeneficiaryFI *FIBeneficiaryFI `json:"fiBeneficiaryFI,omitempty"`
 	// FiBeneficiaryFIAdvice
-	FiBeneficiaryFIAdvice *Advice `json:"fiBeneficiaryFIAdvice,omitempty"`
+	FIBeneficiaryFIAdvice *FIBeneficiaryFIAdvice `json:"fiBeneficiaryFIAdvice,omitempty"`
 	// FiBeneficiary
-	FiBeneficiary *FiToFi `json:"fiBeneficiary,omitempty"`
-	// FiBeneficiaryAdvic
-	FiBeneficiaryAdvice *Advice `json:"fiBeneficiaryAdvice,omitempty"`
+	FIBeneficiary *FIBeneficiary `json:"fiBeneficiary,omitempty"`
+	// FiBeneficiaryAdvice
+	FIBeneficiaryAdvice *FIBeneficiaryAdvice `json:"fiBeneficiaryAdvice,omitempty"`
 	// FiPaymentMethodToBeneficiary
-	FiPaymentMethodToBeneficiary *FIPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
+	FIPaymentMethodToBeneficiary *FIPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
 	// FiAdditionalFiToFi
-	FiAdditionalFiToFi *AdditionalFiToFi `json:"fiAdditionalFiToFi,omitempty"`
+	FIAdditionalFIToFI *FIAdditionalFIToFI `json:"fiAdditionalFiToFi,omitempty"`
 	// CurrencyInstructedAmount
-	CurrencyInstructedAmount *CoverPayment `json:"currencyInstructedAmount,omitempty"`
+	CurrencyInstructedAmount *CurrencyInstructedAmount `json:"currencyInstructedAmount,omitempty"`
 	// OrderingCustomer
-	OrderingCustomer *CoverPayment `json:"orderingCustomer,omitempty"`
+	OrderingCustomer *OrderingCustomer `json:"orderingCustomer,omitempty"`
 	// OrderingInstitution
-	OrderingInstitution *CoverPayment `json:"orderingInstitution,omitempty"`
+	OrderingInstitution *OrderingInstitution `json:"orderingInstitution,omitempty"`
 	// IntermediaryInstitution
-	IntermediaryInstitution *CoverPayment `json:"intermediaryInstitution,omitempty"`
+	IntermediaryInstitution *IntermediaryInstitution `json:"intermediaryInstitution,omitempty"`
 	// InstitutionAccount
-	InstitutionAccount *CoverPayment `json:"institutionAccount,omitempty"`
+	InstitutionAccount *InstitutionAccount `json:"institutionAccount,omitempty"`
 	// BeneficiaryCustomer
-	BeneficiaryCustomer *CoverPayment `json:"beneficiaryCustomer,omitempty"`
+	BeneficiaryCustomer *BeneficiaryCustomer `json:"beneficiaryCustomer,omitempty"`
+	// ToDo: Remove Information
 	// Remittance
-	Remittance *CoverPayment `json:"remittance,omitempty"`
+	Remittance *RemittanceInformation `json:"remittance,omitempty"`
 	// SenderToReceiver
-	SenderToReceiver *CoverPayment `json:"senderToReceiver,omitempty"`
+	SenderToReceiver *SenderToReceiver `json:"senderToReceiver,omitempty"`
 	// UnstructuredAddenda
 	UnstructuredAddenda *UnstructuredAddenda `json:"unstructuredAddenda,omitempty"`
 	// RelatedRemittance
@@ -115,11 +116,11 @@ type FedWireMessage struct {
 	// PrimaryRemittanceDocument
 	PrimaryRemittanceDocument *PrimaryRemittanceDocument `json:"primaryRemittanceDocument,omitempty"`
 	// ActualAmountPaid
-	ActualAmountPaid *RemittanceAmount `json:"actualAmountPaid,omitempty"`
+	ActualAmountPaid *ActualAmountPaid `json:"actualAmountPaid,omitempty"`
 	// GrossAmountRemittanceDocument
-	GrossAmountRemittanceDocument *RemittanceAmount `json:"grossAmountRemittanceDocument,omitempty"`
+	GrossAmountRemittanceDocument *GrossAmountRemittanceDocument `json:"grossAmountRemittanceDocument,omitempty"`
 	// AmountNegotiatedDiscount
-	AmountNegotiatedDiscount *RemittanceAmount `json:"amountNegotiatedDiscount,omitempty"`
+	AmountNegotiatedDiscount *AmountNegotiatedDiscount `json:"amountNegotiatedDiscount,omitempty"`
 	// Adjustment
 	Adjustment *Adjustment `json:"adjustment,omitempty"`
 	// DateRemittanceDocument
