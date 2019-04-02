@@ -151,7 +151,7 @@ const (
 	// MessageDuplicationResend designates a resend of a message
 	MessageDuplicationResend = "P"
 
-	// TagTypeSubType TypeCode
+	// TypeCode
 
 	// FundsTransfer is SenderSuppliedInformation {1510} TypeCode which designates a funds transfer in which the
 	// sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
@@ -164,7 +164,7 @@ const (
 	// between Fedwire Funds Service participants.
 	SettlementTransfer = "30"
 
-	// TagTypeSubType SubTypeCode
+	// SubTypeCode
 
 	// BasicFundsTransfer is SenderSuppliedInformation {1510} SubTypeCode which designates a basic value funds transfer.
 	BasicFundsTransfer = "00"
@@ -196,7 +196,7 @@ const (
 	// communicate questions and information that is not covered by a specific subtype.
 	SSIServiceMessage = "90"
 
-	// TagBusinessFunctionCode BusinessFunctionCode
+	// BusinessFunctionCode
 
 	// BankTransfer is a bank transfer (beneficiary is a bank)
 	BankTransfer = "BTR"
@@ -218,4 +218,38 @@ const (
 	FEDFundsReturned = "FFR"
 	// FEDFundsSold is FED funds sold
 	FEDFundsSold = "FFS"
+
+	// ChargeDetails
+
+	// CDBeneficiary is charge details beneficiary
+	CDBeneficiary = "B"
+	// CDShared is charge details shared
+	CDShared = "S"
+
+	// IDCode
+
+	// SWIFTBankIdentifierCode is SWIFT Bank Identifier Code
+	SWIFTBankIdentifierCode = "B"
+	// CHIPSParticipant is CHIPS Participant
+	CHIPSParticipant = "C"
+	// DemandDepositAccountNumber is Demand Deposit Account Number
+	DemandDepositAccountNumber = "D"
+	// FEDRoutingNumber is FED Routing Number
+	FEDRoutingNumber = "F"
+	// SWIFTBICORBEIANDAccountNumber is SWIFT Bank Identifier Code(BIC) OR Bank Entity Identifier (BEI) AND AccountNumber
+	SWIFTBICORBEIANDAccountNumber = "T"
+	// CHIPSIdentifier is CHIPS Identifier
+	CHIPSIdentifier = "U"
+	// PassportNumber is Passport Number
+	PassportNumber = "1"
+	// TaxIdentificationNumber is Tax Identification Number
+	TaxIdentificationNumber = "2"
+	// DriversLicenseNumber is Drivers License Number
+	DriversLicenseNumber = "3"
+	// AlienRegistrationNumber is Alien Registration Number
+	AlienRegistrationNumber = "4"
+	// CorporateIdentification is corporate identification
+	CorporateIdentification = "5"
+	// OtherIdentification is other identification
+	OtherIdentification = "9"
 )

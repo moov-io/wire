@@ -22,39 +22,44 @@ type ExchangeRate struct {
 
 // NewExchangeRate returns a new ExchangeRate
 func NewExchangeRate() ExchangeRate {
-	er := ExchangeRate{
+	eRate := ExchangeRate{
 		tag: TagExchangeRate,
 	}
-	return er
+	return eRate
 }
 
 // Parse takes the input string and parses the ExchangeRate values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (er *ExchangeRate) Parse(record string) {
+func (eRate *ExchangeRate) Parse(record string) {
+	eRate.tag = record[:6]
+	eRate.ExchangeRate = eRate.parseStringField(record[6:18])
 }
 
 // String writes ExchangeRate
-func (er *ExchangeRate) String() string {
+func (eRate *ExchangeRate) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(12)
-	buf.WriteString(er.tag)
+	buf.Grow(18)
+	buf.WriteString(eRate.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on ExchangeRate and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (er *ExchangeRate) Validate() error {
-	if err := er.fieldInclusion(); err != nil {
+func (eRate *ExchangeRate) Validate() error {
+	if err := eRate.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := eRate.isAmount(eRate.ExchangeRate); err != nil {
+		return fieldError("ExchangeRate", err, eRate.ExchangeRate)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (er *ExchangeRate) fieldInclusion() error {
+func (eRate *ExchangeRate) fieldInclusion() error {
 	return nil
 }

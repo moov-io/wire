@@ -32,13 +32,20 @@ func NewBeneficiary() Beneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (b *Beneficiary) Parse(record string) {
+	b.tag = record[:6]
+	b.Personal.IdentificationCode = b.parseStringField(record[6:7])
+	b.Personal.Identifier = b.parseStringField(record[7:41])
+	b.Personal.Name = b.parseStringField(record[41:76])
+	b.Personal.Address.AddressLineOne = b.parseStringField(record[76:111])
+	b.Personal.Address.AddressLineTwo = b.parseStringField(record[111:146])
+	b.Personal.Address.AddressLineThree = b.parseStringField(record[146:181])
 }
 
 // String writes Beneficiary
 func (b *Beneficiary) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(b.tag)
 	return buf.String()
 }
@@ -48,6 +55,25 @@ func (b *Beneficiary) String() string {
 func (b *Beneficiary) Validate() error {
 	if err := b.fieldInclusion(); err != nil {
 		return err
+	}
+	// Can be any Identification Code
+	if err := b.isIdentificationCode(b.Personal.IdentificationCode); err != nil {
+		return fieldError("IdentificationCode", err, b.Personal.IdentificationCode)
+	}
+	if err := b.isAlphanumeric(b.Personal.Identifier); err != nil {
+		return fieldError("Identifier", err, b.Personal.Identifier)
+	}
+	if err := b.isAlphanumeric(b.Personal.Name); err != nil {
+		return fieldError("Name", err, b.Personal.Name)
+	}
+	if err := b.isAlphanumeric(b.Personal.Address.AddressLineOne); err != nil {
+		return fieldError("AddressLineOne", err, b.Personal.Address.AddressLineOne)
+	}
+	if err := b.isAlphanumeric(b.Personal.Address.AddressLineTwo); err != nil {
+		return fieldError("AddressLineTwo", err, b.Personal.Address.AddressLineTwo)
+	}
+	if err := b.isAlphanumeric(b.Personal.Address.AddressLineThree); err != nil {
+		return fieldError("AddressLineThree", err, b.Personal.Address.AddressLineThree)
 	}
 	return nil
 }

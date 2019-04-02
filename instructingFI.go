@@ -32,6 +32,13 @@ func NewInstructingFI() InstructingFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ifi *InstructingFI) Parse(record string) {
+	ifi.tag = record[:6]
+	ifi.FinancialInstitution.IdentificationCode = ifi.parseStringField(record[6:7])
+	ifi.FinancialInstitution.Identifier = ifi.parseStringField(record[7:41])
+	ifi.FinancialInstitution.Name = ifi.parseStringField(record[41:76])
+	ifi.FinancialInstitution.Address.AddressLineOne = ifi.parseStringField(record[76:111])
+	ifi.FinancialInstitution.Address.AddressLineTwo = ifi.parseStringField(record[111:146])
+	ifi.FinancialInstitution.Address.AddressLineThree = ifi.parseStringField(record[146:181])
 }
 
 // String writes InstructingFI
@@ -48,6 +55,31 @@ func (ifi *InstructingFI) String() string {
 func (ifi *InstructingFI) Validate() error {
 	if err := ifi.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := ifi.isIdentificationCode(ifi.FinancialInstitution.IdentificationCode); err != nil {
+		return fieldError("IdentificationCode", err, ifi.FinancialInstitution.IdentificationCode)
+	}
+	// Can only be these Identification Codes
+	switch ifi.FinancialInstitution.IdentificationCode {
+	case
+		"B", "C", "D", "F", "U":
+	default:
+		return fieldError("IdentificationCode", ErrIdentificationCode, ifi.FinancialInstitution.IdentificationCode)
+	}
+	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Identifier); err != nil {
+		return fieldError("Identifier", err, ifi.FinancialInstitution.Identifier)
+	}
+	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Name); err != nil {
+		return fieldError("Name", err, ifi.FinancialInstitution.Name)
+	}
+	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Address.AddressLineOne); err != nil {
+		return fieldError("AddressLineOne", err, ifi.FinancialInstitution.Address.AddressLineOne)
+	}
+	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Address.AddressLineTwo); err != nil {
+		return fieldError("AddressLineTwo", err, ifi.FinancialInstitution.Address.AddressLineTwo)
+	}
+	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Address.AddressLineThree); err != nil {
+		return fieldError("AddressLineThree", err, ifi.FinancialInstitution.Address.AddressLineThree)
 	}
 	return nil
 }

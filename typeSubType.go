@@ -33,10 +33,10 @@ func NewTypeSubType() TypeSubType {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (tst *TypeSubType) Parse(tag string) {
-	tst.tag = tst.parseStringField(tag[:6])
-	tst.TypeCode = tst.parseStringField(tag[6:8])
-	tst.SubTypeCode = tst.parseStringField(tag[8:10])
+func (tst *TypeSubType) Parse(record string) {
+	tst.tag = tst.parseStringField(record[:6])
+	tst.TypeCode = tst.parseStringField(record[6:8])
+	tst.SubTypeCode = tst.parseStringField(record[8:10])
 }
 
 // String writes TypeSubType

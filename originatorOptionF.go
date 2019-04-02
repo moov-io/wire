@@ -92,6 +92,11 @@ func NewOriginatorOptionF() OriginatorOptionF {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (oof *OriginatorOptionF) Parse(record string) {
+	oof.tag = oof.parseStringField(record[:6])
+	oof.Name = oof.parseStringField(record[6:41])
+	oof.LineOne = oof.parseStringField(record[41:76])
+	oof.LineTwo = oof.parseStringField(record[76:111])
+	oof.LineThree = oof.parseStringField(record[111:146])
 }
 
 // String writes OriginatorOptionF
@@ -108,6 +113,18 @@ func (oof *OriginatorOptionF) String() string {
 func (oof *OriginatorOptionF) Validate() error {
 	if err := oof.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := oof.isAlphanumeric(oof.Name); err != nil {
+		return fieldError("Name", err, oof.Name)
+	}
+	if err := oof.isAlphanumeric(oof.LineOne); err != nil {
+		return fieldError("LineOne", err, oof.LineOne)
+	}
+	if err := oof.isAlphanumeric(oof.LineTwo); err != nil {
+		return fieldError("LineTwo", err, oof.LineTwo)
+	}
+	if err := oof.isAlphanumeric(oof.LineThree); err != nil {
+		return fieldError("LineThree", err, oof.LineThree)
 	}
 	return nil
 }

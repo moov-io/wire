@@ -32,13 +32,15 @@ func NewBeneficiaryReference() BeneficiaryReference {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (br *BeneficiaryReference) Parse(record string) {
+	br.tag = record[:6]
+	br.BeneficiaryReference = br.parseStringField(record[6:22])
 }
 
 // String writes BeneficiaryReference
 func (br *BeneficiaryReference) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(16)
+	buf.Grow(22)
 	buf.WriteString(br.tag)
 	return buf.String()
 }
@@ -48,6 +50,9 @@ func (br *BeneficiaryReference) String() string {
 func (br *BeneficiaryReference) Validate() error {
 	if err := br.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := br.isAlphanumeric(br.BeneficiaryReference); err != nil {
+		return fieldError("BeneficiaryReference", err, br.BeneficiaryReference)
 	}
 	return nil
 }

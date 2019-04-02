@@ -38,13 +38,18 @@ func NewOriginatorToBeneficiary() OriginatorToBeneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ob *OriginatorToBeneficiary) Parse(record string) {
+	ob.tag = record[:6]
+	ob.LineOne = ob.parseStringField(record[6:41])
+	ob.LineTwo = ob.parseStringField(record[41:76])
+	ob.LineThree = ob.parseStringField(record[76:111])
+	ob.LineFour = ob.parseStringField(record[111:146])
 }
 
 // String writes OriginatorToBeneficiary
 func (ob *OriginatorToBeneficiary) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(146)
 	buf.WriteString(ob.tag)
 	return buf.String()
 }
@@ -54,6 +59,18 @@ func (ob *OriginatorToBeneficiary) String() string {
 func (ob *OriginatorToBeneficiary) Validate() error {
 	if err := ob.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := ob.isAlphanumeric(ob.LineOne); err != nil {
+		return fieldError("LineOne", err, ob.LineOne)
+	}
+	if err := ob.isAlphanumeric(ob.LineTwo); err != nil {
+		return fieldError("LineTwo", err, ob.LineTwo)
+	}
+	if err := ob.isAlphanumeric(ob.LineThree); err != nil {
+		return fieldError("LineThree", err, ob.LineThree)
+	}
+	if err := ob.isAlphanumeric(ob.LineFour); err != nil {
+		return fieldError("LineFour", err, ob.LineFour)
 	}
 	return nil
 }

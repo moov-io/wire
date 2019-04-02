@@ -13,5 +13,5 @@ type FinancialInstitution struct {
 	// Name
 	Name string `json:"name"`
 	// Address
-	Address Address `json:"address"`
+	Address *Address `json:"address"`
 }

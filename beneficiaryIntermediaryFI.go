@@ -32,13 +32,20 @@ func NewBeneficiaryIntermediaryFI() BeneficiaryIntermediaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bifi *BeneficiaryIntermediaryFI) Parse(record string) {
+	bifi.tag = record[:6]
+	bifi.FinancialInstitution.IdentificationCode = bifi.parseStringField(record[6:7])
+	bifi.FinancialInstitution.Identifier = bifi.parseStringField(record[7:41])
+	bifi.FinancialInstitution.Name = bifi.parseStringField(record[41:76])
+	bifi.FinancialInstitution.Address.AddressLineOne = bifi.parseStringField(record[76:111])
+	bifi.FinancialInstitution.Address.AddressLineTwo = bifi.parseStringField(record[111:146])
+	bifi.FinancialInstitution.Address.AddressLineThree = bifi.parseStringField(record[146:181])
 }
 
 // String writes BeneficiaryIntermediaryFI
 func (bifi *BeneficiaryIntermediaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(bifi.tag)
 	return buf.String()
 }
@@ -48,6 +55,31 @@ func (bifi *BeneficiaryIntermediaryFI) String() string {
 func (bifi *BeneficiaryIntermediaryFI) Validate() error {
 	if err := bifi.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := bifi.isIdentificationCode(bifi.FinancialInstitution.IdentificationCode); err != nil {
+		return fieldError("IdentificationCode", err, bifi.FinancialInstitution.IdentificationCode)
+	}
+	// Can only be these Identification Codes
+	switch bifi.FinancialInstitution.IdentificationCode {
+	case
+		"B", "C", "D", "F", "U":
+	default:
+		return fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode)
+	}
+	if err := bifi.isAlphanumeric(bifi.FinancialInstitution.Identifier); err != nil {
+		return fieldError("Identifier", err, bifi.FinancialInstitution.Identifier)
+	}
+	if err := bifi.isAlphanumeric(bifi.FinancialInstitution.Name); err != nil {
+		return fieldError("Name", err, bifi.FinancialInstitution.Name)
+	}
+	if err := bifi.isAlphanumeric(bifi.FinancialInstitution.Address.AddressLineOne); err != nil {
+		return fieldError("AddressLineOne", err, bifi.FinancialInstitution.Address.AddressLineOne)
+	}
+	if err := bifi.isAlphanumeric(bifi.FinancialInstitution.Address.AddressLineTwo); err != nil {
+		return fieldError("AddressLineTwo", err, bifi.FinancialInstitution.Address.AddressLineTwo)
+	}
+	if err := bifi.isAlphanumeric(bifi.FinancialInstitution.Address.AddressLineThree); err != nil {
+		return fieldError("AddressLineThree", err, bifi.FinancialInstitution.Address.AddressLineThree)
 	}
 	return nil
 }

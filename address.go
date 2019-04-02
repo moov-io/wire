@@ -4,6 +4,8 @@
 
 package wire
 
+// ToDo: Consider an array
+
 // Address is 3 lines of address information
 type Address struct {
 	// AddressLineOne

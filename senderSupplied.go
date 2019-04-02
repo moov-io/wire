@@ -40,12 +40,12 @@ func NewSenderSupplied() SenderSupplied {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ss *SenderSupplied) Parse(tag string) {
-	ss.tag = ss.parseStringField(tag[:6])
-	ss.FormatVersion = ss.parseStringField(tag[6:8])
-	ss.UserRequestCorrelation = ss.parseStringField(tag[8:16])
-	ss.TestProductionCode = ss.parseStringField(tag[16:17])
-	ss.MessageDuplicationCode = ss.parseStringField(tag[17:18])
+func (ss *SenderSupplied) Parse(record string) {
+	ss.tag = ss.parseStringField(record[:6])
+	ss.FormatVersion = ss.parseStringField(record[6:8])
+	ss.UserRequestCorrelation = ss.parseStringField(record[8:16])
+	ss.TestProductionCode = ss.parseStringField(record[16:17])
+	ss.MessageDuplicationCode = ss.parseStringField(record[17:18])
 }
 
 // String writes SenderSupplied

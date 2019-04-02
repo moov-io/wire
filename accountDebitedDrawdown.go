@@ -37,13 +37,20 @@ func NewAccountDebitedDrawdown() AccountDebitedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (debitDD *AccountDebitedDrawdown) Parse(record string) {
+	debitDD.tag = record[:6]
+	debitDD.IdentificationCode = debitDD.parseStringField(record[6:7])
+	debitDD.Identifier = debitDD.parseStringField(record[7:41])
+	debitDD.Name = debitDD.parseStringField(record[41:76])
+	debitDD.Address.AddressLineOne = debitDD.parseStringField(record[76:111])
+	debitDD.Address.AddressLineTwo = debitDD.parseStringField(record[111:146])
+	debitDD.Address.AddressLineThree = debitDD.parseStringField(record[146:181])
 }
 
 // String writes AccountDebitedDrawdown
 func (debitDD *AccountDebitedDrawdown) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(debitDD.tag)
 	return buf.String()
 }
@@ -53,6 +60,31 @@ func (debitDD *AccountDebitedDrawdown) String() string {
 func (debitDD *AccountDebitedDrawdown) Validate() error {
 	if err := debitDD.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := debitDD.isIdentificationCode(debitDD.IdentificationCode); err != nil {
+		return fieldError("IdentificationCode", err, debitDD.IdentificationCode)
+	}
+	// Can only be these Identification Codes
+	switch debitDD.IdentificationCode {
+	case
+		"D":
+	default:
+		return fieldError("IdentificationCode", ErrIdentificationCode, debitDD.IdentificationCode)
+	}
+	if err := debitDD.isAlphanumeric(debitDD.Identifier); err != nil {
+		return fieldError("Identifier", err, debitDD.Identifier)
+	}
+	if err := debitDD.isAlphanumeric(debitDD.Name); err != nil {
+		return fieldError("Name", err, debitDD.Name)
+	}
+	if err := debitDD.isAlphanumeric(debitDD.Address.AddressLineOne); err != nil {
+		return fieldError("AddressLineOne", err, debitDD.Address.AddressLineOne)
+	}
+	if err := debitDD.isAlphanumeric(debitDD.Address.AddressLineTwo); err != nil {
+		return fieldError("AddressLineTwo", err, debitDD.Address.AddressLineTwo)
+	}
+	if err := debitDD.isAlphanumeric(debitDD.Address.AddressLineThree); err != nil {
+		return fieldError("AddressLineThree", err, debitDD.Address.AddressLineThree)
 	}
 	return nil
 }

@@ -34,13 +34,16 @@ func NewLocalInstrument() LocalInstrument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (li *LocalInstrument) Parse(record string) {
+	li.tag = record[:6]
+	li.LocalInstrumentCode = li.parseStringField(record[6:10])
+	li.ProprietaryCode = li.parseStringField(record[10:45])
 }
 
 // String writes LocalInstrument
 func (li *LocalInstrument) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(39)
+	buf.Grow(45)
 	buf.WriteString(li.tag)
 	return buf.String()
 }
@@ -50,6 +53,12 @@ func (li *LocalInstrument) String() string {
 func (li *LocalInstrument) Validate() error {
 	if err := li.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := li.isLocalInstrumentCode(li.LocalInstrumentCode); err != nil {
+		return fieldError("LocalInstrumentCode", err, li.LocalInstrumentCode)
+	}
+	if err := li.isAlphanumeric(li.ProprietaryCode); err != nil {
+		return fieldError("ProprietaryCode", err, li.ProprietaryCode)
 	}
 	return nil
 }

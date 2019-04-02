@@ -35,11 +35,11 @@ func NewInputMessageAccountabilityData() InputMessageAccountabilityData {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (imad *InputMessageAccountabilityData) Parse(tag string) {
-	imad.tag = tag[:6]
-	imad.InputCycleDate = imad.validateDate(tag[6:14])
-	imad.InputSource = imad.parseStringField(tag[14:22])
-	imad.InputSequenceNumber = imad.parseStringField(tag[22:28])
+func (imad *InputMessageAccountabilityData) Parse(record string) {
+	imad.tag = record[:6]
+	imad.InputCycleDate = imad.validateDate(record[6:14])
+	imad.InputSource = imad.parseStringField(record[14:22])
+	imad.InputSequenceNumber = imad.parseStringField(record[22:28])
 }
 
 // String writes InputMessageAccountabilityData
@@ -57,10 +57,10 @@ func (imad *InputMessageAccountabilityData) Validate() error {
 		return err
 	}
 	if err := imad.isAlphanumeric(imad.InputSource); err != nil {
-		return fieldError("InputSource", ErrNonAlphanumeric, imad.InputSource)
+		return fieldError("InputSource", err, imad.InputSource)
 	}
 	if err := imad.isAlphanumeric(imad.InputSequenceNumber); err != nil {
-		return fieldError("InputSequenceNumber", ErrNonAlphanumeric, imad.InputSequenceNumber)
+		return fieldError("InputSequenceNumber", err, imad.InputSequenceNumber)
 	}
 	return nil
 }

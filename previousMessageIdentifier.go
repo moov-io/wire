@@ -32,13 +32,15 @@ func NewPreviousMessageIdentifier() PreviousMessageIdentifier {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pmi *PreviousMessageIdentifier) Parse(record string) {
+	pmi.tag = record[:6]
+	pmi.PreviousMessageIdentifier = pmi.parseStringField(record[6:28])
 }
 
 // String writes PreviousMessageIdentifier
 func (pmi *PreviousMessageIdentifier) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(22)
+	buf.Grow(28)
 	buf.WriteString(pmi.tag)
 	return buf.String()
 }
@@ -48,6 +50,9 @@ func (pmi *PreviousMessageIdentifier) String() string {
 func (pmi *PreviousMessageIdentifier) Validate() error {
 	if err := pmi.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := pmi.isAlphanumeric(pmi.PreviousMessageIdentifier); err != nil {
+		return fieldError("PreviousMessageIdentifier", err, pmi.PreviousMessageIdentifier)
 	}
 	return nil
 }

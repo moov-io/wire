@@ -16,6 +16,7 @@ var (
 	upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	alphanumericRegex      = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	numericRegex           = regexp.MustCompile(`[^0-9]`)
+	amountRegex            = regexp.MustCompile("[^0-9,]")
 )
 
 // validator is common validation and formatting of golang types to WIRE type strings
@@ -35,6 +36,22 @@ func (v *validator) isNumeric(s string) error {
 	if numericRegex.MatchString(s) {
 		// [^ 0-9]
 		return ErrNonNumeric
+	}
+	return nil
+}
+
+// isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
+func (v *validator) isAmount(s string) error {
+	c := regexp.MustCompile(",")
+
+	matches := c.FindAllStringIndex(s, -1)
+	if len(matches) != 1 {
+		return ErrNonAmount
+	}
+
+	if amountRegex.MatchString(s) {
+		// [^ 0-9]
+		return ErrNonAmount
 	}
 	return nil
 }
@@ -149,6 +166,16 @@ func (v *validator) isBusinessFunctionCode(code string) error {
 	return ErrBusinessFunctionCode
 }
 
+func (v *validator) isChargeDetails(code string) error {
+	switch code {
+	case
+		CDBeneficiary,
+		CDShared:
+		return nil
+	}
+	return ErrChargeDetails
+}
+
 func (v *validator) isTransactionTypeCode(code string) error {
 	// ToDo: Find what the Transaction Type Codes are
 	switch code {
@@ -157,6 +184,26 @@ func (v *validator) isTransactionTypeCode(code string) error {
 		return nil
 	}
 	return ErrTransactionTypeCode
+}
+
+func (v *validator) isIdentificationCode(code string) error {
+	switch code {
+	case
+		SWIFTBankIdentifierCode,
+		CHIPSParticipant,
+		DemandDepositAccountNumber,
+		FEDRoutingNumber,
+		SWIFTBICORBEIANDAccountNumber,
+		CHIPSIdentifier,
+		PassportNumber,
+		TaxIdentificationNumber,
+		DriversLicenseNumber,
+		AlienRegistrationNumber,
+		CorporateIdentification,
+		OtherIdentification:
+		return nil
+	}
+	return ErrIdentificationCode
 }
 
 // isCentury validates a 2 digit century 20-29

@@ -48,13 +48,19 @@ func NewCharges() Charges {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (c *Charges) Parse(record string) {
+	c.tag = record[:6]
+	c.ChargeDetails = c.parseStringField(record[6:8])
+	c.SendersChargesOne = c.parseStringField(record[8:23])
+	c.SendersChargesTwo = c.parseStringField(record[23:38])
+	c.SendersChargesThree = c.parseStringField(record[38:53])
+	c.SendersChargesFour = c.parseStringField(record[53:68])
 }
 
 // String writes Charges
 func (c *Charges) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(61)
+	buf.Grow(68)
 	buf.WriteString(c.tag)
 	return buf.String()
 }
@@ -64,6 +70,23 @@ func (c *Charges) String() string {
 func (c *Charges) Validate() error {
 	if err := c.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := c.isChargeDetails(c.ChargeDetails); err != nil {
+		return fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails)
+	}
+
+	// ToDo: specific validation for Charges 1-4 fields
+	if err := c.isAlphanumeric(c.SendersChargesOne); err != nil {
+		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
+	}
+	if err := c.isAlphanumeric(c.SendersChargesTwo); err != nil {
+		return fieldError("SendersChargesTwo", err, c.SendersChargesTwo)
+	}
+	if err := c.isAlphanumeric(c.SendersChargesThree); err != nil {
+		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
+	}
+	if err := c.isAlphanumeric(c.SendersChargesFour); err != nil {
+		return fieldError("SendersChargesFour", err, c.SendersChargesFour)
 	}
 	return nil
 }

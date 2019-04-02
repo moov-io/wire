@@ -4,6 +4,9 @@
 
 package wire
 
+// ToDo: Handle empty tags e.g.  {5000}  if it's empty, o.isIdentificationCode would fail but why have an empty tag even
+//  get that far, so it should have some type of length.
+
 import (
 	"bufio"
 	"github.com/moov-io/base"

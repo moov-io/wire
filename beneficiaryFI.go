@@ -11,7 +11,7 @@ type BeneficiaryFI struct {
 	// tag
 	tag string
 	// Financial Institution
-	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
+	FinancialInstitution *FinancialInstitution `json:"financialInstitution,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -32,13 +32,20 @@ func NewBeneficiaryFI() BeneficiaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bfi *BeneficiaryFI) Parse(record string) {
+	bfi.tag = record[:6]
+	bfi.FinancialInstitution.IdentificationCode = bfi.parseStringField(record[6:7])
+	bfi.FinancialInstitution.Identifier = bfi.parseStringField(record[7:41])
+	bfi.FinancialInstitution.Name = bfi.parseStringField(record[41:76])
+	bfi.FinancialInstitution.Address.AddressLineOne = bfi.parseStringField(record[76:111])
+	bfi.FinancialInstitution.Address.AddressLineTwo = bfi.parseStringField(record[111:146])
+	bfi.FinancialInstitution.Address.AddressLineThree = bfi.parseStringField(record[146:181])
 }
 
 // String writes BeneficiaryFI
 func (bfi *BeneficiaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(bfi.tag)
 	return buf.String()
 }
@@ -48,6 +55,31 @@ func (bfi *BeneficiaryFI) String() string {
 func (bfi *BeneficiaryFI) Validate() error {
 	if err := bfi.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := bfi.isIdentificationCode(bfi.FinancialInstitution.IdentificationCode); err != nil {
+		return fieldError("IdentificationCode", err, bfi.FinancialInstitution.IdentificationCode)
+	}
+	// Can only be these Identification Codes
+	switch bfi.FinancialInstitution.IdentificationCode {
+	case
+		"B", "C", "D", "F", "U":
+	default:
+		return fieldError("IdentificationCode", ErrIdentificationCode, bfi.FinancialInstitution.IdentificationCode)
+	}
+	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Identifier); err != nil {
+		return fieldError("Identifier", err, bfi.FinancialInstitution.Identifier)
+	}
+	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Name); err != nil {
+		return fieldError("Name", err, bfi.FinancialInstitution.Name)
+	}
+	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineOne); err != nil {
+		return fieldError("AddressLineOne", err, bfi.FinancialInstitution.Address.AddressLineOne)
+	}
+	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineTwo); err != nil {
+		return fieldError("AddressLineTwo", err, bfi.FinancialInstitution.Address.AddressLineTwo)
+	}
+	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineThree); err != nil {
+		return fieldError("AddressLineThree", err, bfi.FinancialInstitution.Address.AddressLineThree)
 	}
 	return nil
 }

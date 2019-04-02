@@ -32,13 +32,14 @@ func NewSenderReference() SenderReference {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sr *SenderReference) Parse(record string) {
+	sr.tag = record[:6]
+	sr.SenderReference = record[6:22]
 }
 
 // String writes SenderReference
 func (sr *SenderReference) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
-	buf.Grow(16)
+	buf.Grow(22)
 	buf.WriteString(sr.tag)
 	return buf.String()
 }
@@ -48,6 +49,9 @@ func (sr *SenderReference) String() string {
 func (sr *SenderReference) Validate() error {
 	if err := sr.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := sr.isAlphanumeric(sr.SenderReference); err != nil {
+		return fieldError("SenderReference", err, sr.SenderReference)
 	}
 	return nil
 }

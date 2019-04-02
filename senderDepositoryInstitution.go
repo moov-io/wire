@@ -33,10 +33,10 @@ func NewSenderDepositoryInstitution() SenderDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sdi *SenderDepositoryInstitution) Parse(tag string) {
-	sdi.tag = tag[:6]
-	sdi.SenderABANumber = sdi.parseStringField(tag[6:15])
-	sdi.SenderShortName = sdi.parseStringField(tag[15:33])
+func (sdi *SenderDepositoryInstitution) Parse(record string) {
+	sdi.tag = record[:6]
+	sdi.SenderABANumber = sdi.parseStringField(record[6:15])
+	sdi.SenderShortName = sdi.parseStringField(record[15:33])
 }
 
 // String writes SenderDepositoryInstitution
@@ -54,10 +54,10 @@ func (sdi *SenderDepositoryInstitution) Validate() error {
 		return err
 	}
 	if err := sdi.isNumeric(sdi.SenderABANumber); err != nil {
-		return fieldError("SenderABANumber", ErrNonNumeric, sdi.SenderABANumber)
+		return fieldError("SenderABANumber", err, sdi.SenderABANumber)
 	}
 	if err := sdi.isAlphanumeric(sdi.SenderShortName); err != nil {
-		return fieldError("SenderShortName", ErrNonNumeric, sdi.SenderShortName)
+		return fieldError("SenderShortName", err, sdi.SenderShortName)
 	}
 	return nil
 }

@@ -33,10 +33,10 @@ func NewReceiverDepositoryInstitution() ReceiverDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rdi *ReceiverDepositoryInstitution) Parse(tag string) {
-	rdi.tag = tag[:6]
-	rdi.ReceiverABANumber = rdi.parseStringField(tag[6:15])
-	rdi.ReceiverShortName = rdi.parseStringField(tag[15:33])
+func (rdi *ReceiverDepositoryInstitution) Parse(record string) {
+	rdi.tag = record[:6]
+	rdi.ReceiverABANumber = rdi.parseStringField(record[6:15])
+	rdi.ReceiverShortName = rdi.parseStringField(record[15:33])
 }
 
 // String writes ReceiverDepositoryInstitution
@@ -54,10 +54,10 @@ func (rdi *ReceiverDepositoryInstitution) Validate() error {
 		return err
 	}
 	if err := rdi.isNumeric(rdi.ReceiverABANumber); err != nil {
-		return fieldError("ReceiverABANumber", ErrNonNumeric, rdi.ReceiverABANumber)
+		return fieldError("ReceiverABANumber", err, rdi.ReceiverABANumber)
 	}
 	if err := rdi.isAlphanumeric(rdi.ReceiverShortName); err != nil {
-		return fieldError("ReceiverShortName", ErrNonNumeric, rdi.ReceiverShortName)
+		return fieldError("ReceiverShortName", err, rdi.ReceiverShortName)
 	}
 	return nil
 }

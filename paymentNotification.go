@@ -46,13 +46,21 @@ func NewPaymentNotification() PaymentNotification {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pn *PaymentNotification) Parse(record string) {
+	pn.tag = record[:6]
+	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:16])
+	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[16:2064])
+	pn.ContactName = pn.parseStringField(record[2064:2204])
+	pn.ContactPhoneNumber = pn.parseStringField(record[2204:2239])
+	pn.ContactMobileNumber = pn.parseStringField(record[2239:2274])
+	pn.FaxNumber = pn.parseStringField(record[2274:2309])
+	pn.EndToEndIdentification = pn.parseStringField(record[2309:2344])
 }
 
 // String writes PaymentNotification
 func (pn *PaymentNotification) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(2338)
+	buf.Grow(2344)
 	buf.WriteString(pn.tag)
 	return buf.String()
 }
@@ -62,6 +70,27 @@ func (pn *PaymentNotification) String() string {
 func (pn *PaymentNotification) Validate() error {
 	if err := pn.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := pn.isNumeric(pn.PaymentNotificationIndicator); err != nil {
+		return fieldError("PaymentNotificationIndicator", err, pn.PaymentNotificationIndicator)
+	}
+	if err := pn.isAlphanumeric(pn.ContactNotificationElectronicAddress); err != nil {
+		return fieldError("ContactNotificationElectronicAddress", err, pn.ContactNotificationElectronicAddress)
+	}
+	if err := pn.isAlphanumeric(pn.ContactName); err != nil {
+		return fieldError("ContactName", err, pn.ContactName)
+	}
+	if err := pn.isAlphanumeric(pn.ContactPhoneNumber); err != nil {
+		return fieldError("ContactPhoneNumber", err, pn.ContactPhoneNumber)
+	}
+	if err := pn.isAlphanumeric(pn.ContactMobileNumber); err != nil {
+		return fieldError("ContactMobileNumber", err, pn.ContactMobileNumber)
+	}
+	if err := pn.isAlphanumeric(pn.FaxNumber); err != nil {
+		return fieldError("FaxNumber", err, pn.FaxNumber)
+	}
+	if err := pn.isAlphanumeric(pn.EndToEndIdentification); err != nil {
+		return fieldError("EndToEndIdentification", err, pn.EndToEndIdentification)
 	}
 	return nil
 }

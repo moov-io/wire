@@ -32,6 +32,8 @@ func NewAccountCreditedDrawdown() AccountCreditedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (creditDD *AccountCreditedDrawdown) Parse(record string) {
+	creditDD.tag = record[:6]
+	creditDD.DrawdownCreditAccountNumber = creditDD.parseStringField(record[6:15])
 }
 
 // String writes AccountCreditedDrawdown
@@ -48,6 +50,9 @@ func (creditDD *AccountCreditedDrawdown) String() string {
 func (creditDD *AccountCreditedDrawdown) Validate() error {
 	if err := creditDD.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := creditDD.isAlphanumeric(creditDD.DrawdownCreditAccountNumber); err != nil {
+		return fieldError("DrawdownCreditAccountNumber", err, creditDD.DrawdownCreditAccountNumber)
 	}
 	return nil
 }

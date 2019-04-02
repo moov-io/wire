@@ -16,6 +16,8 @@ var (
 	ErrNonNumeric = errors.New("has non numeric characters")
 	// ErrNonAlphanumeric is returned when a field has non-alphanumeric characters
 	ErrNonAlphanumeric = errors.New("has non alphanumeric characters")
+	// ErrNonAmount is returned for an incorrect wire amount format
+	ErrNonAmount = errors.New("is an incorrect wire amount format")
 	// ErrUpperAlpha is returned when a field is not in uppercase
 	ErrUpperAlpha = errors.New("is not uppercase A-Z or 0-9")
 	// ErrFieldInclusion is returned when a field is mandatory and has a default value
@@ -60,6 +62,16 @@ var (
 	ErrLocalInstrumentCode = errors.New("is an invalid local instrument Code")
 	// ErrPaymentNotificationIndicator is returned for an invalid payment notification indicator {3620}
 	ErrPaymentNotificationIndicator = errors.New("is an invalid payment notification indicator")
+
+	// Charges Tag {3700}
+
+	// ErrChargeDetails is returned for an invalid charge details for charges
+	ErrChargeDetails = errors.New("is an invalid charge detail")
+
+	// Beneficiary {4000}
+
+	// ErrIdentificationCode is returned for an invalid Identification Code
+	ErrIdentificationCode = errors.New("is an invalid Identification Code")
 )
 
 // FieldError is returned for errors at a field level in a tag

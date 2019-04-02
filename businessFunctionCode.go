@@ -34,10 +34,10 @@ func NewBusinessFunctionCode() BusinessFunctionCode {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfc *BusinessFunctionCode) Parse(tag string) {
-	bfc.tag = tag[:6]
-	bfc.BusinessFunctionCode = bfc.parseStringField(tag[6:9])
-	bfc.TransactionTypeCode = bfc.parseStringField(tag[9:12])
+func (bfc *BusinessFunctionCode) Parse(record string) {
+	bfc.tag = record[:6]
+	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
+	bfc.TransactionTypeCode = bfc.parseStringField(record[9:12])
 }
 
 // String writes BusinessFunctionCode
