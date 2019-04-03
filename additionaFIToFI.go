@@ -4,8 +4,8 @@
 
 package wire
 
-// AdditionalFiToFi is additional financial institution to financial institution information
-type AdditionalFiToFi struct {
+// AdditionalFIToFI is additional financial institution to financial institution information
+type AdditionalFIToFI struct {
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo

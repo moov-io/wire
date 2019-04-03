@@ -52,7 +52,7 @@ type FedWireMessage struct {
 	FiBeneficiaryAdvice Advice `json:"fiBeneficiaryAdvice,omitempty"`
 	FiPaymentMethodToBeneficiary FiPaymentMethodToBeneficiary `json:"fiPaymentMethodToBeneficiary,omitempty"`
 	FiAdditionalFIToFI AdditionalFiToFi `json:"fiAdditionalFIToFI,omitempty"`
-	CurrencyInstructedAmount CoverPayment `json:"currencyInstructedAmount,omitempty"`
+	CurrencyInstructedAmount CurrencyInstructedAmount `json:"currencyInstructedAmount,omitempty"`
 	OrderingCustomer CoverPayment `json:"orderingCustomer,omitempty"`
 	OrderingInstitution CoverPayment `json:"orderingInstitution,omitempty"`
 	IntermediaryInstitution CoverPayment `json:"intermediaryInstitution,omitempty"`

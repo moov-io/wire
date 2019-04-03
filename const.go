@@ -90,8 +90,8 @@ const (
 	TagFIBeneficiaryAdvice = "{6410}"
 	// TagFIPaymentMethodToBeneficiary is FIPaymentMethodToBeneficiary
 	TagFIPaymentMethodToBeneficiary = "{6420}"
-	// TagFIAdditionalFiToFi is FIAdditionalFiToFi
-	TagFIAdditionalFiToFi = "{6500}"
+	// TagFIAdditionalFIToFI is FIAdditionalFIToFI
+	TagFIAdditionalFIToFI = "{6500}"
 
 	// TagCurrencyInstructedAmount is CurrencyInstructedAmount
 	TagCurrencyInstructedAmount = "{7033}"
@@ -252,4 +252,33 @@ const (
 	CorporateIdentification = "5"
 	// OtherIdentification is other identification
 	OtherIdentification = "9"
+
+	// Drawdown Debit Account Advice Information
+	// Advice Codes
+	//
+	// AdviceCodeHold is an advice code for Hold
+	AdviceCodeHold = "HLD"
+	// AdviceCodeLetter is an advice code for LTR
+	AdviceCodeLetter = "LTR"
+	// AdviceCodePhone is an advice code for Phone
+	AdviceCodePhone ="PHN"
+	// AdviceCodeTelex is an advice code for Telex
+	AdviceCodeTelex = "TLX"
+	// AdviceCodeWire is an advice code for Wire
+	AdviceCodeWire = "WRE"
+
+	// AddressType
+
+	// CompletePostalAddress is Complete Postal Address
+	CompletePostalAddress = "ADDR"
+	// HomeAddress is Home Address
+	HomeAddress = "HOME"
+	// BusinessAddress is Business Address
+	BusinessAddress = "BIZZ"
+	// MailAddress is Mail Address
+	MailAddress = "MLTO"
+	// DeliveryAddress is Delivery Address
+	DeliveryAddress = "DLVY"
+	// PostOfficeBox is Post Office Box
+	PostOfficeBox = "PBOX"
 )

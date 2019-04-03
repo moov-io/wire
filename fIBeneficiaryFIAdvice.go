@@ -21,32 +21,40 @@ type FIBeneficiaryFIAdvice struct {
 
 // NewFIBeneficiaryFIAdvice returns a new FIBeneficiaryFIAdvice
 func NewFIBeneficiaryFIAdvice() FIBeneficiaryFIAdvice {
-	ifia := FIBeneficiaryFIAdvice{
+	fibfia := FIBeneficiaryFIAdvice{
 		tag: TagFIBeneficiaryFIAdvice,
 	}
-	return ifia
+	return fibfia
 }
 
 // Parse takes the input string and parses the FIBeneficiaryFIAdvice values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ifia *FIBeneficiaryFIAdvice) Parse(record string) {
+func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) {
+	fibfia.tag = record[:6]
+	fibfia.Advice.AdviceCode = fibfia.parseStringField(record[6:9])
+	fibfia.Advice.LineOne = fibfia.parseStringField(record[9:35])
+	fibfia.Advice.LineTwo = fibfia.parseStringField(record[35:68])
+	fibfia.Advice.LineThree = fibfia.parseStringField(record[68:101])
+	fibfia.Advice.LineFour = fibfia.parseStringField(record[101:134])
+	fibfia.Advice.LineFive = fibfia.parseStringField(record[134:167])
+	fibfia.Advice.LineSix = fibfia.parseStringField(record[167:200])
 }
 
 // String writes FIBeneficiaryFIAdvice
-func (ifia *FIBeneficiaryFIAdvice) String() string {
+func (fibfia *FIBeneficiaryFIAdvice) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(194)
-	buf.WriteString(ifia.tag)
+	buf.Grow(200)
+	buf.WriteString(fibfia.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on FIBeneficiaryFIAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (ifia *FIBeneficiaryFIAdvice) Validate() error {
-	if err := ifia.fieldInclusion(); err != nil {
+func (fibfia *FIBeneficiaryFIAdvice) Validate() error {
+	if err := fibfia.fieldInclusion(); err != nil {
 		return err
 	}
 	return nil
@@ -54,6 +62,6 @@ func (ifia *FIBeneficiaryFIAdvice) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ifia *FIBeneficiaryFIAdvice) fieldInclusion() error {
+func (fibfia *FIBeneficiaryFIAdvice) fieldInclusion() error {
 	return nil
 }

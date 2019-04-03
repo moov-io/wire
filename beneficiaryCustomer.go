@@ -32,13 +32,20 @@ func NewBeneficiaryCustomer() BeneficiaryCustomer {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bc *BeneficiaryCustomer) Parse(record string) {
+	bc.tag = record[:6]
+	bc.CoverPayment.SwiftFieldTag = bc.parseStringField(record[6:11])
+	bc.CoverPayment.SwiftLineOne = bc.parseStringField(record[11:46])
+	bc.CoverPayment.SwiftLineTwo = bc.parseStringField(record[46:81])
+	bc.CoverPayment.SwiftLineThree = bc.parseStringField(record[81:116])
+	bc.CoverPayment.SwiftLineFour = bc.parseStringField(record[116:151])
+	bc.CoverPayment.SwiftLineFive = bc.parseStringField(record[151:186])
 }
 
 // String writes BeneficiaryCustomer
 func (bc *BeneficiaryCustomer) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(180)
+	buf.Grow(186)
 	buf.WriteString(bc.tag)
 	return buf.String()
 }
@@ -48,6 +55,24 @@ func (bc *BeneficiaryCustomer) String() string {
 func (bc *BeneficiaryCustomer) Validate() error {
 	if err := bc.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftFieldTag); err != nil {
+		return fieldError("SwiftFieldTag", err, bc.CoverPayment.SwiftFieldTag)
+	}
+	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftLineOne); err != nil {
+		return fieldError("SwiftLineOne", err, bc.CoverPayment.SwiftLineOne)
+	}
+	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftLineTwo); err != nil {
+		return fieldError("SwiftLineTwo", err, bc.CoverPayment.SwiftLineTwo)
+	}
+	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftLineThree); err != nil {
+		return fieldError("SwiftLineThree", err, bc.CoverPayment.SwiftLineThree)
+	}
+	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftLineFour); err != nil {
+		return fieldError("SwiftLineFour", err, bc.CoverPayment.SwiftLineFour)
+	}
+	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftLineFive); err != nil {
+		return fieldError("SwiftLineFive", err, bc.CoverPayment.SwiftLineFive)
 	}
 	return nil
 }

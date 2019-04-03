@@ -10,8 +10,8 @@ import "strings"
 type FIReceiverFI struct {
 	// tag
 	tag string
-	// Financial Institution
-	FIToFI FiToFi `json:"fiToFI,omitempty"`
+	// FIToFI is financial institution to financial institution
+	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -32,13 +32,20 @@ func NewFIReceiverFI() FIReceiverFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rfi *FIReceiverFI) Parse(record string) {
+	rfi.tag = record[:6]
+	rfi.FIToFI.LineOne = rfi.parseStringField(record[6:36])
+	rfi.FIToFI.LineTwo = rfi.parseStringField(record[36:69])
+	rfi.FIToFI.LineThree = rfi.parseStringField(record[69:104])
+	rfi.FIToFI.LineFour = rfi.parseStringField(record[104:139])
+	rfi.FIToFI.LineFive = rfi.parseStringField(record[139:174])
+	rfi.FIToFI.LineSix = rfi.parseStringField(record[174:209])
 }
 
 // String writes FIReceiverFI
 func (rfi *FIReceiverFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(195)
+	buf.Grow(209)
 	buf.WriteString(rfi.tag)
 	return buf.String()
 }
@@ -48,6 +55,24 @@ func (rfi *FIReceiverFI) String() string {
 func (rfi *FIReceiverFI) Validate() error {
 	if err := rfi.fieldInclusion(); err != nil {
 		return err
+	}
+	if err:= rfi.isAlphanumeric(rfi.FIToFI.LineOne); err!= nil {
+		return fieldError("LineOne", err, rfi.FIToFI.LineOne)
+	}
+	if err:= rfi.isAlphanumeric(rfi.FIToFI.LineTwo); err!= nil {
+		return fieldError("LineTwo", err, rfi.FIToFI.LineTwo)
+	}
+	if err:= rfi.isAlphanumeric(rfi.FIToFI.LineThree); err!= nil {
+		return fieldError("LineThree", err, rfi.FIToFI.LineThree)
+	}
+	if err:= rfi.isAlphanumeric(rfi.FIToFI.LineFour); err!= nil {
+		return fieldError("LineFour", err, rfi.FIToFI.LineFour)
+	}
+	if err:= rfi.isAlphanumeric(rfi.FIToFI.LineFive); err!= nil {
+		return fieldError("LineFive", err, rfi.FIToFI.LineFive)
+	}
+	if err:= rfi.isAlphanumeric(rfi.FIToFI.LineSix); err!= nil {
+		return fieldError("LineSix", err, rfi.FIToFI.LineSix)
 	}
 	return nil
 }

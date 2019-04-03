@@ -382,6 +382,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -391,7 +392,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -460,15 +460,10 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           fiPaymentMethodToBeneficiary:
-            Additional: For goods and services
+            AdditionalInformation: For goods and services
             paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLineFour: Swift Line Four
-            swiftLineOne: Swift Line One
-            swiftLineFive: Swift Line Five
-            swiftLineThree: Swift Line Three
-            swiftLineSix: Swift Line Six
-            swiftLineTwo: Swift Line Two
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -483,6 +478,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -492,7 +488,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -570,6 +565,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -579,7 +575,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -786,6 +781,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -795,7 +791,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -864,15 +859,10 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           fiPaymentMethodToBeneficiary:
-            Additional: For goods and services
+            AdditionalInformation: For goods and services
             paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLineFour: Swift Line Four
-            swiftLineOne: Swift Line One
-            swiftLineFive: Swift Line Five
-            swiftLineThree: Swift Line Three
-            swiftLineSix: Swift Line Six
-            swiftLineTwo: Swift Line Two
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -887,6 +877,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -896,7 +887,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -974,6 +964,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -983,7 +974,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1203,6 +1193,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1212,7 +1203,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1281,15 +1271,10 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           fiPaymentMethodToBeneficiary:
-            Additional: For goods and services
+            AdditionalInformation: For goods and services
             paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLineFour: Swift Line Four
-            swiftLineOne: Swift Line One
-            swiftLineFive: Swift Line Five
-            swiftLineThree: Swift Line Three
-            swiftLineSix: Swift Line Six
-            swiftLineTwo: Swift Line Two
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -1304,6 +1289,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1313,7 +1299,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1391,6 +1376,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1400,7 +1386,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1607,6 +1592,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1616,7 +1602,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1685,15 +1670,10 @@ components:
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
           fiPaymentMethodToBeneficiary:
-            Additional: For goods and services
+            AdditionalInformation: For goods and services
             paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLineFour: Swift Line Four
-            swiftLineOne: Swift Line One
-            swiftLineFive: Swift Line Five
-            swiftLineThree: Swift Line Three
-            swiftLineSix: Swift Line Six
-            swiftLineTwo: Swift Line Two
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -1708,6 +1688,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1717,7 +1698,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1795,6 +1775,7 @@ components:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1804,7 +1785,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -2029,6 +2009,7 @@ components:
             country: US
             townName: Any Town
             addressType: ADDR
+            addressLineOne: AddressLineOne
             addressLineFive: AddressLineFive
             subDepartment: Service
             addressLineSix: AddressLineSix
@@ -2038,7 +2019,6 @@ components:
             countrySubDivisionState: PA
             name: Wade Arnold
             buildingNumber: 1A
-            addressLine1: AddressLineOne
             postCode: "19465"
             department: Buildings
             addressLineThree: AddressLineThree
@@ -2107,15 +2087,10 @@ components:
           inputCycleDate: "20191201"
           inputSequenceNumber: "000001"
         fiPaymentMethodToBeneficiary:
-          Additional: For goods and services
+          AdditionalInformation: For goods and services
           paymentMethod: CHECK
         currencyInstructedAmount:
-          swiftLineFour: Swift Line Four
-          swiftLineOne: Swift Line One
-          swiftLineFive: Swift Line Five
-          swiftLineThree: Swift Line Three
-          swiftLineSix: Swift Line Six
-          swiftLineTwo: Swift Line Two
+          amount: 1234,56
           swiftFieldTag: SWIFT
         instructingFI:
           identificationCode: B
@@ -2130,6 +2105,7 @@ components:
             country: US
             townName: Any Town
             addressType: ADDR
+            addressLineOne: AddressLineOne
             addressLineFive: AddressLineFive
             subDepartment: Service
             addressLineSix: AddressLineSix
@@ -2139,7 +2115,6 @@ components:
             countrySubDivisionState: PA
             name: Wade Arnold
             buildingNumber: 1A
-            addressLine1: AddressLineOne
             postCode: "19465"
             department: Buildings
             addressLineThree: AddressLineThree
@@ -2217,6 +2192,7 @@ components:
             country: US
             townName: Any Town
             addressType: ADDR
+            addressLineOne: AddressLineOne
             addressLineFive: AddressLineFive
             subDepartment: Service
             addressLineSix: AddressLineSix
@@ -2226,7 +2202,6 @@ components:
             countrySubDivisionState: PA
             name: Wade Arnold
             buildingNumber: 1A
-            addressLine1: AddressLineOne
             postCode: "19465"
             department: Buildings
             addressLineThree: AddressLineThree
@@ -2413,7 +2388,7 @@ components:
         fiAdditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
         currencyInstructedAmount:
-          $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CurrencyInstructedAmount'
         orderingCustomer:
           $ref: '#/components/schemas/CoverPayment'
         orderingInstitution:
@@ -3142,7 +3117,7 @@ components:
           type: string
     FIPaymentMethodToBeneficiary:
       example:
-        Additional: For goods and services
+        AdditionalInformation: For goods and services
         paymentMethod: CHECK
       properties:
         paymentMethod:
@@ -3151,9 +3126,9 @@ components:
           - CHECK
           example: CHECK
           type: string
-        Additional:
+        AdditionalInformation:
           example: For goods and services
-          maxLength: 35
+          maxLength: 30
           type: string
     AdditionalFIToFI:
       example:
@@ -3193,6 +3168,22 @@ components:
           description: LineSix
           example: Line Six
           maxLength: 35
+          type: string
+    CurrencyInstructedAmount:
+      description: CurrencyInstructedAmount
+      example:
+        amount: 1234,56
+        swiftFieldTag: SWIFT
+      properties:
+        swiftFieldTag:
+          description: SwiftFieldTag
+          example: SWIFT
+          maxLength: 5
+          type: string
+        amount:
+          description: Amount
+          example: 1234,56
+          maxLength: 18
           type: string
     CoverPayment:
       description: CoverPayment
@@ -3342,6 +3333,7 @@ components:
           country: US
           townName: Any Town
           addressType: ADDR
+          addressLineOne: AddressLineOne
           addressLineFive: AddressLineFive
           subDepartment: Service
           addressLineSix: AddressLineSix
@@ -3351,7 +3343,6 @@ components:
           countrySubDivisionState: PA
           name: Wade Arnold
           buildingNumber: 1A
-          addressLine1: AddressLineOne
           postCode: "19465"
           department: Buildings
           addressLineThree: AddressLineThree
@@ -3385,6 +3376,7 @@ components:
           country: US
           townName: Any Town
           addressType: ADDR
+          addressLineOne: AddressLineOne
           addressLineFive: AddressLineFive
           subDepartment: Service
           addressLineSix: AddressLineSix
@@ -3394,7 +3386,6 @@ components:
           countrySubDivisionState: PA
           name: Wade Arnold
           buildingNumber: 1A
-          addressLine1: AddressLineOne
           postCode: "19465"
           department: Buildings
           addressLineThree: AddressLineThree
@@ -3496,6 +3487,7 @@ components:
           country: US
           townName: Any Town
           addressType: ADDR
+          addressLineOne: AddressLineOne
           addressLineFive: AddressLineFive
           subDepartment: Service
           addressLineSix: AddressLineSix
@@ -3505,7 +3497,6 @@ components:
           countrySubDivisionState: PA
           name: Wade Arnold
           buildingNumber: 1A
-          addressLine1: AddressLineOne
           postCode: "19465"
           department: Buildings
           addressLineThree: AddressLineThree
@@ -3569,6 +3560,7 @@ components:
         country: US
         townName: Any Town
         addressType: ADDR
+        addressLineOne: AddressLineOne
         addressLineFive: AddressLineFive
         subDepartment: Service
         addressLineSix: AddressLineSix
@@ -3578,7 +3570,6 @@ components:
         countrySubDivisionState: PA
         name: Wade Arnold
         buildingNumber: 1A
-        addressLine1: AddressLineOne
         postCode: "19465"
         department: Buildings
         addressLineThree: AddressLineThree
@@ -3632,7 +3623,7 @@ components:
           example: US
           maxLength: 2
           type: string
-        addressLine1:
+        addressLineOne:
           description: AddressLineOne
           example: AddressLineOne
           maxLength: 70

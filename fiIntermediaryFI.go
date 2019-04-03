@@ -11,7 +11,7 @@ type FIIntermediaryFI struct {
 	// tag
 	tag string
 	// Financial Institution
-	FIToFI FiToFi `json:"fiToFI,omitempty"`
+	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -32,13 +32,20 @@ func NewFIIntermediaryFI() FIIntermediaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ifi *FIIntermediaryFI) Parse(record string) {
+	ifi.tag = record[:6]
+	ifi.FIToFI.LineOne = ifi.parseStringField(record[6:36])
+	ifi.FIToFI.LineTwo = ifi.parseStringField(record[36:69])
+	ifi.FIToFI.LineThree = ifi.parseStringField(record[69:104])
+	ifi.FIToFI.LineFour = ifi.parseStringField(record[104:139])
+	ifi.FIToFI.LineFive = ifi.parseStringField(record[139:174])
+	ifi.FIToFI.LineSix = ifi.parseStringField(record[174:209])
 }
 
 // String writes FIIntermediaryFI
 func (ifi *FIIntermediaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(195)
+	buf.Grow(209)
 	buf.WriteString(ifi.tag)
 	return buf.String()
 }
@@ -48,6 +55,24 @@ func (ifi *FIIntermediaryFI) String() string {
 func (ifi *FIIntermediaryFI) Validate() error {
 	if err := ifi.fieldInclusion(); err != nil {
 		return err
+	}
+	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineOne); err!= nil {
+		return fieldError("LineOne", err, ifi.FIToFI.LineOne)
+	}
+	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineTwo); err!= nil {
+		return fieldError("LineTwo", err, ifi.FIToFI.LineTwo)
+	}
+	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineThree); err!= nil {
+		return fieldError("LineThree", err, ifi.FIToFI.LineThree)
+	}
+	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineFour); err!= nil {
+		return fieldError("LineFour", err, ifi.FIToFI.LineFour)
+	}
+	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineFive); err!= nil {
+		return fieldError("LineFive", err, ifi.FIToFI.LineFive)
+	}
+	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineSix); err!= nil {
+		return fieldError("LineSix", err, ifi.FIToFI.LineSix)
 	}
 	return nil
 }

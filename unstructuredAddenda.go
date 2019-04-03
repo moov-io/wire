@@ -34,13 +34,16 @@ func NewUnstructuredAddenda() UnstructuredAddenda {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ua *UnstructuredAddenda) Parse(record string) {
+	ua.tag = record[:6]
+	ua.AddendaLength = record[6:10]
+	ua.Addenda = record[10:9004]
 }
 
 // String writes UnstructuredAddenda
 func (ua *UnstructuredAddenda) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(8998)
+	buf.Grow(9004)
 	buf.WriteString(ua.tag)
 	return buf.String()
 }
@@ -50,6 +53,12 @@ func (ua *UnstructuredAddenda) String() string {
 func (ua *UnstructuredAddenda) Validate() error {
 	if err := ua.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := ua.isNumeric(ua.AddendaLength); err != nil {
+		return fieldError("AddendLength", err, ua.AddendaLength)
+	}
+	if err := ua.isAlphanumeric(ua.Addenda); err != nil {
+		return fieldError("Addenda", err, ua.Addenda)
 	}
 	return nil
 }

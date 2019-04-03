@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **TownName** | **string** | TownName | [optional] 
 **CountrySubDivisionState** | **string** | CountrySubDivisionState | [optional] 
 **Country** | **string** | Country | [optional] 
-**AddressLine1** | **string** | AddressLineOne | [optional] 
+**AddressLineOne** | **string** | AddressLineOne | [optional] 
 **AddressLineTwo** | **string** | AddressLineTwo | [optional] 
 **AddressLineThree** | **string** | AddressLineThree | [optional] 
 **AddressLineFour** | **string** | AddressLineFour | [optional] 

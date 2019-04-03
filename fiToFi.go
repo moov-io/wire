@@ -4,8 +4,8 @@
 
 package wire
 
-// FiToFi is financial institution to financial institution
-type FiToFi struct {
+// FIToFI is financial institution to financial institution
+type FIToFI struct {
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo

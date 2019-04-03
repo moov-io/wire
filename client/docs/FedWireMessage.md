@@ -43,7 +43,7 @@ Name | Type | Description | Notes
 **FiBeneficiaryAdvice** | [**Advice**](Advice.md) |  | [optional] 
 **FiPaymentMethodToBeneficiary** | [**FiPaymentMethodToBeneficiary**](FIPaymentMethodToBeneficiary.md) |  | [optional] 
 **FiAdditionalFIToFI** | [**AdditionalFiToFi**](AdditionalFIToFI.md) |  | [optional] 
-**CurrencyInstructedAmount** | [**CoverPayment**](CoverPayment.md) |  | [optional] 
+**CurrencyInstructedAmount** | [**CurrencyInstructedAmount**](CurrencyInstructedAmount.md) |  | [optional] 
 **OrderingCustomer** | [**CoverPayment**](CoverPayment.md) |  | [optional] 
 **OrderingInstitution** | [**CoverPayment**](CoverPayment.md) |  | [optional] 
 **IntermediaryInstitution** | [**CoverPayment**](CoverPayment.md) |  | [optional] 

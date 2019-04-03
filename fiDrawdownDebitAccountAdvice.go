@@ -21,39 +21,68 @@ type FIDrawdownDebitAccountAdvice struct {
 
 // NewFIDrawdownDebitAccountAdvice returns a new FIDrawdownDebitAccountAdvice
 func NewFIDrawdownDebitAccountAdvice() FIDrawdownDebitAccountAdvice {
-	ba := FIDrawdownDebitAccountAdvice{
+	debitDDAdvice := FIDrawdownDebitAccountAdvice{
 		tag: TagFIDrawdownDebitAccountAdvice,
 	}
-	return ba
+	return debitDDAdvice
 }
 
 // Parse takes the input string and parses the FIDrawdownDebitAccountAdvice values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ba *FIDrawdownDebitAccountAdvice) Parse(record string) {
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) {
+	debitDDAdvice.tag = record[:6]
+	debitDDAdvice.Advice.AdviceCode = debitDDAdvice.parseStringField(record[6:9])
+	debitDDAdvice.Advice.LineOne = debitDDAdvice.parseStringField(record[9:35])
+	debitDDAdvice.Advice.LineTwo = debitDDAdvice.parseStringField(record[35:68])
+	debitDDAdvice.Advice.LineThree = debitDDAdvice.parseStringField(record[68:101])
+	debitDDAdvice.Advice.LineFour = debitDDAdvice.parseStringField(record[101:134])
+	debitDDAdvice.Advice.LineFive = debitDDAdvice.parseStringField(record[134:167])
+	debitDDAdvice.Advice.LineSix = debitDDAdvice.parseStringField(record[167:200])
 }
 
 // String writes FIDrawdownDebitAccountAdvice
-func (ba *FIDrawdownDebitAccountAdvice) String() string {
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(194)
-	buf.WriteString(ba.tag)
+	buf.Grow(200)
+	buf.WriteString(debitDDAdvice.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on FIDrawdownDebitAccountAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (ba *FIDrawdownDebitAccountAdvice) Validate() error {
-	if err := ba.fieldInclusion(); err != nil {
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
+	if err := debitDDAdvice.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := debitDDAdvice.isAdviceCode(debitDDAdvice.Advice.AdviceCode); err != nil {
+		return fieldError("AdviceCode", err, debitDDAdvice.Advice.AdviceCode)
+	}
+	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineOne); err!= nil {
+		return fieldError("LineOne", err, debitDDAdvice.Advice.LineOne)
+	}
+	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineTwo); err!= nil {
+		return fieldError("LineTwo", err, debitDDAdvice.Advice.LineTwo)
+	}
+	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineThree); err!= nil {
+		return fieldError("LineThree", err, debitDDAdvice.Advice.LineThree)
+	}
+	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineFour); err!= nil {
+		return fieldError("LineFour", err, debitDDAdvice.Advice.LineFour)
+	}
+	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineFive); err!= nil {
+		return fieldError("LineFive", err, debitDDAdvice.Advice.LineFive)
+	}
+	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineSix); err!= nil {
+		return fieldError("LineSix", err, debitDDAdvice.Advice.LineSix)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ba *FIDrawdownDebitAccountAdvice) fieldInclusion() error {
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) fieldInclusion() error {
 	return nil
 }

@@ -11,7 +11,7 @@ type FIBeneficiary struct {
 	// tag
 	tag string
 	// Financial Institution
-	FIToFI FiToFi `json:"fiToFI,omitempty"`
+	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -21,39 +21,64 @@ type FIBeneficiary struct {
 
 // NewFIBeneficiary returns a new FIBeneficiary
 func NewFIBeneficiary() FIBeneficiary {
-	b := FIBeneficiary{
+	fib := FIBeneficiary{
 		tag: TagFIBeneficiary,
 	}
-	return b
+	return fib
 }
 
 // Parse takes the input string and parses the FIBeneficiary values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (b *FIBeneficiary) Parse(record string) {
+func (fib *FIBeneficiary) Parse(record string) {
+	fib.tag = record[:6]
+	fib.FIToFI.LineOne = fib.parseStringField(record[6:36])
+	fib.FIToFI.LineTwo = fib.parseStringField(record[36:69])
+	fib.FIToFI.LineThree = fib.parseStringField(record[69:104])
+	fib.FIToFI.LineFour = fib.parseStringField(record[104:139])
+	fib.FIToFI.LineFive = fib.parseStringField(record[139:174])
+	fib.FIToFI.LineSix = fib.parseStringField(record[174:209])
 }
 
 // String writes FIBeneficiary
-func (b *FIBeneficiary) String() string {
+func (fib *FIBeneficiary) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(195)
-	buf.WriteString(b.tag)
+	buf.Grow(209)
+	buf.WriteString(fib.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on FIBeneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (b *FIBeneficiary) Validate() error {
-	if err := b.fieldInclusion(); err != nil {
+func (fib *FIBeneficiary) Validate() error {
+	if err := fib.fieldInclusion(); err != nil {
 		return err
+	}
+	if err:= fib.isAlphanumeric(fib.FIToFI.LineOne); err!= nil {
+		return fieldError("LineOne", err, fib.FIToFI.LineOne)
+	}
+	if err:= fib.isAlphanumeric(fib.FIToFI.LineTwo); err!= nil {
+		return fieldError("LineTwo", err, fib.FIToFI.LineTwo)
+	}
+	if err:= fib.isAlphanumeric(fib.FIToFI.LineThree); err!= nil {
+		return fieldError("LineThree", err, fib.FIToFI.LineThree)
+	}
+	if err:= fib.isAlphanumeric(fib.FIToFI.LineFour); err!= nil {
+		return fieldError("LineFour", err, fib.FIToFI.LineFour)
+	}
+	if err:= fib.isAlphanumeric(fib.FIToFI.LineFive); err!= nil {
+		return fieldError("LineFive", err, fib.FIToFI.LineFive)
+	}
+	if err:= fib.isAlphanumeric(fib.FIToFI.LineSix); err!= nil {
+		return fieldError("LineSix", err, fib.FIToFI.LineSix)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (b *FIBeneficiary) fieldInclusion() error {
+func (fib *FIBeneficiary) fieldInclusion() error {
 	return nil
 }

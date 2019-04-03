@@ -206,6 +206,33 @@ func (v *validator) isIdentificationCode(code string) error {
 	return ErrIdentificationCode
 }
 
+func (v *validator) isAdviceCode(code string) error {
+	switch code {
+	case
+		AdviceCodeHold,
+		AdviceCodeLetter,
+		AdviceCodePhone,
+		AdviceCodeTelex,
+		AdviceCodeWire:
+		return nil
+	}
+	return ErrAdviceCode
+}
+
+func (v *validator) isAddressType(code string) error {
+	switch code {
+	case
+		CompletePostalAddress,
+		HomeAddress,
+		BusinessAddress,
+		MailAddress,
+		DeliveryAddress,
+		PostOfficeBox:
+		return nil
+	}
+	return ErrAddressType
+}
+
 // isCentury validates a 2 digit century 20-29
 func (v *validator) isCentury(s string) error {
 	if s < "20" || s > "29" {

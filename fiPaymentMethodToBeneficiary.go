@@ -13,7 +13,7 @@ type FIPaymentMethodToBeneficiary struct {
 	// PaymentMethod is payment method
 	PaymentMethod string `json:"paymentMethod,omitempty"`
 	// Additional is additional information
-	Additional string `json:"Additional,omitempty"`
+	AdditionalInformation string `json:"Additional,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -23,39 +23,52 @@ type FIPaymentMethodToBeneficiary struct {
 
 // NewFIPaymentMethodToBeneficiary returns a new FIPaymentMethodToBeneficiary
 func NewFIPaymentMethodToBeneficiary() FIPaymentMethodToBeneficiary {
-	b := FIPaymentMethodToBeneficiary{
+	pm := FIPaymentMethodToBeneficiary{
 		tag: TagFIPaymentMethodToBeneficiary,
+		PaymentMethod: "CHECK",
 	}
-	return b
+	return pm
 }
 
 // Parse takes the input string and parses the FIPaymentMethodToBeneficiary values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (b *FIPaymentMethodToBeneficiary) Parse(record string) {
+func (pm *FIPaymentMethodToBeneficiary) Parse(record string) {
+	pm.tag = record[:6]
+	pm.PaymentMethod = pm.parseStringField(record[6:11])
+	pm.AdditionalInformation = pm.parseStringField(record[11:41])
+
 }
 
 // String writes FIPaymentMethodToBeneficiary
-func (b *FIPaymentMethodToBeneficiary) String() string {
+func (pm *FIPaymentMethodToBeneficiary) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(35)
-	buf.WriteString(b.tag)
+	buf.Grow(41)
+	buf.WriteString(pm.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on FIPaymentMethodToBeneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (b *FIPaymentMethodToBeneficiary) Validate() error {
-	if err := b.fieldInclusion(); err != nil {
+func (pm *FIPaymentMethodToBeneficiary) Validate() error {
+	if err := pm.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := pm.isAlphanumeric(pm.AdditionalInformation); err!= nil {
+		return fieldError("AdditionalInformation", err, pm.AdditionalInformation)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (b *FIPaymentMethodToBeneficiary) fieldInclusion() error {
+func (pm *FIPaymentMethodToBeneficiary) fieldInclusion() error {
+
+	if pm.PaymentMethod == "" {
+		return fieldError("PaymentMethod", ErrFieldInclusion, pm.PaymentMethod)
+	}
+
 	return nil
 }

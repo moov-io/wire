@@ -56,6 +56,7 @@ Class | Method | HTTP request | Description
  - [Charges](docs/Charges.md)
  - [CoverPayment](docs/CoverPayment.md)
  - [CreateFile](docs/CreateFile.md)
+ - [CurrencyInstructedAmount](docs/CurrencyInstructedAmount.md)
  - [DateMmdd](docs/DateMmdd.md)
  - [DateRemittanceDocument](docs/DateRemittanceDocument.md)
  - [Error](docs/Error.md)

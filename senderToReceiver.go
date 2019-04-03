@@ -32,13 +32,21 @@ func NewSenderToReceiver() SenderToReceiver {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sr *SenderToReceiver) Parse(record string) {
+	sr.tag = record[:6]
+	sr.CoverPayment.SwiftFieldTag = sr.parseStringField(record[6:11])
+	sr.CoverPayment.SwiftLineOne = sr.parseStringField(record[11:46])
+	sr.CoverPayment.SwiftLineTwo = sr.parseStringField(record[46:81])
+	sr.CoverPayment.SwiftLineThree = sr.parseStringField(record[81:116])
+	sr.CoverPayment.SwiftLineFour = sr.parseStringField(record[116:151])
+	sr.CoverPayment.SwiftLineFive = sr.parseStringField(record[151:186])
+	sr.CoverPayment.SwiftLineSix = sr.parseStringField(record[186:221])
 }
 
 // String writes SenderToReceiver
 func (sr *SenderToReceiver) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(215)
+	buf.Grow(221)
 	buf.WriteString(sr.tag)
 	return buf.String()
 }
@@ -48,6 +56,27 @@ func (sr *SenderToReceiver) String() string {
 func (sr *SenderToReceiver) Validate() error {
 	if err := sr.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftFieldTag); err != nil {
+		return fieldError("SwiftFieldTag", err, sr.CoverPayment.SwiftFieldTag)
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineOne); err != nil {
+		return fieldError("SwiftLineOne", err, sr.CoverPayment.SwiftLineOne)
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineTwo); err != nil {
+		return fieldError("SwiftLineTwo", err, sr.CoverPayment.SwiftLineTwo)
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineThree); err != nil {
+		return fieldError("SwiftLineThree", err, sr.CoverPayment.SwiftLineThree)
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineFour); err != nil {
+		return fieldError("SwiftLineFour", err, sr.CoverPayment.SwiftLineFour)
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineFive); err != nil {
+		return fieldError("SwiftLineFive", err, sr.CoverPayment.SwiftLineFive)
+	}
+	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineSix); err != nil {
+		return fieldError("SwiftLineSix", err, sr.CoverPayment.SwiftLineSix)
 	}
 	return nil
 }

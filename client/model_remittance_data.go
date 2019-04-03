@@ -30,7 +30,7 @@ type RemittanceData struct {
 	// Country
 	Country string `json:"country,omitempty"`
 	// AddressLineOne
-	AddressLine1 string `json:"addressLine1,omitempty"`
+	AddressLineOne string `json:"addressLineOne,omitempty"`
 	// AddressLineTwo
 	AddressLineTwo string `json:"addressLineTwo,omitempty"`
 	// AddressLineThree

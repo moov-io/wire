@@ -70,8 +70,20 @@ var (
 
 	// Beneficiary {4000}
 
-	// ErrIdentificationCode is returned for an invalid Identification Code
-	ErrIdentificationCode = errors.New("is an invalid Identification Code")
+	// ErrIdentificationCode is returned for an invalid identification code
+	ErrIdentificationCode = errors.New("is an invalid identification code")
+
+	// ErrAdviceCode is returned for an invalid advice code
+	ErrAdviceCode = errors.New("is an invalid advice code")
+
+	// related Remittance Information {8250}
+
+	// ErrRemittanceLocationMethod is returned for an remittance location method
+	ErrRemittanceLocationMethod = errors.New("is an invalid remittance location method")
+
+	// ErrAddressType is returned for an invalid address type
+	ErrAddressType = errors.New("is an invalid address type")
+
 )
 
 // FieldError is returned for errors at a field level in a tag

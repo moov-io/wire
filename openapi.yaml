@@ -340,7 +340,7 @@ components:
           $ref: '#/components/schemas/AdditionalFIToFI'
           description: FIAdditionalFIToFI {6500}
         currencyInstructedAmount:
-          $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CurrencyInstructedAmount'
           description: CurrencyInstructedAmount {7033}
         orderingCustomer:
           $ref: '#/components/schemas/CoverPayment'
@@ -981,9 +981,9 @@ components:
           enum:
             - CHECK
           example: 'CHECK'
-        Additional:
+        AdditionalInformation:
           type: string
-          maxLength: 35
+          maxLength: 30
           example: "For goods and services"
     AdditionalFIToFI:
       properties:
@@ -1017,6 +1017,19 @@ components:
           maxLength: 35
           description: LineSix
           example: 'Line Six'
+    CurrencyInstructedAmount:
+      description: CurrencyInstructedAmount
+      properties:
+        swiftFieldTag:
+          type: string
+          maxLength: 5
+          description: SwiftFieldTag
+          example: 'SWIFT'
+        amount:
+          type: string
+          maxLength: 18
+          description: Amount
+          example: 1234,56
     CoverPayment:
       description: CoverPayment
       properties:
@@ -1286,7 +1299,7 @@ components:
           maxLength: 2
           description: Country
           example: 'US'
-        addressLine1:
+        addressLineOne:
           type: string
           maxLength: 70
           description: AddressLineOne

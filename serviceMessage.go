@@ -54,13 +54,26 @@ func NewServiceMessage() ServiceMessage {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sm *ServiceMessage) Parse(record string) {
+	sm.tag = record[:6]
+	sm.LineOne = sm.parseStringField(record[6:41])
+	sm.LineTwo = sm.parseStringField(record[41:76])
+	sm.LineThree = sm.parseStringField(record[76:111])
+	sm.LineFour = sm.parseStringField(record[111:146])
+	sm.LineFive = sm.parseStringField(record[146:181])
+	sm.LineSix = sm.parseStringField(record[181:216])
+	sm.LineSeven = sm.parseStringField(record[216:251])
+	sm.LineEight = sm.parseStringField(record[251:286])
+	sm.LineNine = sm.parseStringField(record[286:321])
+	sm.LineTen = sm.parseStringField(record[321:356])
+	sm.LineEleven = sm.parseStringField(record[356:391])
+	sm.LineTwelve = sm.parseStringField(record[391:426])
 }
 
 // String writes ServiceMessage
 func (sm *ServiceMessage) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(420)
+	buf.Grow(426)
 	buf.WriteString(sm.tag)
 	return buf.String()
 }
@@ -70,6 +83,42 @@ func (sm *ServiceMessage) String() string {
 func (sm *ServiceMessage) Validate() error {
 	if err := sm.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := sm.isAlphanumeric(sm.LineOne); err != nil {
+		return fieldError("LineOne", err, sm.LineOne)
+	}
+	if err := sm.isAlphanumeric(sm.LineTwo); err != nil {
+		return fieldError("LineTwo", err, sm.LineTwo)
+	}
+	if err := sm.isAlphanumeric(sm.LineThree); err != nil {
+		return fieldError("LineThree", err, sm.LineThree)
+	}
+	if err := sm.isAlphanumeric(sm.LineFour); err != nil {
+		return fieldError("LineFour", err, sm.LineFour)
+	}
+	if err := sm.isAlphanumeric(sm.LineFive); err != nil {
+		return fieldError("LineFive", err, sm.LineFive)
+	}
+	if err := sm.isAlphanumeric(sm.LineSix); err != nil {
+		return fieldError("LineSix", err, sm.LineSix)
+	}
+	if err := sm.isAlphanumeric(sm.LineSeven); err != nil {
+		return fieldError("LineSeven", err, sm.LineSeven)
+	}
+	if err := sm.isAlphanumeric(sm.LineEight); err != nil {
+		return fieldError("LineEight", err, sm.LineEight)
+	}
+	if err := sm.isAlphanumeric(sm.LineNine); err != nil {
+		return fieldError("LineNine", err, sm.LineNine)
+	}
+	if err := sm.isAlphanumeric(sm.LineTen); err != nil {
+		return fieldError("LineTen", err, sm.LineTen)
+	}
+	if err := sm.isAlphanumeric(sm.LineEleven); err != nil {
+		return fieldError("LineEleven", err, sm.LineEleven)
+	}
+	if err := sm.isAlphanumeric(sm.LineTwelve); err != nil {
+		return fieldError("LineTwelve", err, sm.LineTwelve)
 	}
 	return nil
 }

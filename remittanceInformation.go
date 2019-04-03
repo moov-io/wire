@@ -32,13 +32,19 @@ func NewRemittanceInformation() RemittanceInformation {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ri *RemittanceInformation) Parse(record string) {
+	ri.tag = record[:6]
+	ri.CoverPayment.SwiftFieldTag = ri.parseStringField(record[6:11])
+	ri.CoverPayment.SwiftLineOne = ri.parseStringField(record[11:46])
+	ri.CoverPayment.SwiftLineTwo = ri.parseStringField(record[46:81])
+	ri.CoverPayment.SwiftLineThree = ri.parseStringField(record[81:116])
+	ri.CoverPayment.SwiftLineFour = ri.parseStringField(record[116:151])
 }
 
 // String writes RemittanceInformation
 func (ri *RemittanceInformation) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(145)
+	buf.Grow(151)
 	buf.WriteString(ri.tag)
 	return buf.String()
 }
@@ -48,6 +54,21 @@ func (ri *RemittanceInformation) String() string {
 func (ri *RemittanceInformation) Validate() error {
 	if err := ri.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftFieldTag); err != nil {
+		return fieldError("SwiftFieldTag", err, ri.CoverPayment.SwiftFieldTag)
+	}
+	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftLineOne); err != nil {
+		return fieldError("SwiftLineOne", err, ri.CoverPayment.SwiftLineOne)
+	}
+	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftLineTwo); err != nil {
+		return fieldError("SwiftLineTwo", err, ri.CoverPayment.SwiftLineTwo)
+	}
+	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftLineThree); err != nil {
+		return fieldError("SwiftLineThree", err, ri.CoverPayment.SwiftLineThree)
+	}
+	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftLineFour); err != nil {
+		return fieldError("SwiftLineFour", err, ri.CoverPayment.SwiftLineFour)
 	}
 	return nil
 }
