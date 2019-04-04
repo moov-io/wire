@@ -1193,6 +1193,11 @@ components:
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
           description: RemittanceData
+        countryOfResidence:
+          type: string
+          maxLength: 2
+          description: CountryOfResidence
+          example: 'US'
         contactName:
           type: string
           maxLength: 140
@@ -1444,7 +1449,7 @@ components:
       properties:
         documentTypeCode:
           $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
-          description:
+          description: DocumentTypeCode
         proprietaryDocumentTypeCode:
           type: string
           maxLength: 35

@@ -36,13 +36,17 @@ func NewRemittanceFreeText() RemittanceFreeText {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rft *RemittanceFreeText) Parse(record string) {
+	rft.tag = record[:6]
+	rft.LineOne = rft.parseStringField(record[6:146])
+	rft.LineTwo = rft.parseStringField(record[146:286])
+	rft.LineThree = rft.parseStringField(record[286:426])
 }
 
 // String writes RemittanceFreeText
 func (rft *RemittanceFreeText) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(420)
+	buf.Grow(426)
 	buf.WriteString(rft.tag)
 	return buf.String()
 }

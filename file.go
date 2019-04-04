@@ -1,3 +1,7 @@
+// Copyright 2019 The ACH Authors
+// Use of this source code is governed by an Apache License
+// license that can be found in the LICENSE file.
+
 package wire
 
 // ToDo:  Do we want tag to be exportable
@@ -6,7 +10,7 @@ package wire
 // File contains the structures of a parsed WIRE File.
 type File struct {
 	ID             string         `json:"id"`
-	FedWireMessage FedWireMessage `json:"fedWireMessage"`
+	FedWireMessages []FedWireMessage `json:"fedWireMessage"`
 }
 
 // Create will tabulate and assemble an WIRE file into a valid state.

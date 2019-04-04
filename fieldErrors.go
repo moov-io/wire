@@ -78,11 +78,20 @@ var (
 
 	// related Remittance Information {8250}
 
-	// ErrRemittanceLocationMethod is returned for an remittance location method
+	// ErrRemittanceLocationMethod is returned for an invalid remittance location method
 	ErrRemittanceLocationMethod = errors.New("is an invalid remittance location method")
 
 	// ErrAddressType is returned for an invalid address type
 	ErrAddressType = errors.New("is an invalid address type")
+
+	// ErrIdentificationType is returned for an invalid remittance Identification Typ
+	ErrIdentificationType = errors.New("is an invalid remittance identification type")
+
+	// ErrOrganizationIdentificationCode is returned for an invalid organization identification code
+	ErrOrganizationIdentificationCode = errors.New("is an invalid organization identification code")
+
+	// ErrPrivateIdentificationCode is returned for an invalid private identification code
+	ErrPrivateIdentificationCode = errors.New("is an invalid private identification code")
 
 )
 

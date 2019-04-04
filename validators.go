@@ -233,6 +233,63 @@ func (v *validator) isAddressType(code string) error {
 	return ErrAddressType
 }
 
+func (v *validator) isRemittanceLocationMethod(code string) error {
+	switch code {
+	case
+		RLMElectronicDataExchange,
+			RLMEmail,
+			RLMFax,
+			RLMPostalService,
+			RLMSMSM,
+			RLMURI:
+		return nil
+	}
+	return ErrRemittanceLocationMethod
+}
+
+func (v *validator) isIdentificationType(code string) error {
+	switch code {
+	case
+		OrganizationID,
+		PrivateID:
+		return nil
+	}
+	return ErrIdentificationType
+}
+
+func (v *validator) isOrganizationIdentificationCode(code string) error {
+	switch code {
+	case
+		OICBankPartyIdentification,
+		OICCustomerNumber,
+		OICDataUniversalNumberSystem,
+		OICEmployerIdentificationNumber,
+		OICGlobalLocationNumber,
+		OICProprietaryIdentificationNumber,
+		OICSWIFTBICORBEI,
+		OICTaxIdentificationNumber:
+		return nil
+	}
+	return ErrOrganizationIdentificationCode
+}
+
+func (v *validator) isPrivateIdentificationCode(code string) error {
+	switch code {
+	case
+		PICAlienRegistrationNumber,
+		PICPassportNumber,
+		PICCustomerNumber,
+		PICDateBirthPlace,
+		PICEmployeeIdentificationNumber,
+		PICNationalIdentityNumber,
+		PICProprietaryIdentificationNumber,
+		PICSocialSecurityNumber,
+		PICTaxIdentificationNumber:
+		return nil
+	}
+	return ErrPrivateIdentificationCode
+}
+
 // isCentury validates a 2 digit century 20-29
 func (v *validator) isCentury(s string) error {
 	if s < "20" || s > "29" {

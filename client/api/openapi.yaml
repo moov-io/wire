@@ -558,9 +558,7 @@ components:
             lineThree: 7/111-22-3456
             partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -581,10 +579,13 @@ components:
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
+            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
             identificationNumberIssuer: Identification Number Issuer
@@ -957,9 +958,7 @@ components:
             lineThree: 7/111-22-3456
             partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -980,10 +979,13 @@ components:
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
+            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
             identificationNumberIssuer: Identification Number Issuer
@@ -1369,9 +1371,7 @@ components:
             lineThree: 7/111-22-3456
             partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -1392,10 +1392,13 @@ components:
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
+            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
             identificationNumberIssuer: Identification Number Issuer
@@ -1768,9 +1771,7 @@ components:
             lineThree: 7/111-22-3456
             partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -1791,10 +1792,13 @@ components:
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
+            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
             identificationNumberIssuer: Identification Number Issuer
@@ -2185,9 +2189,7 @@ components:
           lineThree: 7/111-22-3456
           partyIdentifier: /123456
         remittanceOriginator:
-          contactMobileNumber: 555.555.5555
           identificationCode: BANK
-          dateAndBirthPlace: 03062013 Chester
           remittanceData:
             country: US
             townName: Any Town
@@ -2208,10 +2210,13 @@ components:
             addressLineFour: AddressLineFour
             addressLineSeven: AddressLineSeven
           contactName: Wade Arnold
+          identificationType: OI
+          countryOfResidence: US
+          contactMobileNumber: 555.555.5555
+          dateAndBirthPlace: 03062013 Chester
           contactFaxNumber: 555.555.5555
           identificationNumber: "192827828"
           contactOther: Contact Other
-          identificationType: OI
           contactPhoneNumber: 555.555.5555
           contactElectronicAddress: https://moov.io
           identificationNumberIssuer: Identification Number Issuer
@@ -3369,9 +3374,7 @@ components:
     RemittanceOriginator:
       description: RemittanceOriginator
       example:
-        contactMobileNumber: 555.555.5555
         identificationCode: BANK
-        dateAndBirthPlace: 03062013 Chester
         remittanceData:
           country: US
           townName: Any Town
@@ -3392,10 +3395,13 @@ components:
           addressLineFour: AddressLineFour
           addressLineSeven: AddressLineSeven
         contactName: Wade Arnold
+        identificationType: OI
+        countryOfResidence: US
+        contactMobileNumber: 555.555.5555
+        dateAndBirthPlace: 03062013 Chester
         contactFaxNumber: 555.555.5555
         identificationNumber: "192827828"
         contactOther: Contact Other
-        identificationType: OI
         contactPhoneNumber: 555.555.5555
         contactElectronicAddress: https://moov.io
         identificationNumberIssuer: Identification Number Issuer
@@ -3449,6 +3455,11 @@ components:
           type: string
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
+        countryOfResidence:
+          description: CountryOfResidence
+          example: US
+          maxLength: 2
+          type: string
         contactName:
           description: ContactName
           example: Wade Arnold

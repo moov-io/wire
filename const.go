@@ -254,8 +254,9 @@ const (
 	OtherIdentification = "9"
 
 	// Drawdown Debit Account Advice Information
+
 	// Advice Codes
-	//
+
 	// AdviceCodeHold is an advice code for Hold
 	AdviceCodeHold = "HLD"
 	// AdviceCodeLetter is an advice code for LTR
@@ -266,6 +267,22 @@ const (
 	AdviceCodeTelex = "TLX"
 	// AdviceCodeWire is an advice code for Wire
 	AdviceCodeWire = "WRE"
+
+	// RemittanceLocationMethod
+
+	// RLMElectronicDataExchange is Remittance Location Method Electronic Data Exchange
+	RLMElectronicDataExchange = "EDIC"
+	// RLMEmail is Remittance Location Method Email
+	RLMEmail = "EMAL"
+	// RLMFax is Remittance Location Method Fax
+	RLMFax = "FAXI"
+	// RLMPostalService is Remittance Location Method Postal Service
+	RLMPostalService = "POST"
+	// RLMSMSM is Remittance Location Method Short Message Service (text)
+	RLMSMSM = "SMSM"
+	// RLMURI is Remittance Location Method Uniform Resource Identifier
+	RLMURI = "URID"
+	// is Remittance Location Method
 
 	// AddressType
 
@@ -281,4 +298,52 @@ const (
 	DeliveryAddress = "DLVY"
 	// PostOfficeBox is Post Office Box
 	PostOfficeBox = "PBOX"
+
+	// Remittance IdentificationType
+
+	// OrganizationID is Organization ID
+	OrganizationID = "OI"
+	// PrivateID is Private ID
+	PrivateID = "PI"
+
+	// Remittance Organization Identification Codes (OIC)
+
+	// OICBankPartyIdentification is Bank Party Identification
+	OICBankPartyIdentification = "BANK"
+	// OICCustomerNumber is Customer Number
+	OICCustomerNumber = "CUST"
+	// OICDataUniversalNumberSystem (Dun & Bradstreet) is Data Universal Number System
+	OICDataUniversalNumberSystem = "DUNS"
+	// OICEmployerIdentificationNumber is Employee Identification Number
+	OICEmployerIdentificationNumber = "EMPL"
+	// OICGlobalLocationNumber is Global Location Number
+	OICGlobalLocationNumber = "GS1G"
+	// OICProprietaryIdentificationNumber is Proprietary Identification Number
+	OICProprietaryIdentificationNumber = "PROP"
+	// OICSWIFTBICORBEI is SWIFT BIC or BEI
+	OICSWIFTBICORBEI = "SWBB"
+	// OICTaxIdentificationNumber is Tax Identification Number
+	OICTaxIdentificationNumber = "TXID"
+
+
+	// Remittance Private Identification Codes (PIC)
+
+	// PICAlienRegistrationNumber is Alien Registration Number
+	PICAlienRegistrationNumber = "ARNU"
+	// PICPassportNumber is Passport Number
+	PICPassportNumber = "CCPT"
+	// PICCustomerNumber is Customer Number
+	PICCustomerNumber = "CUST"
+	// PICDateBirthPlace is Date Birth Place
+	PICDateBirthPlace = "DPOB"
+	// PICEmployeeIdentificationNumber is Employer Identification Number
+	PICEmployeeIdentificationNumber = "EMPL"
+	// PICNationalIdentityNumber is National Identity Number
+	PICNationalIdentityNumber = "NIDN"
+	// PICProprietaryIdentificationNumber is Proprietary Identification Number
+	PICProprietaryIdentificationNumber = "PROP"
+	// PICSocialSecurityNumber is Social Security Number
+	PICSocialSecurityNumber = "SOSE"
+	// PICTaxIdentificationNumber is Tax Identification Number
+	PICTaxIdentificationNumber = "TXID"
 )

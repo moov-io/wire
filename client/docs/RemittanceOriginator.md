@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **IdentificationNumberIssuer** | **string** | IdentificationNumberIssuer | [optional] 
 **DateAndBirthPlace** | **string** | DateAndBirthPlace | [optional] 
 **RemittanceData** | [**RemittanceData**](RemittanceData.md) |  | [optional] 
+**CountryOfResidence** | **string** | CountryOfResidence | [optional] 
 **ContactName** | **string** | ContactName | [optional] 
 **ContactPhoneNumber** | **string** | ContactPhoneNumber | [optional] 
 **ContactMobileNumber** | **string** | ContactMobileNumber | [optional] 

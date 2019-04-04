@@ -80,16 +80,20 @@ func (rr *RelatedRemittance) Validate() error {
 	if err := rr.isAlphanumeric(rr.RemittanceIdentification); err != nil {
 		return fieldError("RemittanceIdentification", err, rr.RemittanceIdentification)
 	}
-
+	if err := rr.isRemittanceLocationMethod(rr.RemittanceLocationMethod); err != nil {
+		return fieldError("RemittanceLocationMethod", err, rr.RemittanceLocationMethod)
+	}
 	if err := rr.isAlphanumeric(rr.RemittanceLocationElectronicAddress); err != nil {
 		return fieldError("RemittanceLocationElectronicAddress", err, rr.RemittanceLocationElectronicAddress)
 	}
 	if err := rr.isAlphanumeric(rr.RemittanceData.Name); err != nil {
 		return fieldError("Name", err, rr.RemittanceData.Name)
 	}
-
+	if err := rr.isAddressType(rr.RemittanceData.AddressType); err != nil {
+		return fieldError("AddressType", err, rr.RemittanceData.AddressType)
+	}
 	if err := rr.isAlphanumeric(rr.RemittanceData.Department); err != nil {
-		return fieldError("", err, rr.RemittanceData.Department )
+		return fieldError("Department", err, rr.RemittanceData.Department)
 	}
 	if err := rr.isAlphanumeric(rr.RemittanceData.SubDepartment); err != nil {
 		return fieldError("SubDepartment", err, rr.RemittanceData.SubDepartment)
