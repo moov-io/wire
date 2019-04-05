@@ -21,39 +21,48 @@ type AmountNegotiatedDiscount struct {
 
 // NewAmountNegotiatedDiscount returns a new AmountNegotiatedDiscount
 func NewAmountNegotiatedDiscount() AmountNegotiatedDiscount {
-	and := AmountNegotiatedDiscount{
+	nd := AmountNegotiatedDiscount{
 		tag: TagAmountNegotiatedDiscount,
 	}
-	return and
+	return nd
 }
 
 // Parse takes the input string and parses the AmountNegotiatedDiscount values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (and *AmountNegotiatedDiscount) Parse(record string) {
+func (nd *AmountNegotiatedDiscount) Parse(record string) {
+	nd.tag = record[:6]
+	nd.RemittanceAmount.CurrencyCode = nd.parseStringField(record[6:9])
+	nd.RemittanceAmount.Amount = nd.parseStringField(record[9:28])
 }
 
 // String writes AmountNegotiatedDiscount
-func (and *AmountNegotiatedDiscount) String() string {
+func (nd *AmountNegotiatedDiscount) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(22)
-	buf.WriteString(and.tag)
+	buf.Grow(28)
+	buf.WriteString(nd.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on AmountNegotiatedDiscount and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (and *AmountNegotiatedDiscount) Validate() error {
-	if err := and.fieldInclusion(); err != nil {
+func (nd *AmountNegotiatedDiscount) Validate() error {
+	if err := nd.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := nd.isCurrencyCode(nd.RemittanceAmount.CurrencyCode); err != nil {
+		return fieldError("CurrencyCode", err, nd.RemittanceAmount.CurrencyCode)
+	}
+	if err := nd.isAmount(nd.RemittanceAmount.Amount); err !=nil {
+		return fieldError("Amount", err, nd.RemittanceAmount.Amount)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (and *AmountNegotiatedDiscount) fieldInclusion() error {
+func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
 	return nil
 }

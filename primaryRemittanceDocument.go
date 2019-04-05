@@ -38,13 +38,18 @@ func NewPrimaryRemittanceDocument() PrimaryRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (prd *PrimaryRemittanceDocument) Parse(record string) {
+	prd.tag = record[:6]
+	prd.DocumentTypeCode = record[6:10]
+	prd.ProprietaryDocumentTypeCode = record[10:45]
+	prd.DocumentIdentificationNumber = record[45:80]
+	prd.Issuer = record[80:115]
 }
 
 // String writes PrimaryRemittanceDocument
 func (prd *PrimaryRemittanceDocument) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(109)
+	buf.Grow(115)
 	buf.WriteString(prd.tag)
 	return buf.String()
 }
@@ -54,6 +59,18 @@ func (prd *PrimaryRemittanceDocument) String() string {
 func (prd *PrimaryRemittanceDocument) Validate() error {
 	if err := prd.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := prd.isDocumentTypeCode(prd.DocumentTypeCode); err != nil {
+		return fieldError("DocumentTypeCode", err, prd.DocumentTypeCode)
+	}
+	if err := prd.isAlphanumeric(prd.ProprietaryDocumentTypeCode); err != nil {
+		return fieldError("ProprietaryDocumentTypeCode", err, prd.ProprietaryDocumentTypeCode)
+	}
+	if err := prd.isAlphanumeric(prd.DocumentIdentificationNumber); err != nil {
+		return fieldError("DocumentIdentificationNumber", err, prd.DocumentIdentificationNumber)
+	}
+	if err := prd.isAlphanumeric(prd.Issuer); err != nil {
+		return fieldError("Issuer", err, prd.Issuer)
 	}
 	return nil
 }

@@ -38,6 +38,12 @@ func NewAdjustment() Adjustment {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (adj *Adjustment) Parse(record string) {
+	adj.tag = record[:6]
+	adj.AdjustmentReasonCode = adj.parseStringField(record[6:8])
+	adj.CreditDebitIndicator = adj.parseStringField(record[8:12])
+	adj.RemittanceAmount.CurrencyCode = adj.parseStringField(record[12:15])
+	adj.RemittanceAmount.Amount = adj.parseStringField(record[15:34])
+	adj.AdditionalInfo = adj.parseStringField(record[34:174])
 }
 
 // String writes Adjustment
@@ -55,6 +61,19 @@ func (adj *Adjustment) Validate() error {
 	if err := adj.fieldInclusion(); err != nil {
 		return err
 	}
+	if err := adj.isAdjustmentReasonCode(adj.AdjustmentReasonCode); err != nil {
+		return fieldError("AdjustmentReasonCode", err, adj.AdjustmentReasonCode)
+	}
+	if err := adj.isCreditDebitIndicator(adj.CreditDebitIndicator); err != nil {
+		return fieldError("CreditDebitIndicator", err, adj.CreditDebitIndicator)
+	}
+	if err := adj.isCurrencyCode(adj.RemittanceAmount.CurrencyCode); err != nil {
+		return fieldError("CurrencyCode", err, adj.RemittanceAmount.CurrencyCode)
+	}
+	if err := adj.isAmount(adj.RemittanceAmount.Amount); err !=nil {
+		return fieldError("Amount", err, adj.RemittanceAmount.Amount)
+	}
+
 	return nil
 }
 

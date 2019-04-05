@@ -346,4 +346,75 @@ const (
 	PICSocialSecurityNumber = "SOSE"
 	// PICTaxIdentificationNumber is Tax Identification Number
 	PICTaxIdentificationNumber = "TXID"
+
+	// Document Type Code
+
+	// AccountsReceivableOpenItem is accounts receivable open item
+	AccountsReceivableOpenItem = "AROI"
+    // BillLadingShippingNotice is bill lading shipping notice
+	BillLadingShippingNotice = "BOLD"
+    // CommercialInvoice is commercial invoice
+	CommercialInvoice = "CINV"
+    // CommercialContract is commercial contract
+	CommercialContract = "CMCN"
+    // CreditNoteRelatedFinancialAdjustment is credit note related financial adjustment
+	CreditNoteRelatedFinancialAdjustment = "CNFA"
+    // CreditNote is credit note
+	CreditNote = "CREN"
+    // DebitNote is debit note
+	DebitNote = "DEBN"
+    // DispatchAdvice is dispatch advice
+	DispatchAdvice = "DISP"
+    // DebitNoteRelatedFinancialAdjustment is debit note related financial adjustment
+	DebitNoteRelatedFinancialAdjustment = "DNFA"
+    // HireInvoice is hire invoice
+	HireInvoice = "HIRI"
+    // MeteredServiceInvoice is metered service invoice
+	MeteredServiceInvoice = "MSIN"
+    // ProprietaryDocumentType is proprietary document type
+	ProprietaryDocumentType = "PROP"
+    // PurchaseOrder is Purchase Order
+	PurchaseOrder = "PUOR"
+    // SelfBilledInvoice is self billed invoice
+	SelfBilledInvoice = "SBIN"
+    // StatementAccount is Statement of account
+	StatementAccount = "SOAC"
+    // TradeServicesUtilityTransaction is trade services utility transaction
+	TradeServicesUtilityTransaction = "TSUT"
+    // Voucher is Voucher
+	Voucher = "VCHR"
+
+	// Adjustment Reason Code
+
+	// PricingError is pricing error
+	PricingError = "01"
+	// ExtensionError is extension error
+	ExtensionError = "03"
+	// ItemNotAcceptedDamaged is item not accepted damaged
+	ItemNotAcceptedDamaged = "04"
+	// ItemNotAcceptedQuality is item not accepted quality
+	ItemNotAcceptedQuality = "05"
+	// QuantityContested is quantity contested
+	QuantityContested = "06"
+	// IncorrectProduct is incorrect product
+	IncorrectProduct = "07"
+	// ReturnsDamaged is returns damaged
+	ReturnsDamaged = "11"
+	// ReturnsQuality is returns quality
+	ReturnsQuality = "12"
+	// ItemNotReceived is item not received
+	ItemNotReceived = "59"
+	// TotalOrderNotReceived is total order not received
+	TotalOrderNotReceived = "75"
+	// CreditAgreed is credit agreed
+	CreditAgreed = "81"
+	// CoveredCreditMemo is covered credit memo
+	CoveredCreditMemo = "CM"
+
+	// Debit / Credit Indicator
+
+    // CreditIndicator is a credit
+	CreditIndicator = "CRDT"
+	// DebitIndicator is a debit
+	DebitIndicator = "DBIT"
 )

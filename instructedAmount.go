@@ -10,6 +10,8 @@ import "strings"
 type InstructedAmount struct {
 	// tag
 	tag string
+	// ToDo:  create a CurrencyCodeAmount Type
+
 	// CurrencyCode
 	CurrencyCode string `json:"currencyCode,omitempty"`
 	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
@@ -55,8 +57,7 @@ func (ia *InstructedAmount) Validate() error {
 	if err := ia.fieldInclusion(); err != nil {
 		return err
 	}
-	// ToDo: Add CurrencyCode lookup
-	if err := ia.isAlphanumeric(ia.CurrencyCode); err != nil {
+	if err := ia.isCurrencyCode(ia.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, ia.CurrencyCode)
 	}
 	if err := ia.isAmount(ia.Amount); err != nil {

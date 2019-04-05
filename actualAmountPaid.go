@@ -11,7 +11,7 @@ type ActualAmountPaid struct {
 	// tag
 	tag string
 	// RemittanceAmount is remittance amounts
-	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
+	RemittanceAmount *RemittanceAmount `json:"remittanceAmount,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -32,13 +32,16 @@ func NewActualAmountPaid() ActualAmountPaid {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (aap *ActualAmountPaid) Parse(record string) {
+	aap.tag = record[:6]
+	aap.RemittanceAmount.CurrencyCode = aap.parseStringField(record[6:9])
+	aap.RemittanceAmount.Amount = aap.parseStringField(record[9:28])
 }
 
 // String writes ActualAmountPaid
 func (aap *ActualAmountPaid) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(22)
+	buf.Grow(28)
 	buf.WriteString(aap.tag)
 	return buf.String()
 }
@@ -48,6 +51,12 @@ func (aap *ActualAmountPaid) String() string {
 func (aap *ActualAmountPaid) Validate() error {
 	if err := aap.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := aap.isCurrencyCode(aap.RemittanceAmount.CurrencyCode); err != nil {
+		return fieldError("CurrencyCode", err, aap.RemittanceAmount.CurrencyCode)
+	}
+	if err := aap.isAmount(aap.RemittanceAmount.Amount); err !=nil {
+		return fieldError("Amount", err, aap.RemittanceAmount.Amount)
 	}
 	return nil
 }

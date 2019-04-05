@@ -76,7 +76,7 @@ var (
 	// ErrAdviceCode is returned for an invalid advice code
 	ErrAdviceCode = errors.New("is an invalid advice code")
 
-	// related Remittance Information {8250}
+	// Related Remittance Information {8250}
 
 	// ErrRemittanceLocationMethod is returned for an invalid remittance location method
 	ErrRemittanceLocationMethod = errors.New("is an invalid remittance location method")
@@ -93,6 +93,14 @@ var (
 	// ErrPrivateIdentificationCode is returned for an invalid private identification code
 	ErrPrivateIdentificationCode = errors.New("is an invalid private identification code")
 
+	// ErrDocumentTypeCode is returned for an invalid document type code
+	ErrDocumentTypeCode = errors.New("is an invalid document type code")
+
+	// ErrCreditDebitIndicator is returned for an invalid credit or debit indicator
+	ErrCreditDebitIndicator = errors.New("is an invalid credit or debit indicator")
+
+	// ErrAdjustmentReasonCode is returned for an invalid adjustment reason code
+	ErrAdjustmentReasonCode = errors.New("is an invalid adjustment reason code")
 )
 
 // FieldError is returned for errors at a field level in a tag

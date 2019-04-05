@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"regexp"
 	"unicode/utf8"
+
+	"golang.org/x/text/currency"
 )
 
 var (
@@ -288,6 +290,67 @@ func (v *validator) isPrivateIdentificationCode(code string) error {
 		return nil
 	}
 	return ErrPrivateIdentificationCode
+}
+
+func (v *validator) isDocumentTypeCode(code string) error {
+	switch code {
+	case
+		AccountsReceivableOpenItem,
+		BillLadingShippingNotice,
+		CommercialInvoice,
+		CommercialContract,
+		CreditNoteRelatedFinancialAdjustment,
+		CreditNote,
+		DebitNote,
+		DispatchAdvice,
+		DebitNoteRelatedFinancialAdjustment,
+		HireInvoice,
+		MeteredServiceInvoice,
+		ProprietaryDocumentType,
+		PurchaseOrder,
+		SelfBilledInvoice,
+		StatementAccount,
+		TradeServicesUtilityTransaction,
+		Voucher:
+		return nil
+	}
+	return ErrDocumentTypeCode
+}
+
+func (v *validator) isCreditDebitIndicator(code string) error {
+	switch code {
+	case
+		CreditIndicator,
+		DebitIndicator:
+		return nil
+	}
+	return ErrCreditDebitIndicator
+}
+
+func (v *validator) isAdjustmentReasonCode(code string) error {
+	switch code {
+	case
+		PricingError,
+		ExtensionError,
+		ItemNotAcceptedDamaged,
+		ItemNotAcceptedQuality,
+		QuantityContested,
+		IncorrectProduct,
+		ReturnsDamaged,
+		ReturnsQuality,
+		ItemNotReceived,
+		TotalOrderNotReceived,
+		CreditAgreed,
+		CoveredCreditMemo:
+		return nil
+	}
+	return ErrAdjustmentReasonCode
+}
+
+
+func (v *validator) isCurrencyCode(code string) error {
+	_, err := currency.ParseISO(code)
+	return err
 }
 
 // isCentury validates a 2 digit century 20-29

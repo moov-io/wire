@@ -32,13 +32,16 @@ func NewGrossAmountRemittanceDocument() GrossAmountRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (gard *GrossAmountRemittanceDocument) Parse(record string) {
+	gard.tag = record[:6]
+	gard.RemittanceAmount.CurrencyCode = gard.parseStringField(record[6:9])
+	gard.RemittanceAmount.Amount = gard.parseStringField(record[9:28])
 }
 
 // String writes GrossAmountRemittanceDocument
 func (gard *GrossAmountRemittanceDocument) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(22)
+	buf.Grow(28)
 	buf.WriteString(gard.tag)
 	return buf.String()
 }
@@ -48,6 +51,12 @@ func (gard *GrossAmountRemittanceDocument) String() string {
 func (gard *GrossAmountRemittanceDocument) Validate() error {
 	if err := gard.fieldInclusion(); err != nil {
 		return err
+	}
+	if err := gard.isCurrencyCode(gard.RemittanceAmount.CurrencyCode); err != nil {
+		return fieldError("CurrencyCode", err, gard.RemittanceAmount.CurrencyCode)
+	}
+	if err := gard.isAmount(gard.RemittanceAmount.Amount); err !=nil {
+		return fieldError("Amount", err, gard.RemittanceAmount.Amount)
 	}
 	return nil
 }
