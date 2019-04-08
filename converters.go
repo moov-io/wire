@@ -5,7 +5,9 @@
 package wire
 
 import (
+	"strconv"
 	"strings"
+	"time"
 )
 
 // converters handles golang to WIRE type Converters
@@ -16,7 +18,18 @@ func (c *converters) parseStringField(r string) (s string) {
 	return s
 }
 
-/*// alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.
+// formatYYYYMMDDDate takes a time.Time and returns a string of YYYYMMDD
+func (c *converters) formatYYYYMMDDDate(t time.Time) string {
+	return t.Format("20060102")
+}
+
+// parseYYYMMDDDate returns a time.Time when passed time as YYYYMMDD
+func (c *converters) parseYYYYMMDDDate(s string) time.Time {
+	t, _ := time.Parse("20060102", s)
+	return t
+}
+
+// alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.
 func (c *converters) alphaField(s string, max uint) string {
 	ln := uint(len(s))
 	if ln > max {
@@ -35,7 +48,7 @@ func (c *converters) numericField(n int, max uint) string {
 	}
 	s = strings.Repeat("0", int(max-ln)) + s
 	return s
-}*/
+}
 
 // numericStringField right-justified zero filled
 func (c *converters) numericStringField(s string, max uint) string {

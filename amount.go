@@ -41,6 +41,7 @@ func (a *Amount) String() string {
 	var buf strings.Builder
 	buf.Grow(18)
 	buf.WriteString(a.tag)
+	buf.WriteString(a.AmountField())
 	return buf.String()
 }
 

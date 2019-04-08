@@ -53,6 +53,7 @@ func (ss *SenderSupplied) String() string {
 	var buf strings.Builder
 	buf.Grow(18)
 	buf.WriteString(ss.tag)
+	buf.WriteString(ss.FormatVersionField())
 	return buf.String()
 }
 
@@ -84,4 +85,24 @@ func (ss *SenderSupplied) fieldInclusion() error {
 		return fieldError("UserRequestCorrelation", ErrFieldRequired, ss.UserRequestCorrelation)
 	}
 	return nil
+}
+
+// FormatVersionField gets a string of the FormatVersion field
+func (ss *SenderSupplied) FormatVersionField() string {
+	return ss.alphaField(ss.FormatVersion, 2)
+}
+
+// UserRequestCorrelationField gets a string of the UserRequestCorrelation field
+func (ss *SenderSupplied) UserRequestCorrelationField() string {
+	return ss.alphaField(ss.UserRequestCorrelation, 8)
+}
+
+// TestProductionCodeField gets a string of the TestProductionCoden field
+func (ss *SenderSupplied) TestProductionCodeField() string {
+	return ss.alphaField(ss.TestProductionCode, 1)
+}
+
+// MessageDuplicationCodeField gets a string of the MessageDuplicationCode field
+func (ss *SenderSupplied) MessageDuplicationCodeField() string {
+	return ss.alphaField(ss.MessageDuplicationCode, 1)
 }

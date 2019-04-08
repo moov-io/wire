@@ -47,6 +47,9 @@ func (imad *InputMessageAccountabilityData) String() string {
 	var buf strings.Builder
 	buf.Grow(22)
 	buf.WriteString(imad.tag)
+	buf.WriteString(imad.InputCycleDateField())
+	buf.WriteString(imad.InputSourceField())
+	buf.WriteString(imad.InputSequenceNumberField())
 	return buf.String()
 }
 
@@ -78,4 +81,19 @@ func (imad *InputMessageAccountabilityData) fieldInclusion() error {
 		return fieldError("InputSequenceNumber", ErrFieldRequired, imad.InputSequenceNumber)
 	}
 	return nil
+}
+
+// InputCycleDateField gets a string of the InputCycleDate field
+func (imad *InputMessageAccountabilityData) InputCycleDateField() string {
+	return imad.validateDate(imad.InputCycleDate)
+}
+
+// InputSourceField gets a string of the InputSource field
+func (imad *InputMessageAccountabilityData) InputSourceField() string {
+	return imad.alphaField(imad.InputSource, 8)
+}
+
+// InputSequenceNumberField gets a string of the InputSequenceNumber field
+func (imad *InputMessageAccountabilityData) InputSequenceNumberField() string {
+	return imad.alphaField(imad.InputSequenceNumber, 6)
 }

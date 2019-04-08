@@ -44,6 +44,8 @@ func (tst *TypeSubType) String() string {
 	var buf strings.Builder
 	buf.Grow(10)
 	buf.WriteString(tst.tag)
+	buf.WriteString(tst.TypeCodeField())
+	buf.WriteString(tst.SubTypeCodeField())
 	return buf.String()
 }
 
@@ -66,4 +68,14 @@ func (tst *TypeSubType) Validate() error {
 // invalid the WIRE will return an error.
 func (tst *TypeSubType) fieldInclusion() error {
 	return nil
+}
+
+// TypeCodeField gets a string of the TypeCode field
+func (tst *TypeSubType) TypeCodeField() string {
+	return tst.alphaField(tst.TypeCode, 2)
+}
+
+// SubTypeCodeField gets a string of the SubTypeCode field
+func (tst *TypeSubType) SubTypeCodeField() string {
+	return tst.alphaField(tst.SubTypeCode, 2)
 }

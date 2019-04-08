@@ -44,6 +44,8 @@ func (sdi *SenderDepositoryInstitution) String() string {
 	var buf strings.Builder
 	buf.Grow(39)
 	buf.WriteString(sdi.tag)
+	buf.WriteString(sdi.SenderABANumberField())
+	buf.WriteString(sdi.SenderShortNameField())
 	return buf.String()
 }
 
@@ -72,4 +74,14 @@ func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
 		return fieldError("SenderShortName", ErrFieldRequired, sdi.SenderShortName)
 	}
 	return nil
+}
+
+// SenderABANumberField gets a string of the SenderABANumber field
+func (sdi *SenderDepositoryInstitution) SenderABANumberField() string {
+	return sdi.alphaField(sdi.SenderABANumber, 9)
+}
+
+// SenderShortNameField gets a string of the SenderShortName field
+func (sdi *SenderDepositoryInstitution) SenderShortNameField() string {
+	return sdi.alphaField(sdi.SenderShortName, 18)
 }

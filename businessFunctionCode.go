@@ -45,6 +45,8 @@ func (bfc *BusinessFunctionCode) String() string {
 	var buf strings.Builder
 	buf.Grow(12)
 	buf.WriteString(bfc.tag)
+	buf.WriteString(bfc.BusinessFunctionCode)
+	buf.WriteString(bfc.TransactionTypeCode)
 	return buf.String()
 }
 
@@ -75,4 +77,14 @@ func (bfc *BusinessFunctionCode) fieldInclusion() error {
 		return fieldError("TransactionTypeCode", ErrFieldRequired, bfc.TransactionTypeCode)
 	}*/
 	return nil
+}
+
+// BusinessFunctionCodeField gets a string of the BusinessFunctionCode field
+func (bfc *BusinessFunctionCode) BusinessFunctionCodeField() string {
+	return bfc.alphaField(bfc.BusinessFunctionCode, 3)
+}
+
+// TransactionTypeCodeField gets a string of the TransactionTypeCode field
+func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
+	return bfc.alphaField(bfc.TransactionTypeCode, 3)
 }

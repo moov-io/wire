@@ -44,6 +44,8 @@ func (rdi *ReceiverDepositoryInstitution) String() string {
 	var buf strings.Builder
 	buf.Grow(33)
 	buf.WriteString(rdi.tag)
+	buf.WriteString(rdi.ReceiverABANumber)
+	buf.WriteString(rdi.ReceiverShortName)
 	return buf.String()
 }
 
@@ -72,4 +74,14 @@ func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 		return fieldError("ReceiverShortName", ErrFieldRequired, rdi.ReceiverShortName)
 	}
 	return nil
+}
+
+// ReceiverABANumberField gets a string of the ReceiverABANumber field
+func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField() string {
+	return rdi.alphaField(rdi.ReceiverABANumber, 9)
+}
+
+// ReceiverShortNameField gets a string of the ReceiverShortName field
+func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField() string {
+	return rdi.alphaField(rdi.ReceiverShortName, 18)
 }
