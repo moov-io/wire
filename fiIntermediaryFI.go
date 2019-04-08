@@ -21,64 +21,64 @@ type FIIntermediaryFI struct {
 
 // NewFIIntermediaryFI returns a new FIIntermediaryFI
 func NewFIIntermediaryFI() FIIntermediaryFI {
-	ifi := FIIntermediaryFI{
+	fiifi := FIIntermediaryFI{
 		tag: TagFIIntermediaryFI,
 	}
-	return ifi
+	return fiifi
 }
 
 // Parse takes the input string and parses the FIIntermediaryFI values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ifi *FIIntermediaryFI) Parse(record string) {
-	ifi.tag = record[:6]
-	ifi.FIToFI.LineOne = ifi.parseStringField(record[6:36])
-	ifi.FIToFI.LineTwo = ifi.parseStringField(record[36:69])
-	ifi.FIToFI.LineThree = ifi.parseStringField(record[69:104])
-	ifi.FIToFI.LineFour = ifi.parseStringField(record[104:139])
-	ifi.FIToFI.LineFive = ifi.parseStringField(record[139:174])
-	ifi.FIToFI.LineSix = ifi.parseStringField(record[174:209])
+func (fiifi *FIIntermediaryFI) Parse(record string) {
+	fiifi.tag = record[:6]
+	fiifi.FIToFI.LineOne = fiifi.parseStringField(record[6:36])
+	fiifi.FIToFI.LineTwo = fiifi.parseStringField(record[36:69])
+	fiifi.FIToFI.LineThree = fiifi.parseStringField(record[69:104])
+	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[104:139])
+	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[139:174])
+	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[174:209])
 }
 
 // String writes FIIntermediaryFI
-func (ifi *FIIntermediaryFI) String() string {
+func (fiifi *FIIntermediaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(209)
-	buf.WriteString(ifi.tag)
+	buf.WriteString(fiifi.tag)
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on FIIntermediaryFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (ifi *FIIntermediaryFI) Validate() error {
-	if err := ifi.fieldInclusion(); err != nil {
+func (fiifi *FIIntermediaryFI) Validate() error {
+	if err := fiifi.fieldInclusion(); err != nil {
 		return err
 	}
-	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineOne); err!= nil {
-		return fieldError("LineOne", err, ifi.FIToFI.LineOne)
+	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineOne); err != nil {
+		return fieldError("LineOne", err, fiifi.FIToFI.LineOne)
 	}
-	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineTwo); err!= nil {
-		return fieldError("LineTwo", err, ifi.FIToFI.LineTwo)
+	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineTwo); err != nil {
+		return fieldError("LineTwo", err, fiifi.FIToFI.LineTwo)
 	}
-	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineThree); err!= nil {
-		return fieldError("LineThree", err, ifi.FIToFI.LineThree)
+	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineThree); err != nil {
+		return fieldError("LineThree", err, fiifi.FIToFI.LineThree)
 	}
-	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineFour); err!= nil {
-		return fieldError("LineFour", err, ifi.FIToFI.LineFour)
+	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineFour); err != nil {
+		return fieldError("LineFour", err, fiifi.FIToFI.LineFour)
 	}
-	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineFive); err!= nil {
-		return fieldError("LineFive", err, ifi.FIToFI.LineFive)
+	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineFive); err != nil {
+		return fieldError("LineFive", err, fiifi.FIToFI.LineFive)
 	}
-	if err:= ifi.isAlphanumeric(ifi.FIToFI.LineSix); err!= nil {
-		return fieldError("LineSix", err, ifi.FIToFI.LineSix)
+	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineSix); err != nil {
+		return fieldError("LineSix", err, fiifi.FIToFI.LineSix)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ifi *FIIntermediaryFI) fieldInclusion() error {
+func (fiifi *FIIntermediaryFI) fieldInclusion() error {
 	return nil
 }

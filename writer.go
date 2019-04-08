@@ -49,8 +49,261 @@ func (w *Writer) Flush() {
 }
 
 func (w *Writer) writeFedWireMessage(file *File) error {
-	for range file.FedWireMessages {
+	// ToDo:  More than 1?
+	for _, fwm := range file.FedWireMessages {
+		if err := w.writeMandatory(fwm); err != nil {
+			return err
+		}
+		if err := w.writeOtherTransferInfo(fwm); err != nil {
+			return err
+		}
+		if err := w.writeBeneficiary(fwm); err != nil {
+			return err
+		}
+		if err := w.writeOriginator(fwm); err != nil {
+			return err
+		}
+		if err := w.writeFinancialInstitution(fwm); err != nil {
+			return err
+		}
+		if err := w.writeCoverPayment(fwm); err != nil {
+			return err
+		}
+		if _, err := w.w.WriteString(fwm.GetUnstructuredAddenda().String() + "\n"); err != nil {
+			return err
+		}
+		if err := w.writeRemittance(fwm); err != nil {
+			return err
+		}
+		if _, err := w.w.WriteString(fwm.GetServiceMessage().String() + "\n"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
+
+func (w *Writer) writeMandatory(fwm FedWireMessage) error {
+	if fwm.SenderSupplied != nil {
+		if _, err := w.w.WriteString(fwm.GetSenderSupplied().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+	if fwm.TypeSubType != nil {
+		if _, err := w.w.WriteString(fwm.GetTypeSubType().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+	if fwm.InputMessageAccountabilityData != nil {
+		if _, err := w.w.WriteString(fwm.GetInputMessageAccountabilityData().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+	if fwm.Amount != nil {
+		if _, err := w.w.WriteString(fwm.GetAmount().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+	if fwm.SenderDepositoryInstitution != nil {
+		if _, err := w.w.WriteString(fwm.GetSenderDepositoryInstitution().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+
+	if fwm.ReceiverDepositoryInstitution != nil {
+		if _, err := w.w.WriteString(fwm.GetReceiverDepositoryInstitution().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+	if fwm.BusinessFunctionCode != nil {
+		if _, err := w.w.WriteString(fwm.GetBusinessFunctionCode().String() + "\n"); err != nil {
+			return err
+		}
+		// ToDo; Return error
+	}
+	return nil
+}
+
+func (w *Writer) writeOtherTransferInfo(fwm FedWireMessage) error {
+	if _, err := w.w.WriteString(fwm.GetSenderReference().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetPreviousMessageIdentifier().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetLocalInstrument().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetPaymentNotification().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetCharges().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetInstructedAmount().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetExchangeRate().String() + "\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *Writer) writeBeneficiary(fwm FedWireMessage) error {
+	if _, err := w.w.WriteString(fwm.GetBeneficiaryIntermediaryFI().String() + "\n"); err != nil {
+		return err
+	}
+
+	if _, err := w.w.WriteString(fwm.GetBeneficiaryFI().String() + "\n"); err != nil {
+		return err
+	}
+
+	if _, err := w.w.WriteString(fwm.GetBeneficiary().String() + "\n"); err != nil {
+		return err
+	}
+
+	if _, err := w.w.WriteString(fwm.GetBeneficiaryReference().String() + "\n"); err != nil {
+		return err
+	}
+
+	if _, err := w.w.WriteString(fwm.GetAccountDebitedDrawdown().String() + "\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *Writer) writeOriginator(fwm FedWireMessage) error {
+	if _, err := w.w.WriteString(fwm.GetAccountDebitedDrawdown().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetOriginator().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetOriginatorOptionF().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetOriginatorFI().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetInstructingFI().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetAccountCreditedDrawdown().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetOriginatorToBeneficiary().String() + "\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *Writer) writeFinancialInstitution(fwm FedWireMessage) error {
+	if _, err := w.w.WriteString(fwm.GetFIReceiverFI().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIDrawdownDebitAccountAdvice().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIIntermediaryFI().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIIntermediaryFIAdvice().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIBeneficiaryFI().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIBeneficiaryFIAdvice().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIBeneficiary().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIBeneficiaryAdvice().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIPaymentMethodToBeneficiary().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetFIAdditionalFIToFI().String() + "\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *Writer) writeCoverPayment(fwm FedWireMessage) error {
+	if _, err := w.w.WriteString(fwm.GetCurrencyInstructedAmount().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetOrderingCustomer().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetOrderingInstitution().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetIntermediaryInstitution().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetInstitutionAccount().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetBeneficiaryCustomer().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetRemittance().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetSenderToReceiver().String() + "\n"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (w *Writer) writeRemittance(fwm FedWireMessage) error {
+
+	// Related Remittance
+
+	if _, err := w.w.WriteString(fwm.GetRelatedRemittance().String() + "\n"); err != nil {
+		return err
+	}
+
+	// Structured Remittance
+
+	if _, err := w.w.WriteString(fwm.GetRemittanceOriginator().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetRemittanceBeneficiary().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetPrimaryRemittanceDocument().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetActualAmountPaid().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetGrossAmountRemittanceDocument().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetAmountNegotiatedDiscount().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetAdjustment().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetDateRemittanceDocument().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetSecondaryRemittanceDocument().String() + "\n"); err != nil {
+		return err
+	}
+	if _, err := w.w.WriteString(fwm.GetRemittanceFreeText().String() + "\n"); err != nil {
+		return err
 	}
 	return nil
 }
