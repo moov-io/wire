@@ -45,6 +45,8 @@ func (ua *UnstructuredAddenda) String() string {
 	// ToDo: Separator
 	buf.Grow(9004)
 	buf.WriteString(ua.tag)
+	buf.WriteString(ua.AddendaLengthField())
+	buf.WriteString(ua.AddendaField())
 	return buf.String()
 }
 
@@ -67,4 +69,14 @@ func (ua *UnstructuredAddenda) Validate() error {
 // invalid the WIRE will return an error.
 func (ua *UnstructuredAddenda) fieldInclusion() error {
 	return nil
+}
+
+// AddendaLengthField gets a string of the AddendaLength field
+func (ua *UnstructuredAddenda) AddendaLengthField() string {
+	return ua.alphaField(ua.AddendaLength, 4)
+}
+
+// AddendaField gets a string of the Addenda field
+func (ua *UnstructuredAddenda) AddendaField() string {
+	return ua.alphaField(ua.Addenda, 8994)
 }

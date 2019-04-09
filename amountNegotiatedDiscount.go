@@ -43,6 +43,8 @@ func (nd *AmountNegotiatedDiscount) String() string {
 	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(nd.tag)
+	buf.WriteString(nd.CurrencyCodeField())
+	buf.WriteString(nd.AmountField())
 	return buf.String()
 }
 
@@ -55,7 +57,7 @@ func (nd *AmountNegotiatedDiscount) Validate() error {
 	if err := nd.isCurrencyCode(nd.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, nd.RemittanceAmount.CurrencyCode)
 	}
-	if err := nd.isAmount(nd.RemittanceAmount.Amount); err !=nil {
+	if err := nd.isAmount(nd.RemittanceAmount.Amount); err != nil {
 		return fieldError("Amount", err, nd.RemittanceAmount.Amount)
 	}
 	return nil
@@ -65,4 +67,14 @@ func (nd *AmountNegotiatedDiscount) Validate() error {
 // invalid the WIRE will return an error.
 func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
 	return nil
+}
+
+// CurrencyCodeField gets a string of the CurrencyCode field
+func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
+	return nd.alphaField(nd.RemittanceAmount.CurrencyCode, 3)
+}
+
+// AmountField gets a string of the Amount field
+func (nd *AmountNegotiatedDiscount) AmountField() string {
+	return nd.alphaField(nd.RemittanceAmount.Amount, 19)
 }

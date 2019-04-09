@@ -48,6 +48,9 @@ func (rft *RemittanceFreeText) String() string {
 	// ToDo: Separator
 	buf.Grow(426)
 	buf.WriteString(rft.tag)
+	buf.WriteString(rft.LineOneField())
+	buf.WriteString(rft.LineTwoField())
+	buf.WriteString(rft.LineThreeField())
 	return buf.String()
 }
 
@@ -57,6 +60,15 @@ func (rft *RemittanceFreeText) Validate() error {
 	if err := rft.fieldInclusion(); err != nil {
 		return err
 	}
+	if err := rft.isAlphanumeric(rft.LineOne); err != nil {
+		return fieldError("LineOne", err, rft.LineOne)
+	}
+	if err := rft.isAlphanumeric(rft.LineTwo); err != nil {
+		return fieldError("LineTwo", err, rft.LineTwo)
+	}
+	if err := rft.isAlphanumeric(rft.LineThree); err != nil {
+		return fieldError("LineThree", err, rft.LineThree)
+	}
 	return nil
 }
 
@@ -64,4 +76,19 @@ func (rft *RemittanceFreeText) Validate() error {
 // invalid the WIRE will return an error.
 func (rft *RemittanceFreeText) fieldInclusion() error {
 	return nil
+}
+
+// LineOneField gets a string of the LineOne field
+func (rft *RemittanceFreeText) LineOneField() string {
+	return rft.alphaField(rft.LineOne, 140)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (rft *RemittanceFreeText) LineTwoField() string {
+	return rft.alphaField(rft.LineTwo, 140)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (rft *RemittanceFreeText) LineThreeField() string {
+	return rft.alphaField(rft.LineThree, 140)
 }

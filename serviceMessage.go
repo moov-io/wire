@@ -75,6 +75,20 @@ func (sm *ServiceMessage) String() string {
 	// ToDo: Separator
 	buf.Grow(426)
 	buf.WriteString(sm.tag)
+	buf.WriteString(sm.LineOneField())
+	buf.WriteString(sm.LineTwoField())
+	buf.WriteString(sm.LineThreeField())
+	buf.WriteString(sm.LineFourField())
+	buf.WriteString(sm.LineFiveField())
+	buf.WriteString(sm.LineFiveField())
+	buf.WriteString(sm.LineSixField())
+
+	buf.WriteString(sm.LineSevenField())
+	buf.WriteString(sm.LineEightField())
+	buf.WriteString(sm.LineNineField())
+	buf.WriteString(sm.LineTenField())
+	buf.WriteString(sm.LineElevenField())
+	buf.WriteString(sm.LineTwelveField())
 	return buf.String()
 }
 
@@ -127,4 +141,64 @@ func (sm *ServiceMessage) Validate() error {
 // invalid the WIRE will return an error.
 func (sm *ServiceMessage) fieldInclusion() error {
 	return nil
+}
+
+// LineOneField gets a string of the LineOne field
+func (sm *ServiceMessage) LineOneField() string {
+	return sm.alphaField(sm.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (sm *ServiceMessage) LineTwoField() string {
+	return sm.alphaField(sm.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (sm *ServiceMessage) LineThreeField() string {
+	return sm.alphaField(sm.LineThree, 35)
+}
+
+// LineFourField gets a string of the LineFour field
+func (sm *ServiceMessage) LineFourField() string {
+	return sm.alphaField(sm.LineFour, 35)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (sm *ServiceMessage) LineFiveField() string {
+	return sm.alphaField(sm.LineFive, 35)
+}
+
+// LineSixField gets a string of the LineSix field
+func (sm *ServiceMessage) LineSixField() string {
+	return sm.alphaField(sm.LineSix, 35)
+}
+
+// LineSevenField gets a string of the LineSeven field
+func (sm *ServiceMessage) LineSevenField() string {
+	return sm.alphaField(sm.LineSeven, 35)
+}
+
+// LineEightField gets a string of the LineEight field
+func (sm *ServiceMessage) LineEightField() string {
+	return sm.alphaField(sm.LineEight, 35)
+}
+
+// LineNineField gets a string of the LineNine field
+func (sm *ServiceMessage) LineNineField() string {
+	return sm.alphaField(sm.LineNine, 35)
+}
+
+// LineTenField gets a string of the LineTen field
+func (sm *ServiceMessage) LineTenField() string {
+	return sm.alphaField(sm.LineTen, 35)
+}
+
+// LineElevenField gets a string of the LineEleven field
+func (sm *ServiceMessage) LineElevenField() string {
+	return sm.alphaField(sm.LineEleven, 35)
+}
+
+// LineTwelveField gets a string of the LineTwelve field
+func (sm *ServiceMessage) LineTwelveField() string {
+	return sm.alphaField(sm.LineTwelve, 35)
 }

@@ -52,6 +52,11 @@ func (adj *Adjustment) String() string {
 	// ToDo: Separator
 	buf.Grow(168)
 	buf.WriteString(adj.tag)
+	buf.WriteString(adj.AdjustmentReasonCodeField())
+	buf.WriteString(adj.CreditDebitIndicatorField())
+	buf.WriteString(adj.CurrencyCodeField())
+	buf.WriteString(adj.AmountField())
+	buf.WriteString(adj.AdditionalInfoField())
 	return buf.String()
 }
 
@@ -70,7 +75,7 @@ func (adj *Adjustment) Validate() error {
 	if err := adj.isCurrencyCode(adj.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, adj.RemittanceAmount.CurrencyCode)
 	}
-	if err := adj.isAmount(adj.RemittanceAmount.Amount); err !=nil {
+	if err := adj.isAmount(adj.RemittanceAmount.Amount); err != nil {
 		return fieldError("Amount", err, adj.RemittanceAmount.Amount)
 	}
 
@@ -81,4 +86,29 @@ func (adj *Adjustment) Validate() error {
 // invalid the WIRE will return an error.
 func (adj *Adjustment) fieldInclusion() error {
 	return nil
+}
+
+// AdjustmentReasonCodeField gets a string of the AdjustmentReasonCode field
+func (adj *Adjustment) AdjustmentReasonCodeField() string {
+	return adj.alphaField(adj.AdjustmentReasonCode, 2)
+}
+
+// CreditDebitIndicatorField gets a string of the CreditDebitIndicator field
+func (adj *Adjustment) CreditDebitIndicatorField() string {
+	return adj.alphaField(adj.CreditDebitIndicator, 4)
+}
+
+// CurrencyCodeField gets a string of the CurrencyCode field
+func (adj *Adjustment) CurrencyCodeField() string {
+	return adj.alphaField(adj.RemittanceAmount.CurrencyCode, 3)
+}
+
+// AmountField gets a string of the Amount field
+func (adj *Adjustment) AmountField() string {
+	return adj.alphaField(adj.RemittanceAmount.Amount, 19)
+}
+
+// AdditionalInfoField gets a string of the AdditionalInfo field
+func (adj *Adjustment) AdditionalInfoField() string {
+	return adj.alphaField(adj.AdditionalInfo, 140)
 }

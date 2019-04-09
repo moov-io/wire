@@ -43,6 +43,8 @@ func (aap *ActualAmountPaid) String() string {
 	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(aap.tag)
+	buf.WriteString(aap.CurrencyCodeField())
+	buf.WriteString(aap.AmountField())
 	return buf.String()
 }
 
@@ -55,7 +57,7 @@ func (aap *ActualAmountPaid) Validate() error {
 	if err := aap.isCurrencyCode(aap.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, aap.RemittanceAmount.CurrencyCode)
 	}
-	if err := aap.isAmount(aap.RemittanceAmount.Amount); err !=nil {
+	if err := aap.isAmount(aap.RemittanceAmount.Amount); err != nil {
 		return fieldError("Amount", err, aap.RemittanceAmount.Amount)
 	}
 	return nil
@@ -65,4 +67,14 @@ func (aap *ActualAmountPaid) Validate() error {
 // invalid the WIRE will return an error.
 func (aap *ActualAmountPaid) fieldInclusion() error {
 	return nil
+}
+
+// CurrencyCodeField gets a string of the CurrencyCode field
+func (aap *ActualAmountPaid) CurrencyCodeField() string {
+	return aap.alphaField(aap.RemittanceAmount.CurrencyCode, 3)
+}
+
+// AmountField gets a string of the Amount field
+func (aap *ActualAmountPaid) AmountField() string {
+	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
 }

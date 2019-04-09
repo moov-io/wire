@@ -51,6 +51,10 @@ func (prd *PrimaryRemittanceDocument) String() string {
 	// ToDo: Separator
 	buf.Grow(115)
 	buf.WriteString(prd.tag)
+	buf.WriteString(prd.DocumentTypeCodeField())
+	buf.WriteString(prd.ProprietaryDocumentTypeCodeField())
+	buf.WriteString(prd.DocumentIdentificationNumberField())
+	buf.WriteString(prd.IssuerField())
 	return buf.String()
 }
 
@@ -79,4 +83,24 @@ func (prd *PrimaryRemittanceDocument) Validate() error {
 // invalid the WIRE will return an error.
 func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
 	return nil
+}
+
+// DocumentTypeCodeField gets a string of the DocumentTypeCode field
+func (prd *PrimaryRemittanceDocument) DocumentTypeCodeField() string {
+	return prd.alphaField(prd.DocumentTypeCode, 4)
+}
+
+// ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
+func (prd *PrimaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
+	return prd.alphaField(prd.ProprietaryDocumentTypeCode, 35)
+}
+
+// DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
+func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField() string {
+	return prd.alphaField(prd.DocumentIdentificationNumber, 35)
+}
+
+// IssuerField gets a string of the Issuer field
+func (prd *PrimaryRemittanceDocument) IssuerField() string {
+	return prd.alphaField(prd.Issuer, 35)
 }

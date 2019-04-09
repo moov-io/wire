@@ -10,7 +10,7 @@ import "strings"
 type SecondaryRemittanceDocument struct {
 	// tag
 	tag string
-	// SecondaryRemittanceDocument  * `AROI` - Accounts Receivable Open Item * `DISP` - Dispatch Advice * `FXDR` - Foreign Exchange Deal Reference * `PROP` - Proprietary Document Type PUOR Purchase Order * `RADM` - Remittance Advice Message * `RPIN` - Related Payment Instruction * `SCOR1` - Structured Communication Reference VCHR Voucher
+	// DocumentTypeCode  * `AROI` - Accounts Receivable Open Item * `DISP` - Dispatch Advice * `FXDR` - Foreign Exchange Deal Reference * `PROP` - Proprietary Document Type PUOR Purchase Order * `RADM` - Remittance Advice Message * `RPIN` - Related Payment Instruction * `SCOR1` - Structured Communication Reference VCHR Voucher
 	DocumentTypeCode string `json:"documentTypeCode,omitempty"`
 	// proprietaryDocumentTypeCode
 	ProprietaryDocumentTypeCode string `json:"proprietaryDocumentTypeCode,omitempty"`
@@ -38,13 +38,22 @@ func NewSecondaryRemittanceDocument() SecondaryRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (srd *SecondaryRemittanceDocument) Parse(record string) {
+	srd.tag = record[:6]
+	srd.DocumentTypeCode = srd.parseStringField(record[6:10])
+	srd.ProprietaryDocumentTypeCode = srd.parseStringField(record[10:45])
+	srd.DocumentIdentificationNumber = srd.parseStringField(record[45:80])
+	srd.Issuer = srd.parseStringField(record[80:115])
 }
 
 // String writes SecondaryRemittanceDocument
 func (srd *SecondaryRemittanceDocument) String() string {
 	var buf strings.Builder
-	buf.Grow(8)
+	buf.Grow(115)
 	buf.WriteString(srd.tag)
+	buf.WriteString(srd.DocumentTypeCodeField())
+	buf.WriteString(srd.ProprietaryDocumentTypeCodeField())
+	buf.WriteString(srd.DocumentIdentificationNumberField())
+	buf.WriteString(srd.IssuerField())
 	return buf.String()
 }
 
@@ -54,6 +63,18 @@ func (srd *SecondaryRemittanceDocument) Validate() error {
 	if err := srd.fieldInclusion(); err != nil {
 		return err
 	}
+	if err := srd.isAlphanumeric(srd.DocumentTypeCode); err != nil {
+		return fieldError("DocumentTypeCode", err, srd.DocumentTypeCode)
+	}
+	if err := srd.isAlphanumeric(srd.ProprietaryDocumentTypeCode); err != nil {
+		return fieldError("ProprietaryDocumentTypeCode", err, srd.ProprietaryDocumentTypeCode)
+	}
+	if err := srd.isAlphanumeric(srd.DocumentIdentificationNumber); err != nil {
+		return fieldError("DocumentIdentificationNumber", err, srd.Issuer)
+	}
+	if err := srd.isAlphanumeric(srd.Issuer); err != nil {
+		return fieldError("Issuer", err, srd.Issuer)
+	}
 	return nil
 }
 
@@ -61,4 +82,24 @@ func (srd *SecondaryRemittanceDocument) Validate() error {
 // invalid the WIRE will return an error.
 func (srd *SecondaryRemittanceDocument) fieldInclusion() error {
 	return nil
+}
+
+// DocumentTypeCodeField gets a string of the DocumentTypeCode field
+func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField() string {
+	return srd.alphaField(srd.DocumentTypeCode, 4)
+}
+
+// ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
+func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
+	return srd.alphaField(srd.ProprietaryDocumentTypeCode, 35)
+}
+
+// DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
+func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField() string {
+	return srd.alphaField(srd.DocumentIdentificationNumber, 35)
+}
+
+// IssuerField gets a string of the Issuer field
+func (srd *SecondaryRemittanceDocument) IssuerField() string {
+	return srd.alphaField(srd.Issuer, 35)
 }

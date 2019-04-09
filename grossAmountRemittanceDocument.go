@@ -43,6 +43,8 @@ func (gard *GrossAmountRemittanceDocument) String() string {
 	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(gard.tag)
+	buf.WriteString(gard.CurrencyCodeField())
+	buf.WriteString(gard.AmountField())
 	return buf.String()
 }
 
@@ -55,7 +57,7 @@ func (gard *GrossAmountRemittanceDocument) Validate() error {
 	if err := gard.isCurrencyCode(gard.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, gard.RemittanceAmount.CurrencyCode)
 	}
-	if err := gard.isAmount(gard.RemittanceAmount.Amount); err !=nil {
+	if err := gard.isAmount(gard.RemittanceAmount.Amount); err != nil {
 		return fieldError("Amount", err, gard.RemittanceAmount.Amount)
 	}
 	return nil
@@ -65,4 +67,14 @@ func (gard *GrossAmountRemittanceDocument) Validate() error {
 // invalid the WIRE will return an error.
 func (gard *GrossAmountRemittanceDocument) fieldInclusion() error {
 	return nil
+}
+
+// CurrencyCodeField gets a string of the CurrencyCode field
+func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
+	return gard.alphaField(gard.RemittanceAmount.CurrencyCode, 3)
+}
+
+// AmountField gets a string of the Amount field
+func (gard *GrossAmountRemittanceDocument) AmountField() string {
+	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
 }

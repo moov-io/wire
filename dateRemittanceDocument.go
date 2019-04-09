@@ -41,6 +41,7 @@ func (drd *DateRemittanceDocument) String() string {
 	var buf strings.Builder
 	buf.Grow(14)
 	buf.WriteString(drd.tag)
+	buf.WriteString(drd.DateRemittanceDocumentField())
 	return buf.String()
 }
 
@@ -60,4 +61,9 @@ func (drd *DateRemittanceDocument) fieldInclusion() error {
 		return fieldError("DateRemittanceDocument", ErrFieldRequired, drd.DateRemittanceDocument)
 	}
 	return nil
+}
+
+// DateRemittanceDocumentField gets a string of the DateRemittanceDocument field
+func (drd *DateRemittanceDocument) DateRemittanceDocumentField() string {
+	return drd.validateDate(drd.DateRemittanceDocument)
 }
