@@ -47,6 +47,12 @@ func (bc *BeneficiaryCustomer) String() string {
 	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(bc.tag)
+	buf.WriteString(bc.SwiftFieldTagField())
+	buf.WriteString(bc.SwiftLineOneField())
+	buf.WriteString(bc.SwiftLineTwoField())
+	buf.WriteString(bc.SwiftLineThreeField())
+	buf.WriteString(bc.SwiftLineFourField())
+	buf.WriteString(bc.SwiftLineFiveField())
 	return buf.String()
 }
 
@@ -81,4 +87,34 @@ func (bc *BeneficiaryCustomer) Validate() error {
 // invalid the WIRE will return an error.
 func (bc *BeneficiaryCustomer) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (bc *BeneficiaryCustomer) SwiftFieldTagField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftFieldTag, 5)
+}
+
+// SwiftLineOneField gets a string of the SwiftLineOne field
+func (bc *BeneficiaryCustomer) SwiftLineOneField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineOne, 35)
+}
+
+// SwiftLineTwoField gets a string of the SwiftLineTwo field
+func (bc *BeneficiaryCustomer) SwiftLineTwoField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineTwo, 35)
+}
+
+// SwiftLineThreeField gets a string of the SwiftLineThree field
+func (bc *BeneficiaryCustomer) SwiftLineThreeField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineThree, 35)
+}
+
+// SwiftLineFourField gets a string of the SwiftLineFour field
+func (bc *BeneficiaryCustomer) SwiftLineFourField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineFour, 35)
+}
+
+// SwiftLineFiveField gets a string of the SwiftLineFive field
+func (bc *BeneficiaryCustomer) SwiftLineFiveField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineFive, 35)
 }

@@ -46,6 +46,8 @@ func (cia *CurrencyInstructedAmount) String() string {
 	// ToDo: Separator
 	buf.Grow(29)
 	buf.WriteString(cia.tag)
+	buf.WriteString(cia.SwiftFieldTagField())
+	buf.WriteString(cia.AmountField())
 	return buf.String()
 }
 
@@ -68,4 +70,14 @@ func (cia *CurrencyInstructedAmount) Validate() error {
 // invalid the WIRE will return an error.
 func (cia *CurrencyInstructedAmount) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
+	return cia.alphaField(cia.SwiftFieldTag, 5)
+}
+
+// AmountField gets a string of the AmountTag field
+func (cia *CurrencyInstructedAmount) AmountField() string {
+	return cia.alphaField(cia.Amount, 18)
 }

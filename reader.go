@@ -236,8 +236,7 @@ func (r *Reader) parseLine() error {
 		if err := r.parseBeneficiaryCustomer(); err != nil {
 			return err
 		}
-		// ToDo: Remove Information
-	case TagRemittanceInformation:
+	case TagRemittance:
 		if err := r.parseRemittance(); err != nil {
 			return err
 		}

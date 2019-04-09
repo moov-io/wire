@@ -42,6 +42,7 @@ func (br *BeneficiaryReference) String() string {
 	// ToDo: Separator
 	buf.Grow(22)
 	buf.WriteString(br.tag)
+	buf.WriteString(br.BeneficiaryReferenceField())
 	return buf.String()
 }
 
@@ -61,4 +62,9 @@ func (br *BeneficiaryReference) Validate() error {
 // invalid the WIRE will return an error.
 func (br *BeneficiaryReference) fieldInclusion() error {
 	return nil
+}
+
+// BeneficiaryReferenceField gets a string of the BeneficiaryReference field
+func (br *BeneficiaryReference) BeneficiaryReferenceField() string {
+	return br.alphaField(br.BeneficiaryReference, 16)
 }

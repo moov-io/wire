@@ -51,6 +51,10 @@ func (ob *OriginatorToBeneficiary) String() string {
 	// ToDo: Separator
 	buf.Grow(146)
 	buf.WriteString(ob.tag)
+	buf.WriteString(ob.LineOneField())
+	buf.WriteString(ob.LineTwoField())
+	buf.WriteString(ob.LineThreeField())
+	buf.WriteString(ob.LineFourField())
 	return buf.String()
 }
 
@@ -79,4 +83,24 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 // invalid the WIRE will return an error.
 func (ob *OriginatorToBeneficiary) fieldInclusion() error {
 	return nil
+}
+
+// LineOneField gets a string of the LineOne field
+func (ob *OriginatorToBeneficiary) LineOneField() string {
+	return ob.alphaField(ob.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (ob *OriginatorToBeneficiary) LineTwoField() string {
+	return ob.alphaField(ob.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (ob *OriginatorToBeneficiary) LineThreeField() string {
+	return ob.alphaField(ob.LineThree, 35)
+}
+
+// LineFourField gets a string of the LineFour field
+func (ob *OriginatorToBeneficiary) LineFourField() string {
+	return ob.alphaField(ob.LineFour, 35)
 }

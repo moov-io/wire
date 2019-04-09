@@ -48,6 +48,13 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
 	// ToDo: Separator
 	buf.Grow(200)
 	buf.WriteString(debitDDAdvice.tag)
+	buf.WriteString(debitDDAdvice.AdviceCodeField())
+	buf.WriteString(debitDDAdvice.LineOneField())
+	buf.WriteString(debitDDAdvice.LineTwoField())
+	buf.WriteString(debitDDAdvice.LineThreeField())
+	buf.WriteString(debitDDAdvice.LineFourField())
+	buf.WriteString(debitDDAdvice.LineFiveField())
+	buf.WriteString(debitDDAdvice.LineSixField())
 	return buf.String()
 }
 
@@ -60,22 +67,22 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
 	if err := debitDDAdvice.isAdviceCode(debitDDAdvice.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, debitDDAdvice.Advice.AdviceCode)
 	}
-	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineOne); err!= nil {
+	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineOne); err != nil {
 		return fieldError("LineOne", err, debitDDAdvice.Advice.LineOne)
 	}
-	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineTwo); err!= nil {
+	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineTwo); err != nil {
 		return fieldError("LineTwo", err, debitDDAdvice.Advice.LineTwo)
 	}
-	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineThree); err!= nil {
+	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineThree); err != nil {
 		return fieldError("LineThree", err, debitDDAdvice.Advice.LineThree)
 	}
-	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineFour); err!= nil {
+	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineFour); err != nil {
 		return fieldError("LineFour", err, debitDDAdvice.Advice.LineFour)
 	}
-	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineFive); err!= nil {
+	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineFive); err != nil {
 		return fieldError("LineFive", err, debitDDAdvice.Advice.LineFive)
 	}
-	if err:= debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineSix); err!= nil {
+	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineSix); err != nil {
 		return fieldError("LineSix", err, debitDDAdvice.Advice.LineSix)
 	}
 	return nil
@@ -85,4 +92,39 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
 // invalid the WIRE will return an error.
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) fieldInclusion() error {
 	return nil
+}
+
+// AdviceCodeField gets a string of the AdviceCode field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) AdviceCodeField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.AdviceCode, 3)
+}
+
+// LineOneField gets a string of the LineOne field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineOneField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineOne, 26)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineTwoField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineTwo, 33)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineThreeField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineThree, 33)
+}
+
+// LineFourField gets a string of the LineFour field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFourField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineFour, 33)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFiveField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineFive, 33)
+}
+
+// LineSixField gets a string of the LineSix field
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineSixField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineSix, 33)
 }

@@ -47,6 +47,12 @@ func (firfi *FIReceiverFI) String() string {
 	// ToDo: Separator
 	buf.Grow(209)
 	buf.WriteString(firfi.tag)
+	buf.WriteString(firfi.LineOneField())
+	buf.WriteString(firfi.LineTwoField())
+	buf.WriteString(firfi.LineThreeField())
+	buf.WriteString(firfi.LineFourField())
+	buf.WriteString(firfi.LineFiveField())
+	buf.WriteString(firfi.LineSixField())
 	return buf.String()
 }
 
@@ -81,4 +87,34 @@ func (firfi *FIReceiverFI) Validate() error {
 // invalid the WIRE will return an error.
 func (firfi *FIReceiverFI) fieldInclusion() error {
 	return nil
+}
+
+// LineOneField gets a string of the LineOne field
+func (firfi *FIReceiverFI) LineOneField() string {
+	return firfi.alphaField(firfi.FIToFI.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (firfi *FIReceiverFI) LineTwoField() string {
+	return firfi.alphaField(firfi.FIToFI.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (firfi *FIReceiverFI) LineThreeField() string {
+	return firfi.alphaField(firfi.FIToFI.LineThree, 35)
+}
+
+// LineFourField gets a string of the LineFour field
+func (firfi *FIReceiverFI) LineFourField() string {
+	return firfi.alphaField(firfi.FIToFI.LineFour, 35)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (firfi *FIReceiverFI) LineFiveField() string {
+	return firfi.alphaField(firfi.FIToFI.LineFive, 35)
+}
+
+// LineSixField gets a string of the LineSix field
+func (firfi *FIReceiverFI) LineSixField() string {
+	return firfi.alphaField(firfi.FIToFI.LineSix, 35)
 }

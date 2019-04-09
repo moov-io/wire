@@ -40,8 +40,9 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) {
 func (creditDD *AccountCreditedDrawdown) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(15)
 	buf.WriteString(creditDD.tag)
+	buf.WriteString(creditDD.DrawdownCreditAccountNumberField())
 	return buf.String()
 }
 
@@ -61,4 +62,9 @@ func (creditDD *AccountCreditedDrawdown) Validate() error {
 // invalid the WIRE will return an error.
 func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
 	return nil
+}
+
+// DrawdownCreditAccountNumberField gets a string of the DrawdownCreditAccountNumber field
+func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField() string {
+	return creditDD.alphaField(creditDD.DrawdownCreditAccountNumber, 9)
 }

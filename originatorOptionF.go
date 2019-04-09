@@ -93,18 +93,24 @@ func NewOriginatorOptionF() OriginatorOptionF {
 // successful parsing and data validity.
 func (oof *OriginatorOptionF) Parse(record string) {
 	oof.tag = oof.parseStringField(record[:6])
-	oof.Name = oof.parseStringField(record[6:41])
-	oof.LineOne = oof.parseStringField(record[41:76])
-	oof.LineTwo = oof.parseStringField(record[76:111])
-	oof.LineThree = oof.parseStringField(record[111:146])
+	oof.PartyIdentifier = oof.parseStringField(record[6:41])
+	oof.Name = oof.parseStringField(record[41:76])
+	oof.LineOne = oof.parseStringField(record[76:111])
+	oof.LineTwo = oof.parseStringField(record[111:146])
+	oof.LineThree = oof.parseStringField(record[146:181])
 }
 
 // String writes OriginatorOptionF
 func (oof *OriginatorOptionF) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(oof.tag)
+	buf.WriteString(oof.PartyIdentifierField())
+	buf.WriteString(oof.NameField())
+	buf.WriteString(oof.LineOneField())
+	buf.WriteString(oof.LineTwoField())
+	buf.WriteString(oof.LineThreeField())
 	return buf.String()
 }
 
@@ -133,4 +139,29 @@ func (oof *OriginatorOptionF) Validate() error {
 // invalid the WIRE will return an error.
 func (oof *OriginatorOptionF) fieldInclusion() error {
 	return nil
+}
+
+// PartyIdentifierField gets a string of the PartyIdentifier field
+func (oof *OriginatorOptionF) PartyIdentifierField() string {
+	return oof.alphaField(oof.PartyIdentifier, 35)
+}
+
+// NameField gets a string of the Name field
+func (oof *OriginatorOptionF) NameField() string {
+	return oof.alphaField(oof.Name, 35)
+}
+
+// LineOneField gets a string of the LineOne field
+func (oof *OriginatorOptionF) LineOneField() string {
+	return oof.alphaField(oof.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (oof *OriginatorOptionF) LineTwoField() string {
+	return oof.alphaField(oof.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (oof *OriginatorOptionF) LineThreeField() string {
+	return oof.alphaField(oof.LineThree, 35)
 }

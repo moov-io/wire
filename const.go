@@ -105,8 +105,8 @@ const (
 	TagInstitutionAccount = "{7057}"
 	// TagBeneficiaryCustomer is BeneficiaryCustomer
 	TagBeneficiaryCustomer = "{7059}"
-	// TagRemittanceInformation is RemittanceInformation
-	TagRemittanceInformation = "{7070}"
+	// TagRemittance is Remittance
+	TagRemittance = "{7070}"
 	// TagSenderToReceiver is SenderToReceiver
 	TagSenderToReceiver = "{7072}"
 
@@ -262,7 +262,7 @@ const (
 	// AdviceCodeLetter is an advice code for LTR
 	AdviceCodeLetter = "LTR"
 	// AdviceCodePhone is an advice code for Phone
-	AdviceCodePhone ="PHN"
+	AdviceCodePhone = "PHN"
 	// AdviceCodeTelex is an advice code for Telex
 	AdviceCodeTelex = "TLX"
 	// AdviceCodeWire is an advice code for Wire
@@ -325,7 +325,6 @@ const (
 	// OICTaxIdentificationNumber is Tax Identification Number
 	OICTaxIdentificationNumber = "TXID"
 
-
 	// Remittance Private Identification Codes (PIC)
 
 	// PICAlienRegistrationNumber is Alien Registration Number
@@ -351,37 +350,37 @@ const (
 
 	// AccountsReceivableOpenItem is accounts receivable open item
 	AccountsReceivableOpenItem = "AROI"
-    // BillLadingShippingNotice is bill lading shipping notice
+	// BillLadingShippingNotice is bill lading shipping notice
 	BillLadingShippingNotice = "BOLD"
-    // CommercialInvoice is commercial invoice
+	// CommercialInvoice is commercial invoice
 	CommercialInvoice = "CINV"
-    // CommercialContract is commercial contract
+	// CommercialContract is commercial contract
 	CommercialContract = "CMCN"
-    // CreditNoteRelatedFinancialAdjustment is credit note related financial adjustment
+	// CreditNoteRelatedFinancialAdjustment is credit note related financial adjustment
 	CreditNoteRelatedFinancialAdjustment = "CNFA"
-    // CreditNote is credit note
+	// CreditNote is credit note
 	CreditNote = "CREN"
-    // DebitNote is debit note
+	// DebitNote is debit note
 	DebitNote = "DEBN"
-    // DispatchAdvice is dispatch advice
+	// DispatchAdvice is dispatch advice
 	DispatchAdvice = "DISP"
-    // DebitNoteRelatedFinancialAdjustment is debit note related financial adjustment
+	// DebitNoteRelatedFinancialAdjustment is debit note related financial adjustment
 	DebitNoteRelatedFinancialAdjustment = "DNFA"
-    // HireInvoice is hire invoice
+	// HireInvoice is hire invoice
 	HireInvoice = "HIRI"
-    // MeteredServiceInvoice is metered service invoice
+	// MeteredServiceInvoice is metered service invoice
 	MeteredServiceInvoice = "MSIN"
-    // ProprietaryDocumentType is proprietary document type
+	// ProprietaryDocumentType is proprietary document type
 	ProprietaryDocumentType = "PROP"
-    // PurchaseOrder is Purchase Order
+	// PurchaseOrder is Purchase Order
 	PurchaseOrder = "PUOR"
-    // SelfBilledInvoice is self billed invoice
+	// SelfBilledInvoice is self billed invoice
 	SelfBilledInvoice = "SBIN"
-    // StatementAccount is Statement of account
+	// StatementAccount is Statement of account
 	StatementAccount = "SOAC"
-    // TradeServicesUtilityTransaction is trade services utility transaction
+	// TradeServicesUtilityTransaction is trade services utility transaction
 	TradeServicesUtilityTransaction = "TSUT"
-    // Voucher is Voucher
+	// Voucher is Voucher
 	Voucher = "VCHR"
 
 	// Adjustment Reason Code
@@ -413,7 +412,7 @@ const (
 
 	// Debit / Credit Indicator
 
-    // CreditIndicator is a credit
+	// CreditIndicator is a credit
 	CreditIndicator = "CRDT"
 	// DebitIndicator is a debit
 	DebitIndicator = "DBIT"

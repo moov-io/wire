@@ -47,6 +47,12 @@ func (ii *IntermediaryInstitution) String() string {
 	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(ii.tag)
+	buf.WriteString(ii.SwiftFieldTagField())
+	buf.WriteString(ii.SwiftLineOneField())
+	buf.WriteString(ii.SwiftLineTwoField())
+	buf.WriteString(ii.SwiftLineThreeField())
+	buf.WriteString(ii.SwiftLineFourField())
+	buf.WriteString(ii.SwiftLineFiveField())
 	return buf.String()
 }
 
@@ -81,4 +87,34 @@ func (ii *IntermediaryInstitution) Validate() error {
 // invalid the WIRE will return an error.
 func (ii *IntermediaryInstitution) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (ii *IntermediaryInstitution) SwiftFieldTagField() string {
+	return ii.alphaField(ii.CoverPayment.SwiftFieldTag, 5)
+}
+
+// SwiftLineOneField gets a string of the SwiftLineOne field
+func (ii *IntermediaryInstitution) SwiftLineOneField() string {
+	return ii.alphaField(ii.CoverPayment.SwiftLineOne, 35)
+}
+
+// SwiftLineTwoField gets a string of the SwiftLineTwo field
+func (ii *IntermediaryInstitution) SwiftLineTwoField() string {
+	return ii.alphaField(ii.CoverPayment.SwiftLineTwo, 35)
+}
+
+// SwiftLineThreeField gets a string of the SwiftLineThree field
+func (ii *IntermediaryInstitution) SwiftLineThreeField() string {
+	return ii.alphaField(ii.CoverPayment.SwiftLineThree, 35)
+}
+
+// SwiftLineFourField gets a string of the SwiftLineFour field
+func (ii *IntermediaryInstitution) SwiftLineFourField() string {
+	return ii.alphaField(ii.CoverPayment.SwiftLineFour, 35)
+}
+
+// SwiftLineFiveField gets a string of the SwiftLineFive field
+func (ii *IntermediaryInstitution) SwiftLineFiveField() string {
+	return ii.alphaField(ii.CoverPayment.SwiftLineFive, 35)
 }

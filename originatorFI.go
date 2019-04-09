@@ -45,8 +45,13 @@ func (ofi *OriginatorFI) Parse(record string) {
 func (ofi *OriginatorFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(ofi.tag)
+	buf.WriteString(ofi.IdentificationCodeField())
+	buf.WriteString(ofi.IdentifierField())
+	buf.WriteString(ofi.AddressLineOneField())
+	buf.WriteString(ofi.AddressLineTwoField())
+	buf.WriteString(ofi.AddressLineThreeField())
 	return buf.String()
 }
 
@@ -88,4 +93,34 @@ func (ofi *OriginatorFI) Validate() error {
 // invalid the WIRE will return an error.
 func (ofi *OriginatorFI) fieldInclusion() error {
 	return nil
+}
+
+// IdentificationCodeField gets a string of the IdentificationCode field
+func (ofi *OriginatorFI) IdentificationCodeField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.IdentificationCode, 1)
+}
+
+// IdentifierField gets a string of the Identifier field
+func (ofi *OriginatorFI) IdentifierField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Identifier, 34)
+}
+
+// NameField gets a string of the Name field
+func (ofi *OriginatorFI) NameField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Name, 35)
+}
+
+// AddressLineOneField gets a string of AddressLineOne field
+func (ofi *OriginatorFI) AddressLineOneField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineOne, 35)
+}
+
+// AddressLineTwoField gets a string of AddressLineTwo field
+func (ofi *OriginatorFI) AddressLineTwoField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineTwo, 35)
+}
+
+// AddressLineThreeField gets a string of AddressLineThree field
+func (ofi *OriginatorFI) AddressLineThreeField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineThree, 35)
 }

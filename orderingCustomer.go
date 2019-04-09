@@ -48,6 +48,12 @@ func (oc *OrderingCustomer) String() string {
 	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(oc.tag)
+	buf.WriteString(oc.SwiftFieldTagField())
+	buf.WriteString(oc.SwiftLineOneField())
+	buf.WriteString(oc.SwiftLineTwoField())
+	buf.WriteString(oc.SwiftLineThreeField())
+	buf.WriteString(oc.SwiftLineFourField())
+	buf.WriteString(oc.SwiftLineFiveField())
 	return buf.String()
 }
 
@@ -82,4 +88,34 @@ func (oc *OrderingCustomer) Validate() error {
 // invalid the WIRE will return an error.
 func (oc *OrderingCustomer) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (oc *OrderingCustomer) SwiftFieldTagField() string {
+	return oc.alphaField(oc.CoverPayment.SwiftFieldTag, 5)
+}
+
+// SwiftLineOneField gets a string of the SwiftLineOne field
+func (oc *OrderingCustomer) SwiftLineOneField() string {
+	return oc.alphaField(oc.CoverPayment.SwiftLineOne, 35)
+}
+
+// SwiftLineTwoField gets a string of the SwiftLineTwo field
+func (oc *OrderingCustomer) SwiftLineTwoField() string {
+	return oc.alphaField(oc.CoverPayment.SwiftLineTwo, 35)
+}
+
+// SwiftLineThreeField gets a string of the SwiftLineThree field
+func (oc *OrderingCustomer) SwiftLineThreeField() string {
+	return oc.alphaField(oc.CoverPayment.SwiftLineThree, 35)
+}
+
+// SwiftLineFourField gets a string of the SwiftLineFour field
+func (oc *OrderingCustomer) SwiftLineFourField() string {
+	return oc.alphaField(oc.CoverPayment.SwiftLineFour, 35)
+}
+
+// SwiftLineFiveField gets a string of the SwiftLineFive field
+func (oc *OrderingCustomer) SwiftLineFiveField() string {
+	return oc.alphaField(oc.CoverPayment.SwiftLineFive, 35)
 }

@@ -45,6 +45,12 @@ func (fibfi *FIBeneficiaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(209)
+	buf.WriteString(fibfi.LineOneField())
+	buf.WriteString(fibfi.LineTwoField())
+	buf.WriteString(fibfi.LineThreeField())
+	buf.WriteString(fibfi.LineFourField())
+	buf.WriteString(fibfi.LineFiveField())
+	buf.WriteString(fibfi.LineSixField())
 	buf.WriteString(fibfi.tag)
 	return buf.String()
 }
@@ -55,22 +61,22 @@ func (fibfi *FIBeneficiaryFI) Validate() error {
 	if err := fibfi.fieldInclusion(); err != nil {
 		return err
 	}
-	if err:= fibfi.isAlphanumeric(fibfi.FIToFI.LineOne); err!= nil {
+	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fibfi.FIToFI.LineOne)
 	}
-	if err:= fibfi.isAlphanumeric(fibfi.FIToFI.LineTwo); err!= nil {
+	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineTwo); err != nil {
 		return fieldError("LineTwo", err, fibfi.FIToFI.LineTwo)
 	}
-	if err:= fibfi.isAlphanumeric(fibfi.FIToFI.LineThree); err!= nil {
+	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineThree); err != nil {
 		return fieldError("LineThree", err, fibfi.FIToFI.LineThree)
 	}
-	if err:= fibfi.isAlphanumeric(fibfi.FIToFI.LineFour); err!= nil {
+	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineFour); err != nil {
 		return fieldError("LineFour", err, fibfi.FIToFI.LineFour)
 	}
-	if err:= fibfi.isAlphanumeric(fibfi.FIToFI.LineFive); err!= nil {
+	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineFive); err != nil {
 		return fieldError("LineFive", err, fibfi.FIToFI.LineFive)
 	}
-	if err:= fibfi.isAlphanumeric(fibfi.FIToFI.LineSix); err!= nil {
+	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, fibfi.FIToFI.LineSix)
 	}
 	return nil
@@ -80,4 +86,34 @@ func (fibfi *FIBeneficiaryFI) Validate() error {
 // invalid the WIRE will return an error.
 func (fibfi *FIBeneficiaryFI) fieldInclusion() error {
 	return nil
+}
+
+// LineOneField gets a string of the LineOne field
+func (fibfi *FIBeneficiaryFI) LineOneField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (fibfi *FIBeneficiaryFI) LineTwoField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (fibfi *FIBeneficiaryFI) LineThreeField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineThree, 35)
+}
+
+// LineFourField gets a string of the LineFour field
+func (fibfi *FIBeneficiaryFI) LineFourField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineFour, 35)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (fibfi *FIBeneficiaryFI) LineFiveField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineFive, 35)
+}
+
+// LineSixField gets a string of the LineSix field
+func (fibfi *FIBeneficiaryFI) LineSixField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineSix, 35)
 }

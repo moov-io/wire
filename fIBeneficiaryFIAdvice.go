@@ -48,6 +48,13 @@ func (fibfia *FIBeneficiaryFIAdvice) String() string {
 	// ToDo: Separator
 	buf.Grow(200)
 	buf.WriteString(fibfia.tag)
+	buf.WriteString(fibfia.AdviceCodeField())
+	buf.WriteString(fibfia.LineOneField())
+	buf.WriteString(fibfia.LineTwoField())
+	buf.WriteString(fibfia.LineThreeField())
+	buf.WriteString(fibfia.LineFourField())
+	buf.WriteString(fibfia.LineFiveField())
+	buf.WriteString(fibfia.LineSixField())
 	return buf.String()
 }
 
@@ -64,4 +71,39 @@ func (fibfia *FIBeneficiaryFIAdvice) Validate() error {
 // invalid the WIRE will return an error.
 func (fibfia *FIBeneficiaryFIAdvice) fieldInclusion() error {
 	return nil
+}
+
+// AdviceCodeField gets a string of the AdviceCode field
+func (fibfia *FIBeneficiaryFIAdvice) AdviceCodeField() string {
+	return fibfia.alphaField(fibfia.Advice.AdviceCode, 3)
+}
+
+// LineOneField gets a string of the LineOne field
+func (fibfia *FIBeneficiaryFIAdvice) LineOneField() string {
+	return fibfia.alphaField(fibfia.Advice.LineOne, 26)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (fibfia *FIBeneficiaryFIAdvice) LineTwoField() string {
+	return fibfia.alphaField(fibfia.Advice.LineTwo, 33)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (fibfia *FIBeneficiaryFIAdvice) LineThreeField() string {
+	return fibfia.alphaField(fibfia.Advice.LineThree, 33)
+}
+
+// LineFourField gets a string of the LineFour field
+func (fibfia *FIBeneficiaryFIAdvice) LineFourField() string {
+	return fibfia.alphaField(fibfia.Advice.LineFour, 33)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (fibfia *FIBeneficiaryFIAdvice) LineFiveField() string {
+	return fibfia.alphaField(fibfia.Advice.LineFive, 33)
+}
+
+// LineSixField gets a string of the LineSix field
+func (fibfia *FIBeneficiaryFIAdvice) LineSixField() string {
+	return fibfia.alphaField(fiifia.Advice.LineSix, 33)
 }

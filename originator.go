@@ -46,6 +46,11 @@ func (o *Originator) String() string {
 	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(o.tag)
+	buf.WriteString(o.IdentificationCodeField())
+	buf.WriteString(o.IdentifierField())
+	buf.WriteString(o.AddressLineOneField())
+	buf.WriteString(o.AddressLineTwoField())
+	buf.WriteString(o.AddressLineThreeField())
 	return buf.String()
 }
 
@@ -81,4 +86,34 @@ func (o *Originator) Validate() error {
 // invalid the WIRE will return an error.
 func (o *Originator) fieldInclusion() error {
 	return nil
+}
+
+// IdentificationCodeField gets a string of the IdentificationCode field
+func (o *Originator) IdentificationCodeField() string {
+	return o.alphaField(o.Personal.IdentificationCode, 1)
+}
+
+// IdentifierField gets a string of the Identifier field
+func (o *Originator) IdentifierField() string {
+	return o.alphaField(o.Personal.Identifier, 34)
+}
+
+// NameField gets a string of the Name field
+func (o *Originator) NameField() string {
+	return o.alphaField(o.Personal.Name, 35)
+}
+
+// AddressLineOneField gets a string of AddressLineOne field
+func (o *Originator) AddressLineOneField() string {
+	return o.alphaField(o.Personal.Address.AddressLineOne, 35)
+}
+
+// AddressLineTwoField gets a string of AddressLineTwo field
+func (o *Originator) AddressLineTwoField() string {
+	return o.alphaField(o.Personal.Address.AddressLineTwo, 35)
+}
+
+// AddressLineThreeField gets a string of AddressLineThree field
+func (o *Originator) AddressLineThreeField() string {
+	return o.alphaField(o.Personal.Address.AddressLineThree, 35)
 }

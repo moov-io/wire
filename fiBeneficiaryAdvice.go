@@ -48,6 +48,13 @@ func (fiba *FIBeneficiaryAdvice) String() string {
 	// ToDo: Separator
 	buf.Grow(200)
 	buf.WriteString(fiba.tag)
+	buf.WriteString(fiba.AdviceCodeField())
+	buf.WriteString(fiba.LineOneField())
+	buf.WriteString(fiba.LineTwoField())
+	buf.WriteString(fiba.LineThreeField())
+	buf.WriteString(fiba.LineFourField())
+	buf.WriteString(fiba.LineFiveField())
+	buf.WriteString(fiba.LineSixField())
 	return buf.String()
 }
 
@@ -60,22 +67,22 @@ func (fiba *FIBeneficiaryAdvice) Validate() error {
 	if err := fiba.isAdviceCode(fiba.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, fiba.Advice.AdviceCode)
 	}
-	if err:= fiba.isAlphanumeric(fiba.Advice.LineOne); err!= nil {
+	if err := fiba.isAlphanumeric(fiba.Advice.LineOne); err != nil {
 		return fieldError("LineOne", err, fiba.Advice.LineOne)
 	}
-	if err:= fiba.isAlphanumeric(fiba.Advice.LineTwo); err!= nil {
+	if err := fiba.isAlphanumeric(fiba.Advice.LineTwo); err != nil {
 		return fieldError("LineTwo", err, fiba.Advice.LineTwo)
 	}
-	if err:= fiba.isAlphanumeric(fiba.Advice.LineThree); err!= nil {
+	if err := fiba.isAlphanumeric(fiba.Advice.LineThree); err != nil {
 		return fieldError("LineThree", err, fiba.Advice.LineThree)
 	}
-	if err:= fiba.isAlphanumeric(fiba.Advice.LineFour); err!= nil {
+	if err := fiba.isAlphanumeric(fiba.Advice.LineFour); err != nil {
 		return fieldError("LineFour", err, fiba.Advice.LineFour)
 	}
-	if err:= fiba.isAlphanumeric(fiba.Advice.LineFive); err!= nil {
+	if err := fiba.isAlphanumeric(fiba.Advice.LineFive); err != nil {
 		return fieldError("LineFive", err, fiba.Advice.LineFive)
 	}
-	if err:= fiba.isAlphanumeric(fiba.Advice.LineSix); err!= nil {
+	if err := fiba.isAlphanumeric(fiba.Advice.LineSix); err != nil {
 		return fieldError("LineSix", err, fiba.Advice.LineSix)
 	}
 	return nil
@@ -85,4 +92,39 @@ func (fiba *FIBeneficiaryAdvice) Validate() error {
 // invalid the WIRE will return an error.
 func (fiba *FIBeneficiaryAdvice) fieldInclusion() error {
 	return nil
+}
+
+// AdviceCodeField gets a string of the AdviceCode field
+func (fiba *FIBeneficiaryAdvice) AdviceCodeField() string {
+	return fiba.alphaField(fiba.Advice.AdviceCode, 3)
+}
+
+// LineOneField gets a string of the LineOne field
+func (fiba *FIBeneficiaryAdvice) LineOneField() string {
+	return fiba.alphaField(fiba.Advice.LineOne, 26)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (fiba *FIBeneficiaryAdvice) LineTwoField() string {
+	return fiba.alphaField(fiba.Advice.LineTwo, 33)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (fiba *FIBeneficiaryAdvice) LineThreeField() string {
+	return fiba.alphaField(fiba.Advice.LineThree, 33)
+}
+
+// LineFourField gets a string of the LineFour field
+func (fiba *FIBeneficiaryAdvice) LineFourField() string {
+	return fiba.alphaField(fiba.Advice.LineFour, 33)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (fiba *FIBeneficiaryAdvice) LineFiveField() string {
+	return fiba.alphaField(fiba.Advice.LineFive, 33)
+}
+
+// LineSixField gets a string of the LineSix field
+func (fiba *FIBeneficiaryAdvice) LineSixField() string {
+	return fiba.alphaField(fiifia.Advice.LineSix, 33)
 }

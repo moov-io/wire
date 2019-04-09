@@ -48,6 +48,13 @@ func (sr *SenderToReceiver) String() string {
 	// ToDo: Separator
 	buf.Grow(221)
 	buf.WriteString(sr.tag)
+	buf.WriteString(sr.SwiftFieldTagField())
+	buf.WriteString(sr.SwiftLineOneField())
+	buf.WriteString(sr.SwiftLineTwoField())
+	buf.WriteString(sr.SwiftLineThreeField())
+	buf.WriteString(sr.SwiftLineFourField())
+	buf.WriteString(sr.SwiftLineFiveField())
+	buf.WriteString(sr.SwiftLineSixField())
 	return buf.String()
 }
 
@@ -85,4 +92,39 @@ func (sr *SenderToReceiver) Validate() error {
 // invalid the WIRE will return an error.
 func (sr *SenderToReceiver) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (sr *SenderToReceiver) SwiftFieldTagField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftFieldTag, 5)
+}
+
+// SwiftLineOneField gets a string of the SwiftLineOne field
+func (sr *SenderToReceiver) SwiftLineOneField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftLineOne, 35)
+}
+
+// SwiftLineTwoField gets a string of the SwiftLineTwo field
+func (sr *SenderToReceiver) SwiftLineTwoField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftLineTwo, 35)
+}
+
+// SwiftLineThreeField gets a string of the SwiftLineThree field
+func (sr *SenderToReceiver) SwiftLineThreeField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftLineThree, 35)
+}
+
+// SwiftLineFourField gets a string of the SwiftLineFour field
+func (sr *SenderToReceiver) SwiftLineFourField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftLineFour, 35)
+}
+
+// SwiftLineFiveField gets a string of the SwiftLineFive field
+func (sr *SenderToReceiver) SwiftLineFiveField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftLineFive, 35)
+}
+
+// SwiftLineSixField gets a string of the SwiftLineSix field
+func (sr *SenderToReceiver) SwiftLineSixField() string {
+	return sr.alphaField(sr.CoverPayment.SwiftLineSix, 35)
 }

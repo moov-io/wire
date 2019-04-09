@@ -45,8 +45,13 @@ func (ifi *InstructingFI) Parse(record string) {
 func (ifi *InstructingFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(175)
+	buf.Grow(181)
 	buf.WriteString(ifi.tag)
+	buf.WriteString(ifi.IdentificationCodeField())
+	buf.WriteString(ifi.IdentifierField())
+	buf.WriteString(ifi.AddressLineOneField())
+	buf.WriteString(ifi.AddressLineTwoField())
+	buf.WriteString(ifi.AddressLineThreeField())
 	return buf.String()
 }
 
@@ -88,4 +93,34 @@ func (ifi *InstructingFI) Validate() error {
 // invalid the WIRE will return an error.
 func (ifi *InstructingFI) fieldInclusion() error {
 	return nil
+}
+
+// IdentificationCodeField gets a string of the IdentificationCode field
+func (ifi *InstructingFI) IdentificationCodeField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.IdentificationCode, 1)
+}
+
+// IdentifierField gets a string of the Identifier field
+func (ifi *InstructingFI) IdentifierField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Identifier, 34)
+}
+
+// NameField gets a string of the Name field
+func (ifi *InstructingFI) NameField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Name, 35)
+}
+
+// AddressLineOneField gets a string of AddressLineOne field
+func (ifi *InstructingFI) AddressLineOneField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineOne, 35)
+}
+
+// AddressLineTwoField gets a string of AddressLineTwo field
+func (ifi *InstructingFI) AddressLineTwoField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineTwo, 35)
+}
+
+// AddressLineThreeField gets a string of AddressLineThree field
+func (ifi *InstructingFI) AddressLineThreeField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35)
 }

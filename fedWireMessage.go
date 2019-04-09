@@ -102,9 +102,8 @@ type FedWireMessage struct {
 	InstitutionAccount *InstitutionAccount `json:"institutionAccount,omitempty"`
 	// BeneficiaryCustomer
 	BeneficiaryCustomer *BeneficiaryCustomer `json:"beneficiaryCustomer,omitempty"`
-	// ToDo: Remove Information
 	// Remittance
-	Remittance *RemittanceInformation `json:"remittance,omitempty"`
+	Remittance *Remittance `json:"remittance,omitempty"`
 	// SenderToReceiver
 	SenderToReceiver *SenderToReceiver `json:"senderToReceiver,omitempty"`
 	// UnstructuredAddenda
@@ -587,12 +586,12 @@ func (fwm *FedWireMessage) GetBeneficiaryCustomer() *BeneficiaryCustomer {
 }
 
 // SetRemittance appends a Remittance to the FedWireMessage
-func (fwm *FedWireMessage) SetRemittance(ri *RemittanceInformation) {
+func (fwm *FedWireMessage) SetRemittance(ri *Remittance) {
 	fwm.Remittance = ri
 }
 
 // GetRemittance returns the current Remittance
-func (fwm *FedWireMessage) GetRemittance() *RemittanceInformation {
+func (fwm *FedWireMessage) GetRemittance() *Remittance {
 	return fwm.Remittance
 }
 

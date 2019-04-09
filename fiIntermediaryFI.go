@@ -47,6 +47,12 @@ func (fiifi *FIIntermediaryFI) String() string {
 	// ToDo: Separator
 	buf.Grow(209)
 	buf.WriteString(fiifi.tag)
+	buf.WriteString(fiifi.LineOneField())
+	buf.WriteString(fiifi.LineTwoField())
+	buf.WriteString(fiifi.LineThreeField())
+	buf.WriteString(fiifi.LineFourField())
+	buf.WriteString(fiifi.LineFiveField())
+	buf.WriteString(fiifi.LineSixField())
 	return buf.String()
 }
 
@@ -81,4 +87,34 @@ func (fiifi *FIIntermediaryFI) Validate() error {
 // invalid the WIRE will return an error.
 func (fiifi *FIIntermediaryFI) fieldInclusion() error {
 	return nil
+}
+
+// LineOneField gets a string of the LineOne field
+func (fiifi *FIIntermediaryFI) LineOneField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (fiifi *FIIntermediaryFI) LineTwoField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (fiifi *FIIntermediaryFI) LineThreeField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineThree, 35)
+}
+
+// LineFourField gets a string of the LineFour field
+func (fiifi *FIIntermediaryFI) LineFourField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineFour, 35)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (fiifi *FIIntermediaryFI) LineFiveField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineFive, 35)
+}
+
+// LineSixField gets a string of the LineSix field
+func (fiifi *FIIntermediaryFI) LineSixField() string {
+	return fiifi.alphaField(firfi.FIToFI.LineSix, 35)
 }

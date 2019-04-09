@@ -47,6 +47,11 @@ func (bfi *BeneficiaryFI) String() string {
 	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(bfi.tag)
+	buf.WriteString(bfi.IdentificationCodeField())
+	buf.WriteString(bfi.IdentifierField())
+	buf.WriteString(bfi.AddressLineOneField())
+	buf.WriteString(bfi.AddressLineTwoField())
+	buf.WriteString(bfi.AddressLineThreeField())
 	return buf.String()
 }
 
@@ -88,4 +93,34 @@ func (bfi *BeneficiaryFI) Validate() error {
 // invalid the WIRE will return an error.
 func (bfi *BeneficiaryFI) fieldInclusion() error {
 	return nil
+}
+
+// IdentificationCodeField gets a string of the IdentificationCode field
+func (bfi *BeneficiaryFI) IdentificationCodeField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.IdentificationCode, 1)
+}
+
+// IdentifierField gets a string of the Identifier field
+func (bfi *BeneficiaryFI) IdentifierField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Identifier, 34)
+}
+
+// NameField gets a string of the Name field
+func (bfi *BeneficiaryFI) NameField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Name, 35)
+}
+
+// AddressLineOneField gets a string of AddressLineOne field
+func (bfi *BeneficiaryFI) AddressLineOneField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineOne, 35)
+}
+
+// AddressLineTwoField gets a string of AddressLineTwo field
+func (bfi *BeneficiaryFI) AddressLineTwoField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineTwo, 35)
+}
+
+// AddressLineThreeField gets a string of AddressLineThree field
+func (bfi *BeneficiaryFI) AddressLineThreeField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineThree, 35)
 }

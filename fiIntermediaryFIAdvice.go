@@ -48,6 +48,13 @@ func (fiifia *FIIntermediaryFIAdvice) String() string {
 	// ToDo: Separator
 	buf.Grow(200)
 	buf.WriteString(fiifia.tag)
+	buf.WriteString(fiifia.AdviceCodeField())
+	buf.WriteString(fiifia.LineOneField())
+	buf.WriteString(fiifia.LineTwoField())
+	buf.WriteString(fiifia.LineThreeField())
+	buf.WriteString(fiifia.LineFourField())
+	buf.WriteString(fiifia.LineFiveField())
+	buf.WriteString(fiifia.LineSixField())
 	return buf.String()
 }
 
@@ -85,4 +92,39 @@ func (fiifia *FIIntermediaryFIAdvice) Validate() error {
 // invalid the WIRE will return an error.
 func (fiifia *FIIntermediaryFIAdvice) fieldInclusion() error {
 	return nil
+}
+
+// AdviceCodeField gets a string of the AdviceCode field
+func (fiifia *FIIntermediaryFIAdvice) AdviceCodeField() string {
+	return fiifia.alphaField(fiifia.Advice.AdviceCode, 3)
+}
+
+// LineOneField gets a string of the LineOne field
+func (fiifia *FIIntermediaryFIAdvice) LineOneField() string {
+	return fiifia.alphaField(fiifia.Advice.LineOne, 26)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (fiifia *FIIntermediaryFIAdvice) LineTwoField() string {
+	return fiifia.alphaField(fiifia.Advice.LineTwo, 33)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (fiifia *FIIntermediaryFIAdvice) LineThreeField() string {
+	return fiifia.alphaField(fiifia.Advice.LineThree, 33)
+}
+
+// LineFourField gets a string of the LineFour field
+func (fiifia *FIIntermediaryFIAdvice) LineFourField() string {
+	return fiifia.alphaField(fiifia.Advice.LineFour, 33)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (fiifia *FIIntermediaryFIAdvice) LineFiveField() string {
+	return fiifia.alphaField(fiifia.Advice.LineFive, 33)
+}
+
+// LineSixField gets a string of the LineSix field
+func (fiifia *FIIntermediaryFIAdvice) LineSixField() string {
+	return fiifia.alphaField(fiifia.Advice.LineSix, 33)
 }

@@ -6,8 +6,8 @@ package wire
 
 import "strings"
 
-// RemittanceInformation is the remittance information
-type RemittanceInformation struct {
+// Remittance is the remittance information
+type Remittance struct {
 	// tag
 	tag string
 	// CoverPayment is CoverPayment
@@ -19,19 +19,19 @@ type RemittanceInformation struct {
 	converters
 }
 
-// NewRemittanceInformation returns a new RemittanceInformation
-func NewRemittanceInformation() RemittanceInformation {
-	ri := RemittanceInformation{
-		tag: TagRemittanceInformation,
+// NewRemittance returns a new Remittance
+func NewRemittance() Remittance {
+	ri := Remittance{
+		tag: TagRemittance,
 	}
 	return ri
 }
 
-// Parse takes the input string and parses the RemittanceInformation values
+// Parse takes the input string and parses the Remittance values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ri *RemittanceInformation) Parse(record string) {
+func (ri *Remittance) Parse(record string) {
 	ri.tag = record[:6]
 	ri.CoverPayment.SwiftFieldTag = ri.parseStringField(record[6:11])
 	ri.CoverPayment.SwiftLineOne = ri.parseStringField(record[11:46])
@@ -40,18 +40,23 @@ func (ri *RemittanceInformation) Parse(record string) {
 	ri.CoverPayment.SwiftLineFour = ri.parseStringField(record[116:151])
 }
 
-// String writes RemittanceInformation
-func (ri *RemittanceInformation) String() string {
+// String writes Remittance
+func (ri *Remittance) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(151)
 	buf.WriteString(ri.tag)
+	buf.WriteString(ri.SwiftFieldTagField())
+	buf.WriteString(ri.SwiftLineOneField())
+	buf.WriteString(ri.SwiftLineTwoField())
+	buf.WriteString(ri.SwiftLineThreeField())
+	buf.WriteString(ri.SwiftLineFourField())
 	return buf.String()
 }
 
-// Validate performs WIRE format rule checks on RemittanceInformation and returns an error if not Validated
+// Validate performs WIRE format rule checks on Remittance and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (ri *RemittanceInformation) Validate() error {
+func (ri *Remittance) Validate() error {
 	if err := ri.fieldInclusion(); err != nil {
 		return err
 	}
@@ -75,6 +80,31 @@ func (ri *RemittanceInformation) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ri *RemittanceInformation) fieldInclusion() error {
+func (ri *Remittance) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (ri *Remittance) SwiftFieldTagField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftFieldTag, 5)
+}
+
+// SwiftLineOneField gets a string of the SwiftLineOne field
+func (ri *Remittance) SwiftLineOneField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineOne, 35)
+}
+
+// SwiftLineTwoField gets a string of the SwiftLineTwo field
+func (ri *Remittance) SwiftLineTwoField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineTwo, 35)
+}
+
+// SwiftLineThreeField gets a string of the SwiftLineThree field
+func (ri *Remittance) SwiftLineThreeField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineThree, 35)
+}
+
+// SwiftLineFourField gets a string of the SwiftLineFour field
+func (ri *Remittance) SwiftLineFourField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineFour, 35)
 }

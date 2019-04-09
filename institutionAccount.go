@@ -47,6 +47,12 @@ func (ia *InstitutionAccount) String() string {
 	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(ia.tag)
+	buf.WriteString(ia.SwiftFieldTagField())
+	buf.WriteString(ia.SwiftLineOneField())
+	buf.WriteString(ia.SwiftLineTwoField())
+	buf.WriteString(ia.SwiftLineThreeField())
+	buf.WriteString(ia.SwiftLineFourField())
+	buf.WriteString(ia.SwiftLineFiveField())
 	return buf.String()
 }
 
@@ -81,4 +87,34 @@ func (ia *InstitutionAccount) Validate() error {
 // invalid the WIRE will return an error.
 func (ia *InstitutionAccount) fieldInclusion() error {
 	return nil
+}
+
+// SwiftFieldTagField gets a string of the SwiftFieldTag field
+func (ia *InstitutionAccount) SwiftFieldTagField() string {
+	return ia.alphaField(ia.CoverPayment.SwiftFieldTag, 5)
+}
+
+// SwiftLineOneField gets a string of the SwiftLineOne field
+func (ia *InstitutionAccount) SwiftLineOneField() string {
+	return ia.alphaField(ia.CoverPayment.SwiftLineOne, 35)
+}
+
+// SwiftLineTwoField gets a string of the SwiftLineTwo field
+func (ia *InstitutionAccount) SwiftLineTwoField() string {
+	return ia.alphaField(ia.CoverPayment.SwiftLineTwo, 35)
+}
+
+// SwiftLineThreeField gets a string of the SwiftLineThree field
+func (ia *InstitutionAccount) SwiftLineThreeField() string {
+	return ia.alphaField(ia.CoverPayment.SwiftLineThree, 35)
+}
+
+// SwiftLineFourField gets a string of the SwiftLineFour field
+func (ia *InstitutionAccount) SwiftLineFourField() string {
+	return ia.alphaField(ia.CoverPayment.SwiftLineFour, 35)
+}
+
+// SwiftLineFiveField gets a string of the SwiftLineFive field
+func (ia *InstitutionAccount) SwiftLineFiveField() string {
+	return ia.alphaField(ia.CoverPayment.SwiftLineFive, 35)
 }
