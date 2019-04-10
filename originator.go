@@ -20,8 +20,8 @@ type Originator struct {
 }
 
 // NewOriginator returns a new Originator
-func NewOriginator() Originator {
-	o := Originator{
+func NewOriginator() *Originator {
+	o := &Originator{
 		tag: TagOriginator,
 	}
 	return o

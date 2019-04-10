@@ -24,8 +24,8 @@ type InputMessageAccountabilityData struct {
 }
 
 // NewInputMessageAccountabilityData returns a new InputMessageAccountabilityData
-func NewInputMessageAccountabilityData() InputMessageAccountabilityData {
-	imad := InputMessageAccountabilityData{
+func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
+	imad := &InputMessageAccountabilityData{
 		tag: TagInputMessageAccountabilityData,
 	}
 	return imad

@@ -22,8 +22,8 @@ type SenderDepositoryInstitution struct {
 }
 
 // NewSenderDepositoryInstitution returns a new SenderDepositoryInstitution
-func NewSenderDepositoryInstitution() SenderDepositoryInstitution {
-	sdi := SenderDepositoryInstitution{
+func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
+	sdi := &SenderDepositoryInstitution{
 		tag: TagSenderDepositoryInstitution,
 	}
 	return sdi

@@ -23,8 +23,8 @@ type BusinessFunctionCode struct {
 }
 
 // NewBusinessFunctionCode returns a new BusinessFunctionCode
-func NewBusinessFunctionCode() BusinessFunctionCode {
-	bfc := BusinessFunctionCode{
+func NewBusinessFunctionCode() *BusinessFunctionCode {
+	bfc := &BusinessFunctionCode{
 		tag: TagBusinessFunctionCode,
 	}
 	return bfc

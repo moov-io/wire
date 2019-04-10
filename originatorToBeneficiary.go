@@ -26,8 +26,8 @@ type OriginatorToBeneficiary struct {
 }
 
 // NewOriginatorToBeneficiary returns a new OriginatorToBeneficiary
-func NewOriginatorToBeneficiary() OriginatorToBeneficiary {
-	ob := OriginatorToBeneficiary{
+func NewOriginatorToBeneficiary() *OriginatorToBeneficiary {
+	ob := &OriginatorToBeneficiary{
 		tag: TagOriginatorToBeneficiary,
 	}
 	return ob

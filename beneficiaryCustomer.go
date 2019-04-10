@@ -20,8 +20,8 @@ type BeneficiaryCustomer struct {
 }
 
 // NewBeneficiaryCustomer returns a new BeneficiaryCustomer
-func NewBeneficiaryCustomer() BeneficiaryCustomer {
-	bc := BeneficiaryCustomer{
+func NewBeneficiaryCustomer() *BeneficiaryCustomer {
+	bc := &BeneficiaryCustomer{
 		tag: TagBeneficiaryCustomer,
 	}
 	return bc

@@ -20,8 +20,8 @@ type Amount struct {
 }
 
 // NewAmount returns a new Amount
-func NewAmount() Amount {
-	a := Amount{
+func NewAmount() *Amount {
+	a := &Amount{
 		tag: TagAmount,
 	}
 	return a

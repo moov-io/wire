@@ -20,8 +20,8 @@ type BeneficiaryReference struct {
 }
 
 // NewBeneficiaryReference returns a new BeneficiaryReference
-func NewBeneficiaryReference() BeneficiaryReference {
-	br := BeneficiaryReference{
+func NewBeneficiaryReference() *BeneficiaryReference {
+	br := &BeneficiaryReference{
 		tag: TagBeneficiaryReference,
 	}
 	return br

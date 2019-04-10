@@ -22,8 +22,8 @@ type ReceiverDepositoryInstitution struct {
 }
 
 // NewReceiverDepositoryInstitution returns a new ReceiverDepositoryInstitution
-func NewReceiverDepositoryInstitution() ReceiverDepositoryInstitution {
-	rdi := ReceiverDepositoryInstitution{
+func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
+	rdi := &ReceiverDepositoryInstitution{
 		tag: TagReceiverDepositoryInstitution,
 	}
 	return rdi

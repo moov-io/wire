@@ -22,8 +22,8 @@ type TypeSubType struct {
 }
 
 // NewTypeSubType returns a new TypeSubType
-func NewTypeSubType() TypeSubType {
-	tst := TypeSubType{
+func NewTypeSubType() *TypeSubType {
+	tst := &TypeSubType{
 		tag: TagTypeSubType,
 	}
 	return tst

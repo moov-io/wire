@@ -25,8 +25,8 @@ type AccountDebitedDrawdown struct {
 }
 
 // NewAccountDebitedDrawdown returns a new AccountDebitedDrawdown
-func NewAccountDebitedDrawdown() AccountDebitedDrawdown {
-	debitDD := AccountDebitedDrawdown{
+func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
+	debitDD := &AccountDebitedDrawdown{
 		tag: TagAccountDebitedDrawdown,
 	}
 	return debitDD

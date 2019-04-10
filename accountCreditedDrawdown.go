@@ -20,8 +20,8 @@ type AccountCreditedDrawdown struct {
 }
 
 // NewAccountCreditedDrawdown returns a new AccountCreditedDrawdown
-func NewAccountCreditedDrawdown() AccountCreditedDrawdown {
-	creditDD := AccountCreditedDrawdown{
+func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
+	creditDD := &AccountCreditedDrawdown{
 		tag: TagAccountCreditedDrawdown,
 	}
 	return creditDD

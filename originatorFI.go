@@ -20,8 +20,8 @@ type OriginatorFI struct {
 }
 
 // NewOriginatorFI returns a new OriginatorFI
-func NewOriginatorFI() OriginatorFI {
-	ofi := OriginatorFI{
+func NewOriginatorFI() *OriginatorFI {
+	ofi := &OriginatorFI{
 		tag: TagOriginatorFI,
 	}
 	return ofi

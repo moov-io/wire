@@ -20,8 +20,8 @@ type BeneficiaryIntermediaryFI struct {
 }
 
 // NewBeneficiaryIntermediaryFI returns a new BeneficiaryIntermediaryFI
-func NewBeneficiaryIntermediaryFI() BeneficiaryIntermediaryFI {
-	bifi := BeneficiaryIntermediaryFI{
+func NewBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
+	bifi := &BeneficiaryIntermediaryFI{
 		tag: TagBeneficiaryIntermediaryFI,
 	}
 	return bifi
