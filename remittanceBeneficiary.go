@@ -18,9 +18,10 @@ type RemittanceBeneficiary struct {
 	IdentificationNumber string `json:"identificationNumber,omitempty"`
 	// IdentificationNumberIssuer
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
-	// DateAndfBirthPlace
-	DateAndBirthPlace string         `json:"dateAndBirthPlace,omitempty"`
-	RemittanceData    RemittanceData `json:"remittanceData,omitempty"`
+	// RemittanceData
+	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
+	// CountryOfResidence
+	CountryOfResidence string `json:"countryOfResidence, omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -47,7 +48,7 @@ func (rb *RemittanceBeneficiary) Parse(record string) {
 	rb.IdentificationCode = rb.parseStringField(record[148:154])
 	rb.IdentificationNumber = rb.parseStringField(record[154:189])
 	rb.IdentificationNumberIssuer = rb.parseStringField(record[189:224])
-	//rb.RemittanceData.DateBirthPlace = rb.parseStringField(record[224:306])
+	rb.RemittanceData.DateBirthPlace = rb.parseStringField(record[224:306])
 	rb.RemittanceData.AddressType = rb.parseStringField(record[306:310])
 	rb.RemittanceData.Department = rb.parseStringField(record[310:380])
 	rb.RemittanceData.SubDepartment = rb.parseStringField(record[380:450])
@@ -72,6 +73,29 @@ func (rb *RemittanceBeneficiary) String() string {
 	// ToDo: Separator
 	buf.Grow(1114)
 	buf.WriteString(rb.tag)
+	buf.WriteString(rb.NameField())
+	buf.WriteString(rb.IdentificationTypeField())
+	buf.WriteString(rb.IdentificationCodeField())
+	buf.WriteString(rb.IdentificationNumberField())
+	buf.WriteString(rb.IdentificationNumberIssuerField())
+	buf.WriteString(rb.DateBirthPlaceField())
+	buf.WriteString(rb.AddressTypeField())
+	buf.WriteString(rb.DepartmentField())
+	buf.WriteString(rb.SubDepartmentField())
+	buf.WriteString(rb.StreetNameField())
+	buf.WriteString(rb.BuildingNumberField())
+	buf.WriteString(rb.PostCodeField())
+	buf.WriteString(rb.TownNameField())
+	buf.WriteString(rb.CountrySubDivisionStateField())
+	buf.WriteString(rb.CountryField())
+	buf.WriteString(rb.AddressLineOneField())
+	buf.WriteString(rb.AddressLineTwoField())
+	buf.WriteString(rb.AddressLineThreeField())
+	buf.WriteString(rb.AddressLineFourField())
+	buf.WriteString(rb.AddressLineFiveField())
+	buf.WriteString(rb.AddressLineSixField())
+	buf.WriteString(rb.AddressLineSevenField())
+	buf.WriteString(rb.CountryOfResidenceField())
 	return buf.String()
 }
 
@@ -160,4 +184,119 @@ func (rb *RemittanceBeneficiary) Validate() error {
 // invalid the WIRE will return an error.
 func (rb *RemittanceBeneficiary) fieldInclusion() error {
 	return nil
+}
+
+// NameField gets a string of the Name field
+func (rb *RemittanceBeneficiary) NameField() string {
+	return rb.alphaField(rb.RemittanceData.Name, 140)
+}
+
+// IdentificationTypeField gets a string of the IdentificationType field
+func (rb *RemittanceBeneficiary) IdentificationTypeField() string {
+	return rb.alphaField(rb.IdentificationType, 2)
+}
+
+// IdentificationCodeField gets a string of the IdentificationCode field
+func (rb *RemittanceBeneficiary) IdentificationCodeField() string {
+	return rb.alphaField(rb.IdentificationCode, 4)
+}
+
+// IdentificationNumberField gets a string of the IdentificationNumber field
+func (rb *RemittanceBeneficiary) IdentificationNumberField() string {
+	return rb.alphaField(rb.IdentificationNumber, 35)
+}
+
+// IdentificationNumberIssuerField gets a string of the IdentificationNumberIssuer field
+func (rb *RemittanceBeneficiary) IdentificationNumberIssuerField() string {
+	return rb.alphaField(rb.IdentificationNumberIssuer, 35)
+}
+
+// DateBirthPlaceField gets a string of the DateBirthPlace field
+func (rb *RemittanceBeneficiary) DateBirthPlaceField() string {
+	return rb.alphaField(rb.RemittanceData.DateBirthPlace, 82)
+}
+
+// AddressTypeField gets a string of the AddressType field
+func (rb *RemittanceBeneficiary) AddressTypeField() string {
+	return rb.alphaField(rb.RemittanceData.AddressType, 4)
+}
+
+// DepartmentField gets a string of the Department field
+func (rb *RemittanceBeneficiary) DepartmentField() string {
+	return rb.alphaField(rb.RemittanceData.Department, 70)
+}
+
+// SubDepartmentField gets a string of the SubDepartment field
+func (rb *RemittanceBeneficiary) SubDepartmentField() string {
+	return rb.alphaField(rb.RemittanceData.SubDepartment, 70)
+}
+
+// StreetNameField gets a string of the StreetName field
+func (rb *RemittanceBeneficiary) StreetNameField() string {
+	return rb.alphaField(rb.RemittanceData.StreetName, 70)
+}
+
+// BuildingNumberField gets a string of the BuildingNumber field
+func (rb *RemittanceBeneficiary) BuildingNumberField() string {
+	return rb.alphaField(rb.RemittanceData.BuildingNumber, 16)
+}
+
+// PostCodeField gets a string of the PostCode field
+func (rb *RemittanceBeneficiary) PostCodeField() string {
+	return rb.alphaField(rb.RemittanceData.PostCode, 16)
+}
+
+// TownNameField gets a string of the TownName field
+func (rb *RemittanceBeneficiary) TownNameField() string {
+	return rb.alphaField(rb.RemittanceData.TownName, 35)
+}
+
+// CountrySubDivisionStateField gets a string of the CountrySubDivisionState field
+func (rb *RemittanceBeneficiary) CountrySubDivisionStateField() string {
+	return rb.alphaField(rb.RemittanceData.CountrySubDivisionState, 35)
+}
+
+// CountryField gets a string of the Country field
+func (rb *RemittanceBeneficiary) CountryField() string {
+	return rb.alphaField(rb.RemittanceData.Country, 2)
+}
+
+// AddressLineOneField gets a string of the AddressLineOne field
+func (rb *RemittanceBeneficiary) AddressLineOneField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineOne, 70)
+}
+
+// AddressLineTwoField gets a string of the AddressLineTwo field
+func (rb *RemittanceBeneficiary) AddressLineTwoField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineTwo, 70)
+}
+
+// AddressLineThreeField gets a string of the AddressLineThree field
+func (rb *RemittanceBeneficiary) AddressLineThreeField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineThree, 70)
+}
+
+// AddressLineFourField gets a string of the AddressLineFour field
+func (rb *RemittanceBeneficiary) AddressLineFourField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineFour, 70)
+}
+
+// AddressLineFiveField gets a string of the AddressLineFive field
+func (rb *RemittanceBeneficiary) AddressLineFiveField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineFive, 70)
+}
+
+// AddressLineSixField gets a string of the AddressLineSix field
+func (rb *RemittanceBeneficiary) AddressLineSixField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineSix, 70)
+}
+
+// AddressLineSevenField gets a string of the AddressLineSeven field
+func (rb *RemittanceBeneficiary) AddressLineSevenField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineSeven, 70)
+}
+
+// CountryOfResidenceField gets a string of the CountryOfResidence field
+func (rb *RemittanceBeneficiary) CountryOfResidenceField() string {
+	return rb.alphaField(rb.CountryOfResidence, 2)
 }

@@ -65,8 +65,28 @@ func (rr *RelatedRemittance) Parse(record string) {
 func (rr *RelatedRemittance) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(3035)
+	buf.Grow(3039)
 	buf.WriteString(rr.tag)
+	buf.WriteString(rr.RemittanceIdentificationField())
+	buf.WriteString(rr.RemittanceLocationMethodField())
+	buf.WriteString(rr.RemittanceLocationElectronicAddressField())
+	buf.WriteString(rr.NameField())
+	buf.WriteString(rr.AddressTypeField())
+	buf.WriteString(rr.DepartmentField())
+	buf.WriteString(rr.SubDepartmentField())
+	buf.WriteString(rr.StreetNameField())
+	buf.WriteString(rr.BuildingNumberField())
+	buf.WriteString(rr.PostCodeField())
+	buf.WriteString(rr.TownNameField())
+	buf.WriteString(rr.CountrySubDivisionStateField())
+	buf.WriteString(rr.CountryField())
+	buf.WriteString(rr.AddressLineOneField())
+	buf.WriteString(rr.AddressLineTwoField())
+	buf.WriteString(rr.AddressLineThreeField())
+	buf.WriteString(rr.AddressLineFourField())
+	buf.WriteString(rr.AddressLineFiveField())
+	buf.WriteString(rr.AddressLineSixField())
+	buf.WriteString(rr.AddressLineSevenField())
 	return buf.String()
 }
 
@@ -144,4 +164,104 @@ func (rr *RelatedRemittance) Validate() error {
 // invalid the WIRE will return an error.
 func (rr *RelatedRemittance) fieldInclusion() error {
 	return nil
+}
+
+// RemittanceIdentificationField gets a string of the RemittanceIdentification field
+func (rr *RelatedRemittance) RemittanceIdentificationField() string {
+	return rr.alphaField(rr.RemittanceIdentification, 35)
+}
+
+// RemittanceLocationMethodField gets a string of the RemittanceLocationMethod field
+func (rr *RelatedRemittance) RemittanceLocationMethodField() string {
+	return rr.alphaField(rr.RemittanceLocationMethod, 4)
+}
+
+// RemittanceLocationElectronicAddressField gets a string of the RemittanceLocationElectronicAddress field
+func (rr *RelatedRemittance) RemittanceLocationElectronicAddressField() string {
+	return rr.alphaField(rr.RemittanceLocationElectronicAddress, 2048)
+}
+
+// NameField gets a string of the Name field
+func (rr *RelatedRemittance) NameField() string {
+	return rr.alphaField(rr.RemittanceData.Name, 140)
+}
+
+// AddressTypeField gets a string of the AddressType field
+func (rr *RelatedRemittance) AddressTypeField() string {
+	return rr.alphaField(rr.RemittanceData.AddressType, 4)
+}
+
+// DepartmentField gets a string of the Department field
+func (rr *RelatedRemittance) DepartmentField() string {
+	return rr.alphaField(rr.RemittanceData.Department, 70)
+}
+
+// SubDepartmentField gets a string of the SubDepartment field
+func (rr *RelatedRemittance) SubDepartmentField() string {
+	return rr.alphaField(rr.RemittanceData.SubDepartment, 70)
+}
+
+// StreetNameField gets a string of the StreetName field
+func (rr *RelatedRemittance) StreetNameField() string {
+	return rr.alphaField(rr.RemittanceData.StreetName, 70)
+}
+
+// BuildingNumberField gets a string of the BuildingNumber field
+func (rr *RelatedRemittance) BuildingNumberField() string {
+	return rr.alphaField(rr.RemittanceData.BuildingNumber, 16)
+}
+
+// PostCodeField gets a string of the PostCode field
+func (rr *RelatedRemittance) PostCodeField() string {
+	return rr.alphaField(rr.RemittanceData.PostCode, 16)
+}
+
+// TownNameField gets a string of the TownName field
+func (rr *RelatedRemittance) TownNameField() string {
+	return rr.alphaField(rr.RemittanceData.TownName, 35)
+}
+
+// CountrySubDivisionStateField gets a string of the CountrySubDivisionState field
+func (rr *RelatedRemittance) CountrySubDivisionStateField() string {
+	return rr.alphaField(rr.RemittanceData.CountrySubDivisionState, 35)
+}
+
+// CountryField gets a string of the Country field
+func (rr *RelatedRemittance) CountryField() string {
+	return rr.alphaField(rr.RemittanceData.Country, 2)
+}
+
+// AddressLineOneField gets a string of the AddressLineOne field
+func (rr *RelatedRemittance) AddressLineOneField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineOne, 70)
+}
+
+// AddressLineTwoField gets a string of the AddressLineTwo field
+func (rr *RelatedRemittance) AddressLineTwoField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineTwo, 70)
+}
+
+// AddressLineThreeField gets a string of the AddressLineThree field
+func (rr *RelatedRemittance) AddressLineThreeField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineThree, 70)
+}
+
+// AddressLineFourField gets a string of the AddressLineFour field
+func (rr *RelatedRemittance) AddressLineFourField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineFour, 70)
+}
+
+// AddressLineFiveField gets a string of the AddressLineFive field
+func (rr *RelatedRemittance) AddressLineFiveField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineFive, 70)
+}
+
+// AddressLineSixField gets a string of the AddressLineSix field
+func (rr *RelatedRemittance) AddressLineSixField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineSix, 70)
+}
+
+// AddressLineSevenField gets a string of the AddressLineSeven field
+func (rr *RelatedRemittance) AddressLineSevenField() string {
+	return rr.alphaField(rr.RemittanceData.AddressLineSeven, 70)
 }

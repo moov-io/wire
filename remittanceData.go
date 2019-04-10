@@ -7,7 +7,10 @@ package wire
 // RemittanceData is remittance data
 type RemittanceData struct {
 	// Name
-	Name        string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
+	// DateBirthPlace
+	DateBirthPlace string `json:"dateBirthPlace,omitempty""`
+	// AddressType
 	AddressType string `json:"addressType,omitempty"`
 	// Department
 	Department string `json:"department,omitempty"`

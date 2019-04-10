@@ -377,7 +377,6 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -399,6 +398,7 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           fiIntermediaryFIAdvice:
             adviceCode: HLD
@@ -582,12 +582,12 @@ components:
             identificationType: OI
             countryOfResidence: US
             contactMobileNumber: 555.555.5555
-            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
@@ -777,7 +777,6 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -799,6 +798,7 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           fiIntermediaryFIAdvice:
             adviceCode: HLD
@@ -982,12 +982,12 @@ components:
             identificationType: OI
             countryOfResidence: US
             contactMobileNumber: 555.555.5555
-            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
@@ -1190,7 +1190,6 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -1212,6 +1211,7 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           fiIntermediaryFIAdvice:
             adviceCode: HLD
@@ -1395,12 +1395,12 @@ components:
             identificationType: OI
             countryOfResidence: US
             contactMobileNumber: 555.555.5555
-            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
@@ -1590,7 +1590,6 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
@@ -1612,6 +1611,7 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           fiIntermediaryFIAdvice:
             adviceCode: HLD
@@ -1795,12 +1795,12 @@ components:
             identificationType: OI
             countryOfResidence: US
             contactMobileNumber: 555.555.5555
-            dateAndBirthPlace: 03062013 Chester
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
@@ -2008,7 +2008,6 @@ components:
           sendersChargesTwo: USD1234,56
         remittanceBeneficiary:
           identificationCode: BANK
-          dateAndBirthPlace: 03062013 Chester
           remittanceData:
             country: US
             townName: Any Town
@@ -2030,6 +2029,7 @@ components:
             addressLineSeven: AddressLineSeven
           identificationNumber: "192827828"
           identificationType: OI
+          dateBirthPlace: 03062013 Chester
           identificationNumberIssuer: Identification Number Issuer
         fiIntermediaryFIAdvice:
           adviceCode: HLD
@@ -2213,12 +2213,12 @@ components:
           identificationType: OI
           countryOfResidence: US
           contactMobileNumber: 555.555.5555
-          dateAndBirthPlace: 03062013 Chester
           contactFaxNumber: 555.555.5555
           identificationNumber: "192827828"
           contactOther: Contact Other
           contactPhoneNumber: 555.555.5555
           contactElectronicAddress: https://moov.io
+          dateBirthPlace: 03062013 Chester
           identificationNumberIssuer: Identification Number Issuer
         actualAmountPaid:
           amount: "1234.56789"
@@ -3398,12 +3398,12 @@ components:
         identificationType: OI
         countryOfResidence: US
         contactMobileNumber: 555.555.5555
-        dateAndBirthPlace: 03062013 Chester
         contactFaxNumber: 555.555.5555
         identificationNumber: "192827828"
         contactOther: Contact Other
         contactPhoneNumber: 555.555.5555
         contactElectronicAddress: https://moov.io
+        dateBirthPlace: 03062013 Chester
         identificationNumberIssuer: Identification Number Issuer
       properties:
         identificationType:
@@ -3448,8 +3448,8 @@ components:
           example: Identification Number Issuer
           maxLength: 35
           type: string
-        dateAndBirthPlace:
-          description: DateAndBirthPlace
+        dateBirthPlace:
+          description: DateBirthPlace
           example: 03062013 Chester
           maxLength: 82
           type: string
@@ -3493,7 +3493,6 @@ components:
     RemittanceBeneficiary:
       example:
         identificationCode: BANK
-        dateAndBirthPlace: 03062013 Chester
         remittanceData:
           country: US
           townName: Any Town
@@ -3515,6 +3514,7 @@ components:
           addressLineSeven: AddressLineSeven
         identificationNumber: "192827828"
         identificationType: OI
+        dateBirthPlace: 03062013 Chester
         identificationNumberIssuer: Identification Number Issuer
       properties:
         identificationType:
@@ -3559,8 +3559,8 @@ components:
           example: Identification Number Issuer
           maxLength: 35
           type: string
-        dateAndBirthPlace:
-          description: DateAndfBirthPlace
+        dateBirthPlace:
+          description: DateBirthPlace
           example: 03062013 Chester
           maxLength: 82
           type: string

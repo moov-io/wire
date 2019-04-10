@@ -18,8 +18,8 @@ type RemittanceOriginator struct {
 	IdentificationNumber string `json:"identificationNumber,omitempty"`
 	// IdentificationNumberIssuer
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
-	// DateAndBirthPlace
-	DateAndBirthPlace string `json:"dateAndBirthPlace,omitempty"`
+	// DateBirthPlace
+	DateBirthPlace string `json:"dateBirthPlace,omitempty"`
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 	// CountryOfResidence
 	CountryOfResidence string `json:"countryOfResidence,omitempty"`

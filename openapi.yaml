@@ -1185,10 +1185,10 @@ components:
           maxLength: 35
           description: IdentificationNumberIssuer
           example: 'Identification Number Issuer'
-        dateAndBirthPlace:
+        dateBirthPlace:
           type: string
           maxLength: 82
-          description: DateAndBirthPlace
+          description: DateBirthPlace
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
@@ -1246,10 +1246,10 @@ components:
           maxLength: 35
           description: IdentificationNumberIssuer
           example: 'Identification Number Issuer'
-        dateAndBirthPlace:
+        dateBirthPlace:
           type: string
           maxLength: 82
-          description: DateAndfBirthPlace
+          description: DateBirthPlace
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'

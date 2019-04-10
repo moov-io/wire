@@ -17,7 +17,7 @@ type RemittanceBeneficiary struct {
 	IdentificationNumber string `json:"identificationNumber,omitempty"`
 	// IdentificationNumberIssuer
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
-	// DateAndfBirthPlace
-	DateAndBirthPlace string `json:"dateAndBirthPlace,omitempty"`
+	// DateBirthPlace
+	DateBirthPlace string `json:"dateBirthPlace,omitempty"`
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 }
