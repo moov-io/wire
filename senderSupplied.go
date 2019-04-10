@@ -26,8 +26,8 @@ type SenderSupplied struct {
 }
 
 // NewSenderSupplied returns a new SenderSupplied
-func NewSenderSupplied() SenderSupplied {
-	ss := SenderSupplied{
+func NewSenderSupplied() *SenderSupplied {
+	ss := &SenderSupplied{
 		tag:                    TagSenderSupplied,
 		FormatVersion:          FormatVersion,
 		TestProductionCode:     EnvironmentTest,

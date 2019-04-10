@@ -49,8 +49,7 @@ func (w *Writer) Flush() {
 }
 
 func (w *Writer) writeFedWireMessage(file *File) error {
-	// ToDo:  More than 1?
-	for _, fwm := range file.FedWireMessages {
+		fwm := file.FedWireMessage
 		if err := w.writeMandatory(fwm); err != nil {
 			return err
 		}
@@ -78,7 +77,6 @@ func (w *Writer) writeFedWireMessage(file *File) error {
 		if _, err := w.w.WriteString(fwm.GetServiceMessage().String() + "\n"); err != nil {
 			return err
 		}
-	}
 	return nil
 }
 
