@@ -13,6 +13,17 @@ type File struct {
 	FedWireMessage FedWireMessage `json:"fedWireMessage"`
 }
 
+// NewFile constructs a file template
+func NewFile() *File {
+	return &File{}
+}
+
+// AddFedWireMessage appends a FedWireMessage to the File
+func (f *File) AddFedWireMessage(fwm FedWireMessage) FedWireMessage {
+	f.FedWireMessage = fwm
+	return f.FedWireMessage
+}
+
 // Create will tabulate and assemble an WIRE file into a valid state.
 //
 // Create implementations are free to modify computable fields in a file and should

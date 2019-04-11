@@ -48,6 +48,7 @@ func (o *Originator) String() string {
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
 	buf.WriteString(o.IdentifierField())
+	buf.WriteString(o.NameField())
 	buf.WriteString(o.AddressLineOneField())
 	buf.WriteString(o.AddressLineTwoField())
 	buf.WriteString(o.AddressLineThreeField())

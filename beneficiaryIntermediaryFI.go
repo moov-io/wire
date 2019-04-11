@@ -49,6 +49,7 @@ func (bifi *BeneficiaryIntermediaryFI) String() string {
 	buf.WriteString(bifi.tag)
 	buf.WriteString(bifi.IdentificationCodeField())
 	buf.WriteString(bifi.IdentifierField())
+	buf.WriteString(bifi.NameField())
 	buf.WriteString(bifi.AddressLineOneField())
 	buf.WriteString(bifi.AddressLineTwoField())
 	buf.WriteString(bifi.AddressLineThreeField())

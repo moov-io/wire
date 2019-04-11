@@ -52,7 +52,7 @@ func (a *Amount) Validate() error {
 		return err
 	}
 	// ToDo:  Amount cannot be all zero's except if SubType = 90
-	if err := a.isAmount(a.Amount); err != nil {
+	if err := a.isAmountImplied(a.Amount); err != nil {
 		return fieldError("Amount", err, a.Amount)
 	}
 	return nil

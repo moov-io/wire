@@ -20,8 +20,8 @@ type PreviousMessageIdentifier struct {
 }
 
 // NewPreviousMessageIdentifier returns a new PreviousMessageIdentifier
-func NewPreviousMessageIdentifier() PreviousMessageIdentifier {
-	pmi := PreviousMessageIdentifier{
+func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
+	pmi := &PreviousMessageIdentifier{
 		tag: TagPreviousMessageIdentifier,
 	}
 	return pmi
@@ -42,6 +42,7 @@ func (pmi *PreviousMessageIdentifier) String() string {
 	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(pmi.tag)
+	buf.WriteString(pmi.PreviousMessageIdentifierField())
 	return buf.String()
 }
 
@@ -61,4 +62,9 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 // invalid the WIRE will return an error.
 func (pmi *PreviousMessageIdentifier) fieldInclusion() error {
 	return nil
+}
+
+// PreviousMessageIdentifierField gets a string of PreviousMessageIdentifier field
+func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField() string {
+	return pmi.alphaField(pmi.PreviousMessageIdentifier, 22)
 }

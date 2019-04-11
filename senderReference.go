@@ -20,8 +20,8 @@ type SenderReference struct {
 }
 
 // NewSenderReference returns a new SenderReference
-func NewSenderReference() SenderReference {
-	sr := SenderReference{
+func NewSenderReference() *SenderReference {
+	sr := &SenderReference{
 		tag: TagSenderReference,
 	}
 	return sr
@@ -41,6 +41,7 @@ func (sr *SenderReference) String() string {
 	var buf strings.Builder
 	buf.Grow(22)
 	buf.WriteString(sr.tag)
+	buf.WriteString(sr.SenderReferenceField())
 	return buf.String()
 }
 
@@ -60,4 +61,9 @@ func (sr *SenderReference) Validate() error {
 // invalid the WIRE will return an error.
 func (sr *SenderReference) fieldInclusion() error {
 	return nil
+}
+
+// SenderReferenceField gets a string of SenderReference field
+func (sr *SenderReference) SenderReferenceField() string {
+	return sr.alphaField(sr.SenderReference, 16)
 }

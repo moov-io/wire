@@ -116,5 +116,5 @@ func (fiifi *FIIntermediaryFI) LineFiveField() string {
 
 // LineSixField gets a string of the LineSix field
 func (fiifi *FIIntermediaryFI) LineSixField() string {
-	return fiifi.alphaField(firfi.FIToFI.LineSix, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineSix, 35)
 }

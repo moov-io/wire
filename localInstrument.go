@@ -22,8 +22,8 @@ type LocalInstrument struct {
 }
 
 // NewLocalInstrument returns a new LocalInstrument
-func NewLocalInstrument() LocalInstrument {
-	li := LocalInstrument{
+func NewLocalInstrument() *LocalInstrument {
+	li := &LocalInstrument{
 		tag: TagLocalInstrument,
 	}
 	return li
@@ -45,6 +45,8 @@ func (li *LocalInstrument) String() string {
 	// ToDo: Separator
 	buf.Grow(45)
 	buf.WriteString(li.tag)
+	buf.WriteString(li.LocalInstrumentCodeField())
+	buf.WriteString(li.ProprietaryCodeField())
 	return buf.String()
 }
 
@@ -67,4 +69,14 @@ func (li *LocalInstrument) Validate() error {
 // invalid the WIRE will return an error.
 func (li *LocalInstrument) fieldInclusion() error {
 	return nil
+}
+
+// LocalInstrumentCodeField gets a string of LocalInstrumentCode field
+func (li *LocalInstrument) LocalInstrumentCodeField() string {
+	return li.alphaField(li.LocalInstrumentCode, 4)
+}
+
+// ProprietaryCodeField gets a string of ProprietaryCode field
+func (li *LocalInstrument) ProprietaryCodeField() string {
+	return li.alphaField(li.ProprietaryCode, 35)
 }

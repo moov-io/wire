@@ -147,7 +147,7 @@ const (
 	// EnvironmentProduction designates a production environment
 	EnvironmentProduction = "P"
 	// MessageDuplicationOriginal designates an original message
-	MessageDuplicationOriginal = " "
+	MessageDuplicationOriginal = ""
 	// MessageDuplicationResend designates a resend of a message
 	MessageDuplicationResend = "P"
 

@@ -54,6 +54,7 @@ func (debitDD *AccountDebitedDrawdown) String() string {
 	buf.WriteString(debitDD.tag)
 	buf.WriteString(debitDD.IdentificationCodeField())
 	buf.WriteString(debitDD.IdentifierField())
+	buf.WriteString(debitDD.NameField())
 	buf.WriteString(debitDD.AddressLineOneField())
 	buf.WriteString(debitDD.AddressLineTwoField())
 	buf.WriteString(debitDD.AddressLineThreeField())

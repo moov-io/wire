@@ -126,5 +126,5 @@ func (fiba *FIBeneficiaryAdvice) LineFiveField() string {
 
 // LineSixField gets a string of the LineSix field
 func (fiba *FIBeneficiaryAdvice) LineSixField() string {
-	return fiba.alphaField(fiifia.Advice.LineSix, 33)
+	return fiba.alphaField(fiba.Advice.LineSix, 33)
 }

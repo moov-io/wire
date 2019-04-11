@@ -49,6 +49,7 @@ func (ofi *OriginatorFI) String() string {
 	buf.WriteString(ofi.tag)
 	buf.WriteString(ofi.IdentificationCodeField())
 	buf.WriteString(ofi.IdentifierField())
+	buf.WriteString(ofi.NameField())
 	buf.WriteString(ofi.AddressLineOneField())
 	buf.WriteString(ofi.AddressLineTwoField())
 	buf.WriteString(ofi.AddressLineThreeField())

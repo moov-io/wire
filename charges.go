@@ -36,8 +36,8 @@ type Charges struct {
 }
 
 // NewCharges returns a new Charges
-func NewCharges() Charges {
-	c := Charges{
+func NewCharges() *Charges {
+	c := &Charges{
 		tag: TagCharges,
 	}
 	return c
@@ -49,19 +49,24 @@ func NewCharges() Charges {
 // successful parsing and data validity.
 func (c *Charges) Parse(record string) {
 	c.tag = record[:6]
-	c.ChargeDetails = c.parseStringField(record[6:8])
-	c.SendersChargesOne = c.parseStringField(record[8:23])
-	c.SendersChargesTwo = c.parseStringField(record[23:38])
-	c.SendersChargesThree = c.parseStringField(record[38:53])
-	c.SendersChargesFour = c.parseStringField(record[53:68])
+	c.ChargeDetails = c.parseStringField(record[6:7])
+	c.SendersChargesOne = c.parseStringField(record[7:22])
+	c.SendersChargesTwo = c.parseStringField(record[22:37])
+	c.SendersChargesThree = c.parseStringField(record[37:52])
+	c.SendersChargesFour = c.parseStringField(record[52:67])
 }
 
 // String writes Charges
 func (c *Charges) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(68)
+	buf.Grow(67)
 	buf.WriteString(c.tag)
+	buf.WriteString(c.ChargeDetailsField())
+	buf.WriteString(c.SendersChargesOneField())
+	buf.WriteString(c.SendersChargesTwoField())
+	buf.WriteString(c.SendersChargesThreeField())
+	buf.WriteString(c.SendersChargesFourField())
 	return buf.String()
 }
 
@@ -74,7 +79,6 @@ func (c *Charges) Validate() error {
 	if err := c.isChargeDetails(c.ChargeDetails); err != nil {
 		return fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails)
 	}
-
 	// ToDo: specific validation for Charges 1-4 fields
 	if err := c.isAlphanumeric(c.SendersChargesOne); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
@@ -95,4 +99,29 @@ func (c *Charges) Validate() error {
 // invalid the WIRE will return an error.
 func (c *Charges) fieldInclusion() error {
 	return nil
+}
+
+// ChargeDetailsField gets a string of the ChargeDetails field
+func (c *Charges) ChargeDetailsField() string {
+	return c.alphaField(c.ChargeDetails, 1)
+}
+
+// SendersChargesOneField gets a string of the SendersChargesOne field
+func (c *Charges) SendersChargesOneField() string {
+	return c.alphaField(c.SendersChargesOne, 15)
+}
+
+// SendersChargesTwoField gets a string of the SendersChargesTwo field
+func (c *Charges) SendersChargesTwoField() string {
+	return c.alphaField(c.SendersChargesTwo, 15)
+}
+
+// SendersChargesThreeField gets a string of the SendersChargesThree field
+func (c *Charges) SendersChargesThreeField() string {
+	return c.alphaField(c.SendersChargesThree, 15)
+}
+
+// SendersChargesFourField gets a string of the SendersChargesFour field
+func (c *Charges) SendersChargesFourField() string {
+	return c.alphaField(c.SendersChargesFour, 15)
 }

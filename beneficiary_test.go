@@ -2,12 +2,12 @@ package wire
 
 //  mockBeneficiary creates a Beneficiary
 func mockBeneficiary() *Beneficiary {
-	b := NewBeneficiary()
-	b.Personal.IdentificationCode = DriversLicenseNumber
-	b.Personal.Identifier = "1234"
-	b.Personal.Name = "Name"
-	b.Personal.Address.AddressLineOne = "Address One"
-	b.Personal.Address.AddressLineTwo = "Address Two"
-	b.Personal.Address.AddressLineThree = "Address Three"
-	return b
+	ben := NewBeneficiary()
+	ben.Personal.IdentificationCode = DriversLicenseNumber
+	ben.Personal.Identifier = "1234"
+	ben.Personal.Name = "Name"
+	ben.Personal.Address.AddressLineOne = "Address One"
+	ben.Personal.Address.AddressLineTwo = "Address Two"
+	ben.Personal.Address.AddressLineThree = "Address Three"
+	return ben
 }

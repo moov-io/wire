@@ -49,6 +49,7 @@ func (ifi *InstructingFI) String() string {
 	buf.WriteString(ifi.tag)
 	buf.WriteString(ifi.IdentificationCodeField())
 	buf.WriteString(ifi.IdentifierField())
+	buf.WriteString(ifi.NameField())
 	buf.WriteString(ifi.AddressLineOneField())
 	buf.WriteString(ifi.AddressLineTwoField())
 	buf.WriteString(ifi.AddressLineThreeField())

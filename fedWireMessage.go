@@ -336,8 +336,8 @@ func (fwm *FedWireMessage) GetBeneficiaryFI() *BeneficiaryFI {
 }
 
 // SetBeneficiary appends a Beneficiary to the FedWireMessage
-func (fwm *FedWireMessage) SetBeneficiary(b *Beneficiary) {
-	fwm.Beneficiary = b
+func (fwm *FedWireMessage) SetBeneficiary(ben *Beneficiary) {
+	fwm.Beneficiary = ben
 }
 
 // GetBeneficiary returns the current Beneficiary

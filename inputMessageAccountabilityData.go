@@ -37,7 +37,8 @@ func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
 // successful parsing and data validity.
 func (imad *InputMessageAccountabilityData) Parse(record string) {
 	imad.tag = record[:6]
-	imad.InputCycleDate = imad.validateDate(record[6:14])
+	// ToDo: Check ValidateDate usage
+	imad.InputCycleDate = imad.parseStringField(record[6:14])
 	imad.InputSource = imad.parseStringField(record[14:22])
 	imad.InputSequenceNumber = imad.parseStringField(record[22:28])
 }
@@ -85,7 +86,7 @@ func (imad *InputMessageAccountabilityData) fieldInclusion() error {
 
 // InputCycleDateField gets a string of the InputCycleDate field
 func (imad *InputMessageAccountabilityData) InputCycleDateField() string {
-	return imad.validateDate(imad.InputCycleDate)
+	return imad.alphaField(imad.InputCycleDate, 8)
 }
 
 // InputSourceField gets a string of the InputSource field

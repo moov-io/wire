@@ -21,100 +21,101 @@ type Beneficiary struct {
 
 // NewBeneficiary returns a new Beneficiary
 func NewBeneficiary() *Beneficiary {
-	b := &Beneficiary{
+	ben := &Beneficiary{
 		tag: TagBeneficiary,
 	}
-	return b
+	return ben
 }
 
 // Parse takes the input string and parses the Beneficiary values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (b *Beneficiary) Parse(record string) {
-	b.tag = record[:6]
-	b.Personal.IdentificationCode = b.parseStringField(record[6:7])
-	b.Personal.Identifier = b.parseStringField(record[7:41])
-	b.Personal.Name = b.parseStringField(record[41:76])
-	b.Personal.Address.AddressLineOne = b.parseStringField(record[76:111])
-	b.Personal.Address.AddressLineTwo = b.parseStringField(record[111:146])
-	b.Personal.Address.AddressLineThree = b.parseStringField(record[146:181])
+func (ben *Beneficiary) Parse(record string) {
+	ben.tag = record[:6]
+	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
+	ben.Personal.Identifier = ben.parseStringField(record[7:41])
+	ben.Personal.Name = ben.parseStringField(record[41:76])
+	ben.Personal.Address.AddressLineOne = ben.parseStringField(record[76:111])
+	ben.Personal.Address.AddressLineTwo = ben.parseStringField(record[111:146])
+	ben.Personal.Address.AddressLineThree = ben.parseStringField(record[146:181])
 }
 
 // String writes Beneficiary
-func (b *Beneficiary) String() string {
+func (ben *Beneficiary) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(181)
-	buf.WriteString(b.tag)
-	buf.WriteString(b.IdentificationCodeField())
-	buf.WriteString(b.IdentifierField())
-	buf.WriteString(b.AddressLineOneField())
-	buf.WriteString(b.AddressLineTwoField())
-	buf.WriteString(b.AddressLineThreeField())
+	buf.WriteString(ben.tag)
+	buf.WriteString(ben.IdentificationCodeField())
+	buf.WriteString(ben.IdentifierField())
+	buf.WriteString(ben.NameField())
+	buf.WriteString(ben.AddressLineOneField())
+	buf.WriteString(ben.AddressLineTwoField())
+	buf.WriteString(ben.AddressLineThreeField())
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on Beneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (b *Beneficiary) Validate() error {
-	if err := b.fieldInclusion(); err != nil {
+func (ben *Beneficiary) Validate() error {
+	if err := ben.fieldInclusion(); err != nil {
 		return err
 	}
 	// Can be any Identification Code
-	if err := b.isIdentificationCode(b.Personal.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, b.Personal.IdentificationCode)
+	if err := ben.isIdentificationCode(ben.Personal.IdentificationCode); err != nil {
+		return fieldError("IdentificationCode", err, ben.Personal.IdentificationCode)
 	}
-	if err := b.isAlphanumeric(b.Personal.Identifier); err != nil {
-		return fieldError("Identifier", err, b.Personal.Identifier)
+	if err := ben.isAlphanumeric(ben.Personal.Identifier); err != nil {
+		return fieldError("Identifier", err, ben.Personal.Identifier)
 	}
-	if err := b.isAlphanumeric(b.Personal.Name); err != nil {
-		return fieldError("Name", err, b.Personal.Name)
+	if err := ben.isAlphanumeric(ben.Personal.Name); err != nil {
+		return fieldError("Name", err, ben.Personal.Name)
 	}
-	if err := b.isAlphanumeric(b.Personal.Address.AddressLineOne); err != nil {
-		return fieldError("AddressLineOne", err, b.Personal.Address.AddressLineOne)
+	if err := ben.isAlphanumeric(ben.Personal.Address.AddressLineOne); err != nil {
+		return fieldError("AddressLineOne", err, ben.Personal.Address.AddressLineOne)
 	}
-	if err := b.isAlphanumeric(b.Personal.Address.AddressLineTwo); err != nil {
-		return fieldError("AddressLineTwo", err, b.Personal.Address.AddressLineTwo)
+	if err := ben.isAlphanumeric(ben.Personal.Address.AddressLineTwo); err != nil {
+		return fieldError("AddressLineTwo", err, ben.Personal.Address.AddressLineTwo)
 	}
-	if err := b.isAlphanumeric(b.Personal.Address.AddressLineThree); err != nil {
-		return fieldError("AddressLineThree", err, b.Personal.Address.AddressLineThree)
+	if err := ben.isAlphanumeric(ben.Personal.Address.AddressLineThree); err != nil {
+		return fieldError("AddressLineThree", err, ben.Personal.Address.AddressLineThree)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (b *Beneficiary) fieldInclusion() error {
+func (ben *Beneficiary) fieldInclusion() error {
 	return nil
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
-func (b *Beneficiary) IdentificationCodeField() string {
-	return b.alphaField(b.Personal.IdentificationCode, 1)
+func (ben *Beneficiary) IdentificationCodeField() string {
+	return ben.alphaField(ben.Personal.IdentificationCode, 1)
 }
 
 // IdentifierField gets a string of the Identifier field
-func (b *Beneficiary) IdentifierField() string {
-	return b.alphaField(b.Personal.Identifier, 34)
+func (ben *Beneficiary) IdentifierField() string {
+	return ben.alphaField(ben.Personal.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (b *Beneficiary) NameField() string {
-	return b.alphaField(b.Personal.Name, 35)
+func (ben *Beneficiary) NameField() string {
+	return ben.alphaField(ben.Personal.Name, 35)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (b *Beneficiary) AddressLineOneField() string {
-	return b.alphaField(b.Personal.Address.AddressLineOne, 35)
+func (ben *Beneficiary) AddressLineOneField() string {
+	return ben.alphaField(ben.Personal.Address.AddressLineOne, 35)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (b *Beneficiary) AddressLineTwoField() string {
-	return b.alphaField(b.Personal.Address.AddressLineTwo, 35)
+func (ben *Beneficiary) AddressLineTwoField() string {
+	return ben.alphaField(ben.Personal.Address.AddressLineTwo, 35)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (b *Beneficiary) AddressLineThreeField() string {
-	return b.alphaField(b.Personal.Address.AddressLineThree, 35)
+func (ben *Beneficiary) AddressLineThreeField() string {
+	return ben.alphaField(ben.Personal.Address.AddressLineThree, 35)
 }

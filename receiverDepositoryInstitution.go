@@ -44,8 +44,8 @@ func (rdi *ReceiverDepositoryInstitution) String() string {
 	var buf strings.Builder
 	buf.Grow(33)
 	buf.WriteString(rdi.tag)
-	buf.WriteString(rdi.ReceiverABANumber)
-	buf.WriteString(rdi.ReceiverShortName)
+	buf.WriteString(rdi.ReceiverABANumberField())
+	buf.WriteString(rdi.ReceiverShortNameField())
 	return buf.String()
 }
 

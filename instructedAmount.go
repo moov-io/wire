@@ -25,8 +25,8 @@ type InstructedAmount struct {
 }
 
 // NewInstructedAmount returns a new InstructedAmount
-func NewInstructedAmount() InstructedAmount {
-	ia := InstructedAmount{
+func NewInstructedAmount() *InstructedAmount {
+	ia := &InstructedAmount{
 		tag: TagInstructedAmount,
 	}
 	return ia
@@ -48,6 +48,8 @@ func (ia *InstructedAmount) String() string {
 	// ToDo: Separator
 	buf.Grow(24)
 	buf.WriteString(ia.tag)
+	buf.WriteString(ia.CurrencyCodeField())
+	buf.WriteString(ia.AmountField())
 	return buf.String()
 }
 
@@ -70,4 +72,14 @@ func (ia *InstructedAmount) Validate() error {
 // invalid the WIRE will return an error.
 func (ia *InstructedAmount) fieldInclusion() error {
 	return nil
+}
+
+// CurrencyCodeField gets a string of the CurrencyCode field
+func (ia *InstructedAmount) CurrencyCodeField() string {
+	return ia.alphaField(ia.CurrencyCode, 3)
+}
+
+// AmountField gets a string of the Amount field
+func (ia *InstructedAmount) AmountField() string {
+	return ia.alphaField(ia.Amount, 15)
 }

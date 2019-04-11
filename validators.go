@@ -58,6 +58,17 @@ func (v *validator) isAmount(s string) error {
 	return nil
 }
 
+// isAmountImplied checks if a string only contains only ASCII numeric (0-9) characters, decimal precision is
+// implied (2), and no commas
+func (v *validator) isAmountImplied(s string) error {
+
+	if amountRegex.MatchString(s) {
+		// [^ 0-9]
+		return ErrNonAmount
+	}
+	return nil
+}
+
 // isTypeCode ensures tag {1510} TypeCode is valid
 func (v *validator) isTypeCode(code string) error {
 	switch code {
@@ -182,7 +193,7 @@ func (v *validator) isTransactionTypeCode(code string) error {
 	// ToDo: Find what the Transaction Type Codes are
 	switch code {
 	case
-		"":
+		"XYZ":
 		return nil
 	}
 	return ErrTransactionTypeCode

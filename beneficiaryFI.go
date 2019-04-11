@@ -11,7 +11,7 @@ type BeneficiaryFI struct {
 	// tag
 	tag string
 	// Financial Institution
-	FinancialInstitution *FinancialInstitution `json:"financialInstitution,omitempty"`
+	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -49,6 +49,7 @@ func (bfi *BeneficiaryFI) String() string {
 	buf.WriteString(bfi.tag)
 	buf.WriteString(bfi.IdentificationCodeField())
 	buf.WriteString(bfi.IdentifierField())
+	buf.WriteString(bfi.NameField())
 	buf.WriteString(bfi.AddressLineOneField())
 	buf.WriteString(bfi.AddressLineTwoField())
 	buf.WriteString(bfi.AddressLineThreeField())

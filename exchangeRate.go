@@ -21,8 +21,8 @@ type ExchangeRate struct {
 }
 
 // NewExchangeRate returns a new ExchangeRate
-func NewExchangeRate() ExchangeRate {
-	eRate := ExchangeRate{
+func NewExchangeRate() *ExchangeRate {
+	eRate := &ExchangeRate{
 		tag: TagExchangeRate,
 	}
 	return eRate
@@ -43,6 +43,7 @@ func (eRate *ExchangeRate) String() string {
 	// ToDo: Separator
 	buf.Grow(18)
 	buf.WriteString(eRate.tag)
+	buf.WriteString(eRate.ExchangeRateField())
 	return buf.String()
 }
 
@@ -62,4 +63,9 @@ func (eRate *ExchangeRate) Validate() error {
 // invalid the WIRE will return an error.
 func (eRate *ExchangeRate) fieldInclusion() error {
 	return nil
+}
+
+// ExchangeRateField gets a string of the ExchangeRate field
+func (eRate *ExchangeRate) ExchangeRateField() string {
+	return eRate.alphaField(eRate.ExchangeRate, 12)
 }
