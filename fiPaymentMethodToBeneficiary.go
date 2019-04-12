@@ -22,8 +22,8 @@ type FIPaymentMethodToBeneficiary struct {
 }
 
 // NewFIPaymentMethodToBeneficiary returns a new FIPaymentMethodToBeneficiary
-func NewFIPaymentMethodToBeneficiary() FIPaymentMethodToBeneficiary {
-	pm := FIPaymentMethodToBeneficiary{
+func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
+	pm := &FIPaymentMethodToBeneficiary{
 		tag:           TagFIPaymentMethodToBeneficiary,
 		PaymentMethod: "CHECK",
 	}
@@ -48,7 +48,7 @@ func (pm *FIPaymentMethodToBeneficiary) String() string {
 	buf.Grow(41)
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())
-	buf.WriteString(pm.AdditionalInformationeField())
+	buf.WriteString(pm.AdditionalInformationField())
 	return buf.String()
 }
 
@@ -57,6 +57,9 @@ func (pm *FIPaymentMethodToBeneficiary) String() string {
 func (pm *FIPaymentMethodToBeneficiary) Validate() error {
 	if err := pm.fieldInclusion(); err != nil {
 		return err
+	}
+	if pm.PaymentMethod != "CHECK" {
+		return fieldError("PaymentMethod", ErrFieldInclusion, pm.PaymentMethod)
 	}
 	if err := pm.isAlphanumeric(pm.AdditionalInformation); err != nil {
 		return fieldError("AdditionalInformation", err, pm.AdditionalInformation)
@@ -81,6 +84,6 @@ func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField() string {
 }
 
 // AdditionalInformationField gets a string of the AdditionalInformation field
-func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationeField() string {
+func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField() string {
 	return pm.alphaField(pm.AdditionalInformation, 30)
 }

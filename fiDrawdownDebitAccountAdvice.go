@@ -20,8 +20,8 @@ type FIDrawdownDebitAccountAdvice struct {
 }
 
 // NewFIDrawdownDebitAccountAdvice returns a new FIDrawdownDebitAccountAdvice
-func NewFIDrawdownDebitAccountAdvice() FIDrawdownDebitAccountAdvice {
-	debitDDAdvice := FIDrawdownDebitAccountAdvice{
+func NewFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
+	debitDDAdvice := &FIDrawdownDebitAccountAdvice{
 		tag: TagFIDrawdownDebitAccountAdvice,
 	}
 	return debitDDAdvice

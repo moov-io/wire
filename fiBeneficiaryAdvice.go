@@ -20,8 +20,8 @@ type FIBeneficiaryAdvice struct {
 }
 
 // NewFIBeneficiaryAdvice returns a new FIBeneficiaryAdvice
-func NewFIBeneficiaryAdvice() FIBeneficiaryAdvice {
-	fiba := FIBeneficiaryAdvice{
+func NewFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
+	fiba := &FIBeneficiaryAdvice{
 		tag: TagFIBeneficiaryAdvice,
 	}
 	return fiba

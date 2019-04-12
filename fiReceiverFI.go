@@ -20,8 +20,8 @@ type FIReceiverFI struct {
 }
 
 // NewFIReceiverFI returns a new FIReceiverFI
-func NewFIReceiverFI() FIReceiverFI {
-	firfi := FIReceiverFI{
+func NewFIReceiverFI() *FIReceiverFI {
+	firfi := &FIReceiverFI{
 		tag: TagFIReceiverFI,
 	}
 	return firfi

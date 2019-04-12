@@ -201,7 +201,7 @@ func (r *Reader) parseLine() error {
 			return err
 		}
 	case TagFIBeneficiaryFIAdvice:
-		if err := r.parseFIBeneficiaryFI(); err != nil {
+		if err := r.parseFIBeneficiaryFIAdvice(); err != nil {
 			return err
 		}
 	case TagFIBeneficiary:

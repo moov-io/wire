@@ -20,8 +20,8 @@ type FIAdditionalFIToFI struct {
 }
 
 // NewFIAdditionalFIToFI returns a new FIAdditionalFIToFI
-func NewFIAdditionalFIToFI() FIAdditionalFIToFI {
-	fifi := FIAdditionalFIToFI{
+func NewFIAdditionalFIToFI() *FIAdditionalFIToFI {
+	fifi := &FIAdditionalFIToFI{
 		tag: TagFIAdditionalFIToFI,
 	}
 	return fifi
@@ -47,6 +47,12 @@ func (fifi *FIAdditionalFIToFI) String() string {
 	// ToDo: Separator
 	buf.Grow(211)
 	buf.WriteString(fifi.tag)
+	buf.WriteString(fifi.LineOneField())
+	buf.WriteString(fifi.LineTwoField())
+	buf.WriteString(fifi.LineThreeField())
+	buf.WriteString(fifi.LineFourField())
+	buf.WriteString(fifi.LineFiveField())
+	buf.WriteString(fifi.LineSixField())
 	return buf.String()
 }
 
@@ -81,4 +87,36 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 // invalid the WIRE will return an error.
 func (fifi *FIAdditionalFIToFI) fieldInclusion() error {
 	return nil
+}
+
+// ToDo:  Add functions for writing
+
+// LineOneField gets a string of the LineOne field
+func (fifi *FIAdditionalFIToFI) LineOneField() string {
+	return fifi.alphaField(fifi.AdditionalFIToFI.LineOne, 35)
+}
+
+// LineTwoField gets a string of the LineTwo field
+func (fifi *FIAdditionalFIToFI) LineTwoField() string {
+	return fifi.alphaField(fifi.AdditionalFIToFI.LineTwo, 35)
+}
+
+// LineThreeField gets a string of the LineThree field
+func (fifi *FIAdditionalFIToFI) LineThreeField() string {
+	return fifi.alphaField(fifi.AdditionalFIToFI.LineThree, 35)
+}
+
+// LineFourField gets a string of the LineFour field
+func (fifi *FIAdditionalFIToFI) LineFourField() string {
+	return fifi.alphaField(fifi.AdditionalFIToFI.LineFour, 35)
+}
+
+// LineFiveField gets a string of the LineFive field
+func (fifi *FIAdditionalFIToFI) LineFiveField() string {
+	return fifi.alphaField(fifi.AdditionalFIToFI.LineFive, 35)
+}
+
+// LineSixField gets a string of the LineSix field
+func (fifi *FIAdditionalFIToFI) LineSixField() string {
+	return fifi.alphaField(fifi.AdditionalFIToFI.LineSix, 35)
 }

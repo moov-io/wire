@@ -20,8 +20,8 @@ type FIIntermediaryFIAdvice struct {
 }
 
 // NewFIIntermediaryFIAdvice returns a new FIIntermediaryFIAdvice
-func NewFIIntermediaryFIAdvice() FIIntermediaryFIAdvice {
-	fiifia := FIIntermediaryFIAdvice{
+func NewFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
+	fiifia := &FIIntermediaryFIAdvice{
 		tag: TagFIIntermediaryFIAdvice,
 	}
 	return fiifia

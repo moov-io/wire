@@ -20,8 +20,8 @@ type FIBeneficiaryFI struct {
 }
 
 // NewFIBeneficiaryFI returns a new FIBeneficiaryFI
-func NewFIBeneficiaryFI() FIBeneficiaryFI {
-	fibfi := FIBeneficiaryFI{
+func NewFIBeneficiaryFI() *FIBeneficiaryFI {
+	fibfi := &FIBeneficiaryFI{
 		tag: TagFIBeneficiaryFI,
 	}
 	return fibfi
@@ -32,26 +32,27 @@ func NewFIBeneficiaryFI() FIBeneficiaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fibfi *FIBeneficiaryFI) Parse(record string) {
+	fibfi.tag = record[:6]
 	fibfi.FIToFI.LineOne = fibfi.parseStringField(record[6:36])
 	fibfi.FIToFI.LineTwo = fibfi.parseStringField(record[36:69])
-	fibfi.FIToFI.LineThree = fibfi.parseStringField(record[69:104])
-	fibfi.FIToFI.LineFour = fibfi.parseStringField(record[104:139])
-	fibfi.FIToFI.LineFive = fibfi.parseStringField(record[139:174])
-	fibfi.FIToFI.LineSix = fibfi.parseStringField(record[174:209])
+	fibfi.FIToFI.LineThree = fibfi.parseStringField(record[69:102])
+	fibfi.FIToFI.LineFour = fibfi.parseStringField(record[102:135])
+	fibfi.FIToFI.LineFive = fibfi.parseStringField(record[135:168])
+	fibfi.FIToFI.LineSix = fibfi.parseStringField(record[168:201])
 }
 
 // String writes FIBeneficiaryFI
 func (fibfi *FIBeneficiaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(209)
+	buf.Grow(201)
+	buf.WriteString(fibfi.tag)
 	buf.WriteString(fibfi.LineOneField())
 	buf.WriteString(fibfi.LineTwoField())
 	buf.WriteString(fibfi.LineThreeField())
 	buf.WriteString(fibfi.LineFourField())
 	buf.WriteString(fibfi.LineFiveField())
 	buf.WriteString(fibfi.LineSixField())
-	buf.WriteString(fibfi.tag)
 	return buf.String()
 }
 
@@ -90,30 +91,30 @@ func (fibfi *FIBeneficiaryFI) fieldInclusion() error {
 
 // LineOneField gets a string of the LineOne field
 func (fibfi *FIBeneficiaryFI) LineOneField() string {
-	return fibfi.alphaField(fibfi.FIToFI.LineOne, 35)
+	return fibfi.alphaField(fibfi.FIToFI.LineOne, 30)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (fibfi *FIBeneficiaryFI) LineTwoField() string {
-	return fibfi.alphaField(fibfi.FIToFI.LineTwo, 35)
+	return fibfi.alphaField(fibfi.FIToFI.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (fibfi *FIBeneficiaryFI) LineThreeField() string {
-	return fibfi.alphaField(fibfi.FIToFI.LineThree, 35)
+	return fibfi.alphaField(fibfi.FIToFI.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
 func (fibfi *FIBeneficiaryFI) LineFourField() string {
-	return fibfi.alphaField(fibfi.FIToFI.LineFour, 35)
+	return fibfi.alphaField(fibfi.FIToFI.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
 func (fibfi *FIBeneficiaryFI) LineFiveField() string {
-	return fibfi.alphaField(fibfi.FIToFI.LineFive, 35)
+	return fibfi.alphaField(fibfi.FIToFI.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
 func (fibfi *FIBeneficiaryFI) LineSixField() string {
-	return fibfi.alphaField(fibfi.FIToFI.LineSix, 35)
+	return fibfi.alphaField(fibfi.FIToFI.LineSix, 33)
 }

@@ -20,8 +20,8 @@ type FIIntermediaryFI struct {
 }
 
 // NewFIIntermediaryFI returns a new FIIntermediaryFI
-func NewFIIntermediaryFI() FIIntermediaryFI {
-	fiifi := FIIntermediaryFI{
+func NewFIIntermediaryFI() *FIIntermediaryFI {
+	fiifi := &FIIntermediaryFI{
 		tag: TagFIIntermediaryFI,
 	}
 	return fiifi
@@ -35,17 +35,17 @@ func (fiifi *FIIntermediaryFI) Parse(record string) {
 	fiifi.tag = record[:6]
 	fiifi.FIToFI.LineOne = fiifi.parseStringField(record[6:36])
 	fiifi.FIToFI.LineTwo = fiifi.parseStringField(record[36:69])
-	fiifi.FIToFI.LineThree = fiifi.parseStringField(record[69:104])
-	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[104:139])
-	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[139:174])
-	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[174:209])
+	fiifi.FIToFI.LineThree = fiifi.parseStringField(record[69:102])
+	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[102:135])
+	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[135:168])
+	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[168:201])
 }
 
 // String writes FIIntermediaryFI
 func (fiifi *FIIntermediaryFI) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(209)
+	buf.Grow(201)
 	buf.WriteString(fiifi.tag)
 	buf.WriteString(fiifi.LineOneField())
 	buf.WriteString(fiifi.LineTwoField())
@@ -91,30 +91,30 @@ func (fiifi *FIIntermediaryFI) fieldInclusion() error {
 
 // LineOneField gets a string of the LineOne field
 func (fiifi *FIIntermediaryFI) LineOneField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineOne, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineOne, 30)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (fiifi *FIIntermediaryFI) LineTwoField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineTwo, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (fiifi *FIIntermediaryFI) LineThreeField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineThree, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
 func (fiifi *FIIntermediaryFI) LineFourField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineFour, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
 func (fiifi *FIIntermediaryFI) LineFiveField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineFive, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
 func (fiifi *FIIntermediaryFI) LineSixField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineSix, 35)
+	return fiifi.alphaField(fiifi.FIToFI.LineSix, 33)
 }

@@ -70,7 +70,26 @@ func TestFedWireMessageWrite(t *testing.T) {
 	fwm.SetOriginatorToBeneficiary(ob)
 
 	// FI to FI
-
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
+	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
 
 	// ServiceMessage
 	sm := mockServiceMessage()
