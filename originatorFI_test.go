@@ -1,6 +1,6 @@
 package wire
 
-//  mockOriginatorFI creates a OriginatorFI
+// mockOriginatorFI creates a OriginatorFI
 func mockOriginatorFI() *OriginatorFI {
 	ofi := NewOriginatorFI()
 	ofi.FinancialInstitution.IdentificationCode = DemandDepositAccountNumber

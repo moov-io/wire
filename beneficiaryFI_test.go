@@ -1,6 +1,6 @@
 package wire
 
-//  mockBeneficiaryFI creates a BeneficiaryFI
+// mockBeneficiaryFI creates a BeneficiaryFI
 func mockBeneficiaryFI() *BeneficiaryFI {
 	bfi := NewBeneficiaryFI()
 	bfi.FinancialInstitution.IdentificationCode = DemandDepositAccountNumber

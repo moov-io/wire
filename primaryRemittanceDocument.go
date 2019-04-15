@@ -26,8 +26,8 @@ type PrimaryRemittanceDocument struct {
 }
 
 // NewPrimaryRemittanceDocument returns a new PrimaryRemittanceDocument
-func NewPrimaryRemittanceDocument() PrimaryRemittanceDocument {
-	prd := PrimaryRemittanceDocument{
+func NewPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
+	prd := &PrimaryRemittanceDocument{
 		tag: TagPrimaryRemittanceDocument,
 	}
 	return prd

@@ -1,6 +1,6 @@
 package wire
 
-//  mockBeneficiary creates a Beneficiary
+// mockBeneficiary creates a Beneficiary
 func mockBeneficiary() *Beneficiary {
 	ben := NewBeneficiary()
 	ben.Personal.IdentificationCode = DriversLicenseNumber

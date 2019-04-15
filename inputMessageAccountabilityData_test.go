@@ -1,6 +1,6 @@
 package wire
 
-//  mockInputMessageAccountabilityData creates a mockInputMessageAccountabilityData
+// mockInputMessageAccountabilityData creates a mockInputMessageAccountabilityData
 func mockInputMessageAccountabilityData() *InputMessageAccountabilityData {
 	imad := NewInputMessageAccountabilityData()
 	imad.InputCycleDate = "20190410"

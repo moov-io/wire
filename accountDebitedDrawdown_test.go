@@ -1,6 +1,6 @@
 package wire
 
-//  mockAccountDebitedDrawdown creates a AccountDebitedDrawdown
+// mockAccountDebitedDrawdown creates a AccountDebitedDrawdown
 func mockAccountDebitedDrawdown() *AccountDebitedDrawdown {
 	debitDD := NewAccountDebitedDrawdown()
 	debitDD.IdentificationCode = "DemandDepositAccountNumber"

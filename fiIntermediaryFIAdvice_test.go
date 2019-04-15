@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIIntermediaryFIAdvice creates a FIIntermediaryFIAdvice
+// mockFIIntermediaryFIAdvice creates a FIIntermediaryFIAdvice
 func mockFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
 	fiifia := NewFIIntermediaryFIAdvice()
 	fiifia.Advice.AdviceCode = AdviceCodeLetter

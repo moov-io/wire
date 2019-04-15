@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIReceiverFI creates a FIReceiverFI
+// mockFIReceiverFI creates a FIReceiverFI
 func mockFIReceiverFI() *FIReceiverFI {
 	firfi := NewFIReceiverFI()
 	firfi.FIToFI.LineOne = "Line One"

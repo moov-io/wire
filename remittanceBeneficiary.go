@@ -30,8 +30,8 @@ type RemittanceBeneficiary struct {
 }
 
 // NewRemittanceBeneficiary returns a new RemittanceBeneficiary
-func NewRemittanceBeneficiary() RemittanceBeneficiary {
-	rb := RemittanceBeneficiary{
+func NewRemittanceBeneficiary() *RemittanceBeneficiary {
+	rb := &RemittanceBeneficiary{
 		tag: TagRemittanceBeneficiary,
 	}
 	return rb
@@ -45,26 +45,26 @@ func (rb *RemittanceBeneficiary) Parse(record string) {
 	rb.tag = record[:6]
 	rb.RemittanceData.Name = rb.parseStringField(record[6:146])
 	rb.IdentificationType = rb.parseStringField(record[146:148])
-	rb.IdentificationCode = rb.parseStringField(record[148:154])
-	rb.IdentificationNumber = rb.parseStringField(record[154:189])
-	rb.IdentificationNumberIssuer = rb.parseStringField(record[189:224])
-	rb.RemittanceData.DateBirthPlace = rb.parseStringField(record[224:306])
-	rb.RemittanceData.AddressType = rb.parseStringField(record[306:310])
-	rb.RemittanceData.Department = rb.parseStringField(record[310:380])
-	rb.RemittanceData.SubDepartment = rb.parseStringField(record[380:450])
-	rb.RemittanceData.StreetName = rb.parseStringField(record[450:520])
-	rb.RemittanceData.BuildingNumber = rb.parseStringField(record[520:536])
-	rb.RemittanceData.PostCode = rb.parseStringField(record[536:552])
-	rb.RemittanceData.TownName = rb.parseStringField(record[552:587])
-	rb.RemittanceData.CountrySubDivisionState = rb.parseStringField(record[587:622])
-	rb.RemittanceData.Country = rb.parseStringField(record[622:624])
-	rb.RemittanceData.AddressLineOne = rb.parseStringField(record[624:694])
-	rb.RemittanceData.AddressLineTwo = rb.parseStringField(record[694:764])
-	rb.RemittanceData.AddressLineThree = rb.parseStringField(record[764:834])
-	rb.RemittanceData.AddressLineFour = rb.parseStringField(record[834:904])
-	rb.RemittanceData.AddressLineFive = rb.parseStringField(record[904:974])
-	rb.RemittanceData.AddressLineSix = rb.parseStringField(record[974:1044])
-	rb.RemittanceData.AddressLineSeven = rb.parseStringField(record[1044:1114])
+	rb.IdentificationCode = rb.parseStringField(record[148:152])
+	rb.IdentificationNumber = rb.parseStringField(record[152:187])
+	rb.IdentificationNumberIssuer = rb.parseStringField(record[187:222])
+	rb.RemittanceData.DateBirthPlace = rb.parseStringField(record[222:304])
+	rb.RemittanceData.AddressType = rb.parseStringField(record[304:308])
+	rb.RemittanceData.Department = rb.parseStringField(record[308:378])
+	rb.RemittanceData.SubDepartment = rb.parseStringField(record[378:448])
+	rb.RemittanceData.StreetName = rb.parseStringField(record[448:518])
+	rb.RemittanceData.BuildingNumber = rb.parseStringField(record[518:534])
+	rb.RemittanceData.PostCode = rb.parseStringField(record[534:550])
+	rb.RemittanceData.TownName = rb.parseStringField(record[550:585])
+	rb.RemittanceData.CountrySubDivisionState = rb.parseStringField(record[585:620])
+	rb.RemittanceData.Country = rb.parseStringField(record[620:622])
+	rb.RemittanceData.AddressLineOne = rb.parseStringField(record[622:692])
+	rb.RemittanceData.AddressLineTwo = rb.parseStringField(record[692:762])
+	rb.RemittanceData.AddressLineThree = rb.parseStringField(record[762:832])
+	rb.RemittanceData.AddressLineFour = rb.parseStringField(record[832:902])
+	rb.RemittanceData.AddressLineFive = rb.parseStringField(record[902:972])
+	rb.RemittanceData.AddressLineSix = rb.parseStringField(record[972:1042])
+	rb.RemittanceData.AddressLineSeven = rb.parseStringField(record[1042:1112])
 }
 
 // String writes RemittanceBeneficiary

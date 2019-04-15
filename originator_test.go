@@ -1,6 +1,6 @@
 package wire
 
-//  mockOriginator creates a Originator
+// mockOriginator creates a Originator
 func mockOriginator() *Originator {
 	o := NewOriginator()
 	o.Personal.IdentificationCode = PassportNumber

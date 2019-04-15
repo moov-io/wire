@@ -1,6 +1,6 @@
 package wire
 
-//  mockOriginatorOptionF creates a OriginatorOptionF
+// mockOriginatorOptionF creates a OriginatorOptionF
 func mockOriginatorOptionF() *OriginatorOptionF {
 	oof := NewOriginatorOptionF()
 	oof.PartyIdentifier = "TXID/123-45-6789"

@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIBeneficiaryFI creates a FIBeneficiaryFI
+// mockFIBeneficiaryFI creates a FIBeneficiaryFI
 func mockFIBeneficiaryFI() *FIBeneficiaryFI {
 	fibfi := NewFIBeneficiaryFI()
 	fibfi.FIToFI.LineOne = "Line One"

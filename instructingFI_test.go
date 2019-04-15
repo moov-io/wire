@@ -1,6 +1,6 @@
 package wire
 
-//  mockInstructingFI creates a InstructingFI
+// mockInstructingFI creates a InstructingFI
 func mockInstructingFI() *InstructingFI {
 	ifi := NewInstructingFI()
 	ifi.FinancialInstitution.IdentificationCode = DemandDepositAccountNumber

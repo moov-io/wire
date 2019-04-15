@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIAdditionalFIToFI creates a FIAdditionalFIToFI
+// mockFIAdditionalFIToFI creates a FIAdditionalFIToFI
 func mockFIAdditionalFIToFI() *FIAdditionalFIToFI {
 	fifi := NewFIAdditionalFIToFI()
 	fifi.AdditionalFIToFI.LineOne = "Line One"

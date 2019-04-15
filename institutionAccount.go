@@ -20,101 +20,101 @@ type InstitutionAccount struct {
 }
 
 // NewInstitutionAccount returns a new InstitutionAccount
-func NewInstitutionAccount() InstitutionAccount {
-	ia := InstitutionAccount{
+func NewInstitutionAccount() *InstitutionAccount {
+	iAccount := &InstitutionAccount{
 		tag: TagInstitutionAccount,
 	}
-	return ia
+	return iAccount
 }
 
 // Parse takes the input string and parses the InstitutionAccount values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ia *InstitutionAccount) Parse(record string) {
-	ia.tag = record[:6]
-	ia.CoverPayment.SwiftFieldTag = ia.parseStringField(record[6:11])
-	ia.CoverPayment.SwiftLineOne = ia.parseStringField(record[11:46])
-	ia.CoverPayment.SwiftLineTwo = ia.parseStringField(record[46:81])
-	ia.CoverPayment.SwiftLineThree = ia.parseStringField(record[81:116])
-	ia.CoverPayment.SwiftLineFour = ia.parseStringField(record[116:151])
-	ia.CoverPayment.SwiftLineFive = ia.parseStringField(record[151:186])
+func (iAccount *InstitutionAccount) Parse(record string) {
+	iAccount.tag = record[:6]
+	iAccount.CoverPayment.SwiftFieldTag = iAccount.parseStringField(record[6:11])
+	iAccount.CoverPayment.SwiftLineOne = iAccount.parseStringField(record[11:46])
+	iAccount.CoverPayment.SwiftLineTwo = iAccount.parseStringField(record[46:81])
+	iAccount.CoverPayment.SwiftLineThree = iAccount.parseStringField(record[81:116])
+	iAccount.CoverPayment.SwiftLineFour = iAccount.parseStringField(record[116:151])
+	iAccount.CoverPayment.SwiftLineFive = iAccount.parseStringField(record[151:186])
 }
 
 // String writes InstitutionAccount
-func (ia *InstitutionAccount) String() string {
+func (iAccount *InstitutionAccount) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(186)
-	buf.WriteString(ia.tag)
-	buf.WriteString(ia.SwiftFieldTagField())
-	buf.WriteString(ia.SwiftLineOneField())
-	buf.WriteString(ia.SwiftLineTwoField())
-	buf.WriteString(ia.SwiftLineThreeField())
-	buf.WriteString(ia.SwiftLineFourField())
-	buf.WriteString(ia.SwiftLineFiveField())
+	buf.WriteString(iAccount.tag)
+	buf.WriteString(iAccount.SwiftFieldTagField())
+	buf.WriteString(iAccount.SwiftLineOneField())
+	buf.WriteString(iAccount.SwiftLineTwoField())
+	buf.WriteString(iAccount.SwiftLineThreeField())
+	buf.WriteString(iAccount.SwiftLineFourField())
+	buf.WriteString(iAccount.SwiftLineFiveField())
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on InstitutionAccount and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (ia *InstitutionAccount) Validate() error {
-	if err := ia.fieldInclusion(); err != nil {
+func (iAccount *InstitutionAccount) Validate() error {
+	if err := iAccount.fieldInclusion(); err != nil {
 		return err
 	}
-	if err := ia.isAlphanumeric(ia.CoverPayment.SwiftFieldTag); err != nil {
-		return fieldError("SwiftFieldTag", err, ia.CoverPayment.SwiftFieldTag)
+	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftFieldTag); err != nil {
+		return fieldError("SwiftFieldTag", err, iAccount.CoverPayment.SwiftFieldTag)
 	}
-	if err := ia.isAlphanumeric(ia.CoverPayment.SwiftLineOne); err != nil {
-		return fieldError("SwiftLineOne", err, ia.CoverPayment.SwiftLineOne)
+	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftLineOne); err != nil {
+		return fieldError("SwiftLineOne", err, iAccount.CoverPayment.SwiftLineOne)
 	}
-	if err := ia.isAlphanumeric(ia.CoverPayment.SwiftLineTwo); err != nil {
-		return fieldError("SwiftLineTwo", err, ia.CoverPayment.SwiftLineTwo)
+	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftLineTwo); err != nil {
+		return fieldError("SwiftLineTwo", err, iAccount.CoverPayment.SwiftLineTwo)
 	}
-	if err := ia.isAlphanumeric(ia.CoverPayment.SwiftLineThree); err != nil {
-		return fieldError("SwiftLineThree", err, ia.CoverPayment.SwiftLineThree)
+	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftLineThree); err != nil {
+		return fieldError("SwiftLineThree", err, iAccount.CoverPayment.SwiftLineThree)
 	}
-	if err := ia.isAlphanumeric(ia.CoverPayment.SwiftLineFour); err != nil {
-		return fieldError("SwiftLineFour", err, ia.CoverPayment.SwiftLineFour)
+	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftLineFour); err != nil {
+		return fieldError("SwiftLineFour", err, iAccount.CoverPayment.SwiftLineFour)
 	}
-	if err := ia.isAlphanumeric(ia.CoverPayment.SwiftLineFive); err != nil {
-		return fieldError("SwiftLineFive", err, ia.CoverPayment.SwiftLineFive)
+	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftLineFive); err != nil {
+		return fieldError("SwiftLineFive", err, iAccount.CoverPayment.SwiftLineFive)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ia *InstitutionAccount) fieldInclusion() error {
+func (iAccount *InstitutionAccount) fieldInclusion() error {
 	return nil
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (ia *InstitutionAccount) SwiftFieldTagField() string {
-	return ia.alphaField(ia.CoverPayment.SwiftFieldTag, 5)
+func (iAccount *InstitutionAccount) SwiftFieldTagField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (ia *InstitutionAccount) SwiftLineOneField() string {
-	return ia.alphaField(ia.CoverPayment.SwiftLineOne, 35)
+func (iAccount *InstitutionAccount) SwiftLineOneField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (ia *InstitutionAccount) SwiftLineTwoField() string {
-	return ia.alphaField(ia.CoverPayment.SwiftLineTwo, 35)
+func (iAccount *InstitutionAccount) SwiftLineTwoField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (ia *InstitutionAccount) SwiftLineThreeField() string {
-	return ia.alphaField(ia.CoverPayment.SwiftLineThree, 35)
+func (iAccount *InstitutionAccount) SwiftLineThreeField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (ia *InstitutionAccount) SwiftLineFourField() string {
-	return ia.alphaField(ia.CoverPayment.SwiftLineFour, 35)
+func (iAccount *InstitutionAccount) SwiftLineFourField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFour, 35)
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (ia *InstitutionAccount) SwiftLineFiveField() string {
-	return ia.alphaField(ia.CoverPayment.SwiftLineFive, 35)
+func (iAccount *InstitutionAccount) SwiftLineFiveField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFive, 35)
 }

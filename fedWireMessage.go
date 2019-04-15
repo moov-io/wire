@@ -566,8 +566,8 @@ func (fwm *FedWireMessage) GetIntermediaryInstitution() *IntermediaryInstitution
 }
 
 // SetInstitutionAccount appends a InstitutionAccount to the FedWireMessage
-func (fwm *FedWireMessage) SetInstitutionAccount(ia *InstitutionAccount) {
-	fwm.InstitutionAccount = ia
+func (fwm *FedWireMessage) SetInstitutionAccount(iAccount *InstitutionAccount) {
+	fwm.InstitutionAccount = iAccount
 }
 
 // GetInstitutionAccount returns the current InstitutionAccount
@@ -596,8 +596,8 @@ func (fwm *FedWireMessage) GetRemittance() *Remittance {
 }
 
 // SetSenderToReceiver appends a SenderToReceiver to the FedWireMessage
-func (fwm *FedWireMessage) SetSenderToReceiver(sr *SenderToReceiver) {
-	fwm.SenderToReceiver = sr
+func (fwm *FedWireMessage) SetSenderToReceiver(str *SenderToReceiver) {
+	fwm.SenderToReceiver = str
 }
 
 // GetSenderToReceiver  returns the current SenderToReceiver

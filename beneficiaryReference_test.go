@@ -1,6 +1,6 @@
 package wire
 
-//  mockBeneficiaryReference creates a BeneficiaryReference
+// mockBeneficiaryReference creates a BeneficiaryReference
 func mockBeneficiaryReference() *BeneficiaryReference {
 	br:= NewBeneficiaryReference()
 	br.BeneficiaryReference = "Reference"

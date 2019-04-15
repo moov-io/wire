@@ -1,6 +1,6 @@
 package wire
 
-//  mockCharges creates a Charges
+// mockCharges creates a Charges
 func mockCharges() *Charges {
 	c := NewCharges()
 	c.ChargeDetails = "B"

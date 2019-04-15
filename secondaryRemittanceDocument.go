@@ -26,8 +26,8 @@ type SecondaryRemittanceDocument struct {
 }
 
 // NewSecondaryRemittanceDocument returns a new SecondaryRemittanceDocument
-func NewSecondaryRemittanceDocument() SecondaryRemittanceDocument {
-	srd := SecondaryRemittanceDocument{
+func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
+	srd := &SecondaryRemittanceDocument{
 		tag: TagSecondaryRemittanceDocument,
 	}
 	return srd
@@ -63,7 +63,7 @@ func (srd *SecondaryRemittanceDocument) Validate() error {
 	if err := srd.fieldInclusion(); err != nil {
 		return err
 	}
-	if err := srd.isAlphanumeric(srd.DocumentTypeCode); err != nil {
+	if err := srd.isDocumentTypeCode(srd.DocumentTypeCode); err != nil {
 		return fieldError("DocumentTypeCode", err, srd.DocumentTypeCode)
 	}
 	if err := srd.isAlphanumeric(srd.ProprietaryDocumentTypeCode); err != nil {

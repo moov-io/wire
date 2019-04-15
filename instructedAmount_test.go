@@ -1,6 +1,6 @@
 package wire
 
-//  mockInstructedAmount creates a InstructedAmount
+// mockInstructedAmount creates a InstructedAmount
 func mockInstructedAmount() *InstructedAmount {
 	ia := NewInstructedAmount()
 	ia.CurrencyCode = "USD"

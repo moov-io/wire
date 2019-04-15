@@ -1,6 +1,6 @@
 package wire
 
-//  mockOriginatorToBeneficiary creates a OriginatorToBeneficiary
+// mockOriginatorToBeneficiary creates a OriginatorToBeneficiary
 func mockOriginatorToBeneficiary() *OriginatorToBeneficiary {
 	ob := NewOriginatorToBeneficiary()
 	ob.LineOne = "LineOne"

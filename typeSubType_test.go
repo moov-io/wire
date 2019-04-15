@@ -1,6 +1,6 @@
 package wire
 
-//  mockTypeSubType creates a TypeSubType
+// mockTypeSubType creates a TypeSubType
 func mockTypeSubType() *TypeSubType {
 	tst := NewTypeSubType()
 	tst.tag = TagTypeSubType

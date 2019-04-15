@@ -20,8 +20,8 @@ type AmountNegotiatedDiscount struct {
 }
 
 // NewAmountNegotiatedDiscount returns a new AmountNegotiatedDiscount
-func NewAmountNegotiatedDiscount() AmountNegotiatedDiscount {
-	nd := AmountNegotiatedDiscount{
+func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
+	nd := &AmountNegotiatedDiscount{
 		tag: TagAmountNegotiatedDiscount,
 	}
 	return nd

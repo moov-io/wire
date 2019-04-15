@@ -1,6 +1,6 @@
 package wire
 
-//  mockSenderSupplied creates a SenderSupplied
+// mockSenderSupplied creates a SenderSupplied
 func mockSenderSupplied() *SenderSupplied {
 	ss := NewSenderSupplied()
 	ss.UserRequestCorrelation = "User Req"

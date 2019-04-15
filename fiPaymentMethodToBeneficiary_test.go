@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIPaymentMethodToBeneficiary creates a FIPaymentMethodToBeneficiary
+// mockFIPaymentMethodToBeneficiary creates a FIPaymentMethodToBeneficiary
 func mockFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 	pm := NewFIPaymentMethodToBeneficiary()
 	pm.PaymentMethod = "CHECK"

@@ -11,7 +11,7 @@ type ActualAmountPaid struct {
 	// tag
 	tag string
 	// RemittanceAmount is remittance amounts
-	RemittanceAmount *RemittanceAmount `json:"remittanceAmount,omitempty"`
+	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -20,8 +20,8 @@ type ActualAmountPaid struct {
 }
 
 // NewActualAmountPaid returns a new ActualAmountPaid
-func NewActualAmountPaid() ActualAmountPaid {
-	aap := ActualAmountPaid{
+func NewActualAmountPaid() *ActualAmountPaid {
+	aap := &ActualAmountPaid{
 		tag: TagActualAmountPaid,
 	}
 	return aap

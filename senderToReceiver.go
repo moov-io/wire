@@ -20,111 +20,111 @@ type SenderToReceiver struct {
 }
 
 // NewSenderToReceiver returns a new SenderToReceiver
-func NewSenderToReceiver() SenderToReceiver {
-	sr := SenderToReceiver{
+func NewSenderToReceiver() *SenderToReceiver {
+	str := &SenderToReceiver{
 		tag: TagSenderToReceiver,
 	}
-	return sr
+	return str
 }
 
 // Parse takes the input string and parses the SenderToReceiver values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sr *SenderToReceiver) Parse(record string) {
-	sr.tag = record[:6]
-	sr.CoverPayment.SwiftFieldTag = sr.parseStringField(record[6:11])
-	sr.CoverPayment.SwiftLineOne = sr.parseStringField(record[11:46])
-	sr.CoverPayment.SwiftLineTwo = sr.parseStringField(record[46:81])
-	sr.CoverPayment.SwiftLineThree = sr.parseStringField(record[81:116])
-	sr.CoverPayment.SwiftLineFour = sr.parseStringField(record[116:151])
-	sr.CoverPayment.SwiftLineFive = sr.parseStringField(record[151:186])
-	sr.CoverPayment.SwiftLineSix = sr.parseStringField(record[186:221])
+func (str *SenderToReceiver) Parse(record string) {
+	str.tag = record[:6]
+	str.CoverPayment.SwiftFieldTag = str.parseStringField(record[6:11])
+	str.CoverPayment.SwiftLineOne = str.parseStringField(record[11:46])
+	str.CoverPayment.SwiftLineTwo = str.parseStringField(record[46:81])
+	str.CoverPayment.SwiftLineThree = str.parseStringField(record[81:116])
+	str.CoverPayment.SwiftLineFour = str.parseStringField(record[116:151])
+	str.CoverPayment.SwiftLineFive = str.parseStringField(record[151:186])
+	str.CoverPayment.SwiftLineSix = str.parseStringField(record[186:221])
 }
 
 // String writes SenderToReceiver
-func (sr *SenderToReceiver) String() string {
+func (str *SenderToReceiver) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
 	buf.Grow(221)
-	buf.WriteString(sr.tag)
-	buf.WriteString(sr.SwiftFieldTagField())
-	buf.WriteString(sr.SwiftLineOneField())
-	buf.WriteString(sr.SwiftLineTwoField())
-	buf.WriteString(sr.SwiftLineThreeField())
-	buf.WriteString(sr.SwiftLineFourField())
-	buf.WriteString(sr.SwiftLineFiveField())
-	buf.WriteString(sr.SwiftLineSixField())
+	buf.WriteString(str.tag)
+	buf.WriteString(str.SwiftFieldTagField())
+	buf.WriteString(str.SwiftLineOneField())
+	buf.WriteString(str.SwiftLineTwoField())
+	buf.WriteString(str.SwiftLineThreeField())
+	buf.WriteString(str.SwiftLineFourField())
+	buf.WriteString(str.SwiftLineFiveField())
+	buf.WriteString(str.SwiftLineSixField())
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on SenderToReceiver and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (sr *SenderToReceiver) Validate() error {
-	if err := sr.fieldInclusion(); err != nil {
+func (str *SenderToReceiver) Validate() error {
+	if err := str.fieldInclusion(); err != nil {
 		return err
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftFieldTag); err != nil {
-		return fieldError("SwiftFieldTag", err, sr.CoverPayment.SwiftFieldTag)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftFieldTag); err != nil {
+		return fieldError("SwiftFieldTag", err, str.CoverPayment.SwiftFieldTag)
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineOne); err != nil {
-		return fieldError("SwiftLineOne", err, sr.CoverPayment.SwiftLineOne)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineOne); err != nil {
+		return fieldError("SwiftLineOne", err, str.CoverPayment.SwiftLineOne)
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineTwo); err != nil {
-		return fieldError("SwiftLineTwo", err, sr.CoverPayment.SwiftLineTwo)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineTwo); err != nil {
+		return fieldError("SwiftLineTwo", err, str.CoverPayment.SwiftLineTwo)
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineThree); err != nil {
-		return fieldError("SwiftLineThree", err, sr.CoverPayment.SwiftLineThree)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineThree); err != nil {
+		return fieldError("SwiftLineThree", err, str.CoverPayment.SwiftLineThree)
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineFour); err != nil {
-		return fieldError("SwiftLineFour", err, sr.CoverPayment.SwiftLineFour)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineFour); err != nil {
+		return fieldError("SwiftLineFour", err, str.CoverPayment.SwiftLineFour)
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineFive); err != nil {
-		return fieldError("SwiftLineFive", err, sr.CoverPayment.SwiftLineFive)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineFive); err != nil {
+		return fieldError("SwiftLineFive", err, str.CoverPayment.SwiftLineFive)
 	}
-	if err := sr.isAlphanumeric(sr.CoverPayment.SwiftLineSix); err != nil {
-		return fieldError("SwiftLineSix", err, sr.CoverPayment.SwiftLineSix)
+	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineSix); err != nil {
+		return fieldError("SwiftLineSix", err, str.CoverPayment.SwiftLineSix)
 	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (sr *SenderToReceiver) fieldInclusion() error {
+func (str *SenderToReceiver) fieldInclusion() error {
 	return nil
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (sr *SenderToReceiver) SwiftFieldTagField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftFieldTag, 5)
+func (str *SenderToReceiver) SwiftFieldTagField() string {
+	return str.alphaField(str.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (sr *SenderToReceiver) SwiftLineOneField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftLineOne, 35)
+func (str *SenderToReceiver) SwiftLineOneField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (sr *SenderToReceiver) SwiftLineTwoField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftLineTwo, 35)
+func (str *SenderToReceiver) SwiftLineTwoField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (sr *SenderToReceiver) SwiftLineThreeField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftLineThree, 35)
+func (str *SenderToReceiver) SwiftLineThreeField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (sr *SenderToReceiver) SwiftLineFourField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftLineFour, 35)
+func (str *SenderToReceiver) SwiftLineFourField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineFour, 35)
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (sr *SenderToReceiver) SwiftLineFiveField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftLineFive, 35)
+func (str *SenderToReceiver) SwiftLineFiveField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineFive, 35)
 }
 
 // SwiftLineSixField gets a string of the SwiftLineSix field
-func (sr *SenderToReceiver) SwiftLineSixField() string {
-	return sr.alphaField(sr.CoverPayment.SwiftLineSix, 35)
+func (str *SenderToReceiver) SwiftLineSixField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineSix, 35)
 }

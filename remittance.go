@@ -22,8 +22,8 @@ type Remittance struct {
 }
 
 // NewRemittance returns a new Remittance
-func NewRemittance() Remittance {
-	ri := Remittance{
+func NewRemittance() *Remittance {
+	ri := &Remittance{
 		tag: TagRemittance,
 	}
 	return ri
@@ -76,6 +76,12 @@ func (ri *Remittance) Validate() error {
 	}
 	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftLineFour); err != nil {
 		return fieldError("SwiftLineFour", err, ri.CoverPayment.SwiftLineFour)
+	}
+	if ri.CoverPayment.SwiftLineFive != "" {
+		return fieldError("SwiftLineFive", ErrInvalidProperty, ri.CoverPayment.SwiftLineFive)
+	}
+	if ri.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty, ri.CoverPayment.SwiftLineSix)
 	}
 	return nil
 }

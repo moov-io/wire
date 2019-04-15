@@ -20,8 +20,8 @@ type DateRemittanceDocument struct {
 }
 
 // NewDateRemittanceDocument returns a new DateRemittanceDocument
-func NewDateRemittanceDocument() DateRemittanceDocument {
-	drd := DateRemittanceDocument{
+func NewDateRemittanceDocument() *DateRemittanceDocument {
+	drd := &DateRemittanceDocument{
 		tag: TagDateRemittanceDocument,
 	}
 	return drd
@@ -33,7 +33,7 @@ func NewDateRemittanceDocument() DateRemittanceDocument {
 // successful parsing and data validity.
 func (drd *DateRemittanceDocument) Parse(record string) {
 	drd.tag = record[:6]
-	drd.tag = drd.validateDate(record[6:14])
+	drd.DateRemittanceDocument = drd.parseStringField(record[6:14])
 }
 
 // String writes DateRemittanceDocument
@@ -65,5 +65,5 @@ func (drd *DateRemittanceDocument) fieldInclusion() error {
 
 // DateRemittanceDocumentField gets a string of the DateRemittanceDocument field
 func (drd *DateRemittanceDocument) DateRemittanceDocumentField() string {
-	return drd.validateDate(drd.DateRemittanceDocument)
+	return drd.alphaField(drd.DateRemittanceDocument,8)
 }

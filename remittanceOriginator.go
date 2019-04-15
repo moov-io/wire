@@ -18,8 +18,6 @@ type RemittanceOriginator struct {
 	IdentificationNumber string `json:"identificationNumber,omitempty"`
 	// IdentificationNumberIssuer
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
-	// DateAndBirthPlace
-	DateAndBirthPlace string `json:"dateAndBirthPlace,omitempty"`
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 	// CountryOfResidence
@@ -44,8 +42,8 @@ type RemittanceOriginator struct {
 }
 
 // NewRemittanceOriginator returns a new RemittanceOriginator
-func NewRemittanceOriginator() RemittanceOriginator {
-	ro := RemittanceOriginator{
+func NewRemittanceOriginator() *RemittanceOriginator {
+	ro := &RemittanceOriginator{
 		tag: TagRemittanceOriginator,
 	}
 	return ro

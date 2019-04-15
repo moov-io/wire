@@ -9,6 +9,7 @@ package wire
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"unicode/utf8"
 
 	"golang.org/x/text/currency"
@@ -18,7 +19,7 @@ var (
 	upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	alphanumericRegex      = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 	numericRegex           = regexp.MustCompile(`[^0-9]`)
-	amountRegex            = regexp.MustCompile("[^0-9,]")
+	amountRegex            = regexp.MustCompile("[^0-9,.]")
 )
 
 // validator is common validation and formatting of golang types to WIRE type strings
@@ -42,17 +43,14 @@ func (v *validator) isNumeric(s string) error {
 	return nil
 }
 
+// ToDo; Change to is amount comma?   Create Amount Types...
+
 // isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
-	c := regexp.MustCompile(",")
-
-	matches := c.FindAllStringIndex(s, -1)
-	if len(matches) != 1 {
-		return ErrNonAmount
-	}
-
-	if amountRegex.MatchString(s) {
-		// [^ 0-9]
+	str := strings.Trim(s, ",")
+	str = strings.Trim(s,".")
+	if amountRegex.MatchString(str) {
+		// [^ [0-9],.]
 		return ErrNonAmount
 	}
 	return nil
@@ -61,13 +59,14 @@ func (v *validator) isAmount(s string) error {
 // isAmountImplied checks if a string only contains only ASCII numeric (0-9) characters, decimal precision is
 // implied (2), and no commas
 func (v *validator) isAmountImplied(s string) error {
-
 	if amountRegex.MatchString(s) {
 		// [^ 0-9]
 		return ErrNonAmount
 	}
 	return nil
 }
+
+// ToDo Add 5 decimal precision
 
 // isTypeCode ensures tag {1510} TypeCode is valid
 func (v *validator) isTypeCode(code string) error {
@@ -250,11 +249,11 @@ func (v *validator) isRemittanceLocationMethod(code string) error {
 	switch code {
 	case
 		RLMElectronicDataExchange,
-			RLMEmail,
-			RLMFax,
-			RLMPostalService,
-			RLMSMSM,
-			RLMURI:
+		RLMEmail,
+		RLMFax,
+		RLMPostalService,
+		RLMSMSM,
+		RLMURI:
 		return nil
 	}
 	return ErrRemittanceLocationMethod
@@ -357,7 +356,6 @@ func (v *validator) isAdjustmentReasonCode(code string) error {
 	}
 	return ErrAdjustmentReasonCode
 }
-
 
 func (v *validator) isCurrencyCode(code string) error {
 	_, err := currency.ParseISO(code)

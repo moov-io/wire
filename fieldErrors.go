@@ -34,6 +34,8 @@ var (
 	ErrValidYear = errors.New("is an invalid year")
 	// ErrValidCentury is returned for an invalid century
 	ErrValidCentury = errors.New("is an invalid century")
+	// ErrInvalidProperty is returned for an invalid type property
+	ErrInvalidProperty = errors.New("is an invalid property")
 
 	// SenderSupplied Tag {1500}
 

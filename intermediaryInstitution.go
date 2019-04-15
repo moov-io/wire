@@ -20,8 +20,8 @@ type IntermediaryInstitution struct {
 }
 
 // NewIntermediaryInstitution returns a new IntermediaryInstitution
-func NewIntermediaryInstitution() IntermediaryInstitution {
-	ii := IntermediaryInstitution{
+func NewIntermediaryInstitution() *IntermediaryInstitution {
+	ii := &IntermediaryInstitution{
 		tag: TagIntermediaryInstitution,
 	}
 	return ii

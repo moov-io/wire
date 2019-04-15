@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIBeneficiaryFIAdvice creates a FIBeneficiaryFIAdvice
+// mockFIBeneficiaryFIAdvice creates a FIBeneficiaryFIAdvice
 func mockFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
 	fibfia := NewFIBeneficiaryFIAdvice()
 	fibfia.Advice.AdviceCode = AdviceCodeTelex

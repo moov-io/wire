@@ -1,6 +1,6 @@
 package wire
 
-//  mockFIDrawdownDebitAccountAdvice creates a FIDrawdownDebitAccountAdvice
+// mockFIDrawdownDebitAccountAdvice creates a FIDrawdownDebitAccountAdvice
 func mockFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
 	debitDDAdvice := NewFIDrawdownDebitAccountAdvice()
 	debitDDAdvice.Advice.AdviceCode = AdviceCodeLetter
