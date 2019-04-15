@@ -9,6 +9,7 @@
 
 package openapi
 
+// LocalInstrument is the local instrument
 type LocalInstrument struct {
 	LocalInstrumentCode LocalInstrumentEnum `json:"localInstrumentCode,omitempty"`
 	// ProprietaryCode

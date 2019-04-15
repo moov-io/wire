@@ -9,7 +9,7 @@
 
 package openapi
 
-// DrawdownDebitAccountAdvice
+// Advice
 type Advice struct {
 	AdviceCode AdviceCodeEnum `json:"adviceCode,omitempty"`
 	// LineOne

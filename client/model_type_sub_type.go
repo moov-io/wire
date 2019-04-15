@@ -9,7 +9,7 @@
 
 package openapi
 
-// TypeSubtype {1510}
+// TypeSubtype is the type and sub type codes
 type TypeSubType struct {
 	TypeCode TypeCodeEnum `json:"typeCode"`
 	SubTypeCode SubTypeCodeEnum `json:"subTypeCode"`

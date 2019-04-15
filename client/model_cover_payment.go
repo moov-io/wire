@@ -13,6 +13,16 @@ package openapi
 type CoverPayment struct {
 	// SwiftFieldTag
 	SwiftFieldTag string `json:"swiftFieldTag,omitempty"`
-	// SwiftLine
-	SwiftLine map[string]interface{} `json:"swiftLine,omitempty"`
+	// SwiftLineOne
+	SwiftLineOne string `json:"swiftLineOne,omitempty"`
+	// SwiftLineTwo
+	SwiftLineTwo string `json:"swiftLineTwo,omitempty"`
+	// SwiftLineThree
+	SwiftLineThree string `json:"swiftLineThree,omitempty"`
+	// SwiftLineFour
+	SwiftLineFour string `json:"swiftLineFour,omitempty"`
+	// SwiftLineFive
+	SwiftLineFive string `json:"swiftLineFive,omitempty"`
+	// SwiftLineSix
+	SwiftLineSix string `json:"swiftLineSix,omitempty"`
 }

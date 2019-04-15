@@ -9,12 +9,8 @@
 
 package openapi
 
+// AccountCreditedDrawdown is the account which is credited in a drawdown
 type AccountCreditedDrawdown struct {
-	// Identification Code * `C` - Credit 
-	IdentificationCode string `json:"identificationCode"`
-	// Identifier
-	Identifier string `json:"identifier"`
-	// Name
-	Name string `json:"name"`
-	Address Address `json:"address,omitempty"`
+	// DrawdownCreditAccountNumber  9 character ABA 
+	DrawdownCreditAccountNumber string `json:"drawdownCreditAccountNumber,omitempty"`
 }

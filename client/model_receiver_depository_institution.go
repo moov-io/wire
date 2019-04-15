@@ -9,7 +9,7 @@
 
 package openapi
 
-// Receiver DepositoryInstitution {3400}
+// ReceiverDepositoryInstitution is the receiver depository institution
 type ReceiverDepositoryInstitution struct {
 	// ReceiverABANumber
 	ReceiverABANumber string `json:"receiverABANumber"`

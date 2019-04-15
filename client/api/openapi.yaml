@@ -279,35 +279,34 @@ components:
         id: 3f2d23ee214
         fedWireMessage:
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          receiverFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -316,39 +315,44 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
-          exchangeRate: "1.2345"
+            drawdownCreditAccountNumber: "121042882"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+          id: 3f2d23ee214
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -357,13 +361,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -380,11 +377,11 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -394,7 +391,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -402,7 +398,16 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -429,7 +434,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -437,17 +447,23 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            AdditionalInformation: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLine: '{}'
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -458,11 +474,11 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -472,7 +488,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -480,6 +495,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -496,17 +512,26 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -515,41 +540,30 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -559,27 +573,37 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -590,19 +614,51 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
+          senderReference:
+            senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -619,46 +675,38 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          receiverFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -667,39 +715,44 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
-          exchangeRate: "1.2345"
+            drawdownCreditAccountNumber: "121042882"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+          id: 3f2d23ee214
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -708,13 +761,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -731,11 +777,11 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -745,7 +791,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -753,7 +798,16 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -780,7 +834,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -788,17 +847,23 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            AdditionalInformation: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLine: '{}'
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -809,11 +874,11 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -823,7 +888,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -831,6 +895,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -847,17 +912,26 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -866,41 +940,30 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -910,27 +973,37 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -941,19 +1014,51 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
+          senderReference:
+            senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -970,13 +1075,6 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
@@ -987,42 +1085,41 @@ components:
           type: string
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
           type: array
     File:
       example:
         id: 3f2d23ee214
         fedWireMessage:
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          receiverFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -1031,39 +1128,44 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
-          exchangeRate: "1.2345"
+            drawdownCreditAccountNumber: "121042882"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+          id: 3f2d23ee214
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -1072,13 +1174,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -1095,11 +1190,11 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1109,7 +1204,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1117,7 +1211,16 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -1144,7 +1247,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -1152,17 +1260,23 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            AdditionalInformation: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLine: '{}'
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -1173,11 +1287,11 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1187,7 +1301,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1195,6 +1308,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -1211,17 +1325,26 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -1230,41 +1353,30 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1274,27 +1386,37 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -1305,19 +1427,51 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
+          senderReference:
+            senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -1334,46 +1488,38 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
         - orderingInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           localInstrument:
             localInstrumentCode: ANSI
             proprietaryCode: WJD786363
-          intermediaryFI:
+          fiBeneficiaryFI:
             lineTwo: Line Two
             lineFive: Line Five
             lineSix: Line Six
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorBeneficiaryFinancialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          receiverFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
+          errorWire:
+            errorDescription: Data Error
+            errorCategory: E
+            errorCode: E99
           beneficiaryCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           dateRemittanceDocument:
             dateRemittanceDocument: "20190401"
@@ -1382,39 +1528,44 @@ components:
             messageDuplicationCode: messageDuplicationCode
             formatVersion: "30"
           accountCreditedDrawdown:
-            identificationCode: C
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
-          exchangeRate: "1.2345"
+            drawdownCreditAccountNumber: "121042882"
+          exchangeRate:
+            exchangeRate: "1.2345"
           orderingCustomer:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           instructedAmount:
             amount: amount
             currencyCode: USD
-          beneficiaryAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
-          drawdownDebitAccountAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+          id: 3f2d23ee214
           remittance:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiBeneficiaryAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
+          fiAdditionalFIToFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           paymentNotification:
             contactMobileNumber: 555.555.555
             contactName: Wade Arnold
@@ -1423,13 +1574,6 @@ components:
             paymentNotificationIndicator: "1"
             contactNotificationElectronicAddress: https://moov.io/
             endToEndIdentification: WireTransfer 10001
-          additionalFIToFI:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputDate:
@@ -1446,11 +1590,11 @@ components:
             sendersChargesTwo: USD1234,56
           remittanceBeneficiary:
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1460,7 +1604,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1468,7 +1611,16 @@ components:
               addressLineSeven: AddressLineSeven
             identificationNumber: "192827828"
             identificationType: OI
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
+          fiIntermediaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderSupplied:
             testProductionCode: T
             messageDuplicationCode: messageDuplicationCode
@@ -1495,7 +1647,12 @@ components:
               addressLineThree: addressLineThree
             name: name
           intermediaryInstitution:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
             receiptTime:
@@ -1503,17 +1660,23 @@ components:
             receiptDate:
               date: "0401"
             receiptApplicationIdentification: RB11
-          paymentMethodToBeneficiary:
-            Additional: For goods and services
-            paymentMethod: CHECK
-          previousMessageIdentifier: previousMessageIdentifier
-          adjustment: CM
+          previousMessageIdentifier:
+            previousMessageIdentifier: previousMessageIdentifier
+          adjustment:
+            amount: "1234.56789"
+            additionalInfo: Additional Info
+            creditDebitIndicator: DBIT
+            currencyCode: USD
+            adjustmentReasonCode: CM
           inputMessageAccountabilityData:
             inputSource: 'XYZ ABC '
             inputCycleDate: "20191201"
             inputSequenceNumber: "000001"
+          fiPaymentMethodToBeneficiary:
+            AdditionalInformation: For goods and services
+            paymentMethod: CHECK
           currencyInstructedAmount:
-            swiftLine: '{}'
+            amount: 1234,56
             swiftFieldTag: SWIFT
           instructingFI:
             identificationCode: B
@@ -1524,11 +1687,11 @@ components:
               addressLineThree: addressLineThree
             name: name
           relatedRemittance:
-            remittanceLocationElctronicAddress: https://moov.io
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1538,7 +1701,6 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
@@ -1546,6 +1708,7 @@ components:
               addressLineSeven: AddressLineSeven
             remittanceIdentification: Remittance Identification
             remittanceLocationMethod: EDIC
+            remittanceLocationElectronicAddress: https://moov.io
           beneficiaryIntermediaryFI:
             identificationCode: B
             identifier: identifier
@@ -1562,17 +1725,26 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          error:
-            errorDescription: Data Error
-            errorCategory: E
-            errorCode: E99
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: 'MIDWESTONE B&T    '
+          beneficiaryReference:
+            beneficiaryReference: Test Data
+          fiIntermediaryFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           institutionAccount:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
-          referenceForBeneficiary: Test Data
           originatorFI:
             identificationCode: B
             identifier: identifier
@@ -1581,41 +1753,30 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          originatorBeneficiary:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           unstructuredAddenda:
             addenda: Payment for goods
             addendaLength: "0987"
           amountNegotiatedDiscount:
             amount: "1234.56789"
-            currenyCode: USD
-          intermediaryFinacialInstitutionAdvice:
-            adviceCode: HLD
-            lineTwo: lineTwo
-            lineFive: lineFive
-            lineSix: lineSix
-            lineOne: lineOne
-            lineFour: lineFour
-            lineThree: lineThree
+            currencyCode: USD
           originatorToBeneficiary:
             lineTwo: Line Two
             lineOne: Line One
             lineFour: Line Four
             lineThree: Line Three
-          originatorOptionF: ""
+          originatorOptionF:
+            lineTwo: 3/US/NEW YORK, NY 10000
+            name: 1/SMITH JOHN
+            lineOne: 2/123 MAIN STREET
+            lineThree: 7/111-22-3456
+            partyIdentifier: /123456
           remittanceOriginator:
-            contactMobileNumber: 555.555.5555
             identificationCode: BANK
-            dateAndBirthPlace: 03062013 Chester
             remittanceData:
               country: US
               townName: Any Town
               addressType: ADDR
+              addressLineOne: AddressLineOne
               addressLineFive: AddressLineFive
               subDepartment: Service
               addressLineSix: AddressLineSix
@@ -1625,27 +1786,37 @@ components:
               countrySubDivisionState: PA
               name: Wade Arnold
               buildingNumber: 1A
-              addressLine1: AddressLineOne
               postCode: "19465"
               department: Buildings
               addressLineThree: AddressLineThree
               addressLineFour: AddressLineFour
               addressLineSeven: AddressLineSeven
             contactName: Wade Arnold
+            identificationType: OI
+            countryOfResidence: US
+            contactMobileNumber: 555.555.5555
             contactFaxNumber: 555.555.5555
             identificationNumber: "192827828"
             contactOther: Contact Other
-            identificationType: OI
             contactPhoneNumber: 555.555.5555
             contactElectronicAddress: https://moov.io
+            dateBirthPlace: 03062013 Chester
             identificationNumberIssuer: Identification Number Issuer
           actualAmountPaid:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           remittanceFreeText:
             lineTwo: Line Two Text
             lineOne: Line One Text
             lineThree: Line Three Text
+          fiDrawdownDebitAccountAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           amount:
             amount: "000000100000"
           accountDebitedDrawdown:
@@ -1656,19 +1827,51 @@ components:
               addressLineOne: addressLineOne
               addressLineThree: addressLineThree
             name: name
-          secondaryRemittanceDocument: AROI
-          senderReference: Reference
+          secondaryRemittanceDocument:
+            documentIdentificationNumber: Document2
+            documentTypeCode: AROI
+            proprietaryDocumentTypeCode: Proprietary
+            issuer: Issuer
+          senderReference:
+            senderReference: Reference
+          fiBeneficiaryFIAdvice:
+            adviceCode: HLD
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           primaryRemittanceDocument:
             documentIdentificationNumber: DOCUMENT 292828
             documentTypeCode: AROI
             proprietaryDocumentTypeCode: Proprietary Code
             issuer: Remittance Issuer
+          fiBeneficiary:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           senderToReceiver:
-            swiftLine: '{}'
+            swiftLineFour: Swift Line Four
+            swiftLineOne: Swift Line One
+            swiftLineFive: Swift Line Five
+            swiftLineThree: Swift Line Three
+            swiftLineSix: Swift Line Six
+            swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
+          fiReceiverFI:
+            lineTwo: Line Two
+            lineFive: Line Five
+            lineSix: Line Six
+            lineOne: Line One
+            lineFour: Line Four
+            lineThree: Line Three
           grossAmountRemittanceDocument:
             amount: "1234.56789"
-            currenyCode: USD
+            currencyCode: USD
           typeSubType:
             subTypeCode: "10"
             typeCode: "10"
@@ -1685,13 +1888,6 @@ components:
             lineTwelve: Line Twelve Text
             lineThree: Line Three Text
             lineSeven: Line Seven Text
-          originatorBeneficiaryFinancialInstitution:
-            lineTwo: Line Two
-            lineFive: Line Five
-            lineSix: Line Six
-            lineOne: Line One
-            lineFour: Line Four
-            lineThree: Line Three
           receiverDepositoryInstitution:
             receiverShortName: 'PREMIER BANK      '
             receiverABANumber: "091905664"
@@ -1702,7 +1898,7 @@ components:
           type: string
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
           type: array
       required:
       - fedWireMessage
@@ -1710,39 +1906,38 @@ components:
       items:
         $ref: '#/components/schemas/File'
       type: array
-    FEDWireMessage:
-      description: FEDWireMessage
+    FedWireMessage:
+      description: FedWireMessage
       example:
         orderingInstitution:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         localInstrument:
           localInstrumentCode: ANSI
           proprietaryCode: WJD786363
-        intermediaryFI:
+        fiBeneficiaryFI:
           lineTwo: Line Two
           lineFive: Line Five
           lineSix: Line Six
           lineOne: Line One
           lineFour: Line Four
           lineThree: Line Three
-        originatorBeneficiaryFinancialInstitutionAdvice:
-          adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
-        receiverFI:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
+        errorWire:
+          errorDescription: Data Error
+          errorCategory: E
+          errorCode: E99
         beneficiaryCustomer:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         dateRemittanceDocument:
           dateRemittanceDocument: "20190401"
@@ -1751,39 +1946,44 @@ components:
           messageDuplicationCode: messageDuplicationCode
           formatVersion: "30"
         accountCreditedDrawdown:
-          identificationCode: C
-          identifier: identifier
-          address:
-            addressLineTwo: addressLineTwo
-            addressLineOne: addressLineOne
-            addressLineThree: addressLineThree
-          name: name
-        exchangeRate: "1.2345"
+          drawdownCreditAccountNumber: "121042882"
+        exchangeRate:
+          exchangeRate: "1.2345"
         orderingCustomer:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         instructedAmount:
           amount: amount
           currencyCode: USD
-        beneficiaryAdvice:
-          adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
-        drawdownDebitAccountAdvice:
-          adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+        id: 3f2d23ee214
         remittance:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
+        fiBeneficiaryAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
+        fiAdditionalFIToFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         paymentNotification:
           contactMobileNumber: 555.555.555
           contactName: Wade Arnold
@@ -1792,13 +1992,6 @@ components:
           paymentNotificationIndicator: "1"
           contactNotificationElectronicAddress: https://moov.io/
           endToEndIdentification: WireTransfer 10001
-        additionalFIToFI:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         outputMessageAccountabilityData:
           outputFRBApplicationIdentification: OB11
           outputDate:
@@ -1815,11 +2008,11 @@ components:
           sendersChargesTwo: USD1234,56
         remittanceBeneficiary:
           identificationCode: BANK
-          dateAndBirthPlace: 03062013 Chester
           remittanceData:
             country: US
             townName: Any Town
             addressType: ADDR
+            addressLineOne: AddressLineOne
             addressLineFive: AddressLineFive
             subDepartment: Service
             addressLineSix: AddressLineSix
@@ -1829,7 +2022,6 @@ components:
             countrySubDivisionState: PA
             name: Wade Arnold
             buildingNumber: 1A
-            addressLine1: AddressLineOne
             postCode: "19465"
             department: Buildings
             addressLineThree: AddressLineThree
@@ -1837,7 +2029,16 @@ components:
             addressLineSeven: AddressLineSeven
           identificationNumber: "192827828"
           identificationType: OI
+          dateBirthPlace: 03062013 Chester
           identificationNumberIssuer: Identification Number Issuer
+        fiIntermediaryFIAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         senderSupplied:
           testProductionCode: T
           messageDuplicationCode: messageDuplicationCode
@@ -1864,7 +2065,12 @@ components:
             addressLineThree: addressLineThree
           name: name
         intermediaryInstitution:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         receiptTimeStamp:
           receiptTime:
@@ -1872,17 +2078,23 @@ components:
           receiptDate:
             date: "0401"
           receiptApplicationIdentification: RB11
-        paymentMethodToBeneficiary:
-          Additional: For goods and services
-          paymentMethod: CHECK
-        previousMessageIdentifier: previousMessageIdentifier
-        adjustment: CM
+        previousMessageIdentifier:
+          previousMessageIdentifier: previousMessageIdentifier
+        adjustment:
+          amount: "1234.56789"
+          additionalInfo: Additional Info
+          creditDebitIndicator: DBIT
+          currencyCode: USD
+          adjustmentReasonCode: CM
         inputMessageAccountabilityData:
           inputSource: 'XYZ ABC '
           inputCycleDate: "20191201"
           inputSequenceNumber: "000001"
+        fiPaymentMethodToBeneficiary:
+          AdditionalInformation: For goods and services
+          paymentMethod: CHECK
         currencyInstructedAmount:
-          swiftLine: '{}'
+          amount: 1234,56
           swiftFieldTag: SWIFT
         instructingFI:
           identificationCode: B
@@ -1893,11 +2105,11 @@ components:
             addressLineThree: addressLineThree
           name: name
         relatedRemittance:
-          remittanceLocationElctronicAddress: https://moov.io
           remittanceData:
             country: US
             townName: Any Town
             addressType: ADDR
+            addressLineOne: AddressLineOne
             addressLineFive: AddressLineFive
             subDepartment: Service
             addressLineSix: AddressLineSix
@@ -1907,7 +2119,6 @@ components:
             countrySubDivisionState: PA
             name: Wade Arnold
             buildingNumber: 1A
-            addressLine1: AddressLineOne
             postCode: "19465"
             department: Buildings
             addressLineThree: AddressLineThree
@@ -1915,6 +2126,7 @@ components:
             addressLineSeven: AddressLineSeven
           remittanceIdentification: Remittance Identification
           remittanceLocationMethod: EDIC
+          remittanceLocationElectronicAddress: https://moov.io
         beneficiaryIntermediaryFI:
           identificationCode: B
           identifier: identifier
@@ -1931,17 +2143,26 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
-        error:
-          errorDescription: Data Error
-          errorCategory: E
-          errorCode: E99
         senderDepositoryInstitution:
           senderABANumber: "091905114"
           senderShortName: 'MIDWESTONE B&T    '
+        beneficiaryReference:
+          beneficiaryReference: Test Data
+        fiIntermediaryFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         institutionAccount:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
-        referenceForBeneficiary: Test Data
         originatorFI:
           identificationCode: B
           identifier: identifier
@@ -1950,41 +2171,30 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
-        originatorBeneficiary:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         unstructuredAddenda:
           addenda: Payment for goods
           addendaLength: "0987"
         amountNegotiatedDiscount:
           amount: "1234.56789"
-          currenyCode: USD
-        intermediaryFinacialInstitutionAdvice:
-          adviceCode: HLD
-          lineTwo: lineTwo
-          lineFive: lineFive
-          lineSix: lineSix
-          lineOne: lineOne
-          lineFour: lineFour
-          lineThree: lineThree
+          currencyCode: USD
         originatorToBeneficiary:
           lineTwo: Line Two
           lineOne: Line One
           lineFour: Line Four
           lineThree: Line Three
-        originatorOptionF: ""
+        originatorOptionF:
+          lineTwo: 3/US/NEW YORK, NY 10000
+          name: 1/SMITH JOHN
+          lineOne: 2/123 MAIN STREET
+          lineThree: 7/111-22-3456
+          partyIdentifier: /123456
         remittanceOriginator:
-          contactMobileNumber: 555.555.5555
           identificationCode: BANK
-          dateAndBirthPlace: 03062013 Chester
           remittanceData:
             country: US
             townName: Any Town
             addressType: ADDR
+            addressLineOne: AddressLineOne
             addressLineFive: AddressLineFive
             subDepartment: Service
             addressLineSix: AddressLineSix
@@ -1994,27 +2204,37 @@ components:
             countrySubDivisionState: PA
             name: Wade Arnold
             buildingNumber: 1A
-            addressLine1: AddressLineOne
             postCode: "19465"
             department: Buildings
             addressLineThree: AddressLineThree
             addressLineFour: AddressLineFour
             addressLineSeven: AddressLineSeven
           contactName: Wade Arnold
+          identificationType: OI
+          countryOfResidence: US
+          contactMobileNumber: 555.555.5555
           contactFaxNumber: 555.555.5555
           identificationNumber: "192827828"
           contactOther: Contact Other
-          identificationType: OI
           contactPhoneNumber: 555.555.5555
           contactElectronicAddress: https://moov.io
+          dateBirthPlace: 03062013 Chester
           identificationNumberIssuer: Identification Number Issuer
         actualAmountPaid:
           amount: "1234.56789"
-          currenyCode: USD
+          currencyCode: USD
         remittanceFreeText:
           lineTwo: Line Two Text
           lineOne: Line One Text
           lineThree: Line Three Text
+        fiDrawdownDebitAccountAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         amount:
           amount: "000000100000"
         accountDebitedDrawdown:
@@ -2025,19 +2245,51 @@ components:
             addressLineOne: addressLineOne
             addressLineThree: addressLineThree
           name: name
-        secondaryRemittanceDocument: AROI
-        senderReference: Reference
+        secondaryRemittanceDocument:
+          documentIdentificationNumber: Document2
+          documentTypeCode: AROI
+          proprietaryDocumentTypeCode: Proprietary
+          issuer: Issuer
+        senderReference:
+          senderReference: Reference
+        fiBeneficiaryFIAdvice:
+          adviceCode: HLD
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         primaryRemittanceDocument:
           documentIdentificationNumber: DOCUMENT 292828
           documentTypeCode: AROI
           proprietaryDocumentTypeCode: Proprietary Code
           issuer: Remittance Issuer
+        fiBeneficiary:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         senderToReceiver:
-          swiftLine: '{}'
+          swiftLineFour: Swift Line Four
+          swiftLineOne: Swift Line One
+          swiftLineFive: Swift Line Five
+          swiftLineThree: Swift Line Three
+          swiftLineSix: Swift Line Six
+          swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
+        fiReceiverFI:
+          lineTwo: Line Two
+          lineFive: Line Five
+          lineSix: Line Six
+          lineOne: Line One
+          lineFour: Line Four
+          lineThree: Line Three
         grossAmountRemittanceDocument:
           amount: "1234.56789"
-          currenyCode: USD
+          currencyCode: USD
         typeSubType:
           subTypeCode: "10"
           typeCode: "10"
@@ -2054,25 +2306,22 @@ components:
           lineTwelve: Line Twelve Text
           lineThree: Line Three Text
           lineSeven: Line Seven Text
-        originatorBeneficiaryFinancialInstitution:
-          lineTwo: Line Two
-          lineFive: Line Five
-          lineSix: Line Six
-          lineOne: Line One
-          lineFour: Line Four
-          lineThree: Line Three
         receiverDepositoryInstitution:
           receiverShortName: 'PREMIER BANK      '
           receiverABANumber: "091905664"
       properties:
+        id:
+          description: FedWireMessage ID
+          example: 3f2d23ee214
+          type: string
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
         receiptTimeStamp:
           $ref: '#/components/schemas/ReceiptTimeStamp'
         outputMessageAccountabilityData:
           $ref: '#/components/schemas/OutputMessageAccountabilityData'
-        error:
-          $ref: '#/components/schemas/FEDWireError'
+        errorWire:
+          $ref: '#/components/schemas/ErrorWire'
         senderSupplied:
           $ref: '#/components/schemas/SenderSupplied'
         typeSubType:
@@ -2088,14 +2337,9 @@ components:
         businessFunctionCode:
           $ref: '#/components/schemas/BusinessFunctionCode'
         senderReference:
-          description: SenderReference
-          example: Reference
-          maxLength: 16
-          type: string
+          $ref: '#/components/schemas/SenderReference'
         previousMessageIdentifier:
-          description: PreviousMessageIdentifier
-          maxLength: 22
-          type: string
+          $ref: '#/components/schemas/PreviousMessageIdentifier'
         localInstrument:
           $ref: '#/components/schemas/LocalInstrument'
         paymentNotification:
@@ -2105,31 +2349,21 @@ components:
         instructedAmount:
           $ref: '#/components/schemas/InstructedAmount'
         exchangeRate:
-          description: |
-            ExchangeRate
-
-            Must contain at least one numeric character and only one decimal comma marker
-            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-          example: "1.2345"
-          maxLength: 12
-          type: string
+          $ref: '#/components/schemas/ExchangeRate'
         beneficiaryIntermediaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiary:
           $ref: '#/components/schemas/Personal'
-        referenceForBeneficiary:
-          description: ReferenceForBeneficiary {4320}
-          example: Test Data
-          maxLength: 16
-          type: string
+        beneficiaryReference:
+          $ref: '#/components/schemas/BeneficiaryReference'
         accountDebitedDrawdown:
           $ref: '#/components/schemas/AccountDebitedDrawdown'
         originator:
           $ref: '#/components/schemas/Personal'
         originatorOptionF:
-          description: OriginatorOptionF {5010}
+          $ref: '#/components/schemas/OriginatorOptionF'
         originatorFI:
           $ref: '#/components/schemas/FinancialInstitution'
         instructingFI:
@@ -2138,28 +2372,28 @@ components:
           $ref: '#/components/schemas/AccountCreditedDrawdown'
         originatorToBeneficiary:
           $ref: '#/components/schemas/OriginatorToBeneficiary'
-        receiverFI:
+        fiReceiverFI:
           $ref: '#/components/schemas/FIToFI'
-        drawdownDebitAccountAdvice:
+        fiDrawdownDebitAccountAdvice:
           $ref: '#/components/schemas/Advice'
-        intermediaryFI:
+        fiIntermediaryFI:
           $ref: '#/components/schemas/FIToFI'
-        intermediaryFinacialInstitutionAdvice:
+        fiIntermediaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-        originatorBeneficiaryFinancialInstitution:
+        fiBeneficiaryFI:
           $ref: '#/components/schemas/FIToFI'
-        originatorBeneficiaryFinancialInstitutionAdvice:
+        fiBeneficiaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-        originatorBeneficiary:
+        fiBeneficiary:
           $ref: '#/components/schemas/FIToFI'
-        beneficiaryAdvice:
+        fiBeneficiaryAdvice:
           $ref: '#/components/schemas/Advice'
-        paymentMethodToBeneficiary:
-          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
-        additionalFIToFI:
+        fiPaymentMethodToBeneficiary:
+          $ref: '#/components/schemas/FIPaymentMethodToBeneficiary'
+        fiAdditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
         currencyInstructedAmount:
-          $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CurrencyInstructedAmount'
         orderingCustomer:
           $ref: '#/components/schemas/CoverPayment'
         orderingInstitution:
@@ -2191,39 +2425,11 @@ components:
         amountNegotiatedDiscount:
           $ref: '#/components/schemas/RemittanceAmount'
         adjustment:
-          description: |
-            Adjustment
-
-            * `01` - Pricing Error
-            * `03` - Extension Error
-            * `04` - Item Not Accepted (Damaged)
-            * `05` - Item Not Accepted (Quality)
-            * `06` - Quantity Contested 07   Incorrect Product
-            * `11` - Returns (Damaged)
-            * `12` - Returns (Quality)
-            * `59` - Item Not Received
-            * `75` - Total Order Not Received
-            * `81` - Credit as Agreed
-            * `CM` - Covered by Credit Memo
-          example: CM
-          maxLength: 4
-          type: string
+          $ref: '#/components/schemas/Adjustment'
         dateRemittanceDocument:
           $ref: '#/components/schemas/DateRemittanceDocument'
         secondaryRemittanceDocument:
-          description: |
-            SecondaryRemittanceDocument
-
-            * `AROI` - Accounts Receivable Open Item
-            * `DISP` - Dispatch Advice
-            * `FXDR` - Foreign Exchange Deal Reference
-            * `PROP` - Proprietary Document Type PUOR Purchase Order
-            * `RADM` - Remittance Advice Message
-            * `RPIN` - Related Payment Instruction
-            * `SCOR1` - Structured Communication Reference VCHR Voucher
-          example: AROI
-          maxLength: 4
-          type: string
+          $ref: '#/components/schemas/SecondaryRemittanceDocument'
         remittanceFreeText:
           $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
@@ -2308,7 +2514,8 @@ components:
           example: OB11
           maxLength: 4
           type: string
-    FEDWireError:
+    ErrorWire:
+      description: ErrorWire
       example:
         errorDescription: Data Error
         errorCategory: E
@@ -2337,7 +2544,7 @@ components:
           maxLength: 35
           type: string
     SenderSupplied:
-      description: SenderSupplied {1500}
+      description: SenderSupplied
       example:
         testProductionCode: T
         messageDuplicationCode: messageDuplicationCode
@@ -2391,7 +2598,7 @@ components:
       - testProductionCode
       - userRequestCorrelation
     TypeSubType:
-      description: TypeSubtype {1510}
+      description: TypeSubtype is the type and sub type codes
       example:
         subTypeCode: "10"
         typeCode: "10"
@@ -2404,7 +2611,7 @@ components:
       - subTypeCode
       - typeCode
     InputMessageAccountabilityData:
-      description: Input Message Accountability Data (IMAD) {1520}
+      description: InputMessageAccountabilityData (IMAD)
       example:
         inputSource: 'XYZ ABC '
         inputCycleDate: "20191201"
@@ -2435,7 +2642,7 @@ components:
       - inputSequenceNumber
       - inputSource
     Amount:
-      description: Amount (up to a penny less than $10 billion) {2000}
+      description: Amount is an amount up to a penny less than $10 billion
       example:
         amount: "000000100000"
       properties:
@@ -2452,7 +2659,7 @@ components:
       required:
       - amount
     SenderDepositoryInstitution:
-      description: SenderDepositoryInstitution {3100}
+      description: SenderDepositoryInstitution is the receiver depository institution
       example:
         senderABANumber: "091905114"
         senderShortName: 'MIDWESTONE B&T    '
@@ -2473,7 +2680,7 @@ components:
       - senderABANumber
       - senderShortName
     ReceiverDepositoryInstitution:
-      description: Receiver DepositoryInstitution {3400}
+      description: ReceiverDepositoryInstitution is the receiver depository institution
       example:
         receiverShortName: 'PREMIER BANK      '
         receiverABANumber: "091905664"
@@ -2494,7 +2701,7 @@ components:
       - receiverABANumber
       - receiverShortName
     BusinessFunctionCode:
-      description: BusinessFunctionCode {3600}
+      description: BusinessFunctionCode is the business function code
       example:
         businessFunctionCode: BTR
         transactionTypeCode: transactionTypeCode
@@ -2513,6 +2720,7 @@ components:
       required:
       - businessFunctionCode
     LocalInstrument:
+      description: LocalInstrument is the local instrument
       example:
         localInstrumentCode: ANSI
         proprietaryCode: WJD786363
@@ -2525,6 +2733,7 @@ components:
           maxLength: 35
           type: string
     PaymentNotification:
+      description: PaymentNotification is the payment notification
       example:
         contactMobileNumber: 555.555.555
         contactName: Wade Arnold
@@ -2569,11 +2778,12 @@ components:
           maxLength: 35
           type: string
         endToEndIdentification:
-          description: EndtoEndIdentification
+          description: EndToEndIdentification
           example: WireTransfer 10001
           maxLength: 35
           type: string
     InstructedAmount:
+      description: InstructedAmount is the instructed amount
       example:
         amount: amount
         currencyCode: USD
@@ -2592,16 +2802,21 @@ components:
           maxLength: 15
           type: string
     ExchangeRate:
-      description: |
-        ExchangeRate
+      description: ExchangeRate is the exchange rate
+      example:
+        exchangeRate: "1.2345"
+      properties:
+        exchangeRate:
+          description: |
+            ExchangeRate is the exchange rate
 
-        Must contain at least one numeric character and only one decimal comma marker
-        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-      example: "1.2345"
-      maxLength: 12
-      type: string
+            Must contain at least one numeric character and only one decimal comma marker
+            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+          example: "1.2345"
+          maxLength: 12
+          type: string
     FinancialInstitution:
-      description: FinancialInstitution {4000, 4100}
+      description: FinancialInstitution is financial institution demographic information
       example:
         identificationCode: B
         identifier: identifier
@@ -2640,7 +2855,7 @@ components:
       - identifier
       - name
     Personal:
-      description: FinancialInstitution {4200}
+      description: Personal is personal demographic information
       example:
         identificationCode: B
         identifier: identifier
@@ -2678,7 +2893,17 @@ components:
       - identificationCode
       - identifier
       - name
+    BeneficiaryReference:
+      example:
+        beneficiaryReference: Test Data
+      properties:
+        beneficiaryReference:
+          description: BeneficiaryReference
+          example: Test Data
+          maxLength: 16
+          type: string
     AccountDebitedDrawdown:
+      description: AccountDebitedDrawdown is the account which is debited in a drawdown
       example:
         identificationCode: D
         identifier: identifier
@@ -2711,39 +2936,79 @@ components:
       - identificationCode
       - identifier
       - name
-    AccountCreditedDrawdown:
+    OriginatorOptionF:
+      description: OptionF is originator option F
       example:
-        identificationCode: C
-        identifier: identifier
-        address:
-          addressLineTwo: addressLineTwo
-          addressLineOne: addressLineOne
-          addressLineThree: addressLineThree
-        name: name
+        lineTwo: 3/US/NEW YORK, NY 10000
+        name: 1/SMITH JOHN
+        lineOne: 2/123 MAIN STREET
+        lineThree: 7/111-22-3456
+        partyIdentifier: /123456
       properties:
-        identificationCode:
-          description: |
-            Identification Code
-            * `C` - Credit
-          enum:
-          - C
-          example: C
-          maxLength: 1
-          type: string
-        identifier:
-          description: Identifier
-          maxLength: 34
-          type: string
-        name:
-          description: Name
+        partyIdentifier:
+          description: "PartyIdentifier\n\nMust be one of the following two formats:\n\
+            1.\t/Account Number (slash followed by at least one valid non-space character:\
+            \  e.g., /123456)\n\n2.\tUnique Identifier/ (4 character code followed\
+            \ by a slash and at least one valid non-space character:\n   e.g., SOSE/123-456-789)\n\
+            ARNU: Alien Registration Number\nCCPT: Passport Number\nCUST: Customer\
+            \ Identification Number  DRLC/    Driver’s License Number  EMPL/    Employer\
+            \ Number\nNIDN: National Identify Number  SOSE/    Social Security Number\n\
+            TXID: Tax Identification Number\n"
+          example: /123456
           maxLength: 35
           type: string
-        address:
-          $ref: '#/components/schemas/Address'
-      required:
-      - identificationCode
-      - identifier
-      - name
+        name:
+          description: |
+            Name
+
+            Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+            e.g., 1/SMITH JOHN.
+          example: 1/SMITH JOHN
+          maxLength: 35
+          type: string
+        lineOne:
+          description: "LineOne\n\nFormat: Must begin with one of the following Line\
+            \ Codes followed by a slash and\nat least one valid non-space character.\n\
+            1\tName\n2\tAddress\n3\tCountry and Town\n4\tDate of Birth\n5\tPlace of\
+            \ Birth\n6\tCustomer Identification Number\n7\tNational Identity Number\n\
+            8\tAdditional Information\n\nFor example:\n2/123 MAIN STREET\n3/US/NEW\
+            \ YORK, NY 10000\n7/111-22-3456\n"
+          example: 2/123 MAIN STREET
+          maxLength: 35
+          type: string
+        lineTwo:
+          description: "LineTwo\n\nFormat: Must begin with one of the following Line\
+            \ Codes followed by a slash and\nat least one valid non-space character.\n\
+            1\tName\n2\tAddress\n3\tCountry and Town\n4\tDate of Birth\n5\tPlace of\
+            \ Birth\n6\tCustomer Identification Number\n7\tNational Identity Number\n\
+            8\tAdditional Information\n\nFor example:\n2/123 MAIN STREET\n3/US/NEW\
+            \ YORK, NY 10000\n7/111-22-3456\n"
+          example: 3/US/NEW YORK, NY 10000
+          maxLength: 35
+          type: string
+        lineThree:
+          description: "LineThree\n\nFormat: Must begin with one of the following\
+            \ Line Codes followed by a slash and\nat least one valid non-space character.\n\
+            1\tName\n2\tAddress\n3\tCountry and Town\n4\tDate of Birth\n5\tPlace of\
+            \ Birth\n6\tCustomer Identification Number\n7\tNational Identity Number\n\
+            8\tAdditional Information\n\nFor example:\n2/123 MAIN STREET\n3/US/NEW\
+            \ YORK, NY 10000\n7/111-22-3456\n"
+          example: 7/111-22-3456
+          maxLength: 35
+          type: string
+    AccountCreditedDrawdown:
+      description: AccountCreditedDrawdown is the account which is credited in a drawdown
+      example:
+        drawdownCreditAccountNumber: "121042882"
+      properties:
+        drawdownCreditAccountNumber:
+          description: |
+            DrawdownCreditAccountNumber
+
+            9 character ABA
+          example: "121042882"
+          maxLength: 9
+          type: string
     OriginatorToBeneficiary:
       description: OriginatorToBeneficiary
       example:
@@ -2813,45 +3078,51 @@ components:
           maxLength: 33
           type: string
     Advice:
-      description: DrawdownDebitAccountAdvice
+      description: Advice
       example:
         adviceCode: HLD
-        lineTwo: lineTwo
-        lineFive: lineFive
-        lineSix: lineSix
-        lineOne: lineOne
-        lineFour: lineFour
-        lineThree: lineThree
+        lineTwo: Line Two
+        lineFive: Line Five
+        lineSix: Line Six
+        lineOne: Line One
+        lineFour: Line Four
+        lineThree: Line Three
       properties:
         adviceCode:
           $ref: '#/components/schemas/AdviceCodeEnum'
         lineOne:
           description: LineOne
+          example: Line One
           maxLength: 26
           type: string
         lineTwo:
           description: LineTwo
+          example: Line Two
           maxLength: 33
           type: string
         lineThree:
           description: LineThree
+          example: Line Three
           maxLength: 33
           type: string
         lineFour:
           description: LineFour
+          example: Line Four
           maxLength: 33
           type: string
         lineFive:
           description: LineFive
+          example: Line Five
           maxLength: 33
           type: string
         lineSix:
           description: LineSix
+          example: Line Six
           maxLength: 33
           type: string
-    PaymentMethodToBeneficiary:
+    FIPaymentMethodToBeneficiary:
       example:
-        Additional: For goods and services
+        AdditionalInformation: For goods and services
         paymentMethod: CHECK
       properties:
         paymentMethod:
@@ -2860,9 +3131,9 @@ components:
           - CHECK
           example: CHECK
           type: string
-        Additional:
+        AdditionalInformation:
           example: For goods and services
-          maxLength: 35
+          maxLength: 30
           type: string
     AdditionalFIToFI:
       example:
@@ -2903,10 +3174,10 @@ components:
           example: Line Six
           maxLength: 35
           type: string
-    CoverPayment:
-      description: CoverPayment
+    CurrencyInstructedAmount:
+      description: CurrencyInstructedAmount
       example:
-        swiftLine: '{}'
+        amount: 1234,56
         swiftFieldTag: SWIFT
       properties:
         swiftFieldTag:
@@ -2914,39 +3185,57 @@ components:
           example: SWIFT
           maxLength: 5
           type: string
-        swiftLine:
-          description: SwiftLine
-          properties:
-            swiftLineOne:
-              description: SwiftLineOne
-              example: Swift Line One
-              maxLength: 35
-              type: string
-            swiftLineTwo:
-              description: SwiftLineTwo
-              example: Swift Line Two
-              maxLength: 35
-              type: string
-            swiftLineThree:
-              description: SwiftLineThree
-              example: Swift Line Three
-              maxLength: 35
-              type: string
-            swiftLineFour:
-              description: SwiftLineFour
-              example: Swift Line Four
-              maxLength: 35
-              type: string
-            swiftLineFive:
-              description: SwiftLineFive
-              example: Swift Line Five
-              maxLength: 35
-              type: string
-            swiftLineSix:
-              description: SwiftLineSix
-              example: Swift Line Six
-              maxLength: 35
-              type: string
+        amount:
+          description: Amount
+          example: 1234,56
+          maxLength: 18
+          type: string
+    CoverPayment:
+      description: CoverPayment
+      example:
+        swiftLineFour: Swift Line Four
+        swiftLineOne: Swift Line One
+        swiftLineFive: Swift Line Five
+        swiftLineThree: Swift Line Three
+        swiftLineSix: Swift Line Six
+        swiftLineTwo: Swift Line Two
+        swiftFieldTag: SWIFT
+      properties:
+        swiftFieldTag:
+          description: SwiftFieldTag
+          example: SWIFT
+          maxLength: 5
+          type: string
+        swiftLineOne:
+          description: SwiftLineOne
+          example: Swift Line One
+          maxLength: 35
+          type: string
+        swiftLineTwo:
+          description: SwiftLineTwo
+          example: Swift Line Two
+          maxLength: 35
+          type: string
+        swiftLineThree:
+          description: SwiftLineThree
+          example: Swift Line Three
+          maxLength: 35
+          type: string
+        swiftLineFour:
+          description: SwiftLineFour
+          example: Swift Line Four
+          maxLength: 35
+          type: string
+        swiftLineFive:
+          description: SwiftLineFive
+          example: Swift Line Five
+          maxLength: 35
+          type: string
+        swiftLineSix:
+          description: SwiftLineSix
+          example: Swift Line Six
+          maxLength: 35
+          type: string
     UnstructuredAddenda:
       example:
         addenda: Payment for goods
@@ -2968,14 +3257,24 @@ components:
           maxLength: 8994
           type: string
     SenderReference:
-      description: SenderReference
-      example: Reference
-      maxLength: 16
-      type: string
+      description: SenderReference is sender reference
+      example:
+        senderReference: Reference
+      properties:
+        senderReference:
+          description: SenderReference
+          example: Reference
+          maxLength: 16
+          type: string
     PreviousMessageIdentifier:
-      description: PreviousMessageIdentifier
-      maxLength: 22
-      type: string
+      description: PreviousMessageIdentifier is the identifier for a previous message
+      example:
+        previousMessageIdentifier: previousMessageIdentifier
+      properties:
+        previousMessageIdentifier:
+          description: PreviousMessageIdentifier
+          maxLength: 22
+          type: string
     Charges:
       example:
         sendersChargesOne: USD1234,56
@@ -3033,12 +3332,13 @@ components:
           maxLength: 15
           type: string
     RelatedRemittance:
+      description: RelatedRemittance
       example:
-        remittanceLocationElctronicAddress: https://moov.io
         remittanceData:
           country: US
           townName: Any Town
           addressType: ADDR
+          addressLineOne: AddressLineOne
           addressLineFive: AddressLineFive
           subDepartment: Service
           addressLineSix: AddressLineSix
@@ -3048,7 +3348,6 @@ components:
           countrySubDivisionState: PA
           name: Wade Arnold
           buildingNumber: 1A
-          addressLine1: AddressLineOne
           postCode: "19465"
           department: Buildings
           addressLineThree: AddressLineThree
@@ -3056,6 +3355,7 @@ components:
           addressLineSeven: AddressLineSeven
         remittanceIdentification: Remittance Identification
         remittanceLocationMethod: EDIC
+        remittanceLocationElectronicAddress: https://moov.io
       properties:
         remittanceIdentification:
           description: RemittanceIdentification
@@ -3064,7 +3364,7 @@ components:
           type: string
         remittanceLocationMethod:
           $ref: '#/components/schemas/RemittanceLocationMethodEnum'
-        remittanceLocationElctronicAddress:
+        remittanceLocationElectronicAddress:
           description: RemittanceLocationElectronicAddress (E-mail or URL address)
           example: https://moov.io
           maxLength: 2048
@@ -3072,14 +3372,14 @@ components:
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
     RemittanceOriginator:
+      description: RemittanceOriginator
       example:
-        contactMobileNumber: 555.555.5555
         identificationCode: BANK
-        dateAndBirthPlace: 03062013 Chester
         remittanceData:
           country: US
           townName: Any Town
           addressType: ADDR
+          addressLineOne: AddressLineOne
           addressLineFive: AddressLineFive
           subDepartment: Service
           addressLineSix: AddressLineSix
@@ -3089,19 +3389,21 @@ components:
           countrySubDivisionState: PA
           name: Wade Arnold
           buildingNumber: 1A
-          addressLine1: AddressLineOne
           postCode: "19465"
           department: Buildings
           addressLineThree: AddressLineThree
           addressLineFour: AddressLineFour
           addressLineSeven: AddressLineSeven
         contactName: Wade Arnold
+        identificationType: OI
+        countryOfResidence: US
+        contactMobileNumber: 555.555.5555
         contactFaxNumber: 555.555.5555
         identificationNumber: "192827828"
         contactOther: Contact Other
-        identificationType: OI
         contactPhoneNumber: 555.555.5555
         contactElectronicAddress: https://moov.io
+        dateBirthPlace: 03062013 Chester
         identificationNumberIssuer: Identification Number Issuer
       properties:
         identificationType:
@@ -3146,13 +3448,18 @@ components:
           example: Identification Number Issuer
           maxLength: 35
           type: string
-        dateAndBirthPlace:
-          description: DateAndfBirthPlace
+        dateBirthPlace:
+          description: DateBirthPlace
           example: 03062013 Chester
           maxLength: 82
           type: string
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
+        countryOfResidence:
+          description: CountryOfResidence
+          example: US
+          maxLength: 2
+          type: string
         contactName:
           description: ContactName
           example: Wade Arnold
@@ -3186,11 +3493,11 @@ components:
     RemittanceBeneficiary:
       example:
         identificationCode: BANK
-        dateAndBirthPlace: 03062013 Chester
         remittanceData:
           country: US
           townName: Any Town
           addressType: ADDR
+          addressLineOne: AddressLineOne
           addressLineFive: AddressLineFive
           subDepartment: Service
           addressLineSix: AddressLineSix
@@ -3200,7 +3507,6 @@ components:
           countrySubDivisionState: PA
           name: Wade Arnold
           buildingNumber: 1A
-          addressLine1: AddressLineOne
           postCode: "19465"
           department: Buildings
           addressLineThree: AddressLineThree
@@ -3208,6 +3514,7 @@ components:
           addressLineSeven: AddressLineSeven
         identificationNumber: "192827828"
         identificationType: OI
+        dateBirthPlace: 03062013 Chester
         identificationNumberIssuer: Identification Number Issuer
       properties:
         identificationType:
@@ -3252,8 +3559,8 @@ components:
           example: Identification Number Issuer
           maxLength: 35
           type: string
-        dateAndBirthPlace:
-          description: DateAndfBirthPlace
+        dateBirthPlace:
+          description: DateBirthPlace
           example: 03062013 Chester
           maxLength: 82
           type: string
@@ -3264,6 +3571,7 @@ components:
         country: US
         townName: Any Town
         addressType: ADDR
+        addressLineOne: AddressLineOne
         addressLineFive: AddressLineFive
         subDepartment: Service
         addressLineSix: AddressLineSix
@@ -3273,7 +3581,6 @@ components:
         countrySubDivisionState: PA
         name: Wade Arnold
         buildingNumber: 1A
-        addressLine1: AddressLineOne
         postCode: "19465"
         department: Buildings
         addressLineThree: AddressLineThree
@@ -3327,7 +3634,7 @@ components:
           example: US
           maxLength: 2
           type: string
-        addressLine1:
+        addressLineOne:
           description: AddressLineOne
           example: AddressLineOne
           maxLength: 70
@@ -3412,11 +3719,12 @@ components:
           maxLength: 35
           type: string
     RemittanceAmount:
+      description: RemittanceAmount
       example:
         amount: "1234.56789"
-        currenyCode: USD
+        currencyCode: USD
       properties:
-        currenyCode:
+        currencyCode:
           description: CurrencyCode
           example: USD
           maxLength: 3
@@ -3462,9 +3770,101 @@ components:
           maxLength: 140
           type: string
     Adjustment:
-      $ref: '#/components/schemas/AdjustmentEnum'
+      description: Adjustment
+      example:
+        amount: "1234.56789"
+        additionalInfo: Additional Info
+        creditDebitIndicator: DBIT
+        currencyCode: USD
+        adjustmentReasonCode: CM
+      properties:
+        adjustmentReasonCode:
+          description: |
+            Adjustment
+
+            * `01` - Pricing Error
+            * `03` - Extension Error
+            * `04` - Item Not Accepted (Damaged)
+            * `05` - Item Not Accepted (Quality)
+            * `06` - Quantity Contested 07   Incorrect Product
+            * `11` - Returns (Damaged)
+            * `12` - Returns (Quality)
+            * `59` - Item Not Received
+            * `75` - Total Order Not Received
+            * `81` - Credit as Agreed
+            * `CM` - Covered by Credit Memo
+          example: CM
+          maxLength: 4
+          type: string
+        creditDebitIndicator:
+          description: |
+            CreditDebitIndicator
+
+            * `CRDT` - Credit
+            * `DBIT` - Debit
+          enum:
+          - CRDT
+          - DBIT
+          example: DBIT
+          maxLength: 4
+          type: string
+        currencyCode:
+          description: CurrencyCode
+          example: USD
+          maxLength: 3
+          type: string
+        amount:
+          description: |
+            Amount
+            Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
+            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Amount must be greater than zero (i.e., at least .01).
+          example: "1234.56789"
+          maxLength: 19
+          minLength: 19
+          type: string
+        additionalInfo:
+          description: AdditionalInfo
+          example: Additional Info
+          maxLength: 140
+          type: string
     SecondaryRemittanceDocument:
-      $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+      description: SecondaryRemittanceDocument
+      example:
+        documentIdentificationNumber: Document2
+        documentTypeCode: AROI
+        proprietaryDocumentTypeCode: Proprietary
+        issuer: Issuer
+      properties:
+        documentTypeCode:
+          description: |
+            SecondaryRemittanceDocument
+
+            * `AROI` - Accounts Receivable Open Item
+            * `DISP` - Dispatch Advice
+            * `FXDR` - Foreign Exchange Deal Reference
+            * `PROP` - Proprietary Document Type PUOR Purchase Order
+            * `RADM` - Remittance Advice Message
+            * `RPIN` - Related Payment Instruction
+            * `SCOR1` - Structured Communication Reference VCHR Voucher
+          example: AROI
+          maxLength: 4
+          type: string
+        proprietaryDocumentTypeCode:
+          description: proprietaryDocumentTypeCode
+          example: Proprietary
+          maxLength: 35
+          type: string
+        documentIdentificationNumber:
+          description: documentIdentificationNumber
+          example: Document2
+          maxLength: 35
+          type: string
+        issuer:
+          description: Issuer
+          example: Issuer
+          maxLength: 35
+          type: string
     ServiceMessage:
       example:
         lineNine: Line Nine Text
@@ -3541,7 +3941,7 @@ components:
           maxLength: 35
           type: string
     Address:
-      description: Address
+      description: Address is the address
       example:
         addressLineTwo: addressLineTwo
         addressLineOne: addressLineOne
@@ -3738,6 +4138,7 @@ components:
     LocalInstrumentEnum:
       description: |
         LocalInstrument
+
         * `ANSI` - ANSI X12 format
         * `COVS` - Sequence B Cover Payment Structured
         * `GXML` - General XML format

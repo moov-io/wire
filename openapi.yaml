@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-
+# ToDO: Update Schema descriptions
 servers:
   - url: http://localhost:8087
     description: Local development
@@ -198,7 +198,7 @@ components:
         fedWireMessage:
           type: array
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
     File:
       properties:
         id:
@@ -207,16 +207,20 @@ components:
           example: 3f2d23ee214
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FEDWireMessage'
+            $ref: '#/components/schemas/FedWireMessage'
       required:
         - fedWireMessage
     Files:
       type: array
       items:
         $ref: '#/components/schemas/File'
-    FEDWireMessage:
-      description: FEDWireMessage
+    FedWireMessage:
+      description: FedWireMessage
       properties:
+        id:
+          type: string
+          description: FedWireMessage ID
+          example: 3f2d23ee214
         # TAGS 1100, 1110, 1120, 1130 is information Appended by the Fedwire Funds Service
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
@@ -227,8 +231,8 @@ components:
         outputMessageAccountabilityData:
           $ref: '#/components/schemas/OutputMessageAccountabilityData'
           description: OutputMessageAccountabilityData {1120}
-        error:
-          $ref: '#/components/schemas/FEDWireError'
+        errorWire:
+          $ref: '#/components/schemas/ErrorWire'
           description: Error {1130}
         senderSupplied:
           $ref: '#/components/schemas/SenderSupplied'
@@ -281,11 +285,9 @@ components:
         beneficiary:
           $ref: '#/components/schemas/Personal'
           description: Beneficiary {4200}
-        referenceForBeneficiary:
-          description: ReferenceForBeneficiary {4320}
-          type: string
-          maxLength: 16
-          example: 'Test Data'
+        beneficiaryReference:
+          $ref: '#/components/schemas/BeneficiaryReference'
+          description: BeneficiaryReference {4320}
         accountDebitedDrawdown:
           $ref: '#/components/schemas/AccountDebitedDrawdown'
           description: AccountDebitedDrawdown {4400}
@@ -293,6 +295,7 @@ components:
           $ref: '#/components/schemas/Personal'
           description: Originator {5000}
         originatorOptionF:
+          $ref: '#/components/schemas/OriginatorOptionF'
           description: OriginatorOptionF {5010}
         originatorFI:
           $ref: '#/components/schemas/FinancialInstitution'
@@ -306,38 +309,38 @@ components:
         originatorToBeneficiary:
           $ref: '#/components/schemas/OriginatorToBeneficiary'
           description: OriginatorToBeneficiary {6000}
-        receiverFI:
+        fiReceiverFI:
           $ref: '#/components/schemas/FIToFI'
-          description: ReceiverFI {6100}
-        drawdownDebitAccountAdvice:
+          description: FIReceiverFI {6100}
+        fiDrawdownDebitAccountAdvice:
           $ref: '#/components/schemas/Advice'
-          description: DrawdownDebitAccountAdvice {6110}
-        intermediaryFI:
+          description: FIDrawdownDebitAccountAdvice {6110}
+        fiIntermediaryFI:
           $ref: '#/components/schemas/FIToFI'
-          description: IntermediaryFinancialInstitution {6200}
-        intermediaryFinacialInstitutionAdvice:
+          description: FIIntermediaryFinancialInstitution {6200}
+        fiIntermediaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-          description: IntermediaryFinacialInstitutionAdvice {6210}
-        originatorBeneficiaryFinancialInstitution:
+          description: FIIntermediaryFinacialInstitutionAdvice {6210}
+        fiBeneficiaryFI:
           $ref: '#/components/schemas/FIToFI'
-          description: BeneficiaryFinancialInstitution {6300}
-        originatorBeneficiaryFinancialInstitutionAdvice:
+          description: FIBeneficiaryFinancialInstitution {6300}
+        fiBeneficiaryFIAdvice:
           $ref: '#/components/schemas/Advice'
-          description: BeneficiaryFinacialInstitutionAdvice {6310}
-        originatorBeneficiary:
+          description: FIBeneficiaryFinacialInstitutionAdvice {6310}
+        fiBeneficiary:
           $ref: '#/components/schemas/FIToFI'
-          description: Beneficiary {6400}
-        beneficiaryAdvice:
+          description: FIBeneficiary {6400}
+        fiBeneficiaryAdvice:
           $ref: '#/components/schemas/Advice'
-          description: BeneficiaryAdvice {6410}
-        paymentMethodToBeneficiary:
-          $ref: '#/components/schemas/PaymentMethodToBeneficiary'
-          description: PaymentMethodToBeneficiary {6420}
-        additionalFIToFI:
+          description: FIBeneficiaryAdvice {6410}
+        fiPaymentMethodToBeneficiary:
+          $ref: '#/components/schemas/FIPaymentMethodToBeneficiary'
+          description: FIPaymentMethodToBeneficiary {6420}
+        fiAdditionalFIToFI:
           $ref: '#/components/schemas/AdditionalFIToFI'
-          description: AdditionalFIToFI {6500}
+          description: FIAdditionalFIToFI {6500}
         currencyInstructedAmount:
-          $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CurrencyInstructedAmount'
           description: CurrencyInstructedAmount {7033}
         orderingCustomer:
           $ref: '#/components/schemas/CoverPayment'
@@ -460,7 +463,8 @@ components:
           maxLength: 4
           description: 'OutputFRBApplicationIdentification'
           example: 'OB11'
-    FEDWireError:
+    ErrorWire:
+       description: ErrorWire
        properties:
          errorCategory:
            $ref: '#/components/schemas/ErrorCategoryEnum'
@@ -476,7 +480,7 @@ components:
            description: ErrorDescription
            example: 'Data Error'
     SenderSupplied:
-      description: SenderSupplied {1500}
+      description: SenderSupplied
       properties:
         formatVersion:
           type: string
@@ -507,7 +511,7 @@ components:
         - testProductionCode
         - messageDuplicationCode
     TypeSubType:
-      description: TypeSubtype {1510}
+      description: TypeSubtype is the type and sub type codes
       properties:
         typeCode:
           description: TypeCode
@@ -519,7 +523,7 @@ components:
         - typeCode
         - subTypeCode
     InputMessageAccountabilityData:
-      description: Input Message Accountability Data (IMAD) {1520}
+      description: InputMessageAccountabilityData (IMAD)
       properties:
         inputCycleDate:
           type: string
@@ -546,7 +550,7 @@ components:
         - inputSource
         - inputSequenceNumber
     Amount:
-      description: Amount (up to a penny less than $10 billion) {2000}
+      description: Amount is an amount up to a penny less than $10 billion
       properties:
         amount:
           type: string
@@ -561,7 +565,7 @@ components:
       required:
         - amount
     SenderDepositoryInstitution:
-      description: SenderDepositoryInstitution {3100}
+      description: SenderDepositoryInstitution is the receiver depository institution
       properties:
         senderABANumber:
           type: string
@@ -579,7 +583,7 @@ components:
         - senderABANumber
         - senderShortName
     ReceiverDepositoryInstitution:
-      description: Receiver DepositoryInstitution {3400}
+      description: ReceiverDepositoryInstitution is the receiver depository institution
       properties:
         receiverABANumber:
           type: string
@@ -597,7 +601,7 @@ components:
         - receiverABANumber
         - receiverShortName
     BusinessFunctionCode:
-      description: BusinessFunctionCode {3600}
+      description: BusinessFunctionCode is the business function code
       properties:
         businessFunctionCode:
           description: BusinessFunctionCode
@@ -615,6 +619,7 @@ components:
       required:
         - businessFunctionCode
     LocalInstrument:
+      description: LocalInstrument is the local instrument
       properties:
         localInstrumentCode:
           $ref: '#/components/schemas/LocalInstrumentEnum'
@@ -625,6 +630,7 @@ components:
           description: ProprietaryCode
           example: 'WJD786363'
     PaymentNotification:
+      description: PaymentNotification is the payment notification
       properties:
         paymentNotificationIndicator:
           $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
@@ -657,10 +663,11 @@ components:
         endToEndIdentification:
           type: string
           maxLength: 35
-          description: EndtoEndIdentification
+          description: EndToEndIdentification
           #ToDo Review
           example: 'WireTransfer 10001'
     InstructedAmount:
+      description: InstructedAmount is the instructed amount
       properties:
         currencyCode:
           type: string
@@ -676,16 +683,19 @@ components:
             Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
             (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
     ExchangeRate:
-      type: string
-      maxLength: 12
-      description: |
-        ExchangeRate
+      description: ExchangeRate is the exchange rate
+      properties:
+        exchangeRate:
+          type: string
+          maxLength: 12
+          description: |
+            ExchangeRate is the exchange rate
 
-        Must contain at least one numeric character and only one decimal comma marker
-        (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-      example: '1.2345'
+            Must contain at least one numeric character and only one decimal comma marker
+            (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
+          example: '1.2345'
     FinancialInstitution:
-      description: FinancialInstitution {4000, 4100}
+      description: FinancialInstitution is financial institution demographic information
       properties:
         identificationCode:
           description: Identification Code
@@ -707,7 +717,7 @@ components:
         - name
         - address
     Personal:
-      description: FinancialInstitution {4200}
+      description: Personal is personal demographic information
       properties:
         identificationCode:
           description: Identification Code
@@ -728,7 +738,15 @@ components:
         - identifier
         - name
         - address
+    BeneficiaryReference:
+      properties:
+          beneficiaryReference:
+            type: string
+            maxLength: 16
+            example: 'Test Data'
+            description: BeneficiaryReference
     AccountDebitedDrawdown:
+      description: AccountDebitedDrawdown is the account which is debited in a drawdown
       properties:
         identificationCode:
           type: string
@@ -754,32 +772,115 @@ components:
         - identificationCode
         - identifier
         - name
-    AccountCreditedDrawdown:
+    OriginatorOptionF:
+      description: OptionF is originator option F
       properties:
-        identificationCode:
+        partyIdentifier:
           type: string
-          maxLength: 1
+          maxLength: 35
           description: |
-            Identification Code
-            * `C` - Credit
-          enum:
-            - C
-          example: 'C'
-        identifier:
-          type: string
-          maxLength: 34
-          description: Identifier
+            PartyIdentifier
+
+            Must be one of the following two formats:
+            1.	/Account Number (slash followed by at least one valid non-space character:  e.g., /123456)
+
+            2.	Unique Identifier/ (4 character code followed by a slash and at least one valid non-space character:
+               e.g., SOSE/123-456-789)
+            ARNU: Alien Registration Number
+            CCPT: Passport Number
+            CUST: Customer Identification Number  DRLC/    Driver’s License Number  EMPL/    Employer Number
+            NIDN: National Identify Number  SOSE/    Social Security Number
+            TXID: Tax Identification Number
+          example: '/123456'
         name:
           type: string
           maxLength: 35
-          description: Name
-        address:
-          description: Address
-          $ref: '#/components/schemas/Address'
-      required:
-        - identificationCode
-        - identifier
-        - name
+          description: |
+            Name
+
+            Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+            e.g., 1/SMITH JOHN.
+          example: '1/SMITH JOHN'
+        lineOne:
+          type: string
+          maxLength: 35
+          description: |
+            LineOne
+
+            Format: Must begin with one of the following Line Codes followed by a slash and
+            at least one valid non-space character.
+            1	Name
+            2	Address
+            3	Country and Town
+            4	Date of Birth
+            5	Place of Birth
+            6	Customer Identification Number
+            7	National Identity Number
+            8	Additional Information
+
+            For example:
+            2/123 MAIN STREET
+            3/US/NEW YORK, NY 10000
+            7/111-22-3456
+
+          example: '2/123 MAIN STREET'
+        lineTwo:
+          type: string
+          maxLength: 35
+          description: |
+            LineTwo
+
+            Format: Must begin with one of the following Line Codes followed by a slash and
+            at least one valid non-space character.
+            1	Name
+            2	Address
+            3	Country and Town
+            4	Date of Birth
+            5	Place of Birth
+            6	Customer Identification Number
+            7	National Identity Number
+            8	Additional Information
+
+            For example:
+            2/123 MAIN STREET
+            3/US/NEW YORK, NY 10000
+            7/111-22-3456
+
+          example: '3/US/NEW YORK, NY 10000'
+        lineThree:
+          type: string
+          maxLength: 35
+          description: |
+            LineThree
+
+            Format: Must begin with one of the following Line Codes followed by a slash and
+            at least one valid non-space character.
+            1	Name
+            2	Address
+            3	Country and Town
+            4	Date of Birth
+            5	Place of Birth
+            6	Customer Identification Number
+            7	National Identity Number
+            8	Additional Information
+
+            For example:
+            2/123 MAIN STREET
+            3/US/NEW YORK, NY 10000
+            7/111-22-3456
+
+          example: '7/111-22-3456'
+    AccountCreditedDrawdown:
+      description: AccountCreditedDrawdown is the account which is credited in a drawdown
+      properties:
+        drawdownCreditAccountNumber:
+          type: string
+          maxLength: 9
+          description: |
+            DrawdownCreditAccountNumber
+
+            9 character ABA
+          example: '121042882'
     OriginatorToBeneficiary:
         description: OriginatorToBeneficiary
         properties:
@@ -837,7 +938,7 @@ components:
           description: LineSix
           example: 'Line Six'
     Advice:
-      description: DrawdownDebitAccountAdvice
+      description: Advice
       properties:
         adviceCode:
           $ref: '#/components/schemas/AdviceCodeEnum'
@@ -846,27 +947,33 @@ components:
           type: string
           maxLength: 26
           description: LineOne
+          example: 'Line One'
         lineTwo:
           type: string
           maxLength: 33
           description: LineTwo
+          example: 'Line Two'
         lineThree:
           type: string
           maxLength: 33
           description: LineThree
+          example: 'Line Three'
         lineFour:
           type: string
           maxLength: 33
           description: LineFour
+          example: 'Line Four'
         lineFive:
           type: string
           maxLength: 33
           description: LineFive
+          example: 'Line Five'
         lineSix:
           type: string
           maxLength: 33
           description: LineSix
-    PaymentMethodToBeneficiary:
+          example: 'Line Six'
+    FIPaymentMethodToBeneficiary:
       properties:
         paymentMethod:
           type: string
@@ -874,9 +981,9 @@ components:
           enum:
             - CHECK
           example: 'CHECK'
-        Additional:
+        AdditionalInformation:
           type: string
-          maxLength: 35
+          maxLength: 30
           example: "For goods and services"
     AdditionalFIToFI:
       properties:
@@ -910,6 +1017,19 @@ components:
           maxLength: 35
           description: LineSix
           example: 'Line Six'
+    CurrencyInstructedAmount:
+      description: CurrencyInstructedAmount
+      properties:
+        swiftFieldTag:
+          type: string
+          maxLength: 5
+          description: SwiftFieldTag
+          example: 'SWIFT'
+        amount:
+          type: string
+          maxLength: 18
+          description: Amount
+          example: 1234,56
     CoverPayment:
       description: CoverPayment
       properties:
@@ -918,39 +1038,36 @@ components:
           maxLength: 5
           description: SwiftFieldTag
           example: 'SWIFT'
-        swiftLine:
-              description: SwiftLine
-              properties:
-                swiftLineOne:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineOne
-                  example: 'Swift Line One'
-                swiftLineTwo:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineTwo
-                  example: 'Swift Line Two'
-                swiftLineThree:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineThree
-                  example: 'Swift Line Three'
-                swiftLineFour:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineFour
-                  example: 'Swift Line Four'
-                swiftLineFive:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineFive
-                  example: 'Swift Line Five'
-                swiftLineSix:
-                  type: string
-                  maxLength: 35
-                  description: SwiftLineSix
-                  example: 'Swift Line Six'
+        swiftLineOne:
+          type: string
+          maxLength: 35
+          description: SwiftLineOne
+          example: 'Swift Line One'
+        swiftLineTwo:
+          type: string
+          maxLength: 35
+          description: SwiftLineTwo
+          example: 'Swift Line Two'
+        swiftLineThree:
+          type: string
+          maxLength: 35
+          description: SwiftLineThree
+          example: 'Swift Line Three'
+        swiftLineFour:
+          type: string
+          maxLength: 35
+          description: SwiftLineFour
+          example: 'Swift Line Four'
+        swiftLineFive:
+          type: string
+          maxLength: 35
+          description: SwiftLineFive
+          example: 'Swift Line Five'
+        swiftLineSix:
+          type: string
+          maxLength: 35
+          description: SwiftLineSix
+          example: 'Swift Line Six'
     UnstructuredAddenda:
       properties:
         addendaLength:
@@ -969,15 +1086,21 @@ components:
           description: Addenda
           example: 'Payment for goods'
     SenderReference:
-      type: string
-      maxLength: 16
-      description: SenderReference
-      example: 'Reference'
+      description: SenderReference is sender reference
+      properties:
+        senderReference:
+          type: string
+          maxLength: 16
+          description: SenderReference
+          example: 'Reference'
     PreviousMessageIdentifier:
-      type: string
-      maxLength: 22
-      description: PreviousMessageIdentifier
-      # ToDo: find previousMessageIdentifier example
+      description: PreviousMessageIdentifier is the identifier for a previous message
+      properties:
+        previousMessageIdentifier:
+          type: string
+          maxLength: 22
+          description: PreviousMessageIdentifier
+          # ToDo: find previousMessageIdentifier example
       example: ''
     Charges:
       properties:
@@ -1025,6 +1148,7 @@ components:
             marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
           example: 'USD1234,56'
     RelatedRemittance:
+      description: RelatedRemittance
       properties:
         remittanceIdentification:
           type: string
@@ -1034,7 +1158,7 @@ components:
         remittanceLocationMethod:
           $ref: '#/components/schemas/RemittanceLocationMethodEnum'
           description: RemittanceLocationMethodEnum
-        remittanceLocationElctronicAddress:
+        remittanceLocationElectronicAddress:
           type: string
           maxLength: 2048
           description: RemittanceLocationElectronicAddress (E-mail or URL address)
@@ -1043,13 +1167,14 @@ components:
           $ref: '#/components/schemas/RemittanceData'
           description: RemittanceData
     RemittanceOriginator:
+      description: RemittanceOriginator
       properties:
         identificationType:
           $ref: '#/components/schemas/IdentificationTypeEnum'
-          description: identificationType
+          description: IdentificationType
         identificationCode:
           $ref: '#/components/schemas/IdentificationCodeEnum'
-          description: identificationCode
+          description: IdentificationCode
         identificationNumber:
           type: string
           maxLength: 35
@@ -1060,14 +1185,19 @@ components:
           maxLength: 35
           description: IdentificationNumberIssuer
           example: 'Identification Number Issuer'
-        dateAndBirthPlace:
+        dateBirthPlace:
           type: string
           maxLength: 82
-          description: DateAndfBirthPlace
+          description: DateBirthPlace
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
           description: RemittanceData
+        countryOfResidence:
+          type: string
+          maxLength: 2
+          description: CountryOfResidence
+          example: 'US'
         contactName:
           type: string
           maxLength: 140
@@ -1116,10 +1246,10 @@ components:
           maxLength: 35
           description: IdentificationNumberIssuer
           example: 'Identification Number Issuer'
-        dateAndBirthPlace:
+        dateBirthPlace:
           type: string
           maxLength: 82
-          description: DateAndfBirthPlace
+          description: DateBirthPlace
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
@@ -1174,7 +1304,7 @@ components:
           maxLength: 2
           description: Country
           example: 'US'
-        addressLine1:
+        addressLineOne:
           type: string
           maxLength: 70
           description: AddressLineOne
@@ -1235,8 +1365,9 @@ components:
           description: Issuer
           example: 'Remittance Issuer'
     RemittanceAmount:
+      description: RemittanceAmount
       properties:
-        currenyCode:
+        currencyCode:
           type: string
           maxLength: 3
           description: CurrencyCode
@@ -1276,9 +1407,11 @@ components:
           description: LineThree
           example: 'Line Three Text'
     Adjustment:
-      $ref: '#/components/schemas/AdjustmentEnum'
-      description: Adjustment {8600}
+      description: Adjustment
       properties:
+        adjustmentReasonCode:
+          $ref: '#/components/schemas/AdjustmentEnum'
+          description: AdjustmentReasonCode
         creditDebitIndicator:
           type: string
           maxLength: 4
@@ -1291,7 +1424,7 @@ components:
             - CRDT
             - DBIT
           example: 'DBIT'
-        currenyCode:
+        currencyCode:
           type: string
           maxLength: 3
           description: CurrencyCode
@@ -1312,9 +1445,11 @@ components:
           description: AdditionalInfo
           example: 'Additional Info'
     SecondaryRemittanceDocument:
-      $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
       description: SecondaryRemittanceDocument
       properties:
+        documentTypeCode:
+          $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
+          description: DocumentTypeCode
         proprietaryDocumentTypeCode:
           type: string
           maxLength: 35
@@ -1393,7 +1528,7 @@ components:
           description: LineTwelve
           example: 'Line Twelve Text'
     Address:
-      description: Address
+      description: Address is the address
       properties:
         addressLineOne:
           type: string
@@ -1611,6 +1746,7 @@ components:
       maxLength: 4
       description: |
         LocalInstrument
+
         * `ANSI` - ANSI X12 format
         * `COVS` - Sequence B Cover Payment Structured
         * `GXML` - General XML format
