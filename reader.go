@@ -72,12 +72,17 @@ func (r *Reader) Read() (File, error) {
 		// ToDo: File length Check?
 		r.line = line
 		if err := r.parseLine(); err != nil {
-			return r.File, err
+			r.errors.Add(err)
 		}
 	}
+
 	r.File.AddFedWireMessage(r.currentFedWireMessage)
 	r.currentFedWireMessage = NewFedWireMessage()
-	return r.File, nil
+
+	if r.errors.Empty() {
+		return r.File, nil
+	}
+	return r.File, r.errors
 }
 
 func (r *Reader) parseLine() error {
