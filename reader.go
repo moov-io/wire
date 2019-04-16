@@ -865,7 +865,7 @@ func (r *Reader) parsePrimaryRemittanceDocument() error {
 	if err := prd.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetDateRemittanceDocument(prd)
+	r.currentFedWireMessage.SetPrimaryRemittanceDocument(prd)
 	return nil
 }
 
