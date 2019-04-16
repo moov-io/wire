@@ -280,8 +280,8 @@ func (fwm *FedWireMessage) GetLocalInstrument() *LocalInstrument {
 }
 
 // SetPaymentNotification appends a PaymentNotification to the FedWireMessage
-func (fwm *FedWireMessage) SetPaymentNotification(imad *PaymentNotification) {
-	fwm.PaymentNotification = imad
+func (fwm *FedWireMessage) SetPaymentNotification(pn *PaymentNotification) {
+	fwm.PaymentNotification = pn
 }
 
 // GetPaymentNotification returns the current PaymentNotification
@@ -520,8 +520,8 @@ func (fwm *FedWireMessage) GetFIPaymentMethodToBeneficiary() *FIPaymentMethodToB
 }
 
 // SetFIAdditionalFIToFI appends a FIAdditionalFIToFI to the FedWireMessage
-func (fwm *FedWireMessage) SetFIAdditionalFIToFI(imad *FIAdditionalFIToFI) {
-	fwm.FIAdditionalFIToFI = imad
+func (fwm *FedWireMessage) SetFIAdditionalFIToFI(fifi *FIAdditionalFIToFI) {
+	fwm.FIAdditionalFIToFI = fifi
 }
 
 // GetFIAdditionalFIToFI returns the current FIAdditionalFIToFI
@@ -730,8 +730,8 @@ func (fwm *FedWireMessage) GetRemittanceFreeText() *RemittanceFreeText {
 }
 
 // SetServiceMessage appends a ServiceMessage to the FedWireMessage
-func (fwm *FedWireMessage) SetServiceMessage(imad *ServiceMessage) {
-	fwm.ServiceMessage = imad
+func (fwm *FedWireMessage) SetServiceMessage(sm *ServiceMessage) {
+	fwm.ServiceMessage = sm
 }
 
 // GetServiceMessage returns the current ServiceMessage
