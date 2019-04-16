@@ -6,8 +6,6 @@
 
 package wire
 
-//ToDo: omitEmpty
-
 // FedWireMessage is a FedWire Message
 type FedWireMessage struct {
 	// ID
@@ -142,34 +140,40 @@ func NewFedWireMessage() FedWireMessage {
 
 // verify checks basic valid NACHA batch rules. Assumes properly parsed records. This does not mean it is a valid batch as validity is tied to each batch type
 func (fwm *FedWireMessage) verify() error {
-	// ToDo: Add errors
+
+	if err := fwm.isMandatory(); err != nil {
+		return err
+	}
+
+	/*	if err := batch.isBatchAmount(); err != nil {
+		return err
+	}*/
+
+	return nil
+}
+
+func (fwm *FedWireMessage) isMandatory() error {
 
 	if fwm.SenderSupplied == nil {
-		return nil
+		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
-
 	if fwm.TypeSubType == nil {
-		return nil
+		return fieldError("TypeSubType", ErrFieldRequired)
 	}
-
 	if fwm.InputMessageAccountabilityData == nil {
-		return nil
+		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
-
 	if fwm.Amount == nil {
-		return nil
+		return fieldError("Amount", ErrFieldRequired)
 	}
-
 	if fwm.SenderDepositoryInstitution == nil {
-		return nil
+		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
 	}
-
 	if fwm.ReceiverDepositoryInstitution == nil {
-		return nil
+		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
-
 	if fwm.BusinessFunctionCode == nil {
-		return nil
+		return fieldError("BusinessFunctionCode", ErrFieldRequired)
 	}
 
 	return nil

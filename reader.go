@@ -21,6 +21,7 @@ type Reader struct {
 	File File
 	// line is the current line being parsed from the input r
 	line string
+	// ToDo:  Do we need a current FEDWireMessage, just use FedWireMessage
 	// currentFedWireMessage is the current FedWireMessage being parsed
 	currentFedWireMessage FedWireMessage
 	// lineNum is the line number of the file being parsed
@@ -74,6 +75,8 @@ func (r *Reader) Read() (File, error) {
 			return r.File, err
 		}
 	}
+	r.File.AddFedWireMessage(r.currentFedWireMessage)
+	r.currentFedWireMessage = NewFedWireMessage()
 	return r.File, nil
 }
 
@@ -321,6 +324,7 @@ func (r *Reader) parseSenderSupplied() error {
 	if err := ss.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSenderSupplied(ss)
 	return nil
 }
 
@@ -335,6 +339,7 @@ func (r *Reader) parseTypeSubType() error {
 	if err := tst.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetTypeSubType(tst)
 	return nil
 }
 
@@ -349,6 +354,7 @@ func (r *Reader) parseInputMessageAccountabilityData() error {
 	if err := imad.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetInputMessageAccountabilityData(imad)
 	return nil
 }
 
@@ -363,12 +369,13 @@ func (r *Reader) parseAmount() error {
 	if err := amt.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetAmount(amt)
 	return nil
 }
 
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
-/*	if len(r.line) < 15 {
+	/*	if len(r.line) < 15 {
 		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
 		return r.errors
 	}*/
@@ -377,12 +384,13 @@ func (r *Reader) parseSenderDepositoryInstitution() error {
 	if err := sdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSenderDepositoryInstitution(sdi)
 	return nil
 }
 
 func (r *Reader) parseReceiverDepositoryInstitution() error {
 	r.tagName = "ReceiverDepositoryInstitution"
-/*	if len(r.line) < 15 {
+	/*	if len(r.line) < 15 {
 		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
 		return r.errors
 	}*/
@@ -391,6 +399,7 @@ func (r *Reader) parseReceiverDepositoryInstitution() error {
 	if err := rdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetReceiverDepositoryInstitution(rdi)
 	return nil
 }
 
@@ -405,6 +414,7 @@ func (r *Reader) parseBusinessFunctionCode() error {
 	if err := bfc.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBusinessFunctionCode(bfc)
 	return nil
 }
 

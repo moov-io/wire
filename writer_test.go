@@ -2,14 +2,14 @@ package wire
 
 import (
 	"bytes"
+	"github.com/moov-io/base"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 	"testing"
 )
 
-// TestFedWireMessage writes an FedWireMessage toa file
+// TestFedWireMessage writes an FedWireMessage to a file
 func TestFedWireMessageWrite(t *testing.T) {
 	file := NewFile()
 	fwm := NewFedWireMessage()
@@ -163,47 +163,241 @@ func TestFedWireMessageWrite(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 
-	fd, err := os.Create(filepath.Join("", "test/testdata", "fedWireMessage.txt"))
-	if err != nil {
-		log.Fatalf("Unexpected error creating output file: %s\n", err)
-	}
-	defer func() {
-		fd.Sync()
-		fd.Close()
-	}()
-	w := NewWriter(fd)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-
 	// We want to write the file to an io.Writer
-	w = NewWriter(os.Stdout)
+	w := NewWriter(os.Stdout)
 	if err := w.Write(file); err != nil {
 		log.Fatalf("Unexpected error: %s\n", err)
 	}
 	w.Flush()
 
 	r := NewReader(strings.NewReader(b.String()))
-	_, err = r.Read()
+
+	fwmFile, err := r.Read()
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-	if err = r.File.Validate(); err != nil {
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
 		t.Errorf("%T: %s", err, err)
+	}
+
+}
+
+func TestSenderSupplied_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	bfc := mockBusinessFunctionCode()
+	fwm.SetBusinessFunctionCode(bfc)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
 	}
 }
 
-/*// write the file to std out. Anything io.Writer
-fd, err := os.Create(filepath.Join("..", "ach-rck-read", "rck-debit.ach"))
-if err != nil {
-log.Fatalf("Unexpected error creating output file: %s\n", err)
+func TestTypeSubType_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	bfc := mockBusinessFunctionCode()
+	fwm.SetBusinessFunctionCode(bfc)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 }
-defer func() {
-	fd.Sync()
-	fd.Close()
-}()
-w := ach.NewWriter(fd)
-if err := w.Write(file); err != nil {
-log.Fatalf("Unexpected error: %s\n", err)
+
+func TestInputMessageAccountabilityData_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	bfc := mockBusinessFunctionCode()
+	fwm.SetBusinessFunctionCode(bfc)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 }
-w.Flush()*/
+
+func TestAmount_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	bfc := mockBusinessFunctionCode()
+	fwm.SetBusinessFunctionCode(bfc)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+func TestSenderDepositoryInstitution_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	fwm.SetBusinessFunctionCode(bfc)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+func TestReceiverDepositoryInstitution_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	bfc := mockBusinessFunctionCode()
+	fwm.SetBusinessFunctionCode(bfc)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+func TestBusinessFunctionCode_Mandatory(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

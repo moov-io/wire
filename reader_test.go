@@ -13,12 +13,14 @@ func TestFedWireMessageFileRead(t *testing.T) {
 	}
 	defer f.Close()
 	r := NewReader(f)
-	_, err = r.Read()
 
-	if _, err := r.Read(); err != nil {
+	fwmFile, err := r.Read()
+	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-	if err = r.File.Validate(); err != nil {
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
+
 }
