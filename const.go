@@ -218,6 +218,8 @@ const (
 	FEDFundsReturned = "FFR"
 	// FEDFundsSold is FED funds sold
 	FEDFundsSold = "FFS"
+	// ServiceMessage is Service Message
+	BFCServiceMessage = "SVC"
 
 	// ChargeDetails
 
@@ -416,4 +418,29 @@ const (
 	CreditIndicator = "CRDT"
 	// DebitIndicator is a debit
 	DebitIndicator = "DBIT"
+
+	// Local Instrument Code
+
+	// ANSIX12format is ANSI X12 format
+	ANSIX12format = "ANSI"
+	// SequenceBCoverPaymentStructured is Sequence B Cover Payment Structured
+	SequenceBCoverPaymentStructured = "COVS"
+	// GeneralXMLformat is General XML format
+	GeneralXMLformat = "GXML"
+	// ISO20022XMLformat is ISO 20022 XML format
+	ISO20022XMLformat = "IXML"
+	// NarrativeText is Narrative Text
+	NarrativeText = "NARR"
+	// ProprietaryLocalInstrumentCode is Proprietary Local Instrument Code
+	ProprietaryLocalInstrumentCode = "PROP"
+	// RemittanceInformationStructured is Remittance Information Structured
+	RemittanceInformationStructured = "RMTS"
+	// RelatedRemittanceInformation is Related Remittance Information
+	RelatedRemittanceInformation = "RRMT"
+	// STP820format is STP 820 format
+	STP820format = "S820"
+	// SWIFTfield70 = SWIFT field 70
+	SWIFTfield70 = "SWIF"
+	// UNEDIFACTformat is UN-EDIFACT format
+	UNEDIFACTformat = "UEDI"
 )

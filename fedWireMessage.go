@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // ToDo: Change FedWireMessage to FED...
+// ToDo Change DrawdownPayment to DrawDownRequest
 
 package wire
 
@@ -140,20 +141,17 @@ func NewFedWireMessage() FedWireMessage {
 
 // verify checks basic valid NACHA batch rules. Assumes properly parsed records. This does not mean it is a valid batch as validity is tied to each batch type
 func (fwm *FedWireMessage) verify() error {
-
 	if err := fwm.isMandatory(); err != nil {
 		return err
 	}
-
-	/*	if err := batch.isBatchAmount(); err != nil {
+	if err :=fwm.isBusinessCodeValid(); err != nil {
 		return err
-	}*/
-
+	}
 	return nil
 }
 
+// isMandatory validates mandatory tags for a FedWireMessage are defined
 func (fwm *FedWireMessage) isMandatory() error {
-
 	if fwm.SenderSupplied == nil {
 		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
@@ -175,9 +173,443 @@ func (fwm *FedWireMessage) isMandatory() error {
 	if fwm.BusinessFunctionCode == nil {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired)
 	}
-
 	return nil
 }
+
+func (fwm *FedWireMessage) isBusinessCodeValid() error {
+	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+	case BankTransfer:
+		if err := fwm.isBankTransferValid(); err != nil {
+			return err
+		}
+		if err := fwm.isBankTransferTags(); err != nil {
+			return err
+		}
+	case CustomerTransfer:
+		if err := fwm.isCustomerTransferValid(); err != nil {
+			return err
+		}
+		if err := fwm.isCustomerTransferTags(); err != nil {
+			return err
+		}
+	case CustomerTransferPlus:
+		if err := fwm.isCustomerTransferPlusValid(); err != nil {
+			return err
+		}
+		if err := fwm.isCustomerTransferPlusTags(); err != nil {
+			return err
+		}
+	case CheckSameDaySettlement:
+		if err := fwm.isCheckSameDaySettlementValid(); err != nil {
+			return err
+		}
+		if err := fwm.isCheckSameDaySettlementTags(); err != nil {
+			return err
+		}
+	case DepositSendersAccount:
+		if err := fwm.isDepositSendersAccountValid(); err != nil {
+			return err
+		}
+		if err := fwm.isDepositSendersAccountTags(); err != nil {
+			return err
+		}
+	case FEDFundsReturned:
+		if err := fwm.isFEDFundsReturnedValid(); err != nil {
+			return err
+		}
+		if err := fwm.isFEDFundsReturnedTags(); err != nil {
+			return err
+		}
+	case FEDFundsSold:
+		if err := fwm.isFEDFundsSoldValid(); err != nil {
+			return err
+		}
+		if err := fwm.isFEDFundsSoldTags(); err != nil {
+			return err
+		}
+	case DrawdownPayment:
+		if err := fwm.isDrawdownPaymentValid(); err != nil {
+			return err
+		}
+		if err := fwm.isDrawdownPaymentTags(); err != nil {
+			return err
+		}
+	case BankDrawdownRequest:
+		if err := fwm.isBankDrawdownRequestValid(); err != nil {
+			return err
+		}
+		if err := fwm.isBankDrawdownRequestTags(); err != nil {
+			return err
+		}
+	case CustomerCorporateDrawdownRequest:
+		if err := fwm.isCustomerCorporateDrawdownRequestValid(); err != nil {
+			return err
+		}
+		if err := fwm.isCustomerCorporateDrawdownRequestTags(); err != nil {
+			return err
+		}
+	case BFCServiceMessage:
+		if err := fwm.isServiceMessageValid(); err != nil {
+			return err
+		}
+		if err := fwm.isServiceMessageTags(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// isBankTransferValid
+func (fwm *FedWireMessage) isBankTransferValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1000", "1002", "1008",
+		"1500", "1502", "1508",
+		"1600", "1602", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isBankTransferTags
+func (fwm *FedWireMessage) isBankTransferTags() error {
+	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// ToDo: Do a more generic case for type and which Business function codes are invalid.
+
+/*func (fwm *FedWireMessage) isInvalidTag() error {
+
+	if fwm.CurrencyInstructedAmount != nil {
+		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+		// any 7
+		case BankTransfer, CustomerTransfer, CheckSameDaySettlement, DepositSendersAccount,
+		FEDFundsReturned, FEDFundsSold, DrawdownPayment, BankDrawdownRequest, CustomerCorporateDrawdownRequest, BFCServiceMessage:
+			return fieldError("BusinessFunctionCode", ErrInvalidProperty, "CurrencyInstructedAmount")
+		}
+	}
+	return nil
+}*/
+
+// isCustomerTransferValid
+func (fwm *FedWireMessage) isCustomerTransferValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1000", "1002", "1008",
+		"1500", "1502", "1508",
+		"1600", "1602", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isCustomerTransferTags
+func (fwm *FedWireMessage) isCustomerTransferTags() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	if fwm.Originator == nil && fwm.OriginatorFI == nil {
+		return fieldError("Originator or OriginatorFI", ErrFieldRequired)
+	}
+	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+		return err
+	}
+	return nil
+}
+
+// isCustomerTransferPlusValid
+func (fwm *FedWireMessage) isCustomerTransferPlusValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1000", "1001", "1002", "1007", "1008",
+		"1500", "1501", "1502", "1507", "1508",
+		"1600", "1601", "1602", "1607", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isCustomerTransferPlusTags
+func (fwm *FedWireMessage) isCustomerTransferPlusTags() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	if fwm.Originator == nil {
+		return fieldError("Originator", ErrFieldRequired)
+	}
+	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+		return err
+	}
+	switch fwm.LocalInstrument.LocalInstrumentCode {
+	case SequenceBCoverPaymentStructured:
+		if fwm.BeneficiaryReference == nil {
+			return fieldError("Beneficiary Reference", ErrFieldRequired)
+		}
+		if fwm.OrderingCustomer == nil {
+			return fieldError("Ordering Customer", ErrFieldRequired)
+		}
+		if fwm.BeneficiaryCustomer == nil {
+			return fieldError("BeneficiaryCustomer", ErrFieldRequired)
+		}
+	case ANSIX12format, GeneralXMLformat, ISO20022XMLformat,
+		NarrativeText, STP820format , SWIFTfield70, UNEDIFACTformat:
+		if fwm.UnstructuredAddenda == nil {
+			return fieldError("UnstructuredAddenda", ErrFieldRequired)
+		}
+	case RelatedRemittanceInformation:
+		if fwm.RelatedRemittance == nil {
+			return fieldError("RelatedRemittance", ErrFieldRequired)
+		}
+	case RemittanceInformationStructured:
+		if fwm.RemittanceOriginator == nil {
+			return fieldError("RemittanceOriginator", ErrFieldRequired)
+		}
+		if fwm.RemittanceBeneficiary == nil {
+			return fieldError("RemittanceBeneficiary", ErrFieldRequired)
+		}
+		if fwm.PrimaryRemittanceDocument == nil {
+			return fieldError("PrimaryRemittanceDocument", ErrFieldRequired)
+		}
+		if fwm.ActualAmountPaid == nil {
+			return fieldError("ActualAmountPaid", ErrFieldRequired)
+		}
+	case ProprietaryLocalInstrumentCode:
+		if fwm.LocalInstrument.ProprietaryCode == "" {
+			return fieldError("ProprietaryCode", ErrFieldRequired)
+		}
+	}
+	return nil
+}
+
+// isCheckSameDaySettlementValid
+func (fwm *FedWireMessage) isCheckSameDaySettlementValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1600", "1602", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isCheckSameDaySettlementTags
+func (fwm *FedWireMessage) isCheckSameDaySettlementTags() error {
+	return nil
+}
+
+// isDepositSendersAccountValid
+func (fwm *FedWireMessage) isDepositSendersAccountValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1600", "1602", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isDepositSendersAccountTags
+func (fwm *FedWireMessage) isDepositSendersAccountTags() error {
+	return nil
+}
+
+// isFEDFundsReturnedValid
+func (fwm *FedWireMessage) isFEDFundsReturnedValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1600", "1602", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isFEDFundsReturnedTag
+func (fwm *FedWireMessage) isFEDFundsReturnedTags() error {
+	return nil
+}
+
+// isFEDFundsSoldValid
+func (fwm *FedWireMessage) isFEDFundsSoldValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1600", "1602", "1608":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isFEDFundsSoldTags
+func (fwm *FedWireMessage) isFEDFundsSoldTags() error {
+	return nil
+}
+
+// isDrawdownPaymentValid
+func (fwm *FedWireMessage) isDrawdownPaymentValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1032", "1632":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isDrawdownPaymentTags
+func (fwm *FedWireMessage) isDrawdownPaymentTags() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	if fwm.Originator == nil {
+		return fieldError("Originator", ErrFieldRequired)
+	}
+	return nil
+}
+
+// isBankDrawdownRequestValid
+func (fwm *FedWireMessage) isBankDrawdownRequestValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1631", "1633":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isBankDrawdownRequestTags
+func (fwm *FedWireMessage) isBankDrawdownRequestTags() error {
+	if fwm.AccountDebitedDrawdown == nil {
+		return fieldError("AccountDebitedDrawdown", ErrFieldRequired)
+	}
+	if fwm.AccountCreditedDrawdown == nil {
+		return fieldError("AccountCreditedDrawdown", ErrFieldRequired)
+	}
+	return nil
+}
+
+// isCustomerCorporateDrawdownRequestValid
+func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1031", "1033":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isCustomerCorporateDrawdownRequestTags
+func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestTags() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	if fwm.AccountDebitedDrawdown == nil {
+		return fieldError("AccountDebitedDrawdown", ErrFieldRequired)
+	}
+	if fwm.AccountCreditedDrawdown == nil {
+		return fieldError("AccountCreditedDrawdown", ErrFieldRequired)
+	}
+	return nil
+}
+
+// isServiceMessageValid
+func (fwm *FedWireMessage) isServiceMessageValid() error {
+	typeSubType :=  fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
+	switch typeSubType {
+	case
+		"1001", "1007", "1033", "1090",
+		"1501", "1507", "1590",
+		"1601", "1607", "1633", "1690":
+	default:
+		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	return nil
+}
+
+// isServiceMessageTags
+func (fwm *FedWireMessage) isServiceMessageTags() error {
+	return nil
+}
+
+// isPreviousMessageIdentifierRequired
+func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
+	switch fwm.TypeSubType.SubTypeCode {
+	case "02", "08":
+		if fwm.PreviousMessageIdentifier == nil {
+			return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+		}
+	}
+	return nil
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // SetSenderSupplied appends a SenderSupplied to the FedWireMessage
 func (fwm *FedWireMessage) SetSenderSupplied(ss *SenderSupplied) {

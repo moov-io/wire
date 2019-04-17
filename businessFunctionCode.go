@@ -59,9 +59,11 @@ func (bfc *BusinessFunctionCode) Validate() error {
 	if err := bfc.isBusinessFunctionCode(bfc.BusinessFunctionCode); err != nil {
 		return fieldError("BusinessFunctionCode", err, bfc.BusinessFunctionCode)
 	}
-	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
+	// transactionCodeType does not seem to be defined in the spec
+
+	/*	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
 		return fieldError("TransactionTypeCode", err, bfc.TransactionTypeCode)
-	}
+	}*/
 	return nil
 }
 
@@ -69,13 +71,10 @@ func (bfc *BusinessFunctionCode) Validate() error {
 // invalid the WIRE will return an error.
 func (bfc *BusinessFunctionCode) fieldInclusion() error {
 
+	// only element 01 (BusinessFunctionCode) is required
 	if bfc.BusinessFunctionCode == "" {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode)
 	}
-	//ToDo: "" may be allowed
-	/*	if bfc.TransactionTypeCode == "" {
-		return fieldError("TransactionTypeCode", ErrFieldRequired, bfc.TransactionTypeCode)
-	}*/
 	return nil
 }
 
