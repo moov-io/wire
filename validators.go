@@ -48,7 +48,7 @@ func (v *validator) isNumeric(s string) error {
 // isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")
-	str = strings.Trim(s,".")
+	str = strings.Trim(s, ".")
 	if amountRegex.MatchString(str) {
 		// [^ [0-9],.]
 		return ErrNonAmount
@@ -159,7 +159,7 @@ func (v *validator) isBusinessFunctionCode(code string) error {
 		DepositSendersAccount,
 		BankDrawdownRequest,
 		CustomerCorporateDrawdownRequest,
-		DrawdownPayment,
+		DrawdownRequest,
 		FEDFundsReturned,
 		FEDFundsSold,
 		BFCServiceMessage:
