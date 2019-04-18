@@ -7,6 +7,8 @@
 
 package wire
 
+import "strings"
+
 // FedWireMessage is a FedWire Message
 type FedWireMessage struct {
 	// ID
@@ -317,7 +319,7 @@ func (fwm *FedWireMessage) isBankTransferTags() error {
 
 // isInvalidBankTransferTags
 func (fwm *FedWireMessage) isInvalidBankTransferTags() error {
-	if fwm.BusinessFunctionCode.TransactionTypeCode != "" {
+	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
 	if fwm.LocalInstrument != nil {
@@ -399,7 +401,7 @@ func (fwm *FedWireMessage) isCustomerTransferTags() error {
 
 // isInvalidCustomerTransferTags
 func (fwm *FedWireMessage) isInvalidCustomerTransferTags() error {
-	if fwm.BusinessFunctionCode.TransactionTypeCode != "COV" {
+	if fwm.BusinessFunctionCode.TransactionTypeCode == "COV" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
 	if fwm.LocalInstrument != nil {

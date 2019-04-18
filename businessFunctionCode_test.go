@@ -4,6 +4,6 @@ package wire
 func mockBusinessFunctionCode() *BusinessFunctionCode {
 	bfc := NewBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	bfc.TransactionTypeCode = "COV"
+	bfc.TransactionTypeCode = "XYZ"
 	return bfc
 }
