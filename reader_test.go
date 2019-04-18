@@ -6,8 +6,8 @@ import (
 )
 
 // TestFedWireMessage validates reading an FedWireMessage file
-func TestFedWireMessageFileRead(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage.txt")
+func TestFedWireMessageCTR_FileREAD(t *testing.T) {
+	f, err := os.Open("./test/testdata/fedWireMessage-CTR.txt")
 	if err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
@@ -22,5 +22,4 @@ func TestFedWireMessageFileRead(t *testing.T) {
 	if err = fwmFile.Validate(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-
 }

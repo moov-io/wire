@@ -182,7 +182,7 @@ func (v *validator) isTransactionTypeCode(code string) error {
 	// ToDo: Find what the Transaction Type Codes are
 	switch code {
 	case
-		"XYZ":
+		"", "COV":
 		return nil
 	}
 	return ErrTransactionTypeCode

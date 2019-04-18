@@ -37,7 +37,7 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 func (bfc *BusinessFunctionCode) Parse(record string) {
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
-	bfc.TransactionTypeCode = bfc.parseStringField(record[9:12])
+	bfc.TransactionTypeCode = record[9:12]
 }
 
 // String writes BusinessFunctionCode
