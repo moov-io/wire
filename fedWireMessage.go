@@ -753,6 +753,8 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
 	return nil
 }
 
+// ToDo:  May revisit this create separate functions for each of the case BusinessFunctionCode statements.
+
 // isInvalidTags
 // isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
 // BusinessFunctionCode, create function isInvalidBusinessFunctionCodeTag() with the specific invalid tags for that
@@ -838,7 +840,6 @@ func (fwm *FedWireMessage) isInvalidTags() error {
 		if fwm.OriginatorOptionF != nil {
 			return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
 		}
-
 		if fwm.ServiceMessage != nil {
 			return fieldError("BusinessFunctionCode", ErrInvalidProperty, "ServiceMessage")
 		}

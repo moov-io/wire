@@ -380,10 +380,10 @@ func (r *Reader) parseAmount() error {
 
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
-	/*	if len(r.line) < 15 {
+	if len(r.line) < 15 {
 		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
 		return r.errors
-	}*/
+	}
 	sdi := new(SenderDepositoryInstitution)
 	sdi.Parse(r.line)
 	if err := sdi.Validate(); err != nil {
@@ -395,10 +395,10 @@ func (r *Reader) parseSenderDepositoryInstitution() error {
 
 func (r *Reader) parseReceiverDepositoryInstitution() error {
 	r.tagName = "ReceiverDepositoryInstitution"
-	/*	if len(r.line) < 15 {
+	if len(r.line) < 15 {
 		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
 		return r.errors
-	}*/
+	}
 	rdi := new(ReceiverDepositoryInstitution)
 	rdi.Parse(r.line)
 	if err := rdi.Validate(); err != nil {
