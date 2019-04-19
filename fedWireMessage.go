@@ -506,7 +506,7 @@ func (fwm *FedWireMessage) isCustomerTransferPlusTags() error {
 
 // isInvalidCustomerTransferPlusTags
 func (fwm *FedWireMessage) isInvalidCustomerTransferPlusTags() error {
-	if fwm.BusinessFunctionCode.TransactionTypeCode != "" {
+	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
 	if fwm.AccountDebitedDrawdown != nil {
