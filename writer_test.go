@@ -438,7 +438,6 @@ func TestFedWireMessageWriteBankTransfer(t *testing.T) {
 	br := mockBeneficiaryReference()
 	fwm.SetBeneficiaryReference(br)
 
-
 	// Originator
 	o := mockOriginator()
 	fwm.SetOriginator(o)
@@ -1087,7 +1086,6 @@ func TestFedWireMessageWriteDrawdownRequest(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-
 	file.AddFedWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
@@ -1169,7 +1167,6 @@ func TestFedWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	fwm.SetFIPaymentMethodToBeneficiary(pm)
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
-
 
 	file.AddFedWireMessage(fwm)
 
@@ -1350,37 +1347,35 @@ func TestFedWireMessageWriteServiceMessage(t *testing.T) {
 	}
 }
 
-func writeFile(file *File)  error {
-		if err := file.Create(); err != nil {
-			return err
-		}
-		if err := file.Validate(); err != nil {
-			return err
-		}
+// writeFile writes a FedWireMessage File and ensures the File can be read
+func writeFile(file *File) error {
+	if err := file.Create(); err != nil {
+		return err
+	}
+	if err := file.Validate(); err != nil {
+		return err
+	}
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+	if err := f.Write(file); err != nil {
+		return err
+	}
+	// ToDo:  Write to disk?
 
-		b := &bytes.Buffer{}
-		f := NewWriter(b)
-
-		if err := f.Write(file); err != nil {
-			return err
-		}
-
-/*		// We want to write the file to an io.Writer
-		w := NewWriter(os.Stdout)
-		if err := w.Write(file); err != nil {
-			log.Fatalf("Unexpected error: %s\n", err)
-		}
-		w.Flush()*/
-
-		r := NewReader(strings.NewReader(b.String()))
-
-		fwmFile, err := r.Read()
-		if err != nil {
-			return err
-		}
-		// ensure we have a validated file structure
-		if err = fwmFile.Validate(); err != nil {
-			return err
-		}
-		return nil
+	/*		// We want to write the file to an io.Writer
+			w := NewWriter(os.Stdout)
+			if err := w.Write(file); err != nil {
+				log.Fatalf("Unexpected error: %s\n", err)
+			}
+			w.Flush()*/
+	r := NewReader(strings.NewReader(b.String()))
+	fwmFile, err := r.Read()
+	if err != nil {
+		return err
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		return err
+	}
+	return nil
 }
