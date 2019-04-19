@@ -3,8 +3,6 @@ package wire
 import (
 	"bytes"
 	"github.com/moov-io/base"
-	"log"
-	"os"
 	"strings"
 	"testing"
 )
@@ -473,36 +471,7 @@ func TestFedWireMessageWriteBankTransfer(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -584,36 +553,7 @@ func TestFedWireMessageWriteCustomerTransfer(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -759,36 +699,7 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -866,36 +777,7 @@ func TestFedWireMessageWriteCheckSameDaySettlement(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -973,36 +855,7 @@ func TestFedWireMessageWriteDepositSendersAccount(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -1080,36 +933,7 @@ func TestFedWireMessageWriteFEDFundsReturned(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -1187,36 +1011,7 @@ func TestFedWireMessageWriteFEDFundsSold(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -1295,36 +1090,7 @@ func TestFedWireMessageWriteDrawdownRequest(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -1407,36 +1173,7 @@ func TestFedWireMessageWriteBankDrawdownRequest(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
@@ -1520,42 +1257,13 @@ func TestFedWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
-
-	r := NewReader(strings.NewReader(b.String()))
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteBFCServiceMessage writes a FedWireMessage to a file with BusinessFunctionCode = SVC
-func TestFedWireMessageWriteBFCServiceMessage(t *testing.T) {
+// TestFedWireMessageWriteServiceMessage writes a FedWireMessage to a file with BusinessFunctionCode = SVC
+func TestFedWireMessageWriteServiceMessage(t *testing.T) {
 	file := NewFile()
 	fwm := NewFedWireMessage()
 
@@ -1637,36 +1345,42 @@ func TestFedWireMessageWriteBFCServiceMessage(t *testing.T) {
 
 	file.AddFedWireMessage(fwm)
 
-	// Create file
-	if err := file.Create(); err != nil {
+	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-	if err := file.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+}
 
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
+func writeFile(file *File)  error {
+		if err := file.Create(); err != nil {
+			return err
+		}
+		if err := file.Validate(); err != nil {
+			return err
+		}
 
-	if err := f.Write(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+		b := &bytes.Buffer{}
+		f := NewWriter(b)
 
-	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
+		if err := f.Write(file); err != nil {
+			return err
+		}
 
-	r := NewReader(strings.NewReader(b.String()))
+/*		// We want to write the file to an io.Writer
+		w := NewWriter(os.Stdout)
+		if err := w.Write(file); err != nil {
+			log.Fatalf("Unexpected error: %s\n", err)
+		}
+		w.Flush()*/
 
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
+		r := NewReader(strings.NewReader(b.String()))
+
+		fwmFile, err := r.Read()
+		if err != nil {
+			return err
+		}
+		// ensure we have a validated file structure
+		if err = fwmFile.Validate(); err != nil {
+			return err
+		}
+		return nil
 }
