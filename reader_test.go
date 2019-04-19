@@ -5,211 +5,39 @@ import (
 	"testing"
 )
 
-// TestFedWireMessageCustomerTransfer_FileREAD validates reading an CustomerTransfer FedWireMessage
-func TestFedWireMessageCustomerTransfer_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-CustomerTransfer.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
+// TestRead reads wire Files with different BusinessFunctionCodes
+func TestRead(t *testing.T) {
+	t.Run("BankTransfer", testRead("./test/testdata/fedWireMessage-BankTransfer.txt"))
+	t.Run("CustomerTransfer", testRead("./test/testdata/fedWireMessage-CustomerTransfer.txt"))
+	t.Run("CustomerTransferPlus", testRead("./test/testdata/fedWireMessage-CustomerTransferPlus.txt"))
+	t.Run("CheckSameDaySettlement", testRead("./test/testdata/fedWireMessage-CheckSameDaySettlement.txt"))
+	t.Run("DepositSendersAccount", testRead("./test/testdata/fedWireMessage-DepositSendersAccount.txt"))
+	t.Run("FEDFundsReturned", testRead("./test/testdata/fedWireMessage-FEDFundsReturned.txt"))
+	t.Run("FEDFundsSold", testRead("./test/testdata/fedWireMessage-FEDFundsSold.txt"))
+	t.Run("DrawdownRequest", testRead("./test/testdata/fedWireMessage-DrawdownRequest.txt"))
+	t.Run("BankDrawdownRequest", testRead("./test/testdata/fedWireMessage-BankDrawdownRequest.txt"))
+	t.Run("CustomerCorporateDrawdownRequest", testRead("./test/testdata/fedWireMessage-CustomerCorporateDrawdownRequest.txt"))
+	t.Run("ServiceMessage", testRead("./test/testdata/fedWireMessage-ServiceMessage.txt"))
+}
 
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
+func testRead(filePathName string) func(t *testing.T) {
+	return func(t *testing.T) {
+		f, err := os.Open(filePathName)
+		if err != nil {
+			t.Errorf("%T: %s", err, err)
+		}
+		defer f.Close()
+		r := NewReader(f)
+
+		fwmFile, err := r.Read()
+		if err != nil {
+			t.Errorf("%T: %s", err, err)
+		}
+		// ensure we have a validated file structure
+		if err = fwmFile.Validate(); err != nil {
+			t.Errorf("%T: %s", err, err)
+		}
 	}
 }
 
-// TestFedWireMessageBankTransfer_FileREAD validates reading an BankTransfer FedWireMessage
-func TestFedWireMessageBankTransfer_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-BankTransfer.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
 
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageCustomerTransferPlus_FileREAD validates reading an CustomerTransferPlus FedWireMessage
-func TestFedWireMessageCustomerTransferPlus_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-CustomerTransferPlus.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageCheckSameDaySettlement_FileREAD validates reading an CheckSameDaySettlement FedWireMessage
-func TestFedWireMessageCheckSameDaySettlement_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-CheckSameDaySettlement.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageDepositSendersAccount_FileREAD validates reading an DepositSendersAccount FedWireMessage
-func TestFedWireMessageDepositSendersAccount_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-DepositSendersAccount.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageFEDFundsReturned_FileREAD validates reading an FEDFundsReturned FedWireMessage
-func TestFedWireMessageFEDFundsReturned_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-FEDFundsReturned.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageFEDFundsSold_FileREAD validates reading an FEDFundsSold FedWireMessage
-func TestFedWireMessageFEDFundsSold_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-FEDFundsSold.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageDrawdownRequest_FileREAD validates reading an DrawdownRequest FedWireMessage
-func TestFedWireMessageDrawdownRequest_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-DrawdownRequest.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageBankDrawdownRequest_FileREAD validates reading an BankDrawdownRequest FedWireMessage
-func TestFedWireMessageBankDrawdownRequest_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-BankDrawdownRequest.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageCustomerCorporateDrawdownRequest_FileREAD validates reading an CustomerCorporateDrawdownRequest FedWireMessage
-func TestFedWireMessageCustomerCorporateDrawdownRequest_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-BankDrawdownRequest.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// TestFedWireMessageServiceMessage_FileREAD validates reading an ServiceMessage FedWireMessage
-func TestFedWireMessageServiceMessage_FileREAD(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-BankDrawdownRequest.txt")
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	fwmFile, err := r.Read()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
