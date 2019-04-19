@@ -792,3 +792,881 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 }
+
+// TestFedWireMessageWriteCheckSameDaySettlement writes a FedWireMessage to a file with BusinessFunctionCode = CKS
+func TestFedWireMessageWriteCheckSameDaySettlement(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	tst.TypeCode = "16"
+	tst.SubTypeCode = "00"
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = CheckSameDaySettlement
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteDepositSendersAccount writes a FedWireMessage to a file with BusinessFunctionCode = DEP
+func TestFedWireMessageWriteDepositSendersAccount(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	tst.TypeCode = "16"
+	tst.SubTypeCode = "00"
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = DepositSendersAccount
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteFEDFundsReturned writes a FedWireMessage to a file with BusinessFunctionCode = FFR
+func TestFedWireMessageWriteFEDFundsReturned(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	tst.TypeCode = "16"
+	tst.SubTypeCode = "00"
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = FEDFundsReturned
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteFEDFundsSold writes a FedWireMessage to a file with BusinessFunctionCode = FFS
+func TestFedWireMessageWriteFEDFundsSold(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	tst.TypeCode = "16"
+	tst.SubTypeCode = "00"
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = FEDFundsSold
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteDrawdownRequest writes a FedWireMessage to a file with BusinessFunctionCode = DRW
+func TestFedWireMessageWriteDrawdownRequest(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	tst.TypeCode = "10"
+	tst.SubTypeCode = "32"
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = DrawdownRequest
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteBankDrawdownRequest writes a FedWireMessage to a file with BusinessFunctionCode = DRB
+func TestFedWireMessageWriteBankDrawdownRequest(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	tst.TypeCode = "16"
+	tst.SubTypeCode = "31"
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = BankDrawdownRequest
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+	debitDD := mockAccountDebitedDrawdown()
+	fwm.SetAccountDebitedDrawdown(debitDD)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	creditDD := mockAccountCreditedDrawdown()
+	fwm.SetAccountCreditedDrawdown(creditDD)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteCustomerCorporateDrawdownRequest writes a FedWireMessage to a file with BusinessFunctionCode = DRC
+func TestFedWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	tst.TypeCode = "10"
+	tst.SubTypeCode = "31"
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = CustomerCorporateDrawdownRequest
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+	debitDD := mockAccountDebitedDrawdown()
+	fwm.SetAccountDebitedDrawdown(debitDD)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	creditDD := mockAccountCreditedDrawdown()
+	fwm.SetAccountCreditedDrawdown(creditDD)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
+	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteBFCServiceMessage writes a FedWireMessage to a file with BusinessFunctionCode = SVC
+func TestFedWireMessageWriteBFCServiceMessage(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	tst.TypeCode = "10"
+	tst.SubTypeCode = "01"
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = BFCServiceMessage
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+	debitDD := mockAccountDebitedDrawdown()
+	fwm.SetAccountDebitedDrawdown(debitDD)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	creditDD := mockAccountCreditedDrawdown()
+	fwm.SetAccountCreditedDrawdown(creditDD)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
+	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+	// ServiceMessage
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+
+	file.AddFedWireMessage(fwm)
+
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	if err := file.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+
+	if err := f.Write(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+
+	r := NewReader(strings.NewReader(b.String()))
+
+	fwmFile, err := r.Read()
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}

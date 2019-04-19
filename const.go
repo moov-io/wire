@@ -162,7 +162,7 @@ const (
 	ForeignTransfer = "15"
 	// SettlementTransfer is SenderSuppliedInformation {1510} TypeCode which designates a funds transfer
 	// between Fedwire Funds Service participants.
-	SettlementTransfer = "30"
+	SettlementTransfer = "16"
 
 	// SubTypeCode
 

@@ -3,7 +3,8 @@
 // license that can be found in the LICENSE file.
 
 // ToDo: Change FedWireMessage to FED...
-// ToDo: Make TAGS call 2 functions Required and invalid
+// ToDo: Change typeSubType check to constants
+// ToDo: Remove empty functions after all validation checks are coded
 
 package wire
 
@@ -149,6 +150,37 @@ func (fwm *FedWireMessage) verify() error {
 	if err := fwm.isBusinessCodeValid(); err != nil {
 		return err
 	}
+	// edit requirements
+/*	if err := fwm.isAmountValid(); err != nil {
+		return err
+	}
+	if err := fwm.isBusinessFunctionCodeValid(); err != nil {
+		return err
+	}
+	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
+		return err
+	}
+	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+		return err
+	}
+	if err := fwm.isPaymentNotificationValid(); err != nil {
+		return err
+	}
+	if err := fwm.isChargesValid(); err != nil {
+		return err
+	}
+	if err := fwm.isInstructedAmountValid(); err != nil {
+		return err
+	}
+	if err := fwm.isExchangeRateValid(); err != nil {
+		return err
+	}
+	if err := fwm.isIntermediaryFIValid(); err != nil {
+		return err
+	}
+	if err := fwm.isBeneficiaryFIValid(); err != nil {
+		return err
+	}*/
 	return nil
 }
 
@@ -703,7 +735,7 @@ func (fwm *FedWireMessage) isServiceMessageTags() error {
 // isInvalidServiceMessageTags
 func (fwm *FedWireMessage) isInvalidServiceMessageTags() error {
 	// BusinessFunctionCode.TransactionTypeCode (Element 02) is invalid
-	if fwm.BusinessFunctionCode.TransactionTypeCode != "" {
+	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
 	if fwm.LocalInstrument != nil {
@@ -753,7 +785,8 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
 	return nil
 }
 
-// ToDo:  May revisit this create separate functions for each of the case BusinessFunctionCode statements.
+// ToDo:  May revisit this create separate functions for each of the case BusinessFunctionCode statements as I did with
+//  Valid and Tags or vice versa
 
 // isInvalidTags
 // isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
@@ -762,8 +795,7 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
 func (fwm *FedWireMessage) isInvalidTags() error {
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 	case CheckSameDaySettlement, DepositSendersAccount, FEDFundsReturned, FEDFundsSold:
-
-		if fwm.BusinessFunctionCode.TransactionTypeCode != "" {
+		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 		}
 		if fwm.LocalInstrument != nil {
@@ -813,7 +845,7 @@ func (fwm *FedWireMessage) isInvalidTags() error {
 			return err
 		}
 	case DrawdownRequest, BankDrawdownRequest, CustomerCorporateDrawdownRequest:
-		if fwm.BusinessFunctionCode.TransactionTypeCode != "" {
+		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 		}
 		if fwm.LocalInstrument != nil {
