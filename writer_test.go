@@ -3,6 +3,8 @@ package wire
 import (
 	"bytes"
 	"github.com/moov-io/base"
+	"log"
+	"os"
 	"strings"
 	"testing"
 )
@@ -587,6 +589,8 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fwm.SetPreviousMessageIdentifier(pmi)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
+	pn := mockPaymentNotification()
+	fwm.SetPaymentNotification(pn)
 	c := mockCharges()
 	fwm.SetCharges(c)
 	ia := mockInstructedAmount()
@@ -603,8 +607,6 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fwm.SetBeneficiary(ben)
 	br := mockBeneficiaryReference()
 	fwm.SetBeneficiaryReference(br)
-	//debitDD := mockAccountDebitedDrawdown()
-	//fwm.SetAccountDebitedDrawdown(debitDD)
 
 	// Originator
 	o := mockOriginator()
@@ -615,16 +617,10 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fwm.SetOriginatorFI(ofi)
 	ifi := mockInstructingFI()
 	fwm.SetInstructingFI(ifi)
-	//creditDD := mockAccountCreditedDrawdown()
-	//fwm.SetAccountCreditedDrawdown(creditDD)
 	ob := mockOriginatorToBeneficiary()
 	fwm.SetOriginatorToBeneficiary(ob)
 
 	// FI to FI
-	//firfi := mockFIReceiverFI()
-	//fwm.SetFIReceiverFI(firfi)
-	//debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
-	//fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
 	fiifi := mockFIIntermediaryFI()
 	fwm.SetFIIntermediaryFI(fiifi)
 	fiifia := mockFIIntermediaryFIAdvice()
@@ -687,8 +683,8 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fwm.SetAdjustment(adj)
 	drd := mockDateRemittanceDocument()
 	fwm.SetDateRemittanceDocument(drd)
-	srd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(srd)
+	srd := mockSecondaryRemittanceDocument()
+	fwm.SetSecondaryRemittanceDocument(srd)
 	rft := mockRemittanceFreeText()
 	fwm.SetRemittanceFreeText(rft)
 
@@ -1024,9 +1020,9 @@ func TestFedWireMessageWriteDrawdownRequest(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	fwm.SetTypeSubType(tst)
 	tst.TypeCode = "10"
 	tst.SubTypeCode = "32"
+	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
 	amt := mockAmount()
@@ -1102,9 +1098,9 @@ func TestFedWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	fwm.SetTypeSubType(tst)
 	tst.TypeCode = "16"
 	tst.SubTypeCode = "31"
+	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
 	amt := mockAmount()
@@ -1262,15 +1258,63 @@ func TestFedWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 // TestFedWireMessageWriteServiceMessage writes a FedWireMessage to a file with BusinessFunctionCode = SVC
 func TestFedWireMessageWriteServiceMessage(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := createMockServiceMessageData()
+	fwm.TypeSubType.TypeCode = "10"
+	fwm.TypeSubType.SubTypeCode = "01"
+	fwm.SetTypeSubType(fwm.TypeSubType)
 
+	fwm.BusinessFunctionCode.BusinessFunctionCode = BFCServiceMessage
+	fwm.BusinessFunctionCode.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(fwm.BusinessFunctionCode)
+
+	file.AddFedWireMessage(fwm)
+
+	if err := writeFile(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// writeFile writes a FedWireMessage File and ensures the File can be read
+func writeFile(file *File) error {
+	if err := file.Create(); err != nil {
+		return err
+	}
+	if err := file.Validate(); err != nil {
+		return err
+	}
+	b := &bytes.Buffer{}
+	f := NewWriter(b)
+	if err := f.Write(file); err != nil {
+		return err
+	}
+	// ToDo:  Write to disk?
+	// We want to write the file to an io.Writer
+	w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+	log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
+	r := NewReader(strings.NewReader(b.String()))
+	fwmFile, err := r.Read()
+	if err != nil {
+		return err
+	}
+	// ensure we have a validated file structure
+	if err = fwmFile.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func createMockServiceMessageData() FedWireMessage {
+	fwm := NewFedWireMessage()
 	// Mandatory Fields
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	fwm.SetTypeSubType(tst)
 	tst.TypeCode = "10"
 	tst.SubTypeCode = "01"
+	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
 	amt := mockAmount()
@@ -1339,43 +1383,5 @@ func TestFedWireMessageWriteServiceMessage(t *testing.T) {
 	// ServiceMessage
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
-
-	file.AddFedWireMessage(fwm)
-
-	if err := writeFile(file); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-}
-
-// writeFile writes a FedWireMessage File and ensures the File can be read
-func writeFile(file *File) error {
-	if err := file.Create(); err != nil {
-		return err
-	}
-	if err := file.Validate(); err != nil {
-		return err
-	}
-	b := &bytes.Buffer{}
-	f := NewWriter(b)
-	if err := f.Write(file); err != nil {
-		return err
-	}
-	// ToDo:  Write to disk?
-
-	/*		// We want to write the file to an io.Writer
-			w := NewWriter(os.Stdout)
-			if err := w.Write(file); err != nil {
-				log.Fatalf("Unexpected error: %s\n", err)
-			}
-			w.Flush()*/
-	r := NewReader(strings.NewReader(b.String()))
-	fwmFile, err := r.Read()
-	if err != nil {
-		return err
-	}
-	// ensure we have a validated file structure
-	if err = fwmFile.Validate(); err != nil {
-		return err
-	}
-	return nil
+	return fwm
 }

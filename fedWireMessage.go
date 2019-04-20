@@ -144,23 +144,22 @@ func NewFedWireMessage() FedWireMessage {
 
 // verify checks basic valid NACHA batch rules. Assumes properly parsed records. This does not mean it is a valid batch as validity is tied to each batch type
 func (fwm *FedWireMessage) verify() error {
+
 	if err := fwm.isMandatory(); err != nil {
 		return err
 	}
+
 	if err := fwm.isBusinessCodeValid(); err != nil {
 		return err
 	}
-	// edit requirements
-/*	if err := fwm.isAmountValid(); err != nil {
-		return err
-	}
-	if err := fwm.isBusinessFunctionCodeValid(); err != nil {
+
+	if err := fwm.isAmountValid(); err != nil {
 		return err
 	}
 	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
 		return err
 	}
-	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+/*	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
 		return err
 	}
 	if err := fwm.isPaymentNotificationValid(); err != nil {
@@ -433,6 +432,7 @@ func (fwm *FedWireMessage) isCustomerTransferTags() error {
 
 // isInvalidCustomerTransferTags
 func (fwm *FedWireMessage) isInvalidCustomerTransferTags() error {
+	// This covers the edit requirement
 	if fwm.BusinessFunctionCode.TransactionTypeCode == "COV" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
@@ -1513,4 +1513,23 @@ func (fwm *FedWireMessage) SetServiceMessage(sm *ServiceMessage) {
 // GetServiceMessage returns the current ServiceMessage
 func (fwm *FedWireMessage) GetServiceMessage() *ServiceMessage {
 	return fwm.ServiceMessage
+}
+
+func (fwm *FedWireMessage) isAmountValid() error {
+	if  fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
+		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode", fwm.TypeSubType.SubTypeCode)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
+	if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
+		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+		case BankTransfer, CustomerTransfer, CustomerTransferPlus:
+			if fwm.PreviousMessageIdentifier == nil {
+				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+			}
+		}
+	}
+	return nil
 }

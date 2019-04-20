@@ -92,7 +92,7 @@
 				
 				<option value="file18">github.com/moov-io/wire/fIBeneficiaryFIAdvice.go (96.9%)</option>
 				
-				<option value="file19">github.com/moov-io/wire/fedWireMessage.go (64.7%)</option>
+				<option value="file19">github.com/moov-io/wire/fedWireMessage.go (65.1%)</option>
 				
 				<option value="file20">github.com/moov-io/wire/fiAdditionalFIToFI.go (82.9%)</option>
 				
@@ -112,7 +112,7 @@
 				
 				<option value="file28">github.com/moov-io/wire/fiReceiverFI.go (82.9%)</option>
 				
-				<option value="file29">github.com/moov-io/wire/fieldErrors.go (50.0%)</option>
+				<option value="file29">github.com/moov-io/wire/fieldErrors.go (42.9%)</option>
 				
 				<option value="file30">github.com/moov-io/wire/file.go (100.0%)</option>
 				
@@ -148,13 +148,13 @@
 				
 				<option value="file46">github.com/moov-io/wire/outputMessageAccountabilityData.go (0.0%)</option>
 				
-				<option value="file47">github.com/moov-io/wire/paymentNotification.go (0.0%)</option>
+				<option value="file47">github.com/moov-io/wire/paymentNotification.go (82.6%)</option>
 				
 				<option value="file48">github.com/moov-io/wire/previousMessageIdentifier.go (87.5%)</option>
 				
 				<option value="file49">github.com/moov-io/wire/primaryRemittanceDocument.go (83.9%)</option>
 				
-				<option value="file50">github.com/moov-io/wire/reader.go (72.8%)</option>
+				<option value="file50">github.com/moov-io/wire/reader.go (75.3%)</option>
 				
 				<option value="file51">github.com/moov-io/wire/receiptTimeStamp.go (0.0%)</option>
 				
@@ -170,7 +170,7 @@
 				
 				<option value="file57">github.com/moov-io/wire/remittanceOriginator.go (80.3%)</option>
 				
-				<option value="file58">github.com/moov-io/wire/secondaryRemittanceDocument.go (0.0%)</option>
+				<option value="file58">github.com/moov-io/wire/secondaryRemittanceDocument.go (83.9%)</option>
 				
 				<option value="file59">github.com/moov-io/wire/senderDepositoryInstitution.go (80.0%)</option>
 				
@@ -188,7 +188,7 @@
 				
 				<option value="file66">github.com/moov-io/wire/validators.go (43.1%)</option>
 				
-				<option value="file67">github.com/moov-io/wire/writer.go (67.2%)</option>
+				<option value="file67">github.com/moov-io/wire/writer.go (68.1%)</option>
 				
 				</select>
 			</div>
@@ -2144,12 +2144,42 @@ func NewFedWireMessage() FedWireMessage <span class="cov8" title="1">{
 
 // verify checks basic valid NACHA batch rules. Assumes properly parsed records. This does not mean it is a valid batch as validity is tied to each batch type
 func (fwm *FedWireMessage) verify() error <span class="cov8" title="1">{
+
         if err := fwm.isMandatory(); err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
+
         <span class="cov8" title="1">if err := fwm.isBusinessCodeValid(); err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
+
+        <span class="cov8" title="1">if err := fwm.isAmountValid(); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">if err := fwm.isPreviousMessageIdentifierValid(); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+/*        if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+                return err
+        }
+        if err := fwm.isPaymentNotificationValid(); err != nil {
+                return err
+        }
+        if err := fwm.isChargesValid(); err != nil {
+                return err
+        }
+        if err := fwm.isInstructedAmountValid(); err != nil {
+                return err
+        }
+        if err := fwm.isExchangeRateValid(); err != nil {
+                return err
+        }
+        if err := fwm.isIntermediaryFIValid(); err != nil {
+                return err
+        }
+        if err := fwm.isBeneficiaryFIValid(); err != nil {
+                return err
+        }*/
         <span class="cov8" title="1">return nil</span>
 }
 
@@ -2402,6 +2432,7 @@ func (fwm *FedWireMessage) isCustomerTransferTags() error <span class="cov8" tit
 
 // isInvalidCustomerTransferTags
 func (fwm *FedWireMessage) isInvalidCustomerTransferTags() error <span class="cov8" title="1">{
+        // This covers the edit requirement
         if fwm.BusinessFunctionCode.TransactionTypeCode == "COV" </span><span class="cov0" title="0">{
                 return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
         }</span>
@@ -3025,12 +3056,12 @@ func (fwm *FedWireMessage) GetLocalInstrument() *LocalInstrument <span class="co
 }</span>
 
 // SetPaymentNotification appends a PaymentNotification to the FedWireMessage
-func (fwm *FedWireMessage) SetPaymentNotification(pn *PaymentNotification) <span class="cov0" title="0">{
+func (fwm *FedWireMessage) SetPaymentNotification(pn *PaymentNotification) <span class="cov8" title="1">{
         fwm.PaymentNotification = pn
 }</span>
 
 // GetPaymentNotification returns the current PaymentNotification
-func (fwm *FedWireMessage) GetPaymentNotification() *PaymentNotification <span class="cov0" title="0">{
+func (fwm *FedWireMessage) GetPaymentNotification() *PaymentNotification <span class="cov8" title="1">{
         return fwm.PaymentNotification
 }</span>
 
@@ -3455,12 +3486,12 @@ func (fwm *FedWireMessage) GetDateRemittanceDocument() *DateRemittanceDocument <
 }</span>
 
 // SetSecondaryRemittanceDocument appends a SecondaryRemittanceDocument to the FedWireMessage
-func (fwm *FedWireMessage) SetSecondaryRemittanceDocument(srd *SecondaryRemittanceDocument) <span class="cov0" title="0">{
+func (fwm *FedWireMessage) SetSecondaryRemittanceDocument(srd *SecondaryRemittanceDocument) <span class="cov8" title="1">{
         fwm.SecondaryRemittanceDocument = srd
 }</span>
 
 // GetSecondaryRemittanceDocument returns the current SecondaryRemittanceDocument
-func (fwm *FedWireMessage) GetSecondaryRemittanceDocument() *SecondaryRemittanceDocument <span class="cov0" title="0">{
+func (fwm *FedWireMessage) GetSecondaryRemittanceDocument() *SecondaryRemittanceDocument <span class="cov8" title="1">{
         return fwm.SecondaryRemittanceDocument
 }</span>
 
@@ -3483,7 +3514,25 @@ func (fwm *FedWireMessage) SetServiceMessage(sm *ServiceMessage) <span class="co
 func (fwm *FedWireMessage) GetServiceMessage() *ServiceMessage <span class="cov8" title="1">{
         return fwm.ServiceMessage
 }</span>
-</pre>
+
+func (fwm *FedWireMessage) isAmountValid() error <span class="cov8" title="1">{
+        if  fwm.TypeSubType.SubTypeCode != "90" &amp;&amp; fwm.Amount.Amount == "000000000000" </span><span class="cov0" title="0">{
+                return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode", fwm.TypeSubType.SubTypeCode)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error <span class="cov8" title="1">{
+        if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" </span><span class="cov0" title="0">{
+                switch fwm.BusinessFunctionCode.BusinessFunctionCode </span>{
+                case BankTransfer, CustomerTransfer, CustomerTransferPlus:<span class="cov0" title="0">
+                        if fwm.PreviousMessageIdentifier == nil </span><span class="cov0" title="0">{
+                                return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">return nil</span>
+}</pre>
 		
 		<pre class="file" id="file20" style="display: none">// Copyright 2019 The Moov Authors
 // Use of this source code is governed by an Apache License
@@ -4748,6 +4797,30 @@ func NewErrBusinessFunctionCodeProperty(property, propertyValue, businessFunctio
 }</span>
 
 func (e ErrBusinessFunctionCodeProperty) Error() string <span class="cov0" title="0">{
+        return e.Message
+}</span>
+
+// ErrInvalidPropertyForProperty is the error given when the observed check digit does not match the calculated one
+type ErrInvalidPropertyForProperty struct {
+        Message             string
+        Property            string
+        PropertyValue       string
+        SecondProperty      string
+        SecondPropertyValue string
+}
+
+// NewErrInvalidPropertyForProperty creates a new error of the ErrInvalidPropertyForProperty type
+func NewErrInvalidPropertyForProperty(property, propertyValue, secondProperty, secondPropertyValue string) ErrInvalidPropertyForProperty <span class="cov0" title="0">{
+        return ErrInvalidPropertyForProperty{
+                Message:        fmt.Sprintf("%v: %v is not valid for %v: %v", property, propertyValue, secondProperty, secondPropertyValue),
+                Property:       property,
+                PropertyValue:  propertyValue,
+                SecondProperty: secondProperty,
+                SecondPropertyValue: secondPropertyValue,
+        }
+}</span>
+
+func (e ErrInvalidPropertyForProperty) Error() string <span class="cov0" title="0">{
         return e.Message
 }</span>
 </pre>
@@ -6508,7 +6581,7 @@ type PaymentNotification struct {
         // ContactMobileNumber
         ContactMobileNumber string `json:"contactMobileNumber,omitempty"`
         // FaxNumber
-        FaxNumber string `json:"faxNumber,omitempty"`
+        ContactFaxNumber string `json:"faxNumber,omitempty"`
         // EndToEndIdentification
         EndToEndIdentification string `json:"endToEndIdentification,omitempty"`
 
@@ -6519,8 +6592,8 @@ type PaymentNotification struct {
 }
 
 // NewPaymentNotification returns a new PaymentNotification
-func NewPaymentNotification() PaymentNotification <span class="cov0" title="0">{
-        pn := PaymentNotification{
+func NewPaymentNotification() *PaymentNotification <span class="cov8" title="1">{
+        pn := &amp;PaymentNotification{
                 tag: TagPaymentNotification,
         }
         return pn
@@ -6530,62 +6603,103 @@ func NewPaymentNotification() PaymentNotification <span class="cov0" title="0">{
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pn *PaymentNotification) Parse(record string) <span class="cov0" title="0">{
+func (pn *PaymentNotification) Parse(record string) <span class="cov8" title="1">{
         pn.tag = record[:6]
-        pn.PaymentNotificationIndicator = pn.parseStringField(record[6:16])
-        pn.ContactNotificationElectronicAddress = pn.parseStringField(record[16:2064])
-        pn.ContactName = pn.parseStringField(record[2064:2204])
-        pn.ContactPhoneNumber = pn.parseStringField(record[2204:2239])
-        pn.ContactMobileNumber = pn.parseStringField(record[2239:2274])
-        pn.FaxNumber = pn.parseStringField(record[2274:2309])
-        pn.EndToEndIdentification = pn.parseStringField(record[2309:2344])
+        pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
+        pn.ContactNotificationElectronicAddress = pn.parseStringField(record[7:2055])
+        pn.ContactName = pn.parseStringField(record[2055:2195])
+        pn.ContactPhoneNumber = pn.parseStringField(record[2195:2230])
+        pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
+        pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
+        pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
 }</span>
 
 // String writes PaymentNotification
-func (pn *PaymentNotification) String() string <span class="cov0" title="0">{
+func (pn *PaymentNotification) String() string <span class="cov8" title="1">{
         var buf strings.Builder
         // ToDo: Separator
-        buf.Grow(2344)
+        buf.Grow(2335)
         buf.WriteString(pn.tag)
+        buf.WriteString(pn.PaymentNotificationIndicatorField())
+        buf.WriteString(pn.ContactNotificationElectronicAddressField())
+        buf.WriteString(pn.ContactNameField())
+        buf.WriteString(pn.ContactPhoneNumberField())
+        buf.WriteString(pn.ContactMobileNumberField())
+        buf.WriteString(pn.ContactFaxNumberField())
+        buf.WriteString(pn.EndToEndIdentificationField())
         return buf.String()
 }</span>
 
 // Validate performs WIRE format rule checks on PaymentNotification and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (pn *PaymentNotification) Validate() error <span class="cov0" title="0">{
+func (pn *PaymentNotification) Validate() error <span class="cov8" title="1">{
         if err := pn.fieldInclusion(); err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">if err := pn.isNumeric(pn.PaymentNotificationIndicator); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := pn.isNumeric(pn.PaymentNotificationIndicator); err != nil </span><span class="cov0" title="0">{
                 return fieldError("PaymentNotificationIndicator", err, pn.PaymentNotificationIndicator)
         }</span>
-        <span class="cov0" title="0">if err := pn.isAlphanumeric(pn.ContactNotificationElectronicAddress); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := pn.isAlphanumeric(pn.ContactNotificationElectronicAddress); err != nil </span><span class="cov0" title="0">{
                 return fieldError("ContactNotificationElectronicAddress", err, pn.ContactNotificationElectronicAddress)
         }</span>
-        <span class="cov0" title="0">if err := pn.isAlphanumeric(pn.ContactName); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := pn.isAlphanumeric(pn.ContactName); err != nil </span><span class="cov0" title="0">{
                 return fieldError("ContactName", err, pn.ContactName)
         }</span>
-        <span class="cov0" title="0">if err := pn.isAlphanumeric(pn.ContactPhoneNumber); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := pn.isAlphanumeric(pn.ContactPhoneNumber); err != nil </span><span class="cov0" title="0">{
                 return fieldError("ContactPhoneNumber", err, pn.ContactPhoneNumber)
         }</span>
-        <span class="cov0" title="0">if err := pn.isAlphanumeric(pn.ContactMobileNumber); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := pn.isAlphanumeric(pn.ContactMobileNumber); err != nil </span><span class="cov0" title="0">{
                 return fieldError("ContactMobileNumber", err, pn.ContactMobileNumber)
         }</span>
-        <span class="cov0" title="0">if err := pn.isAlphanumeric(pn.FaxNumber); err != nil </span><span class="cov0" title="0">{
-                return fieldError("FaxNumber", err, pn.FaxNumber)
+        <span class="cov8" title="1">if err := pn.isAlphanumeric(pn.ContactFaxNumber); err != nil </span><span class="cov0" title="0">{
+                return fieldError("FaxNumber", err, pn.ContactFaxNumber)
         }</span>
-        <span class="cov0" title="0">if err := pn.isAlphanumeric(pn.EndToEndIdentification); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := pn.isAlphanumeric(pn.EndToEndIdentification); err != nil </span><span class="cov0" title="0">{
                 return fieldError("EndToEndIdentification", err, pn.EndToEndIdentification)
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (pn *PaymentNotification) fieldInclusion() error <span class="cov0" title="0">{
+func (pn *PaymentNotification) fieldInclusion() error <span class="cov8" title="1">{
         return nil
 }</span>
-</pre>
+
+// PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
+func (pn *PaymentNotification) PaymentNotificationIndicatorField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.PaymentNotificationIndicator, 1)
+}</span>
+
+// ContactNotificationElectronicAddressField gets a string of ContactNotificationElectronicAddress field
+func (pn *PaymentNotification) ContactNotificationElectronicAddressField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.ContactNotificationElectronicAddress, 2048)
+}</span>
+
+// ContactNameField gets a string of ContactName field
+func (pn *PaymentNotification) ContactNameField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.ContactName, 140)
+}</span>
+
+// ContactPhoneNumberField gets a string of ContactPhoneNumberField field
+func (pn *PaymentNotification) ContactPhoneNumberField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.ContactPhoneNumber, 35)
+}</span>
+
+// ContactMobileNumberField gets a string of ContactMobileNumber field
+func (pn *PaymentNotification) ContactMobileNumberField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.ContactMobileNumber, 35)
+}</span>
+
+// ContactFaxNumberField gets a string of FaxNumber field
+func (pn *PaymentNotification) ContactFaxNumberField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.ContactFaxNumber, 35)
+}</span>
+
+// EndToEndIdentificationField gets a string of EndToEndIdentification field
+func (pn *PaymentNotification) EndToEndIdentificationField() string <span class="cov8" title="1">{
+        return pn.alphaField(pn.EndToEndIdentification, 35)
+}</pre>
 		
 		<pre class="file" id="file48" style="display: none">// Copyright 2019 The Moov Authors
 // Use of this source code is governed by an Apache License
@@ -6896,7 +7010,7 @@ func (r *Reader) parseLine() error <span class="cov8" title="1">{
                 if err := r.parseLocalInstrument(); err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
-        case TagPaymentNotification:<span class="cov0" title="0">
+        case TagPaymentNotification:<span class="cov8" title="1">
                 if err := r.parsePaymentNotification(); err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
@@ -7069,7 +7183,7 @@ func (r *Reader) parseLine() error <span class="cov8" title="1">{
                 if err := r.parseDateRemittanceDocument(); err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
-        case TagSecondaryRemittanceDocument:<span class="cov0" title="0">
+        case TagSecondaryRemittanceDocument:<span class="cov8" title="1">
                 if err := r.parseSecondaryRemittanceDocument(); err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
@@ -7225,14 +7339,14 @@ func (r *Reader) parseLocalInstrument() error <span class="cov8" title="1">{
         return nil</span>
 }
 
-func (r *Reader) parsePaymentNotification() error <span class="cov0" title="0">{
+func (r *Reader) parsePaymentNotification() error <span class="cov8" title="1">{
         r.tagName = "PaymentNotification"
         pn := new(PaymentNotification)
         pn.Parse(r.line)
         if err := pn.Validate(); err != nil </span><span class="cov0" title="0">{
                 return r.parseError(err)
         }</span>
-        <span class="cov0" title="0">r.currentFedWireMessage.SetPaymentNotification(pn)
+        <span class="cov8" title="1">r.currentFedWireMessage.SetPaymentNotification(pn)
         return nil</span>
 }
 
@@ -7698,14 +7812,14 @@ func (r *Reader) parseDateRemittanceDocument() error <span class="cov8" title="1
         return nil</span>
 }
 
-func (r *Reader) parseSecondaryRemittanceDocument() error <span class="cov0" title="0">{
+func (r *Reader) parseSecondaryRemittanceDocument() error <span class="cov8" title="1">{
         r.tagName = "SecondaryRemittanceDocument"
         srd := new(SecondaryRemittanceDocument)
         srd.Parse(r.line)
         if err := srd.Validate(); err != nil </span><span class="cov0" title="0">{
                 return r.parseError(err)
         }</span>
-        <span class="cov0" title="0">r.currentFedWireMessage.SetSecondaryRemittanceDocument(srd)
+        <span class="cov8" title="1">r.currentFedWireMessage.SetSecondaryRemittanceDocument(srd)
         return nil</span>
 }
 
@@ -9086,7 +9200,7 @@ type SecondaryRemittanceDocument struct {
 }
 
 // NewSecondaryRemittanceDocument returns a new SecondaryRemittanceDocument
-func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument <span class="cov0" title="0">{
+func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument <span class="cov8" title="1">{
         srd := &amp;SecondaryRemittanceDocument{
                 tag: TagSecondaryRemittanceDocument,
         }
@@ -9097,7 +9211,7 @@ func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument <span class="
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (srd *SecondaryRemittanceDocument) Parse(record string) <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) Parse(record string) <span class="cov8" title="1">{
         srd.tag = record[:6]
         srd.DocumentTypeCode = srd.parseStringField(record[6:10])
         srd.ProprietaryDocumentTypeCode = srd.parseStringField(record[10:45])
@@ -9106,7 +9220,7 @@ func (srd *SecondaryRemittanceDocument) Parse(record string) <span class="cov0" 
 }</span>
 
 // String writes SecondaryRemittanceDocument
-func (srd *SecondaryRemittanceDocument) String() string <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) String() string <span class="cov8" title="1">{
         var buf strings.Builder
         buf.Grow(115)
         buf.WriteString(srd.tag)
@@ -9119,48 +9233,48 @@ func (srd *SecondaryRemittanceDocument) String() string <span class="cov0" title
 
 // Validate performs WIRE format rule checks on SecondaryRemittanceDocument and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (srd *SecondaryRemittanceDocument) Validate() error <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) Validate() error <span class="cov8" title="1">{
         if err := srd.fieldInclusion(); err != nil </span><span class="cov0" title="0">{
                 return err
         }</span>
-        <span class="cov0" title="0">if err := srd.isDocumentTypeCode(srd.DocumentTypeCode); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := srd.isDocumentTypeCode(srd.DocumentTypeCode); err != nil </span><span class="cov0" title="0">{
                 return fieldError("DocumentTypeCode", err, srd.DocumentTypeCode)
         }</span>
-        <span class="cov0" title="0">if err := srd.isAlphanumeric(srd.ProprietaryDocumentTypeCode); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := srd.isAlphanumeric(srd.ProprietaryDocumentTypeCode); err != nil </span><span class="cov0" title="0">{
                 return fieldError("ProprietaryDocumentTypeCode", err, srd.ProprietaryDocumentTypeCode)
         }</span>
-        <span class="cov0" title="0">if err := srd.isAlphanumeric(srd.DocumentIdentificationNumber); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := srd.isAlphanumeric(srd.DocumentIdentificationNumber); err != nil </span><span class="cov0" title="0">{
                 return fieldError("DocumentIdentificationNumber", err, srd.Issuer)
         }</span>
-        <span class="cov0" title="0">if err := srd.isAlphanumeric(srd.Issuer); err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err := srd.isAlphanumeric(srd.Issuer); err != nil </span><span class="cov0" title="0">{
                 return fieldError("Issuer", err, srd.Issuer)
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (srd *SecondaryRemittanceDocument) fieldInclusion() error <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) fieldInclusion() error <span class="cov8" title="1">{
         return nil
 }</span>
 
 // DocumentTypeCodeField gets a string of the DocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField() string <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField() string <span class="cov8" title="1">{
         return srd.alphaField(srd.DocumentTypeCode, 4)
 }</span>
 
 // ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string <span class="cov8" title="1">{
         return srd.alphaField(srd.ProprietaryDocumentTypeCode, 35)
 }</span>
 
 // DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
-func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField() string <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField() string <span class="cov8" title="1">{
         return srd.alphaField(srd.DocumentIdentificationNumber, 35)
 }</span>
 
 // IssuerField gets a string of the Issuer field
-func (srd *SecondaryRemittanceDocument) IssuerField() string <span class="cov0" title="0">{
+func (srd *SecondaryRemittanceDocument) IssuerField() string <span class="cov8" title="1">{
         return srd.alphaField(srd.Issuer, 35)
 }</span>
 </pre>
@@ -10543,7 +10657,7 @@ func (w *Writer) writeOtherTransferInfo(fwm FedWireMessage) error <span class="c
                         return err
                 }</span>
         }
-        <span class="cov8" title="1">if fwm.PaymentNotification != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if fwm.PaymentNotification != nil </span><span class="cov8" title="1">{
                 if _, err := w.w.WriteString(fwm.GetPaymentNotification().String() + "\n"); err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>
@@ -10784,7 +10898,7 @@ func (w *Writer) writeRemittance(fwm FedWireMessage) error <span class="cov8" ti
                         return err
                 }</span>
         }
-        <span class="cov8" title="1">if fwm.SecondaryRemittanceDocument != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if fwm.SecondaryRemittanceDocument != nil </span><span class="cov8" title="1">{
                 if _, err := w.w.WriteString(fwm.GetSecondaryRemittanceDocument().String() + "\n"); err != nil </span><span class="cov0" title="0">{
                         return err
                 }</span>

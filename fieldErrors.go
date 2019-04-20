@@ -166,3 +166,27 @@ func NewErrBusinessFunctionCodeProperty(property, propertyValue, businessFunctio
 func (e ErrBusinessFunctionCodeProperty) Error() string {
 	return e.Message
 }
+
+// ErrInvalidPropertyForProperty is the error given when the observed check digit does not match the calculated one
+type ErrInvalidPropertyForProperty struct {
+	Message             string
+	Property            string
+	PropertyValue       string
+	SecondProperty      string
+	SecondPropertyValue string
+}
+
+// NewErrInvalidPropertyForProperty creates a new error of the ErrInvalidPropertyForProperty type
+func NewErrInvalidPropertyForProperty(property, propertyValue, secondProperty, secondPropertyValue string) ErrInvalidPropertyForProperty {
+	return ErrInvalidPropertyForProperty{
+		Message:        fmt.Sprintf("%v: %v is not valid for %v: %v", property, propertyValue, secondProperty, secondPropertyValue),
+		Property:       property,
+		PropertyValue:  propertyValue,
+		SecondProperty: secondProperty,
+		SecondPropertyValue: secondPropertyValue,
+	}
+}
+
+func (e ErrInvalidPropertyForProperty) Error() string {
+	return e.Message
+}

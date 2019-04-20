@@ -23,7 +23,7 @@ type PaymentNotification struct {
 	// ContactMobileNumber
 	ContactMobileNumber string `json:"contactMobileNumber,omitempty"`
 	// FaxNumber
-	FaxNumber string `json:"faxNumber,omitempty"`
+	ContactFaxNumber string `json:"faxNumber,omitempty"`
 	// EndToEndIdentification
 	EndToEndIdentification string `json:"endToEndIdentification,omitempty"`
 
@@ -34,8 +34,8 @@ type PaymentNotification struct {
 }
 
 // NewPaymentNotification returns a new PaymentNotification
-func NewPaymentNotification() PaymentNotification {
-	pn := PaymentNotification{
+func NewPaymentNotification() *PaymentNotification {
+	pn := &PaymentNotification{
 		tag: TagPaymentNotification,
 	}
 	return pn
@@ -47,21 +47,28 @@ func NewPaymentNotification() PaymentNotification {
 // successful parsing and data validity.
 func (pn *PaymentNotification) Parse(record string) {
 	pn.tag = record[:6]
-	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:16])
-	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[16:2064])
-	pn.ContactName = pn.parseStringField(record[2064:2204])
-	pn.ContactPhoneNumber = pn.parseStringField(record[2204:2239])
-	pn.ContactMobileNumber = pn.parseStringField(record[2239:2274])
-	pn.FaxNumber = pn.parseStringField(record[2274:2309])
-	pn.EndToEndIdentification = pn.parseStringField(record[2309:2344])
+	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
+	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[7:2055])
+	pn.ContactName = pn.parseStringField(record[2055:2195])
+	pn.ContactPhoneNumber = pn.parseStringField(record[2195:2230])
+	pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
+	pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
+	pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
 }
 
 // String writes PaymentNotification
 func (pn *PaymentNotification) String() string {
 	var buf strings.Builder
 	// ToDo: Separator
-	buf.Grow(2344)
+	buf.Grow(2335)
 	buf.WriteString(pn.tag)
+	buf.WriteString(pn.PaymentNotificationIndicatorField())
+	buf.WriteString(pn.ContactNotificationElectronicAddressField())
+	buf.WriteString(pn.ContactNameField())
+	buf.WriteString(pn.ContactPhoneNumberField())
+	buf.WriteString(pn.ContactMobileNumberField())
+	buf.WriteString(pn.ContactFaxNumberField())
+	buf.WriteString(pn.EndToEndIdentificationField())
 	return buf.String()
 }
 
@@ -86,8 +93,8 @@ func (pn *PaymentNotification) Validate() error {
 	if err := pn.isAlphanumeric(pn.ContactMobileNumber); err != nil {
 		return fieldError("ContactMobileNumber", err, pn.ContactMobileNumber)
 	}
-	if err := pn.isAlphanumeric(pn.FaxNumber); err != nil {
-		return fieldError("FaxNumber", err, pn.FaxNumber)
+	if err := pn.isAlphanumeric(pn.ContactFaxNumber); err != nil {
+		return fieldError("FaxNumber", err, pn.ContactFaxNumber)
 	}
 	if err := pn.isAlphanumeric(pn.EndToEndIdentification); err != nil {
 		return fieldError("EndToEndIdentification", err, pn.EndToEndIdentification)
@@ -99,4 +106,39 @@ func (pn *PaymentNotification) Validate() error {
 // invalid the WIRE will return an error.
 func (pn *PaymentNotification) fieldInclusion() error {
 	return nil
+}
+
+// PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
+func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
+	return pn.alphaField(pn.PaymentNotificationIndicator, 1)
+}
+
+// ContactNotificationElectronicAddressField gets a string of ContactNotificationElectronicAddress field
+func (pn *PaymentNotification) ContactNotificationElectronicAddressField() string {
+	return pn.alphaField(pn.ContactNotificationElectronicAddress, 2048)
+}
+
+// ContactNameField gets a string of ContactName field
+func (pn *PaymentNotification) ContactNameField() string {
+	return pn.alphaField(pn.ContactName, 140)
+}
+
+// ContactPhoneNumberField gets a string of ContactPhoneNumberField field
+func (pn *PaymentNotification) ContactPhoneNumberField() string {
+	return pn.alphaField(pn.ContactPhoneNumber, 35)
+}
+
+// ContactMobileNumberField gets a string of ContactMobileNumber field
+func (pn *PaymentNotification) ContactMobileNumberField() string {
+	return pn.alphaField(pn.ContactMobileNumber, 35)
+}
+
+// ContactFaxNumberField gets a string of FaxNumber field
+func (pn *PaymentNotification) ContactFaxNumberField() string {
+	return pn.alphaField(pn.ContactFaxNumber, 35)
+}
+
+// EndToEndIdentificationField gets a string of EndToEndIdentification field
+func (pn *PaymentNotification) EndToEndIdentificationField() string {
+	return pn.alphaField(pn.EndToEndIdentification, 35)
 }

@@ -1,0 +1,49 @@
+package wire
+
+type fedWireMessageValidator struct {}
+
+
+func (fwmValidator *fedWireMessageValidator) validate(fwm *FedWireMessage) error {
+
+	if err := fwmValidator.isMandatory(fwm); err != nil {
+		return err
+	}
+
+/*	if err := fwmValidator.isAmountValid(fwm); err != nil {
+			return err
+	}*/
+	return nil
+}
+
+// isMandatory validates mandatory tags for a FedWireMessage are defined
+func (fwmValidator *fedWireMessageValidator) isMandatory(fwm *FedWireMessage) error {
+	if fwm.SenderSupplied == nil {
+		return fieldError("SenderSupplied", ErrFieldRequired)
+	}
+	if fwm.TypeSubType == nil {
+		return fieldError("TypeSubType", ErrFieldRequired)
+	}
+	if fwm.InputMessageAccountabilityData == nil {
+		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
+	}
+	if fwm.Amount == nil {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if fwm.SenderDepositoryInstitution == nil {
+		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
+	}
+	if fwm.ReceiverDepositoryInstitution == nil {
+		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
+	}
+	if fwm.BusinessFunctionCode == nil {
+		return fieldError("BusinessFunctionCode", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwmValidator *fedWireMessageValidator) isAmountValid(fwm *FedWireMessage) error {
+	if  fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
+		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode", fwm.TypeSubType.SubTypeCode)
+	}
+	return nil
+}
