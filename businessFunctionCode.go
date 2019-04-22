@@ -2,6 +2,8 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
+// ToDo:  Consider just naming the type BusinessFunction
+
 package wire
 
 import "strings"

@@ -48,7 +48,6 @@ func (ob *OriginatorToBeneficiary) Parse(record string) {
 // String writes OriginatorToBeneficiary
 func (ob *OriginatorToBeneficiary) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(146)
 	buf.WriteString(ob.tag)
 	buf.WriteString(ob.LineOneField())

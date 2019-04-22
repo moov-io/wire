@@ -45,7 +45,6 @@ func (fiifia *FIIntermediaryFIAdvice) Parse(record string) {
 // String writes FIIntermediaryFIAdvice
 func (fiifia *FIIntermediaryFIAdvice) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(200)
 	buf.WriteString(fiifia.tag)
 	buf.WriteString(fiifia.AdviceCodeField())

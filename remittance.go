@@ -45,7 +45,6 @@ func (ri *Remittance) Parse(record string) {
 // String writes Remittance
 func (ri *Remittance) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(151)
 	buf.WriteString(ri.tag)
 	buf.WriteString(ri.SwiftFieldTagField())

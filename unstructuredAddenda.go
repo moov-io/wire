@@ -36,15 +36,12 @@ func NewUnstructuredAddenda() *UnstructuredAddenda {
 func (ua *UnstructuredAddenda) Parse(record string) {
 	ua.tag = record[:6]
 	ua.AddendaLength = record[6:10]
-	// ToDo : Only read to length
 	ua.Addenda = record[10:9004]
 }
 
 // String writes UnstructuredAddenda
 func (ua *UnstructuredAddenda) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
-	//ToDo:  Only grow to length
 	buf.Grow(9004)
 	buf.WriteString(ua.tag)
 	buf.WriteString(ua.AddendaLengthField())

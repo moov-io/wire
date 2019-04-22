@@ -49,7 +49,6 @@ func (adj *Adjustment) Parse(record string) {
 // String writes Adjustment
 func (adj *Adjustment) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(168)
 	buf.WriteString(adj.tag)
 	buf.WriteString(adj.AdjustmentReasonCodeField())

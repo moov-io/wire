@@ -45,7 +45,6 @@ func (ia *InstructedAmount) Parse(record string) {
 // String writes InstructedAmount
 func (ia *InstructedAmount) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(24)
 	buf.WriteString(ia.tag)
 	buf.WriteString(ia.CurrencyCodeField())

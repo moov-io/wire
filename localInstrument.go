@@ -42,7 +42,6 @@ func (li *LocalInstrument) Parse(record string) {
 // String writes LocalInstrument
 func (li *LocalInstrument) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(45)
 	buf.WriteString(li.tag)
 	buf.WriteString(li.LocalInstrumentCodeField())

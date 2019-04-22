@@ -588,6 +588,8 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	pmi := mockPreviousMessageIdentifier()
 	fwm.SetPreviousMessageIdentifier(pmi)
 	li := mockLocalInstrument()
+	li.LocalInstrumentCode = "PROP"
+	li.ProprietaryCode = "PROP CODE"
 	fwm.SetLocalInstrument(li)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
@@ -597,6 +599,148 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fwm.SetInstructedAmount(ia)
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
+
+	// Beneficiary
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	br := mockBeneficiaryReference()
+	fwm.SetBeneficiaryReference(br)
+
+	// Originator
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	oof := mockOriginatorOptionF()
+	fwm.SetOriginatorOptionF(oof)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	ifi := mockInstructingFI()
+	fwm.SetInstructingFI(ifi)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+
+	// FI to FI
+	fiifi := mockFIIntermediaryFI()
+	fwm.SetFIIntermediaryFI(fiifi)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fibfi := mockFIBeneficiaryFI()
+	fwm.SetFIBeneficiaryFI(fibfi)
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	fiba := mockFIBeneficiaryAdvice()
+	fwm.SetFIBeneficiaryAdvice(fiba)
+	pm := mockFIPaymentMethodToBeneficiary()
+	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+
+/*	// Cover Payment Information
+	cia := mockCurrencyInstructedAmount()
+	fwm.SetCurrencyInstructedAmount(cia)
+	oc := mockOrderingCustomer()
+	fwm.SetOrderingCustomer(oc)
+	oi := mockOrderingInstitution()
+	fwm.SetOrderingInstitution(oi)
+	ii := mockIntermediaryInstitution()
+	fwm.SetIntermediaryInstitution(ii)
+	iAccount := mockInstitutionAccount()
+	fwm.SetInstitutionAccount(iAccount)
+	bc := mockBeneficiaryCustomer()
+	fwm.SetBeneficiaryCustomer(bc)
+	ri := mockRemittance()
+	fwm.SetRemittance(ri)
+	str := mockSenderToReceiver()
+	fwm.SetSenderToReceiver(str)*/
+
+	// Unstructured Addenda
+	ua := mockUnstructuredAddenda()
+	fwm.SetUnstructuredAddenda(ua)
+
+	// Related Remittance Information
+	rr := mockRelatedRemittance()
+	fwm.SetRelatedRemittance(rr)
+
+	// Structured Remittance Information
+	ro := mockRemittanceOriginator()
+	fwm.SetRemittanceOriginator(ro)
+	rb := mockRemittanceBeneficiary()
+	fwm.SetRemittanceBeneficiary(rb)
+
+	// Additional Remittance Data
+	prd := mockPrimaryRemittanceDocument()
+	fwm.SetPrimaryRemittanceDocument(prd)
+	aap := mockActualAmountPaid()
+	fwm.SetActualAmountPaid(aap)
+	gard := mockGrossAmountRemittanceDocument()
+	fwm.SetGrossAmountRemittanceDocument(gard)
+	nd := mockAmountNegotiatedDiscount()
+	fwm.SetAmountNegotiatedDiscount(nd)
+	adj := mockAdjustment()
+	fwm.SetAdjustment(adj)
+	drd := mockDateRemittanceDocument()
+	fwm.SetDateRemittanceDocument(drd)
+	srd := mockSecondaryRemittanceDocument()
+	fwm.SetSecondaryRemittanceDocument(srd)
+	rft := mockRemittanceFreeText()
+	fwm.SetRemittanceFreeText(rft)
+
+	// ServiceMessage
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+
+	file.AddFedWireMessage(fwm)
+
+	if err := writeFile(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}
+
+// TestFedWireMessageWriteCustomerTransferPlusCOVS writes a FedWireMessage to a file with BusinessFunctionCode = CTP and
+// LocalInstrumentCode = "COVS
+func TestFedWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
+	file := NewFile()
+	fwm := NewFedWireMessage()
+
+	// Mandatory Fields
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	sdi := mockSenderDepositoryInstitution()
+	fwm.SetSenderDepositoryInstitution(sdi)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = CustomerTransferPlus
+	bfc.TransactionTypeCode = "   "
+	fwm.SetBusinessFunctionCode(bfc)
+
+	// Other Transfer Information
+	sr := mockSenderReference()
+	fwm.SetSenderReference(sr)
+	pmi := mockPreviousMessageIdentifier()
+	fwm.SetPreviousMessageIdentifier(pmi)
+	li := mockLocalInstrument()
+	li.LocalInstrumentCode = "COVS"
+	fwm.SetLocalInstrument(li)
+	pn := mockPaymentNotification()
+	fwm.SetPaymentNotification(pn)
+	//c := mockCharges()
+	//fwm.SetCharges(c)
+	//ia := mockInstructedAmount()
+	//fwm.SetInstructedAmount(ia)
+	//eRate := mockExchangeRate()
+	//fwm.SetExchangeRate(eRate)
 
 	// Beneficiary
 	bifi := mockBeneficiaryIntermediaryFI()
@@ -698,6 +842,7 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 }
+
 
 // TestFedWireMessageWriteCheckSameDaySettlement writes a FedWireMessage to a file with BusinessFunctionCode = CKS
 func TestFedWireMessageWriteCheckSameDaySettlement(t *testing.T) {

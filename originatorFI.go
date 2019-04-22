@@ -44,7 +44,6 @@ func (ofi *OriginatorFI) Parse(record string) {
 // String writes OriginatorFI
 func (ofi *OriginatorFI) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(ofi.tag)
 	buf.WriteString(ofi.IdentificationCodeField())
@@ -86,6 +85,12 @@ func (ofi *OriginatorFI) Validate() error {
 	}
 	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, ofi.FinancialInstitution.Address.AddressLineThree)
+	}
+	if ofi.FinancialInstitution.IdentificationCode != "" && ofi.FinancialInstitution.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if ofi.FinancialInstitution.IdentificationCode == "" && ofi.FinancialInstitution.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
 }

@@ -4,6 +4,6 @@ package wire
 func mockLocalInstrument() *LocalInstrument {
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = "ANSI"
-	li.ProprietaryCode = "PROP CODE"
+	li.ProprietaryCode = ""
 	return li
 }

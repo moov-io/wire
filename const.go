@@ -212,13 +212,13 @@ const (
 	BankDrawdownRequest = "DRB"
 	// CustomerCorporateDrawdownRequest is a customer or corporate drawdown request
 	CustomerCorporateDrawdownRequest = "DRC"
-	// DrawdownPayment is a drawdown payment
+	// DrawdownRequest is a drawdown payment
 	DrawdownRequest = "DRW"
 	// FEDFundsReturned is FED funds returned
 	FEDFundsReturned = "FFR"
 	// FEDFundsSold is FED funds sold
 	FEDFundsSold = "FFS"
-	// ServiceMessage is Service Message
+	// BFCServiceMessage is Service Message
 	BFCServiceMessage = "SVC"
 
 	// ChargeDetails

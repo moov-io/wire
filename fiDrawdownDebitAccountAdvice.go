@@ -45,7 +45,6 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) {
 // String writes FIDrawdownDebitAccountAdvice
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(200)
 	buf.WriteString(debitDDAdvice.tag)
 	buf.WriteString(debitDDAdvice.AdviceCodeField())

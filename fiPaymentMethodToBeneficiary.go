@@ -44,7 +44,6 @@ func (pm *FIPaymentMethodToBeneficiary) Parse(record string) {
 // String writes FIPaymentMethodToBeneficiary
 func (pm *FIPaymentMethodToBeneficiary) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(41)
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())

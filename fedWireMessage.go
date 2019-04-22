@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 // ToDo: Change FedWireMessage to FED...
-// ToDo: Change typeSubType check to constants
 // ToDo: Remove empty functions after all validation checks are coded
 
 package wire
@@ -85,6 +84,7 @@ type FedWireMessage struct {
 	// FIBeneficiaryFIAdvice
 	FIBeneficiaryFIAdvice *FIBeneficiaryFIAdvice `json:"fiBeneficiaryFIAdvice,omitempty"`
 	// FIBeneficiary
+
 	FIBeneficiary *FIBeneficiary `json:"fiBeneficiary,omitempty"`
 	// FIBeneficiaryAdvice
 	FIBeneficiaryAdvice *FIBeneficiaryAdvice `json:"fiBeneficiaryAdvice,omitempty"`
@@ -148,38 +148,102 @@ func (fwm *FedWireMessage) verify() error {
 	if err := fwm.isMandatory(); err != nil {
 		return err
 	}
-
 	if err := fwm.isBusinessCodeValid(); err != nil {
 		return err
 	}
-
 	if err := fwm.isAmountValid(); err != nil {
 		return err
 	}
-	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
-		return err
+	if fwm.PreviousMessageIdentifier != nil {
+		if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
+			return err
+		}
 	}
-/*	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
-		return err
+	if fwm.LocalInstrument != nil {
+		if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+			return err
+		}
 	}
-	if err := fwm.isPaymentNotificationValid(); err != nil {
-		return err
+	if fwm.PaymentNotification != nil {
+		if err := fwm.isPaymentNotificationValid(); err != nil {
+			return err
+		}
 	}
-	if err := fwm.isChargesValid(); err != nil {
-		return err
+	if  fwm.Charges != nil {
+		if err := fwm.isChargesValid(); err != nil {
+			return err
+		}
 	}
-	if err := fwm.isInstructedAmountValid(); err != nil {
-		return err
+	if fwm.InstructedAmount != nil {
+		if err := fwm.isInstructedAmountValid(); err != nil {
+			return err
+		}
 	}
-	if err := fwm.isExchangeRateValid(); err != nil {
-		return err
+	if fwm.ExchangeRate != nil {
+		if err := fwm.isExchangeRateValid(); err != nil {
+			return err
+		}
 	}
-	if err := fwm.isIntermediaryFIValid(); err != nil {
-		return err
+	if fwm.BeneficiaryIntermediaryFI != nil {
+		if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
+			return err
+		}
 	}
-	if err := fwm.isBeneficiaryFIValid(); err != nil {
-		return err
-	}*/
+	if fwm.BeneficiaryFI != nil {
+		if err := fwm.isBeneficiaryFIValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.OriginatorFI != nil {
+		if err := fwm.isOriginatorFIValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.InstructingFI != nil {
+		if err := fwm.isInstructingFIValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.OriginatorToBeneficiary != nil {
+		if err := fwm.isOriginatorToBeneficiaryValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIIntermediaryFI != nil {
+		if err := fwm.isFIIntermediaryFIValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIIntermediaryFIAdvice != nil {
+		if err := fwm.isFIIntermediaryFIAdviceValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIBeneficiaryFI != nil {
+		if err := fwm.isFIBeneficiaryFIValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIBeneficiaryFIAdvice != nil {
+		if err := fwm.isFIBeneficiaryFIAdviceValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIBeneficiary != nil {
+		if err := fwm.isFIBeneficiaryValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIBeneficiaryAdvice != nil {
+		if err := fwm.isFIBeneficiaryAdviceValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.FIPaymentMethodToBeneficiary != nil {
+		if err := fwm.isFIPaymentMethodToBeneficiaryValid(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -406,9 +470,15 @@ func (fwm *FedWireMessage) isCustomerTransferValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1000", "1002", "1008",
-		"1500", "1502", "1508",
-		"1600", "1602", "1608":
+		FundsTransfer + BasicFundsTransfer,
+		FundsTransfer + ReversalTransfer,
+		FundsTransfer + ReversalPriorDayTransfer,
+		ForeignTransfer + BasicFundsTransfer,
+		ForeignTransfer + ReversalTransfer,
+		ForeignTransfer + ReversalPriorDayTransfer,
+		SettlementTransfer + BasicFundsTransfer,
+		SettlementTransfer + ReversalTransfer,
+		SettlementTransfer + ReversalPriorDayTransfer:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -474,9 +544,21 @@ func (fwm *FedWireMessage) isCustomerTransferPlusValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1000", "1001", "1002", "1007", "1008",
-		"1500", "1501", "1502", "1507", "1508",
-		"1600", "1601", "1602", "1607", "1608":
+		FundsTransfer + BasicFundsTransfer,
+		FundsTransfer + RequestReversal,
+		FundsTransfer + ReversalTransfer,
+		FundsTransfer + RequestReversalPriorDayTransfer,
+		FundsTransfer + ReversalPriorDayTransfer,
+		ForeignTransfer + BasicFundsTransfer,
+		ForeignTransfer + RequestReversal,
+		ForeignTransfer + ReversalTransfer,
+		ForeignTransfer + RequestReversalPriorDayTransfer,
+		ForeignTransfer + ReversalPriorDayTransfer,
+		SettlementTransfer + BasicFundsTransfer,
+		SettlementTransfer + RequestReversal,
+		SettlementTransfer + ReversalTransfer,
+		SettlementTransfer + RequestReversalPriorDayTransfer,
+		SettlementTransfer + ReversalPriorDayTransfer:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -533,6 +615,11 @@ func (fwm *FedWireMessage) isCustomerTransferPlusTags() error {
 			return fieldError("ProprietaryCode", ErrFieldRequired)
 		}
 	}
+	if fwm.LocalInstrument.LocalInstrumentCode != "COVS" {
+		if err := fwm.invalidCoverPaymentTags(); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -570,7 +657,9 @@ func (fwm *FedWireMessage) isCheckSameDaySettlementValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1600", "1602", "1608":
+		SettlementTransfer + BasicFundsTransfer,
+		SettlementTransfer + ReversalTransfer,
+		SettlementTransfer + ReversalPriorDayTransfer:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -588,7 +677,9 @@ func (fwm *FedWireMessage) isDepositSendersAccountValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1600", "1602", "1608":
+		SettlementTransfer + BasicFundsTransfer,
+		SettlementTransfer + ReversalTransfer,
+		SettlementTransfer + ReversalPriorDayTransfer:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -606,7 +697,9 @@ func (fwm *FedWireMessage) isFEDFundsReturnedValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1600", "1602", "1608":
+		SettlementTransfer + BasicFundsTransfer,
+		SettlementTransfer + ReversalTransfer,
+		SettlementTransfer + ReversalPriorDayTransfer:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -624,7 +717,9 @@ func (fwm *FedWireMessage) isFEDFundsSoldValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1600", "1602", "1608":
+		SettlementTransfer + BasicFundsTransfer,
+		SettlementTransfer + ReversalTransfer,
+		SettlementTransfer + ReversalPriorDayTransfer:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -642,7 +737,8 @@ func (fwm *FedWireMessage) isDrawdownRequestValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1032", "1632":
+		FundsTransfer + FundsTransferRequestCredit,
+		SettlementTransfer + FundsTransferRequestCredit:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -666,7 +762,8 @@ func (fwm *FedWireMessage) isBankDrawdownRequestValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1631", "1633":
+		SettlementTransfer + RequestCredit,
+		SettlementTransfer + RefusalRequestCredit:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -690,7 +787,8 @@ func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1031", "1033":
+		FundsTransfer + RequestCredit,
+		FundsTransfer + RefusalRequestCredit:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -717,9 +815,17 @@ func (fwm *FedWireMessage) isServiceMessageValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
-		"1001", "1007", "1033", "1090",
-		"1501", "1507", "1590",
-		"1601", "1607", "1633", "1690":
+		FundsTransfer + RequestReversal,
+		FundsTransfer + RequestReversalPriorDayTransfer,
+		FundsTransfer + RefusalRequestCredit,
+		FundsTransfer + SSIServiceMessage,
+		ForeignTransfer + RequestReversal,
+		ForeignTransfer + RequestReversalPriorDayTransfer,
+		ForeignTransfer + SSIServiceMessage,
+		SettlementTransfer + RequestReversal,
+		SettlementTransfer + RequestReversalPriorDayTransfer,
+		SettlementTransfer + RefusalRequestCredit,
+		SettlementTransfer + SSIServiceMessage:
 	default:
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
@@ -777,7 +883,7 @@ func (fwm *FedWireMessage) isInvalidServiceMessageTags() error {
 // isPreviousMessageIdentifierRequired
 func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
 	switch fwm.TypeSubType.SubTypeCode {
-	case "02", "08":
+	case ReversalTransfer, ReversalPriorDayTransfer:
 		if fwm.PreviousMessageIdentifier == nil {
 			return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
 		}
@@ -881,7 +987,6 @@ func (fwm *FedWireMessage) isInvalidTags() error {
 		if err := fwm.invalidCoverPaymentTags(); err != nil {
 			return err
 		}
-
 		if err := fwm.invalidRemittanceTags(); err != nil {
 			return err
 		}
@@ -933,7 +1038,6 @@ func (fwm *FedWireMessage) invalidCoverPaymentTags() error {
 	if fwm.OrderingCustomer != nil {
 		return fieldError("OrderingCustomer", ErrInvalidProperty, fwm.OrderingCustomer)
 	}
-
 	if fwm.OrderingInstitution != nil {
 		return fieldError("OrderingInstitution", ErrInvalidProperty, fwm.OrderingInstitution)
 	}
@@ -1517,7 +1621,8 @@ func (fwm *FedWireMessage) GetServiceMessage() *ServiceMessage {
 
 func (fwm *FedWireMessage) isAmountValid() error {
 	if  fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
-		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode", fwm.TypeSubType.SubTypeCode)
+		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
+			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
 	}
 	return nil
 }
@@ -1533,3 +1638,190 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
 	}
 	return nil
 }
+
+func (fwm *FedWireMessage) isLocalInstrumentCodeValid() error {
+/*	if fwm.BusinessFunctionCode.BusinessFunctionCode != "CTP" {
+		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+			"BusinessFunctionCode.BusinessFunctionCode", fwm.BusinessFunctionCode.BusinessFunctionCode)
+	}*/
+	if fwm.LocalInstrument.ProprietaryCode != "" && fwm.LocalInstrument.LocalInstrumentCode != "PROP" {
+		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+			"LocalInstrument.ProprietaryCode", fwm.LocalInstrument.ProprietaryCode)
+	}
+	if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
+		if fwm.BeneficiaryReference == nil {
+			return fieldError("BeneficiaryReference", ErrFieldRequired)
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isPaymentNotificationValid() error {
+	// ToDo: I'm not sure of anyway to indicate this from a code stand point
+	//  Payment Notification Indicator is mandatory.
+	//   Indicators 0 through 6 – Reserved for market practice conventions.
+	//   Indicators 7 through 9 – Reserved for bilateral agreements between Fedwire senders and receivers.
+	return nil
+}
+
+func (fwm *FedWireMessage) isChargesValid() error {
+	if fwm.LocalInstrument != nil {
+		if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
+			return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+				"Charges", "Charges Defined")
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isInstructedAmountValid() error {
+	if fwm.LocalInstrument != nil {
+		if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
+			return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+				"Instructed Amount", "Instructed Amount")
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isExchangeRateValid() error {
+	if fwm.InstructedAmount == nil {
+		return fieldError("InstructedAmount", ErrFieldRequired)
+	}
+	if fwm.LocalInstrument != nil {
+		if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
+			return NewErrInvalidPropertyForProperty("ExchangeRate", fwm.ExchangeRate.ExchangeRate,
+				"Instructed Amount", "Instructed Amount")
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isBeneficiaryIntermediaryFIValid() error {
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isBeneficiaryFIValid() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isOriginatorFIValid() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
+		if fwm.Originator == nil && fwm.OriginatorOptionF == nil {
+			return fieldError("Originator or Originator Option F", ErrFieldRequired)
+		}
+	} else {
+		if fwm.Originator == nil {
+			return fieldError("Originator", ErrFieldRequired)
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isInstructingFIValid() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
+		if fwm.Originator == nil && fwm.OriginatorOptionF == nil {
+			return fieldError("Originator or Originator Option F", ErrFieldRequired)
+		}
+	} else {
+		if fwm.Originator == nil {
+			return fieldError("Originator", ErrFieldRequired)
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isOriginatorToBeneficiaryValid() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
+		if fwm.Originator == nil && fwm.OriginatorOptionF == nil {
+			return fieldError("Originator or Originator Option F", ErrFieldRequired)
+		}
+	} else {
+		if fwm.Originator == nil {
+			return fieldError("Originator", ErrFieldRequired)
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isFIIntermediaryFIValid() error {
+	if fwm.BeneficiaryIntermediaryFI == nil {
+		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
+	}
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isFIIntermediaryFIAdviceValid() error {
+	if fwm.BeneficiaryIntermediaryFI == nil {
+		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
+	}
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isFIBeneficiaryFIValid() error {
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isFIBeneficiaryFIAdviceValid() error {
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isFIBeneficiaryValid() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+func (fwm *FedWireMessage) isFIBeneficiaryAdviceValid() error {
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) isFIPaymentMethodToBeneficiaryValid() error {
+	if fwm.FIBeneficiary == nil {
+		return fieldError("FIBeneficiary", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
+	}
+	return nil
+}
+

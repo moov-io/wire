@@ -44,7 +44,6 @@ func (fiifi *FIIntermediaryFI) Parse(record string) {
 // String writes FIIntermediaryFI
 func (fiifi *FIIntermediaryFI) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(201)
 	buf.WriteString(fiifi.tag)
 	buf.WriteString(fiifi.LineOneField())

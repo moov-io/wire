@@ -44,7 +44,6 @@ func (fifi *FIAdditionalFIToFI) Parse(record string) {
 // String writes FIAdditionalFIToFI
 func (fifi *FIAdditionalFIToFI) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(211)
 	buf.WriteString(fifi.tag)
 	buf.WriteString(fifi.LineOneField())

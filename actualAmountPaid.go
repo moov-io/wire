@@ -40,7 +40,6 @@ func (aap *ActualAmountPaid) Parse(record string) {
 // String writes ActualAmountPaid
 func (aap *ActualAmountPaid) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(aap.tag)
 	buf.WriteString(aap.CurrencyCodeField())

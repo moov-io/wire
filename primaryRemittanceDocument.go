@@ -48,7 +48,6 @@ func (prd *PrimaryRemittanceDocument) Parse(record string) {
 // String writes PrimaryRemittanceDocument
 func (prd *PrimaryRemittanceDocument) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(115)
 	buf.WriteString(prd.tag)
 	buf.WriteString(prd.DocumentTypeCodeField())

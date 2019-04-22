@@ -59,7 +59,6 @@ func (pn *PaymentNotification) Parse(record string) {
 // String writes PaymentNotification
 func (pn *PaymentNotification) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(2335)
 	buf.WriteString(pn.tag)
 	buf.WriteString(pn.PaymentNotificationIndicatorField())

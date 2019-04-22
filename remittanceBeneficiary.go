@@ -70,7 +70,6 @@ func (rb *RemittanceBeneficiary) Parse(record string) {
 // String writes RemittanceBeneficiary
 func (rb *RemittanceBeneficiary) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(1114)
 	buf.WriteString(rb.tag)
 	buf.WriteString(rb.NameField())

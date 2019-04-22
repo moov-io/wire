@@ -39,7 +39,6 @@ func (br *BeneficiaryReference) Parse(record string) {
 // String writes BeneficiaryReference
 func (br *BeneficiaryReference) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(22)
 	buf.WriteString(br.tag)
 	buf.WriteString(br.BeneficiaryReferenceField())

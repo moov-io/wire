@@ -41,7 +41,6 @@ func (we *ErrorWire) Parse(record string) {
 // String writes ErrorWire
 func (we *ErrorWire) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(39)
 	buf.WriteString(we.tag)
 	return buf.String()

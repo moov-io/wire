@@ -49,7 +49,6 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) {
 // String writes AccountDebitedDrawdown
 func (debitDD *AccountDebitedDrawdown) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(debitDD.tag)
 	buf.WriteString(debitDD.IdentificationCodeField())
@@ -98,6 +97,15 @@ func (debitDD *AccountDebitedDrawdown) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (debitDD *AccountDebitedDrawdown) fieldInclusion() error {
+	if debitDD.IdentificationCode == "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
+	if debitDD.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if debitDD.Name== "" {
+		return fieldError("Name", ErrFieldRequired)
+	}
 	return nil
 }
 

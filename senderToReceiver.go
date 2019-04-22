@@ -45,7 +45,6 @@ func (str *SenderToReceiver) Parse(record string) {
 // String writes SenderToReceiver
 func (str *SenderToReceiver) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(221)
 	buf.WriteString(str.tag)
 	buf.WriteString(str.SwiftFieldTagField())

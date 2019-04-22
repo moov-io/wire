@@ -41,7 +41,6 @@ func (md *MessageDisposition) Parse(record string) {
 // String writes MessageDisposition
 func (md *MessageDisposition) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(5)
 	buf.WriteString(md.tag)
 	return buf.String()

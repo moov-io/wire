@@ -44,7 +44,6 @@ func (fib *FIBeneficiary) Parse(record string) {
 // String writes FIBeneficiary
 func (fib *FIBeneficiary) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(201)
 	buf.WriteString(fib.tag)
 	buf.WriteString(fib.LineOneField())

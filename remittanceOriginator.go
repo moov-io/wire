@@ -89,7 +89,6 @@ func (ro *RemittanceOriginator) Parse(record string) {
 // String writes RemittanceOriginator
 func (ro *RemittanceOriginator) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(3438)
 	buf.WriteString(ro.tag)
 	buf.WriteString(ro.IdentificationTypeField())

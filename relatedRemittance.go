@@ -64,7 +64,6 @@ func (rr *RelatedRemittance) Parse(record string) {
 // String writes RelatedRemittance
 func (rr *RelatedRemittance) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(3039)
 	buf.WriteString(rr.tag)
 	buf.WriteString(rr.RemittanceIdentificationField())

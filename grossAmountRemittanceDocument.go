@@ -40,7 +40,6 @@ func (gard *GrossAmountRemittanceDocument) Parse(record string) {
 // String writes GrossAmountRemittanceDocument
 func (gard *GrossAmountRemittanceDocument) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(gard.tag)
 	buf.WriteString(gard.CurrencyCodeField())
