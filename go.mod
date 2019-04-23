@@ -8,6 +8,6 @@ require (
 	github.com/moov-io/base v0.9.0
 	github.com/pkg/errors v0.8.0
 	github.com/rickar/cal v1.0.1 // indirect
-	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421
+	golang.org/x/oauth2 v0.0.0-20190423205934-9f3314589c9a
 	golang.org/x/text v0.3.0
 )
