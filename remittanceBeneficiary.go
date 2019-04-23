@@ -176,12 +176,31 @@ func (rb *RemittanceBeneficiary) Validate() error {
 	if err := rb.isAlphanumeric(rb.RemittanceData.AddressLineSeven); err != nil {
 		return fieldError("AddressLineSeven", err, rb.RemittanceData.AddressLineSeven)
 	}
+	if rb.IdentificationType == "" || rb.IdentificationCode == PICDateBirthPlace || rb.IdentificationCode == "" {
+		if rb.IdentificationNumber != "" {
+			return fieldError("IdentificationNumber", ErrInvalidProperty)
+		}
+	}
+	if rb.IdentificationType == "" || rb.IdentificationNumber == "" || rb.IdentificationCode == OICSWIFTBICORBEI ||
+		rb.IdentificationCode == PICDateBirthPlace || rb.IdentificationCode == "" {
+		if rb.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+		}
+	}
+	if rb.IdentificationCode != PICDateBirthPlace {
+		if rb.RemittanceData.DateBirthPlace != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+		}
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (rb *RemittanceBeneficiary) fieldInclusion() error {
+	if rb.RemittanceData.Name == "" {
+		return fieldError("Name", ErrFieldRequired)
+	}
 	return nil
 }
 

@@ -659,36 +659,36 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fwm.SetSenderToReceiver(str)*/
 
 	// Unstructured Addenda
-	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)
+/*	ua := mockUnstructuredAddenda()
+	fwm.SetUnstructuredAddenda(ua)*/
 
 	// Related Remittance Information
-	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)
+/*	rr := mockRelatedRemittance()
+	fwm.SetRelatedRemittance(rr)*/
 
 	// Structured Remittance Information
-	ro := mockRemittanceOriginator()
-	fwm.SetRemittanceOriginator(ro)
-	rb := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(rb)
+	//ro := mockRemittanceOriginator()
+	//fwm.SetRemittanceOriginator(ro)
+	//rb := mockRemittanceBeneficiary()
+	//fwm.SetRemittanceBeneficiary(rb)
 
 	// Additional Remittance Data
-	prd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(prd)
-	aap := mockActualAmountPaid()
-	fwm.SetActualAmountPaid(aap)
-	gard := mockGrossAmountRemittanceDocument()
-	fwm.SetGrossAmountRemittanceDocument(gard)
-	nd := mockAmountNegotiatedDiscount()
-	fwm.SetAmountNegotiatedDiscount(nd)
-	adj := mockAdjustment()
-	fwm.SetAdjustment(adj)
-	drd := mockDateRemittanceDocument()
-	fwm.SetDateRemittanceDocument(drd)
-	srd := mockSecondaryRemittanceDocument()
-	fwm.SetSecondaryRemittanceDocument(srd)
-	rft := mockRemittanceFreeText()
-	fwm.SetRemittanceFreeText(rft)
+	//prd := mockPrimaryRemittanceDocument()
+	//fwm.SetPrimaryRemittanceDocument(prd)
+	//aap := mockActualAmountPaid()
+	//fwm.SetActualAmountPaid(aap)
+	//gard := mockGrossAmountRemittanceDocument()
+	//fwm.SetGrossAmountRemittanceDocument(gard)
+	//nd := mockAmountNegotiatedDiscount()
+	//fwm.SetAmountNegotiatedDiscount(nd)
+	//adj := mockAdjustment()
+	//fwm.SetAdjustment(adj)
+	//drd := mockDateRemittanceDocument()
+	//fwm.SetDateRemittanceDocument(drd)
+	//srd := mockSecondaryRemittanceDocument()
+	//fwm.SetSecondaryRemittanceDocument(srd)
+	//rft := mockRemittanceFreeText()
+	//fwm.SetRemittanceFreeText(rft)
 
 	// ServiceMessage
 	sm := mockServiceMessage()
@@ -801,36 +801,36 @@ func TestFedWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
 	fwm.SetSenderToReceiver(str)
 
 	// Unstructured Addenda
-	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)
+/*	ua := mockUnstructuredAddenda()
+	fwm.SetUnstructuredAddenda(ua)*/
 
 	// Related Remittance Information
-	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)
+/*	rr := mockRelatedRemittance()
+	fwm.SetRelatedRemittance(rr)*/
 
 	// Structured Remittance Information
-	ro := mockRemittanceOriginator()
-	fwm.SetRemittanceOriginator(ro)
-	rb := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(rb)
+	//ro := mockRemittanceOriginator()
+	//fwm.SetRemittanceOriginator(ro)
+	//rb := mockRemittanceBeneficiary()
+	//fwm.SetRemittanceBeneficiary(rb)
 
 	// Additional Remittance Data
-	prd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(prd)
-	aap := mockActualAmountPaid()
-	fwm.SetActualAmountPaid(aap)
-	gard := mockGrossAmountRemittanceDocument()
-	fwm.SetGrossAmountRemittanceDocument(gard)
-	nd := mockAmountNegotiatedDiscount()
-	fwm.SetAmountNegotiatedDiscount(nd)
-	adj := mockAdjustment()
-	fwm.SetAdjustment(adj)
-	drd := mockDateRemittanceDocument()
-	fwm.SetDateRemittanceDocument(drd)
-	srd := mockSecondaryRemittanceDocument()
-	fwm.SetSecondaryRemittanceDocument(srd)
-	rft := mockRemittanceFreeText()
-	fwm.SetRemittanceFreeText(rft)
+	//prd := mockPrimaryRemittanceDocument()
+	//fwm.SetPrimaryRemittanceDocument(prd)
+	//aap := mockActualAmountPaid()
+	//fwm.SetActualAmountPaid(aap)
+	//gard := mockGrossAmountRemittanceDocument()
+	//fwm.SetGrossAmountRemittanceDocument(gard)
+	//nd := mockAmountNegotiatedDiscount()
+	//fwm.SetAmountNegotiatedDiscount(nd)
+	//adj := mockAdjustment()
+	//fwm.SetAdjustment(adj)
+	//drd := mockDateRemittanceDocument()
+	//fwm.SetDateRemittanceDocument(drd)
+	//srd := mockSecondaryRemittanceDocument()
+	//fwm.SetSecondaryRemittanceDocument(srd)
+	//rft := mockRemittanceFreeText()
+	//fwm.SetRemittanceFreeText(rft)
 
 	// ServiceMessage
 	sm := mockServiceMessage()

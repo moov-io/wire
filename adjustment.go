@@ -77,13 +77,24 @@ func (adj *Adjustment) Validate() error {
 	if err := adj.isAmount(adj.RemittanceAmount.Amount); err != nil {
 		return fieldError("Amount", err, adj.RemittanceAmount.Amount)
 	}
-
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (adj *Adjustment) fieldInclusion() error {
+	if adj.AdjustmentReasonCode == "" {
+		return fieldError("AdjustmentReasonCode", ErrFieldRequired)
+	}
+	if adj.CreditDebitIndicator == "" {
+		return fieldError("CreditDebitIndicator", ErrFieldRequired)
+	}
+	if adj.RemittanceAmount.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if adj.RemittanceAmount.CurrencyCode == "" {
+		return fieldError("CurrencyCode", ErrFieldRequired)
+	}
 	return nil
 }
 

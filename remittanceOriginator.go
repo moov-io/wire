@@ -224,13 +224,44 @@ func (ro *RemittanceOriginator) Validate() error {
 	if err := ro.isAlphanumeric(ro.ContactOther); err != nil {
 		return fieldError("ContactOther", err, ro.ContactOther)
 	}
-
+	switch ro.IdentificationCode {
+	case PICDateBirthPlace:
+		if ro.IdentificationNumber != "" {
+			return fieldError("IdentificationNumber", ErrInvalidProperty)
+		}
+		if ro.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+		}
+	case OICSWIFTBICORBEI:
+		if ro.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+		}
+		if ro.RemittanceData.DateBirthPlace != "" {
+			return fieldError("DateBirthPlace", ErrInvalidProperty)
+		}
+	default:
+		if ro.RemittanceData.DateBirthPlace != "" {
+			return fieldError("DateBirthPlace", ErrInvalidProperty)
+		}
+		if ro.IdentificationNumber == "" {
+			return fieldError("IdentificationNumber", ErrFieldRequired)
+		}
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ro *RemittanceOriginator) fieldInclusion() error {
+	if ro.IdentificationType == "" {
+		return fieldError("IdentificationType", ErrFieldRequired)
+	}
+	if ro.IdentificationCode == "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
+	if ro.RemittanceData.Name == "" {
+		return fieldError("Name", ErrFieldRequired)
+	}
 	return nil
 }
 

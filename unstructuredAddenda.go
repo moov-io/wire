@@ -61,6 +61,8 @@ func (ua *UnstructuredAddenda) Validate() error {
 	if err := ua.isAlphanumeric(ua.Addenda); err != nil {
 		return fieldError("Addenda", err, ua.Addenda)
 	}
+	// ToDo:  if ANSI only X12 character set?  If GXML, IXML, NARR, SWIF, UEDI only SWIFT MX ISO ?
+
 	return nil
 }
 

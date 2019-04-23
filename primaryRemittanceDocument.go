@@ -81,6 +81,19 @@ func (prd *PrimaryRemittanceDocument) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
+	if prd.DocumentIdentificationNumber == "" {
+		return fieldError("DocumentIdentificationNumber", ErrFieldRequired)
+	}
+	switch prd.DocumentTypeCode {
+	case ProprietaryDocumentType:
+		if prd.ProprietaryDocumentTypeCode == "" {
+			return fieldError("ProprietaryDocumentTypeCode", ErrFieldRequired)
+		}
+	default:
+		if prd.ProprietaryDocumentTypeCode != "" {
+			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty)
+		}
+	}
 	return nil
 }
 
