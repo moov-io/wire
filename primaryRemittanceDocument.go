@@ -48,7 +48,6 @@ func (prd *PrimaryRemittanceDocument) Parse(record string) {
 // String writes PrimaryRemittanceDocument
 func (prd *PrimaryRemittanceDocument) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(115)
 	buf.WriteString(prd.tag)
 	buf.WriteString(prd.DocumentTypeCodeField())
@@ -82,6 +81,19 @@ func (prd *PrimaryRemittanceDocument) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
+	if prd.DocumentIdentificationNumber == "" {
+		return fieldError("DocumentIdentificationNumber", ErrFieldRequired)
+	}
+	switch prd.DocumentTypeCode {
+	case ProprietaryDocumentType:
+		if prd.ProprietaryDocumentTypeCode == "" {
+			return fieldError("ProprietaryDocumentTypeCode", ErrFieldRequired)
+		}
+	default:
+		if prd.ProprietaryDocumentTypeCode != "" {
+			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty)
+		}
+	}
 	return nil
 }
 

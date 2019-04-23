@@ -43,7 +43,6 @@ func (cia *CurrencyInstructedAmount) Parse(record string) {
 // String writes CurrencyInstructedAmount
 func (cia *CurrencyInstructedAmount) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(29)
 	buf.WriteString(cia.tag)
 	buf.WriteString(cia.SwiftFieldTagField())

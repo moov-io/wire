@@ -44,7 +44,6 @@ func (bc *BeneficiaryCustomer) Parse(record string) {
 // String writes BeneficiaryCustomer
 func (bc *BeneficiaryCustomer) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(bc.tag)
 	buf.WriteString(bc.SwiftFieldTagField())

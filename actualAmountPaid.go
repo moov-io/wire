@@ -40,7 +40,6 @@ func (aap *ActualAmountPaid) Parse(record string) {
 // String writes ActualAmountPaid
 func (aap *ActualAmountPaid) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(aap.tag)
 	buf.WriteString(aap.CurrencyCodeField())
@@ -66,6 +65,13 @@ func (aap *ActualAmountPaid) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (aap *ActualAmountPaid) fieldInclusion() error {
+	if aap.RemittanceAmount.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if aap.RemittanceAmount.CurrencyCode == "" {
+		return fieldError("CurrencyCode", ErrFieldRequired)
+
+	}
 	return nil
 }
 

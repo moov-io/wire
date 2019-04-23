@@ -21,6 +21,7 @@ type Reader struct {
 	File File
 	// line is the current line being parsed from the input r
 	line string
+	// ToDo:  Do we need a current FEDWireMessage, just use FedWireMessage
 	// currentFedWireMessage is the current FedWireMessage being parsed
 	currentFedWireMessage FedWireMessage
 	// lineNum is the line number of the file being parsed
@@ -71,10 +72,17 @@ func (r *Reader) Read() (File, error) {
 		// ToDo: File length Check?
 		r.line = line
 		if err := r.parseLine(); err != nil {
-			return r.File, err
+			r.errors.Add(err)
 		}
 	}
-	return r.File, nil
+
+	r.File.AddFedWireMessage(r.currentFedWireMessage)
+	r.currentFedWireMessage = NewFedWireMessage()
+
+	if r.errors.Empty() {
+		return r.File, nil
+	}
+	return r.File, r.errors
 }
 
 func (r *Reader) parseLine() error {
@@ -321,6 +329,7 @@ func (r *Reader) parseSenderSupplied() error {
 	if err := ss.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSenderSupplied(ss)
 	return nil
 }
 
@@ -335,6 +344,7 @@ func (r *Reader) parseTypeSubType() error {
 	if err := tst.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetTypeSubType(tst)
 	return nil
 }
 
@@ -349,6 +359,7 @@ func (r *Reader) parseInputMessageAccountabilityData() error {
 	if err := imad.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetInputMessageAccountabilityData(imad)
 	return nil
 }
 
@@ -363,34 +374,37 @@ func (r *Reader) parseAmount() error {
 	if err := amt.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetAmount(amt)
 	return nil
 }
 
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
-/*	if len(r.line) < 15 {
+	if len(r.line) < 15 {
 		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
 		return r.errors
-	}*/
+	}
 	sdi := new(SenderDepositoryInstitution)
 	sdi.Parse(r.line)
 	if err := sdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSenderDepositoryInstitution(sdi)
 	return nil
 }
 
 func (r *Reader) parseReceiverDepositoryInstitution() error {
 	r.tagName = "ReceiverDepositoryInstitution"
-/*	if len(r.line) < 15 {
+	if len(r.line) < 15 {
 		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
 		return r.errors
-	}*/
+	}
 	rdi := new(ReceiverDepositoryInstitution)
 	rdi.Parse(r.line)
 	if err := rdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetReceiverDepositoryInstitution(rdi)
 	return nil
 }
 
@@ -405,6 +419,7 @@ func (r *Reader) parseBusinessFunctionCode() error {
 	if err := bfc.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBusinessFunctionCode(bfc)
 	return nil
 }
 
@@ -415,6 +430,7 @@ func (r *Reader) parseSenderReference() error {
 	if err := sr.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSenderReference(sr)
 	return nil
 }
 
@@ -425,6 +441,7 @@ func (r *Reader) parsePreviousMessageIdentifier() error {
 	if err := pmi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetPreviousMessageIdentifier(pmi)
 	return nil
 }
 
@@ -435,16 +452,18 @@ func (r *Reader) parseLocalInstrument() error {
 	if err := li.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetLocalInstrument(li)
 	return nil
 }
 
 func (r *Reader) parsePaymentNotification() error {
 	r.tagName = "PaymentNotification"
-	pm := new(PaymentNotification)
-	pm.Parse(r.line)
-	if err := pm.Validate(); err != nil {
+	pn := new(PaymentNotification)
+	pn.Parse(r.line)
+	if err := pn.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetPaymentNotification(pn)
 	return nil
 }
 
@@ -455,6 +474,7 @@ func (r *Reader) parseCharges() error {
 	if err := c.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetCharges(c)
 	return nil
 }
 
@@ -465,6 +485,7 @@ func (r *Reader) parseInstructedAmount() error {
 	if err := ia.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetInstructedAmount(ia)
 	return nil
 }
 
@@ -475,6 +496,7 @@ func (r *Reader) parseExchangeRate() error {
 	if err := eRate.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetExchangeRate(eRate)
 	return nil
 }
 
@@ -485,6 +507,7 @@ func (r *Reader) parseBeneficiaryIntermediaryFI() error {
 	if err := bifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBeneficiaryIntermediaryFI(bifi)
 	return nil
 }
 
@@ -495,6 +518,7 @@ func (r *Reader) parseBeneficiaryFI() error {
 	if err := bfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBeneficiaryFI(bfi)
 	return nil
 }
 
@@ -505,6 +529,7 @@ func (r *Reader) parseBeneficiary() error {
 	if err := ben.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBeneficiary(ben)
 	return nil
 }
 
@@ -515,6 +540,7 @@ func (r *Reader) parseBeneficiaryReference() error {
 	if err := br.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBeneficiaryReference(br)
 	return nil
 }
 
@@ -525,6 +551,7 @@ func (r *Reader) parseAccountDebitedDrawdown() error {
 	if err := debitDD.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetAccountDebitedDrawdown(debitDD)
 	return nil
 }
 
@@ -535,6 +562,7 @@ func (r *Reader) parseOriginator() error {
 	if err := o.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetOriginator(o)
 	return nil
 }
 
@@ -545,6 +573,7 @@ func (r *Reader) parseOriginatorOptionF() error {
 	if err := oof.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetOriginatorOptionF(oof)
 	return nil
 }
 
@@ -555,6 +584,7 @@ func (r *Reader) parseOriginatorFI() error {
 	if err := ofi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetOriginatorFI(ofi)
 	return nil
 }
 
@@ -565,6 +595,7 @@ func (r *Reader) parseInstructingFI() error {
 	if err := ifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetInstructingFI(ifi)
 	return nil
 }
 
@@ -575,6 +606,7 @@ func (r *Reader) parseAccountCreditedDrawdown() error {
 	if err := creditDD.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetAccountCreditedDrawdown(creditDD)
 	return nil
 }
 
@@ -585,6 +617,7 @@ func (r *Reader) parseOriginatorToBeneficiary() error {
 	if err := ob.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetOriginatorToBeneficiary(ob)
 	return nil
 }
 
@@ -595,6 +628,7 @@ func (r *Reader) parseFIReceiverFI() error {
 	if err := firfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIReceiverFI(firfi)
 	return nil
 }
 
@@ -605,6 +639,7 @@ func (r *Reader) parseFIDrawdownDebitAccountAdvice() error {
 	if err := debitDDAdvice.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
 	return nil
 }
 
@@ -615,6 +650,7 @@ func (r *Reader) parseFIIntermediaryFI() error {
 	if err := fiifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIIntermediaryFI(fiifi)
 	return nil
 }
 
@@ -625,6 +661,7 @@ func (r *Reader) parseFIIntermediaryFIAdvice() error {
 	if err := fiifia.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIIntermediaryFIAdvice(fiifia)
 	return nil
 }
 
@@ -635,6 +672,7 @@ func (r *Reader) parseFIBeneficiaryFI() error {
 	if err := fibfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIBeneficiaryFI(fibfi)
 	return nil
 }
 
@@ -645,6 +683,7 @@ func (r *Reader) parseFIBeneficiaryFIAdvice() error {
 	if err := fibfia.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIBeneficiaryFIAdvice(fibfia)
 	return nil
 }
 
@@ -655,16 +694,18 @@ func (r *Reader) parseFIBeneficiary() error {
 	if err := fib.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIBeneficiary(fib)
 	return nil
 }
 
 func (r *Reader) parseFIBeneficiaryAdvice() error {
 	r.tagName = "FIBeneficiaryAdvice"
-	fiba := new(FIBeneficiaryAdvice)
-	fiba.Parse(r.line)
-	if err := fiba.Validate(); err != nil {
+	fibfia := new(FIBeneficiaryFIAdvice)
+	fibfia.Parse(r.line)
+	if err := fibfia.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIBeneficiaryFIAdvice(fibfia)
 	return nil
 }
 
@@ -675,6 +716,7 @@ func (r *Reader) parseFIPaymentMethodToBeneficiary() error {
 	if err := pm.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIPaymentMethodToBeneficiary(pm)
 	return nil
 }
 
@@ -685,6 +727,7 @@ func (r *Reader) parseFIAdditionalFiToFi() error {
 	if err := fifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetFIAdditionalFIToFI(fifi)
 	return nil
 }
 
@@ -695,6 +738,7 @@ func (r *Reader) parseCurrencyInstructedAmount() error {
 	if err := cia.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetCurrencyInstructedAmount(cia)
 	return nil
 }
 
@@ -705,6 +749,7 @@ func (r *Reader) parseOrderingCustomer() error {
 	if err := oc.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetOrderingCustomer(oc)
 	return nil
 }
 
@@ -715,6 +760,7 @@ func (r *Reader) parseOrderingInstitution() error {
 	if err := oi.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetOrderingInstitution(oi)
 	return nil
 }
 
@@ -725,16 +771,18 @@ func (r *Reader) parseIntermediaryInstitution() error {
 	if err := ii.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetIntermediaryInstitution(ii)
 	return nil
 }
 
 func (r *Reader) parseInstitutionAccount() error {
 	r.tagName = "InstitutionAccount"
-	ia := new(InstitutionAccount)
-	ia.Parse(r.line)
-	if err := ia.Validate(); err != nil {
+	iAccount := new(InstitutionAccount)
+	iAccount.Parse(r.line)
+	if err := iAccount.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetInstitutionAccount(iAccount)
 	return nil
 }
 
@@ -745,6 +793,7 @@ func (r *Reader) parseBeneficiaryCustomer() error {
 	if err := bc.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetBeneficiaryCustomer(bc)
 	return nil
 }
 
@@ -755,6 +804,7 @@ func (r *Reader) parseRemittance() error {
 	if err := ri.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetRemittance(ri)
 	return nil
 }
 
@@ -765,6 +815,7 @@ func (r *Reader) parseSenderToReceiver() error {
 	if err := sr.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSenderToReceiver(sr)
 	return nil
 }
 
@@ -775,6 +826,7 @@ func (r *Reader) parseUnstructuredAddenda() error {
 	if err := ua.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetUnstructuredAddenda(ua)
 	return nil
 }
 
@@ -785,6 +837,7 @@ func (r *Reader) parseRelatedRemittance() error {
 	if err := rr.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetRelatedRemittance(rr)
 	return nil
 }
 
@@ -795,6 +848,7 @@ func (r *Reader) parseRemittanceOriginator() error {
 	if err := ro.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetRemittanceOriginator(ro)
 	return nil
 }
 
@@ -805,6 +859,7 @@ func (r *Reader) parseRemittanceBeneficiary() error {
 	if err := rb.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetRemittanceBeneficiary(rb)
 	return nil
 }
 
@@ -815,6 +870,7 @@ func (r *Reader) parsePrimaryRemittanceDocument() error {
 	if err := prd.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetPrimaryRemittanceDocument(prd)
 	return nil
 }
 
@@ -825,6 +881,7 @@ func (r *Reader) parseActualAmountPaid() error {
 	if err := aap.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetActualAmountPaid(aap)
 	return nil
 }
 
@@ -835,16 +892,18 @@ func (r *Reader) parseGrossAmountRemittanceDocument() error {
 	if err := gard.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetGrossAmountRemittanceDocument(gard)
 	return nil
 }
 
 func (r *Reader) parseAmountNegotiatedDiscount() error {
 	r.tagName = "AmountNegotiatedDiscount"
-	and := new(AmountNegotiatedDiscount)
-	and.Parse(r.line)
-	if err := and.Validate(); err != nil {
+	nd := new(AmountNegotiatedDiscount)
+	nd.Parse(r.line)
+	if err := nd.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetAmountNegotiatedDiscount(nd)
 	return nil
 }
 
@@ -855,6 +914,7 @@ func (r *Reader) parseAdjustment() error {
 	if err := adj.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetAdjustment(adj)
 	return nil
 }
 
@@ -865,6 +925,7 @@ func (r *Reader) parseDateRemittanceDocument() error {
 	if err := drd.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetDateRemittanceDocument(drd)
 	return nil
 }
 
@@ -875,6 +936,7 @@ func (r *Reader) parseSecondaryRemittanceDocument() error {
 	if err := srd.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetSecondaryRemittanceDocument(srd)
 	return nil
 }
 
@@ -885,6 +947,7 @@ func (r *Reader) parseRemittanceFreeText() error {
 	if err := rft.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetRemittanceFreeText(rft)
 	return nil
 }
 
@@ -895,5 +958,6 @@ func (r *Reader) parseServiceMessage() error {
 	if err := sm.Validate(); err != nil {
 		return r.parseError(err)
 	}
+	r.currentFedWireMessage.SetServiceMessage(sm)
 	return nil
 }

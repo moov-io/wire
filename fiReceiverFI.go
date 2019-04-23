@@ -44,7 +44,6 @@ func (firfi *FIReceiverFI) Parse(record string) {
 // String writes FIReceiverFI
 func (firfi *FIReceiverFI) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(209)
 	buf.WriteString(firfi.tag)
 	buf.WriteString(firfi.LineOneField())

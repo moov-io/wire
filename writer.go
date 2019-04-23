@@ -9,10 +9,10 @@ import (
 	"io"
 )
 
-// A Writer writes an x9.file to an encoded file.
+// A Writer writes an fedWireMessage to an encoded file.
 //
-// As returned by NewWriter, a Writer writes x9file structs into
-// x9 formatted files.
+// As returned by NewWriter, a Writer writes FedWireMessage file structs into
+// FedWireMessage formatted files.
 
 // Writer struct
 type Writer struct {
@@ -27,7 +27,7 @@ func NewWriter(w io.Writer) *Writer {
 	}
 }
 
-// Writer writes a single x9.file record to w
+// Writer writes a single FedWireMessage record to w
 func (w *Writer) Write(file *File) error {
 	if err := file.Validate(); err != nil {
 		return err
@@ -49,43 +49,42 @@ func (w *Writer) Flush() {
 }
 
 func (w *Writer) writeFedWireMessage(file *File) error {
-		fwm := file.FedWireMessage
-		if err := w.writeMandatory(fwm); err != nil {
-			return err
-		}
-		if err := w.writeOtherTransferInfo(fwm); err != nil {
-			return err
-		}
-		if err := w.writeBeneficiary(fwm); err != nil {
-			return err
-		}
-		if err := w.writeOriginator(fwm); err != nil {
-			return err
-		}
-		if err := w.writeFinancialInstitution(fwm); err != nil {
-			return err
-		}
+	fwm := file.FedWireMessage
+	if err := w.writeMandatory(fwm); err != nil {
+		return err
+	}
+	if err := w.writeOtherTransferInfo(fwm); err != nil {
+		return err
+	}
+	if err := w.writeBeneficiary(fwm); err != nil {
+		return err
+	}
+	if err := w.writeOriginator(fwm); err != nil {
+		return err
+	}
+	if err := w.writeFinancialInstitution(fwm); err != nil {
+		return err
+	}
 
-		if err := w.writeCoverPayment(fwm); err != nil {
+	if err := w.writeCoverPayment(fwm); err != nil {
+		return err
+	}
+
+	if fwm.UnstructuredAddenda != nil {
+		if _, err := w.w.WriteString(fwm.GetUnstructuredAddenda().String() + "\n"); err != nil {
 			return err
 		}
-
-		if fwm.UnstructuredAddenda != nil {
-			if _, err := w.w.WriteString(fwm.GetUnstructuredAddenda().String() + "\n"); err != nil {
-				return err
-			}
+	}
+	if err := w.writeRemittance(fwm); err != nil {
+		return err
+	}
+	if fwm.ServiceMessage != nil {
+		if _, err := w.w.WriteString(fwm.GetServiceMessage().String() + "\n"); err != nil {
+			return err
 		}
-		if err := w.writeRemittance(fwm); err != nil {
-				return err
-			}
-		if fwm.ServiceMessage != nil {
-			if _, err := w.w.WriteString(fwm.GetServiceMessage().String() + "\n"); err != nil {
-				return err
-			}
-		}
+	}
 	return nil
 }
-
 
 func (w *Writer) writeMandatory(fwm FedWireMessage) error {
 	if fwm.SenderSupplied != nil {

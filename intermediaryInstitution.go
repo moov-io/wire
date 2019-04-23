@@ -44,7 +44,6 @@ func (ii *IntermediaryInstitution) Parse(record string) {
 // String writes IntermediaryInstitution
 func (ii *IntermediaryInstitution) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(ii.tag)
 	buf.WriteString(ii.SwiftFieldTagField())

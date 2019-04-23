@@ -48,7 +48,7 @@ func (v *validator) isNumeric(s string) error {
 // isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")
-	str = strings.Trim(s,".")
+	str = strings.Trim(s, ".")
 	if amountRegex.MatchString(str) {
 		// [^ [0-9],.]
 		return ErrNonAmount
@@ -101,28 +101,17 @@ func (v *validator) isSubTypeCode(code string) error {
 func (v *validator) isLocalInstrumentCode(code string) error {
 	switch code {
 	case
-		// ANSI X12 format
-		"ANSI",
-		// Sequence B Cover Payment Structured
-		"COVS",
-		// General XML format
-		"GXML",
-		// ISO 20022 XML formaT
-		"IXML",
-		// Narrative Text
-		"NARR",
-		// Proprietary Local Instrument Code
-		"PROP",
-		//  Remittance Information Structured
-		"RMTS",
-		// Related Remittance Information
-		"RRMT",
-		// STP 820 format
-		"S820",
-		// SWIFT field 70
-		"SWIF",
-		// UN/EDIFACT format
-		"UEDI":
+		ANSIX12format,
+		SequenceBCoverPaymentStructured,
+		GeneralXMLformat,
+		ISO20022XMLformat,
+		NarrativeText,
+		ProprietaryLocalInstrumentCode,
+		RemittanceInformationStructured,
+		RelatedRemittanceInformation,
+		STP820format,
+		SWIFTfield70,
+		UNEDIFACTformat:
 		return nil
 	}
 	return ErrLocalInstrumentCode
@@ -170,9 +159,10 @@ func (v *validator) isBusinessFunctionCode(code string) error {
 		DepositSendersAccount,
 		BankDrawdownRequest,
 		CustomerCorporateDrawdownRequest,
-		DrawdownPayment,
+		DrawdownRequest,
 		FEDFundsReturned,
-		FEDFundsSold:
+		FEDFundsSold,
+		BFCServiceMessage:
 		return nil
 	}
 	return ErrBusinessFunctionCode
@@ -192,7 +182,7 @@ func (v *validator) isTransactionTypeCode(code string) error {
 	// ToDo: Find what the Transaction Type Codes are
 	switch code {
 	case
-		"XYZ":
+		"   ", "COV":
 		return nil
 	}
 	return ErrTransactionTypeCode

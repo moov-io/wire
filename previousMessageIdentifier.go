@@ -39,7 +39,6 @@ func (pmi *PreviousMessageIdentifier) Parse(record string) {
 // String writes PreviousMessageIdentifier
 func (pmi *PreviousMessageIdentifier) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(pmi.tag)
 	buf.WriteString(pmi.PreviousMessageIdentifierField())

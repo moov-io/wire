@@ -40,7 +40,6 @@ func (nd *AmountNegotiatedDiscount) Parse(record string) {
 // String writes AmountNegotiatedDiscount
 func (nd *AmountNegotiatedDiscount) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(28)
 	buf.WriteString(nd.tag)
 	buf.WriteString(nd.CurrencyCodeField())

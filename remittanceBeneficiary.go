@@ -21,7 +21,7 @@ type RemittanceBeneficiary struct {
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 	// CountryOfResidence
-	CountryOfResidence string `json:"countryOfResidence, omitempty"`
+	CountryOfResidence string `json:"countryOfResidence,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -70,7 +70,6 @@ func (rb *RemittanceBeneficiary) Parse(record string) {
 // String writes RemittanceBeneficiary
 func (rb *RemittanceBeneficiary) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(1114)
 	buf.WriteString(rb.tag)
 	buf.WriteString(rb.NameField())
@@ -177,12 +176,31 @@ func (rb *RemittanceBeneficiary) Validate() error {
 	if err := rb.isAlphanumeric(rb.RemittanceData.AddressLineSeven); err != nil {
 		return fieldError("AddressLineSeven", err, rb.RemittanceData.AddressLineSeven)
 	}
+	if rb.IdentificationType == "" || rb.IdentificationCode == PICDateBirthPlace || rb.IdentificationCode == "" {
+		if rb.IdentificationNumber != "" {
+			return fieldError("IdentificationNumber", ErrInvalidProperty)
+		}
+	}
+	if rb.IdentificationType == "" || rb.IdentificationNumber == "" || rb.IdentificationCode == OICSWIFTBICORBEI ||
+		rb.IdentificationCode == PICDateBirthPlace || rb.IdentificationCode == "" {
+		if rb.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+		}
+	}
+	if rb.IdentificationCode != PICDateBirthPlace {
+		if rb.RemittanceData.DateBirthPlace != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+		}
+	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (rb *RemittanceBeneficiary) fieldInclusion() error {
+	if rb.RemittanceData.Name == "" {
+		return fieldError("Name", ErrFieldRequired)
+	}
 	return nil
 }
 

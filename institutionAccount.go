@@ -44,7 +44,6 @@ func (iAccount *InstitutionAccount) Parse(record string) {
 // String writes InstitutionAccount
 func (iAccount *InstitutionAccount) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(iAccount.tag)
 	buf.WriteString(iAccount.SwiftFieldTagField())

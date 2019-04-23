@@ -144,3 +144,49 @@ func fieldError(field string, err error, values ...interface{}) error {
 	}
 	return &fe
 }
+
+// ErrBusinessFunctionCodeProperty is the error given when the observed check digit does not match the calculated one
+type ErrBusinessFunctionCodeProperty struct {
+	Message              string
+	Property             string
+	PropertyValue        string
+	BusinessFunctionCode string
+}
+
+// NewErrBusinessFunctionCodeProperty creates a new error of the ErrBusinessFunctionCodeProperty type
+func NewErrBusinessFunctionCodeProperty(property, propertyValue, businessFunctionCode string) ErrBusinessFunctionCodeProperty {
+	return ErrBusinessFunctionCodeProperty{
+		Message:              fmt.Sprintf("%v: %v is not valid for %v", property, propertyValue, businessFunctionCode),
+		Property:             property,
+		PropertyValue:        propertyValue,
+		BusinessFunctionCode: businessFunctionCode,
+	}
+}
+
+func (e ErrBusinessFunctionCodeProperty) Error() string {
+	return e.Message
+}
+
+// ErrInvalidPropertyForProperty is the error given when the observed check digit does not match the calculated one
+type ErrInvalidPropertyForProperty struct {
+	Message             string
+	Property            string
+	PropertyValue       string
+	SecondProperty      string
+	SecondPropertyValue string
+}
+
+// NewErrInvalidPropertyForProperty creates a new error of the ErrInvalidPropertyForProperty type
+func NewErrInvalidPropertyForProperty(property, propertyValue, secondProperty, secondPropertyValue string) ErrInvalidPropertyForProperty {
+	return ErrInvalidPropertyForProperty{
+		Message:        fmt.Sprintf("%v: %v is not valid for %v: %v", property, propertyValue, secondProperty, secondPropertyValue),
+		Property:       property,
+		PropertyValue:  propertyValue,
+		SecondProperty: secondProperty,
+		SecondPropertyValue: secondPropertyValue,
+	}
+}
+
+func (e ErrInvalidPropertyForProperty) Error() string {
+	return e.Message
+}

@@ -1,6 +1,6 @@
 package wire
 
-//  mockBeneficiaryIntermediaryFI creates a BeneficiaryIntermediaryFI
+// mockBeneficiaryIntermediaryFI creates a BeneficiaryIntermediaryFI
 func mockBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
 	bifi := NewBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = DemandDepositAccountNumber

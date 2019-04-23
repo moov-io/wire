@@ -44,7 +44,6 @@ func (oi *OrderingInstitution) Parse(record string) {
 // String writes OrderingInstitution
 func (oi *OrderingInstitution) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(oi.tag)
 	buf.WriteString(oi.SwiftFieldTagField())

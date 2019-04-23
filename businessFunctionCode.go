@@ -2,6 +2,8 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
+// ToDo:  Consider just naming the type BusinessFunction
+
 package wire
 
 import "strings"
@@ -13,7 +15,6 @@ type BusinessFunctionCode struct {
 	// BusinessFunctionCode BTR: Bank Transfer (Beneficiary is a bank) DRC: Customer or Corporate Drawdown Request CKS: Check Same Day Settlement DRW: Drawdown Payment CTP: Customer Transfer Plus FFR: Fed Funds Returned CTR: Customer Transfer (Beneficiary is a not a bank) FFS: Fed Funds Sold DEP: Deposit to Sender’s Account SVC: Service Message DRB: Bank-to-Bank Drawdown Request
 	BusinessFunctionCode string `json:"businessFunctionCode"`
 	// TransactionTypeCode If {3600} is CTR, an optional Transaction Type Code element is permitted; however, the Transaction Type Code 'COV' is not permitted.
-	// ToDo: Research This, I don't understand it yet
 	TransactionTypeCode string `json:"transactionTypeCode,omitempty"`
 
 	// validator is composed for data validation
@@ -37,7 +38,7 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 func (bfc *BusinessFunctionCode) Parse(record string) {
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
-	bfc.TransactionTypeCode = bfc.parseStringField(record[9:12])
+	bfc.TransactionTypeCode = record[9:12]
 }
 
 // String writes BusinessFunctionCode
@@ -59,9 +60,11 @@ func (bfc *BusinessFunctionCode) Validate() error {
 	if err := bfc.isBusinessFunctionCode(bfc.BusinessFunctionCode); err != nil {
 		return fieldError("BusinessFunctionCode", err, bfc.BusinessFunctionCode)
 	}
-	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
+	// transactionCodeType does not seem to be defined in the spec
+
+	/*	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
 		return fieldError("TransactionTypeCode", err, bfc.TransactionTypeCode)
-	}
+	}*/
 	return nil
 }
 
@@ -69,13 +72,10 @@ func (bfc *BusinessFunctionCode) Validate() error {
 // invalid the WIRE will return an error.
 func (bfc *BusinessFunctionCode) fieldInclusion() error {
 
+	// only element 01 (BusinessFunctionCode) is required
 	if bfc.BusinessFunctionCode == "" {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode)
 	}
-	//ToDo: "" may be allowed
-	/*	if bfc.TransactionTypeCode == "" {
-		return fieldError("TransactionTypeCode", ErrFieldRequired, bfc.TransactionTypeCode)
-	}*/
 	return nil
 }
 

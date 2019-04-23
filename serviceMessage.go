@@ -72,7 +72,6 @@ func (sm *ServiceMessage) Parse(record string) {
 // String writes ServiceMessage
 func (sm *ServiceMessage) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(426)
 	buf.WriteString(sm.tag)
 	buf.WriteString(sm.LineOneField())

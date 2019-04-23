@@ -45,7 +45,6 @@ func (rft *RemittanceFreeText) Parse(record string) {
 // String writes RemittanceFreeText
 func (rft *RemittanceFreeText) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(426)
 	buf.WriteString(rft.tag)
 	buf.WriteString(rft.LineOneField())

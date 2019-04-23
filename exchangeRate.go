@@ -40,7 +40,6 @@ func (eRate *ExchangeRate) Parse(record string) {
 // String writes ExchangeRate
 func (eRate *ExchangeRate) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(18)
 	buf.WriteString(eRate.tag)
 	buf.WriteString(eRate.ExchangeRateField())

@@ -41,7 +41,6 @@ func (rts *ReceiptTimeStamp) Parse(record string) {
 // String writes ReceiptTimeStamp
 func (rts *ReceiptTimeStamp) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(12)
 	buf.WriteString(rts.tag)
 	return buf.String()

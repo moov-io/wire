@@ -44,7 +44,6 @@ func (ifi *InstructingFI) Parse(record string) {
 // String writes InstructingFI
 func (ifi *InstructingFI) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(ifi.tag)
 	buf.WriteString(ifi.IdentificationCodeField())
@@ -86,6 +85,12 @@ func (ifi *InstructingFI) Validate() error {
 	}
 	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, ifi.FinancialInstitution.Address.AddressLineThree)
+	}
+	if ifi.FinancialInstitution.IdentificationCode != "" && ifi.FinancialInstitution.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if ifi.FinancialInstitution.IdentificationCode == "" && ifi.FinancialInstitution.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
 }

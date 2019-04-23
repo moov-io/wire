@@ -103,7 +103,6 @@ func (oof *OriginatorOptionF) Parse(record string) {
 // String writes OriginatorOptionF
 func (oof *OriginatorOptionF) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(oof.tag)
 	buf.WriteString(oof.PartyIdentifierField())

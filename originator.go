@@ -43,7 +43,6 @@ func (o *Originator) Parse(record string) {
 // String writes Originator
 func (o *Originator) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
@@ -79,6 +78,12 @@ func (o *Originator) Validate() error {
 	}
 	if err := o.isAlphanumeric(o.Personal.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, o.Personal.Address.AddressLineThree)
+	}
+	if o.Personal.IdentificationCode != "" && o.Personal.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if o.Personal.IdentificationCode == "" && o.Personal.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
 }

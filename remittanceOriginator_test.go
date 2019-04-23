@@ -7,7 +7,7 @@ func mockRemittanceOriginator() *RemittanceOriginator {
 	ro.IdentificationCode = OICCustomerNumber
 	ro.IdentificationNumber = "111111"
 	ro.IdentificationNumberIssuer = "Bank"
-	ro.RemittanceData.DateBirthPlace = "12072008 AnyTown"
+	//ro.RemittanceData.DateBirthPlace = "12072008 AnyTown"
 	ro.RemittanceData.Name = "Name"
 	ro.RemittanceData.AddressType = CompletePostalAddress
 	ro.RemittanceData.Department = "Department"

@@ -45,7 +45,6 @@ func (oc *OrderingCustomer) Parse(record string) {
 // String writes OrderingCustomer
 func (oc *OrderingCustomer) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(186)
 	buf.WriteString(oc.tag)
 	buf.WriteString(oc.SwiftFieldTagField())

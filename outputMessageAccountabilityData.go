@@ -45,7 +45,6 @@ func (omad *OutputMessageAccountabilityData) Parse(record string) {
 // String writes OutputMessageAccountabilityData
 func (omad *OutputMessageAccountabilityData) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(34)
 	buf.WriteString(omad.tag)
 	return buf.String()

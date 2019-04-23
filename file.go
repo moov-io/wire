@@ -34,5 +34,8 @@ func (f *File) Create() error {
 
 // Validate will never modify the file.
 func (f *File) Validate() error {
+	if err := f.FedWireMessage.verify(); err != nil {
+		return err
+	}
 	return nil
 }

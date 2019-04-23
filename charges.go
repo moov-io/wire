@@ -59,7 +59,6 @@ func (c *Charges) Parse(record string) {
 // String writes Charges
 func (c *Charges) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(67)
 	buf.WriteString(c.tag)
 	buf.WriteString(c.ChargeDetailsField())
