@@ -44,7 +44,6 @@ func (ben *Beneficiary) Parse(record string) {
 // String writes Beneficiary
 func (ben *Beneficiary) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(181)
 	buf.WriteString(ben.tag)
 	buf.WriteString(ben.IdentificationCodeField())

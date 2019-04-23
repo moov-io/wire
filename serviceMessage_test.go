@@ -1,7 +1,7 @@
 package wire
 
 // mockServiceMessage creates a ServiceMessage
-func mockServiceMessage () *ServiceMessage {
+func mockServiceMessage() *ServiceMessage {
 	sm := NewServiceMessage()
 	sm.LineOne = "Line One"
 	sm.LineTwo = "Line Two"

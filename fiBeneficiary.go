@@ -61,22 +61,22 @@ func (fib *FIBeneficiary) Validate() error {
 	if err := fib.fieldInclusion(); err != nil {
 		return err
 	}
-	if err:= fib.isAlphanumeric(fib.FIToFI.LineOne); err!= nil {
+	if err := fib.isAlphanumeric(fib.FIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fib.FIToFI.LineOne)
 	}
-	if err:= fib.isAlphanumeric(fib.FIToFI.LineTwo); err!= nil {
+	if err := fib.isAlphanumeric(fib.FIToFI.LineTwo); err != nil {
 		return fieldError("LineTwo", err, fib.FIToFI.LineTwo)
 	}
-	if err:= fib.isAlphanumeric(fib.FIToFI.LineThree); err!= nil {
+	if err := fib.isAlphanumeric(fib.FIToFI.LineThree); err != nil {
 		return fieldError("LineThree", err, fib.FIToFI.LineThree)
 	}
-	if err:= fib.isAlphanumeric(fib.FIToFI.LineFour); err!= nil {
+	if err := fib.isAlphanumeric(fib.FIToFI.LineFour); err != nil {
 		return fieldError("LineFour", err, fib.FIToFI.LineFour)
 	}
-	if err:= fib.isAlphanumeric(fib.FIToFI.LineFive); err!= nil {
+	if err := fib.isAlphanumeric(fib.FIToFI.LineFive); err != nil {
 		return fieldError("LineFive", err, fib.FIToFI.LineFive)
 	}
-	if err:= fib.isAlphanumeric(fib.FIToFI.LineSix); err!= nil {
+	if err := fib.isAlphanumeric(fib.FIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, fib.FIToFI.LineSix)
 	}
 	return nil

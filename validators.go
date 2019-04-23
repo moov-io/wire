@@ -2,8 +2,6 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-//ToDo:  Review to see if we want something like model_*enum
-
 package wire
 
 import (
@@ -43,8 +41,6 @@ func (v *validator) isNumeric(s string) error {
 	return nil
 }
 
-// ToDo; Change to is amount comma?   Create Amount Types...
-
 // isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")
@@ -66,7 +62,7 @@ func (v *validator) isAmountImplied(s string) error {
 	return nil
 }
 
-// ToDo Add 5 decimal precision
+// ToDo Add 5 decimal precision?
 
 // isTypeCode ensures tag {1510} TypeCode is valid
 func (v *validator) isTypeCode(code string) error {
@@ -382,7 +378,6 @@ func (v *validator) isMonth(s string) error {
 // isDay validates a 2 digit day based on a 2 digit month
 // month 01-12 day 01-31 based on month
 func (v *validator) isDay(m string, d string) error {
-	// ToDo: Future Consideration Leap Year - not sure if cards actually have 0229
 	switch m {
 	// February
 	case "02":

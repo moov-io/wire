@@ -78,7 +78,6 @@ func (c *Charges) Validate() error {
 	if err := c.isChargeDetails(c.ChargeDetails); err != nil {
 		return fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails)
 	}
-	// ToDo: specific validation for Charges 1-4 fields
 	if err := c.isAlphanumeric(c.SendersChargesOne); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
 	}

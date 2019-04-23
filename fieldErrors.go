@@ -179,10 +179,10 @@ type ErrInvalidPropertyForProperty struct {
 // NewErrInvalidPropertyForProperty creates a new error of the ErrInvalidPropertyForProperty type
 func NewErrInvalidPropertyForProperty(property, propertyValue, secondProperty, secondPropertyValue string) ErrInvalidPropertyForProperty {
 	return ErrInvalidPropertyForProperty{
-		Message:        fmt.Sprintf("%v: %v is not valid for %v: %v", property, propertyValue, secondProperty, secondPropertyValue),
-		Property:       property,
-		PropertyValue:  propertyValue,
-		SecondProperty: secondProperty,
+		Message:             fmt.Sprintf("%v: %v is not valid for %v: %v", property, propertyValue, secondProperty, secondPropertyValue),
+		Property:            property,
+		PropertyValue:       propertyValue,
+		SecondProperty:      secondProperty,
 		SecondPropertyValue: secondPropertyValue,
 	}
 }

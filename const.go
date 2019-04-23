@@ -4,9 +4,6 @@
 
 package wire
 
-// ToDo: Evaluate use of {}
-// ToDo: see if we want these constants
-
 const (
 
 	// TagMessageDisposition is MessageDisposition

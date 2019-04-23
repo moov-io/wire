@@ -61,22 +61,22 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 	if err := fifi.fieldInclusion(); err != nil {
 		return err
 	}
-	if err:= fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineOne); err!= nil {
+	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fifi.AdditionalFIToFI.LineOne)
 	}
-	if err:= fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineTwo); err!= nil {
+	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineTwo); err != nil {
 		return fieldError("LineTwo", err, fifi.AdditionalFIToFI.LineTwo)
 	}
-	if err:= fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineThree); err!= nil {
+	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineThree); err != nil {
 		return fieldError("LineThree", err, fifi.AdditionalFIToFI.LineThree)
 	}
-	if err:= fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineFour); err!= nil {
+	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineFour); err != nil {
 		return fieldError("LineFour", err, fifi.AdditionalFIToFI.LineFour)
 	}
-	if err:= fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineFive); err!= nil {
+	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineFive); err != nil {
 		return fieldError("LineFive", err, fifi.AdditionalFIToFI.LineFive)
 	}
-	if err:= fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineSix); err!= nil {
+	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, fifi.AdditionalFIToFI.LineSix)
 	}
 	return nil
@@ -87,8 +87,6 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 func (fifi *FIAdditionalFIToFI) fieldInclusion() error {
 	return nil
 }
-
-// ToDo:  Add functions for writing
 
 // LineOneField gets a string of the LineOne field
 func (fifi *FIAdditionalFIToFI) LineOneField() string {

@@ -39,5 +39,3 @@ func testRead(filePathName string) func(t *testing.T) {
 		}
 	}
 }
-
-

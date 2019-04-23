@@ -169,7 +169,7 @@ func (fwm *FedWireMessage) verify() error {
 			return err
 		}
 	}
-	if  fwm.Charges != nil {
+	if fwm.Charges != nil {
 		if err := fwm.isChargesValid(); err != nil {
 			return err
 		}
@@ -1670,7 +1670,7 @@ func (fwm *FedWireMessage) GetServiceMessage() *ServiceMessage {
 }
 
 func (fwm *FedWireMessage) isAmountValid() error {
-	if  fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
+	if fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
 		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
 			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
 	}
@@ -1690,7 +1690,7 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
 }
 
 func (fwm *FedWireMessage) isLocalInstrumentCodeValid() error {
-/*	if fwm.BusinessFunctionCode.BusinessFunctionCode != "CTP" {
+	/*	if fwm.BusinessFunctionCode.BusinessFunctionCode != "CTP" {
 		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
 			"BusinessFunctionCode.BusinessFunctionCode", fwm.BusinessFunctionCode.BusinessFunctionCode)
 	}*/
@@ -1882,7 +1882,7 @@ func (fwm *FedWireMessage) isUnstructuredAddendaValid() error {
 		ProprietaryLocalInstrumentCode,
 		RemittanceInformationStructured,
 		RelatedRemittanceInformation:
-			// ToDo may want to also check Addenda Length
+		// ToDo may want to also check Addenda Length
 		if len(fwm.UnstructuredAddenda.Addenda) > 1 {
 			return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.Addenda,
 				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)

@@ -2711,9 +2711,6 @@ components:
         transactionTypeCode:
           description: |-
             TransactionTypeCode
-            If {3600} is CTR, an optional Transaction Type Code element is permitted;
-            however, the Transaction Type Code 'COV' is not permitted.
-            ToDo: Research This, I don't understand it yet
           maxLength: 3
           minLength: 3
           type: string

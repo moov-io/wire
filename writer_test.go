@@ -3,8 +3,6 @@ package wire
 import (
 	"bytes"
 	"github.com/moov-io/base"
-	"log"
-	"os"
 	"strings"
 	"testing"
 )
@@ -640,31 +638,31 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-/*	// Cover Payment Information
-	cia := mockCurrencyInstructedAmount()
-	fwm.SetCurrencyInstructedAmount(cia)
-	oc := mockOrderingCustomer()
-	fwm.SetOrderingCustomer(oc)
-	oi := mockOrderingInstitution()
-	fwm.SetOrderingInstitution(oi)
-	ii := mockIntermediaryInstitution()
-	fwm.SetIntermediaryInstitution(ii)
-	iAccount := mockInstitutionAccount()
-	fwm.SetInstitutionAccount(iAccount)
-	bc := mockBeneficiaryCustomer()
-	fwm.SetBeneficiaryCustomer(bc)
-	ri := mockRemittance()
-	fwm.SetRemittance(ri)
-	str := mockSenderToReceiver()
-	fwm.SetSenderToReceiver(str)*/
+	/*	// Cover Payment Information
+		cia := mockCurrencyInstructedAmount()
+		fwm.SetCurrencyInstructedAmount(cia)
+		oc := mockOrderingCustomer()
+		fwm.SetOrderingCustomer(oc)
+		oi := mockOrderingInstitution()
+		fwm.SetOrderingInstitution(oi)
+		ii := mockIntermediaryInstitution()
+		fwm.SetIntermediaryInstitution(ii)
+		iAccount := mockInstitutionAccount()
+		fwm.SetInstitutionAccount(iAccount)
+		bc := mockBeneficiaryCustomer()
+		fwm.SetBeneficiaryCustomer(bc)
+		ri := mockRemittance()
+		fwm.SetRemittance(ri)
+		str := mockSenderToReceiver()
+		fwm.SetSenderToReceiver(str)*/
 
 	// Unstructured Addenda
-/*	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)*/
+	/*	ua := mockUnstructuredAddenda()
+		fwm.SetUnstructuredAddenda(ua)*/
 
 	// Related Remittance Information
-/*	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)*/
+	/*	rr := mockRelatedRemittance()
+		fwm.SetRelatedRemittance(rr)*/
 
 	// Structured Remittance Information
 	//ro := mockRemittanceOriginator()
@@ -801,12 +799,12 @@ func TestFedWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
 	fwm.SetSenderToReceiver(str)
 
 	// Unstructured Addenda
-/*	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)*/
+	/*	ua := mockUnstructuredAddenda()
+		fwm.SetUnstructuredAddenda(ua)*/
 
 	// Related Remittance Information
-/*	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)*/
+	/*	rr := mockRelatedRemittance()
+		fwm.SetRelatedRemittance(rr)*/
 
 	// Structured Remittance Information
 	//ro := mockRemittanceOriginator()
@@ -842,7 +840,6 @@ func TestFedWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
 		t.Errorf("%T: %s", err, err)
 	}
 }
-
 
 // TestFedWireMessageWriteCheckSameDaySettlement writes a FedWireMessage to a file with BusinessFunctionCode = CKS
 func TestFedWireMessageWriteCheckSameDaySettlement(t *testing.T) {
@@ -1434,11 +1431,12 @@ func writeFile(file *File) error {
 	}
 	// ToDo:  Write to disk?
 	// We want to write the file to an io.Writer
-	w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-	log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()
+	/*	w := NewWriter(os.Stdout)
+		if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+		}
+		w.Flush()
+	*/
 	r := NewReader(strings.NewReader(b.String()))
 	fwmFile, err := r.Read()
 	if err != nil {

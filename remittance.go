@@ -6,8 +6,6 @@ package wire
 
 import "strings"
 
-// ToDo:  SwiftRemittance?
-
 // Remittance is the remittance information
 type Remittance struct {
 	// tag

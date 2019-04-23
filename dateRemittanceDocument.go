@@ -65,5 +65,5 @@ func (drd *DateRemittanceDocument) fieldInclusion() error {
 
 // DateRemittanceDocumentField gets a string of the DateRemittanceDocument field
 func (drd *DateRemittanceDocument) DateRemittanceDocumentField() string {
-	return drd.alphaField(drd.DateRemittanceDocument,8)
+	return drd.alphaField(drd.DateRemittanceDocument, 8)
 }

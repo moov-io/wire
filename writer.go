@@ -91,44 +91,51 @@ func (w *Writer) writeMandatory(fwm FedWireMessage) error {
 		if _, err := w.w.WriteString(fwm.GetSenderSupplied().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
+
 	if fwm.TypeSubType != nil {
 		if _, err := w.w.WriteString(fwm.GetTypeSubType().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("TypeSubType", ErrFieldRequired)
 	}
 	if fwm.InputMessageAccountabilityData != nil {
 		if _, err := w.w.WriteString(fwm.GetInputMessageAccountabilityData().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
 	if fwm.Amount != nil {
 		if _, err := w.w.WriteString(fwm.GetAmount().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("Amount", ErrFieldRequired)
 	}
 	if fwm.SenderDepositoryInstitution != nil {
 		if _, err := w.w.WriteString(fwm.GetSenderDepositoryInstitution().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
 	}
-
 	if fwm.ReceiverDepositoryInstitution != nil {
 		if _, err := w.w.WriteString(fwm.GetReceiverDepositoryInstitution().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
 	if fwm.BusinessFunctionCode != nil {
 		if _, err := w.w.WriteString(fwm.GetBusinessFunctionCode().String() + "\n"); err != nil {
 			return err
 		}
-		// ToDo; Return error
+	} else {
+		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
 	return nil
 }

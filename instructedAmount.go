@@ -10,8 +10,6 @@ import "strings"
 type InstructedAmount struct {
 	// tag
 	tag string
-	// ToDo:  create a CurrencyCodeAmount Type
-
 	// CurrencyCode
 	CurrencyCode string `json:"currencyCode,omitempty"`
 	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker

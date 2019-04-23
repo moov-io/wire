@@ -37,7 +37,6 @@ func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
 // successful parsing and data validity.
 func (imad *InputMessageAccountabilityData) Parse(record string) {
 	imad.tag = record[:6]
-	// ToDo: Check ValidateDate usage
 	imad.InputCycleDate = imad.parseStringField(record[6:14])
 	imad.InputSource = imad.parseStringField(record[14:22])
 	imad.InputSequenceNumber = imad.parseStringField(record[22:28])

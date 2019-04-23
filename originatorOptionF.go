@@ -119,7 +119,6 @@ func (oof *OriginatorOptionF) Validate() error {
 	if err := oof.fieldInclusion(); err != nil {
 		return err
 	}
-	// ToDo; PartyIdentifier Validation
 	if err := oof.isAlphanumeric(oof.Name); err != nil {
 		return fieldError("Name", err, oof.Name)
 	}

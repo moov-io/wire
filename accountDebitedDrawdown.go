@@ -103,7 +103,7 @@ func (debitDD *AccountDebitedDrawdown) fieldInclusion() error {
 	if debitDD.Identifier == "" {
 		return fieldError("Identifier", ErrFieldRequired)
 	}
-	if debitDD.Name== "" {
+	if debitDD.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
 	return nil

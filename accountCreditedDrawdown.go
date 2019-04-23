@@ -39,7 +39,6 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) {
 // String writes AccountCreditedDrawdown
 func (creditDD *AccountCreditedDrawdown) String() string {
 	var buf strings.Builder
-	// ToDo: Separator
 	buf.Grow(15)
 	buf.WriteString(creditDD.tag)
 	buf.WriteString(creditDD.DrawdownCreditAccountNumberField())
