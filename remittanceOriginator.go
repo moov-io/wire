@@ -21,7 +21,7 @@ type RemittanceOriginator struct {
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 	// CountryOfResidence
-	CountryOfResidence string `json:"countryOfResidence, omitempty"`
+	CountryOfResidence string `json:"countryOfResidence,omitempty"`
 	// ContactName
 	ContactName string `json:"contactName,omitempty"`
 	// ContactPhoneNumber

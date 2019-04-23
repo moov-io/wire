@@ -21,7 +21,7 @@ type RemittanceBeneficiary struct {
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
 	// CountryOfResidence
-	CountryOfResidence string `json:"countryOfResidence, omitempty"`
+	CountryOfResidence string `json:"countryOfResidence,omitempty"`
 
 	// validator is composed for data validation
 	validator
