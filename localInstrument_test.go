@@ -3,7 +3,7 @@ package wire
 // mockLocalInstrument creates a LocalInstrument
 func mockLocalInstrument() *LocalInstrument {
 	li := NewLocalInstrument()
-	li.LocalInstrumentCode = "ANSI"
+	li.LocalInstrumentCode = ANSIX12format
 	li.ProprietaryCode = ""
 	return li
 }

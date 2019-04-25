@@ -72,7 +72,7 @@ func (debitDD *AccountDebitedDrawdown) Validate() error {
 	// Can only be these Identification Codes
 	switch debitDD.IdentificationCode {
 	case
-		"D":
+		DemandDepositAccountNumber:
 	default:
 		return fieldError("IdentificationCode", ErrIdentificationCode, debitDD.IdentificationCode)
 	}

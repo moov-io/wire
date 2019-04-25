@@ -121,7 +121,6 @@ func (rb *RemittanceBeneficiary) Validate() error {
 			return fieldError("IdentificationCode", err, rb.IdentificationCode)
 		}
 	}
-
 	if err := rb.isAlphanumeric(rb.IdentificationNumber); err != nil {
 		return fieldError("IdentificationNumber", err, rb.IdentificationNumber)
 	}
@@ -189,7 +188,7 @@ func (rb *RemittanceBeneficiary) Validate() error {
 	}
 	if rb.IdentificationCode != PICDateBirthPlace {
 		if rb.RemittanceData.DateBirthPlace != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
+			return fieldError("DateBirthPlace", ErrInvalidProperty)
 		}
 	}
 	return nil

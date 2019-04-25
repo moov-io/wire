@@ -17,7 +17,9 @@ var (
 	// ErrNonAlphanumeric is returned when a field has non-alphanumeric characters
 	ErrNonAlphanumeric = errors.New("has non alphanumeric characters")
 	// ErrNonAmount is returned for an incorrect wire amount format
-	ErrNonAmount = errors.New("is an incorrect wire amount format")
+	ErrNonAmount = errors.New("is an incorrect amount format")
+	// ErrNonCurrencyCode is returned for an incorrect currency code
+	ErrNonCurrencyCode = errors.New("is not a recognized currency code")
 	// ErrUpperAlpha is returned when a field is not in uppercase
 	ErrUpperAlpha = errors.New("is not uppercase A-Z or 0-9")
 	// ErrFieldInclusion is returned when a field is mandatory and has a default value

@@ -60,6 +60,9 @@ func (creditDD *AccountCreditedDrawdown) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
+	if creditDD.DrawdownCreditAccountNumber == "" {
+		return fieldError("DrawdownCreditAccountNumber", ErrFieldRequired)
+	}
 	return nil
 }
 

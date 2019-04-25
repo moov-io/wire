@@ -345,7 +345,10 @@ func (v *validator) isAdjustmentReasonCode(code string) error {
 
 func (v *validator) isCurrencyCode(code string) error {
 	_, err := currency.ParseISO(code)
-	return err
+	if err != nil {
+		return ErrNonCurrencyCode
+	}
+	return nil
 }
 
 // isCentury validates a 2 digit century 20-29
