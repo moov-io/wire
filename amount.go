@@ -61,6 +61,9 @@ func (a *Amount) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (a *Amount) fieldInclusion() error {
+	if a.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
 	return nil
 }
 

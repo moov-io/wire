@@ -1616,3 +1616,24 @@ func TestFedWireMessageWriteCustomerTransferPlusRemittanceInformationStructured(
 		t.Errorf("%T: %s", err, err)
 	}
 }
+
+// TestFedWireMessageWriteCustomerTransferPlusUnstructuredAddenda writes a FedWireMessage to a file with BusinessFunctionCode = CTP and
+// LocalInstrumentCode = "ANSI"
+func TestFedWireMessageWriteCustomerTransferPlusUnstructuredAddenda(t *testing.T) {
+	file := NewFile()
+	fwm := createCustomerTransferData()
+
+	fwm.LocalInstrument.LocalInstrumentCode = ANSIX12format
+	fwm.LocalInstrument.ProprietaryCode = ""
+	fwm.SetLocalInstrument(fwm.LocalInstrument)
+
+	// Unstructured Addenda
+	ua := mockUnstructuredAddenda()
+	fwm.SetUnstructuredAddenda(ua)
+
+	file.AddFedWireMessage(fwm)
+
+	if err := writeFile(file); err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+}

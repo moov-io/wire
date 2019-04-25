@@ -4,6 +4,7 @@
 
 // ToDo: Change FedWireMessage to FED...
 // ToDo: Remove empty functions after all validation checks are coded
+// ToDo: if utf8.RuneCountInString(record) != NNN {..}  checks
 
 package wire
 
@@ -154,36 +155,11 @@ func (fwm *FedWireMessage) verify() error {
 	if err := fwm.isAmountValid(); err != nil {
 		return err
 	}
-	if fwm.PreviousMessageIdentifier != nil {
-		if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
-			return err
-		}
+
+	if err := fwm.otherTransferInformation(); err != nil {
+		return err
 	}
-	if fwm.LocalInstrument != nil {
-		if err := fwm.isLocalInstrumentCodeValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.PaymentNotification != nil {
-		if err := fwm.isPaymentNotificationValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.Charges != nil {
-		if err := fwm.isChargesValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.InstructedAmount != nil {
-		if err := fwm.isInstructedAmountValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.ExchangeRate != nil {
-		if err := fwm.isExchangeRateValid(); err != nil {
-			return err
-		}
-	}
+
 	if fwm.BeneficiaryIntermediaryFI != nil {
 		if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
 			return err
@@ -249,50 +225,8 @@ func (fwm *FedWireMessage) verify() error {
 			return err
 		}
 	}
-	if fwm.RelatedRemittance != nil {
-		if err := fwm.isRelatedRemittanceValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.RemittanceOriginator != nil {
-		if err := fwm.isRemittanceOriginatorValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.RemittanceBeneficiary != nil {
-		if err := fwm.isRemittanceBeneficiaryValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.PrimaryRemittanceDocument != nil {
-		if err := fwm.isPrimaryRemittanceDocumentValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.ActualAmountPaid != nil {
-		if err := fwm.isActualAmountPaidValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.GrossAmountRemittanceDocument != nil {
-		if err := fwm.isGrossAmountRemittanceDocumentValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.Adjustment != nil {
-		if err := fwm.isAdjustmentValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.DateRemittanceDocument != nil {
-		if err := fwm.isDateRemittanceDocumentValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.RemittanceFreeText != nil {
-		if err := fwm.isRemittanceFreeTextValid(); err != nil {
-			return err
-		}
+	if err := fwm.remittance(); err != nil {
+		return err
 	}
 	return nil
 }
@@ -1967,6 +1901,90 @@ func (fwm *FedWireMessage) isRemittanceFreeTextValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("RemittanceFreeText", "RemittanceFreeText",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
+	}
+	return nil
+}
+
+
+func (fwm *FedWireMessage) otherTransferInformation() error {
+	if fwm.PreviousMessageIdentifier != nil {
+		if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.LocalInstrument != nil {
+		if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.PaymentNotification != nil {
+		if err := fwm.isPaymentNotificationValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.Charges != nil {
+		if err := fwm.isChargesValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.InstructedAmount != nil {
+		if err := fwm.isInstructedAmountValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.ExchangeRate != nil {
+		if err := fwm.isExchangeRateValid(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (fwm *FedWireMessage) remittance() error {
+	if fwm.RelatedRemittance != nil {
+		if err := fwm.isRelatedRemittanceValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.RemittanceOriginator != nil {
+		if err := fwm.isRemittanceOriginatorValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.RemittanceBeneficiary != nil {
+		if err := fwm.isRemittanceBeneficiaryValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.PrimaryRemittanceDocument != nil {
+		if err := fwm.isPrimaryRemittanceDocumentValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.ActualAmountPaid != nil {
+		if err := fwm.isActualAmountPaidValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.GrossAmountRemittanceDocument != nil {
+		if err := fwm.isGrossAmountRemittanceDocumentValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.Adjustment != nil {
+		if err := fwm.isAdjustmentValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.DateRemittanceDocument != nil {
+		if err := fwm.isDateRemittanceDocumentValid(); err != nil {
+			return err
+		}
+	}
+	if fwm.RemittanceFreeText != nil {
+		if err := fwm.isRemittanceFreeTextValid(); err != nil {
+			return err
+		}
 	}
 	return nil
 }

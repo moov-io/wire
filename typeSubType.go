@@ -67,6 +67,12 @@ func (tst *TypeSubType) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (tst *TypeSubType) fieldInclusion() error {
+	if tst.TypeCode == "" {
+		return fieldError("TypeCode", ErrFieldRequired)
+	}
+	if tst.SubTypeCode == "" {
+		return fieldError("SubTypeCode", ErrFieldRequired)
+	}
 	return nil
 }
 

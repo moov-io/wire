@@ -21,8 +21,8 @@ func TestMockActualAmountPaid(t *testing.T) {
 	}
 }
 
-// TestAmountRequired validates Amount is required
-func TestAmountRequired(t *testing.T) {
+// TestActualAmountPaidAmountRequired validates ActualAmountPaid Amount is required
+func TestActualAmountPaidAmountRequired(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.Amount = ""
 	if err := aap.Validate(); err != nil {
@@ -32,7 +32,7 @@ func TestAmountRequired(t *testing.T) {
 	}
 }
 
-// TestCurrencyCodeRequired validates CurrencyCode is required
+// TestActualAmountPaidCurrencyCodeRequired validates ActualAmountPaid CurrencyCode is required
 func TestCurrencyCodeRequired(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.CurrencyCode = ""
@@ -43,8 +43,8 @@ func TestCurrencyCodeRequired(t *testing.T) {
 	}
 }
 
-// TestAmountValid validates Amount
-func TestAmountValid(t *testing.T) {
+// TestActualAmountPaidAmountValid validates Amount
+func TestActualAmountPaidAmountValid(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.Amount = "X,"
 	if err := aap.Validate(); err != nil {
@@ -54,7 +54,7 @@ func TestAmountValid(t *testing.T) {
 	}
 }
 
-// TestCurrencyCodeValid validates Amount
+// TestActualAmountPaidCurrencyCodeValid validates Amount
 func TestCurrencyCodeValid(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.CurrencyCode = "XZP"

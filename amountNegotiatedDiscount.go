@@ -65,6 +65,12 @@ func (nd *AmountNegotiatedDiscount) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
+	if nd.RemittanceAmount.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if nd.RemittanceAmount.CurrencyCode == "" {
+		return fieldError("CurrencyCode", ErrFieldRequired)
+	}
 	return nil
 }
 
