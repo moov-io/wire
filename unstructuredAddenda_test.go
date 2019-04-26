@@ -42,3 +42,14 @@ func TestAddendaAlphaNumeric(t *testing.T) {
 		}
 	}
 }
+
+// TestAddendaLengthRequired validates UnstructuredAddenda Length is required
+func TestAddendaLengthRequired(t *testing.T) {
+	ua := mockUnstructuredAddenda()
+	ua.AddendaLength = ""
+	if err := ua.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

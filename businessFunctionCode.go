@@ -46,8 +46,8 @@ func (bfc *BusinessFunctionCode) String() string {
 	var buf strings.Builder
 	buf.Grow(12)
 	buf.WriteString(bfc.tag)
-	buf.WriteString(bfc.BusinessFunctionCode)
-	buf.WriteString(bfc.TransactionTypeCode)
+	buf.WriteString(bfc.BusinessFunctionCodeField())
+	buf.WriteString(bfc.TransactionTypeCodeField())
 	return buf.String()
 }
 
@@ -72,7 +72,7 @@ func (bfc *BusinessFunctionCode) Validate() error {
 // invalid the WIRE will return an error.
 func (bfc *BusinessFunctionCode) fieldInclusion() error {
 
-	// only element 01 (BusinessFunctionCode) is required
+	// only BusinessFunctionCode is required
 	if bfc.BusinessFunctionCode == "" {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode)
 	}

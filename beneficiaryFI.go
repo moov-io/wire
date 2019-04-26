@@ -67,7 +67,11 @@ func (bfi *BeneficiaryFI) Validate() error {
 	// Can only be these Identification Codes
 	switch bfi.FinancialInstitution.IdentificationCode {
 	case
-		"B", "C", "D", "F", "U":
+		SWIFTBankIdentifierCode,
+		CHIPSParticipant,
+		DemandDepositAccountNumber,
+		FEDRoutingNumber,
+		CHIPSIdentifier:
 	default:
 		return fieldError("IdentificationCode", ErrIdentificationCode, bfi.FinancialInstitution.IdentificationCode)
 	}
@@ -86,18 +90,18 @@ func (bfi *BeneficiaryFI) Validate() error {
 	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, bfi.FinancialInstitution.Address.AddressLineThree)
 	}
-	if bfi.FinancialInstitution.IdentificationCode != "" && bfi.FinancialInstitution.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if bfi.FinancialInstitution.IdentificationCode == "" && bfi.FinancialInstitution.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (bfi *BeneficiaryFI) fieldInclusion() error {
+	if bfi.FinancialInstitution.IdentificationCode != "" && bfi.FinancialInstitution.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if bfi.FinancialInstitution.IdentificationCode == "" && bfi.FinancialInstitution.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

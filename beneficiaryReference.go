@@ -60,6 +60,9 @@ func (br *BeneficiaryReference) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (br *BeneficiaryReference) fieldInclusion() error {
+	if br.BeneficiaryReference == "" {
+		return fieldError("BeneficiaryReference", ErrFieldRequired)
+	}
 	return nil
 }
 

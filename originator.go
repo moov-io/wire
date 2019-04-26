@@ -79,18 +79,18 @@ func (o *Originator) Validate() error {
 	if err := o.isAlphanumeric(o.Personal.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, o.Personal.Address.AddressLineThree)
 	}
-	if o.Personal.IdentificationCode != "" && o.Personal.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if o.Personal.IdentificationCode == "" && o.Personal.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (o *Originator) fieldInclusion() error {
+	if o.Personal.IdentificationCode != "" && o.Personal.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if o.Personal.IdentificationCode == "" && o.Personal.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

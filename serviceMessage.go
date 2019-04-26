@@ -139,6 +139,11 @@ func (sm *ServiceMessage) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (sm *ServiceMessage) fieldInclusion() error {
+	// If ServiceMessage is defined, LineOne is required
+	if sm.LineOne == "" {
+		return fieldError("LineOne", ErrFieldRequired)
+	}
+
 	return nil
 }
 

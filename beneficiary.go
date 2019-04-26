@@ -80,18 +80,18 @@ func (ben *Beneficiary) Validate() error {
 	if err := ben.isAlphanumeric(ben.Personal.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, ben.Personal.Address.AddressLineThree)
 	}
-	if ben.Personal.IdentificationCode != "" && ben.Personal.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if ben.Personal.IdentificationCode == "" && ben.Personal.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ben *Beneficiary) fieldInclusion() error {
+	if ben.Personal.IdentificationCode != "" && ben.Personal.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if ben.Personal.IdentificationCode == "" && ben.Personal.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

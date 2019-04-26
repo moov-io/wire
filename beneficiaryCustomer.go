@@ -85,6 +85,10 @@ func (bc *BeneficiaryCustomer) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (bc *BeneficiaryCustomer) fieldInclusion() error {
+	// If the BeneficiaryCustomer is defined the default required field is SwiftFieldTag
+	if bc.CoverPayment.SwiftFieldTag == "" {
+		return fieldError("SwiftFieldTag", ErrFieldRequired)
+	}
 	return nil
 }
 

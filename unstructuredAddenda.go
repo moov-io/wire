@@ -68,6 +68,11 @@ func (ua *UnstructuredAddenda) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ua *UnstructuredAddenda) fieldInclusion() error {
+	// If UnstructuredAddenda is defined, AddendaLength is required, however it could be "0000"), but
+	// I'm not sure of the point
+	if ua.AddendaLength == "" {
+		return fieldError("AddendLength", ErrFieldRequired)
+	}
 	return nil
 }
 

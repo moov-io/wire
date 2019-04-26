@@ -63,6 +63,7 @@ func TestLineThreeAlphaNumeric(t *testing.T) {
 		}
 	}
 }
+
 // TestLineFourAlphaNumeric validates ServiceMessage LineFour is alphanumeric
 func TestLineFourAlphaNumeric(t *testing.T) {
 	sm := mockServiceMessage()
@@ -157,6 +158,17 @@ func TestLineTwelveAlphaNumeric(t *testing.T) {
 	sm.LineTwelve = "®"
 	if err := sm.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestLineOneRequired validates ServiceMessage LineOne is required
+func TestLineOneRequired(t *testing.T) {
+	sm := mockServiceMessage()
+	sm.LineOne = ""
+	if err := sm.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

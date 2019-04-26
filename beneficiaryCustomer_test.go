@@ -1,5 +1,10 @@
 package wire
 
+import (
+	"github.com/moov-io/base"
+	"testing"
+)
+
 // mockBeneficiaryCustomer creates a BeneficiaryCustomer
 func mockBeneficiaryCustomer() *BeneficiaryCustomer {
 	bc := NewBeneficiaryCustomer()
@@ -10,4 +15,89 @@ func mockBeneficiaryCustomer() *BeneficiaryCustomer {
 	bc.CoverPayment.SwiftLineFour = "Swift Line Four"
 	bc.CoverPayment.SwiftLineFive = "Swift Line Five"
 	return bc
+}
+
+// TestMockBeneficiaryCustomer validates mockBeneficiaryCustomer
+func TestMockBeneficiaryCustomer(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	if err := bc.Validate(); err != nil {
+		t.Error("mockBeneficiaryCustomer does not validate and will break other tests")
+	}
+}
+
+// TestBeneficiaryCustomerSwiftFieldTagAlphaNumeric validates BeneficiaryCustomer SwiftFieldTag is alphanumeric
+func TestBeneficiaryCustomerSwiftFieldTagAlphaNumeric(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftFieldTag = "®"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestBeneficiaryCustomerSwiftLineOneAlphaNumeric validates BeneficiaryCustomer SwiftLineOne is alphanumeric
+func TestBeneficiaryCustomerSwiftLineOneAlphaNumeric(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftLineOne = "®"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestBeneficiaryCustomerSwiftLineTwoAlphaNumeric validates BeneficiaryCustomer SwiftLineTwo is alphanumeric
+func TestBeneficiaryCustomerSwiftLineTwoAlphaNumeric(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftLineTwo = "®"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestBeneficiaryCustomerSwiftLineThreeAlphaNumeric validates BeneficiaryCustomer SwiftLineThree is alphanumeric
+func TestBeneficiaryCustomerSwiftLineThreeAlphaNumeric(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftLineThree = "®"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestBeneficiaryCustomerSwiftLineFourAlphaNumeric validates BeneficiaryCustomer SwiftLineFour is alphanumeric
+func TestBeneficiaryCustomerSwiftLineFourAlphaNumeric(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftLineFour = "®"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric validates BeneficiaryCustomer SwiftLineFive is alphanumeric
+func TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftLineFive = "®"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestBeneficiaryCustomerSwiftFieldTagRequired validates BeneficiaryCustomer SwiftFieldTag is required
+func TestBeneficiaryCustomerSwiftFieldTagRequired(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.CoverPayment.SwiftFieldTag = ""
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 }

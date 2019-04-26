@@ -1905,7 +1905,6 @@ func (fwm *FedWireMessage) isRemittanceFreeTextValid() error {
 	return nil
 }
 
-
 func (fwm *FedWireMessage) otherTransferInformation() error {
 	if fwm.PreviousMessageIdentifier != nil {
 		if err := fwm.isPreviousMessageIdentifierValid(); err != nil {

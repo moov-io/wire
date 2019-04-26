@@ -25,8 +25,8 @@ func TestMockAccountDebitedDrawdown(t *testing.T) {
 	}
 }
 
-// TestIdentifierAlphaNumeric validates Name is alphanumeric
-func TestIdentifierAlphaNumeric(t *testing.T) {
+// TestADDIdentifierAlphaNumeric validates Name is alphanumeric
+func TestADDIdentifierAlphaNumeric(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Identifier = "®"
 	if err := debitDD.Validate(); err != nil {
@@ -36,8 +36,8 @@ func TestIdentifierAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestNameAlphaNumeric validates Identifier is alphanumeric
-func TestNameAlphaNumeric(t *testing.T) {
+// TestADDNameAlphaNumeric validates Identifier is alphanumeric
+func TestADDNameAlphaNumeric(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Name = "®"
 	if err := debitDD.Validate(); err != nil {
@@ -47,8 +47,8 @@ func TestNameAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestAddressLineOneAlphaNumeric validates AddressLineOne is alphanumeric
-func TestAddressLineOneAlphaNumeric(t *testing.T) {
+// TestADDAddressLineOneAlphaNumeric validates AddressLineOne is alphanumeric
+func TestADDAddressLineOneAlphaNumeric(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Address.AddressLineOne = "®"
 	if err := debitDD.Validate(); err != nil {
@@ -58,8 +58,8 @@ func TestAddressLineOneAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestAddressLineTwoAlphaNumeric validates AddressLineTwo is alphanumeric
-func TestAddressLineTwoAlphaNumeric(t *testing.T) {
+// TestADDAddressLineTwoAlphaNumeric validates AddressLineTwo is alphanumeric
+func TestADDAddressLineTwoAlphaNumeric(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Address.AddressLineTwo = "®"
 	if err := debitDD.Validate(); err != nil {
@@ -69,8 +69,8 @@ func TestAddressLineTwoAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestAddressLineThreeAlphaNumeric validates AddressLineThree is alphanumeric
-func TestAddressLineThreeAlphaNumeric(t *testing.T) {
+// TestADDAddressLineThreeAlphaNumeric validates AddressLineThree is alphanumeric
+func TestADDAddressLineThreeAlphaNumeric(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Address.AddressLineThree = "®"
 	if err := debitDD.Validate(); err != nil {
@@ -80,8 +80,8 @@ func TestAddressLineThreeAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestIdentifierRequired validates Identifier is required
-func TestIdentifierRequired(t *testing.T) {
+// TestADDIdentifierRequired validates Identifier is required
+func TestADDIdentifierRequired(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Identifier = ""
 	if err := debitDD.Validate(); err != nil {
@@ -91,8 +91,8 @@ func TestIdentifierRequired(t *testing.T) {
 	}
 }
 
-// TestNameRequired validates Name is required
-func TestNameRequired(t *testing.T) {
+// TestADDNameRequired validates Name is required
+func TestADDNameRequired(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.Name = ""
 	if err := debitDD.Validate(); err != nil {
@@ -102,8 +102,8 @@ func TestNameRequired(t *testing.T) {
 	}
 }
 
-// TestIdentificationRequired validates IdentificationCode is required
-func TestIdentificationCodeNull(t *testing.T) {
+// TestADDIdentificationRequired validates IdentificationCode is required
+func TestADDIdentificationCodeRequired(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.IdentificationCode = ""
 	if err := debitDD.Validate(); err != nil {
@@ -113,10 +113,21 @@ func TestIdentificationCodeNull(t *testing.T) {
 	}
 }
 
-// TestIdentificationCodeValid validates IdentificationCode
-func TestIdentificationCodeRequired(t *testing.T) {
+// TestADDIdentificationCodeValid validates IdentificationCode
+func TestADDIdentificationCodeValid(t *testing.T) {
 	debitDD := mockAccountDebitedDrawdown()
 	debitDD.IdentificationCode = TaxIdentificationNumber
+	if err := debitDD.Validate(); err != nil {
+		if !base.Match(err, ErrIdentificationCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestADDIdentificationCodeBogus validates IdentificationCode if the IdentificationCode is bogus
+func TestIdentificationCodeBogus(t *testing.T) {
+	debitDD := mockAccountDebitedDrawdown()
+	debitDD.IdentificationCode = "Card ID"
 	if err := debitDD.Validate(); err != nil {
 		if !base.Match(err, ErrIdentificationCode) {
 			t.Errorf("%T: %s", err, err)

@@ -1,5 +1,7 @@
 package wire
 
+import "testing"
+
 // mockCharges creates a Charges
 func mockCharges() *Charges {
 	c := NewCharges()
@@ -9,4 +11,12 @@ func mockCharges() *Charges {
 	c.SendersChargesThree = "USD3,99"
 	c.SendersChargesFour = "USD1,00"
 	return c
+}
+
+// TestMockCharges validates mockCharges
+func TestMockCharges(t *testing.T) {
+	ben := mockCharges()
+	if err := ben.Validate(); err != nil {
+		t.Error("mockCharges does not validate and will break other tests")
+	}
 }
