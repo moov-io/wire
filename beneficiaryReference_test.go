@@ -30,14 +30,3 @@ func TestBeneficiaryReferenceAlphaNumeric(t *testing.T) {
 		}
 	}
 }
-
-// TestBeneficiaryReferenceRequired validates BeneficiaryReference is required
-func TestBeneficiaryReferenceRequired(t *testing.T) {
-	br := mockBeneficiaryReference()
-	br.BeneficiaryReference = ""
-	if err := br.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}

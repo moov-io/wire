@@ -60,9 +60,9 @@ func (ob *OriginatorToBeneficiary) String() string {
 // Validate performs WIRE format rule checks on OriginatorToBeneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (ob *OriginatorToBeneficiary) Validate() error {
-	if err := ob.fieldInclusion(); err != nil {
+	/*	if err := ob.fieldInclusion(); err != nil {
 		return err
-	}
+	}*/
 	if err := ob.isAlphanumeric(ob.LineOne); err != nil {
 		return fieldError("LineOne", err, ob.LineOne)
 	}
@@ -80,9 +80,9 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ob *OriginatorToBeneficiary) fieldInclusion() error {
+/*func (ob *OriginatorToBeneficiary) fieldInclusion() error {
 	return nil
-}
+}*/
 
 // LineOneField gets a string of the LineOne field
 func (ob *OriginatorToBeneficiary) LineOneField() string {

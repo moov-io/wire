@@ -48,9 +48,9 @@ func (br *BeneficiaryReference) String() string {
 // Validate performs WIRE format rule checks on BeneficiaryReference and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (br *BeneficiaryReference) Validate() error {
-	if err := br.fieldInclusion(); err != nil {
+	/*	if err := br.fieldInclusion(); err != nil {
 		return err
-	}
+	}*/
 	if err := br.isAlphanumeric(br.BeneficiaryReference); err != nil {
 		return fieldError("BeneficiaryReference", err, br.BeneficiaryReference)
 	}
@@ -59,12 +59,9 @@ func (br *BeneficiaryReference) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (br *BeneficiaryReference) fieldInclusion() error {
-	if br.BeneficiaryReference == "" {
-		return fieldError("BeneficiaryReference", ErrFieldRequired)
-	}
+/*func (br *BeneficiaryReference) fieldInclusion() error {
 	return nil
-}
+}*/
 
 // BeneficiaryReferenceField gets a string of the BeneficiaryReference field
 func (br *BeneficiaryReference) BeneficiaryReferenceField() string {

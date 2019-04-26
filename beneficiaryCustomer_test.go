@@ -90,14 +90,3 @@ func TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric(t *testing.T) {
 		}
 	}
 }
-
-// TestBeneficiaryCustomerSwiftFieldTagRequired validates BeneficiaryCustomer SwiftFieldTag is required
-func TestBeneficiaryCustomerSwiftFieldTagRequired(t *testing.T) {
-	bc := mockBeneficiaryCustomer()
-	bc.CoverPayment.SwiftFieldTag = ""
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
