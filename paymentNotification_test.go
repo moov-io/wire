@@ -26,10 +26,76 @@ func TestMockPaymentNotification(t *testing.T) {
 	}
 }
 
+// TestPaymentNotificationIndicatorNumeric validates PaymentNotificationIndicator is numeric
+func TestPaymentNotificationIndicatorNumeric(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.PaymentNotificationIndicator = "Z"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrNonNumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
 // TestPaymentNotificationContactNotificationElectronicAddressAlphaNumeric validates PaymentNotification ContactNotificationElectronicAddress is alphanumeric
 func TestContactNotificationElectronicAddressAlphaNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.ContactNotificationElectronicAddress = "®"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestPaymentNotificationContactNameAlphaNumeric validates PaymentNotification ContactName is alphanumeric
+func TestContactNameAlphaNumeric(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.ContactName = "®"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestPaymentNotificationContactPhoneNumberAlphaNumeric validates PaymentNotification ContactPhoneNumber is alphanumeric
+func TestContactPhoneNumberAlphaNumeric(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.ContactPhoneNumber = "®"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestPaymentNotificationContactMobileNumberAlphaNumeric validates PaymentNotification ContactMobileNumber is alphanumeric
+func TestContactMobileNumberAlphaNumeric(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.ContactMobileNumber = "®"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestPaymentNotificationContactFaxNumberAlphaNumeric validates PaymentNotification ContactFaxNumber is alphanumeric
+func TestContactContactFaxNumberNumeric(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.ContactFaxNumber = "®"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestPaymentNotificationEndToEndIdentificationAlphaNumeric validates PaymentNotification EndToEndIdentification is alphanumeric
+func TestContactEndToEndIdentificationNumeric(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.EndToEndIdentification = "®"
 	if err := pn.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)

@@ -48,18 +48,9 @@ func (sr *SenderReference) String() string {
 // Validate performs WIRE format rule checks on SenderReference and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (sr *SenderReference) Validate() error {
-	if err := sr.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := sr.isAlphanumeric(sr.SenderReference); err != nil {
 		return fieldError("SenderReference", err, sr.SenderReference)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (sr *SenderReference) fieldInclusion() error {
 	return nil
 }
 

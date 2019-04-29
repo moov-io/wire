@@ -48,18 +48,9 @@ func (pmi *PreviousMessageIdentifier) String() string {
 // Validate performs WIRE format rule checks on PreviousMessageIdentifier and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (pmi *PreviousMessageIdentifier) Validate() error {
-	if err := pmi.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := pmi.isAlphanumeric(pmi.PreviousMessageIdentifier); err != nil {
 		return fieldError("PreviousMessageIdentifier", err, pmi.PreviousMessageIdentifier)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (pmi *PreviousMessageIdentifier) fieldInclusion() error {
 	return nil
 }
 

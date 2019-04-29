@@ -15,8 +15,8 @@ func mockCharges() *Charges {
 
 // TestMockCharges validates mockCharges
 func TestMockCharges(t *testing.T) {
-	ben := mockCharges()
-	if err := ben.Validate(); err != nil {
+	c := mockCharges()
+	if err := c.Validate(); err != nil {
 		t.Error("mockCharges does not validate and will break other tests")
 	}
 }

@@ -13,6 +13,7 @@ type PaymentNotification struct {
 	// PaymentNotificationIndicator
 	// * `0 - 6` - Reserved for market practice conventions.
 	// * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+	// ToDo: Change to just Indicator?
 	PaymentNotificationIndicator string `json:"paymentNotificationIndicator,omitempty"`
 	// ContactNotificationElectronicAddress
 	ContactNotificationElectronicAddress string `json:"contactNotificationElectronicAddress,omitempty"`

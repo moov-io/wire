@@ -41,16 +41,25 @@ func (v *validator) isNumeric(s string) error {
 	return nil
 }
 
-// isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
+// isAmount checks if a string only contains onc comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")
-	str = strings.Trim(s, ".")
 	if amountRegex.MatchString(str) {
 		// [^ [0-9],.]
 		return ErrNonAmount
 	}
 	return nil
 }
+
+/*// isAmount checks if a string only contains onc decmal and ASCII numeric (0-9) characters
+func (v *validator) isAmountDecimal(s string) error {
+	str := strings.Trim(s, ".")
+	if amountRegex.MatchString(str) {
+		// [^ [0-9],.]
+		return ErrNonAmount
+	}
+	return nil
+}*/
 
 // isAmountImplied checks if a string only contains only ASCII numeric (0-9) characters, decimal precision is
 // implied (2), and no commas

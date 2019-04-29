@@ -49,20 +49,13 @@ func (eRate *ExchangeRate) String() string {
 // Validate performs WIRE format rule checks on ExchangeRate and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (eRate *ExchangeRate) Validate() error {
-	if err := eRate.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := eRate.isAmount(eRate.ExchangeRate); err != nil {
 		return fieldError("ExchangeRate", err, eRate.ExchangeRate)
 	}
 	return nil
 }
 
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (eRate *ExchangeRate) fieldInclusion() error {
-	return nil
-}
+
 
 // ExchangeRateField gets a string of the ExchangeRate field
 func (eRate *ExchangeRate) ExchangeRateField() string {
