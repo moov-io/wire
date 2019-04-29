@@ -697,12 +697,12 @@ func (r *Reader) parseFIBeneficiary() error {
 
 func (r *Reader) parseFIBeneficiaryAdvice() error {
 	r.tagName = "FIBeneficiaryAdvice"
-	fibfia := new(FIBeneficiaryFIAdvice)
-	fibfia.Parse(r.line)
-	if err := fibfia.Validate(); err != nil {
+	fiba := new(FIBeneficiaryAdvice)
+	fiba.Parse(r.line)
+	if err := fiba.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIBeneficiaryFIAdvice(fibfia)
+	r.currentFedWireMessage.SetFIBeneficiaryAdvice(fiba)
 	return nil
 }
 

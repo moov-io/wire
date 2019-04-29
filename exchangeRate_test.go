@@ -23,7 +23,7 @@ func TestMockExchangeRate(t *testing.T) {
 // TestExchangeRate validates ExchangeRate
 func TestExchangeRateNumeric(t *testing.T) {
 	eRate := mockExchangeRate()
-	eRate.ExchangeRate= "1,--0.00"
+	eRate.ExchangeRate = "1,--0.00"
 	if err := eRate.Validate(); err != nil {
 		if !base.Match(err, ErrNonAmount) {
 			t.Errorf("%T: %s", err, err)

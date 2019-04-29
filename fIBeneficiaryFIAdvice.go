@@ -60,15 +60,27 @@ func (fibfia *FIBeneficiaryFIAdvice) String() string {
 // Validate performs WIRE format rule checks on FIBeneficiaryFIAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fibfia *FIBeneficiaryFIAdvice) Validate() error {
-	if err := fibfia.fieldInclusion(); err != nil {
-		return err
+	if err := fibfia.isAdviceCode(fibfia.Advice.AdviceCode); err != nil {
+		return fieldError("AdviceCode", err, fibfia.Advice.AdviceCode)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fibfia *FIBeneficiaryFIAdvice) fieldInclusion() error {
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineOne); err != nil {
+		return fieldError("LineOne", err, fibfia.Advice.LineOne)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineTwo); err != nil {
+		return fieldError("LineTwo", err, fibfia.Advice.LineTwo)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineThree); err != nil {
+		return fieldError("LineThree", err, fibfia.Advice.LineThree)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineFour); err != nil {
+		return fieldError("LineFour", err, fibfia.Advice.LineFour)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineFive); err != nil {
+		return fieldError("LineFive", err, fibfia.Advice.LineFive)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineSix); err != nil {
+		return fieldError("LineSix", err, fibfia.Advice.LineSix)
+	}
 	return nil
 }
 

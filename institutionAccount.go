@@ -85,6 +85,9 @@ func (iAccount *InstitutionAccount) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (iAccount *InstitutionAccount) fieldInclusion() error {
+	if iAccount.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty)
+	}
 	return nil
 }
 

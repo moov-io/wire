@@ -85,6 +85,9 @@ func (oi *OrderingInstitution) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (oi *OrderingInstitution) fieldInclusion() error {
+	if oi.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty)
+	}
 	return nil
 }
 

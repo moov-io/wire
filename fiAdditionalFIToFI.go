@@ -58,9 +58,6 @@ func (fifi *FIAdditionalFIToFI) String() string {
 // Validate performs WIRE format rule checks on FIAdditionalFIToFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fifi *FIAdditionalFIToFI) Validate() error {
-	if err := fifi.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fifi.AdditionalFIToFI.LineOne)
 	}
@@ -79,12 +76,6 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, fifi.AdditionalFIToFI.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fifi *FIAdditionalFIToFI) fieldInclusion() error {
 	return nil
 }
 

@@ -56,9 +56,6 @@ func (rft *RemittanceFreeText) String() string {
 // Validate performs WIRE format rule checks on RemittanceFreeText and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (rft *RemittanceFreeText) Validate() error {
-	if err := rft.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := rft.isAlphanumeric(rft.LineOne); err != nil {
 		return fieldError("LineOne", err, rft.LineOne)
 	}
@@ -68,12 +65,6 @@ func (rft *RemittanceFreeText) Validate() error {
 	if err := rft.isAlphanumeric(rft.LineThree); err != nil {
 		return fieldError("LineThree", err, rft.LineThree)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (rft *RemittanceFreeText) fieldInclusion() error {
 	return nil
 }
 

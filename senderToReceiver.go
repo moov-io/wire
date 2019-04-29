@@ -60,9 +60,6 @@ func (str *SenderToReceiver) String() string {
 // Validate performs WIRE format rule checks on SenderToReceiver and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (str *SenderToReceiver) Validate() error {
-	if err := str.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := str.isAlphanumeric(str.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, str.CoverPayment.SwiftFieldTag)
 	}
@@ -84,12 +81,6 @@ func (str *SenderToReceiver) Validate() error {
 	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineSix); err != nil {
 		return fieldError("SwiftLineSix", err, str.CoverPayment.SwiftLineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (str *SenderToReceiver) fieldInclusion() error {
 	return nil
 }
 

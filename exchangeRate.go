@@ -55,8 +55,6 @@ func (eRate *ExchangeRate) Validate() error {
 	return nil
 }
 
-
-
 // ExchangeRateField gets a string of the ExchangeRate field
 func (eRate *ExchangeRate) ExchangeRateField() string {
 	return eRate.alphaField(eRate.ExchangeRate, 12)

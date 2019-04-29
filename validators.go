@@ -41,6 +41,8 @@ func (v *validator) isNumeric(s string) error {
 	return nil
 }
 
+// ToDo: Amount Decimal and AmountComma (only 1 per each)
+
 // isAmount checks if a string only contains onc comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")

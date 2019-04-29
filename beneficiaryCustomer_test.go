@@ -90,3 +90,14 @@ func TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric(t *testing.T) {
 		}
 	}
 }
+
+// TestBeneficiaryCustomerSwiftLineSixAlphaNumeric validates BeneficiaryCustomer SwiftLineSix is alphanumeric
+func TestBeneficiaryCustomerSwiftLineSixAlphaNumeric(t *testing.T) {
+	sr := mockBeneficiaryCustomer()
+	sr.CoverPayment.SwiftLineSix = "Test"
+	if err := sr.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

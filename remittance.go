@@ -86,6 +86,12 @@ func (ri *Remittance) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ri *Remittance) fieldInclusion() error {
+	if ri.CoverPayment.SwiftLineFive != "" {
+		return fieldError("SwiftLineFive", ErrInvalidProperty)
+	}
+	if ri.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty)
+	}
 	return nil
 }
 

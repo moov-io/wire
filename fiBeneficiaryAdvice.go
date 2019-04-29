@@ -60,9 +60,6 @@ func (fiba *FIBeneficiaryAdvice) String() string {
 // Validate performs WIRE format rule checks on FIBeneficiaryAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fiba *FIBeneficiaryAdvice) Validate() error {
-	if err := fiba.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := fiba.isAdviceCode(fiba.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, fiba.Advice.AdviceCode)
 	}
@@ -84,12 +81,6 @@ func (fiba *FIBeneficiaryAdvice) Validate() error {
 	if err := fiba.isAlphanumeric(fiba.Advice.LineSix); err != nil {
 		return fieldError("LineSix", err, fiba.Advice.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fiba *FIBeneficiaryAdvice) fieldInclusion() error {
 	return nil
 }
 

@@ -58,9 +58,9 @@ func (bc *BeneficiaryCustomer) String() string {
 // Validate performs WIRE format rule checks on BeneficiaryCustomer and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (bc *BeneficiaryCustomer) Validate() error {
-	/*	if err := bc.fieldInclusion(); err != nil {
+	if err := bc.fieldInclusion(); err != nil {
 		return err
-	}*/
+	}
 	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, bc.CoverPayment.SwiftFieldTag)
 	}
@@ -84,9 +84,12 @@ func (bc *BeneficiaryCustomer) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-/*func (bc *BeneficiaryCustomer) fieldInclusion() error {
+func (bc *BeneficiaryCustomer) fieldInclusion() error {
+	if bc.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty)
+	}
 	return nil
-}*/
+}
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
 func (bc *BeneficiaryCustomer) SwiftFieldTagField() string {

@@ -53,21 +53,12 @@ func (cia *CurrencyInstructedAmount) String() string {
 // Validate performs WIRE format rule checks on CurrencyInstructedAmount and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (cia *CurrencyInstructedAmount) Validate() error {
-	if err := cia.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := cia.isAlphanumeric(cia.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, cia.SwiftFieldTag)
 	}
 	if err := cia.isAmount(cia.Amount); err != nil {
 		return fieldError("Amount", err, cia.Amount)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (cia *CurrencyInstructedAmount) fieldInclusion() error {
 	return nil
 }
 

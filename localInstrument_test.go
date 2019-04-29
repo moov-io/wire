@@ -54,4 +54,3 @@ func TestProprietaryCodeAlphaNumeric(t *testing.T) {
 		}
 	}
 }
-
