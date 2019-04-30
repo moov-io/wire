@@ -60,9 +60,6 @@ func (fiifia *FIIntermediaryFIAdvice) String() string {
 // Validate performs WIRE format rule checks on FIIntermediaryFIAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fiifia *FIIntermediaryFIAdvice) Validate() error {
-	if err := fiifia.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := fiifia.isAdviceCode(fiifia.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, fiifia.Advice.AdviceCode)
 	}
@@ -84,12 +81,6 @@ func (fiifia *FIIntermediaryFIAdvice) Validate() error {
 	if err := fiifia.isAlphanumeric(fiifia.Advice.LineSix); err != nil {
 		return fieldError("LineSix", err, fiifia.Advice.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fiifia *FIIntermediaryFIAdvice) fieldInclusion() error {
 	return nil
 }
 

@@ -60,9 +60,6 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
 // Validate performs WIRE format rule checks on FIDrawdownDebitAccountAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
-	if err := debitDDAdvice.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := debitDDAdvice.isAdviceCode(debitDDAdvice.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, debitDDAdvice.Advice.AdviceCode)
 	}
@@ -84,12 +81,6 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
 	if err := debitDDAdvice.isAlphanumeric(debitDDAdvice.Advice.LineSix); err != nil {
 		return fieldError("LineSix", err, debitDDAdvice.Advice.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) fieldInclusion() error {
 	return nil
 }
 

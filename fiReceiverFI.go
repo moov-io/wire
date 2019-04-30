@@ -58,9 +58,6 @@ func (firfi *FIReceiverFI) String() string {
 // Validate performs WIRE format rule checks on FIReceiverFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (firfi *FIReceiverFI) Validate() error {
-	if err := firfi.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := firfi.isAlphanumeric(firfi.FIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, firfi.FIToFI.LineOne)
 	}
@@ -79,12 +76,6 @@ func (firfi *FIReceiverFI) Validate() error {
 	if err := firfi.isAlphanumeric(firfi.FIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, firfi.FIToFI.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (firfi *FIReceiverFI) fieldInclusion() error {
 	return nil
 }
 

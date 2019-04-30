@@ -57,9 +57,6 @@ func (pm *FIPaymentMethodToBeneficiary) Validate() error {
 	if err := pm.fieldInclusion(); err != nil {
 		return err
 	}
-	if pm.PaymentMethod != "CHECK" {
-		return fieldError("PaymentMethod", ErrFieldInclusion, pm.PaymentMethod)
-	}
 	if err := pm.isAlphanumeric(pm.AdditionalInformation); err != nil {
 		return fieldError("AdditionalInformation", err, pm.AdditionalInformation)
 	}
@@ -69,11 +66,9 @@ func (pm *FIPaymentMethodToBeneficiary) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (pm *FIPaymentMethodToBeneficiary) fieldInclusion() error {
-
-	if pm.PaymentMethod == "" {
+	if pm.PaymentMethod != "CHECK" {
 		return fieldError("PaymentMethod", ErrFieldInclusion, pm.PaymentMethod)
 	}
-
 	return nil
 }
 

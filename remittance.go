@@ -87,10 +87,10 @@ func (ri *Remittance) Validate() error {
 // invalid the WIRE will return an error.
 func (ri *Remittance) fieldInclusion() error {
 	if ri.CoverPayment.SwiftLineFive != "" {
-		return fieldError("SwiftLineFive", ErrInvalidProperty)
+		return fieldError("SwiftLineFive", ErrInvalidProperty, ri.CoverPayment.SwiftLineFive)
 	}
 	if ri.CoverPayment.SwiftLineSix != "" {
-		return fieldError("SwiftLineSix", ErrInvalidProperty)
+		return fieldError("SwiftLineSix", ErrInvalidProperty, ri.CoverPayment.SwiftLineSix)
 	}
 	return nil
 }

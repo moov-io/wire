@@ -91,7 +91,7 @@ func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
 		}
 	default:
 		if strings.TrimSpace(prd.ProprietaryDocumentTypeCode) != "" {
-			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty)
+			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty, prd.ProprietaryDocumentTypeCode)
 		}
 	}
 	return nil

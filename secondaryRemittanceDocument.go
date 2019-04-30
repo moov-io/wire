@@ -91,7 +91,7 @@ func (srd *SecondaryRemittanceDocument) fieldInclusion() error {
 		}
 	default:
 		if srd.ProprietaryDocumentTypeCode != "" {
-			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty)
+			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty, srd.ProprietaryDocumentTypeCode)
 		}
 	}
 	return nil

@@ -86,7 +86,7 @@ func (bc *BeneficiaryCustomer) Validate() error {
 // invalid the WIRE will return an error.
 func (bc *BeneficiaryCustomer) fieldInclusion() error {
 	if bc.CoverPayment.SwiftLineSix != "" {
-		return fieldError("SwiftLineSix", ErrInvalidProperty)
+		return fieldError("SwiftLineSix", ErrInvalidProperty, bc.CoverPayment.SwiftLineSix)
 	}
 	return nil
 }

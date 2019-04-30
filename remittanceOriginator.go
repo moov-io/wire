@@ -20,8 +20,6 @@ type RemittanceOriginator struct {
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
-	// CountryOfResidence
-	CountryOfResidence string `json:"countryOfResidence,omitempty"`
 	// ContactName
 	ContactName string `json:"contactName,omitempty"`
 	// ContactPhoneNumber
@@ -77,7 +75,7 @@ func (ro *RemittanceOriginator) Parse(record string) {
 	ro.RemittanceData.AddressLineFive = ro.parseStringField(record[898:968])
 	ro.RemittanceData.AddressLineSix = ro.parseStringField(record[968:1038])
 	ro.RemittanceData.AddressLineSeven = ro.parseStringField(record[1038:1108])
-	ro.CountryOfResidence = ro.parseStringField(record[1108:1110])
+	ro.RemittanceData.CountryOfResidence = ro.parseStringField(record[1108:1110])
 	ro.ContactName = ro.parseStringField(record[1110:1250])
 	ro.ContactPhoneNumber = ro.parseStringField(record[1250:1285])
 	ro.ContactMobileNumber = ro.parseStringField(record[1285:1320])
@@ -203,8 +201,8 @@ func (ro *RemittanceOriginator) Validate() error {
 		return fieldError("AddressLineSeven", err, ro.RemittanceData.AddressLineSeven)
 	}
 
-	if err := ro.isAlphanumeric(ro.CountryOfResidence); err != nil {
-		return fieldError("CountryOfResidence", err, ro.CountryOfResidence)
+	if err := ro.isAlphanumeric(ro.RemittanceData.CountryOfResidence); err != nil {
+		return fieldError("CountryOfResidence", err, ro.RemittanceData.CountryOfResidence)
 	}
 	if err := ro.isAlphanumeric(ro.ContactName); err != nil {
 		return fieldError("ContactName", err, ro.ContactName)
@@ -224,29 +222,6 @@ func (ro *RemittanceOriginator) Validate() error {
 	if err := ro.isAlphanumeric(ro.ContactOther); err != nil {
 		return fieldError("ContactOther", err, ro.ContactOther)
 	}
-	switch ro.IdentificationCode {
-	case PICDateBirthPlace:
-		if ro.IdentificationNumber != "" {
-			return fieldError("IdentificationNumber", ErrInvalidProperty)
-		}
-		if ro.IdentificationNumberIssuer != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
-		}
-	case OICSWIFTBICORBEI:
-		if ro.IdentificationNumberIssuer != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
-		}
-		if ro.RemittanceData.DateBirthPlace != "" {
-			return fieldError("DateBirthPlace", ErrInvalidProperty)
-		}
-	default:
-		if ro.RemittanceData.DateBirthPlace != "" {
-			return fieldError("DateBirthPlace", ErrInvalidProperty)
-		}
-		if ro.IdentificationNumber == "" {
-			return fieldError("IdentificationNumber", ErrFieldRequired)
-		}
-	}
 	return nil
 }
 
@@ -261,6 +236,29 @@ func (ro *RemittanceOriginator) fieldInclusion() error {
 	}
 	if ro.RemittanceData.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
+	}
+	switch ro.IdentificationCode {
+	case PICDateBirthPlace:
+		if ro.IdentificationNumber != "" {
+			return fieldError("IdentificationNumber", ErrInvalidProperty, ro.IdentificationNumber)
+		}
+		if ro.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, ro.IdentificationNumberIssuer)
+		}
+	case OICSWIFTBICORBEI:
+		if ro.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, ro.IdentificationNumberIssuer)
+		}
+		if ro.RemittanceData.DateBirthPlace != "" {
+			return fieldError("DateBirthPlace", ErrInvalidProperty, ro.RemittanceData.DateBirthPlace)
+		}
+	default:
+		if ro.RemittanceData.DateBirthPlace != "" {
+			return fieldError("DateBirthPlace", ErrInvalidProperty, ro.RemittanceData.DateBirthPlace)
+		}
+		if ro.IdentificationNumber == "" {
+			return fieldError("IdentificationNumber", ErrFieldRequired, ro.IdentificationNumber)
+		}
 	}
 	return nil
 }
@@ -377,7 +375,7 @@ func (ro *RemittanceOriginator) AddressLineSevenField() string {
 
 // CountryOfResidenceField gets a string of the CountryOfResidence field
 func (ro *RemittanceOriginator) CountryOfResidenceField() string {
-	return ro.alphaField(ro.CountryOfResidence, 2)
+	return ro.alphaField(ro.RemittanceData.CountryOfResidence, 2)
 }
 
 // ContactNameField gets a string of the ContactName field

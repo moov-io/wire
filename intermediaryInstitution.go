@@ -86,7 +86,7 @@ func (ii *IntermediaryInstitution) Validate() error {
 // invalid the WIRE will return an error.
 func (ii *IntermediaryInstitution) fieldInclusion() error {
 	if ii.CoverPayment.SwiftLineSix != "" {
-		return fieldError("SwiftLineSix", ErrInvalidProperty)
+		return fieldError("SwiftLineSix", ErrInvalidProperty, ii.CoverPayment.SwiftLineSix )
 	}
 	return nil
 }

@@ -68,7 +68,7 @@ func (li *LocalInstrument) Validate() error {
 // invalid the WIRE will return an error.
 func (li *LocalInstrument) fieldInclusion() error {
 	if li.LocalInstrumentCode != ProprietaryLocalInstrumentCode && li.ProprietaryCode != "" {
-		return fieldError("ProprietaryCode", ErrInvalidProperty)
+		return fieldError("ProprietaryCode", ErrInvalidProperty, li.ProprietaryCode)
 	}
 	return nil
 }

@@ -1,5 +1,7 @@
 package wire
 
+import "testing"
+
 // RelatedRemittance creates a RelatedRemittance
 func mockRelatedRemittance() *RelatedRemittance {
 	rr := NewRelatedRemittance()
@@ -23,4 +25,12 @@ func mockRelatedRemittance() *RelatedRemittance {
 	rr.RemittanceData.AddressLineSix = "Address Line Six"
 	rr.RemittanceData.AddressLineSeven = "Address Line Seven"
 	return rr
+}
+
+// TestMockRelatedRemittance validates mockRelatedRemittance
+func TestMockRelatedRemittance(t *testing.T) {
+	rr := mockRelatedRemittance()
+	if err := rr.Validate(); err != nil {
+		t.Error("mockRelatedRemittance does not validate and will break other tests")
+	}
 }
