@@ -86,7 +86,7 @@ func (w *Writer) writeFedWireMessage(file *File) error {
 	return nil
 }
 
-func (w *Writer) writeMandatory(fwm FedWireMessage) error {
+func (w *Writer) writeMandatory(fwm FEDWireMessage) error {
 	if fwm.SenderSupplied != nil {
 		if _, err := w.w.WriteString(fwm.GetSenderSupplied().String() + "\n"); err != nil {
 			return err
@@ -140,7 +140,7 @@ func (w *Writer) writeMandatory(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeOtherTransferInfo(fwm FedWireMessage) error {
+func (w *Writer) writeOtherTransferInfo(fwm FEDWireMessage) error {
 	if fwm.SenderReference != nil {
 		if _, err := w.w.WriteString(fwm.GetSenderReference().String() + "\n"); err != nil {
 			return err
@@ -179,7 +179,7 @@ func (w *Writer) writeOtherTransferInfo(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeBeneficiary(fwm FedWireMessage) error {
+func (w *Writer) writeBeneficiary(fwm FEDWireMessage) error {
 	if fwm.BeneficiaryIntermediaryFI != nil {
 		if _, err := w.w.WriteString(fwm.GetBeneficiaryIntermediaryFI().String() + "\n"); err != nil {
 			return err
@@ -216,7 +216,7 @@ func (w *Writer) writeBeneficiary(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeOriginator(fwm FedWireMessage) error {
+func (w *Writer) writeOriginator(fwm FEDWireMessage) error {
 	if fwm.Originator != nil {
 		if _, err := w.w.WriteString(fwm.GetOriginator().String() + "\n"); err != nil {
 			return err
@@ -250,7 +250,7 @@ func (w *Writer) writeOriginator(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeFinancialInstitution(fwm FedWireMessage) error {
+func (w *Writer) writeFinancialInstitution(fwm FEDWireMessage) error {
 	if fwm.FIReceiverFI != nil {
 		if _, err := w.w.WriteString(fwm.GetFIReceiverFI().String() + "\n"); err != nil {
 			return err
@@ -304,7 +304,7 @@ func (w *Writer) writeFinancialInstitution(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeCoverPayment(fwm FedWireMessage) error {
+func (w *Writer) writeCoverPayment(fwm FEDWireMessage) error {
 	if fwm.CurrencyInstructedAmount != nil {
 		if _, err := w.w.WriteString(fwm.GetCurrencyInstructedAmount().String() + "\n"); err != nil {
 			return err
@@ -348,7 +348,7 @@ func (w *Writer) writeCoverPayment(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeRemittance(fwm FedWireMessage) error {
+func (w *Writer) writeRemittance(fwm FEDWireMessage) error {
 
 	// Related Remittance
 	if fwm.RelatedRemittance != nil {

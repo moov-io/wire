@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 
-func mockCustomerTransferData() FedWireMessage {
-	fwm := NewFedWireMessage()
+func mockCustomerTransferData() FEDWireMessage {
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -34,32 +34,32 @@ func mockCustomerTransferData() FedWireMessage {
 	return fwm
 }
 
-func TestFedWireMessage_isAmountValid(t *testing.T) {
+func TestFEDWireMessage_isAmountValid(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	fwm.Amount.Amount = "000000000000"
 	//fwm.SetAmount(fwm.Amount)
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 	// Create file
 	if err := file.Create(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 	// Validate File
 	if err := file.Validate(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("Amount",fwm.Amount.Amount,"SubTypeCode",
+		if err != NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode",
 			fwm.TypeSubType.SubTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
 }
 
-func TestFedWireMessage_isPreviousMessageIdentifierValid(t *testing.T) {
+func TestFEDWireMessage_isPreviousMessageIdentifierValid(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	fwm.TypeSubType.SubTypeCode = "02"
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -73,7 +73,7 @@ func TestFedWireMessage_isPreviousMessageIdentifierValid(t *testing.T) {
 	}
 }
 
-func TestFedWireMessage_isLocalInstrumentCodeValid(t *testing.T) {
+func TestFEDWireMessage_isLocalInstrumentCodeValid(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
@@ -82,7 +82,7 @@ func TestFedWireMessage_isLocalInstrumentCodeValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
@@ -91,7 +91,7 @@ func TestFedWireMessage_isLocalInstrumentCodeValid(t *testing.T) {
 	}
 }
 
-func TestFedWireMessage_isChargesValid(t *testing.T) {
+func TestFEDWireMessage_isChargesValid(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
@@ -102,7 +102,7 @@ func TestFedWireMessage_isChargesValid(t *testing.T) {
 	fwm.SetCharges(c)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := fwm.isChargesValid(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
@@ -112,7 +112,7 @@ func TestFedWireMessage_isChargesValid(t *testing.T) {
 	}
 }
 
-func TestFedWireMessage_isInstructedAmountValid(t *testing.T) {
+func TestFEDWireMessage_isInstructedAmountValid(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
@@ -123,7 +123,7 @@ func TestFedWireMessage_isInstructedAmountValid(t *testing.T) {
 	fwm.SetInstructedAmount(ia)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := fwm.isInstructedAmountValid(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode",
@@ -133,7 +133,7 @@ func TestFedWireMessage_isInstructedAmountValid(t *testing.T) {
 	}
 }
 
-func TestFedWireMessage_isExchangeRateRequired(t *testing.T) {
+func TestFEDWireMessage_isExchangeRateRequired(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
@@ -141,7 +141,7 @@ func TestFedWireMessage_isExchangeRateRequired(t *testing.T) {
 	fwm.SetExchangeRate(eRate)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := fwm.isExchangeRateValid(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
@@ -150,7 +150,7 @@ func TestFedWireMessage_isExchangeRateRequired(t *testing.T) {
 	}
 }
 
-func TestFedWireMessage_isExchangeRateValid(t *testing.T) {
+func TestFEDWireMessage_isExchangeRateValid(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
@@ -163,7 +163,7 @@ func TestFedWireMessage_isExchangeRateValid(t *testing.T) {
 	fwm.SetInstructedAmount(ia)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := fwm.isExchangeRateValid(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode",
@@ -173,56 +173,44 @@ func TestFedWireMessage_isExchangeRateValid(t *testing.T) {
 	}
 }
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
 
-/*func TestFedWireMessage_is(t *testing.T) {
+/*func TestFEDWireMessage_is(t *testing.T) {
 }*/
-
-
-
-
-
-
-
-

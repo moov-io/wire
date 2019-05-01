@@ -69,7 +69,7 @@ func TestIssuerAlphaNumeric(t *testing.T) {
 }
 
 // TestProprietaryDocumentTypeCodeRequired validates PrimaryRemittanceDocument ProprietaryDocumentTypeCode is required
-func TestProprietaryDocumentTypeCodeRequired (t *testing.T) {
+func TestProprietaryDocumentTypeCodeRequired(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = ProprietaryDocumentType
 	prd.ProprietaryDocumentTypeCode = ""
@@ -81,7 +81,7 @@ func TestProprietaryDocumentTypeCodeRequired (t *testing.T) {
 }
 
 // TestDocumentIdentificationNumberRequired validates PrimaryRemittanceDocument DocumentIdentificationNumber is required
-func TestDocumentIdentificationNumberRequired (t *testing.T) {
+func TestDocumentIdentificationNumberRequired(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentIdentificationNumber = ""
 	if err := prd.Validate(); err != nil {
@@ -92,7 +92,7 @@ func TestDocumentIdentificationNumberRequired (t *testing.T) {
 }
 
 // TestProprietaryDocumentTypeCodeInvalid validates PrimaryRemittanceDocument ProprietaryDocumentTypeCode is invalid
-func TestProprietaryDocumentTypeCodeInvalid (t *testing.T) {
+func TestProprietaryDocumentTypeCodeInvalid(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = AccountsReceivableOpenItem
 	prd.ProprietaryDocumentTypeCode = "Proprietary"

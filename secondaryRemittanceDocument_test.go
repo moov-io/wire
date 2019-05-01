@@ -69,7 +69,7 @@ func TestSRDIssuerAlphaNumeric(t *testing.T) {
 }
 
 // TestSRDProprietaryDocumentTypeCodeRequired validates SecondaryRemittanceDocument ProprietaryDocumentTypeCode is required
-func TestSRDProprietaryDocumentTypeCodeRequired (t *testing.T) {
+func TestSRDProprietaryDocumentTypeCodeRequired(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentTypeCode = ProprietaryDocumentType
 	prd.ProprietaryDocumentTypeCode = ""
@@ -81,7 +81,7 @@ func TestSRDProprietaryDocumentTypeCodeRequired (t *testing.T) {
 }
 
 // TestSRDDocumentIdentificationNumberRequired validates SecondaryRemittanceDocument DocumentIdentificationNumber is required
-func TestSRDDocumentIdentificationNumberRequired (t *testing.T) {
+func TestSRDDocumentIdentificationNumberRequired(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentIdentificationNumber = ""
 	if err := prd.Validate(); err != nil {
@@ -92,7 +92,7 @@ func TestSRDDocumentIdentificationNumberRequired (t *testing.T) {
 }
 
 // TestSRDProprietaryDocumentTypeCodeInvalid validates SecondaryRemittanceDocument ProprietaryDocumentTypeCode is invalid
-func TestSRDProprietaryDocumentTypeCodeInvalid (t *testing.T) {
+func TestSRDProprietaryDocumentTypeCodeInvalid(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentTypeCode = AccountsReceivableOpenItem
 	prd.ProprietaryDocumentTypeCode = "Proprietary"

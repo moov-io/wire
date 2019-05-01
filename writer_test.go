@@ -7,10 +7,10 @@ import (
 	"testing"
 )
 
-/*// TestFedWireMessageWriteCustomerTransfer writes a FedWireMessage to a file with BusinessFunctionCode = CTR
-func TestFedWireMessageWriteCustomerTransfer(t *testing.T) {
+/*// TestFEDWireMessageWriteCustomerTransfer writes a FEDWireMessage to a file with BusinessFunctionCode = CTR
+func TestFEDWireMessageWriteCustomerTransfer(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -144,7 +144,7 @@ func TestFedWireMessageWriteCustomerTransfer(t *testing.T) {
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -182,7 +182,7 @@ func TestFedWireMessageWriteCustomerTransfer(t *testing.T) {
 
 func TestSenderSupplied_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	tst := mockTypeSubType()
@@ -198,7 +198,7 @@ func TestSenderSupplied_Mandatory(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -213,7 +213,7 @@ func TestSenderSupplied_Mandatory(t *testing.T) {
 
 func TestTypeSubType_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -229,7 +229,7 @@ func TestTypeSubType_Mandatory(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -244,7 +244,7 @@ func TestTypeSubType_Mandatory(t *testing.T) {
 
 func TestInputMessageAccountabilityData_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -260,7 +260,7 @@ func TestInputMessageAccountabilityData_Mandatory(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -275,7 +275,7 @@ func TestInputMessageAccountabilityData_Mandatory(t *testing.T) {
 
 func TestAmount_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -293,7 +293,7 @@ func TestAmount_Mandatory(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -308,7 +308,7 @@ func TestAmount_Mandatory(t *testing.T) {
 
 func TestSenderDepositoryInstitution_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -324,7 +324,7 @@ func TestSenderDepositoryInstitution_Mandatory(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -339,7 +339,7 @@ func TestSenderDepositoryInstitution_Mandatory(t *testing.T) {
 
 func TestReceiverDepositoryInstitution_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -355,7 +355,7 @@ func TestReceiverDepositoryInstitution_Mandatory(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -370,7 +370,7 @@ func TestReceiverDepositoryInstitution_Mandatory(t *testing.T) {
 
 func TestBusinessFunctionCode_Mandatory(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -386,7 +386,7 @@ func TestBusinessFunctionCode_Mandatory(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	// Create file
 	if err := file.Create(); err != nil {
@@ -399,10 +399,10 @@ func TestBusinessFunctionCode_Mandatory(t *testing.T) {
 	}
 }
 
-// TestFedWireMessageWriteBankTransfer writes a FedWireMessage to a file with BusinessFunctionCode = BTR
-func TestFedWireMessageWriteBankTransfer(t *testing.T) {
+// TestFEDWireMessageWriteBankTransfer writes a FEDWireMessage to a file with BusinessFunctionCode = BTR
+func TestFEDWireMessageWriteBankTransfer(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -468,17 +468,17 @@ func TestFedWireMessageWriteBankTransfer(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCustomerTransfer writes a FedWireMessage to a file with BusinessFunctionCode = CTR
-func TestFedWireMessageWriteCustomerTransfer(t *testing.T) {
+// TestFEDWireMessageWriteCustomerTransfer writes a FEDWireMessage to a file with BusinessFunctionCode = CTR
+func TestFEDWireMessageWriteCustomerTransfer(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -550,17 +550,17 @@ func TestFedWireMessageWriteCustomerTransfer(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCustomerTransferPlus writes a FedWireMessage to a file with BusinessFunctionCode = CTP
-func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
+// TestFEDWireMessageWriteCustomerTransferPlus writes a FEDWireMessage to a file with BusinessFunctionCode = CTP
+func TestFEDWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -692,17 +692,17 @@ func TestFedWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCheckSameDaySettlement writes a FedWireMessage to a file with BusinessFunctionCode = CKS
-func TestFedWireMessageWriteCheckSameDaySettlement(t *testing.T) {
+// TestFEDWireMessageWriteCheckSameDaySettlement writes a FEDWireMessage to a file with BusinessFunctionCode = CKS
+func TestFEDWireMessageWriteCheckSameDaySettlement(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -770,17 +770,17 @@ func TestFedWireMessageWriteCheckSameDaySettlement(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteDepositSendersAccount writes a FedWireMessage to a file with BusinessFunctionCode = DEP
-func TestFedWireMessageWriteDepositSendersAccount(t *testing.T) {
+// TestFEDWireMessageWriteDepositSendersAccount writes a FEDWireMessage to a file with BusinessFunctionCode = DEP
+func TestFEDWireMessageWriteDepositSendersAccount(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -848,17 +848,17 @@ func TestFedWireMessageWriteDepositSendersAccount(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteFEDFundsReturned writes a FedWireMessage to a file with BusinessFunctionCode = FFR
-func TestFedWireMessageWriteFEDFundsReturned(t *testing.T) {
+// TestFEDWireMessageWriteFEDFundsReturned writes a FEDWireMessage to a file with BusinessFunctionCode = FFR
+func TestFEDWireMessageWriteFEDFundsReturned(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -926,17 +926,17 @@ func TestFedWireMessageWriteFEDFundsReturned(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteFEDFundsSold writes a FedWireMessage to a file with BusinessFunctionCode = FFS
-func TestFedWireMessageWriteFEDFundsSold(t *testing.T) {
+// TestFEDWireMessageWriteFEDFundsSold writes a FEDWireMessage to a file with BusinessFunctionCode = FFS
+func TestFEDWireMessageWriteFEDFundsSold(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -1004,17 +1004,17 @@ func TestFedWireMessageWriteFEDFundsSold(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteDrawdownRequest writes a FedWireMessage to a file with BusinessFunctionCode = DRW
-func TestFedWireMessageWriteDrawdownRequest(t *testing.T) {
+// TestFEDWireMessageWriteDrawdownRequest writes a FEDWireMessage to a file with BusinessFunctionCode = DRW
+func TestFEDWireMessageWriteDrawdownRequest(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -1082,17 +1082,17 @@ func TestFedWireMessageWriteDrawdownRequest(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteBankDrawdownRequest writes a FedWireMessage to a file with BusinessFunctionCode = DRB
-func TestFedWireMessageWriteBankDrawdownRequest(t *testing.T) {
+// TestFEDWireMessageWriteBankDrawdownRequest writes a FEDWireMessage to a file with BusinessFunctionCode = DRB
+func TestFEDWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -1164,17 +1164,17 @@ func TestFedWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCustomerCorporateDrawdownRequest writes a FedWireMessage to a file with BusinessFunctionCode = DRC
-func TestFedWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
+// TestFEDWireMessageWriteCustomerCorporateDrawdownRequest writes a FEDWireMessage to a file with BusinessFunctionCode = DRC
+func TestFEDWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 	file := NewFile()
-	fwm := NewFedWireMessage()
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -1248,15 +1248,15 @@ func TestFedWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 	fifi := mockFIAdditionalFIToFI()
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteServiceMessage writes a FedWireMessage to a file with BusinessFunctionCode = SVC
-func TestFedWireMessageWriteServiceMessage(t *testing.T) {
+// TestFEDWireMessageWriteServiceMessage writes a FEDWireMessage to a file with BusinessFunctionCode = SVC
+func TestFEDWireMessageWriteServiceMessage(t *testing.T) {
 	file := NewFile()
 	fwm := createMockServiceMessageData()
 	fwm.TypeSubType.TypeCode = "10"
@@ -1267,14 +1267,14 @@ func TestFedWireMessageWriteServiceMessage(t *testing.T) {
 	fwm.BusinessFunctionCode.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(fwm.BusinessFunctionCode)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// writeFile writes a FedWireMessage File and ensures the File can be read
+// writeFile writes a FEDWireMessage File and ensures the File can be read
 func writeFile(file *File) error {
 	if err := file.Create(); err != nil {
 		return err
@@ -1307,8 +1307,8 @@ func writeFile(file *File) error {
 	return nil
 }
 
-func createMockServiceMessageData() FedWireMessage {
-	fwm := NewFedWireMessage()
+func createMockServiceMessageData() FEDWireMessage {
+	fwm := NewFEDWireMessage()
 	// Mandatory Fields
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
@@ -1387,8 +1387,8 @@ func createMockServiceMessageData() FedWireMessage {
 	return fwm
 }
 
-func createCustomerTransferData() FedWireMessage {
-	fwm := NewFedWireMessage()
+func createCustomerTransferData() FEDWireMessage {
+	fwm := NewFEDWireMessage()
 
 	// Mandatory Fields
 	ss := mockSenderSupplied()
@@ -1519,9 +1519,9 @@ func createCustomerTransferData() FedWireMessage {
 	return fwm
 }
 
-// TestFedWireMessageWriteCustomerTransferPlusCOVS writes a FedWireMessage to a file with BusinessFunctionCode = CTP and
+// TestFEDWireMessageWriteCustomerTransferPlusCOVS writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and
 // LocalInstrumentCode = "COVS"
-func TestFedWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
+func TestFEDWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
 	file := NewFile()
 	fwm := createCustomerTransferData()
 
@@ -1547,16 +1547,16 @@ func TestFedWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
 	str := mockSenderToReceiver()
 	fwm.SetSenderToReceiver(str)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCustomerTransferPlusRelatedRemittance writes a FedWireMessage to a file with BusinessFunctionCode = CTP and
+// TestFEDWireMessageWriteCustomerTransferPlusRelatedRemittance writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and
 // LocalInstrumentCode = "RRMT"
-func TestFedWireMessageWriteCustomerTransferPlusRelatedRemittance(t *testing.T) {
+func TestFEDWireMessageWriteCustomerTransferPlusRelatedRemittance(t *testing.T) {
 	file := NewFile()
 	fwm := createCustomerTransferData()
 
@@ -1568,16 +1568,16 @@ func TestFedWireMessageWriteCustomerTransferPlusRelatedRemittance(t *testing.T) 
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCustomerTransferPlusRemittanceInformationStructured writes a FedWireMessage to a file with BusinessFunctionCode = CTP and
+// TestFEDWireMessageWriteCustomerTransferPlusRemittanceInformationStructured writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and
 // LocalInstrumentCode = "RMTS"
-func TestFedWireMessageWriteCustomerTransferPlusRemittanceInformationStructured(t *testing.T) {
+func TestFEDWireMessageWriteCustomerTransferPlusRemittanceInformationStructured(t *testing.T) {
 	file := NewFile()
 	fwm := createCustomerTransferData()
 
@@ -1610,16 +1610,16 @@ func TestFedWireMessageWriteCustomerTransferPlusRemittanceInformationStructured(
 	rft := mockRemittanceFreeText()
 	fwm.SetRemittanceFreeText(rft)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
 }
 
-// TestFedWireMessageWriteCustomerTransferPlusUnstructuredAddenda writes a FedWireMessage to a file with BusinessFunctionCode = CTP and
+// TestFEDWireMessageWriteCustomerTransferPlusUnstructuredAddenda writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and
 // LocalInstrumentCode = "ANSI"
-func TestFedWireMessageWriteCustomerTransferPlusUnstructuredAddenda(t *testing.T) {
+func TestFEDWireMessageWriteCustomerTransferPlusUnstructuredAddenda(t *testing.T) {
 	file := NewFile()
 	fwm := createCustomerTransferData()
 
@@ -1631,7 +1631,7 @@ func TestFedWireMessageWriteCustomerTransferPlusUnstructuredAddenda(t *testing.T
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
 
-	file.AddFedWireMessage(fwm)
+	file.AddFEDWireMessage(fwm)
 
 	if err := writeFile(file); err != nil {
 		t.Errorf("%T: %s", err, err)

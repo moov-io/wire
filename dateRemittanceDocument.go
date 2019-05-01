@@ -51,6 +51,7 @@ func (drd *DateRemittanceDocument) Validate() error {
 	if err := drd.fieldInclusion(); err != nil {
 		return err
 	}
+	// ToDo: Validate Date Fields
 	return nil
 }
 

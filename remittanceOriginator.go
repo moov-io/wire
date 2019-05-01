@@ -231,14 +231,14 @@ func (ro *RemittanceOriginator) fieldInclusion() error {
 	if ro.RemittanceData.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
-	if  ro.IdentificationCode == PICDateBirthPlace {
+	if ro.IdentificationCode == PICDateBirthPlace {
 		if ro.IdentificationNumber != "" {
 			return fieldError("IdentificationNumber", ErrInvalidProperty, ro.IdentificationNumber)
 		}
 	}
 
-	if  ro.IdentificationNumber == "" || ro.IdentificationCode == OICSWIFTBICORBEI ||
-		ro.IdentificationCode == PICDateBirthPlace  {
+	if ro.IdentificationNumber == "" || ro.IdentificationCode == OICSWIFTBICORBEI ||
+		ro.IdentificationCode == PICDateBirthPlace {
 		if ro.IdentificationNumberIssuer != "" {
 			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, ro.IdentificationNumberIssuer)
 		}

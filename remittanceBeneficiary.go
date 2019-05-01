@@ -188,13 +188,13 @@ func (rb *RemittanceBeneficiary) fieldInclusion() error {
 		return fieldError("Name", ErrFieldRequired)
 	}
 
-	if  rb.IdentificationCode == PICDateBirthPlace {
+	if rb.IdentificationCode == PICDateBirthPlace {
 		if rb.IdentificationNumber != "" {
 			return fieldError("IdentificationNumber", ErrInvalidProperty, rb.IdentificationNumber)
 		}
 	}
-	if  rb.IdentificationNumber == "" || rb.IdentificationCode == OICSWIFTBICORBEI ||
-		rb.IdentificationCode == PICDateBirthPlace  {
+	if rb.IdentificationNumber == "" || rb.IdentificationCode == OICSWIFTBICORBEI ||
+		rb.IdentificationCode == PICDateBirthPlace {
 		if rb.IdentificationNumberIssuer != "" {
 			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, rb.IdentificationNumberIssuer)
 		}

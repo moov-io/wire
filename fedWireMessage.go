@@ -10,8 +10,8 @@ package wire
 
 import "strings"
 
-// FedWireMessage is a FedWire Message
-type FedWireMessage struct {
+// FEDWireMessage is a FedWire Message
+type FEDWireMessage struct {
 	// ID
 	ID string `json:"id"`
 	// MessageDisposition
@@ -137,14 +137,14 @@ type FedWireMessage struct {
 	ServiceMessage *ServiceMessage `json:"serviceMessage,omitempty"`
 }
 
-// NewFedWireMessage returns a new FedWireMessage
-func NewFedWireMessage() FedWireMessage {
-	fwm := FedWireMessage{}
+// NewFEDWireMessage returns a new FEDWireMessage
+func NewFEDWireMessage() FEDWireMessage {
+	fwm := FEDWireMessage{}
 	return fwm
 }
 
 // verify checks basic valid NACHA batch rules. Assumes properly parsed records. This does not mean it is a valid batch as validity is tied to each batch type
-func (fwm *FedWireMessage) verify() error {
+func (fwm *FEDWireMessage) verify() error {
 
 	if err := fwm.isMandatory(); err != nil {
 		return err
@@ -231,8 +231,8 @@ func (fwm *FedWireMessage) verify() error {
 	return nil
 }
 
-// isMandatory validates mandatory tags for a FedWireMessage are defined
-func (fwm *FedWireMessage) isMandatory() error {
+// isMandatory validates mandatory tags for a FEDWireMessage are defined
+func (fwm *FEDWireMessage) isMandatory() error {
 	if fwm.SenderSupplied == nil {
 		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
@@ -257,7 +257,7 @@ func (fwm *FedWireMessage) isMandatory() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isBusinessCodeValid() error {
+func (fwm *FEDWireMessage) isBusinessCodeValid() error {
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 	case BankTransfer:
 		if err := fwm.isBankTransferValid(); err != nil {
@@ -374,7 +374,7 @@ func (fwm *FedWireMessage) isBusinessCodeValid() error {
 }
 
 // isBankTransferValid
-func (fwm *FedWireMessage) isBankTransferValid() error {
+func (fwm *FEDWireMessage) isBankTransferValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -389,7 +389,7 @@ func (fwm *FedWireMessage) isBankTransferValid() error {
 }
 
 // isBankTransferTags
-func (fwm *FedWireMessage) isBankTransferTags() error {
+func (fwm *FEDWireMessage) isBankTransferTags() error {
 	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
 		return err
 	}
@@ -397,7 +397,7 @@ func (fwm *FedWireMessage) isBankTransferTags() error {
 }
 
 // isInvalidBankTransferTags
-func (fwm *FedWireMessage) isInvalidBankTransferTags() error {
+func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
 	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
@@ -454,7 +454,7 @@ func (fwm *FedWireMessage) isInvalidBankTransferTags() error {
 }
 
 // isCustomerTransferValid
-func (fwm *FedWireMessage) isCustomerTransferValid() error {
+func (fwm *FEDWireMessage) isCustomerTransferValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -475,7 +475,7 @@ func (fwm *FedWireMessage) isCustomerTransferValid() error {
 }
 
 // isCustomerTransferTags
-func (fwm *FedWireMessage) isCustomerTransferTags() error {
+func (fwm *FEDWireMessage) isCustomerTransferTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -489,7 +489,7 @@ func (fwm *FedWireMessage) isCustomerTransferTags() error {
 }
 
 // isInvalidCustomerTransferTags
-func (fwm *FedWireMessage) isInvalidCustomerTransferTags() error {
+func (fwm *FEDWireMessage) isInvalidCustomerTransferTags() error {
 	// This covers the edit requirement
 	if fwm.BusinessFunctionCode.TransactionTypeCode == "COV" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
@@ -528,7 +528,7 @@ func (fwm *FedWireMessage) isInvalidCustomerTransferTags() error {
 }
 
 // isCustomerTransferPlusValid
-func (fwm *FedWireMessage) isCustomerTransferPlusValid() error {
+func (fwm *FEDWireMessage) isCustomerTransferPlusValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -555,7 +555,7 @@ func (fwm *FedWireMessage) isCustomerTransferPlusValid() error {
 }
 
 // isCustomerTransferPlusTags
-func (fwm *FedWireMessage) isCustomerTransferPlusTags() error {
+func (fwm *FEDWireMessage) isCustomerTransferPlusTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -612,7 +612,7 @@ func (fwm *FedWireMessage) isCustomerTransferPlusTags() error {
 }
 
 // isInvalidCustomerTransferPlusTags
-func (fwm *FedWireMessage) isInvalidCustomerTransferPlusTags() error {
+func (fwm *FEDWireMessage) isInvalidCustomerTransferPlusTags() error {
 	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
@@ -641,7 +641,7 @@ func (fwm *FedWireMessage) isInvalidCustomerTransferPlusTags() error {
 }
 
 // isCheckSameDaySettlementValid
-func (fwm *FedWireMessage) isCheckSameDaySettlementValid() error {
+func (fwm *FEDWireMessage) isCheckSameDaySettlementValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -656,12 +656,12 @@ func (fwm *FedWireMessage) isCheckSameDaySettlementValid() error {
 }
 
 // isCheckSameDaySettlementTags
-func (fwm *FedWireMessage) isCheckSameDaySettlementTags() error {
+func (fwm *FEDWireMessage) isCheckSameDaySettlementTags() error {
 	return nil
 }
 
 // isDepositSendersAccountValid
-func (fwm *FedWireMessage) isDepositSendersAccountValid() error {
+func (fwm *FEDWireMessage) isDepositSendersAccountValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -676,12 +676,12 @@ func (fwm *FedWireMessage) isDepositSendersAccountValid() error {
 }
 
 // isDepositSendersAccountTags
-func (fwm *FedWireMessage) isDepositSendersAccountTags() error {
+func (fwm *FEDWireMessage) isDepositSendersAccountTags() error {
 	return nil
 }
 
 // isFEDFundsReturnedValid
-func (fwm *FedWireMessage) isFEDFundsReturnedValid() error {
+func (fwm *FEDWireMessage) isFEDFundsReturnedValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -696,12 +696,12 @@ func (fwm *FedWireMessage) isFEDFundsReturnedValid() error {
 }
 
 // isFEDFundsReturnedTag
-func (fwm *FedWireMessage) isFEDFundsReturnedTags() error {
+func (fwm *FEDWireMessage) isFEDFundsReturnedTags() error {
 	return nil
 }
 
 // isFEDFundsSoldValid
-func (fwm *FedWireMessage) isFEDFundsSoldValid() error {
+func (fwm *FEDWireMessage) isFEDFundsSoldValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -716,12 +716,12 @@ func (fwm *FedWireMessage) isFEDFundsSoldValid() error {
 }
 
 // isFEDFundsSoldTags
-func (fwm *FedWireMessage) isFEDFundsSoldTags() error {
+func (fwm *FEDWireMessage) isFEDFundsSoldTags() error {
 	return nil
 }
 
 // isDrawdownRequestValid
-func (fwm *FedWireMessage) isDrawdownRequestValid() error {
+func (fwm *FEDWireMessage) isDrawdownRequestValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -735,7 +735,7 @@ func (fwm *FedWireMessage) isDrawdownRequestValid() error {
 }
 
 // isDrawdownRequestTags
-func (fwm *FedWireMessage) isDrawdownRequestTags() error {
+func (fwm *FEDWireMessage) isDrawdownRequestTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -746,7 +746,7 @@ func (fwm *FedWireMessage) isDrawdownRequestTags() error {
 }
 
 // isBankDrawdownRequestValid
-func (fwm *FedWireMessage) isBankDrawdownRequestValid() error {
+func (fwm *FEDWireMessage) isBankDrawdownRequestValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -760,7 +760,7 @@ func (fwm *FedWireMessage) isBankDrawdownRequestValid() error {
 }
 
 // isBankDrawdownRequestTags
-func (fwm *FedWireMessage) isBankDrawdownRequestTags() error {
+func (fwm *FEDWireMessage) isBankDrawdownRequestTags() error {
 	if fwm.AccountDebitedDrawdown == nil {
 		return fieldError("AccountDebitedDrawdown", ErrFieldRequired)
 	}
@@ -771,7 +771,7 @@ func (fwm *FedWireMessage) isBankDrawdownRequestTags() error {
 }
 
 // isCustomerCorporateDrawdownRequestValid
-func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestValid() error {
+func (fwm *FEDWireMessage) isCustomerCorporateDrawdownRequestValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -785,7 +785,7 @@ func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestValid() error {
 }
 
 // isCustomerCorporateDrawdownRequestTags
-func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestTags() error {
+func (fwm *FEDWireMessage) isCustomerCorporateDrawdownRequestTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -799,7 +799,7 @@ func (fwm *FedWireMessage) isCustomerCorporateDrawdownRequestTags() error {
 }
 
 // isServiceMessageValid
-func (fwm *FedWireMessage) isServiceMessageValid() error {
+func (fwm *FEDWireMessage) isServiceMessageValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
 	case
@@ -822,12 +822,12 @@ func (fwm *FedWireMessage) isServiceMessageValid() error {
 }
 
 // isServiceMessageTags
-func (fwm *FedWireMessage) isServiceMessageTags() error {
+func (fwm *FEDWireMessage) isServiceMessageTags() error {
 	return nil
 }
 
 // isInvalidServiceMessageTags
-func (fwm *FedWireMessage) isInvalidServiceMessageTags() error {
+func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	// BusinessFunctionCode.TransactionTypeCode (Element 02) is invalid
 	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
@@ -869,7 +869,7 @@ func (fwm *FedWireMessage) isInvalidServiceMessageTags() error {
 }
 
 // isPreviousMessageIdentifierRequired
-func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
+func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
 	switch fwm.TypeSubType.SubTypeCode {
 	case ReversalTransfer, ReversalPriorDayTransfer:
 		if fwm.PreviousMessageIdentifier == nil {
@@ -886,7 +886,7 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierRequired() error {
 // isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
 // BusinessFunctionCode, create function isInvalidBusinessFunctionCodeTag() with the specific invalid tags for that
 // BusinessFunctionCode (e.g. isInvalidBankTransferTags)
-func (fwm *FedWireMessage) isInvalidTags() error {
+func (fwm *FEDWireMessage) isInvalidTags() error {
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 	case CheckSameDaySettlement, DepositSendersAccount, FEDFundsReturned, FEDFundsSold:
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
@@ -982,7 +982,7 @@ func (fwm *FedWireMessage) isInvalidTags() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) invalidRemittanceTags() error {
+func (fwm *FEDWireMessage) invalidRemittanceTags() error {
 	if fwm.RelatedRemittance != nil {
 		return fieldError("RelatedRemittance", ErrInvalidProperty, "RelatedRemittance")
 	}
@@ -1019,7 +1019,7 @@ func (fwm *FedWireMessage) invalidRemittanceTags() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) invalidCoverPaymentTags() error {
+func (fwm *FEDWireMessage) invalidCoverPaymentTags() error {
 	if fwm.CurrencyInstructedAmount != nil {
 		return fieldError("CurrencyInstructedAmount ", ErrInvalidProperty, fwm.CurrencyInstructedAmount)
 	}
@@ -1047,567 +1047,567 @@ func (fwm *FedWireMessage) invalidCoverPaymentTags() error {
 	return nil
 }
 
-// SetSenderSupplied appends a SenderSupplied to the FedWireMessage
-func (fwm *FedWireMessage) SetSenderSupplied(ss *SenderSupplied) {
+// SetSenderSupplied appends a SenderSupplied to the FEDWireMessage
+func (fwm *FEDWireMessage) SetSenderSupplied(ss *SenderSupplied) {
 	fwm.SenderSupplied = ss
 }
 
 // GetSenderSupplied returns the current SenderSupplied
-func (fwm *FedWireMessage) GetSenderSupplied() *SenderSupplied {
+func (fwm *FEDWireMessage) GetSenderSupplied() *SenderSupplied {
 	return fwm.SenderSupplied
 }
 
-// SetTypeSubType appends a TypeSubType to the FedWireMessage
-func (fwm *FedWireMessage) SetTypeSubType(tst *TypeSubType) {
+// SetTypeSubType appends a TypeSubType to the FEDWireMessage
+func (fwm *FEDWireMessage) SetTypeSubType(tst *TypeSubType) {
 	fwm.TypeSubType = tst
 }
 
 // GetTypeSubType returns the current TypeSubType
-func (fwm *FedWireMessage) GetTypeSubType() *TypeSubType {
+func (fwm *FEDWireMessage) GetTypeSubType() *TypeSubType {
 	return fwm.TypeSubType
 }
 
-// SetInputMessageAccountabilityData appends a InputMessageAccountabilityData to the FedWireMessage
-func (fwm *FedWireMessage) SetInputMessageAccountabilityData(imad *InputMessageAccountabilityData) {
+// SetInputMessageAccountabilityData appends a InputMessageAccountabilityData to the FEDWireMessage
+func (fwm *FEDWireMessage) SetInputMessageAccountabilityData(imad *InputMessageAccountabilityData) {
 	fwm.InputMessageAccountabilityData = imad
 }
 
 // GetInputMessageAccountabilityData returns the current InputMessageAccountabilityData
-func (fwm *FedWireMessage) GetInputMessageAccountabilityData() *InputMessageAccountabilityData {
+func (fwm *FEDWireMessage) GetInputMessageAccountabilityData() *InputMessageAccountabilityData {
 	return fwm.InputMessageAccountabilityData
 }
 
-// SetAmount appends a Amount to the FedWireMessage
-func (fwm *FedWireMessage) SetAmount(amt *Amount) {
+// SetAmount appends a Amount to the FEDWireMessage
+func (fwm *FEDWireMessage) SetAmount(amt *Amount) {
 	fwm.Amount = amt
 }
 
 // GetAmount returns the current Amount
-func (fwm *FedWireMessage) GetAmount() *Amount {
+func (fwm *FEDWireMessage) GetAmount() *Amount {
 	return fwm.Amount
 }
 
-// SetSenderDepositoryInstitution appends a SenderDepositoryInstitution to the FedWireMessage
-func (fwm *FedWireMessage) SetSenderDepositoryInstitution(sdi *SenderDepositoryInstitution) {
+// SetSenderDepositoryInstitution appends a SenderDepositoryInstitution to the FEDWireMessage
+func (fwm *FEDWireMessage) SetSenderDepositoryInstitution(sdi *SenderDepositoryInstitution) {
 	fwm.SenderDepositoryInstitution = sdi
 }
 
 // GetSenderDepositoryInstitution returns the current SenderDepositoryInstitution
-func (fwm *FedWireMessage) GetSenderDepositoryInstitution() *SenderDepositoryInstitution {
+func (fwm *FEDWireMessage) GetSenderDepositoryInstitution() *SenderDepositoryInstitution {
 	return fwm.SenderDepositoryInstitution
 }
 
-// SetReceiverDepositoryInstitution appends a ReceiverDepositoryInstitution to the FedWireMessage
-func (fwm *FedWireMessage) SetReceiverDepositoryInstitution(rdi *ReceiverDepositoryInstitution) {
+// SetReceiverDepositoryInstitution appends a ReceiverDepositoryInstitution to the FEDWireMessage
+func (fwm *FEDWireMessage) SetReceiverDepositoryInstitution(rdi *ReceiverDepositoryInstitution) {
 	fwm.ReceiverDepositoryInstitution = rdi
 }
 
 // GetReceiverDepositoryInstitution returns the current ReceiverDepositoryInstitution
-func (fwm *FedWireMessage) GetReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
+func (fwm *FEDWireMessage) GetReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 	return fwm.ReceiverDepositoryInstitution
 }
 
-// SetBusinessFunctionCode appends a BusinessFunctionCode to the FedWireMessage
-func (fwm *FedWireMessage) SetBusinessFunctionCode(bfc *BusinessFunctionCode) {
+// SetBusinessFunctionCode appends a BusinessFunctionCode to the FEDWireMessage
+func (fwm *FEDWireMessage) SetBusinessFunctionCode(bfc *BusinessFunctionCode) {
 	fwm.BusinessFunctionCode = bfc
 }
 
 // GetBusinessFunctionCode returns the current BusinessFunctionCode
-func (fwm *FedWireMessage) GetBusinessFunctionCode() *BusinessFunctionCode {
+func (fwm *FEDWireMessage) GetBusinessFunctionCode() *BusinessFunctionCode {
 	return fwm.BusinessFunctionCode
 }
 
-// SetSenderReference appends a SenderReference to the FedWireMessage
-func (fwm *FedWireMessage) SetSenderReference(sr *SenderReference) {
+// SetSenderReference appends a SenderReference to the FEDWireMessage
+func (fwm *FEDWireMessage) SetSenderReference(sr *SenderReference) {
 	fwm.SenderReference = sr
 }
 
 // GetSenderReference returns the current SenderReference
-func (fwm *FedWireMessage) GetSenderReference() *SenderReference {
+func (fwm *FEDWireMessage) GetSenderReference() *SenderReference {
 	return fwm.SenderReference
 }
 
-// SetPreviousMessageIdentifier appends a PreviousMessageIdentifier to the FedWireMessage
-func (fwm *FedWireMessage) SetPreviousMessageIdentifier(pmi *PreviousMessageIdentifier) {
+// SetPreviousMessageIdentifier appends a PreviousMessageIdentifier to the FEDWireMessage
+func (fwm *FEDWireMessage) SetPreviousMessageIdentifier(pmi *PreviousMessageIdentifier) {
 	fwm.PreviousMessageIdentifier = pmi
 }
 
 // GetPreviousMessageIdentifier returns the current PreviousMessageIdentifier
-func (fwm *FedWireMessage) GetPreviousMessageIdentifier() *PreviousMessageIdentifier {
+func (fwm *FEDWireMessage) GetPreviousMessageIdentifier() *PreviousMessageIdentifier {
 	return fwm.PreviousMessageIdentifier
 }
 
-// SetLocalInstrument appends a LocalInstrument to the FedWireMessage
-func (fwm *FedWireMessage) SetLocalInstrument(li *LocalInstrument) {
+// SetLocalInstrument appends a LocalInstrument to the FEDWireMessage
+func (fwm *FEDWireMessage) SetLocalInstrument(li *LocalInstrument) {
 	fwm.LocalInstrument = li
 }
 
 // GetLocalInstrument returns the current LocalInstrument
-func (fwm *FedWireMessage) GetLocalInstrument() *LocalInstrument {
+func (fwm *FEDWireMessage) GetLocalInstrument() *LocalInstrument {
 	return fwm.LocalInstrument
 }
 
-// SetPaymentNotification appends a PaymentNotification to the FedWireMessage
-func (fwm *FedWireMessage) SetPaymentNotification(pn *PaymentNotification) {
+// SetPaymentNotification appends a PaymentNotification to the FEDWireMessage
+func (fwm *FEDWireMessage) SetPaymentNotification(pn *PaymentNotification) {
 	fwm.PaymentNotification = pn
 }
 
 // GetPaymentNotification returns the current PaymentNotification
-func (fwm *FedWireMessage) GetPaymentNotification() *PaymentNotification {
+func (fwm *FEDWireMessage) GetPaymentNotification() *PaymentNotification {
 	return fwm.PaymentNotification
 }
 
-// SetCharges appends a Charges to the FedWireMessage
-func (fwm *FedWireMessage) SetCharges(c *Charges) {
+// SetCharges appends a Charges to the FEDWireMessage
+func (fwm *FEDWireMessage) SetCharges(c *Charges) {
 	fwm.Charges = c
 }
 
 // GetCharges returns the current Charges
-func (fwm *FedWireMessage) GetCharges() *Charges {
+func (fwm *FEDWireMessage) GetCharges() *Charges {
 	return fwm.Charges
 }
 
-// SetInstructedAmount appends a InstructedAmount to the FedWireMessage
-func (fwm *FedWireMessage) SetInstructedAmount(ia *InstructedAmount) {
+// SetInstructedAmount appends a InstructedAmount to the FEDWireMessage
+func (fwm *FEDWireMessage) SetInstructedAmount(ia *InstructedAmount) {
 	fwm.InstructedAmount = ia
 }
 
 // GetInstructedAmount returns the current Instructed Amount
-func (fwm *FedWireMessage) GetInstructedAmount() *InstructedAmount {
+func (fwm *FEDWireMessage) GetInstructedAmount() *InstructedAmount {
 	return fwm.InstructedAmount
 }
 
-// SetExchangeRate appends a ExchangeRate to the FedWireMessage
-func (fwm *FedWireMessage) SetExchangeRate(er *ExchangeRate) {
+// SetExchangeRate appends a ExchangeRate to the FEDWireMessage
+func (fwm *FEDWireMessage) SetExchangeRate(er *ExchangeRate) {
 	fwm.ExchangeRate = er
 }
 
 // GetExchangeRate returns the current ExchangeRate
-func (fwm *FedWireMessage) GetExchangeRate() *ExchangeRate {
+func (fwm *FEDWireMessage) GetExchangeRate() *ExchangeRate {
 	return fwm.ExchangeRate
 }
 
-// SetBeneficiaryIntermediaryFI appends a BeneficiaryIntermediaryFI to the FedWireMessage
-func (fwm *FedWireMessage) SetBeneficiaryIntermediaryFI(bifi *BeneficiaryIntermediaryFI) {
+// SetBeneficiaryIntermediaryFI appends a BeneficiaryIntermediaryFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetBeneficiaryIntermediaryFI(bifi *BeneficiaryIntermediaryFI) {
 	fwm.BeneficiaryIntermediaryFI = bifi
 }
 
 // GetBeneficiaryIntermediaryFI returns the current BeneficiaryIntermediaryFI
-func (fwm *FedWireMessage) GetBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
+func (fwm *FEDWireMessage) GetBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
 	return fwm.BeneficiaryIntermediaryFI
 }
 
-// SetBeneficiaryFI appends a BeneficiaryFI to the FedWireMessage
-func (fwm *FedWireMessage) SetBeneficiaryFI(bfi *BeneficiaryFI) {
+// SetBeneficiaryFI appends a BeneficiaryFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetBeneficiaryFI(bfi *BeneficiaryFI) {
 	fwm.BeneficiaryFI = bfi
 }
 
 // GetBeneficiaryFI returns the current BeneficiaryFI
-func (fwm *FedWireMessage) GetBeneficiaryFI() *BeneficiaryFI {
+func (fwm *FEDWireMessage) GetBeneficiaryFI() *BeneficiaryFI {
 	return fwm.BeneficiaryFI
 }
 
-// SetBeneficiary appends a Beneficiary to the FedWireMessage
-func (fwm *FedWireMessage) SetBeneficiary(ben *Beneficiary) {
+// SetBeneficiary appends a Beneficiary to the FEDWireMessage
+func (fwm *FEDWireMessage) SetBeneficiary(ben *Beneficiary) {
 	fwm.Beneficiary = ben
 }
 
 // GetBeneficiary returns the current Beneficiary
-func (fwm *FedWireMessage) GetBeneficiary() *Beneficiary {
+func (fwm *FEDWireMessage) GetBeneficiary() *Beneficiary {
 	return fwm.Beneficiary
 }
 
-// SetBeneficiaryReference appends a BeneficiaryReference to the FedWireMessage
-func (fwm *FedWireMessage) SetBeneficiaryReference(br *BeneficiaryReference) {
+// SetBeneficiaryReference appends a BeneficiaryReference to the FEDWireMessage
+func (fwm *FEDWireMessage) SetBeneficiaryReference(br *BeneficiaryReference) {
 	fwm.BeneficiaryReference = br
 }
 
 // GetBeneficiaryReference returns the current BeneficiaryReference
-func (fwm *FedWireMessage) GetBeneficiaryReference() *BeneficiaryReference {
+func (fwm *FEDWireMessage) GetBeneficiaryReference() *BeneficiaryReference {
 	return fwm.BeneficiaryReference
 }
 
-// SetAccountDebitedDrawdown appends a AccountDebitedDrawdown to the FedWireMessage
-func (fwm *FedWireMessage) SetAccountDebitedDrawdown(debitDD *AccountDebitedDrawdown) {
+// SetAccountDebitedDrawdown appends a AccountDebitedDrawdown to the FEDWireMessage
+func (fwm *FEDWireMessage) SetAccountDebitedDrawdown(debitDD *AccountDebitedDrawdown) {
 	fwm.AccountDebitedDrawdown = debitDD
 }
 
 // GetAccountDebitedDrawdown returns the current AccountDebitedDrawdown
-func (fwm *FedWireMessage) GetAccountDebitedDrawdown() *AccountDebitedDrawdown {
+func (fwm *FEDWireMessage) GetAccountDebitedDrawdown() *AccountDebitedDrawdown {
 	return fwm.AccountDebitedDrawdown
 }
 
-// SetOriginator appends a Originator to the FedWireMessage
-func (fwm *FedWireMessage) SetOriginator(o *Originator) {
+// SetOriginator appends a Originator to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOriginator(o *Originator) {
 	fwm.Originator = o
 }
 
 // GetOriginator returns the current Originator
-func (fwm *FedWireMessage) GetOriginator() *Originator {
+func (fwm *FEDWireMessage) GetOriginator() *Originator {
 	return fwm.Originator
 }
 
-// SetOriginatorOptionF appends a OriginatorOptionF to the FedWireMessage
-func (fwm *FedWireMessage) SetOriginatorOptionF(oof *OriginatorOptionF) {
+// SetOriginatorOptionF appends a OriginatorOptionF to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOriginatorOptionF(oof *OriginatorOptionF) {
 	fwm.OriginatorOptionF = oof
 }
 
 // GetOriginatorOptionF returns the current OriginatorOptionF
-func (fwm *FedWireMessage) GetOriginatorOptionF() *OriginatorOptionF {
+func (fwm *FEDWireMessage) GetOriginatorOptionF() *OriginatorOptionF {
 	return fwm.OriginatorOptionF
 }
 
-// SetOriginatorFI appends a OriginatorFI to the FedWireMessage
-func (fwm *FedWireMessage) SetOriginatorFI(ofi *OriginatorFI) {
+// SetOriginatorFI appends a OriginatorFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOriginatorFI(ofi *OriginatorFI) {
 	fwm.OriginatorFI = ofi
 }
 
 // GetOriginatorFI returns the current OriginatorFI
-func (fwm *FedWireMessage) GetOriginatorFI() *OriginatorFI {
+func (fwm *FEDWireMessage) GetOriginatorFI() *OriginatorFI {
 	return fwm.OriginatorFI
 }
 
-// SetInstructingFI appends a InstructingFI to the FedWireMessage
-func (fwm *FedWireMessage) SetInstructingFI(ifi *InstructingFI) {
+// SetInstructingFI appends a InstructingFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetInstructingFI(ifi *InstructingFI) {
 	fwm.InstructingFI = ifi
 }
 
 // GetInstructingFI returns the current InstructingFI
-func (fwm *FedWireMessage) GetInstructingFI() *InstructingFI {
+func (fwm *FEDWireMessage) GetInstructingFI() *InstructingFI {
 	return fwm.InstructingFI
 }
 
-// SetAccountCreditedDrawdown appends a AccountCreditedDrawdown to the FedWireMessage
-func (fwm *FedWireMessage) SetAccountCreditedDrawdown(creditDD *AccountCreditedDrawdown) {
+// SetAccountCreditedDrawdown appends a AccountCreditedDrawdown to the FEDWireMessage
+func (fwm *FEDWireMessage) SetAccountCreditedDrawdown(creditDD *AccountCreditedDrawdown) {
 	fwm.AccountCreditedDrawdown = creditDD
 }
 
 // GetAccountCreditedDrawdown returns the current AccountCreditedDrawdown
-func (fwm *FedWireMessage) GetAccountCreditedDrawdown() *AccountCreditedDrawdown {
+func (fwm *FEDWireMessage) GetAccountCreditedDrawdown() *AccountCreditedDrawdown {
 	return fwm.AccountCreditedDrawdown
 }
 
-// SetOriginatorToBeneficiary appends a OriginatorToBeneficiary to the FedWireMessage
-func (fwm *FedWireMessage) SetOriginatorToBeneficiary(ob *OriginatorToBeneficiary) {
+// SetOriginatorToBeneficiary appends a OriginatorToBeneficiary to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOriginatorToBeneficiary(ob *OriginatorToBeneficiary) {
 	fwm.OriginatorToBeneficiary = ob
 }
 
 // GetOriginatorToBeneficiary returns the current OriginatorToBeneficiary
-func (fwm *FedWireMessage) GetOriginatorToBeneficiary() *OriginatorToBeneficiary {
+func (fwm *FEDWireMessage) GetOriginatorToBeneficiary() *OriginatorToBeneficiary {
 	return fwm.OriginatorToBeneficiary
 }
 
-// SetFIReceiverFI appends a FIReceiverFI to the FedWireMessage
-func (fwm *FedWireMessage) SetFIReceiverFI(firfi *FIReceiverFI) {
+// SetFIReceiverFI appends a FIReceiverFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIReceiverFI(firfi *FIReceiverFI) {
 	fwm.FIReceiverFI = firfi
 }
 
 // GetFIReceiverFI returns the current FIReceiverFI
-func (fwm *FedWireMessage) GetFIReceiverFI() *FIReceiverFI {
+func (fwm *FEDWireMessage) GetFIReceiverFI() *FIReceiverFI {
 	return fwm.FIReceiverFI
 }
 
-// SetFIDrawdownDebitAccountAdvice appends a FIDrawdownDebitAccountAdvice to the FedWireMessage
-func (fwm *FedWireMessage) SetFIDrawdownDebitAccountAdvice(debitDDAdvice *FIDrawdownDebitAccountAdvice) {
+// SetFIDrawdownDebitAccountAdvice appends a FIDrawdownDebitAccountAdvice to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIDrawdownDebitAccountAdvice(debitDDAdvice *FIDrawdownDebitAccountAdvice) {
 	fwm.FIDrawdownDebitAccountAdvice = debitDDAdvice
 }
 
 // GetFIDrawdownDebitAccountAdvice returns the current FIDrawdownDebitAccountAdvice
-func (fwm *FedWireMessage) GetFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
+func (fwm *FEDWireMessage) GetFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
 	return fwm.FIDrawdownDebitAccountAdvice
 }
 
-// SetFIIntermediaryFI appends a FIIntermediaryFI to the FedWireMessage
-func (fwm *FedWireMessage) SetFIIntermediaryFI(fiifi *FIIntermediaryFI) {
+// SetFIIntermediaryFI appends a FIIntermediaryFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIIntermediaryFI(fiifi *FIIntermediaryFI) {
 	fwm.FIIntermediaryFI = fiifi
 }
 
 // GetFIIntermediaryFI returns the current FIIntermediaryFI
-func (fwm *FedWireMessage) GetFIIntermediaryFI() *FIIntermediaryFI {
+func (fwm *FEDWireMessage) GetFIIntermediaryFI() *FIIntermediaryFI {
 	return fwm.FIIntermediaryFI
 }
 
-// SetFIIntermediaryFIAdvice appends a FIIntermediaryFIAdvice to the FedWireMessage
-func (fwm *FedWireMessage) SetFIIntermediaryFIAdvice(fiifia *FIIntermediaryFIAdvice) {
+// SetFIIntermediaryFIAdvice appends a FIIntermediaryFIAdvice to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIIntermediaryFIAdvice(fiifia *FIIntermediaryFIAdvice) {
 	fwm.FIIntermediaryFIAdvice = fiifia
 }
 
 // GetFIIntermediaryFIAdvice returns the current FIIntermediaryFIAdvice
-func (fwm *FedWireMessage) GetFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
+func (fwm *FEDWireMessage) GetFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
 	return fwm.FIIntermediaryFIAdvice
 }
 
-// SetFIBeneficiaryFI appends a FIBeneficiaryFI to the FedWireMessage
-func (fwm *FedWireMessage) SetFIBeneficiaryFI(fibfi *FIBeneficiaryFI) {
+// SetFIBeneficiaryFI appends a FIBeneficiaryFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIBeneficiaryFI(fibfi *FIBeneficiaryFI) {
 	fwm.FIBeneficiaryFI = fibfi
 }
 
 // GetFIBeneficiaryFI returns the current FIBeneficiaryFI
-func (fwm *FedWireMessage) GetFIBeneficiaryFI() *FIBeneficiaryFI {
+func (fwm *FEDWireMessage) GetFIBeneficiaryFI() *FIBeneficiaryFI {
 	return fwm.FIBeneficiaryFI
 }
 
-// SetFIBeneficiaryFIAdvice appends a FIBeneficiaryFIAdvice to the FedWireMessage
-func (fwm *FedWireMessage) SetFIBeneficiaryFIAdvice(fibfia *FIBeneficiaryFIAdvice) {
+// SetFIBeneficiaryFIAdvice appends a FIBeneficiaryFIAdvice to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIBeneficiaryFIAdvice(fibfia *FIBeneficiaryFIAdvice) {
 	fwm.FIBeneficiaryFIAdvice = fibfia
 }
 
 // GetFIBeneficiaryFIAdvice returns the current FIBeneficiaryFIAdvice
-func (fwm *FedWireMessage) GetFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
+func (fwm *FEDWireMessage) GetFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
 	return fwm.FIBeneficiaryFIAdvice
 }
 
-// SetFIBeneficiary appends a FIBeneficiary to the FedWireMessage
-func (fwm *FedWireMessage) SetFIBeneficiary(fib *FIBeneficiary) {
+// SetFIBeneficiary appends a FIBeneficiary to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIBeneficiary(fib *FIBeneficiary) {
 	fwm.FIBeneficiary = fib
 }
 
 // GetFIBeneficiary returns the current FIBeneficiary
-func (fwm *FedWireMessage) GetFIBeneficiary() *FIBeneficiary {
+func (fwm *FEDWireMessage) GetFIBeneficiary() *FIBeneficiary {
 	return fwm.FIBeneficiary
 }
 
-// SetFIBeneficiaryAdvice appends a FIBeneficiaryAdviceto the FedWireMessage
-func (fwm *FedWireMessage) SetFIBeneficiaryAdvice(fiba *FIBeneficiaryAdvice) {
+// SetFIBeneficiaryAdvice appends a FIBeneficiaryAdviceto the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIBeneficiaryAdvice(fiba *FIBeneficiaryAdvice) {
 	fwm.FIBeneficiaryAdvice = fiba
 }
 
 // GetFIBeneficiaryAdvice returns the current FIBeneficiaryAdvice
-func (fwm *FedWireMessage) GetFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
+func (fwm *FEDWireMessage) GetFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
 	return fwm.FIBeneficiaryAdvice
 }
 
-// SetFIPaymentMethodToBeneficiary appends a FIPaymentMethodToBeneficiary to the FedWireMessage
-func (fwm *FedWireMessage) SetFIPaymentMethodToBeneficiary(pm *FIPaymentMethodToBeneficiary) {
+// SetFIPaymentMethodToBeneficiary appends a FIPaymentMethodToBeneficiary to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIPaymentMethodToBeneficiary(pm *FIPaymentMethodToBeneficiary) {
 	fwm.FIPaymentMethodToBeneficiary = pm
 }
 
 // GetFIPaymentMethodToBeneficiary returns the current FIPaymentMethodToBeneficiary
-func (fwm *FedWireMessage) GetFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
+func (fwm *FEDWireMessage) GetFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 	return fwm.FIPaymentMethodToBeneficiary
 }
 
-// SetFIAdditionalFIToFI appends a FIAdditionalFIToFI to the FedWireMessage
-func (fwm *FedWireMessage) SetFIAdditionalFIToFI(fifi *FIAdditionalFIToFI) {
+// SetFIAdditionalFIToFI appends a FIAdditionalFIToFI to the FEDWireMessage
+func (fwm *FEDWireMessage) SetFIAdditionalFIToFI(fifi *FIAdditionalFIToFI) {
 	fwm.FIAdditionalFIToFI = fifi
 }
 
 // GetFIAdditionalFIToFI returns the current FIAdditionalFIToFI
-func (fwm *FedWireMessage) GetFIAdditionalFIToFI() *FIAdditionalFIToFI {
+func (fwm *FEDWireMessage) GetFIAdditionalFIToFI() *FIAdditionalFIToFI {
 	return fwm.FIAdditionalFIToFI
 }
 
-// SetCurrencyInstructedAmount appends a CurrencyInstructedAmount to the FedWireMessage
-func (fwm *FedWireMessage) SetCurrencyInstructedAmount(cia *CurrencyInstructedAmount) {
+// SetCurrencyInstructedAmount appends a CurrencyInstructedAmount to the FEDWireMessage
+func (fwm *FEDWireMessage) SetCurrencyInstructedAmount(cia *CurrencyInstructedAmount) {
 	fwm.CurrencyInstructedAmount = cia
 }
 
 // GetCurrencyInstructedAmount returns the current CurrencyInstructedAmount
-func (fwm *FedWireMessage) GetCurrencyInstructedAmount() *CurrencyInstructedAmount {
+func (fwm *FEDWireMessage) GetCurrencyInstructedAmount() *CurrencyInstructedAmount {
 	return fwm.CurrencyInstructedAmount
 }
 
-// SetOrderingCustomer appends a OrderingCustomer to the FedWireMessage
-func (fwm *FedWireMessage) SetOrderingCustomer(oc *OrderingCustomer) {
+// SetOrderingCustomer appends a OrderingCustomer to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOrderingCustomer(oc *OrderingCustomer) {
 	fwm.OrderingCustomer = oc
 }
 
 // GetOrderingCustomer returns the current OrderingCustomer
-func (fwm *FedWireMessage) GetOrderingCustomer() *OrderingCustomer {
+func (fwm *FEDWireMessage) GetOrderingCustomer() *OrderingCustomer {
 	return fwm.OrderingCustomer
 }
 
-// SetOrderingInstitution appends a OrderingInstitution to the FedWireMessage
-func (fwm *FedWireMessage) SetOrderingInstitution(oi *OrderingInstitution) {
+// SetOrderingInstitution appends a OrderingInstitution to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOrderingInstitution(oi *OrderingInstitution) {
 	fwm.OrderingInstitution = oi
 }
 
 // GetOrderingInstitution returns the current OrderingInstitution
-func (fwm *FedWireMessage) GetOrderingInstitution() *OrderingInstitution {
+func (fwm *FEDWireMessage) GetOrderingInstitution() *OrderingInstitution {
 	return fwm.OrderingInstitution
 }
 
-// SetIntermediaryInstitution appends a IntermediaryInstitution to the FedWireMessage
-func (fwm *FedWireMessage) SetIntermediaryInstitution(ii *IntermediaryInstitution) {
+// SetIntermediaryInstitution appends a IntermediaryInstitution to the FEDWireMessage
+func (fwm *FEDWireMessage) SetIntermediaryInstitution(ii *IntermediaryInstitution) {
 	fwm.IntermediaryInstitution = ii
 }
 
 // GetIntermediaryInstitution returns the current IntermediaryInstitution
-func (fwm *FedWireMessage) GetIntermediaryInstitution() *IntermediaryInstitution {
+func (fwm *FEDWireMessage) GetIntermediaryInstitution() *IntermediaryInstitution {
 	return fwm.IntermediaryInstitution
 }
 
-// SetInstitutionAccount appends a InstitutionAccount to the FedWireMessage
-func (fwm *FedWireMessage) SetInstitutionAccount(iAccount *InstitutionAccount) {
+// SetInstitutionAccount appends a InstitutionAccount to the FEDWireMessage
+func (fwm *FEDWireMessage) SetInstitutionAccount(iAccount *InstitutionAccount) {
 	fwm.InstitutionAccount = iAccount
 }
 
 // GetInstitutionAccount returns the current InstitutionAccount
-func (fwm *FedWireMessage) GetInstitutionAccount() *InstitutionAccount {
+func (fwm *FEDWireMessage) GetInstitutionAccount() *InstitutionAccount {
 	return fwm.InstitutionAccount
 }
 
-// SetBeneficiaryCustomer appends a BeneficiaryCustomer to the FedWireMessage
-func (fwm *FedWireMessage) SetBeneficiaryCustomer(bc *BeneficiaryCustomer) {
+// SetBeneficiaryCustomer appends a BeneficiaryCustomer to the FEDWireMessage
+func (fwm *FEDWireMessage) SetBeneficiaryCustomer(bc *BeneficiaryCustomer) {
 	fwm.BeneficiaryCustomer = bc
 }
 
 // GetBeneficiaryCustomer returns the current BeneficiaryCustomer
-func (fwm *FedWireMessage) GetBeneficiaryCustomer() *BeneficiaryCustomer {
+func (fwm *FEDWireMessage) GetBeneficiaryCustomer() *BeneficiaryCustomer {
 	return fwm.BeneficiaryCustomer
 }
 
-// SetRemittance appends a Remittance to the FedWireMessage
-func (fwm *FedWireMessage) SetRemittance(ri *Remittance) {
+// SetRemittance appends a Remittance to the FEDWireMessage
+func (fwm *FEDWireMessage) SetRemittance(ri *Remittance) {
 	fwm.Remittance = ri
 }
 
 // GetRemittance returns the current Remittance
-func (fwm *FedWireMessage) GetRemittance() *Remittance {
+func (fwm *FEDWireMessage) GetRemittance() *Remittance {
 	return fwm.Remittance
 }
 
-// SetSenderToReceiver appends a SenderToReceiver to the FedWireMessage
-func (fwm *FedWireMessage) SetSenderToReceiver(str *SenderToReceiver) {
+// SetSenderToReceiver appends a SenderToReceiver to the FEDWireMessage
+func (fwm *FEDWireMessage) SetSenderToReceiver(str *SenderToReceiver) {
 	fwm.SenderToReceiver = str
 }
 
 // GetSenderToReceiver  returns the current SenderToReceiver
-func (fwm *FedWireMessage) GetSenderToReceiver() *SenderToReceiver {
+func (fwm *FEDWireMessage) GetSenderToReceiver() *SenderToReceiver {
 	return fwm.SenderToReceiver
 }
 
-// SetUnstructuredAddenda appends a UnstructuredAddenda to the FedWireMessage
-func (fwm *FedWireMessage) SetUnstructuredAddenda(ua *UnstructuredAddenda) {
+// SetUnstructuredAddenda appends a UnstructuredAddenda to the FEDWireMessage
+func (fwm *FEDWireMessage) SetUnstructuredAddenda(ua *UnstructuredAddenda) {
 	fwm.UnstructuredAddenda = ua
 }
 
 // GetUnstructuredAddenda returns the current UnstructuredAddenda
-func (fwm *FedWireMessage) GetUnstructuredAddenda() *UnstructuredAddenda {
+func (fwm *FEDWireMessage) GetUnstructuredAddenda() *UnstructuredAddenda {
 	return fwm.UnstructuredAddenda
 }
 
-// SetRelatedRemittance appends a RelatedRemittance to the FedWireMessage
-func (fwm *FedWireMessage) SetRelatedRemittance(rr *RelatedRemittance) {
+// SetRelatedRemittance appends a RelatedRemittance to the FEDWireMessage
+func (fwm *FEDWireMessage) SetRelatedRemittance(rr *RelatedRemittance) {
 	fwm.RelatedRemittance = rr
 }
 
 // GetRelatedRemittance returns the current RelatedRemittance
-func (fwm *FedWireMessage) GetRelatedRemittance() *RelatedRemittance {
+func (fwm *FEDWireMessage) GetRelatedRemittance() *RelatedRemittance {
 	return fwm.RelatedRemittance
 }
 
-// SetRemittanceOriginator appends a RemittanceOriginator to the FedWireMessage
-func (fwm *FedWireMessage) SetRemittanceOriginator(ro *RemittanceOriginator) {
+// SetRemittanceOriginator appends a RemittanceOriginator to the FEDWireMessage
+func (fwm *FEDWireMessage) SetRemittanceOriginator(ro *RemittanceOriginator) {
 	fwm.RemittanceOriginator = ro
 }
 
 // GetRemittanceOriginator returns the current RemittanceOriginator
-func (fwm *FedWireMessage) GetRemittanceOriginator() *RemittanceOriginator {
+func (fwm *FEDWireMessage) GetRemittanceOriginator() *RemittanceOriginator {
 	return fwm.RemittanceOriginator
 }
 
-// SetRemittanceBeneficiary appends a RemittanceBeneficiary to the FedWireMessage
-func (fwm *FedWireMessage) SetRemittanceBeneficiary(rb *RemittanceBeneficiary) {
+// SetRemittanceBeneficiary appends a RemittanceBeneficiary to the FEDWireMessage
+func (fwm *FEDWireMessage) SetRemittanceBeneficiary(rb *RemittanceBeneficiary) {
 	fwm.RemittanceBeneficiary = rb
 }
 
 // GetRemittanceBeneficiary returns the current RemittanceBeneficiary
-func (fwm *FedWireMessage) GetRemittanceBeneficiary() *RemittanceBeneficiary {
+func (fwm *FEDWireMessage) GetRemittanceBeneficiary() *RemittanceBeneficiary {
 	return fwm.RemittanceBeneficiary
 }
 
-// SetPrimaryRemittanceDocument appends a PrimaryRemittanceDocument to the FedWireMessage
-func (fwm *FedWireMessage) SetPrimaryRemittanceDocument(prd *PrimaryRemittanceDocument) {
+// SetPrimaryRemittanceDocument appends a PrimaryRemittanceDocument to the FEDWireMessage
+func (fwm *FEDWireMessage) SetPrimaryRemittanceDocument(prd *PrimaryRemittanceDocument) {
 	fwm.PrimaryRemittanceDocument = prd
 }
 
 // GetPrimaryRemittanceDocument returns the current PrimaryRemittanceDocument
-func (fwm *FedWireMessage) GetPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
+func (fwm *FEDWireMessage) GetPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
 	return fwm.PrimaryRemittanceDocument
 }
 
-// SetActualAmountPaid appends a ActualAmountPaid to the FedWireMessage
-func (fwm *FedWireMessage) SetActualAmountPaid(aap *ActualAmountPaid) {
+// SetActualAmountPaid appends a ActualAmountPaid to the FEDWireMessage
+func (fwm *FEDWireMessage) SetActualAmountPaid(aap *ActualAmountPaid) {
 	fwm.ActualAmountPaid = aap
 }
 
 // GetActualAmountPaid returns the current ActualAmountPaid
-func (fwm *FedWireMessage) GetActualAmountPaid() *ActualAmountPaid {
+func (fwm *FEDWireMessage) GetActualAmountPaid() *ActualAmountPaid {
 	return fwm.ActualAmountPaid
 }
 
-// SetGrossAmountRemittanceDocument appends a GrossAmountRemittanceDocument to the FedWireMessage
-func (fwm *FedWireMessage) SetGrossAmountRemittanceDocument(gard *GrossAmountRemittanceDocument) {
+// SetGrossAmountRemittanceDocument appends a GrossAmountRemittanceDocument to the FEDWireMessage
+func (fwm *FEDWireMessage) SetGrossAmountRemittanceDocument(gard *GrossAmountRemittanceDocument) {
 	fwm.GrossAmountRemittanceDocument = gard
 }
 
 // GetGrossAmountRemittanceDocument returns the current GrossAmountRemittanceDocument
-func (fwm *FedWireMessage) GetGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
+func (fwm *FEDWireMessage) GetGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
 	return fwm.GrossAmountRemittanceDocument
 }
 
-// SetAmountNegotiatedDiscount appends a AmountNegotiatedDiscount to the FedWireMessage
-func (fwm *FedWireMessage) SetAmountNegotiatedDiscount(nd *AmountNegotiatedDiscount) {
+// SetAmountNegotiatedDiscount appends a AmountNegotiatedDiscount to the FEDWireMessage
+func (fwm *FEDWireMessage) SetAmountNegotiatedDiscount(nd *AmountNegotiatedDiscount) {
 	fwm.AmountNegotiatedDiscount = nd
 }
 
 // GetAmountNegotiatedDiscount returns the current AmountNegotiatedDiscount
-func (fwm *FedWireMessage) GetAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
+func (fwm *FEDWireMessage) GetAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
 	return fwm.AmountNegotiatedDiscount
 }
 
-// SetAdjustment appends a Adjustment to the FedWireMessage
-func (fwm *FedWireMessage) SetAdjustment(adj *Adjustment) {
+// SetAdjustment appends a Adjustment to the FEDWireMessage
+func (fwm *FEDWireMessage) SetAdjustment(adj *Adjustment) {
 	fwm.Adjustment = adj
 }
 
 // GetAdjustment returns the current Adjustment
-func (fwm *FedWireMessage) GetAdjustment() *Adjustment {
+func (fwm *FEDWireMessage) GetAdjustment() *Adjustment {
 	return fwm.Adjustment
 }
 
-// SetDateRemittanceDocument appends a DateRemittanceDocument to the FedWireMessage
-func (fwm *FedWireMessage) SetDateRemittanceDocument(drd *DateRemittanceDocument) {
+// SetDateRemittanceDocument appends a DateRemittanceDocument to the FEDWireMessage
+func (fwm *FEDWireMessage) SetDateRemittanceDocument(drd *DateRemittanceDocument) {
 	fwm.DateRemittanceDocument = drd
 }
 
 // GetDateRemittanceDocument returns the current DateRemittanceDocument
-func (fwm *FedWireMessage) GetDateRemittanceDocument() *DateRemittanceDocument {
+func (fwm *FEDWireMessage) GetDateRemittanceDocument() *DateRemittanceDocument {
 	return fwm.DateRemittanceDocument
 }
 
-// SetSecondaryRemittanceDocument appends a SecondaryRemittanceDocument to the FedWireMessage
-func (fwm *FedWireMessage) SetSecondaryRemittanceDocument(srd *SecondaryRemittanceDocument) {
+// SetSecondaryRemittanceDocument appends a SecondaryRemittanceDocument to the FEDWireMessage
+func (fwm *FEDWireMessage) SetSecondaryRemittanceDocument(srd *SecondaryRemittanceDocument) {
 	fwm.SecondaryRemittanceDocument = srd
 }
 
 // GetSecondaryRemittanceDocument returns the current SecondaryRemittanceDocument
-func (fwm *FedWireMessage) GetSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
+func (fwm *FEDWireMessage) GetSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 	return fwm.SecondaryRemittanceDocument
 }
 
-// SetRemittanceFreeText appends a RemittanceFreeText to the FedWireMessage
-func (fwm *FedWireMessage) SetRemittanceFreeText(rft *RemittanceFreeText) {
+// SetRemittanceFreeText appends a RemittanceFreeText to the FEDWireMessage
+func (fwm *FEDWireMessage) SetRemittanceFreeText(rft *RemittanceFreeText) {
 	fwm.RemittanceFreeText = rft
 }
 
 // GetRemittanceFreeText returns the current RemittanceFreeText
-func (fwm *FedWireMessage) GetRemittanceFreeText() *RemittanceFreeText {
+func (fwm *FEDWireMessage) GetRemittanceFreeText() *RemittanceFreeText {
 	return fwm.RemittanceFreeText
 }
 
-// SetServiceMessage appends a ServiceMessage to the FedWireMessage
-func (fwm *FedWireMessage) SetServiceMessage(sm *ServiceMessage) {
+// SetServiceMessage appends a ServiceMessage to the FEDWireMessage
+func (fwm *FEDWireMessage) SetServiceMessage(sm *ServiceMessage) {
 	fwm.ServiceMessage = sm
 }
 
 // GetServiceMessage returns the current ServiceMessage
-func (fwm *FedWireMessage) GetServiceMessage() *ServiceMessage {
+func (fwm *FEDWireMessage) GetServiceMessage() *ServiceMessage {
 	return fwm.ServiceMessage
 }
 
-func (fwm *FedWireMessage) isAmountValid() error {
+func (fwm *FEDWireMessage) isAmountValid() error {
 	if fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
 		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
 			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
@@ -1615,7 +1615,7 @@ func (fwm *FedWireMessage) isAmountValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
+func (fwm *FEDWireMessage) isPreviousMessageIdentifierValid() error {
 	if fwm.PreviousMessageIdentifier != nil {
 		if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
 			switch fwm.BusinessFunctionCode.BusinessFunctionCode {
@@ -1629,7 +1629,7 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isLocalInstrumentCodeValid() error {
+func (fwm *FEDWireMessage) isLocalInstrumentCodeValid() error {
 	if fwm.LocalInstrument != nil {
 		if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
 			if fwm.BeneficiaryReference == nil {
@@ -1640,7 +1640,7 @@ func (fwm *FedWireMessage) isLocalInstrumentCodeValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isChargesValid() error {
+func (fwm *FEDWireMessage) isChargesValid() error {
 	if fwm.Charges != nil {
 		if fwm.LocalInstrument != nil {
 			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
@@ -1652,7 +1652,7 @@ func (fwm *FedWireMessage) isChargesValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isInstructedAmountValid() error {
+func (fwm *FEDWireMessage) isInstructedAmountValid() error {
 	if fwm.InstructedAmount != nil {
 		if fwm.LocalInstrument != nil {
 			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
@@ -1664,7 +1664,7 @@ func (fwm *FedWireMessage) isInstructedAmountValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isExchangeRateValid() error {
+func (fwm *FEDWireMessage) isExchangeRateValid() error {
 	if fwm.ExchangeRate != nil {
 		if fwm.InstructedAmount == nil {
 			return fieldError("InstructedAmount", ErrFieldRequired)
@@ -1679,7 +1679,7 @@ func (fwm *FedWireMessage) isExchangeRateValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isBeneficiaryIntermediaryFIValid() error {
+func (fwm *FEDWireMessage) isBeneficiaryIntermediaryFIValid() error {
 	if fwm.BeneficiaryFI == nil {
 		return fieldError("BeneficiaryFI", ErrFieldRequired)
 	}
@@ -1689,14 +1689,14 @@ func (fwm *FedWireMessage) isBeneficiaryIntermediaryFIValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isBeneficiaryFIValid() error {
+func (fwm *FEDWireMessage) isBeneficiaryFIValid() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
-func (fwm *FedWireMessage) isOriginatorFIValid() error {
+func (fwm *FEDWireMessage) isOriginatorFIValid() error {
 	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
 		if fwm.Originator == nil && fwm.OriginatorOptionF == nil {
 			return fieldError("Originator or Originator Option F", ErrFieldRequired)
@@ -1709,7 +1709,7 @@ func (fwm *FedWireMessage) isOriginatorFIValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isInstructingFIValid() error {
+func (fwm *FEDWireMessage) isInstructingFIValid() error {
 	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
 		if fwm.Originator == nil && fwm.OriginatorOptionF == nil {
 			return fieldError("Originator or Originator Option F", ErrFieldRequired)
@@ -1722,7 +1722,7 @@ func (fwm *FedWireMessage) isInstructingFIValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isOriginatorToBeneficiaryValid() error {
+func (fwm *FEDWireMessage) isOriginatorToBeneficiaryValid() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -1738,7 +1738,7 @@ func (fwm *FedWireMessage) isOriginatorToBeneficiaryValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isFIIntermediaryFIValid() error {
+func (fwm *FEDWireMessage) isFIIntermediaryFIValid() error {
 	if fwm.BeneficiaryIntermediaryFI == nil {
 		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
 	}
@@ -1751,7 +1751,7 @@ func (fwm *FedWireMessage) isFIIntermediaryFIValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isFIIntermediaryFIAdviceValid() error {
+func (fwm *FEDWireMessage) isFIIntermediaryFIAdviceValid() error {
 	if fwm.BeneficiaryIntermediaryFI == nil {
 		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
 	}
@@ -1764,7 +1764,7 @@ func (fwm *FedWireMessage) isFIIntermediaryFIAdviceValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isFIBeneficiaryFIValid() error {
+func (fwm *FEDWireMessage) isFIBeneficiaryFIValid() error {
 	if fwm.BeneficiaryFI == nil {
 		return fieldError("BeneficiaryFI", ErrFieldRequired)
 	}
@@ -1774,7 +1774,7 @@ func (fwm *FedWireMessage) isFIBeneficiaryFIValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isFIBeneficiaryFIAdviceValid() error {
+func (fwm *FEDWireMessage) isFIBeneficiaryFIAdviceValid() error {
 	if fwm.BeneficiaryFI == nil {
 		return fieldError("BeneficiaryFI", ErrFieldRequired)
 	}
@@ -1784,20 +1784,20 @@ func (fwm *FedWireMessage) isFIBeneficiaryFIAdviceValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isFIBeneficiaryValid() error {
+func (fwm *FEDWireMessage) isFIBeneficiaryValid() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
-func (fwm *FedWireMessage) isFIBeneficiaryAdviceValid() error {
+func (fwm *FEDWireMessage) isFIBeneficiaryAdviceValid() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
-func (fwm *FedWireMessage) isFIPaymentMethodToBeneficiaryValid() error {
+func (fwm *FEDWireMessage) isFIPaymentMethodToBeneficiaryValid() error {
 	if fwm.FIBeneficiary == nil {
 		return fieldError("FIBeneficiary", ErrFieldRequired)
 	}
@@ -1807,7 +1807,7 @@ func (fwm *FedWireMessage) isFIPaymentMethodToBeneficiaryValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isUnstructuredAddendaValid() error {
+func (fwm *FEDWireMessage) isUnstructuredAddendaValid() error {
 	switch fwm.LocalInstrument.LocalInstrumentCode {
 	case
 		SequenceBCoverPaymentStructured,
@@ -1823,7 +1823,7 @@ func (fwm *FedWireMessage) isUnstructuredAddendaValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isRelatedRemittanceValid() error {
+func (fwm *FEDWireMessage) isRelatedRemittanceValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RelatedRemittanceInformation {
 		return NewErrInvalidPropertyForProperty("RelatedRemittance", "RelatedRemittance",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1831,7 +1831,7 @@ func (fwm *FedWireMessage) isRelatedRemittanceValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isRemittanceOriginatorValid() error {
+func (fwm *FEDWireMessage) isRemittanceOriginatorValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("RemittanceOriginator", "RemittanceOriginator",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1839,7 +1839,7 @@ func (fwm *FedWireMessage) isRemittanceOriginatorValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isRemittanceBeneficiaryValid() error {
+func (fwm *FEDWireMessage) isRemittanceBeneficiaryValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("RemittanceBeneficiary", "RemittanceBeneficiary",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1847,7 +1847,7 @@ func (fwm *FedWireMessage) isRemittanceBeneficiaryValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isPrimaryRemittanceDocumentValid() error {
+func (fwm *FEDWireMessage) isPrimaryRemittanceDocumentValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", "PrimaryRemittanceDocument",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1855,7 +1855,7 @@ func (fwm *FedWireMessage) isPrimaryRemittanceDocumentValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isActualAmountPaidValid() error {
+func (fwm *FEDWireMessage) isActualAmountPaidValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("ActualAmountPaid", "ActualAmountPaid",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1863,7 +1863,7 @@ func (fwm *FedWireMessage) isActualAmountPaidValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isGrossAmountRemittanceDocumentValid() error {
+func (fwm *FEDWireMessage) isGrossAmountRemittanceDocumentValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("GrossAmountRemittanceDocument", "GrossAmountRemittanceDocument",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1871,7 +1871,7 @@ func (fwm *FedWireMessage) isGrossAmountRemittanceDocumentValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isAdjustmentValid() error {
+func (fwm *FEDWireMessage) isAdjustmentValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("Adjustment", "Adjustment",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1879,7 +1879,7 @@ func (fwm *FedWireMessage) isAdjustmentValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isDateRemittanceDocumentValid() error {
+func (fwm *FEDWireMessage) isDateRemittanceDocumentValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("DateRemittanceDocument", "DateRemittanceDocument",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1887,7 +1887,7 @@ func (fwm *FedWireMessage) isDateRemittanceDocumentValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isSecondaryRemittanceDocumentValid() error {
+func (fwm *FEDWireMessage) isSecondaryRemittanceDocumentValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("SecondaryRemittanceDocument", "SecondaryRemittanceDocument",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1895,7 +1895,7 @@ func (fwm *FedWireMessage) isSecondaryRemittanceDocumentValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) isRemittanceFreeTextValid() error {
+func (fwm *FEDWireMessage) isRemittanceFreeTextValid() error {
 	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
 		return NewErrInvalidPropertyForProperty("RemittanceFreeText", "RemittanceFreeText",
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
@@ -1903,7 +1903,7 @@ func (fwm *FedWireMessage) isRemittanceFreeTextValid() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) otherTransferInformation() error {
+func (fwm *FEDWireMessage) otherTransferInformation() error {
 	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
 		return err
 	}
@@ -1923,7 +1923,7 @@ func (fwm *FedWireMessage) otherTransferInformation() error {
 	return nil
 }
 
-func (fwm *FedWireMessage) remittance() error {
+func (fwm *FEDWireMessage) remittance() error {
 	if fwm.RelatedRemittance != nil {
 		if err := fwm.isRelatedRemittanceValid(); err != nil {
 			return err

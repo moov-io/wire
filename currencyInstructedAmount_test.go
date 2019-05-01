@@ -32,8 +32,8 @@ func TestCurrencyInstructedAmountSwiftFieldTagAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestInstructedAmountValid validates CurrencyInstructedAmount InstructedAmount is valid
-func TestInstructedAmountValid(t *testing.T) {
+// TestCurrencyInstructedAmountValid validates CurrencyInstructedAmount InstructedAmount is valid
+func TestCurrencyInstructedAmountValid(t *testing.T) {
 	cia := mockCurrencyInstructedAmount()
 	cia.Amount = "1-0"
 	if err := cia.Validate(); err != nil {

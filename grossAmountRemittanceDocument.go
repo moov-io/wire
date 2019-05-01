@@ -65,6 +65,12 @@ func (gard *GrossAmountRemittanceDocument) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (gard *GrossAmountRemittanceDocument) fieldInclusion() error {
+	if gard.RemittanceAmount.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if gard.RemittanceAmount.CurrencyCode == "" {
+		return fieldError("CurrencyCode", ErrFieldRequired)
+	}
 	return nil
 }
 

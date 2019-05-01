@@ -22,7 +22,7 @@ func TestMockInstructedAmount(t *testing.T) {
 }
 
 // TestInstructedAmountAmountRequired validates InstructedAmount Amount is required
-func TestInstructedAmountAmountRequired(t *testing.T) {
+func TestInstructedAmountRequired(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.Amount = ""
 	if err := ia.Validate(); err != nil {
@@ -44,7 +44,7 @@ func TestInstructedAmountCurrencyCodeRequired(t *testing.T) {
 }
 
 // TestInstructedAmountAmountValid validates Amount
-func TestInstructedAmountAmountValid(t *testing.T) {
+func TestInstructedAmountValid(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.Amount = "X,"
 	if err := ia.Validate(); err != nil {

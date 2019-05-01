@@ -94,7 +94,7 @@ func TestRemittanceOriginatorAddressTypeValid(t *testing.T) {
 }
 
 // TestRemittanceOriginatorNameAlphaNumeric validates RemittanceOriginator Name is alphanumeric
-func TestRemittanceOriginatorNameAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorNameAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.Name = "®"
 	if err := ro.Validate(); err != nil {
@@ -105,7 +105,7 @@ func TestRemittanceOriginatorNameAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorIdentificationNumberAlphaNumeric validates RemittanceOriginator IdentificationNumber is alphanumeric
-func TestRemittanceOriginatorIdentificationNumberAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorIdentificationNumberAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.IdentificationNumber = "®"
 	if err := ro.Validate(); err != nil {
@@ -116,7 +116,7 @@ func TestRemittanceOriginatorIdentificationNumberAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorIdentificationNumberIssuerAlphaNumeric validates RemittanceOriginator IdentificationNumberIssuer is alphanumeric
-func TestRemittanceOriginatorIdentificationNumberIssuerAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorIdentificationNumberIssuerAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.IdentificationNumberIssuer = "®"
 	if err := ro.Validate(); err != nil {
@@ -127,7 +127,7 @@ func TestRemittanceOriginatorIdentificationNumberIssuerAlphaNumeric (t *testing.
 }
 
 // TestRemittanceOriginatorDepartmentAlphaNumeric validates RemittanceOriginator Department is alphanumeric
-func TestRemittanceOriginatorDepartmentAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorDepartmentAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.Department = "®"
 	if err := ro.Validate(); err != nil {
@@ -138,7 +138,7 @@ func TestRemittanceOriginatorDepartmentAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorSubDepartmentAlphaNumeric validates RemittanceOriginator SubDepartment is alphanumeric
-func TestRemittanceOriginatorSubDepartmentAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorSubDepartmentAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.SubDepartment = "®"
 	if err := ro.Validate(); err != nil {
@@ -149,7 +149,7 @@ func TestRemittanceOriginatorSubDepartmentAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorStreetNameAlphaNumeric validates RemittanceOriginator StreetName is alphanumeric
-func TestRemittanceOriginatorStreetNameAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorStreetNameAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.StreetName = "®"
 	if err := ro.Validate(); err != nil {
@@ -160,7 +160,7 @@ func TestRemittanceOriginatorStreetNameAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorBuildingNumberAlphaNumeric validates RemittanceOriginator BuildingNumber is alphanumeric
-func TestRemittanceOriginatorBuildingNumberAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorBuildingNumberAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.BuildingNumber = "®"
 	if err := ro.Validate(); err != nil {
@@ -171,7 +171,7 @@ func TestRemittanceOriginatorBuildingNumberAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorPostCodeAlphaNumeric validates RemittanceOriginator PostCode is alphanumeric
-func TestRemittanceOriginatorPostCodeAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorPostCodeAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.PostCode = "®"
 	if err := ro.Validate(); err != nil {
@@ -182,7 +182,7 @@ func TestRemittanceOriginatorPostCodeAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorTownNameAlphaNumeric validates RemittanceOriginator TownName is alphanumeric
-func TestRemittanceOriginatorTownNameAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorTownNameAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.TownName = "®"
 	if err := ro.Validate(); err != nil {
@@ -194,7 +194,7 @@ func TestRemittanceOriginatorTownNameAlphaNumeric (t *testing.T) {
 
 // TestRemittanceOriginatorCountrySubDivisionStateAlphaNumeric validates RemittanceOriginator CountrySubDivisionState
 // is alphanumeric
-func TestRemittanceOriginatorCountrySubDivisionStateAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorCountrySubDivisionStateAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.CountrySubDivisionState = "®"
 	if err := ro.Validate(); err != nil {
@@ -205,7 +205,7 @@ func TestRemittanceOriginatorCountrySubDivisionStateAlphaNumeric (t *testing.T) 
 }
 
 // TestRemittanceOriginatorCountryAlphaNumeric validates RemittanceOriginator Country is alphanumeric
-func TestRemittanceOriginatorCountryAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorCountryAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.Country = "®"
 	if err := ro.Validate(); err != nil {
@@ -216,7 +216,7 @@ func TestRemittanceOriginatorCountryAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineOneAlphaNumeric validates RemittanceOriginator AddressLineOne is alphanumeric
-func TestRemittanceOriginatorAddressLineOneAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineOneAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineOne = "®"
 	if err := ro.Validate(); err != nil {
@@ -227,7 +227,7 @@ func TestRemittanceOriginatorAddressLineOneAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineTwoAlphaNumeric validates RemittanceOriginator AddressLineTwo is alphanumeric
-func TestRemittanceOriginatorAddressLineTwoAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineTwoAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineTwo = "®"
 	if err := ro.Validate(); err != nil {
@@ -238,7 +238,7 @@ func TestRemittanceOriginatorAddressLineTwoAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineThreeAlphaNumeric validates RemittanceOriginator AddressLineThree is alphanumeric
-func TestRemittanceOriginatorAddressLineThreeAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineThreeAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineThree = "®"
 	if err := ro.Validate(); err != nil {
@@ -249,7 +249,7 @@ func TestRemittanceOriginatorAddressLineThreeAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineFourAlphaNumeric validates RemittanceOriginator AddressLineFour is alphanumeric
-func TestRemittanceOriginatorAddressLineFourAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineFourAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineFour = "®"
 	if err := ro.Validate(); err != nil {
@@ -260,7 +260,7 @@ func TestRemittanceOriginatorAddressLineFourAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineFiveAlphaNumeric validates RemittanceOriginator AddressLineFive is alphanumeric
-func TestRemittanceOriginatorAddressLineFiveAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineFiveAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineFive = "®"
 	if err := ro.Validate(); err != nil {
@@ -271,7 +271,7 @@ func TestRemittanceOriginatorAddressLineFiveAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineSixAlphaNumeric validates RemittanceOriginator AddressLineSix is alphanumeric
-func TestRemittanceOriginatorAddressLineSixAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineSixAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineSix = "®"
 	if err := ro.Validate(); err != nil {
@@ -282,7 +282,7 @@ func TestRemittanceOriginatorAddressLineSixAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorAddressLineSevenAlphaNumeric validates RemittanceOriginator AddressLineSeven is alphanumeric
-func TestRemittanceOriginatorAddressLineSevenAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorAddressLineSevenAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.AddressLineSeven = "®"
 	if err := ro.Validate(); err != nil {
@@ -293,7 +293,7 @@ func TestRemittanceOriginatorAddressLineSevenAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorCountryOfResidenceAlphaNumeric validates RemittanceOriginator CountryOfResidence is alphanumeric
-func TestRemittanceOriginatorCountryOfResidenceAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorCountryOfResidenceAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.RemittanceData.CountryOfResidence = "®"
 	if err := ro.Validate(); err != nil {
@@ -304,7 +304,7 @@ func TestRemittanceOriginatorCountryOfResidenceAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorContactNameAlphaNumeric validates RemittanceOriginator ContactName is alphanumeric
-func TestRemittanceOriginatorContactNameAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorContactNameAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.ContactName = "®"
 	if err := ro.Validate(); err != nil {
@@ -315,7 +315,7 @@ func TestRemittanceOriginatorContactNameAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorContactPhoneNumberAlphaNumeric validates RemittanceOriginator ContactPhoneNumber is alphanumeric
-func TestRemittanceOriginatorContactPhoneNumberAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorContactPhoneNumberAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.ContactPhoneNumber = "®"
 	if err := ro.Validate(); err != nil {
@@ -326,7 +326,7 @@ func TestRemittanceOriginatorContactPhoneNumberAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorContactMobileNumberAlphaNumeric validates RemittanceOriginator ContactMobileNumber is alphanumeric
-func TestRemittanceOriginatorContactMobileNumberAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorContactMobileNumberAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.ContactMobileNumber = "®"
 	if err := ro.Validate(); err != nil {
@@ -337,7 +337,7 @@ func TestRemittanceOriginatorContactMobileNumberAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorContactFaxNumberAlphaNumeric validates RemittanceOriginator ContactFaxNumber is alphanumeric
-func TestRemittanceOriginatorContactFaxNumberAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorContactFaxNumberAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.ContactFaxNumber = "®"
 	if err := ro.Validate(); err != nil {
@@ -349,7 +349,7 @@ func TestRemittanceOriginatorContactFaxNumberAlphaNumeric (t *testing.T) {
 
 // TestRemittanceOriginatorContactElectronicAddressAlphaNumeric validates RemittanceOriginator ContactElectronicAddress
 // is alphanumeric
-func TestRemittanceOriginatorContactElectronicAddressAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorContactElectronicAddressAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.ContactElectronicAddress = "®"
 	if err := ro.Validate(); err != nil {
@@ -361,7 +361,7 @@ func TestRemittanceOriginatorContactElectronicAddressAlphaNumeric (t *testing.T)
 
 // TestRemittanceOriginatorContactOtherAlphaNumeric validates RemittanceOriginator ContactOther
 // is alphanumeric
-func TestRemittanceOriginatorContactOtherAlphaNumeric (t *testing.T) {
+func TestRemittanceOriginatorContactOtherAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.ContactOther = "®"
 	if err := ro.Validate(); err != nil {
@@ -372,7 +372,7 @@ func TestRemittanceOriginatorContactOtherAlphaNumeric (t *testing.T) {
 }
 
 // TestRemittanceOriginatorNameRequired validates RemittanceOriginator Name is required
-func TestRemittanceOriginatorNameRequired (t *testing.T) {
+func TestRemittanceOriginatorNameRequired(t *testing.T) {
 	rb := mockRemittanceOriginator()
 	rb.RemittanceData.Name = ""
 	if err := rb.Validate(); err != nil {
