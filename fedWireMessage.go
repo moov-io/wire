@@ -1910,9 +1910,6 @@ func (fwm *FedWireMessage) otherTransferInformation() error {
 	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
 		return err
 	}
-	if err := fwm.isPaymentNotificationValid(); err != nil {
-		return err
-	}
 	if err := fwm.isChargesValid(); err != nil {
 		return err
 	}
