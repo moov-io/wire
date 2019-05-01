@@ -308,23 +308,62 @@ func TestRemittanceBeneficiaryNameRequired (t *testing.T) {
 	}
 }
 
-/*// TestRemittanceBeneficiaryIdentificationCodeValid validates RemittanceBeneficiary IdentificationCode
-func TestRemittanceBeneficiaryIdentificationCodeValid(t *testing.T) {
+// TestRemittanceBeneficiaryIdentificationNumberInvalid validates RemittanceBeneficiary IdentificationNumber
+func TestRemittanceBeneficiaryIdentificationNumberInvalid(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
-	rb.IdentificationCode = "zz"
+	rb.IdentificationCode = PICDateBirthPlace
+	rb.IdentificationNumber = "zz"
 	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrOrganizationIdentificationCode) {
+		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
-}*/
+}
 
-/*func validate(rb *RemittanceBeneficiary) func(t *testing.T) {
-	return func(t *testing.T) {
-		if err := rb.Validate(); err != nil {
-			if !base.Match(err, ErrNonAlphanumeric) {
-				t.Errorf("%T: %s", err, err)
-			}
+// TestIdentificationNumberIssuerInvalid_IdentificationNumber validates RemittanceBeneficiary IdentificationNumberIssuer
+func TestIdentificationNumberIssuerInvalid_IdentificationNumber(t *testing.T) {
+	rb := mockRemittanceBeneficiary()
+	rb.IdentificationNumber = ""
+	rb.IdentificationNumberIssuer = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
 		}
 	}
-}*/
+}
+
+// TestIdentificationNumberIssuerInvalid_PICDateBirthPlace validates RemittanceBeneficiary IdentificationNumberIssuer
+func TestIdentificationNumberIssuerInvalid_PICDateBirthPlace(t *testing.T) {
+	rb := mockRemittanceBeneficiary()
+	rb.IdentificationCode = PICDateBirthPlace
+	rb.IdentificationNumberIssuer = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI validates RemittanceBeneficiary IdentificationNumberIssuer
+func TestIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI(t *testing.T) {
+	rb := mockRemittanceBeneficiary()
+	rb.IdentificationCode = OICSWIFTBICORBEI
+	rb.IdentificationNumberIssuer = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceBeneficiaryDateBirthPlaceInvalid validates RemittanceBeneficiary DateBirthPlace
+func TestRemittanceBeneficiaryDateBirthPlaceInvalid(t *testing.T) {
+	rb := mockRemittanceBeneficiary()
+	rb.IdentificationCode = PICCustomerNumber
+	rb.RemittanceData.DateBirthPlace = "Pottstown"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

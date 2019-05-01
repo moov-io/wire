@@ -187,6 +187,7 @@ func (rb *RemittanceBeneficiary) fieldInclusion() error {
 	if rb.RemittanceData.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
+
 	if  rb.IdentificationCode == PICDateBirthPlace {
 		if rb.IdentificationNumber != "" {
 			return fieldError("IdentificationNumber", ErrInvalidProperty, rb.IdentificationNumber)
@@ -203,6 +204,7 @@ func (rb *RemittanceBeneficiary) fieldInclusion() error {
 			return fieldError("DateBirthPlace", ErrInvalidProperty, rb.RemittanceData.DateBirthPlace)
 		}
 	}
+
 	return nil
 }
 

@@ -416,14 +416,18 @@ func (fwm *FedWireMessage) isInvalidBankTransferTags() error {
 	if fwm.ExchangeRate != nil {
 		return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 	}
-	if fwm.Beneficiary.Personal.IdentificationCode == "T" {
-		return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+	if fwm.Beneficiary != nil {
+		if fwm.Beneficiary.Personal.IdentificationCode == "T" {
+			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+		}
 	}
 	if fwm.AccountDebitedDrawdown != nil {
 		return fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown)
 	}
-	if fwm.Originator.Personal.IdentificationCode == "T" {
-		return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+	if fwm.Originator != nil {
+		if fwm.Originator.Personal.IdentificationCode == "T" {
+			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+		}
 	}
 	if fwm.OriginatorOptionF != nil {
 		return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
@@ -599,7 +603,7 @@ func (fwm *FedWireMessage) isCustomerTransferPlusTags() error {
 			return fieldError("ProprietaryCode", ErrFieldRequired)
 		}
 	}
-	if fwm.LocalInstrument.LocalInstrumentCode != "COVS" {
+	if fwm.LocalInstrument.LocalInstrumentCode != SequenceBCoverPaymentStructured {
 		if err := fwm.invalidCoverPaymentTags(); err != nil {
 			return err
 		}
@@ -1612,11 +1616,13 @@ func (fwm *FedWireMessage) isAmountValid() error {
 }
 
 func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
-	if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
-		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
-		case BankTransfer, CustomerTransfer, CustomerTransferPlus:
-			if fwm.PreviousMessageIdentifier == nil {
-				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+	if fwm.PreviousMessageIdentifier != nil {
+		if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
+			switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+			case BankTransfer, CustomerTransfer, CustomerTransferPlus:
+				if fwm.PreviousMessageIdentifier == nil {
+					return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+				}
 			}
 		}
 	}
@@ -1624,58 +1630,50 @@ func (fwm *FedWireMessage) isPreviousMessageIdentifierValid() error {
 }
 
 func (fwm *FedWireMessage) isLocalInstrumentCodeValid() error {
-	/*	if fwm.BusinessFunctionCode.BusinessFunctionCode != "CTP" {
-		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-			"BusinessFunctionCode.BusinessFunctionCode", fwm.BusinessFunctionCode.BusinessFunctionCode)
-	}*/
-	if fwm.LocalInstrument.ProprietaryCode != "" && fwm.LocalInstrument.LocalInstrumentCode != "PROP" {
-		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-			"LocalInstrument.ProprietaryCode", fwm.LocalInstrument.ProprietaryCode)
-	}
-	if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
-		if fwm.BeneficiaryReference == nil {
-			return fieldError("BeneficiaryReference", ErrFieldRequired)
+	if fwm.LocalInstrument != nil {
+		if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+			if fwm.BeneficiaryReference == nil {
+				return fieldError("BeneficiaryReference", ErrFieldRequired)
+			}
 		}
 	}
 	return nil
 }
 
-func (fwm *FedWireMessage) isPaymentNotificationValid() error {
-	// ToDo: I'm not sure of anyway to indicate this from a code stand point
-	//  Payment Notification Indicator is mandatory.
-	//   Indicators 0 through 6 – Reserved for market practice conventions.
-	//   Indicators 7 through 9 – Reserved for bilateral agreements between Fedwire senders and receivers.
-	return nil
-}
-
 func (fwm *FedWireMessage) isChargesValid() error {
-	if fwm.LocalInstrument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
-			return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-				"Charges", "Charges Defined")
+	if fwm.Charges != nil {
+		if fwm.LocalInstrument != nil {
+			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+				return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+					"Charges", fwm.Charges.String())
+			}
 		}
 	}
 	return nil
 }
 
 func (fwm *FedWireMessage) isInstructedAmountValid() error {
-	if fwm.LocalInstrument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
-			return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-				"Instructed Amount", "Instructed Amount")
+	if fwm.InstructedAmount != nil {
+		if fwm.LocalInstrument != nil {
+			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+				return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
+					fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
+			}
 		}
 	}
 	return nil
 }
 
 func (fwm *FedWireMessage) isExchangeRateValid() error {
-	if fwm.InstructedAmount == nil {
-		return fieldError("InstructedAmount", ErrFieldRequired)
-	}
-	if fwm.LocalInstrument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode == "COVS" {
-			return NewErrInvalidPropertyForProperty("ExchangeRate", fwm.ExchangeRate.ExchangeRate,
-				"Instructed Amount", "Instructed Amount")
+	if fwm.ExchangeRate != nil {
+		if fwm.InstructedAmount == nil {
+			return fieldError("InstructedAmount", ErrFieldRequired)
+		}
+		if fwm.LocalInstrument != nil {
+			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+				return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
+					fwm.LocalInstrument.LocalInstrumentCode, "ExchangeRate", fwm.ExchangeRate.ExchangeRate)
+			}
 		}
 	}
 	return nil
@@ -1906,35 +1904,24 @@ func (fwm *FedWireMessage) isRemittanceFreeTextValid() error {
 }
 
 func (fwm *FedWireMessage) otherTransferInformation() error {
-	if fwm.PreviousMessageIdentifier != nil {
-		if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
-			return err
-		}
+	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
+		return err
 	}
-	if fwm.LocalInstrument != nil {
-		if err := fwm.isLocalInstrumentCodeValid(); err != nil {
-			return err
-		}
+	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+		return err
 	}
-	if fwm.PaymentNotification != nil {
-		if err := fwm.isPaymentNotificationValid(); err != nil {
-			return err
-		}
+	if err := fwm.isPaymentNotificationValid(); err != nil {
+		return err
 	}
-	if fwm.Charges != nil {
-		if err := fwm.isChargesValid(); err != nil {
-			return err
-		}
+	if err := fwm.isChargesValid(); err != nil {
+		return err
 	}
-	if fwm.InstructedAmount != nil {
-		if err := fwm.isInstructedAmountValid(); err != nil {
-			return err
-		}
+	if err := fwm.isInstructedAmountValid(); err != nil {
+		return err
 	}
-	if fwm.ExchangeRate != nil {
-		if err := fwm.isExchangeRateValid(); err != nil {
-			return err
-		}
+
+	if err := fwm.isExchangeRateValid(); err != nil {
+		return err
 	}
 	return nil
 }

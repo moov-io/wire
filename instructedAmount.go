@@ -68,6 +68,13 @@ func (ia *InstructedAmount) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ia *InstructedAmount) fieldInclusion() error {
+	if ia.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if ia.CurrencyCode == "" {
+		return fieldError("CurrencyCode", ErrFieldRequired)
+
+	}
 	return nil
 }
 

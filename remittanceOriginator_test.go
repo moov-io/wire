@@ -31,7 +31,6 @@ func mockRemittanceOriginator() *RemittanceOriginator {
 	ro.RemittanceData.AddressLineSix = "Address Line Six"
 	ro.RemittanceData.AddressLineSeven = "Address Line Seven"
 	ro.RemittanceData.CountryOfResidence = "US"
-
 	ro.ContactName = "Contact Name"
 	ro.ContactPhoneNumber = "5551231212"
 	ro.ContactMobileNumber = "5551231212"
@@ -46,6 +45,51 @@ func TestMockRemittanceOriginator(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	if err := ro.Validate(); err != nil {
 		t.Error("mockRemittanceOriginator does not validate and will break other tests")
+	}
+}
+
+// TestRemittanceOriginatorIdentificationTypeValid validates RemittanceOriginator IdentificationType
+func TestRemittanceOriginatorIdentificationTypeValid(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationType = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrIdentificationType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorIdentificationCodeValid validates RemittanceOriginator IdentificationCode
+func TestRemittanceOriginatorIdentificationCodeValid(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationCode = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrOrganizationIdentificationCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorIdentificationCodeValid2 validates RemittanceOriginator IdentificationCode
+func TestRemittanceOriginatorIdentificationCodeValid2(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationType = PrivateID
+	rb.IdentificationCode = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrPrivateIdentificationCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorAddressTypeValid validates RemittanceOriginator AddressType
+func TestRemittanceOriginatorAddressTypeValid(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.RemittanceData.AddressType = "BBRB"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrAddressType) {
+			t.Errorf("%T: %s", err, err)
+		}
 	}
 }
 
@@ -254,6 +298,145 @@ func TestRemittanceOriginatorCountryOfResidenceAlphaNumeric (t *testing.T) {
 	ro.RemittanceData.CountryOfResidence = "®"
 	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorContactNameAlphaNumeric validates RemittanceOriginator ContactName is alphanumeric
+func TestRemittanceOriginatorContactNameAlphaNumeric (t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.ContactName = "®"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorContactPhoneNumberAlphaNumeric validates RemittanceOriginator ContactPhoneNumber is alphanumeric
+func TestRemittanceOriginatorContactPhoneNumberAlphaNumeric (t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.ContactPhoneNumber = "®"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorContactMobileNumberAlphaNumeric validates RemittanceOriginator ContactMobileNumber is alphanumeric
+func TestRemittanceOriginatorContactMobileNumberAlphaNumeric (t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.ContactMobileNumber = "®"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorContactFaxNumberAlphaNumeric validates RemittanceOriginator ContactFaxNumber is alphanumeric
+func TestRemittanceOriginatorContactFaxNumberAlphaNumeric (t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.ContactFaxNumber = "®"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorContactElectronicAddressAlphaNumeric validates RemittanceOriginator ContactElectronicAddress
+// is alphanumeric
+func TestRemittanceOriginatorContactElectronicAddressAlphaNumeric (t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.ContactElectronicAddress = "®"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorContactOtherAlphaNumeric validates RemittanceOriginator ContactOther
+// is alphanumeric
+func TestRemittanceOriginatorContactOtherAlphaNumeric (t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.ContactOther = "®"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorNameRequired validates RemittanceOriginator Name is required
+func TestRemittanceOriginatorNameRequired (t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.RemittanceData.Name = ""
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorIdentificationNumberInvalid validates RemittanceOriginator IdentificationNumber
+func TestRemittanceOriginatorIdentificationNumberInvalid(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationCode = PICDateBirthPlace
+	rb.IdentificationNumber = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber validates RemittanceOriginator IdentificationNumberIssuer
+func TestOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationNumber = ""
+	rb.IdentificationNumberIssuer = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorIdentificationNumberIssuerInvalid_PICDateBirthPlace validates RemittanceOriginator IdentificationNumberIssuer
+func TestOriginatorIdentificationNumberIssuerInvalid_PICDateBirthPlace(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationCode = PICDateBirthPlace
+	rb.IdentificationNumberIssuer = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI validates RemittanceOriginator IdentificationNumberIssuer
+func TestOriginatorIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationCode = OICSWIFTBICORBEI
+	rb.IdentificationNumberIssuer = "zz"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestRemittanceOriginatorDateBirthPlaceInvalid validates RemittanceOriginator DateBirthPlace
+func TestRemittanceOriginatorDateBirthPlaceInvalid(t *testing.T) {
+	rb := mockRemittanceOriginator()
+	rb.IdentificationCode = PICCustomerNumber
+	rb.RemittanceData.DateBirthPlace = "Pottstown"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

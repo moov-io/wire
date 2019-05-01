@@ -228,36 +228,24 @@ func (ro *RemittanceOriginator) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ro *RemittanceOriginator) fieldInclusion() error {
-	if ro.IdentificationType == "" {
-		return fieldError("IdentificationType", ErrFieldRequired)
-	}
-	if ro.IdentificationCode == "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	if ro.RemittanceData.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
-	switch ro.IdentificationCode {
-	case PICDateBirthPlace:
+	if  ro.IdentificationCode == PICDateBirthPlace {
 		if ro.IdentificationNumber != "" {
 			return fieldError("IdentificationNumber", ErrInvalidProperty, ro.IdentificationNumber)
 		}
+	}
+
+	if  ro.IdentificationNumber == "" || ro.IdentificationCode == OICSWIFTBICORBEI ||
+		ro.IdentificationCode == PICDateBirthPlace  {
 		if ro.IdentificationNumberIssuer != "" {
 			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, ro.IdentificationNumberIssuer)
 		}
-	case OICSWIFTBICORBEI:
-		if ro.IdentificationNumberIssuer != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, ro.IdentificationNumberIssuer)
-		}
+	}
+	if ro.IdentificationCode != PICDateBirthPlace {
 		if ro.RemittanceData.DateBirthPlace != "" {
 			return fieldError("DateBirthPlace", ErrInvalidProperty, ro.RemittanceData.DateBirthPlace)
-		}
-	default:
-		if ro.RemittanceData.DateBirthPlace != "" {
-			return fieldError("DateBirthPlace", ErrInvalidProperty, ro.RemittanceData.DateBirthPlace)
-		}
-		if ro.IdentificationNumber == "" {
-			return fieldError("IdentificationNumber", ErrFieldRequired, ro.IdentificationNumber)
 		}
 	}
 	return nil

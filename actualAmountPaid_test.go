@@ -55,7 +55,7 @@ func TestActualAmountPaidAmountValid(t *testing.T) {
 }
 
 // TestActualAmountPaidCurrencyCodeValid validates Amount
-func TestCurrencyCodeValid(t *testing.T) {
+func TestActualAmountPaidCurrencyCodeValid(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.CurrencyCode = "XZP"
 	if err := aap.Validate(); err != nil {
