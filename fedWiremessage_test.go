@@ -173,44 +173,120 @@ func TestFEDWireMessage_isExchangeRateValid(t *testing.T) {
 	}
 }
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_isBeneficiaryIntermediaryFIValid(t *testing.T) {
+	file := NewFile()
+	fwm := mockCustomerTransferData()
+	// Override to trigger error
+	//li := mockLocalInstrument()
+	//li.LocalInstrumentCode = SequenceBCoverPaymentStructured
+	//fwm.SetLocalInstrument(li)
+	//eRate := mockExchangeRate()
+	//fwm.SetExchangeRate(eRate)
+	//ia := mockInstructedAmount()
+	//fwm.SetInstructedAmount(ia)
+	bifi := mockBeneficiaryIntermediaryFI()
+	fwm.SetBeneficiaryIntermediaryFI(bifi)
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	file.AddFEDWireMessage(fwm)
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	// BeneficiaryFI required field check
+	if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	// Beneficiary required field check
+	if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_isBeneficiaryFIValid(t *testing.T) {
+	file := NewFile()
+	fwm := mockCustomerTransferData()
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+	file.AddFEDWireMessage(fwm)
+	// Beneficiary required field check
+	if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
+		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_isOriginatorFIValid(t *testing.T) {
+}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_isFIIntermediaryFIValid(t *testing.T) {
+}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_isFIIntermediaryFIAdviceValid(t *testing.T) {
+}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_FIBeneficiaryFI(t *testing.T) {
+}
 
-/*func TestFEDWireMessage_is(t *testing.T) {
-}*/
+func TestFEDWireMessage_isFIBeneficiaryFIAdvice(t *testing.T) {
+}
+
+func TestFEDWireMessage_isFIBeneficiary(t *testing.T) {
+}
+
+func TestFEDWireMessage_isFIBeneficiaryAdvice(t *testing.T) {
+}
+
+func TestFEDWireMessage_isUnstructuredAddendaValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isRemittanceOriginatorValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isRemittanceBeneficiaryValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isPrimaryRemittanceDocumentValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isActualAmountPaidValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isGrossAmountRemittanceDocument(t *testing.T) {
+}
+
+func TestFEDWireMessage_is(t *testing.T) {
+}
+
+func TestFEDWireMessage_isAdjustmentValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isDateRemittanceDocumentValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isSecondaryRemittanceDocumen(t *testing.T) {
+}
+
+func TestFEDWireMessage_isRemittanceFreeText(t *testing.T) {
+}
+
+func TestFEDWireMessage_isRelatedRemittanceValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isGrossAmountRemittanceDocumentValid(t *testing.T) {
+}
+
+func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
+}
+
+

@@ -81,6 +81,9 @@ func (c *Charges) Validate() error {
 	if err := c.isAlphanumeric(c.SendersChargesOne); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
 	}
+	if err := c.isChargesValid(c.SendersChargesOne); err != nil {
+		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
+	}
 	if err := c.isAlphanumeric(c.SendersChargesTwo); err != nil {
 		return fieldError("SendersChargesTwo", err, c.SendersChargesTwo)
 	}
@@ -122,4 +125,15 @@ func (c *Charges) SendersChargesThreeField() string {
 // SendersChargesFourField gets a string of the SendersChargesFour field
 func (c *Charges) SendersChargesFourField() string {
 	return c.alphaField(c.SendersChargesFour, 15)
+}
+
+func (c *Charges) isChargesValid(s string) error {
+	if s == "" {
+		return nil
+	}
+	currencyCode := s[:3]
+	if err := c.isCurrencyCode(currencyCode); err != nil {
+
+	}
+	return nil
 }

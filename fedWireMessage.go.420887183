@@ -1794,190 +1794,155 @@ func (fwm *FEDWireMessage) isFIIntermediaryFIValid() error {
 }
 
 func (fwm *FEDWireMessage) isFIIntermediaryFIAdviceValid() error {
-	if fwm.FIIntermediaryFIAdvice != nil {
-		if fwm.BeneficiaryIntermediaryFI == nil {
-			return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
-		}
-		if fwm.BeneficiaryFI == nil {
-			return fieldError("BeneficiaryFI", ErrFieldRequired)
-		}
-		if fwm.Beneficiary == nil {
-			return fieldError("Beneficiary", ErrFieldRequired)
-		}
+	if fwm.BeneficiaryIntermediaryFI == nil {
+		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
+	}
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isFIBeneficiaryFIValid() error {
-	if fwm.FIBeneficiaryFI != nil {
-		if fwm.BeneficiaryFI == nil {
-			return fieldError("BeneficiaryFI", ErrFieldRequired)
-		}
-		if fwm.Beneficiary == nil {
-			return fieldError("Beneficiary", ErrFieldRequired)
-		}
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isFIBeneficiaryFIAdviceValid() error {
-	if fwm.FIBeneficiaryFIAdvice != nil {
-		if fwm.BeneficiaryFI == nil {
-			return fieldError("BeneficiaryFI", ErrFieldRequired)
-		}
-		if fwm.Beneficiary == nil {
-			return fieldError("Beneficiary", ErrFieldRequired)
-		}
+	if fwm.BeneficiaryFI == nil {
+		return fieldError("BeneficiaryFI", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isFIBeneficiaryValid() error {
-	if fwm.FIBeneficiary != nil {
-		if fwm.Beneficiary == nil {
-			return fieldError("Beneficiary", ErrFieldRequired)
-		}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
 	}
-
 	return nil
 }
 func (fwm *FEDWireMessage) isFIBeneficiaryAdviceValid() error {
-	if fwm.FIBeneficiaryAdvice != nil {
-		if fwm.Beneficiary == nil {
-			return fieldError("Beneficiary", ErrFieldRequired)
-		}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isFIPaymentMethodToBeneficiaryValid() error {
-	if fwm.FIPaymentMethodToBeneficiary != nil {
-		if fwm.FIBeneficiary == nil {
-			return fieldError("FIBeneficiary", ErrFieldRequired)
-		}
-		if fwm.Beneficiary == nil {
-			return fieldError("Beneficiary", ErrFieldRequired)
-		}
+	if fwm.FIBeneficiary == nil {
+		return fieldError("FIBeneficiary", ErrFieldRequired)
+	}
+	if fwm.Beneficiary == nil {
+		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isUnstructuredAddendaValid() error {
-	if fwm.UnstructuredAddenda != nil {
-		switch fwm.LocalInstrument.LocalInstrumentCode {
-		case
-			SequenceBCoverPaymentStructured,
-			ProprietaryLocalInstrumentCode,
-			RemittanceInformationStructured,
-			RelatedRemittanceInformation:
-			// ToDo may want to also check Addenda Length
-			if len(fwm.UnstructuredAddenda.Addenda) > 1 {
-				return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.Addenda,
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+	switch fwm.LocalInstrument.LocalInstrumentCode {
+	case
+		SequenceBCoverPaymentStructured,
+		ProprietaryLocalInstrumentCode,
+		RemittanceInformationStructured,
+		RelatedRemittanceInformation:
+		// ToDo may want to also check Addenda Length
+		if len(fwm.UnstructuredAddenda.Addenda) > 1 {
+			return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.Addenda,
+				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 		}
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isRelatedRemittanceValid() error {
-	if fwm.RelatedRemittance != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RelatedRemittanceInformation {
-			return NewErrInvalidPropertyForProperty("RelatedRemittance", "RelatedRemittance",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RelatedRemittanceInformation {
+		return NewErrInvalidPropertyForProperty("RelatedRemittance", "RelatedRemittance",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isRemittanceOriginatorValid() error {
-	if fwm.RemittanceOriginator != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("RemittanceOriginator", "RemittanceOriginator",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("RemittanceOriginator", "RemittanceOriginator",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isRemittanceBeneficiaryValid() error {
-	if fwm.RemittanceBeneficiary != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("RemittanceBeneficiary", "RemittanceBeneficiary",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("RemittanceBeneficiary", "RemittanceBeneficiary",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isPrimaryRemittanceDocumentValid() error {
-	if fwm.PrimaryRemittanceDocument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", "PrimaryRemittanceDocument",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", "PrimaryRemittanceDocument",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isActualAmountPaidValid() error {
-	if fwm.ActualAmountPaid != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("ActualAmountPaid", "ActualAmountPaid",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("ActualAmountPaid", "ActualAmountPaid",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isGrossAmountRemittanceDocumentValid() error {
-	if fwm.GrossAmountRemittanceDocument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("GrossAmountRemittanceDocument", "GrossAmountRemittanceDocument",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("GrossAmountRemittanceDocument", "GrossAmountRemittanceDocument",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isAdjustmentValid() error {
-	if fwm.Adjustment != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("Adjustment", "Adjustment",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("Adjustment", "Adjustment",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isDateRemittanceDocumentValid() error {
-	if fwm.DateRemittanceDocument != nil  {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("DateRemittanceDocument", "DateRemittanceDocument",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("DateRemittanceDocument", "DateRemittanceDocument",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isSecondaryRemittanceDocumentValid() error {
-	if fwm.SecondaryRemittanceDocument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("SecondaryRemittanceDocument", "SecondaryRemittanceDocument",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("SecondaryRemittanceDocument", "SecondaryRemittanceDocument",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
 	return nil
 }
 
 func (fwm *FEDWireMessage) isRemittanceFreeTextValid() error {
-	if fwm.RemittanceFreeText != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-			return NewErrInvalidPropertyForProperty("RemittanceFreeText", "RemittanceFreeText",
-				"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-		}
+	if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
+		return NewErrInvalidPropertyForProperty("RemittanceFreeText", "RemittanceFreeText",
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
 	}
-		return nil
+	return nil
 }
 
 func (fwm *FEDWireMessage) otherTransferInformation() error {
