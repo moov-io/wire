@@ -309,6 +309,10 @@ func (r *Reader) parseLine() error {
 		if err := r.parseServiceMessage(); err != nil {
 			return err
 		}
+	case TagReceiptTimeStamp:
+		if err := r.parseReceiptTimeStamp(); err != nil {
+			return err
+		}
 	default:
 		return NewErrInvalidTag(r.line[:6])
 	}
@@ -956,5 +960,49 @@ func (r *Reader) parseServiceMessage() error {
 		return r.parseError(err)
 	}
 	r.currentFEDWireMessage.SetServiceMessage(sm)
+	return nil
+}
+
+func (r *Reader) parseMessageDisposition() error {
+	r.tagName = "MessageDisposition"
+	md := new(MessageDisposition)
+	md.Parse(r.line)
+	if err := md.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetMessageDisposition(md)
+	return nil
+}
+
+func (r *Reader) parseReceiptTimeStamp() error {
+	r.tagName = "ReceiptTimeStamp"
+	rts := new(ReceiptTimeStamp)
+	rts.Parse(r.line)
+	if err := rts.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetReceiptTimeStamp(rts)
+	return nil
+}
+
+func (r *Reader) parseOutputMessageAccountabilityData() error {
+	r.tagName = "OutputMessageAccountabilityData"
+	omad := new(OutputMessageAccountabilityData)
+	omad.Parse(r.line)
+	if err := omad.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetOutputMessageAccountabilityData(omad)
+	return nil
+}
+
+func (r *Reader) parseErrorWire() error {
+	r.tagName = "ErrorWire"
+	ew := new(ErrorWire)
+	ew.Parse(r.line)
+	if err := ew.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetErrorWire(ew)
 	return nil
 }

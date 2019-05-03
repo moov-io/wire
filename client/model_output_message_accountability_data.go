@@ -14,6 +14,8 @@ type OutputMessageAccountabilityData struct {
 	OutputCycleDate string `json:"outputCycleDate,omitempty"`
 	// OutputDestinationID
 	OutputDestinationID string `json:"outputDestinationID,omitempty"`
+	// outputSequenceNumber
+	OutputSequenceNumber string `json:"outputSequenceNumber,omitempty"`
 	OutputDate DateMmdd `json:"outputDate,omitempty"`
 	OutputTime TimeHhmm `json:"outputTime,omitempty"`
 	// OutputFRBApplicationIdentification

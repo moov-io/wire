@@ -30,7 +30,7 @@ func NewSenderSupplied() *SenderSupplied {
 	ss := &SenderSupplied{
 		tag:                    TagSenderSupplied,
 		FormatVersion:          FormatVersion,
-		TestProductionCode:     EnvironmentTest,
+		TestProductionCode:     EnvironmentProduction,
 		MessageDuplicationCode: MessageDuplicationOriginal,
 	}
 	return ss

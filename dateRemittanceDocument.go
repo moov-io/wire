@@ -59,7 +59,7 @@ func (drd *DateRemittanceDocument) Validate() error {
 // invalid the WIRE will return an error.
 func (drd *DateRemittanceDocument) fieldInclusion() error {
 	if drd.DateRemittanceDocument == "" {
-		return fieldError("DateRemittanceDocument", ErrFieldRequired, drd.DateRemittanceDocument)
+		return fieldError("DateRemittanceDocument", ErrFieldRequired)
 	}
 	return nil
 }

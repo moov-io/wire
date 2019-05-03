@@ -24,8 +24,8 @@ type ReceiptTimeStamp struct {
 }
 
 // NewReceiptTimeStamp returns a new ReceiptTimeStamp
-func NewReceiptTimeStamp() ReceiptTimeStamp {
-	rts := ReceiptTimeStamp{
+func NewReceiptTimeStamp() *ReceiptTimeStamp {
+	rts := &ReceiptTimeStamp{
 		tag: TagReceiptTimeStamp,
 	}
 	return rts
@@ -36,27 +36,41 @@ func NewReceiptTimeStamp() ReceiptTimeStamp {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rts *ReceiptTimeStamp) Parse(record string) {
+	rts.tag = record[:6]
+	rts.ReceiptDate = rts.parseStringField(record[6:10])
+	rts.ReceiptTime = rts.parseStringField(record[10:14])
+	rts.ReceiptApplicationIdentification = rts.parseStringField(record[14:18])
 }
 
 // String writes ReceiptTimeStamp
 func (rts *ReceiptTimeStamp) String() string {
 	var buf strings.Builder
-	buf.Grow(12)
+	buf.Grow(18)
 	buf.WriteString(rts.tag)
+	buf.WriteString(rts.ReceiptDateField())
+	buf.WriteString(rts.ReceiptTimeField())
+	buf.WriteString(rts.ReceiptApplicationIdentificationField())
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on ReceiptTimeStamp and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (rts *ReceiptTimeStamp) Validate() error {
-	if err := rts.fieldInclusion(); err != nil {
-		return err
-	}
+	// Currently no validation as the FED is responsible for the values
 	return nil
 }
 
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (rts *ReceiptTimeStamp) fieldInclusion() error {
-	return nil
+// ReceiptDateField gets a string of the ReceiptDate field
+func (rts *ReceiptTimeStamp) ReceiptDateField() string {
+	return rts.alphaField(rts.ReceiptDate, 4)
+}
+
+// ReceiptTimeField gets a string of the ReceiptTime field
+func (rts *ReceiptTimeStamp) ReceiptTimeField() string {
+	return rts.alphaField(rts.ReceiptTime, 4)
+}
+
+// ReceiptApplicationIdentificationField gets a string of the ReceiptApplicationIdentification field
+func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField() string {
+	return rts.alphaField(rts.ReceiptApplicationIdentification, 4)
 }

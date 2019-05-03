@@ -2,7 +2,6 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-// ToDo: Change FedWireMessage to FED...
 // ToDo: Remove empty functions after all validation checks are coded
 // ToDo: if utf8.RuneCountInString(record) != NNN {..}  checks
 
@@ -1605,6 +1604,46 @@ func (fwm *FEDWireMessage) SetServiceMessage(sm *ServiceMessage) {
 // GetServiceMessage returns the current ServiceMessage
 func (fwm *FEDWireMessage) GetServiceMessage() *ServiceMessage {
 	return fwm.ServiceMessage
+}
+
+// SetMessageDisposition appends a MessageDisposition to the FEDWireMessage
+func (fwm *FEDWireMessage) SetMessageDisposition(md *MessageDisposition) {
+	fwm.MessageDisposition = md
+}
+
+// GetMessageDisposition returns the current MessageDisposition
+func (fwm *FEDWireMessage) GetMessageDisposition() *MessageDisposition {
+	return fwm.MessageDisposition
+}
+
+// SetReceiptTimeStamp appends a ReceiptTimeStamp to the FEDWireMessage
+func (fwm *FEDWireMessage) SetReceiptTimeStamp(rts *ReceiptTimeStamp) {
+	fwm.ReceiptTimeStamp = rts
+}
+
+// GetReceiptTimeStamp returns the current ReceiptTimeStamp
+func (fwm *FEDWireMessage) GetReceiptTimeStamp() *ReceiptTimeStamp {
+	return fwm.ReceiptTimeStamp
+}
+
+// SetOutputMessageAccountabilityData appends a ErrorWire to the FEDWireMessage
+func (fwm *FEDWireMessage) SetOutputMessageAccountabilityData(omad *OutputMessageAccountabilityData) {
+	fwm.OutputMessageAccountabilityData = omad
+}
+
+// GetOutputMessageAccountabilityData returns the current OutputMessageAccountabilityData
+func (fwm *FEDWireMessage) GetOutputMessageAccountabilityData() *OutputMessageAccountabilityData {
+	return fwm.OutputMessageAccountabilityData
+}
+
+// SetErrorWire appends a ErrorWire to the FEDWireMessage
+func (fwm *FEDWireMessage) SetErrorWire(ew *ErrorWire) {
+	fwm.ErrorWire = ew
+}
+
+// GetErrorWire returns the current ErrorWire
+func (fwm *FEDWireMessage) GetErrorWire() *ErrorWire {
+	return fwm.ErrorWire
 }
 
 func (fwm *FEDWireMessage) isAmountValid() error {

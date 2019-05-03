@@ -5,6 +5,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **OutputCycleDate** | **string** | OutputCycleDate (CCYYMMDD) | [optional] 
 **OutputDestinationID** | **string** | OutputDestinationID | [optional] 
+**OutputSequenceNumber** | **string** | outputSequenceNumber | [optional] 
 **OutputDate** | [**DateMmdd**](DateMMDD.md) |  | [optional] 
 **OutputTime** | [**TimeHhmm**](TimeHHMM.md) |  | [optional] 
 **OutputFRBApplicationIdentification** | **string** | OutputFRBApplicationIdentification | [optional] 

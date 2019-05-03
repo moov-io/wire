@@ -9,7 +9,7 @@
 
 package openapi
 
-// FedWireMessage
+// FEDWireMessage
 type FedWireMessage struct {
 	// FedWireMessage ID
 	Id string `json:"id,omitempty"`
