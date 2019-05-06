@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -71,6 +72,22 @@ func TestSenderSuppliedUserRequestCorrelationRequired(t *testing.T) {
 	ss.UserRequestCorrelation = ""
 	if err := ss.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseSenderSuppliedWrongLength parses a wrong SenderSupplied record length
+func TestParseSenderSuppliedWrongLength(t *testing.T) {
+	var line = "{1500}30P"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	err := r.parseSenderSupplied()
+	if err != nil {
+		if !base.Has(err, NewTagWrongLengthErr(18, len(r.line))) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

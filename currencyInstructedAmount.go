@@ -69,5 +69,5 @@ func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
 
 // AmountField gets a string of the AmountTag field
 func (cia *CurrencyInstructedAmount) AmountField() string {
-	return cia.alphaField(cia.Amount, 18)
+	return cia.numericStringField(cia.Amount, 18)
 }

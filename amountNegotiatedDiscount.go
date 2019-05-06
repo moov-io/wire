@@ -81,5 +81,5 @@ func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (nd *AmountNegotiatedDiscount) AmountField() string {
-	return nd.alphaField(nd.RemittanceAmount.Amount, 19)
+	return nd.numericStringField(nd.RemittanceAmount.Amount, 19)
 }

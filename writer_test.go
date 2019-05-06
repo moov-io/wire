@@ -284,8 +284,6 @@ func TestAmount_Mandatory(t *testing.T) {
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
-	amt := mockAmount()
-	fwm.SetAmount(amt)
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 	sdi := mockSenderDepositoryInstitution()

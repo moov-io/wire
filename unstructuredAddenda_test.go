@@ -9,7 +9,7 @@ import (
 func mockUnstructuredAddenda() *UnstructuredAddenda {
 	ua := NewUnstructuredAddenda()
 	ua.AddendaLength = "0014"
-	ua.Addenda = "This is a test"
+	ua.Addenda = "Unstructured Addenda"
 	return ua
 }
 

@@ -2,13 +2,13 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
 // mockTypeSubType creates a TypeSubType
 func mockTypeSubType() *TypeSubType {
 	tst := NewTypeSubType()
-	tst.tag = TagTypeSubType
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = BasicFundsTransfer
 	return tst
@@ -61,6 +61,23 @@ func TestSubTypeCodeRequired(t *testing.T) {
 	tst.SubTypeCode = ""
 	if err := tst.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseTypeSubTypeWrongLength parses a wrong TypeSubType record length
+func TestParseTypeSubTypeWrongLength(t *testing.T) {
+	var line = "{1510}1"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	err := r.parseTypeSubType()
+	if err != nil {
+
+		if !base.Has(err, NewTagWrongLengthErr(10, len(r.line))) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

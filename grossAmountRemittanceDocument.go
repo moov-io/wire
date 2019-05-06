@@ -81,5 +81,5 @@ func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (gard *GrossAmountRemittanceDocument) AmountField() string {
-	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
+	return gard.numericStringField(gard.RemittanceAmount.Amount, 19)
 }

@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // InputMessageAccountabilityData (IMAD) {1520}
 type InputMessageAccountabilityData struct {

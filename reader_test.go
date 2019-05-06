@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"github.com/moov-io/base"
 	"os"
 	"testing"
 )
@@ -38,4 +39,21 @@ func testRead(filePathName string) func(t *testing.T) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
+}
+
+func TestReadInvalidTag(t *testing.T) {
+	f, err := os.Open("./test/testdata/fedWireMessage-InvalidTag.txt")
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	defer f.Close()
+	r := NewReader(f)
+
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, NewErrInvalidTag(r.line[:6])) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+
 }

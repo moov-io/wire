@@ -43,7 +43,7 @@ type ErrInvalidTag struct {
 // NewErrInvalidTag creates a new error of the ErrInvalidTag type
 func NewErrInvalidTag(tag string) ErrInvalidTag {
 	return ErrInvalidTag{
-		Message: fmt.Sprintf("%s is an unknown tag", tag),
+		Message: fmt.Sprintf("%s is an invalid tag", tag),
 		Type:    tag,
 	}
 }

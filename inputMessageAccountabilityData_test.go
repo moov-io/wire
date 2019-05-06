@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 	"time"
 )
@@ -76,6 +77,23 @@ func TestInputMessageAccountabilityDataInputSequenceNumberRequired(t *testing.T)
 	imad.InputSequenceNumber = ""
 	if err := imad.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseInputMessageAccountabilityDataWrongLength parses a wrong InputMessageAccountabilityData record length
+func TestParseInputMessageAccountabilityDataWrongLength(t *testing.T) {
+	var line = "{1510}1"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	err := r.parseInputMessageAccountabilityData()
+	if err != nil {
+
+		if !base.Has(err, NewTagWrongLengthErr(28, len(r.line))) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

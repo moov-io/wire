@@ -26,8 +26,8 @@ func TestMockFIBeneficiaryAdvice(t *testing.T) {
 	}
 }
 
-// TestFIBeneficiaryAdviceAdviceCodeValid validates FIBeneficiaryAdvice AdviceCode is alphanumeric
-func TestFIBeneficiaryAdviceAdviceCodeValid(t *testing.T) {
+// TestFIBeneficiaryAdviceCodeValid validates FIBeneficiaryAdvice AdviceCode is alphanumeric
+func TestFIBeneficiaryAdviceCodeValid(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.AdviceCode = "Z"
 	if err := fiba.Validate(); err != nil {

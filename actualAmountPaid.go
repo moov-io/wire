@@ -82,5 +82,5 @@ func (aap *ActualAmountPaid) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (aap *ActualAmountPaid) AmountField() string {
-	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
+	return aap.numericStringField(aap.RemittanceAmount.Amount, 19)
 }

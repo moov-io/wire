@@ -24,7 +24,7 @@ func TestMockMessageDisposition(t *testing.T) {
 	}
 }
 
-// TestParseMessageDisposition parses a known MessageDisposition  record string
+// TestParseMessageDisposition parses a known MessageDisposition record string
 func TestParseMessageDisposition(t *testing.T) {
 	var line = "{1100}30P 2"
 	r := NewReader(strings.NewReader(line))

@@ -115,7 +115,7 @@ func (adj *Adjustment) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (adj *Adjustment) AmountField() string {
-	return adj.alphaField(adj.RemittanceAmount.Amount, 19)
+	return adj.numericStringField(adj.RemittanceAmount.Amount, 19)
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field
