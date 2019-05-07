@@ -9,7 +9,7 @@
 {3320}Sender Reference
 {3500}Previous Message Ident
 {3700}BUSD0,99        USD2,99        USD3,99        USD1,00        
-{3710}USD4567,89        
+{3710}USD000000004567,89        
 {3720}1,2345      
 {4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {4100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      

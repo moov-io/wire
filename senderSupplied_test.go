@@ -87,7 +87,29 @@ func TestParseSenderSuppliedWrongLength(t *testing.T) {
 	fwm.SetSenderSupplied(ss)
 	err := r.parseSenderSupplied()
 	if err != nil {
-		if !base.Has(err, NewTagWrongLengthErr(18, len(r.line))) {
+		if !base.Match(err, NewTagWrongLengthErr(18, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseSenderSuppliedReaderParseError parses a wrong SenderSupplied reader parse error
+func TestParseSenderSuppliedReaderParseError(t *testing.T) {
+	var line = "{1500}25User ReqP "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ss := mockSenderSupplied()
+	fwm.SetSenderSupplied(ss)
+	err := r.parseSenderSupplied()
+	if err != nil {
+		if !base.Match(err, ErrFormatVersion) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrFormatVersion) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

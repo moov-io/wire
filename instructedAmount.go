@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // InstructedAmount is the InstructedAmount of the wire
 type InstructedAmount struct {
@@ -34,10 +37,14 @@ func NewInstructedAmount() *InstructedAmount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ia *InstructedAmount) Parse(record string) {
+func (ia *InstructedAmount) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 24 {
+		return NewTagWrongLengthErr(24, len(record))
+	}
 	ia.tag = record[:6]
 	ia.CurrencyCode = ia.parseStringField(record[6:9])
 	ia.Amount = ia.parseStringField(record[9:24])
+	return nil
 }
 
 // String writes InstructedAmount

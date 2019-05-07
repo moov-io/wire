@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // SenderReference is the SenderReference of the wire
 type SenderReference struct {
@@ -31,9 +34,13 @@ func NewSenderReference() *SenderReference {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sr *SenderReference) Parse(record string) {
+func (sr *SenderReference) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 22 {
+		return NewTagWrongLengthErr(22, len(record))
+	}
 	sr.tag = record[:6]
 	sr.SenderReference = record[6:22]
+	return nil
 }
 
 // String writes SenderReference

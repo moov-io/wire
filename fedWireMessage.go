@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // ToDo: Remove empty functions after all validation checks are coded
-// ToDo: if utf8.RuneCountInString(record) != NNN {..}  checks
+// ToDo: if utf8.RuneCountInString(record) != NNN {..}  checks  see BusinessFunctionCode.go and reader.parseBusinessFunctionCode
 
 package wire
 

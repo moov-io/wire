@@ -76,8 +76,29 @@ func TestParseTypeSubTypeWrongLength(t *testing.T) {
 	fwm.SetTypeSubType(tst)
 	err := r.parseTypeSubType()
 	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(18, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
 
-		if !base.Has(err, NewTagWrongLengthErr(10, len(r.line))) {
+// TestParseTypeSubTypeReaderParseError parses a wrong TypeSubType reader parse error
+func TestParseTypeSubTypeReaderParseError(t *testing.T) {
+	var line = "{1510}100Z"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	tst := mockTypeSubType()
+	fwm.SetTypeSubType(tst)
+	err := r.parseTypeSubType()
+	if err != nil {
+		if !base.Match(err, ErrSubTypeCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrSubTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

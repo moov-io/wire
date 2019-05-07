@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -50,6 +51,44 @@ func TestProprietaryCodeAlphaNumeric(t *testing.T) {
 	li.ProprietaryCode = "®"
 	if err := li.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseLocalInstrumentWrongLength parses a wrong LocalInstrumente record length
+func TestParseLocalInstrumentWrongLength(t *testing.T) {
+	var line = "{3610}ANSI                                 "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	li := mockLocalInstrument()
+	fwm.SetLocalInstrument(li)
+	err := r.parseLocalInstrument()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(45, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseLocalInstrumentReaderParseError parses a wrong LocalInstrumente reader parse error
+func TestParseLocalInstrumentReaderParseError(t *testing.T) {
+	var line = "{3610}ABCD                                   "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	li := mockLocalInstrument()
+	fwm.SetLocalInstrument(li)
+	err := r.parseLocalInstrument()
+	if err != nil {
+		if !base.Match(err, ErrLocalInstrumentCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrLocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

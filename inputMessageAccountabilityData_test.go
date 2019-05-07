@@ -53,7 +53,7 @@ func TestInputMessageAccountabilityDataInputSequenceNumberAlphaNumeric(t *testin
 	imad := mockInputMessageAccountabilityData()
 	imad.InputSequenceNumber = "®"
 	if err := imad.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrNonNumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
@@ -93,7 +93,29 @@ func TestParseInputMessageAccountabilityDataWrongLength(t *testing.T) {
 	err := r.parseInputMessageAccountabilityData()
 	if err != nil {
 
-		if !base.Has(err, NewTagWrongLengthErr(28, len(r.line))) {
+		if !base.Match(err, NewTagWrongLengthErr(28, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseInputMessageAccountabilityDataReaderParseError parses a wrong InputMessageAccountabilityData reader parse error
+func TestParseInputMessageAccountabilityDataReaderParseError(t *testing.T) {
+	var line = "{1520}20190507Source0800000Z"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	imad := mockInputMessageAccountabilityData()
+	fwm.SetInputMessageAccountabilityData(imad)
+	err := r.parseInputMessageAccountabilityData()
+	if err != nil {
+		if !base.Match(err, ErrNonNumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonNumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

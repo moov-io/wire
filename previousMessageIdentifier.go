@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // PreviousMessageIdentifier is the PreviousMessageIdentifier of the wire
 type PreviousMessageIdentifier struct {
@@ -31,9 +34,13 @@ func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pmi *PreviousMessageIdentifier) Parse(record string) {
+func (pmi *PreviousMessageIdentifier) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 28 {
+		return NewTagWrongLengthErr(28, len(record))
+	}
 	pmi.tag = record[:6]
 	pmi.PreviousMessageIdentifier = pmi.parseStringField(record[6:28])
+	return nil
 }
 
 // String writes PreviousMessageIdentifier

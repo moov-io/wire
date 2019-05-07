@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // SenderSupplied {1500}
 type SenderSupplied struct {
@@ -40,12 +43,16 @@ func NewSenderSupplied() *SenderSupplied {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ss *SenderSupplied) Parse(record string) {
+func (ss *SenderSupplied) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 18 {
+		return NewTagWrongLengthErr(18, len(record))
+	}
 	ss.tag = record[0:6]
 	ss.FormatVersion = ss.parseStringField(record[6:8])
 	ss.UserRequestCorrelation = ss.parseStringField(record[8:16])
 	ss.TestProductionCode = ss.parseStringField(record[16:17])
 	ss.MessageDuplicationCode = ss.parseStringField(record[17:18])
+	return nil
 }
 
 // String writes SenderSupplied

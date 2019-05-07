@@ -321,12 +321,10 @@ func (r *Reader) parseLine() error {
 
 func (r *Reader) parseSenderSupplied() error {
 	r.tagName = "SenderSupplied"
-	if len(r.line) != 18 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(18, len(r.line))))
-		return r.errors
-	}
 	ss := new(SenderSupplied)
-	ss.Parse(r.line)
+	if err:= ss.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ss.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -336,12 +334,10 @@ func (r *Reader) parseSenderSupplied() error {
 
 func (r *Reader) parseTypeSubType() error {
 	r.tagName = "TypeSubType"
-	if len(r.line) != 10 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(10, len(r.line))))
-		return r.errors
-	}
 	tst := new(TypeSubType)
-	tst.Parse(r.line)
+	if err:= tst.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := tst.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -351,12 +347,10 @@ func (r *Reader) parseTypeSubType() error {
 
 func (r *Reader) parseInputMessageAccountabilityData() error {
 	r.tagName = "InputMessageAccountabilityData"
-	if len(r.line) != 28 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(22, len(r.line))))
-		return r.errors
-	}
 	imad := new(InputMessageAccountabilityData)
-	imad.Parse(r.line)
+	if err:= imad.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := imad.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -366,12 +360,10 @@ func (r *Reader) parseInputMessageAccountabilityData() error {
 
 func (r *Reader) parseAmount() error {
 	r.tagName = "Amount"
-	if len(r.line) != 18 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(18, len(r.line))))
-		return r.errors
-	}
 	amt := new(Amount)
-	amt.Parse(r.line)
+	if err:= amt.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := amt.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -381,12 +373,10 @@ func (r *Reader) parseAmount() error {
 
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
-	if len(r.line) < 15 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
-		return r.errors
-	}
 	sdi := new(SenderDepositoryInstitution)
-	sdi.Parse(r.line)
+	if err:= sdi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -396,12 +386,10 @@ func (r *Reader) parseSenderDepositoryInstitution() error {
 
 func (r *Reader) parseReceiverDepositoryInstitution() error {
 	r.tagName = "ReceiverDepositoryInstitution"
-	if len(r.line) < 15 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
-		return r.errors
-	}
 	rdi := new(ReceiverDepositoryInstitution)
-	rdi.Parse(r.line)
+	if err:= rdi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -411,12 +399,10 @@ func (r *Reader) parseReceiverDepositoryInstitution() error {
 
 func (r *Reader) parseBusinessFunctionCode() error {
 	r.tagName = "BusinessFunctionCode"
-	if len(r.line) != 12 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(12, len(r.line))))
-		return r.errors
-	}
 	bfc := new(BusinessFunctionCode)
-	bfc.Parse(r.line)
+	if err := bfc.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := bfc.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -427,7 +413,9 @@ func (r *Reader) parseBusinessFunctionCode() error {
 func (r *Reader) parseSenderReference() error {
 	r.tagName = "SenderReference"
 	sr := new(SenderReference)
-	sr.Parse(r.line)
+	if err:= sr.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sr.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -438,7 +426,9 @@ func (r *Reader) parseSenderReference() error {
 func (r *Reader) parsePreviousMessageIdentifier() error {
 	r.tagName = "PreviousMessageIdentifier"
 	pmi := new(PreviousMessageIdentifier)
-	pmi.Parse(r.line)
+	if err:= pmi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := pmi.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -449,7 +439,9 @@ func (r *Reader) parsePreviousMessageIdentifier() error {
 func (r *Reader) parseLocalInstrument() error {
 	r.tagName = "LocalInstrument"
 	li := new(LocalInstrument)
-	li.Parse(r.line)
+	if err:= li.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := li.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -460,7 +452,9 @@ func (r *Reader) parseLocalInstrument() error {
 func (r *Reader) parsePaymentNotification() error {
 	r.tagName = "PaymentNotification"
 	pn := new(PaymentNotification)
-	pn.Parse(r.line)
+	if err:= pn.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := pn.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -482,7 +476,9 @@ func (r *Reader) parseCharges() error {
 func (r *Reader) parseInstructedAmount() error {
 	r.tagName = "InstructedAmount"
 	ia := new(InstructedAmount)
-	ia.Parse(r.line)
+	if err:= ia.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ia.Validate(); err != nil {
 		return r.parseError(err)
 	}

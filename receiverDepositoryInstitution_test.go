@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -60,6 +61,44 @@ func TestReceiverShortNameRequired(t *testing.T) {
 	rdi.ReceiverShortName = ""
 	if err := rdi.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseReceiverWrongLength parses a wrong Receiver record length
+func TestParseReceiverWrongLength(t *testing.T) {
+	var line = "{3400}00"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	err := r.parseReceiverDepositoryInstitution()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(15, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseReceiverReaderParseError parses a wrong Receiver reader parse error
+func TestParseReceiverReaderParseError(t *testing.T) {
+	var line = "{3400}2313Z0104Citadel           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	rdi := mockReceiverDepositoryInstitution()
+	fwm.SetReceiverDepositoryInstitution(rdi)
+	err := r.parseReceiverDepositoryInstitution()
+	if err != nil {
+		if !base.Match(err, ErrNonNumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonNumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

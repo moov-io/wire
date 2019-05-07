@@ -6,7 +6,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BusinessFunctionCode {3600}
 type BusinessFunctionCode struct {
@@ -35,10 +38,14 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfc *BusinessFunctionCode) Parse(record string) {
+func (bfc *BusinessFunctionCode) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 12 {
+		return NewTagWrongLengthErr(12, len(record))
+	}
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
 	bfc.TransactionTypeCode = record[9:12]
+	return nil
 }
 
 // String writes BusinessFunctionCode

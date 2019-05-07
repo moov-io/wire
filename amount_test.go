@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -37,6 +38,44 @@ func TestAmountRequired(t *testing.T) {
 	a.Amount = ""
 	if err := a.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseAmountWrongLength parses a wrong Amount record length
+func TestParseAmountWrongLength(t *testing.T) {
+	var line = "{2000}00"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	err := r.parseAmount()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(18, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseAmountReaderParseError parses a wrong Amount reader parse error
+func TestParseAmountReaderParseError(t *testing.T) {
+	var line = "{2000}00000Z030022"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	amt := mockAmount()
+	fwm.SetAmount(amt)
+	err := r.parseAmount()
+	if err != nil {
+		if !base.Match(err, ErrNonAmount) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAmount) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

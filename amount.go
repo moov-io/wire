@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // Amount (up to a penny less than $10 billion) {2000}
 type Amount struct {
@@ -31,9 +34,13 @@ func NewAmount() *Amount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (a *Amount) Parse(record string) {
+func (a *Amount) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 18 {
+		return NewTagWrongLengthErr(18, len(record))
+	}
 	a.tag = record[:6]
 	a.Amount = a.parseStringField(record[6:18])
+	return nil
 }
 
 // String writes Amount

@@ -6,7 +6,7 @@
 {3400}231380104Citadel           
 {3600}BTR   
 {3320}Sender Reference
-{3500}Previous Message Ident           
+{3500}Previous Message Ident
 {4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {4100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {4200}31234                              Name                               Address One                        Address Two                        Address Three                      

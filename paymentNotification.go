@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // PaymentNotification is the PaymentNotification of the wire
 type PaymentNotification struct {
@@ -46,7 +49,10 @@ func NewPaymentNotification() *PaymentNotification {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pn *PaymentNotification) Parse(record string) {
+func (pn *PaymentNotification) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 2335  {
+		return NewTagWrongLengthErr(2335, len(record))
+	}
 	pn.tag = record[:6]
 	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
 	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[7:2055])
@@ -55,6 +61,7 @@ func (pn *PaymentNotification) Parse(record string) {
 	pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
 	pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
 	pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
+	return nil
 }
 
 // String writes PaymentNotification

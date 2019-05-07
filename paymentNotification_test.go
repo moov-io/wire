@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -98,6 +99,44 @@ func TestContactEndToEndIdentificationNumeric(t *testing.T) {
 	pn.EndToEndIdentification = "®"
 	if err := pn.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParsePaymentNotificationWrongLength parses a wrong PaymentNotification record length
+func TestParsePaymentNotificationWrongLength(t *testing.T) {
+	var line = "{3620}1http://moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Contact Name                                                                                                                                5555551212                         5551231212                         5554561212                         End To End Identification"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	pn := mockPaymentNotification()
+	fwm.SetPaymentNotification(pn)
+	err := r.parsePaymentNotification()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(2335, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParsePaymentNotificationReaderParseError parses a wrong PaymentNotification reader parse error
+func TestParsePaymentNotificationReaderParseError(t *testing.T) {
+	var line = "{3620}Zhttp://moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Contact Name                                                                                                                                5555551212                         5551231212                         5554561212                         End To End Identification"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	pn := mockPaymentNotification()
+	fwm.SetPaymentNotification(pn)
+	err := r.parsePaymentNotification()
+	if err != nil {
+		if !base.Match(err, ErrNonNumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonNumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // SenderDepositoryInstitution {3100}
 type SenderDepositoryInstitution struct {
@@ -33,10 +36,15 @@ func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sdi *SenderDepositoryInstitution) Parse(record string) {
+func (sdi *SenderDepositoryInstitution) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 33 {
+		return NewTagWrongLengthErr(33, len(record))
+	}
+
 	sdi.tag = record[:6]
 	sdi.SenderABANumber = sdi.parseStringField(record[6:15])
 	sdi.SenderShortName = sdi.parseStringField(record[15:33])
+	return nil
 }
 
 // String writes SenderDepositoryInstitution
