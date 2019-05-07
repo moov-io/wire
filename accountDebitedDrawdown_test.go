@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -130,6 +131,44 @@ func TestIdentificationCodeBogus(t *testing.T) {
 	debitDD.IdentificationCode = "Card ID"
 	if err := debitDD.Validate(); err != nil {
 		if !base.Match(err, ErrIdentificationCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseAccountDebitedDrawdownWrongLength parses a wrong AccountDebitedDrawdown record length
+func TestParseAccountDebitedDrawdownWrongLength(t *testing.T) {
+	var line = "{4400}D123456789                         debitDD Name                       Address One                        Address Two                        Address Three                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	debitDD := mockAccountDebitedDrawdown()
+	fwm.SetAccountDebitedDrawdown(debitDD)
+	err := r.parseAccountDebitedDrawdown()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseAccountDebitedDrawdownReaderParseError parses a wrong AccountDebitedDrawdown reader parse error
+func TestParseAccountDebitedDrawdownReaderParseError(t *testing.T) {
+	var line = "{4400}D123456789                         debitDD ®ame                       Address One                        Address Two                        Address Three                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	debitDD := mockAccountDebitedDrawdown()
+	fwm.SetAccountDebitedDrawdown(debitDD)
+	err := r.parseAccountDebitedDrawdown()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -62,6 +63,44 @@ func TestOriginatorToBeneficiaryLineFourAlphaNumeric(t *testing.T) {
 	ob.LineFour = "®"
 	if err := ob.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOriginatorToBeneficiaryWrongLength parses a wrong OriginatorToBeneficiary record length
+func TestParseOriginatorToBeneficiaryWrongLength(t *testing.T) {
+	var line = "{6000}LineOne                            LineTwo                            LineThree                          LineFour                         "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+	err := r.parseOriginatorToBeneficiary()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(146, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOriginatorToBeneficiaryReaderParseError parses a wrong OriginatorToBeneficiary reader parse error
+func TestParseOriginatorToBeneficiaryReaderParseError(t *testing.T) {
+	var line = "{6000}LineOne                            ®ineTwo                            LineThree                          LineFour                           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ob := mockOriginatorToBeneficiary()
+	fwm.SetOriginatorToBeneficiary(ob)
+	err := r.parseOriginatorToBeneficiary()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

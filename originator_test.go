@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -108,6 +109,44 @@ func TestOriginatorIdentifierRequired(t *testing.T) {
 	o.Personal.Identifier = ""
 	if err := o.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOriginatorWrongLength parses a wrong Originator record length
+func TestParseOriginatorWrongLength(t *testing.T) {
+	var line = "{5000}11234                              Name                               Address One                        Address Two                        Address Three                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	err := r.parseOriginator()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOriginatorReaderParseError parses a wrong Originator reader parse error
+func TestParseOriginatorReaderParseError(t *testing.T) {
+	var line = "{5000}11234                              ®ame                               Address One                        Address Two                        Address Three                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	o := mockOriginator()
+	fwm.SetOriginator(o)
+	err := r.parseOriginator()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -119,6 +120,44 @@ func TestBeneficiaryFIIdentifierRequired(t *testing.T) {
 	bfi.FinancialInstitution.Identifier = ""
 	if err := bfi.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseBeneficiaryFIWrongLength parses a wrong BeneficiaryFI record length
+func TestParseBeneficiaryFIWrongLength(t *testing.T) {
+	var line = "{4100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	err := r.parseBeneficiaryFI()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseBeneficiaryFIReaderParseError parses a wrong BeneficiaryFI reader parse error
+func TestParseBeneficiaryFIReaderParseError(t *testing.T) {
+	var line = "{4100}D123456789                         F® Name                            Address One                        Address Two                        Address Three                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	bfi := mockBeneficiaryFI()
+	fwm.SetBeneficiaryFI(bfi)
+	err := r.parseBeneficiaryFI()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

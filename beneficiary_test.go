@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -108,6 +109,44 @@ func TestBeneficiaryIdentifierRequired(t *testing.T) {
 	ben.Personal.Identifier = ""
 	if err := ben.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseBeneficiaryWrongLength parses a wrong Beneficiary record length
+func TestParseBeneficiaryWrongLength(t *testing.T) {
+	var line = "{4200}31234                              Name                               Address One                        Address Two                        Address Three                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	err := r.parseBeneficiary()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseBeneficiaryReaderParseError parses a wrong Beneficiary reader parse error
+func TestParseBeneficiaryReaderParseError(t *testing.T) {
+	var line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ben := mockBeneficiary()
+	fwm.SetBeneficiary(ben)
+	err := r.parseBeneficiary()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

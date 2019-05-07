@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // ExchangeRate is the ExchangeRate of the wire
 type ExchangeRate struct {
@@ -32,9 +35,13 @@ func NewExchangeRate() *ExchangeRate {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (eRate *ExchangeRate) Parse(record string) {
+func (eRate *ExchangeRate) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  18 {
+		return NewTagWrongLengthErr(18, len(record))
+	}
 	eRate.tag = record[:6]
 	eRate.ExchangeRate = eRate.parseStringField(record[6:18])
+	return nil
 }
 
 // String writes ExchangeRate

@@ -92,5 +92,5 @@ func (ia *InstructedAmount) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (ia *InstructedAmount) AmountField() string {
-	return ia.numericStringField(ia.Amount, 15)
+	return ia.alphaField(ia.Amount, 15)
 }

@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // Beneficiary is the beneficiary of the wire
 type Beneficiary struct {
@@ -31,7 +34,10 @@ func NewBeneficiary() *Beneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ben *Beneficiary) Parse(record string) {
+func (ben *Beneficiary) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	ben.tag = record[:6]
 	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
 	ben.Personal.Identifier = ben.parseStringField(record[7:41])
@@ -39,6 +45,7 @@ func (ben *Beneficiary) Parse(record string) {
 	ben.Personal.Address.AddressLineOne = ben.parseStringField(record[76:111])
 	ben.Personal.Address.AddressLineTwo = ben.parseStringField(record[111:146])
 	ben.Personal.Address.AddressLineThree = ben.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes Beneficiary

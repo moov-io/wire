@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // InstructingFI is the instructing financial institution
 type InstructingFI struct {
@@ -31,7 +34,10 @@ func NewInstructingFI() *InstructingFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ifi *InstructingFI) Parse(record string) {
+func (ifi *InstructingFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	ifi.tag = record[:6]
 	ifi.FinancialInstitution.IdentificationCode = ifi.parseStringField(record[6:7])
 	ifi.FinancialInstitution.Identifier = ifi.parseStringField(record[7:41])
@@ -39,6 +45,7 @@ func (ifi *InstructingFI) Parse(record string) {
 	ifi.FinancialInstitution.Address.AddressLineOne = ifi.parseStringField(record[76:111])
 	ifi.FinancialInstitution.Address.AddressLineTwo = ifi.parseStringField(record[111:146])
 	ifi.FinancialInstitution.Address.AddressLineThree = ifi.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes InstructingFI

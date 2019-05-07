@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BeneficiaryReference is a reference for the beneficiary
 type BeneficiaryReference struct {
@@ -31,9 +34,13 @@ func NewBeneficiaryReference() *BeneficiaryReference {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (br *BeneficiaryReference) Parse(record string) {
+func (br *BeneficiaryReference) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  22 {
+		return NewTagWrongLengthErr(22, len(record))
+	}
 	br.tag = record[:6]
 	br.BeneficiaryReference = br.parseStringField(record[6:22])
+	return nil
 }
 
 // String writes BeneficiaryReference

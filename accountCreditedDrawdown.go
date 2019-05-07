@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // AccountCreditedDrawdown is the account which is credited in a drawdown
 type AccountCreditedDrawdown struct {
@@ -31,9 +34,13 @@ func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (creditDD *AccountCreditedDrawdown) Parse(record string) {
+func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  15 {
+		return NewTagWrongLengthErr(15, len(record))
+	}
 	creditDD.tag = record[:6]
 	creditDD.DrawdownCreditAccountNumber = creditDD.parseStringField(record[6:15])
+	return nil
 }
 
 // String writes AccountCreditedDrawdown
@@ -51,7 +58,7 @@ func (creditDD *AccountCreditedDrawdown) Validate() error {
 	if err := creditDD.fieldInclusion(); err != nil {
 		return err
 	}
-	if err := creditDD.isAlphanumeric(creditDD.DrawdownCreditAccountNumber); err != nil {
+	if err := creditDD.isNumeric(creditDD.DrawdownCreditAccountNumber); err != nil {
 		return fieldError("DrawdownCreditAccountNumber", err, creditDD.DrawdownCreditAccountNumber)
 	}
 	return nil

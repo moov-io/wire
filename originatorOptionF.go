@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // OriginatorOptionF is originator option F information
 type OriginatorOptionF struct {
@@ -91,13 +94,17 @@ func NewOriginatorOptionF() *OriginatorOptionF {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oof *OriginatorOptionF) Parse(record string) {
+func (oof *OriginatorOptionF) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	oof.tag = oof.parseStringField(record[:6])
 	oof.PartyIdentifier = oof.parseStringField(record[6:41])
 	oof.Name = oof.parseStringField(record[41:76])
 	oof.LineOne = oof.parseStringField(record[76:111])
 	oof.LineTwo = oof.parseStringField(record[111:146])
 	oof.LineThree = oof.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes OriginatorOptionF

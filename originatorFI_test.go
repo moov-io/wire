@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -119,6 +120,44 @@ func TestOriginatorFIIdentifierRequired(t *testing.T) {
 	ofi.FinancialInstitution.Identifier = ""
 	if err := ofi.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOriginatorFIWrongLength parses a wrong OriginatorFI record length
+func TestParseOriginatorFIWrongLength(t *testing.T) {
+	var line = "{5100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	err := r.parseOriginatorFI()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOriginatorFIReaderParseError parses a wrong OriginatorFI reader parse error
+func TestParseOriginatorFIReaderParseError(t *testing.T) {
+	var line = "{5100}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ofi := mockOriginatorFI()
+	fwm.SetOriginatorFI(ofi)
+	err := r.parseOriginatorFI()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

@@ -8,7 +8,7 @@
 {3320}Sender Reference
 {3500}Previous Message Ident
 {3700}BUSD0,99        USD2,99        USD3,99        USD1,00        
-{3710}USD000000004567,89
+{3710}USD4567,89        
 {3720}1,2345      
 {4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {4100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
@@ -18,7 +18,7 @@
 {5100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {5200}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {6000}LineOne                            LineTwo                            LineThree                          LineFour                           
-{6100}Line Six                                                                                                                                                                                                          
+{6100}Line Six                                                                                                                                                                                           
 {6200}Line Six                                                                                                                                                                                           
 {6210}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         
 {6300}Line One                      Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         

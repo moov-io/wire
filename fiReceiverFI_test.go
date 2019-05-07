@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -86,6 +87,44 @@ func TestFIReceiverFILineSixAlphaNumeric(t *testing.T) {
 	firfi.FIToFI.LineSix = "®"
 	if err := firfi.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIReceiverFIWrongLength parses a wrong FIReceiverFI record length
+func TestParseFIReceiverFIWrongLength(t *testing.T) {
+	var line = "{6100}Line Six                                                                                                                                                                                         "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	err := r.parseFIReceiverFI()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIReceiverFIReaderParseError parses a wrong FIReceiverFI reader parse error
+func TestParseFIReceiverFIReaderParseError(t *testing.T) {
+	var line = "{6100}Line Si®                                                                                                                                                                                           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	firfi := mockFIReceiverFI()
+	fwm.SetFIReceiverFI(firfi)
+	err := r.parseFIReceiverFI()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

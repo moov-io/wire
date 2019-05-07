@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIReceiverFI is the financial institution receiver financial institution
 type FIReceiverFI struct {
@@ -31,20 +34,24 @@ func NewFIReceiverFI() *FIReceiverFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (firfi *FIReceiverFI) Parse(record string) {
+func (firfi *FIReceiverFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) !=  201 {
+		return NewTagWrongLengthErr(201, len(record))
+	}
 	firfi.tag = record[:6]
 	firfi.FIToFI.LineOne = firfi.parseStringField(record[6:36])
 	firfi.FIToFI.LineTwo = firfi.parseStringField(record[36:69])
-	firfi.FIToFI.LineThree = firfi.parseStringField(record[69:104])
-	firfi.FIToFI.LineFour = firfi.parseStringField(record[104:139])
-	firfi.FIToFI.LineFive = firfi.parseStringField(record[139:174])
-	firfi.FIToFI.LineSix = firfi.parseStringField(record[174:209])
+	firfi.FIToFI.LineThree = firfi.parseStringField(record[69:102])
+	firfi.FIToFI.LineFour = firfi.parseStringField(record[102:135])
+	firfi.FIToFI.LineFive = firfi.parseStringField(record[135:168])
+	firfi.FIToFI.LineSix = firfi.parseStringField(record[174:201])
+	return nil
 }
 
 // String writes FIReceiverFI
 func (firfi *FIReceiverFI) String() string {
 	var buf strings.Builder
-	buf.Grow(209)
+	buf.Grow(201)
 	buf.WriteString(firfi.tag)
 	buf.WriteString(firfi.LineOneField())
 	buf.WriteString(firfi.LineTwoField())
@@ -81,30 +88,30 @@ func (firfi *FIReceiverFI) Validate() error {
 
 // LineOneField gets a string of the LineOne field
 func (firfi *FIReceiverFI) LineOneField() string {
-	return firfi.alphaField(firfi.FIToFI.LineOne, 35)
+	return firfi.alphaField(firfi.FIToFI.LineOne, 30)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (firfi *FIReceiverFI) LineTwoField() string {
-	return firfi.alphaField(firfi.FIToFI.LineTwo, 35)
+	return firfi.alphaField(firfi.FIToFI.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (firfi *FIReceiverFI) LineThreeField() string {
-	return firfi.alphaField(firfi.FIToFI.LineThree, 35)
+	return firfi.alphaField(firfi.FIToFI.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
 func (firfi *FIReceiverFI) LineFourField() string {
-	return firfi.alphaField(firfi.FIToFI.LineFour, 35)
+	return firfi.alphaField(firfi.FIToFI.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
 func (firfi *FIReceiverFI) LineFiveField() string {
-	return firfi.alphaField(firfi.FIToFI.LineFive, 35)
+	return firfi.alphaField(firfi.FIToFI.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
 func (firfi *FIReceiverFI) LineSixField() string {
-	return firfi.alphaField(firfi.FIToFI.LineSix, 35)
+	return firfi.alphaField(firfi.FIToFI.LineSix, 33)
 }
