@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -97,6 +98,44 @@ func TestInstitutionAccountSwiftLineSixAlphaNumeric(t *testing.T) {
 	iAccount.CoverPayment.SwiftLineSix = "Test"
 	if err := iAccount.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseInstitutionAccountWrongLength parses a wrong InstitutionAccount record length
+func TestParseInstitutionAccountWrongLength(t *testing.T) {
+	var line = "{7057}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	iAccount := mockInstitutionAccount()
+	fwm.SetInstitutionAccount(iAccount)
+	err := r.parseInstitutionAccount()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseInstitutionAccountReaderParseError parses a wrong InstitutionAccount reader parse error
+func TestParseInstitutionAccountReaderParseError(t *testing.T) {
+	var line = "{7057}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	iAccount := mockInstitutionAccount()
+	fwm.SetInstitutionAccount(iAccount)
+	err := r.parseInstitutionAccount()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

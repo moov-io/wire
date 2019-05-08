@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // IntermediaryInstitution is the intermediary institution
 type IntermediaryInstitution struct {
@@ -31,7 +34,10 @@ func NewIntermediaryInstitution() *IntermediaryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ii *IntermediaryInstitution) Parse(record string) {
+func (ii *IntermediaryInstitution) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 186 {
+		return NewTagWrongLengthErr(186, len(record))
+	}
 	ii.tag = record[:6]
 	ii.CoverPayment.SwiftFieldTag = ii.parseStringField(record[6:11])
 	ii.CoverPayment.SwiftLineOne = ii.parseStringField(record[11:46])
@@ -39,6 +45,7 @@ func (ii *IntermediaryInstitution) Parse(record string) {
 	ii.CoverPayment.SwiftLineThree = ii.parseStringField(record[81:116])
 	ii.CoverPayment.SwiftLineFour = ii.parseStringField(record[116:151])
 	ii.CoverPayment.SwiftLineFive = ii.parseStringField(record[151:186])
+	return nil
 }
 
 // String writes IntermediaryInstitution

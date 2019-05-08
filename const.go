@@ -440,4 +440,7 @@ const (
 	SWIFTfield70 = "SWIF"
 	// UNEDIFACTformat is UN-EDIFACT format
 	UNEDIFACTformat = "UEDI"
+
+	// PaymentMethod is the payment method to beneficiary.  'CHECK' is the only valid option
+	PaymentMethod = "CHECK"
 )

@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -96,6 +97,44 @@ func TestRemittanceSwiftLineSixAlphaNumeric(t *testing.T) {
 	ri.CoverPayment.SwiftLineSix = "Test"
 	if err := ri.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseRemittanceWrongLength parses a wrong Remittance record length
+func TestParseRemittanceWrongLength(t *testing.T) {
+	var line = "{7070}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                  "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ri := mockRemittance()
+	fwm.SetRemittance(ri)
+	err := r.parseRemittance()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseRemittanceReaderParseError parses a wrong Remittance reader parse error
+func TestParseRemittanceReaderParseError(t *testing.T) {
+	var line = "{7070}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ri := mockRemittance()
+	fwm.SetRemittance(ri)
+	err := r.parseRemittance()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

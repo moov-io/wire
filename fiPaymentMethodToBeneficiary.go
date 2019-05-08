@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIPaymentMethodToBeneficiary is the financial institution payment method to beneficiary
 type FIPaymentMethodToBeneficiary struct {
@@ -34,11 +37,14 @@ func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pm *FIPaymentMethodToBeneficiary) Parse(record string) {
+func (pm *FIPaymentMethodToBeneficiary) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 41 {
+		return NewTagWrongLengthErr(41, len(record))
+	}
 	pm.tag = record[:6]
 	pm.PaymentMethod = pm.parseStringField(record[6:11])
 	pm.AdditionalInformation = pm.parseStringField(record[11:41])
-
+	return nil
 }
 
 // String writes FIPaymentMethodToBeneficiary
@@ -66,7 +72,7 @@ func (pm *FIPaymentMethodToBeneficiary) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (pm *FIPaymentMethodToBeneficiary) fieldInclusion() error {
-	if pm.PaymentMethod != "CHECK" {
+	if pm.PaymentMethod != PaymentMethod {
 		return fieldError("PaymentMethod", ErrFieldInclusion, pm.PaymentMethod)
 	}
 	return nil

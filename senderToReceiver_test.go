@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -98,6 +99,44 @@ func TestSenderToReceiverSwiftLineSixAlphaNumeric(t *testing.T) {
 	sr.CoverPayment.SwiftLineSix = "®"
 	if err := sr.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseSenderToReceiverWrongLength parses a wrong SenderToReceiver record length
+func TestParseSenderToReceiverWrongLength(t *testing.T) {
+	var line = "{7072}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    Swift Line Six                   "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	sr := mockSenderToReceiver()
+	fwm.SetSenderToReceiver(sr)
+	err := r.parseSenderToReceiver()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(221, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseSenderToReceiverReaderParseError parses a wrong SenderToReceiver reader parse error
+func TestParseSenderToReceiverReaderParseError(t *testing.T) {
+	var line = "{7072}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    Swift Line Six                     "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	sr := mockSenderToReceiver()
+	fwm.SetSenderToReceiver(sr)
+	err := r.parseSenderToReceiver()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

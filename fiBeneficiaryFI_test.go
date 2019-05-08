@@ -94,7 +94,7 @@ func TestFIBeneficiaryFILineSixAlphaNumeric(t *testing.T) {
 
 // TestParseFIBeneficiaryFIWrongLength parses a wrong FIBeneficiaryFI record length
 func TestParseFIBeneficiaryFIWrongLength(t *testing.T) {
-	var line = "{6100}Line Six                                                                                                                                                                                         "
+	var line = "{6300}Line One                      Line Two                         Line Three                       Line Four                        Line Five                        Line Six                       "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	fwm := new(FEDWireMessage)
@@ -110,7 +110,7 @@ func TestParseFIBeneficiaryFIWrongLength(t *testing.T) {
 
 // TestParseFIBeneficiaryFIReaderParseError parses a wrong FIBeneficiaryFI reader parse error
 func TestParseFIBeneficiaryFIReaderParseError(t *testing.T) {
-	var line = "{6100}Line Si®                                                                                                                                                                                           "
+	var line = "{6300}Line ®ne                      Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	fwm := new(FEDWireMessage)

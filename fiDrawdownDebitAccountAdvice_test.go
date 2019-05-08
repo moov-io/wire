@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -98,6 +99,44 @@ func TestFIDrawdownDebitAccountAdviceLineSixAlphaNumeric(t *testing.T) {
 	debitDDAdvice.Advice.LineSix = "®"
 	if err := debitDDAdvice.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIDrawdownDebitAccountAdviceWrongLength parses a wrong FIDrawdownDebitAccountAdvice record length
+func TestParseFIDrawdownDebitAccountAdviceWrongLength(t *testing.T) {
+	var line = "{6110}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                       "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fibfia := mockFIDrawdownDebitAccountAdvice()
+	fwm.SetFIDrawdownDebitAccountAdvice(fibfia)
+	err := r.parseFIDrawdownDebitAccountAdvice()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(200, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIDrawdownDebitAccountAdviceReaderParseError parses a wrong FIDrawdownDebitAccountAdvice reader parse error
+func TestParseFIDrawdownDebitAccountAdviceReaderParseError(t *testing.T) {
+	var line = "{6110}LTR®ine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fibfia := mockFIDrawdownDebitAccountAdvice()
+	fwm.SetFIDrawdownDebitAccountAdvice(fibfia)
+	err := r.parseFIDrawdownDebitAccountAdvice()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

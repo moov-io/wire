@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // CurrencyInstructedAmount is the currency instructed amount
 type CurrencyInstructedAmount struct {
@@ -34,10 +37,14 @@ func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (cia *CurrencyInstructedAmount) Parse(record string) {
+func (cia *CurrencyInstructedAmount) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 29 {
+		return NewTagWrongLengthErr(29, len(record))
+	}
 	cia.tag = record[:6]
 	cia.SwiftFieldTag = cia.parseStringField(record[6:11])
 	cia.Amount = cia.parseStringField(record[11:29])
+	return nil
 }
 
 // String writes CurrencyInstructedAmount
@@ -66,6 +73,8 @@ func (cia *CurrencyInstructedAmount) Validate() error {
 func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
 	return cia.alphaField(cia.SwiftFieldTag, 5)
 }
+
+// ToDo: The spec isn't clear if this is padded with zeros or not, so for now it is
 
 // AmountField gets a string of the AmountTag field
 func (cia *CurrencyInstructedAmount) AmountField() string {

@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // OrderingCustomer is the ordering customer
 type OrderingCustomer struct {
@@ -31,7 +34,10 @@ func NewOrderingCustomer() *OrderingCustomer {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oc *OrderingCustomer) Parse(record string) {
+func (oc *OrderingCustomer) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 186 {
+		return NewTagWrongLengthErr(186, len(record))
+	}
 	oc.tag = record[:6]
 	oc.CoverPayment.SwiftFieldTag = oc.parseStringField(record[6:11])
 	oc.CoverPayment.SwiftLineOne = oc.parseStringField(record[11:46])
@@ -39,7 +45,7 @@ func (oc *OrderingCustomer) Parse(record string) {
 	oc.CoverPayment.SwiftLineThree = oc.parseStringField(record[81:116])
 	oc.CoverPayment.SwiftLineFour = oc.parseStringField(record[116:151])
 	oc.CoverPayment.SwiftLineFive = oc.parseStringField(record[151:186])
-
+	return nil
 }
 
 // String writes OrderingCustomer

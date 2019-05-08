@@ -1291,8 +1291,8 @@ func writeFile(file *File) error {
 		if err := w.Write(file); err != nil {
 		log.Fatalf("Unexpected error: %s\n", err)
 		}
-		w.Flush()
-	*/
+		w.Flush()*/
+
 	r := NewReader(strings.NewReader(b.String()))
 	fwmFile, err := r.Read()
 	if err != nil {

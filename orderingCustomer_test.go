@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -97,6 +98,44 @@ func TestOrderingCustomerSwiftLineSixAlphaNumeric(t *testing.T) {
 	oc.CoverPayment.SwiftLineSix = "Test"
 	if err := oc.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOrderingCustomerWrongLength parses a wrong OrderingCustomer record length
+func TestParseOrderingCustomerWrongLength(t *testing.T) {
+	var line = "{7050}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	oc := mockOrderingCustomer()
+	fwm.SetOrderingCustomer(oc)
+	err := r.parseOrderingCustomer()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOrderingCustomerReaderParseError parses a wrong OrderingCustomer reader parse error
+func TestParseOrderingCustomerReaderParseError(t *testing.T) {
+	var line = "{7050}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	oc := mockOrderingCustomer()
+	fwm.SetOrderingCustomer(oc)
+	err := r.parseOrderingCustomer()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

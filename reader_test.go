@@ -19,6 +19,7 @@ func TestRead(t *testing.T) {
 	t.Run("BankDrawdownRequest", testRead("./test/testdata/fedWireMessage-BankDrawdownRequest.txt"))
 	t.Run("CustomerCorporateDrawdownRequest", testRead("./test/testdata/fedWireMessage-CustomerCorporateDrawdownRequest.txt"))
 	t.Run("ServiceMessage", testRead("./test/testdata/fedWireMessage-ServiceMessage.txt"))
+	t.Run("CustomerTransferPlusCOVS", testRead("./test/testdata/fedWireMessage-CustomerTransferPlusCOVS.txt"))
 }
 
 func testRead(filePathName string) func(t *testing.T) {

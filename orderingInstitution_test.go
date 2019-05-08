@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -97,6 +98,44 @@ func TestOrderingInstitutionSwiftLineSixAlphaNumeric(t *testing.T) {
 	oi.CoverPayment.SwiftLineSix = "Test"
 	if err := oi.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOrderingInstitutionWrongLength parses a wrong OrderingInstitution record length
+func TestParseOrderingInstitutionWrongLength(t *testing.T) {
+	var line = "{7052}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	oi := mockOrderingInstitution()
+	fwm.SetOrderingInstitution(oi)
+	err := r.parseOrderingInstitution()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseOrderingInstitutionReaderParseError parses a wrong OrderingInstitution reader parse error
+func TestParseOrderingInstitutionReaderParseError(t *testing.T) {
+	var line = "{7052}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	oi := mockOrderingInstitution()
+	fwm.SetOrderingInstitution(oi)
+	err := r.parseOrderingInstitution()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

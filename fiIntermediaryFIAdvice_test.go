@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -98,6 +99,44 @@ func TestFIIntermediaryFIAdviceLineSixAlphaNumeric(t *testing.T) {
 	fiifia.Advice.LineSix = "®"
 	if err := fiifia.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIIntermediaryFIAdviceWrongLength parses a wrong FIIntermediaryFIAdvice record length
+func TestParseFIIntermediaryFIAdviceWrongLength(t *testing.T) {
+	var line = "{6210}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                       "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	err := r.parseFIIntermediaryFIAdvice()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(200, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIIntermediaryFIAdviceReaderParseError parses a wrong FIIntermediaryFIAdvice reader parse error
+func TestParseFIIntermediaryFIAdviceReaderParseError(t *testing.T) {
+	var line = "{6210}LTRLine ®ne                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fiifia := mockFIIntermediaryFIAdvice()
+	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	err := r.parseFIIntermediaryFIAdvice()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

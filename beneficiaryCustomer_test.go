@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -97,6 +98,44 @@ func TestBeneficiaryCustomerSwiftLineSixAlphaNumeric(t *testing.T) {
 	sr.CoverPayment.SwiftLineSix = "Test"
 	if err := sr.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseBeneficiaryCustomerWrongLength parses a wrong BeneficiaryCustomer record length
+func TestParseBeneficiaryCustomerWrongLength(t *testing.T) {
+	var line = "{7059}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	bc := mockBeneficiaryCustomer()
+	fwm.SetBeneficiaryCustomer(bc)
+	err := r.parseBeneficiaryCustomer()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseBeneficiaryCustomerReaderParseError parses a wrong BeneficiaryCustomer reader parse error
+func TestParseBeneficiaryCustomerReaderParseError(t *testing.T) {
+	var line = "{7059}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	bc := mockBeneficiaryCustomer()
+	fwm.SetBeneficiaryCustomer(bc)
+	err := r.parseBeneficiaryCustomer()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
