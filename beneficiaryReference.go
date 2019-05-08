@@ -35,7 +35,7 @@ func NewBeneficiaryReference() *BeneficiaryReference {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (br *BeneficiaryReference) Parse(record string) error {
-	if utf8.RuneCountInString(record) !=  22 {
+	if utf8.RuneCountInString(record) != 22 {
 		return NewTagWrongLengthErr(22, len(record))
 	}
 	br.tag = record[:6]

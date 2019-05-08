@@ -50,7 +50,7 @@ func NewPaymentNotification() *PaymentNotification {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pn *PaymentNotification) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 2335  {
+	if utf8.RuneCountInString(record) != 2335 {
 		return NewTagWrongLengthErr(2335, len(record))
 	}
 	pn.tag = record[:6]

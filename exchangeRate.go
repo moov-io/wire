@@ -36,7 +36,7 @@ func NewExchangeRate() *ExchangeRate {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (eRate *ExchangeRate) Parse(record string) error {
-	if utf8.RuneCountInString(record) !=  18 {
+	if utf8.RuneCountInString(record) != 18 {
 		return NewTagWrongLengthErr(18, len(record))
 	}
 	eRate.tag = record[:6]

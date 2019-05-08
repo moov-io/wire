@@ -222,7 +222,7 @@ func (r *Reader) parseLine() error {
 			return err
 		}
 	case TagFIAdditionalFIToFI:
-		if err := r.parseFIAdditionalFiToFi(); err != nil {
+		if err := r.parseFIAdditionalFIToFI(); err != nil {
 			return err
 		}
 	case TagCurrencyInstructedAmount:
@@ -322,7 +322,7 @@ func (r *Reader) parseLine() error {
 func (r *Reader) parseSenderSupplied() error {
 	r.tagName = "SenderSupplied"
 	ss := new(SenderSupplied)
-	if err:= ss.Parse(r.line); err != nil {
+	if err := ss.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := ss.Validate(); err != nil {
@@ -335,7 +335,7 @@ func (r *Reader) parseSenderSupplied() error {
 func (r *Reader) parseTypeSubType() error {
 	r.tagName = "TypeSubType"
 	tst := new(TypeSubType)
-	if err:= tst.Parse(r.line); err != nil {
+	if err := tst.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := tst.Validate(); err != nil {
@@ -348,7 +348,7 @@ func (r *Reader) parseTypeSubType() error {
 func (r *Reader) parseInputMessageAccountabilityData() error {
 	r.tagName = "InputMessageAccountabilityData"
 	imad := new(InputMessageAccountabilityData)
-	if err:= imad.Parse(r.line); err != nil {
+	if err := imad.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := imad.Validate(); err != nil {
@@ -361,7 +361,7 @@ func (r *Reader) parseInputMessageAccountabilityData() error {
 func (r *Reader) parseAmount() error {
 	r.tagName = "Amount"
 	amt := new(Amount)
-	if err:= amt.Parse(r.line); err != nil {
+	if err := amt.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := amt.Validate(); err != nil {
@@ -374,7 +374,7 @@ func (r *Reader) parseAmount() error {
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
 	sdi := new(SenderDepositoryInstitution)
-	if err:= sdi.Parse(r.line); err != nil {
+	if err := sdi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := sdi.Validate(); err != nil {
@@ -387,7 +387,7 @@ func (r *Reader) parseSenderDepositoryInstitution() error {
 func (r *Reader) parseReceiverDepositoryInstitution() error {
 	r.tagName = "ReceiverDepositoryInstitution"
 	rdi := new(ReceiverDepositoryInstitution)
-	if err:= rdi.Parse(r.line); err != nil {
+	if err := rdi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := rdi.Validate(); err != nil {
@@ -413,7 +413,7 @@ func (r *Reader) parseBusinessFunctionCode() error {
 func (r *Reader) parseSenderReference() error {
 	r.tagName = "SenderReference"
 	sr := new(SenderReference)
-	if err:= sr.Parse(r.line); err != nil {
+	if err := sr.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := sr.Validate(); err != nil {
@@ -426,7 +426,7 @@ func (r *Reader) parseSenderReference() error {
 func (r *Reader) parsePreviousMessageIdentifier() error {
 	r.tagName = "PreviousMessageIdentifier"
 	pmi := new(PreviousMessageIdentifier)
-	if err:= pmi.Parse(r.line); err != nil {
+	if err := pmi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := pmi.Validate(); err != nil {
@@ -439,7 +439,7 @@ func (r *Reader) parsePreviousMessageIdentifier() error {
 func (r *Reader) parseLocalInstrument() error {
 	r.tagName = "LocalInstrument"
 	li := new(LocalInstrument)
-	if err:= li.Parse(r.line); err != nil {
+	if err := li.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := li.Validate(); err != nil {
@@ -452,7 +452,7 @@ func (r *Reader) parseLocalInstrument() error {
 func (r *Reader) parsePaymentNotification() error {
 	r.tagName = "PaymentNotification"
 	pn := new(PaymentNotification)
-	if err:= pn.Parse(r.line); err != nil {
+	if err := pn.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := pn.Validate(); err != nil {
@@ -476,7 +476,7 @@ func (r *Reader) parseCharges() error {
 func (r *Reader) parseInstructedAmount() error {
 	r.tagName = "InstructedAmount"
 	ia := new(InstructedAmount)
-	if err:= ia.Parse(r.line); err != nil {
+	if err := ia.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := ia.Validate(); err != nil {
@@ -489,7 +489,7 @@ func (r *Reader) parseInstructedAmount() error {
 func (r *Reader) parseExchangeRate() error {
 	r.tagName = "ExchangeRate"
 	eRate := new(ExchangeRate)
-	if err:= eRate.Parse(r.line); err != nil {
+	if err := eRate.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := eRate.Validate(); err != nil {
@@ -502,7 +502,7 @@ func (r *Reader) parseExchangeRate() error {
 func (r *Reader) parseBeneficiaryIntermediaryFI() error {
 	r.tagName = "BeneficiaryIntermediaryFI"
 	bifi := new(BeneficiaryIntermediaryFI)
-	if err:= bifi.Parse(r.line); err != nil {
+	if err := bifi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := bifi.Validate(); err != nil {
@@ -515,7 +515,7 @@ func (r *Reader) parseBeneficiaryIntermediaryFI() error {
 func (r *Reader) parseBeneficiaryFI() error {
 	r.tagName = "BeneficiaryFI"
 	bfi := new(BeneficiaryFI)
-	if err:= bfi.Parse(r.line); err != nil {
+	if err := bfi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := bfi.Validate(); err != nil {
@@ -528,7 +528,7 @@ func (r *Reader) parseBeneficiaryFI() error {
 func (r *Reader) parseBeneficiary() error {
 	r.tagName = "Beneficiary"
 	ben := new(Beneficiary)
-	if err:= ben.Parse(r.line); err != nil {
+	if err := ben.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := ben.Validate(); err != nil {
@@ -541,7 +541,7 @@ func (r *Reader) parseBeneficiary() error {
 func (r *Reader) parseBeneficiaryReference() error {
 	r.tagName = "BeneficiaryReference"
 	br := new(BeneficiaryReference)
-	if err:= br.Parse(r.line); err != nil {
+	if err := br.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := br.Validate(); err != nil {
@@ -554,7 +554,7 @@ func (r *Reader) parseBeneficiaryReference() error {
 func (r *Reader) parseAccountDebitedDrawdown() error {
 	r.tagName = "AccountDebitedDrawdown"
 	debitDD := new(AccountDebitedDrawdown)
-	if err:= debitDD.Parse(r.line); err != nil {
+	if err := debitDD.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := debitDD.Validate(); err != nil {
@@ -567,7 +567,7 @@ func (r *Reader) parseAccountDebitedDrawdown() error {
 func (r *Reader) parseOriginator() error {
 	r.tagName = "Originator"
 	o := new(Originator)
-	if err:= o.Parse(r.line); err != nil {
+	if err := o.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := o.Validate(); err != nil {
@@ -580,7 +580,7 @@ func (r *Reader) parseOriginator() error {
 func (r *Reader) parseOriginatorOptionF() error {
 	r.tagName = "OriginatorOptionF"
 	oof := new(OriginatorOptionF)
-	if err:= oof.Parse(r.line); err != nil {
+	if err := oof.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := oof.Validate(); err != nil {
@@ -593,7 +593,7 @@ func (r *Reader) parseOriginatorOptionF() error {
 func (r *Reader) parseOriginatorFI() error {
 	r.tagName = "OriginatorFI"
 	ofi := new(OriginatorFI)
-	if err:= ofi.Parse(r.line); err != nil {
+	if err := ofi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := ofi.Validate(); err != nil {
@@ -606,7 +606,7 @@ func (r *Reader) parseOriginatorFI() error {
 func (r *Reader) parseInstructingFI() error {
 	r.tagName = "InstructingFI"
 	ifi := new(InstructingFI)
-	if err:= ifi.Parse(r.line); err != nil {
+	if err := ifi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := ifi.Validate(); err != nil {
@@ -619,7 +619,7 @@ func (r *Reader) parseInstructingFI() error {
 func (r *Reader) parseAccountCreditedDrawdown() error {
 	r.tagName = "AccountCreditedDrawdown"
 	creditDD := new(AccountCreditedDrawdown)
-	if err:= creditDD.Parse(r.line); err != nil {
+	if err := creditDD.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := creditDD.Validate(); err != nil {
@@ -632,7 +632,7 @@ func (r *Reader) parseAccountCreditedDrawdown() error {
 func (r *Reader) parseOriginatorToBeneficiary() error {
 	r.tagName = "OriginatorToBeneficiary"
 	ob := new(OriginatorToBeneficiary)
-	if err:= ob.Parse(r.line); err != nil {
+	if err := ob.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := ob.Validate(); err != nil {
@@ -645,7 +645,7 @@ func (r *Reader) parseOriginatorToBeneficiary() error {
 func (r *Reader) parseFIReceiverFI() error {
 	r.tagName = "FIReceiverFI"
 	firfi := new(FIReceiverFI)
-	if err:= firfi.Parse(r.line); err != nil {
+	if err := firfi.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
 	if err := firfi.Validate(); err != nil {
@@ -669,7 +669,9 @@ func (r *Reader) parseFIDrawdownDebitAccountAdvice() error {
 func (r *Reader) parseFIIntermediaryFI() error {
 	r.tagName = "FIIntermediaryFI"
 	fiifi := new(FIIntermediaryFI)
-	fiifi.Parse(r.line)
+	if err := fiifi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fiifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -691,7 +693,9 @@ func (r *Reader) parseFIIntermediaryFIAdvice() error {
 func (r *Reader) parseFIBeneficiaryFI() error {
 	r.tagName = "FIBeneficiaryFI"
 	fibfi := new(FIBeneficiaryFI)
-	fibfi.Parse(r.line)
+	if err := fibfi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fibfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -713,7 +717,9 @@ func (r *Reader) parseFIBeneficiaryFIAdvice() error {
 func (r *Reader) parseFIBeneficiary() error {
 	r.tagName = "FIBeneficiary"
 	fib := new(FIBeneficiary)
-	fib.Parse(r.line)
+	if err := fib.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fib.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -743,10 +749,12 @@ func (r *Reader) parseFIPaymentMethodToBeneficiary() error {
 	return nil
 }
 
-func (r *Reader) parseFIAdditionalFiToFi() error {
+func (r *Reader) parseFIAdditionalFIToFI() error {
 	r.tagName = "FIAdditionalFiToFi"
 	fifi := new(FIAdditionalFIToFI)
-	fifi.Parse(r.line)
+	if err := fifi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fifi.Validate(); err != nil {
 		return r.parseError(err)
 	}

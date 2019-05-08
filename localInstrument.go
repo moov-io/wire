@@ -37,7 +37,7 @@ func NewLocalInstrument() *LocalInstrument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (li *LocalInstrument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 45  {
+	if utf8.RuneCountInString(record) != 45 {
 		return NewTagWrongLengthErr(45, len(record))
 	}
 	li.tag = record[:6]

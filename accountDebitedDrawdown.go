@@ -40,7 +40,7 @@ func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (debitDD *AccountDebitedDrawdown) Parse(record string) error {
-	if utf8.RuneCountInString(record) !=  181 {
+	if utf8.RuneCountInString(record) != 181 {
 		return NewTagWrongLengthErr(181, len(record))
 	}
 	debitDD.tag = record[:6]

@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -86,6 +87,44 @@ func TestFIAdditionalFIToFILineSixAlphaNumeric(t *testing.T) {
 	fifi.AdditionalFIToFI.LineSix = "®"
 	if err := fifi.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIAdditionalFIToFIWrongLength parses a wrong FIAdditionalFIToFI record length
+func TestParseFIAdditionalFIToFIWrongLength(t *testing.T) {
+	var line = "{6500}Line One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                         "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+	err := r.parseFIAdditionalFIToFI()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(216, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIAdditionalFIToFIReaderParseError parses a wrong FIAdditionalFIToFI reader parse error
+func TestParseFIAdditionalFIToFIReaderParseError(t *testing.T) {
+	var line = "{6500}®ine One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fifi := mockFIAdditionalFIToFI()
+	fwm.SetFIAdditionalFIToFI(fifi)
+	err := r.parseFIAdditionalFIToFI()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

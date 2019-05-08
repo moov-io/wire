@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -86,6 +87,44 @@ func TestFIBeneficiaryLineSixAlphaNumeric(t *testing.T) {
 	fib.FIToFI.LineSix = "®"
 	if err := fib.Validate(); err != nil {
 		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIBeneficiaryWrongLength parses a wrong FIBeneficiary record length
+func TestParseFIBeneficiaryWrongLength(t *testing.T) {
+	var line = "{6100}Line Six                                                                                                                                                                                         "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	err := r.parseFIBeneficiary()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(201, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseFIBeneficiaryReaderParseError parses a wrong FIBeneficiary reader parse error
+func TestParseFIBeneficiaryReaderParseError(t *testing.T) {
+	var line = "{6100}Line Si®                                                                                                                                                                                           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	fib := mockFIBeneficiary()
+	fwm.SetFIBeneficiary(fib)
+	err := r.parseFIBeneficiary()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

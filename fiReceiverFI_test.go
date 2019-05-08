@@ -102,7 +102,7 @@ func TestParseFIReceiverFIWrongLength(t *testing.T) {
 	fwm.SetFIReceiverFI(firfi)
 	err := r.parseFIReceiverFI()
 	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
+		if !base.Match(err, NewTagWrongLengthErr(201, len(r.line))) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

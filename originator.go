@@ -35,7 +35,7 @@ func NewOriginator() *Originator {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (o *Originator) Parse(record string) error {
-	if utf8.RuneCountInString(record) !=  181 {
+	if utf8.RuneCountInString(record) != 181 {
 		return NewTagWrongLengthErr(181, len(record))
 	}
 	o.tag = record[:6]

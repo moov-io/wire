@@ -98,7 +98,7 @@ func TestParseOriginatorOptionFWrongLength(t *testing.T) {
 
 // TestParseOriginatorOptionFReaderParseError parses a wrong OriginatorOptionF reader parse error
 func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
-	var line = "{5010}TXID/123-45-6789                   Name                               LineOne                            LineTwo                            LineThree                          "
+	var line = "{5010}TXID/123-45-6789                   ®ame                               LineOne                            LineTwo                            LineThree                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	fwm := new(FEDWireMessage)

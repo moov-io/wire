@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIBeneficiary is the financial institution beneficiary
 type FIBeneficiary struct {
@@ -31,7 +34,10 @@ func NewFIBeneficiary() *FIBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fib *FIBeneficiary) Parse(record string) {
+func (fib *FIBeneficiary) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 201 {
+		return NewTagWrongLengthErr(201, len(record))
+	}
 	fib.tag = record[:6]
 	fib.FIToFI.LineOne = fib.parseStringField(record[6:36])
 	fib.FIToFI.LineTwo = fib.parseStringField(record[36:69])
@@ -39,6 +45,7 @@ func (fib *FIBeneficiary) Parse(record string) {
 	fib.FIToFI.LineFour = fib.parseStringField(record[102:135])
 	fib.FIToFI.LineFive = fib.parseStringField(record[135:168])
 	fib.FIToFI.LineSix = fib.parseStringField(record[168:201])
+	return nil
 }
 
 // String writes FIBeneficiary

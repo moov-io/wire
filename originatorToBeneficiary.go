@@ -41,7 +41,7 @@ func NewOriginatorToBeneficiary() *OriginatorToBeneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ob *OriginatorToBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) !=  146 {
+	if utf8.RuneCountInString(record) != 146 {
 		return NewTagWrongLengthErr(146, len(record))
 	}
 	ob.tag = record[:6]
