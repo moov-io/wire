@@ -1287,11 +1287,11 @@ func writeFile(file *File) error {
 	}
 	// ToDo:  Write to disk?
 	// We want to write the file to an io.Writer
-	/*	w := NewWriter(os.Stdout)
-		if err := w.Write(file); err != nil {
+	/*w := NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
 		log.Fatalf("Unexpected error: %s\n", err)
-		}
-		w.Flush()*/
+	}
+	w.Flush()*/
 
 	r := NewReader(strings.NewReader(b.String()))
 	fwmFile, err := r.Read()

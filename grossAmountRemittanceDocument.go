@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // GrossAmountRemittanceDocument is the gross amount remittance document
 type GrossAmountRemittanceDocument struct {
@@ -31,10 +34,14 @@ func NewGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (gard *GrossAmountRemittanceDocument) Parse(record string) {
+func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 28 {
+		return NewTagWrongLengthErr(28, len(record))
+	}
 	gard.tag = record[:6]
 	gard.RemittanceAmount.CurrencyCode = gard.parseStringField(record[6:9])
 	gard.RemittanceAmount.Amount = gard.parseStringField(record[9:28])
+	return nil
 }
 
 // String writes GrossAmountRemittanceDocument
@@ -81,5 +88,5 @@ func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (gard *GrossAmountRemittanceDocument) AmountField() string {
-	return gard.numericStringField(gard.RemittanceAmount.Amount, 19)
+	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
 }

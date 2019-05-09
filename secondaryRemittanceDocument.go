@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // SecondaryRemittanceDocument is the date of remittance document
 type SecondaryRemittanceDocument struct {
@@ -37,12 +40,16 @@ func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (srd *SecondaryRemittanceDocument) Parse(record string) {
+func (srd *SecondaryRemittanceDocument) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 115 {
+		return NewTagWrongLengthErr(115, len(record))
+	}
 	srd.tag = record[:6]
 	srd.DocumentTypeCode = srd.parseStringField(record[6:10])
 	srd.ProprietaryDocumentTypeCode = srd.parseStringField(record[10:45])
 	srd.DocumentIdentificationNumber = srd.parseStringField(record[45:80])
 	srd.Issuer = srd.parseStringField(record[80:115])
+	return nil
 }
 
 // String writes SecondaryRemittanceDocument

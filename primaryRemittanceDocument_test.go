@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -98,6 +99,44 @@ func TestProprietaryDocumentTypeCodeInvalid(t *testing.T) {
 	prd.ProprietaryDocumentTypeCode = "Proprietary"
 	if err := prd.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParsePrimaryRemittanceDocumentWrongLength parses a wrong PrimaryRemittanceDocument record length
+func TestParsePrimaryRemittanceDocumentWrongLength(t *testing.T) {
+	var line = "{8400}AROI                                   111111                             Issuer                           "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	prd := mockPrimaryRemittanceDocument()
+	fwm.SetPrimaryRemittanceDocument(prd)
+	err := r.parsePrimaryRemittanceDocument()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(115, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParsePrimaryRemittanceDocumentReaderParseError parses a wrong PrimaryRemittanceDocument reader parse error
+func TestParsePrimaryRemittanceDocumentReaderParseError(t *testing.T) {
+	var line = "{8400}ZZZZ                                   111111                             Issuer                             "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	prd := mockPrimaryRemittanceDocument()
+	fwm.SetPrimaryRemittanceDocument(prd)
+	err := r.parsePrimaryRemittanceDocument()
+	if err != nil {
+		if !base.Match(err, ErrDocumentTypeCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrDocumentTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

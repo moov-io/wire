@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -50,9 +51,9 @@ func TestMockRemittanceOriginator(t *testing.T) {
 
 // TestRemittanceOriginatorIdentificationTypeValid validates RemittanceOriginator IdentificationType
 func TestRemittanceOriginatorIdentificationTypeValid(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationType = "zz"
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationType = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrIdentificationType) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -61,9 +62,9 @@ func TestRemittanceOriginatorIdentificationTypeValid(t *testing.T) {
 
 // TestRemittanceOriginatorIdentificationCodeValid validates RemittanceOriginator IdentificationCode
 func TestRemittanceOriginatorIdentificationCodeValid(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationCode = "zz"
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationCode = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrOrganizationIdentificationCode) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -72,10 +73,10 @@ func TestRemittanceOriginatorIdentificationCodeValid(t *testing.T) {
 
 // TestRemittanceOriginatorIdentificationCodeValid2 validates RemittanceOriginator IdentificationCode
 func TestRemittanceOriginatorIdentificationCodeValid2(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationType = PrivateID
-	rb.IdentificationCode = "zz"
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationType = PrivateID
+	ro.IdentificationCode = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrPrivateIdentificationCode) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -84,9 +85,9 @@ func TestRemittanceOriginatorIdentificationCodeValid2(t *testing.T) {
 
 // TestRemittanceOriginatorAddressTypeValid validates RemittanceOriginator AddressType
 func TestRemittanceOriginatorAddressTypeValid(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.RemittanceData.AddressType = "BBRB"
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.RemittanceData.AddressType = "BBRB"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrAddressType) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -373,9 +374,9 @@ func TestRemittanceOriginatorContactOtherAlphaNumeric(t *testing.T) {
 
 // TestRemittanceOriginatorNameRequired validates RemittanceOriginator Name is required
 func TestRemittanceOriginatorNameRequired(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.RemittanceData.Name = ""
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.RemittanceData.Name = ""
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -384,22 +385,22 @@ func TestRemittanceOriginatorNameRequired(t *testing.T) {
 
 // TestRemittanceOriginatorIdentificationNumberInvalid validates RemittanceOriginator IdentificationNumber
 func TestRemittanceOriginatorIdentificationNumberInvalid(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationCode = PICDateBirthPlace
-	rb.IdentificationNumber = "zz"
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationCode = PICDateBirthPlace
+	ro.IdentificationNumber = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
 }
 
-// TestOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber validates RemittanceOriginator IdentificationNumberIssuer
-func TestOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationNumber = ""
-	rb.IdentificationNumberIssuer = "zz"
-	if err := rb.Validate(); err != nil {
+// TestRemittanceOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber validates RemittanceOriginator IdentificationNumberIssuer
+func TestRemittanceOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber(t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationNumber = ""
+	ro.IdentificationNumberIssuer = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -407,11 +408,11 @@ func TestOriginatorIdentificationNumberIssuerInvalid_IdentificationNumber(t *tes
 }
 
 // TestRemittanceOriginatorIdentificationNumberIssuerInvalid_PICDateBirthPlace validates RemittanceOriginator IdentificationNumberIssuer
-func TestOriginatorIdentificationNumberIssuerInvalid_PICDateBirthPlace(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationCode = PICDateBirthPlace
-	rb.IdentificationNumberIssuer = "zz"
-	if err := rb.Validate(); err != nil {
+func TestRemittanceOriginatorIdentificationNumberIssuerInvalid_PICDateBirthPlace(t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationCode = PICDateBirthPlace
+	ro.IdentificationNumberIssuer = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -419,11 +420,11 @@ func TestOriginatorIdentificationNumberIssuerInvalid_PICDateBirthPlace(t *testin
 }
 
 // TestRemittanceOriginatorIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI validates RemittanceOriginator IdentificationNumberIssuer
-func TestOriginatorIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationCode = OICSWIFTBICORBEI
-	rb.IdentificationNumberIssuer = "zz"
-	if err := rb.Validate(); err != nil {
+func TestRemittanceOriginatorIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI(t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationCode = OICSWIFTBICORBEI
+	ro.IdentificationNumberIssuer = "zz"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -432,11 +433,49 @@ func TestOriginatorIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI(t *testing
 
 // TestRemittanceOriginatorDateBirthPlaceInvalid validates RemittanceOriginator DateBirthPlace
 func TestRemittanceOriginatorDateBirthPlaceInvalid(t *testing.T) {
-	rb := mockRemittanceOriginator()
-	rb.IdentificationCode = PICCustomerNumber
-	rb.RemittanceData.DateBirthPlace = "Pottstown"
-	if err := rb.Validate(); err != nil {
+	ro := mockRemittanceOriginator()
+	ro.IdentificationCode = PICCustomerNumber
+	ro.RemittanceData.DateBirthPlace = "Pottstown"
+	if err := ro.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseRemittanceOriginatorWrongLength parses a wrong RemittanceOriginator record length
+func TestParseRemittanceOriginatorWrongLength(t *testing.T) {
+	var line = "{8300}OICUSTName                                                                                                                                        111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                    USContact Name                                                                                                                                5551231212                         5551231212                         5551231212                         http://www.moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Contact Other                    "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ro := mockRemittanceOriginator()
+	fwm.SetRemittanceOriginator(ro)
+	err := r.parseRemittanceOriginator()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(3442, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseRemittanceOriginatorReaderParseError parses a wrong RemittanceOriginator reader parse error
+func TestParseRemittanceOriginatorReaderParseError(t *testing.T) {
+	var line = "{8300}OICUSTName                                                                                                                                        111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UA®ddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                    USContact Name                                                                                                                                5551231212                         5551231212                         5551231212                         http://www.moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Contact Other                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ro := mockRemittanceOriginator()
+	fwm.SetRemittanceOriginator(ro)
+	err := r.parseRemittanceOriginator()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

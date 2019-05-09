@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // RemittanceFreeText is the remittance free text
 type RemittanceFreeText struct {
@@ -35,11 +38,15 @@ func NewRemittanceFreeText() *RemittanceFreeText {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rft *RemittanceFreeText) Parse(record string) {
+func (rft *RemittanceFreeText) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 426 {
+		return NewTagWrongLengthErr(426, len(record))
+	}
 	rft.tag = record[:6]
 	rft.LineOne = rft.parseStringField(record[6:146])
 	rft.LineTwo = rft.parseStringField(record[146:286])
 	rft.LineThree = rft.parseStringField(record[286:426])
+	return nil
 }
 
 // String writes RemittanceFreeText

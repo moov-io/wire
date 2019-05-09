@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // UnstructuredAddenda is the unstructured addenda information
 type UnstructuredAddenda struct {
@@ -33,18 +36,29 @@ func NewUnstructuredAddenda() *UnstructuredAddenda {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ua *UnstructuredAddenda) Parse(record string) {
+func (ua *UnstructuredAddenda) Parse(record string) error {
+	// First check ua.tag and ua.AddendaLength
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagWrongLengthErr(10, len(record))
+	}
 	ua.tag = record[:6]
 	ua.AddendaLength = record[6:10]
-	ua.Addenda = record[10:9004]
+	al := ua.parseNumField(ua.AddendaLength)
+	// check RuneCount for entire record
+	if utf8.RuneCountInString(record) != 10+al {
+		return NewTagWrongLengthErr(10+al, len(record))
+	}
+	ua.Addenda = ua.parseStringField(record[10 : 10+al])
+	return nil
 }
 
 // String writes UnstructuredAddenda
 func (ua *UnstructuredAddenda) String() string {
 	var buf strings.Builder
-	buf.Grow(9004)
+	buf.Grow(10)
 	buf.WriteString(ua.tag)
 	buf.WriteString(ua.AddendaLengthField())
+	buf.Grow(ua.parseNumField(ua.AddendaLength))
 	buf.WriteString(ua.AddendaField())
 	return buf.String()
 }
@@ -83,5 +97,5 @@ func (ua *UnstructuredAddenda) AddendaLengthField() string {
 
 // AddendaField gets a string of the Addenda field
 func (ua *UnstructuredAddenda) AddendaField() string {
-	return ua.alphaField(ua.Addenda, 8994)
+	return ua.alphaField(ua.Addenda, uint(ua.parseNumField(ua.AddendaLength)))
 }

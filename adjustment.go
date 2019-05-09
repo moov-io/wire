@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // Adjustment is adjustment
 type Adjustment struct {
@@ -37,13 +40,17 @@ func NewAdjustment() *Adjustment {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (adj *Adjustment) Parse(record string) {
+func (adj *Adjustment) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 174 {
+		return NewTagWrongLengthErr(174, len(record))
+	}
 	adj.tag = record[:6]
 	adj.AdjustmentReasonCode = adj.parseStringField(record[6:8])
 	adj.CreditDebitIndicator = adj.parseStringField(record[8:12])
 	adj.RemittanceAmount.CurrencyCode = adj.parseStringField(record[12:15])
 	adj.RemittanceAmount.Amount = adj.parseStringField(record[15:34])
 	adj.AdditionalInfo = adj.parseStringField(record[34:174])
+	return nil
 }
 
 // String writes Adjustment
@@ -115,7 +122,7 @@ func (adj *Adjustment) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (adj *Adjustment) AmountField() string {
-	return adj.numericStringField(adj.RemittanceAmount.Amount, 19)
+	return adj.alphaField(adj.RemittanceAmount.Amount, 19)
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field

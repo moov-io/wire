@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -169,6 +170,44 @@ func TestLineOneRequired(t *testing.T) {
 	sm.LineOne = ""
 	if err := sm.Validate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseServiceMessageWrongLength parses a wrong ServiceMessage record length
+func TestParseServiceMessageWrongLength(t *testing.T) {
+	var line = "{9000}Line One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                      "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	err := r.parseServiceMessage()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(426, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseServiceMessageReaderParseError parses a wrong ServiceMessage reader parse error
+func TestParseServiceMessageReaderParseError(t *testing.T) {
+	var line = "{9000}®ine One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                        "
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	err := r.parseServiceMessage()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

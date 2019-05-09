@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // ServiceMessage is the ServiceMessage of the wire
 type ServiceMessage struct {
@@ -53,7 +56,10 @@ func NewServiceMessage() *ServiceMessage {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sm *ServiceMessage) Parse(record string) {
+func (sm *ServiceMessage) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 426 {
+		return NewTagWrongLengthErr(426, len(record))
+	}
 	sm.tag = record[:6]
 	sm.LineOne = sm.parseStringField(record[6:41])
 	sm.LineTwo = sm.parseStringField(record[41:76])
@@ -67,6 +73,7 @@ func (sm *ServiceMessage) Parse(record string) {
 	sm.LineTen = sm.parseStringField(record[321:356])
 	sm.LineEleven = sm.parseStringField(record[356:391])
 	sm.LineTwelve = sm.parseStringField(record[391:426])
+	return nil
 }
 
 // String writes ServiceMessage
@@ -79,9 +86,7 @@ func (sm *ServiceMessage) String() string {
 	buf.WriteString(sm.LineThreeField())
 	buf.WriteString(sm.LineFourField())
 	buf.WriteString(sm.LineFiveField())
-	buf.WriteString(sm.LineFiveField())
 	buf.WriteString(sm.LineSixField())
-
 	buf.WriteString(sm.LineSevenField())
 	buf.WriteString(sm.LineEightField())
 	buf.WriteString(sm.LineNineField())

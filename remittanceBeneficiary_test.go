@@ -2,6 +2,7 @@ package wire
 
 import (
 	"github.com/moov-io/base"
+	"strings"
 	"testing"
 )
 
@@ -363,6 +364,44 @@ func TestRemittanceBeneficiaryDateBirthPlaceInvalid(t *testing.T) {
 	rb.RemittanceData.DateBirthPlace = "Pottstown"
 	if err := rb.Validate(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseRemittanceBeneficiaryWrongLength parses a wrong RemittanceBeneficiary record length
+func TestParseRemittanceBeneficiaryWrongLength(t *testing.T) {
+	var line = "{8350}Name                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                  US"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ro := mockRemittanceBeneficiary()
+	fwm.SetRemittanceBeneficiary(ro)
+	err := r.parseRemittanceBeneficiary()
+	if err != nil {
+		if !base.Match(err, NewTagWrongLengthErr(1114, len(r.line))) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestParseRemittanceBeneficiaryReaderParseError parses a wrong RemittanceBeneficiary reader parse error
+func TestParseRemittanceBeneficiaryReaderParseError(t *testing.T) {
+	var line = "{8350}®ame                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                    US"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+	fwm := new(FEDWireMessage)
+	ro := mockRemittanceBeneficiary()
+	fwm.SetRemittanceBeneficiary(ro)
+	err := r.parseRemittanceBeneficiary()
+	if err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

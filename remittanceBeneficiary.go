@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // RemittanceBeneficiary is remittance beneficiary
 type RemittanceBeneficiary struct {
@@ -39,7 +42,10 @@ func NewRemittanceBeneficiary() *RemittanceBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rb *RemittanceBeneficiary) Parse(record string) {
+func (rb *RemittanceBeneficiary) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 1114 {
+		return NewTagWrongLengthErr(1114, len(record))
+	}
 	rb.tag = record[:6]
 	rb.RemittanceData.Name = rb.parseStringField(record[6:146])
 	rb.IdentificationType = rb.parseStringField(record[146:148])
@@ -64,6 +70,7 @@ func (rb *RemittanceBeneficiary) Parse(record string) {
 	rb.RemittanceData.AddressLineSix = rb.parseStringField(record[972:1042])
 	rb.RemittanceData.AddressLineSeven = rb.parseStringField(record[1042:1112])
 	rb.RemittanceData.CountryOfResidence = rb.parseStringField(record[1112:1114])
+	return nil
 }
 
 // String writes RemittanceBeneficiary

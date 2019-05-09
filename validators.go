@@ -5,7 +5,6 @@
 package wire
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -432,23 +431,23 @@ func (v *validator) isDay(m string, d string) error {
 
 // validateDate will return the incoming string only if it matches a valid CCYYMMDD
 // date format. (C=Century, Y=Year, M=Month, D=Day)
-func (v *validator) validateDate(s string) string {
+func (v *validator) validateDate(s string) error {
 	if length := utf8.RuneCountInString(s); length != 8 {
-		return ""
+		return NewTagWrongLengthErr(8, len(s))
 	}
-	cc, yy, mm, dd := s[:2], s[2:4], s[4:6], s[4:8]
+	cc, yy, mm, dd := s[:2], s[2:4], s[4:6], s[6:8]
 
 	if err := v.isCentury(cc); err != nil {
-		return ""
+		return ErrValidDate
 	}
 	if err := v.isYear(yy); err != nil {
-		return ""
+		return ErrValidDate
 	}
 	if err := v.isMonth(mm); err != nil {
-		return ""
+		return ErrValidDate
 	}
 	if err := v.isDay(mm, dd); err != nil {
-		return ""
+		return ErrValidDate
 	}
-	return fmt.Sprintf("%s%s%s%s", cc, yy, mm, dd)
+	return nil
 }

@@ -311,10 +311,6 @@ func (r *Reader) parseLine() error {
 		if err := r.parseServiceMessage(); err != nil {
 			return err
 		}
-	case TagReceiptTimeStamp:
-		if err := r.parseReceiptTimeStamp(); err != nil {
-			return err
-		}
 	default:
 		return NewErrInvalidTag(r.line[:6])
 	}
@@ -881,7 +877,9 @@ func (r *Reader) parseSenderToReceiver() error {
 func (r *Reader) parseUnstructuredAddenda() error {
 	r.tagName = "UnstructuredAddenda"
 	ua := new(UnstructuredAddenda)
-	ua.Parse(r.line)
+	if err := ua.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ua.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -892,7 +890,9 @@ func (r *Reader) parseUnstructuredAddenda() error {
 func (r *Reader) parseRelatedRemittance() error {
 	r.tagName = "RelatedRemittance"
 	rr := new(RelatedRemittance)
-	rr.Parse(r.line)
+	if err := rr.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rr.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -903,7 +903,9 @@ func (r *Reader) parseRelatedRemittance() error {
 func (r *Reader) parseRemittanceOriginator() error {
 	r.tagName = "RemittanceOriginator"
 	ro := new(RemittanceOriginator)
-	ro.Parse(r.line)
+	if err := ro.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ro.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -914,7 +916,9 @@ func (r *Reader) parseRemittanceOriginator() error {
 func (r *Reader) parseRemittanceBeneficiary() error {
 	r.tagName = "RemittanceBeneficiary"
 	rb := new(RemittanceBeneficiary)
-	rb.Parse(r.line)
+	if err := rb.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rb.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -925,7 +929,9 @@ func (r *Reader) parseRemittanceBeneficiary() error {
 func (r *Reader) parsePrimaryRemittanceDocument() error {
 	r.tagName = "PrimaryRemittanceDocument"
 	prd := new(PrimaryRemittanceDocument)
-	prd.Parse(r.line)
+	if err := prd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := prd.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -936,7 +942,9 @@ func (r *Reader) parsePrimaryRemittanceDocument() error {
 func (r *Reader) parseActualAmountPaid() error {
 	r.tagName = "ActualAmountPaid"
 	aap := new(ActualAmountPaid)
-	aap.Parse(r.line)
+	if err := aap.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := aap.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -947,7 +955,9 @@ func (r *Reader) parseActualAmountPaid() error {
 func (r *Reader) parseGrossAmountRemittanceDocument() error {
 	r.tagName = "GrossAmountRemittanceDocument"
 	gard := new(GrossAmountRemittanceDocument)
-	gard.Parse(r.line)
+	if err := gard.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := gard.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -958,7 +968,9 @@ func (r *Reader) parseGrossAmountRemittanceDocument() error {
 func (r *Reader) parseAmountNegotiatedDiscount() error {
 	r.tagName = "AmountNegotiatedDiscount"
 	nd := new(AmountNegotiatedDiscount)
-	nd.Parse(r.line)
+	if err := nd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := nd.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -969,7 +981,9 @@ func (r *Reader) parseAmountNegotiatedDiscount() error {
 func (r *Reader) parseAdjustment() error {
 	r.tagName = "Adjustment"
 	adj := new(Adjustment)
-	adj.Parse(r.line)
+	if err := adj.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := adj.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -980,7 +994,9 @@ func (r *Reader) parseAdjustment() error {
 func (r *Reader) parseDateRemittanceDocument() error {
 	r.tagName = "DateRemittanceDocument"
 	drd := new(DateRemittanceDocument)
-	drd.Parse(r.line)
+	if err := drd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := drd.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -991,7 +1007,9 @@ func (r *Reader) parseDateRemittanceDocument() error {
 func (r *Reader) parseSecondaryRemittanceDocument() error {
 	r.tagName = "SecondaryRemittanceDocument"
 	srd := new(SecondaryRemittanceDocument)
-	srd.Parse(r.line)
+	if err := srd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := srd.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -1002,7 +1020,9 @@ func (r *Reader) parseSecondaryRemittanceDocument() error {
 func (r *Reader) parseRemittanceFreeText() error {
 	r.tagName = "RemittanceFreeText"
 	rft := new(RemittanceFreeText)
-	rft.Parse(r.line)
+	if err := rft.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rft.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -1013,7 +1033,9 @@ func (r *Reader) parseRemittanceFreeText() error {
 func (r *Reader) parseServiceMessage() error {
 	r.tagName = "ServiceMessage"
 	sm := new(ServiceMessage)
-	sm.Parse(r.line)
+	if err := sm.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sm.Validate(); err != nil {
 		return r.parseError(err)
 	}

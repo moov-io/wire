@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // ActualAmountPaid is the actual amount paid
 type ActualAmountPaid struct {
@@ -31,10 +34,14 @@ func NewActualAmountPaid() *ActualAmountPaid {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (aap *ActualAmountPaid) Parse(record string) {
+func (aap *ActualAmountPaid) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 28 {
+		return NewTagWrongLengthErr(28, len(record))
+	}
 	aap.tag = record[:6]
 	aap.RemittanceAmount.CurrencyCode = aap.parseStringField(record[6:9])
 	aap.RemittanceAmount.Amount = aap.parseStringField(record[9:28])
+	return nil
 }
 
 // String writes ActualAmountPaid
@@ -82,5 +89,5 @@ func (aap *ActualAmountPaid) CurrencyCodeField() string {
 
 // AmountField gets a string of the Amount field
 func (aap *ActualAmountPaid) AmountField() string {
-	return aap.numericStringField(aap.RemittanceAmount.Amount, 19)
+	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
 }

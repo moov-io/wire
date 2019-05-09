@@ -36,6 +36,8 @@ var (
 	ErrValidYear = errors.New("is an invalid year")
 	// ErrValidCentury is returned for an invalid century
 	ErrValidCentury = errors.New("is an invalid century")
+	// ErrValidDate is returned for an invalid date
+	ErrValidDate = errors.New("is an invalid date format")
 	// ErrInvalidProperty is returned for an invalid type property
 	ErrInvalidProperty = errors.New("is an invalid property")
 
