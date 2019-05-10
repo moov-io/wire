@@ -7,5 +7,5 @@ require (
 	github.com/moov-io/base v0.9.0
 	github.com/rickar/cal v1.0.1 // indirect
 	golang.org/x/oauth2 v0.0.0-20190423205934-9f3314589c9a
-	golang.org/x/text v0.3.0
+	golang.org/x/text v0.3.2
 )
