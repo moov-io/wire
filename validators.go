@@ -185,7 +185,6 @@ func (v *validator) isChargeDetails(code string) error {
 }
 
 func (v *validator) isTransactionTypeCode(code string) error {
-	// ToDo: Find what the Transaction Type Codes are
 	switch code {
 	case
 		"   ", "COV":

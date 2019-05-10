@@ -798,8 +798,10 @@ func (fwm *FEDWireMessage) isServiceMessageTags() error {
 // isInvalidServiceMessageTags
 func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	// BusinessFunctionCode.TransactionTypeCode (Element 02) is invalid
-	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
-		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
+	if fwm.BusinessFunctionCode != nil {
+		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
+			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
+		}
 	}
 	if fwm.LocalInstrument != nil {
 		return fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument)
@@ -816,11 +818,15 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	if fwm.ExchangeRate != nil {
 		return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 	}
-	if fwm.Beneficiary.Personal.IdentificationCode == "T" {
-		return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+	if fwm.Beneficiary != nil {
+		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+		}
 	}
-	if fwm.Originator.Personal.IdentificationCode == "T" {
-		return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+	if fwm.Originator != nil {
+		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+		}
 	}
 	if fwm.OriginatorOptionF != nil {
 		return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)

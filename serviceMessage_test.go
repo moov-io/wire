@@ -212,3 +212,186 @@ func TestParseServiceMessageReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestTransactionTypeCodeForServiceMessage test an invalid TransactionTypeCode
+func TestInvalidTransactionTypeCodeForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	bfc := mockBusinessFunctionCode()
+	bfc.TransactionTypeCode = "COV"
+	fwm.SetBusinessFunctionCode(bfc)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidLocalInstrumentForServiceMessage test an invalid LocalInstrument
+func TestInvalidLocalInstrumentForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	li := mockLocalInstrument()
+	fwm.SetLocalInstrument(li)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidPaymentNotificationForServiceMessage test an invalid PaymentNotification
+func TestInvalidPaymentNotificationForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	pn := mockPaymentNotification()
+	fwm.SetPaymentNotification(pn)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidChargesForServiceMessage test an invalid Charges
+func TestInvalidChargesForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	c := mockCharges()
+	fwm.SetCharges(c)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidInstructedAmountForServiceMessage test an invalid InstructedAmount
+func TestInvalidInstructedAmountForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	ia := mockInstructedAmount()
+	fwm.SetInstructedAmount(ia)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidExchangeRateForServiceMessage test an invalid ExchangeRate
+func TestInvalidExchangeRateForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	eRate := mockExchangeRate()
+	fwm.SetExchangeRate(eRate)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidBeneficiaryIdentificationCodeForServiceMessage test an invalid BeneficiaryIdentificationCode
+func TestInvalidBeneficiaryIdentificationCodeForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	ben := mockBeneficiary()
+	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
+	fwm.SetBeneficiary(ben)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidOriginatorIdentificationCodeForServiceMessage test an invalid OriginatorIdentificationCode
+func TestInvalidOriginatorIdentificationCodeForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	o := mockOriginator()
+	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
+	fwm.SetOriginator(o)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidOriginatorOptionFForServiceMessage test an invalid OriginatorOptionF
+func TestInvalidOriginatorOptionFForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	off := mockOriginatorOptionF()
+	fwm.SetOriginatorOptionF(off)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidUnstructuredAddendaForServiceMessage test an invalid UnstructuredAddenda
+func TestInvalidUnstructuredAddendaForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	ua := mockUnstructuredAddenda()
+	fwm.SetUnstructuredAddenda(ua)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidCurrencyInstructedAmountForServiceMessage test an invalid CurrencyInstructedAmount
+func TestInvalidCurrencyInstructedAmountForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	cia := mockCurrencyInstructedAmount()
+	fwm.SetCurrencyInstructedAmount(cia)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInvalidRelatedRemittanceForServiceMessage test an invalid RelatedRemittance
+func TestInvalidRelatedRemittanceForServiceMessage(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	sm := mockServiceMessage()
+	fwm.SetServiceMessage(sm)
+	rr := mockRelatedRemittance()
+	fwm.SetRelatedRemittance(rr)
+	err := fwm.isInvalidServiceMessageTags()
+	if err != nil {
+		if !base.Match(err, ErrInvalidProperty) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

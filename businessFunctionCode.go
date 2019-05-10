@@ -67,11 +67,9 @@ func (bfc *BusinessFunctionCode) Validate() error {
 	if err := bfc.isBusinessFunctionCode(bfc.BusinessFunctionCode); err != nil {
 		return fieldError("BusinessFunctionCode", err, bfc.BusinessFunctionCode)
 	}
-	// transactionCodeType does not seem to be defined in the spec
-
-	/*	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
+	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
 		return fieldError("TransactionTypeCode", err, bfc.TransactionTypeCode)
-	}*/
+	}
 	return nil
 }
 
