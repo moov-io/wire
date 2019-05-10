@@ -10,7 +10,7 @@ import (
 func mockBusinessFunctionCode() *BusinessFunctionCode {
 	bfc := NewBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	bfc.TransactionTypeCode = "XYZ"
+	bfc.TransactionTypeCode = "   "
 	return bfc
 }
 

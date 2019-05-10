@@ -223,7 +223,7 @@ func TestInvalidTransactionTypeCodeForServiceMessage(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	err := fwm.isInvalidServiceMessageTags()
 	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
+		if !base.Match(err, ErrTransactionTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
