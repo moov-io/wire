@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BeneficiaryReference is a reference for the beneficiary
 type BeneficiaryReference struct {
@@ -31,9 +34,13 @@ func NewBeneficiaryReference() *BeneficiaryReference {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (br *BeneficiaryReference) Parse(record string) {
+func (br *BeneficiaryReference) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 22 {
+		return NewTagWrongLengthErr(22, len(record))
+	}
 	br.tag = record[:6]
 	br.BeneficiaryReference = br.parseStringField(record[6:22])
+	return nil
 }
 
 // String writes BeneficiaryReference
@@ -48,9 +55,9 @@ func (br *BeneficiaryReference) String() string {
 // Validate performs WIRE format rule checks on BeneficiaryReference and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (br *BeneficiaryReference) Validate() error {
-	if err := br.fieldInclusion(); err != nil {
+	/*	if err := br.fieldInclusion(); err != nil {
 		return err
-	}
+	}*/
 	if err := br.isAlphanumeric(br.BeneficiaryReference); err != nil {
 		return fieldError("BeneficiaryReference", err, br.BeneficiaryReference)
 	}
@@ -59,9 +66,9 @@ func (br *BeneficiaryReference) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (br *BeneficiaryReference) fieldInclusion() error {
+/*func (br *BeneficiaryReference) fieldInclusion() error {
 	return nil
-}
+}*/
 
 // BeneficiaryReferenceField gets a string of the BeneficiaryReference field
 func (br *BeneficiaryReference) BeneficiaryReferenceField() string {

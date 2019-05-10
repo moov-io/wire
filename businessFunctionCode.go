@@ -6,7 +6,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BusinessFunctionCode {3600}
 type BusinessFunctionCode struct {
@@ -35,10 +38,14 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfc *BusinessFunctionCode) Parse(record string) {
+func (bfc *BusinessFunctionCode) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 12 {
+		return NewTagWrongLengthErr(12, len(record))
+	}
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
 	bfc.TransactionTypeCode = record[9:12]
+	return nil
 }
 
 // String writes BusinessFunctionCode
@@ -46,8 +53,8 @@ func (bfc *BusinessFunctionCode) String() string {
 	var buf strings.Builder
 	buf.Grow(12)
 	buf.WriteString(bfc.tag)
-	buf.WriteString(bfc.BusinessFunctionCode)
-	buf.WriteString(bfc.TransactionTypeCode)
+	buf.WriteString(bfc.BusinessFunctionCodeField())
+	buf.WriteString(bfc.TransactionTypeCodeField())
 	return buf.String()
 }
 
@@ -60,11 +67,9 @@ func (bfc *BusinessFunctionCode) Validate() error {
 	if err := bfc.isBusinessFunctionCode(bfc.BusinessFunctionCode); err != nil {
 		return fieldError("BusinessFunctionCode", err, bfc.BusinessFunctionCode)
 	}
-	// transactionCodeType does not seem to be defined in the spec
-
-	/*	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
+	if err := bfc.isTransactionTypeCode(bfc.TransactionTypeCode); err != nil {
 		return fieldError("TransactionTypeCode", err, bfc.TransactionTypeCode)
-	}*/
+	}
 	return nil
 }
 
@@ -72,7 +77,7 @@ func (bfc *BusinessFunctionCode) Validate() error {
 // invalid the WIRE will return an error.
 func (bfc *BusinessFunctionCode) fieldInclusion() error {
 
-	// only element 01 (BusinessFunctionCode) is required
+	// only BusinessFunctionCode is required
 	if bfc.BusinessFunctionCode == "" {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode)
 	}

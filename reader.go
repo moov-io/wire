@@ -4,6 +4,8 @@
 
 package wire
 
+// ToDo:  Add Tag checks in validate of each type
+
 import (
 	"bufio"
 	"github.com/moov-io/base"
@@ -18,9 +20,9 @@ type Reader struct {
 	File File
 	// line is the current line being parsed from the input r
 	line string
-	// ToDo:  Do we need a current FEDWireMessage, just use FedWireMessage
-	// currentFedWireMessage is the current FedWireMessage being parsed
-	currentFedWireMessage FedWireMessage
+	// ToDo:  Do we need a current FEDWireMessage, just use FEDWireMessage
+	// currentFEDWireMessage is the current FEDWireMessage being parsed
+	currentFEDWireMessage FEDWireMessage
 	// lineNum is the line number of the file being parsed
 	lineNum int
 	// tagName holds the current tag name being parsed.
@@ -51,10 +53,10 @@ func NewReader(r io.Reader) *Reader {
 	}
 }
 
-// addCurrentFedWireMessage creates the current FedWireMessage for the file being read. A successful
-// current FedWireMessage will be added to r.File once parsed.
-func (r *Reader) addCurrentFedWireMessage(fwm FedWireMessage) {
-	r.currentFedWireMessage = FedWireMessage{}
+// addCurrentFEDWireMessage creates the current FEDWireMessage for the file being read. A successful
+// current FEDWireMessage will be added to r.File once parsed.
+func (r *Reader) addCurrentFEDWireMessage(fwm FEDWireMessage) {
+	r.currentFEDWireMessage = FEDWireMessage{}
 }
 
 // Read reads each line of the FED Wire file and defines which parser to use based
@@ -73,8 +75,8 @@ func (r *Reader) Read() (File, error) {
 		}
 	}
 
-	r.File.AddFedWireMessage(r.currentFedWireMessage)
-	r.currentFedWireMessage = NewFedWireMessage()
+	r.File.AddFEDWireMessage(r.currentFEDWireMessage)
+	r.currentFEDWireMessage = NewFEDWireMessage()
 
 	if r.errors.Empty() {
 		return r.File, nil
@@ -222,7 +224,7 @@ func (r *Reader) parseLine() error {
 			return err
 		}
 	case TagFIAdditionalFIToFI:
-		if err := r.parseFIAdditionalFiToFi(); err != nil {
+		if err := r.parseFIAdditionalFIToFI(); err != nil {
 			return err
 		}
 	case TagCurrencyInstructedAmount:
@@ -317,150 +319,144 @@ func (r *Reader) parseLine() error {
 
 func (r *Reader) parseSenderSupplied() error {
 	r.tagName = "SenderSupplied"
-	if len(r.line) != 18 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(18, len(r.line))))
-		return r.errors
-	}
 	ss := new(SenderSupplied)
-	ss.Parse(r.line)
+	if err := ss.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ss.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetSenderSupplied(ss)
+	r.currentFEDWireMessage.SetSenderSupplied(ss)
 	return nil
 }
 
 func (r *Reader) parseTypeSubType() error {
 	r.tagName = "TypeSubType"
-	if len(r.line) != 10 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(10, len(r.line))))
-		return r.errors
-	}
 	tst := new(TypeSubType)
-	tst.Parse(r.line)
+	if err := tst.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := tst.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetTypeSubType(tst)
+	r.currentFEDWireMessage.SetTypeSubType(tst)
 	return nil
 }
 
 func (r *Reader) parseInputMessageAccountabilityData() error {
 	r.tagName = "InputMessageAccountabilityData"
-	if len(r.line) != 28 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(22, len(r.line))))
-		return r.errors
-	}
 	imad := new(InputMessageAccountabilityData)
-	imad.Parse(r.line)
+	if err := imad.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := imad.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetInputMessageAccountabilityData(imad)
+	r.currentFEDWireMessage.SetInputMessageAccountabilityData(imad)
 	return nil
 }
 
 func (r *Reader) parseAmount() error {
 	r.tagName = "Amount"
-	if len(r.line) != 18 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(18, len(r.line))))
-		return r.errors
-	}
 	amt := new(Amount)
-	amt.Parse(r.line)
+	if err := amt.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := amt.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetAmount(amt)
+	r.currentFEDWireMessage.SetAmount(amt)
 	return nil
 }
 
 func (r *Reader) parseSenderDepositoryInstitution() error {
 	r.tagName = "SenderDepositoryInstitution"
-	if len(r.line) < 15 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
-		return r.errors
-	}
 	sdi := new(SenderDepositoryInstitution)
-	sdi.Parse(r.line)
+	if err := sdi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetSenderDepositoryInstitution(sdi)
+	r.currentFEDWireMessage.SetSenderDepositoryInstitution(sdi)
 	return nil
 }
 
 func (r *Reader) parseReceiverDepositoryInstitution() error {
 	r.tagName = "ReceiverDepositoryInstitution"
-	if len(r.line) < 15 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(15, len(r.line))))
-		return r.errors
-	}
 	rdi := new(ReceiverDepositoryInstitution)
-	rdi.Parse(r.line)
+	if err := rdi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rdi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetReceiverDepositoryInstitution(rdi)
+	r.currentFEDWireMessage.SetReceiverDepositoryInstitution(rdi)
 	return nil
 }
 
 func (r *Reader) parseBusinessFunctionCode() error {
 	r.tagName = "BusinessFunctionCode"
-	if len(r.line) != 12 {
-		r.errors.Add(r.parseError(NewTagWrongLengthErr(12, len(r.line))))
-		return r.errors
-	}
 	bfc := new(BusinessFunctionCode)
-	bfc.Parse(r.line)
+	if err := bfc.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := bfc.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetBusinessFunctionCode(bfc)
+	r.currentFEDWireMessage.SetBusinessFunctionCode(bfc)
 	return nil
 }
 
 func (r *Reader) parseSenderReference() error {
 	r.tagName = "SenderReference"
 	sr := new(SenderReference)
-	sr.Parse(r.line)
+	if err := sr.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sr.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetSenderReference(sr)
+	r.currentFEDWireMessage.SetSenderReference(sr)
 	return nil
 }
 
 func (r *Reader) parsePreviousMessageIdentifier() error {
 	r.tagName = "PreviousMessageIdentifier"
 	pmi := new(PreviousMessageIdentifier)
-	pmi.Parse(r.line)
+	if err := pmi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := pmi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetPreviousMessageIdentifier(pmi)
+	r.currentFEDWireMessage.SetPreviousMessageIdentifier(pmi)
 	return nil
 }
 
 func (r *Reader) parseLocalInstrument() error {
 	r.tagName = "LocalInstrument"
 	li := new(LocalInstrument)
-	li.Parse(r.line)
+	if err := li.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := li.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetLocalInstrument(li)
+	r.currentFEDWireMessage.SetLocalInstrument(li)
 	return nil
 }
 
 func (r *Reader) parsePaymentNotification() error {
 	r.tagName = "PaymentNotification"
 	pn := new(PaymentNotification)
-	pn.Parse(r.line)
+	if err := pn.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := pn.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetPaymentNotification(pn)
+	r.currentFEDWireMessage.SetPaymentNotification(pn)
 	return nil
 }
 
@@ -471,490 +467,622 @@ func (r *Reader) parseCharges() error {
 	if err := c.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetCharges(c)
+	r.currentFEDWireMessage.SetCharges(c)
 	return nil
 }
 
 func (r *Reader) parseInstructedAmount() error {
 	r.tagName = "InstructedAmount"
 	ia := new(InstructedAmount)
-	ia.Parse(r.line)
+	if err := ia.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ia.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetInstructedAmount(ia)
+	r.currentFEDWireMessage.SetInstructedAmount(ia)
 	return nil
 }
 
 func (r *Reader) parseExchangeRate() error {
 	r.tagName = "ExchangeRate"
 	eRate := new(ExchangeRate)
-	eRate.Parse(r.line)
+	if err := eRate.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := eRate.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetExchangeRate(eRate)
+	r.currentFEDWireMessage.SetExchangeRate(eRate)
 	return nil
 }
 
 func (r *Reader) parseBeneficiaryIntermediaryFI() error {
 	r.tagName = "BeneficiaryIntermediaryFI"
 	bifi := new(BeneficiaryIntermediaryFI)
-	bifi.Parse(r.line)
+	if err := bifi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := bifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetBeneficiaryIntermediaryFI(bifi)
+	r.currentFEDWireMessage.SetBeneficiaryIntermediaryFI(bifi)
 	return nil
 }
 
 func (r *Reader) parseBeneficiaryFI() error {
 	r.tagName = "BeneficiaryFI"
 	bfi := new(BeneficiaryFI)
-	bfi.Parse(r.line)
+	if err := bfi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := bfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetBeneficiaryFI(bfi)
+	r.currentFEDWireMessage.SetBeneficiaryFI(bfi)
 	return nil
 }
 
 func (r *Reader) parseBeneficiary() error {
 	r.tagName = "Beneficiary"
 	ben := new(Beneficiary)
-	ben.Parse(r.line)
+	if err := ben.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ben.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetBeneficiary(ben)
+	r.currentFEDWireMessage.SetBeneficiary(ben)
 	return nil
 }
 
 func (r *Reader) parseBeneficiaryReference() error {
 	r.tagName = "BeneficiaryReference"
 	br := new(BeneficiaryReference)
-	br.Parse(r.line)
+	if err := br.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := br.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetBeneficiaryReference(br)
+	r.currentFEDWireMessage.SetBeneficiaryReference(br)
 	return nil
 }
 
 func (r *Reader) parseAccountDebitedDrawdown() error {
 	r.tagName = "AccountDebitedDrawdown"
 	debitDD := new(AccountDebitedDrawdown)
-	debitDD.Parse(r.line)
+	if err := debitDD.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := debitDD.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetAccountDebitedDrawdown(debitDD)
+	r.currentFEDWireMessage.SetAccountDebitedDrawdown(debitDD)
 	return nil
 }
 
 func (r *Reader) parseOriginator() error {
 	r.tagName = "Originator"
 	o := new(Originator)
-	o.Parse(r.line)
+	if err := o.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := o.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetOriginator(o)
+	r.currentFEDWireMessage.SetOriginator(o)
 	return nil
 }
 
 func (r *Reader) parseOriginatorOptionF() error {
 	r.tagName = "OriginatorOptionF"
 	oof := new(OriginatorOptionF)
-	oof.Parse(r.line)
+	if err := oof.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := oof.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetOriginatorOptionF(oof)
+	r.currentFEDWireMessage.SetOriginatorOptionF(oof)
 	return nil
 }
 
 func (r *Reader) parseOriginatorFI() error {
 	r.tagName = "OriginatorFI"
 	ofi := new(OriginatorFI)
-	ofi.Parse(r.line)
+	if err := ofi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ofi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetOriginatorFI(ofi)
+	r.currentFEDWireMessage.SetOriginatorFI(ofi)
 	return nil
 }
 
 func (r *Reader) parseInstructingFI() error {
 	r.tagName = "InstructingFI"
 	ifi := new(InstructingFI)
-	ifi.Parse(r.line)
+	if err := ifi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetInstructingFI(ifi)
+	r.currentFEDWireMessage.SetInstructingFI(ifi)
 	return nil
 }
 
 func (r *Reader) parseAccountCreditedDrawdown() error {
 	r.tagName = "AccountCreditedDrawdown"
 	creditDD := new(AccountCreditedDrawdown)
-	creditDD.Parse(r.line)
+	if err := creditDD.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := creditDD.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetAccountCreditedDrawdown(creditDD)
+	r.currentFEDWireMessage.SetAccountCreditedDrawdown(creditDD)
 	return nil
 }
 
 func (r *Reader) parseOriginatorToBeneficiary() error {
 	r.tagName = "OriginatorToBeneficiary"
 	ob := new(OriginatorToBeneficiary)
-	ob.Parse(r.line)
+	if err := ob.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ob.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetOriginatorToBeneficiary(ob)
+	r.currentFEDWireMessage.SetOriginatorToBeneficiary(ob)
 	return nil
 }
 
 func (r *Reader) parseFIReceiverFI() error {
 	r.tagName = "FIReceiverFI"
 	firfi := new(FIReceiverFI)
-	firfi.Parse(r.line)
+	if err := firfi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := firfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIReceiverFI(firfi)
+	r.currentFEDWireMessage.SetFIReceiverFI(firfi)
 	return nil
 }
 
 func (r *Reader) parseFIDrawdownDebitAccountAdvice() error {
 	r.tagName = "FIDrawdownDebitAccountAdvice"
 	debitDDAdvice := new(FIDrawdownDebitAccountAdvice)
-	debitDDAdvice.Parse(r.line)
+	if err := debitDDAdvice.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := debitDDAdvice.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+	r.currentFEDWireMessage.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
 	return nil
 }
 
 func (r *Reader) parseFIIntermediaryFI() error {
 	r.tagName = "FIIntermediaryFI"
 	fiifi := new(FIIntermediaryFI)
-	fiifi.Parse(r.line)
+	if err := fiifi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fiifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIIntermediaryFI(fiifi)
+	r.currentFEDWireMessage.SetFIIntermediaryFI(fiifi)
 	return nil
 }
 
 func (r *Reader) parseFIIntermediaryFIAdvice() error {
 	r.tagName = "FIIntermediaryFIAdvice"
 	fiifia := new(FIIntermediaryFIAdvice)
-	fiifia.Parse(r.line)
+	if err := fiifia.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fiifia.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIIntermediaryFIAdvice(fiifia)
+	r.currentFEDWireMessage.SetFIIntermediaryFIAdvice(fiifia)
 	return nil
 }
 
 func (r *Reader) parseFIBeneficiaryFI() error {
 	r.tagName = "FIBeneficiaryFI"
 	fibfi := new(FIBeneficiaryFI)
-	fibfi.Parse(r.line)
+	if err := fibfi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fibfi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIBeneficiaryFI(fibfi)
+	r.currentFEDWireMessage.SetFIBeneficiaryFI(fibfi)
 	return nil
 }
 
 func (r *Reader) parseFIBeneficiaryFIAdvice() error {
 	r.tagName = "FIBeneficiaryFIAdvice"
 	fibfia := new(FIBeneficiaryFIAdvice)
-	fibfia.Parse(r.line)
+	if err := fibfia.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fibfia.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIBeneficiaryFIAdvice(fibfia)
+	r.currentFEDWireMessage.SetFIBeneficiaryFIAdvice(fibfia)
 	return nil
 }
 
 func (r *Reader) parseFIBeneficiary() error {
 	r.tagName = "FIBeneficiary"
 	fib := new(FIBeneficiary)
-	fib.Parse(r.line)
+	if err := fib.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fib.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIBeneficiary(fib)
+	r.currentFEDWireMessage.SetFIBeneficiary(fib)
 	return nil
 }
 
 func (r *Reader) parseFIBeneficiaryAdvice() error {
 	r.tagName = "FIBeneficiaryAdvice"
-	fibfia := new(FIBeneficiaryFIAdvice)
-	fibfia.Parse(r.line)
-	if err := fibfia.Validate(); err != nil {
+	fiba := new(FIBeneficiaryAdvice)
+	if err := fiba.Parse(r.line); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIBeneficiaryFIAdvice(fibfia)
+	if err := fiba.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetFIBeneficiaryAdvice(fiba)
 	return nil
 }
 
 func (r *Reader) parseFIPaymentMethodToBeneficiary() error {
 	r.tagName = "FIPaymentMethodToBeneficiary"
 	pm := new(FIPaymentMethodToBeneficiary)
-	pm.Parse(r.line)
+	if err := pm.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := pm.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIPaymentMethodToBeneficiary(pm)
+	r.currentFEDWireMessage.SetFIPaymentMethodToBeneficiary(pm)
 	return nil
 }
 
-func (r *Reader) parseFIAdditionalFiToFi() error {
+func (r *Reader) parseFIAdditionalFIToFI() error {
 	r.tagName = "FIAdditionalFiToFi"
 	fifi := new(FIAdditionalFIToFI)
-	fifi.Parse(r.line)
+	if err := fifi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := fifi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetFIAdditionalFIToFI(fifi)
+	r.currentFEDWireMessage.SetFIAdditionalFIToFI(fifi)
 	return nil
 }
 
 func (r *Reader) parseCurrencyInstructedAmount() error {
 	r.tagName = "CurrencyInstructedAmount"
 	cia := new(CurrencyInstructedAmount)
-	cia.Parse(r.line)
+	if err := cia.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := cia.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetCurrencyInstructedAmount(cia)
+	r.currentFEDWireMessage.SetCurrencyInstructedAmount(cia)
 	return nil
 }
 
 func (r *Reader) parseOrderingCustomer() error {
 	r.tagName = "OrderingCustomer"
 	oc := new(OrderingCustomer)
-	oc.Parse(r.line)
+	if err := oc.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := oc.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetOrderingCustomer(oc)
+	r.currentFEDWireMessage.SetOrderingCustomer(oc)
 	return nil
 }
 
 func (r *Reader) parseOrderingInstitution() error {
 	r.tagName = "OrderingInstitution"
 	oi := new(OrderingInstitution)
-	oi.Parse(r.line)
+	if err := oi.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := oi.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetOrderingInstitution(oi)
+	r.currentFEDWireMessage.SetOrderingInstitution(oi)
 	return nil
 }
 
 func (r *Reader) parseIntermediaryInstitution() error {
 	r.tagName = "IntermediaryInstitution"
 	ii := new(IntermediaryInstitution)
-	ii.Parse(r.line)
+	if err := ii.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ii.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetIntermediaryInstitution(ii)
+	r.currentFEDWireMessage.SetIntermediaryInstitution(ii)
 	return nil
 }
 
 func (r *Reader) parseInstitutionAccount() error {
 	r.tagName = "InstitutionAccount"
 	iAccount := new(InstitutionAccount)
-	iAccount.Parse(r.line)
+	if err := iAccount.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := iAccount.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetInstitutionAccount(iAccount)
+	r.currentFEDWireMessage.SetInstitutionAccount(iAccount)
 	return nil
 }
 
 func (r *Reader) parseBeneficiaryCustomer() error {
 	r.tagName = "BeneficiaryCustomer"
 	bc := new(BeneficiaryCustomer)
-	bc.Parse(r.line)
+	if err := bc.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := bc.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetBeneficiaryCustomer(bc)
+	r.currentFEDWireMessage.SetBeneficiaryCustomer(bc)
 	return nil
 }
 
 func (r *Reader) parseRemittance() error {
 	r.tagName = "Remittance"
 	ri := new(Remittance)
-	ri.Parse(r.line)
+	if err := ri.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ri.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetRemittance(ri)
+	r.currentFEDWireMessage.SetRemittance(ri)
 	return nil
 }
 
 func (r *Reader) parseSenderToReceiver() error {
 	r.tagName = "SenderToReceiver"
 	sr := new(SenderToReceiver)
-	sr.Parse(r.line)
+	if err := sr.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sr.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetSenderToReceiver(sr)
+	r.currentFEDWireMessage.SetSenderToReceiver(sr)
 	return nil
 }
 
 func (r *Reader) parseUnstructuredAddenda() error {
 	r.tagName = "UnstructuredAddenda"
 	ua := new(UnstructuredAddenda)
-	ua.Parse(r.line)
+	if err := ua.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ua.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetUnstructuredAddenda(ua)
+	r.currentFEDWireMessage.SetUnstructuredAddenda(ua)
 	return nil
 }
 
 func (r *Reader) parseRelatedRemittance() error {
 	r.tagName = "RelatedRemittance"
 	rr := new(RelatedRemittance)
-	rr.Parse(r.line)
+	if err := rr.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rr.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetRelatedRemittance(rr)
+	r.currentFEDWireMessage.SetRelatedRemittance(rr)
 	return nil
 }
 
 func (r *Reader) parseRemittanceOriginator() error {
 	r.tagName = "RemittanceOriginator"
 	ro := new(RemittanceOriginator)
-	ro.Parse(r.line)
+	if err := ro.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ro.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetRemittanceOriginator(ro)
+	r.currentFEDWireMessage.SetRemittanceOriginator(ro)
 	return nil
 }
 
 func (r *Reader) parseRemittanceBeneficiary() error {
 	r.tagName = "RemittanceBeneficiary"
 	rb := new(RemittanceBeneficiary)
-	rb.Parse(r.line)
+	if err := rb.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rb.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetRemittanceBeneficiary(rb)
+	r.currentFEDWireMessage.SetRemittanceBeneficiary(rb)
 	return nil
 }
 
 func (r *Reader) parsePrimaryRemittanceDocument() error {
 	r.tagName = "PrimaryRemittanceDocument"
 	prd := new(PrimaryRemittanceDocument)
-	prd.Parse(r.line)
+	if err := prd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := prd.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetPrimaryRemittanceDocument(prd)
+	r.currentFEDWireMessage.SetPrimaryRemittanceDocument(prd)
 	return nil
 }
 
 func (r *Reader) parseActualAmountPaid() error {
 	r.tagName = "ActualAmountPaid"
 	aap := new(ActualAmountPaid)
-	aap.Parse(r.line)
+	if err := aap.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := aap.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetActualAmountPaid(aap)
+	r.currentFEDWireMessage.SetActualAmountPaid(aap)
 	return nil
 }
 
 func (r *Reader) parseGrossAmountRemittanceDocument() error {
 	r.tagName = "GrossAmountRemittanceDocument"
 	gard := new(GrossAmountRemittanceDocument)
-	gard.Parse(r.line)
+	if err := gard.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := gard.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetGrossAmountRemittanceDocument(gard)
+	r.currentFEDWireMessage.SetGrossAmountRemittanceDocument(gard)
 	return nil
 }
 
 func (r *Reader) parseAmountNegotiatedDiscount() error {
 	r.tagName = "AmountNegotiatedDiscount"
 	nd := new(AmountNegotiatedDiscount)
-	nd.Parse(r.line)
+	if err := nd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := nd.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetAmountNegotiatedDiscount(nd)
+	r.currentFEDWireMessage.SetAmountNegotiatedDiscount(nd)
 	return nil
 }
 
 func (r *Reader) parseAdjustment() error {
 	r.tagName = "Adjustment"
 	adj := new(Adjustment)
-	adj.Parse(r.line)
+	if err := adj.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := adj.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetAdjustment(adj)
+	r.currentFEDWireMessage.SetAdjustment(adj)
 	return nil
 }
 
 func (r *Reader) parseDateRemittanceDocument() error {
 	r.tagName = "DateRemittanceDocument"
 	drd := new(DateRemittanceDocument)
-	drd.Parse(r.line)
+	if err := drd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := drd.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetDateRemittanceDocument(drd)
+	r.currentFEDWireMessage.SetDateRemittanceDocument(drd)
 	return nil
 }
 
 func (r *Reader) parseSecondaryRemittanceDocument() error {
 	r.tagName = "SecondaryRemittanceDocument"
 	srd := new(SecondaryRemittanceDocument)
-	srd.Parse(r.line)
+	if err := srd.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := srd.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetSecondaryRemittanceDocument(srd)
+	r.currentFEDWireMessage.SetSecondaryRemittanceDocument(srd)
 	return nil
 }
 
 func (r *Reader) parseRemittanceFreeText() error {
 	r.tagName = "RemittanceFreeText"
 	rft := new(RemittanceFreeText)
-	rft.Parse(r.line)
+	if err := rft.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rft.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetRemittanceFreeText(rft)
+	r.currentFEDWireMessage.SetRemittanceFreeText(rft)
 	return nil
 }
 
 func (r *Reader) parseServiceMessage() error {
 	r.tagName = "ServiceMessage"
 	sm := new(ServiceMessage)
-	sm.Parse(r.line)
+	if err := sm.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := sm.Validate(); err != nil {
 		return r.parseError(err)
 	}
-	r.currentFedWireMessage.SetServiceMessage(sm)
+	r.currentFEDWireMessage.SetServiceMessage(sm)
+	return nil
+}
+
+func (r *Reader) parseMessageDisposition() error {
+	r.tagName = "MessageDisposition"
+	md := new(MessageDisposition)
+	md.Parse(r.line)
+	if err := md.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetMessageDisposition(md)
+	return nil
+}
+
+func (r *Reader) parseReceiptTimeStamp() error {
+	r.tagName = "ReceiptTimeStamp"
+	rts := new(ReceiptTimeStamp)
+	rts.Parse(r.line)
+	if err := rts.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetReceiptTimeStamp(rts)
+	return nil
+}
+
+func (r *Reader) parseOutputMessageAccountabilityData() error {
+	r.tagName = "OutputMessageAccountabilityData"
+	omad := new(OutputMessageAccountabilityData)
+	omad.Parse(r.line)
+	if err := omad.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetOutputMessageAccountabilityData(omad)
+	return nil
+}
+
+func (r *Reader) parseErrorWire() error {
+	r.tagName = "ErrorWire"
+	ew := new(ErrorWire)
+	ew.Parse(r.line)
+	if err := ew.Validate(); err != nil {
+		return r.parseError(err)
+	}
+	r.currentFEDWireMessage.SetErrorWire(ew)
 	return nil
 }

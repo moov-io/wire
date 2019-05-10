@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // RemittanceBeneficiary is remittance beneficiary
 type RemittanceBeneficiary struct {
@@ -20,8 +23,6 @@ type RemittanceBeneficiary struct {
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
-	// CountryOfResidence
-	CountryOfResidence string `json:"countryOfResidence,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -41,7 +42,10 @@ func NewRemittanceBeneficiary() *RemittanceBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rb *RemittanceBeneficiary) Parse(record string) {
+func (rb *RemittanceBeneficiary) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 1114 {
+		return NewTagWrongLengthErr(1114, len(record))
+	}
 	rb.tag = record[:6]
 	rb.RemittanceData.Name = rb.parseStringField(record[6:146])
 	rb.IdentificationType = rb.parseStringField(record[146:148])
@@ -65,6 +69,8 @@ func (rb *RemittanceBeneficiary) Parse(record string) {
 	rb.RemittanceData.AddressLineFive = rb.parseStringField(record[902:972])
 	rb.RemittanceData.AddressLineSix = rb.parseStringField(record[972:1042])
 	rb.RemittanceData.AddressLineSeven = rb.parseStringField(record[1042:1112])
+	rb.RemittanceData.CountryOfResidence = rb.parseStringField(record[1112:1114])
+	return nil
 }
 
 // String writes RemittanceBeneficiary
@@ -121,7 +127,6 @@ func (rb *RemittanceBeneficiary) Validate() error {
 			return fieldError("IdentificationCode", err, rb.IdentificationCode)
 		}
 	}
-
 	if err := rb.isAlphanumeric(rb.IdentificationNumber); err != nil {
 		return fieldError("IdentificationNumber", err, rb.IdentificationNumber)
 	}
@@ -176,22 +181,10 @@ func (rb *RemittanceBeneficiary) Validate() error {
 	if err := rb.isAlphanumeric(rb.RemittanceData.AddressLineSeven); err != nil {
 		return fieldError("AddressLineSeven", err, rb.RemittanceData.AddressLineSeven)
 	}
-	if rb.IdentificationType == "" || rb.IdentificationCode == PICDateBirthPlace || rb.IdentificationCode == "" {
-		if rb.IdentificationNumber != "" {
-			return fieldError("IdentificationNumber", ErrInvalidProperty)
-		}
+	if err := rb.isAlphanumeric(rb.RemittanceData.CountryOfResidence); err != nil {
+		return fieldError("AddressLineSeven", err, rb.RemittanceData.CountryOfResidence)
 	}
-	if rb.IdentificationType == "" || rb.IdentificationNumber == "" || rb.IdentificationCode == OICSWIFTBICORBEI ||
-		rb.IdentificationCode == PICDateBirthPlace || rb.IdentificationCode == "" {
-		if rb.IdentificationNumberIssuer != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
-		}
-	}
-	if rb.IdentificationCode != PICDateBirthPlace {
-		if rb.RemittanceData.DateBirthPlace != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
-		}
-	}
+
 	return nil
 }
 
@@ -201,6 +194,24 @@ func (rb *RemittanceBeneficiary) fieldInclusion() error {
 	if rb.RemittanceData.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
+
+	if rb.IdentificationCode == PICDateBirthPlace {
+		if rb.IdentificationNumber != "" {
+			return fieldError("IdentificationNumber", ErrInvalidProperty, rb.IdentificationNumber)
+		}
+	}
+	if rb.IdentificationNumber == "" || rb.IdentificationCode == OICSWIFTBICORBEI ||
+		rb.IdentificationCode == PICDateBirthPlace {
+		if rb.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, rb.IdentificationNumberIssuer)
+		}
+	}
+	if rb.IdentificationCode != PICDateBirthPlace {
+		if rb.RemittanceData.DateBirthPlace != "" {
+			return fieldError("DateBirthPlace", ErrInvalidProperty, rb.RemittanceData.DateBirthPlace)
+		}
+	}
+
 	return nil
 }
 
@@ -316,5 +327,5 @@ func (rb *RemittanceBeneficiary) AddressLineSevenField() string {
 
 // CountryOfResidenceField gets a string of the CountryOfResidence field
 func (rb *RemittanceBeneficiary) CountryOfResidenceField() string {
-	return rb.alphaField(rb.CountryOfResidence, 2)
+	return rb.alphaField(rb.RemittanceData.CountryOfResidence, 2)
 }

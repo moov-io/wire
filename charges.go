@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // Charges is the Charges of the wire
 type Charges struct {
@@ -81,15 +83,27 @@ func (c *Charges) Validate() error {
 	if err := c.isAlphanumeric(c.SendersChargesOne); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
 	}
+	/*	if err := c.isChargesValid(c.SendersChargesOne); err != nil {
+		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
+	}*/
 	if err := c.isAlphanumeric(c.SendersChargesTwo); err != nil {
 		return fieldError("SendersChargesTwo", err, c.SendersChargesTwo)
 	}
+	/*	if err := c.isChargesValid(c.SendersChargesTwo); err != nil {
+		return fieldError("SendersChargesTwo", err, c.SendersChargesTwo)
+	}*/
 	if err := c.isAlphanumeric(c.SendersChargesThree); err != nil {
 		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
 	}
+	/*	if err := c.isChargesValid(c.SendersChargesThree); err != nil {
+		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
+	}*/
 	if err := c.isAlphanumeric(c.SendersChargesFour); err != nil {
 		return fieldError("SendersChargesFour", err, c.SendersChargesFour)
 	}
+	/*	if err := c.isChargesValid(c.SendersChargesFour); err != nil {
+		return fieldError("SendersChargesFour", err, c.SendersChargesFour)
+	}*/
 	return nil
 }
 
@@ -123,3 +137,19 @@ func (c *Charges) SendersChargesThreeField() string {
 func (c *Charges) SendersChargesFourField() string {
 	return c.alphaField(c.SendersChargesFour, 15)
 }
+
+/*
+func (c *Charges) isChargesValid(s string) error {
+	if s == "" {
+		return nil
+	}
+	currencyCode := s[:3]
+	if err := c.isCurrencyCode(currencyCode); err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	amount := s[3:]
+	if err := c.isAmount(amount); err != nil {
+		return fieldError("Amount", err)
+	}
+	return nil
+}*/

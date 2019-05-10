@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BeneficiaryCustomer is the beneficiary customer
 type BeneficiaryCustomer struct {
@@ -31,7 +34,10 @@ func NewBeneficiaryCustomer() *BeneficiaryCustomer {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bc *BeneficiaryCustomer) Parse(record string) {
+func (bc *BeneficiaryCustomer) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 186 {
+		return NewTagWrongLengthErr(186, len(record))
+	}
 	bc.tag = record[:6]
 	bc.CoverPayment.SwiftFieldTag = bc.parseStringField(record[6:11])
 	bc.CoverPayment.SwiftLineOne = bc.parseStringField(record[11:46])
@@ -39,6 +45,7 @@ func (bc *BeneficiaryCustomer) Parse(record string) {
 	bc.CoverPayment.SwiftLineThree = bc.parseStringField(record[81:116])
 	bc.CoverPayment.SwiftLineFour = bc.parseStringField(record[116:151])
 	bc.CoverPayment.SwiftLineFive = bc.parseStringField(record[151:186])
+	return nil
 }
 
 // String writes BeneficiaryCustomer
@@ -85,6 +92,9 @@ func (bc *BeneficiaryCustomer) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (bc *BeneficiaryCustomer) fieldInclusion() error {
+	if bc.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty, bc.CoverPayment.SwiftLineSix)
+	}
 	return nil
 }
 

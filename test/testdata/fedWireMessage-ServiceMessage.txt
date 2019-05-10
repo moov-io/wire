@@ -17,7 +17,7 @@
 {5200}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {5400}123456789
 {6000}LineOne                            LineTwo                            LineThree                          LineFour                           
-{6100}Line Six                                                                                                                                                                                                          
+{6100}Line Six                                                                                                                                                                                           
 {6110}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         
 {6200}Line Six                                                                                                                                                                                           
 {6210}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         
@@ -27,4 +27,4 @@
 {6410}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         
 {6420}CHECKAdditional Information        
 {6500}Line One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           
-{9000}Line One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                        
+{9000}Line One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                        

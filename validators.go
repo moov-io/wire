@@ -5,7 +5,6 @@
 package wire
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 	"unicode/utf8"
@@ -41,16 +40,27 @@ func (v *validator) isNumeric(s string) error {
 	return nil
 }
 
-// isAmount checks if a string only contains once comma and ASCII numeric (0-9) characters
+// ToDo: Amount Decimal and AmountComma (only 1 per each)
+
+// isAmount checks if a string only contains onc comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")
-	str = strings.Trim(s, ".")
 	if amountRegex.MatchString(str) {
 		// [^ [0-9],.]
 		return ErrNonAmount
 	}
 	return nil
 }
+
+/*// isAmount checks if a string only contains onc decmal and ASCII numeric (0-9) characters
+func (v *validator) isAmountDecimal(s string) error {
+	str := strings.Trim(s, ".")
+	if amountRegex.MatchString(str) {
+		// [^ [0-9],.]
+		return ErrNonAmount
+	}
+	return nil
+}*/
 
 // isAmountImplied checks if a string only contains only ASCII numeric (0-9) characters, decimal precision is
 // implied (2), and no commas
@@ -175,7 +185,6 @@ func (v *validator) isChargeDetails(code string) error {
 }
 
 func (v *validator) isTransactionTypeCode(code string) error {
-	// ToDo: Find what the Transaction Type Codes are
 	switch code {
 	case
 		"   ", "COV":
@@ -345,7 +354,10 @@ func (v *validator) isAdjustmentReasonCode(code string) error {
 
 func (v *validator) isCurrencyCode(code string) error {
 	_, err := currency.ParseISO(code)
-	return err
+	if err != nil {
+		return ErrNonCurrencyCode
+	}
+	return nil
 }
 
 // isCentury validates a 2 digit century 20-29
@@ -418,23 +430,23 @@ func (v *validator) isDay(m string, d string) error {
 
 // validateDate will return the incoming string only if it matches a valid CCYYMMDD
 // date format. (C=Century, Y=Year, M=Month, D=Day)
-func (v *validator) validateDate(s string) string {
+func (v *validator) validateDate(s string) error {
 	if length := utf8.RuneCountInString(s); length != 8 {
-		return ""
+		return NewTagWrongLengthErr(8, len(s))
 	}
-	cc, yy, mm, dd := s[:2], s[2:4], s[4:6], s[4:8]
+	cc, yy, mm, dd := s[:2], s[2:4], s[4:6], s[6:8]
 
 	if err := v.isCentury(cc); err != nil {
-		return ""
+		return ErrValidDate
 	}
 	if err := v.isYear(yy); err != nil {
-		return ""
+		return ErrValidDate
 	}
 	if err := v.isMonth(mm); err != nil {
-		return ""
+		return ErrValidDate
 	}
 	if err := v.isDay(mm, dd); err != nil {
-		return ""
+		return ErrValidDate
 	}
-	return fmt.Sprintf("%s%s%s%s", cc, yy, mm, dd)
+	return nil
 }

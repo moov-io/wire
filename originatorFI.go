@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // OriginatorFI is the originator Financial Institution
 type OriginatorFI struct {
@@ -31,7 +34,10 @@ func NewOriginatorFI() *OriginatorFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ofi *OriginatorFI) Parse(record string) {
+func (ofi *OriginatorFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	ofi.tag = record[:6]
 	ofi.FinancialInstitution.IdentificationCode = ofi.parseStringField(record[6:7])
 	ofi.FinancialInstitution.Identifier = ofi.parseStringField(record[7:41])
@@ -39,6 +45,7 @@ func (ofi *OriginatorFI) Parse(record string) {
 	ofi.FinancialInstitution.Address.AddressLineOne = ofi.parseStringField(record[76:111])
 	ofi.FinancialInstitution.Address.AddressLineTwo = ofi.parseStringField(record[111:146])
 	ofi.FinancialInstitution.Address.AddressLineThree = ofi.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes OriginatorFI
@@ -86,18 +93,18 @@ func (ofi *OriginatorFI) Validate() error {
 	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, ofi.FinancialInstitution.Address.AddressLineThree)
 	}
-	if ofi.FinancialInstitution.IdentificationCode != "" && ofi.FinancialInstitution.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if ofi.FinancialInstitution.IdentificationCode == "" && ofi.FinancialInstitution.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ofi *OriginatorFI) fieldInclusion() error {
+	if ofi.FinancialInstitution.IdentificationCode != "" && ofi.FinancialInstitution.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if ofi.FinancialInstitution.IdentificationCode == "" && ofi.FinancialInstitution.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

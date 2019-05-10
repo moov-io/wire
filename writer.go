@@ -1,4 +1,4 @@
-// Copyright 2019 The ACH Authors
+// Copyright 2019 The WIRE Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
@@ -83,10 +83,32 @@ func (w *Writer) writeFedWireMessage(file *File) error {
 			return err
 		}
 	}
+
+	// Information Appended by FedWire Funds Service - Commented for now
+	/*	if fwm.MessageDisposition != nil {
+		if _, err := w.w.WriteString(fwm.GetMessageDisposition().String() + "\n"); err != nil {
+			return err
+		}
+	}*/
+	/*	if fwm.ReceiptTimeStamp != nil {
+		if _, err := w.w.WriteString(fwm.GetReceiptTimeStamp().String() + "\n"); err != nil {
+			return err
+		}
+	}*/
+	/*	if fwm.OutputMessageAccountabilityData != nil {
+		if _, err := w.w.WriteString(fwm.GetOutputMessageAccountabilityData().String() + "\n"); err != nil {
+			return err
+		}
+	}*/
+	/*	if fwm.ErrorWire != nil {
+		if _, err := w.w.WriteString(fwm.GetErrorWire().String() + "\n"); err != nil {
+			return err
+		}
+	}*/
 	return nil
 }
 
-func (w *Writer) writeMandatory(fwm FedWireMessage) error {
+func (w *Writer) writeMandatory(fwm FEDWireMessage) error {
 	if fwm.SenderSupplied != nil {
 		if _, err := w.w.WriteString(fwm.GetSenderSupplied().String() + "\n"); err != nil {
 			return err
@@ -140,7 +162,7 @@ func (w *Writer) writeMandatory(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeOtherTransferInfo(fwm FedWireMessage) error {
+func (w *Writer) writeOtherTransferInfo(fwm FEDWireMessage) error {
 	if fwm.SenderReference != nil {
 		if _, err := w.w.WriteString(fwm.GetSenderReference().String() + "\n"); err != nil {
 			return err
@@ -179,7 +201,7 @@ func (w *Writer) writeOtherTransferInfo(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeBeneficiary(fwm FedWireMessage) error {
+func (w *Writer) writeBeneficiary(fwm FEDWireMessage) error {
 	if fwm.BeneficiaryIntermediaryFI != nil {
 		if _, err := w.w.WriteString(fwm.GetBeneficiaryIntermediaryFI().String() + "\n"); err != nil {
 			return err
@@ -216,7 +238,7 @@ func (w *Writer) writeBeneficiary(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeOriginator(fwm FedWireMessage) error {
+func (w *Writer) writeOriginator(fwm FEDWireMessage) error {
 	if fwm.Originator != nil {
 		if _, err := w.w.WriteString(fwm.GetOriginator().String() + "\n"); err != nil {
 			return err
@@ -250,7 +272,7 @@ func (w *Writer) writeOriginator(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeFinancialInstitution(fwm FedWireMessage) error {
+func (w *Writer) writeFinancialInstitution(fwm FEDWireMessage) error {
 	if fwm.FIReceiverFI != nil {
 		if _, err := w.w.WriteString(fwm.GetFIReceiverFI().String() + "\n"); err != nil {
 			return err
@@ -304,7 +326,7 @@ func (w *Writer) writeFinancialInstitution(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeCoverPayment(fwm FedWireMessage) error {
+func (w *Writer) writeCoverPayment(fwm FEDWireMessage) error {
 	if fwm.CurrencyInstructedAmount != nil {
 		if _, err := w.w.WriteString(fwm.GetCurrencyInstructedAmount().String() + "\n"); err != nil {
 			return err
@@ -348,7 +370,7 @@ func (w *Writer) writeCoverPayment(fwm FedWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeRemittance(fwm FedWireMessage) error {
+func (w *Writer) writeRemittance(fwm FEDWireMessage) error {
 
 	// Related Remittance
 	if fwm.RelatedRemittance != nil {

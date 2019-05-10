@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"github.com/moov-io/base"
 	"os"
 	"testing"
 )
@@ -18,6 +19,9 @@ func TestRead(t *testing.T) {
 	t.Run("BankDrawdownRequest", testRead("./test/testdata/fedWireMessage-BankDrawdownRequest.txt"))
 	t.Run("CustomerCorporateDrawdownRequest", testRead("./test/testdata/fedWireMessage-CustomerCorporateDrawdownRequest.txt"))
 	t.Run("ServiceMessage", testRead("./test/testdata/fedWireMessage-ServiceMessage.txt"))
+	t.Run("CustomerTransferPlusCOVS", testRead("./test/testdata/fedWireMessage-CustomerTransferPlusCOVS.txt"))
+	t.Run("CustomerTransferPlusUnstructuredAddenda", testRead("./test/testdata/fedWireMessage-CustomerTransferPlusUnstructuredAddenda.txt"))
+	t.Run("CustomerTransferPlusStructuredRemittance", testRead("./test/testdata/fedWireMessage-CustomerTransferPlusStructuredRemittance.txt"))
 }
 
 func testRead(filePathName string) func(t *testing.T) {
@@ -38,4 +42,21 @@ func testRead(filePathName string) func(t *testing.T) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
+}
+
+func TestReadInvalidTag(t *testing.T) {
+	f, err := os.Open("./test/testdata/fedWireMessage-InvalidTag.txt")
+	if err != nil {
+		t.Errorf("%T: %s", err, err)
+	}
+	defer f.Close()
+	r := NewReader(f)
+
+	_, err = r.Read()
+	if err != nil {
+		if !base.Has(err, NewErrInvalidTag(r.line[:6])) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+
 }

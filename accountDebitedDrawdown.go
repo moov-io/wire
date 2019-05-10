@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // AccountDebitedDrawdown is the account which is debited in a drawdown
 type AccountDebitedDrawdown struct {
@@ -36,7 +39,10 @@ func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (debitDD *AccountDebitedDrawdown) Parse(record string) {
+func (debitDD *AccountDebitedDrawdown) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	debitDD.tag = record[:6]
 	debitDD.IdentificationCode = debitDD.parseStringField(record[6:7])
 	debitDD.Identifier = debitDD.parseStringField(record[7:41])
@@ -44,6 +50,7 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) {
 	debitDD.Address.AddressLineOne = debitDD.parseStringField(record[76:111])
 	debitDD.Address.AddressLineTwo = debitDD.parseStringField(record[111:146])
 	debitDD.Address.AddressLineThree = debitDD.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes AccountDebitedDrawdown
@@ -72,7 +79,7 @@ func (debitDD *AccountDebitedDrawdown) Validate() error {
 	// Can only be these Identification Codes
 	switch debitDD.IdentificationCode {
 	case
-		"D":
+		DemandDepositAccountNumber:
 	default:
 		return fieldError("IdentificationCode", ErrIdentificationCode, debitDD.IdentificationCode)
 	}

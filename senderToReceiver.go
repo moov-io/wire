@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // SenderToReceiver is the remittance information
 type SenderToReceiver struct {
@@ -31,7 +34,10 @@ func NewSenderToReceiver() *SenderToReceiver {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (str *SenderToReceiver) Parse(record string) {
+func (str *SenderToReceiver) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 221 {
+		return NewTagWrongLengthErr(221, len(record))
+	}
 	str.tag = record[:6]
 	str.CoverPayment.SwiftFieldTag = str.parseStringField(record[6:11])
 	str.CoverPayment.SwiftLineOne = str.parseStringField(record[11:46])
@@ -40,6 +46,7 @@ func (str *SenderToReceiver) Parse(record string) {
 	str.CoverPayment.SwiftLineFour = str.parseStringField(record[116:151])
 	str.CoverPayment.SwiftLineFive = str.parseStringField(record[151:186])
 	str.CoverPayment.SwiftLineSix = str.parseStringField(record[186:221])
+	return nil
 }
 
 // String writes SenderToReceiver
@@ -60,9 +67,6 @@ func (str *SenderToReceiver) String() string {
 // Validate performs WIRE format rule checks on SenderToReceiver and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (str *SenderToReceiver) Validate() error {
-	if err := str.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := str.isAlphanumeric(str.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, str.CoverPayment.SwiftFieldTag)
 	}
@@ -84,12 +88,6 @@ func (str *SenderToReceiver) Validate() error {
 	if err := str.isAlphanumeric(str.CoverPayment.SwiftLineSix); err != nil {
 		return fieldError("SwiftLineSix", err, str.CoverPayment.SwiftLineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (str *SenderToReceiver) fieldInclusion() error {
 	return nil
 }
 

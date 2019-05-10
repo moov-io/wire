@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIAdditionalFIToFI is the financial institution beneficiary financial institution
 type FIAdditionalFIToFI struct {
@@ -31,20 +34,24 @@ func NewFIAdditionalFIToFI() *FIAdditionalFIToFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fifi *FIAdditionalFIToFI) Parse(record string) {
+func (fifi *FIAdditionalFIToFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 216 {
+		return NewTagWrongLengthErr(216, len(record))
+	}
 	fifi.tag = record[:6]
-	fifi.AdditionalFIToFI.LineOne = fifi.parseStringField(record[6:36])
-	fifi.AdditionalFIToFI.LineTwo = fifi.parseStringField(record[36:71])
-	fifi.AdditionalFIToFI.LineThree = fifi.parseStringField(record[71:106])
-	fifi.AdditionalFIToFI.LineFour = fifi.parseStringField(record[106:141])
-	fifi.AdditionalFIToFI.LineFive = fifi.parseStringField(record[141:176])
-	fifi.AdditionalFIToFI.LineSix = fifi.parseStringField(record[176:211])
+	fifi.AdditionalFIToFI.LineOne = fifi.parseStringField(record[6:41])
+	fifi.AdditionalFIToFI.LineTwo = fifi.parseStringField(record[41:76])
+	fifi.AdditionalFIToFI.LineThree = fifi.parseStringField(record[76:111])
+	fifi.AdditionalFIToFI.LineFour = fifi.parseStringField(record[111:146])
+	fifi.AdditionalFIToFI.LineFive = fifi.parseStringField(record[146:181])
+	fifi.AdditionalFIToFI.LineSix = fifi.parseStringField(record[181:216])
+	return nil
 }
 
 // String writes FIAdditionalFIToFI
 func (fifi *FIAdditionalFIToFI) String() string {
 	var buf strings.Builder
-	buf.Grow(211)
+	buf.Grow(216)
 	buf.WriteString(fifi.tag)
 	buf.WriteString(fifi.LineOneField())
 	buf.WriteString(fifi.LineTwoField())
@@ -58,9 +65,6 @@ func (fifi *FIAdditionalFIToFI) String() string {
 // Validate performs WIRE format rule checks on FIAdditionalFIToFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fifi *FIAdditionalFIToFI) Validate() error {
-	if err := fifi.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fifi.AdditionalFIToFI.LineOne)
 	}
@@ -79,12 +83,6 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 	if err := fifi.isAlphanumeric(fifi.AdditionalFIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, fifi.AdditionalFIToFI.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fifi *FIAdditionalFIToFI) fieldInclusion() error {
 	return nil
 }
 

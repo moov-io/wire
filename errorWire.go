@@ -24,39 +24,53 @@ type ErrorWire struct {
 }
 
 // NewErrorWire returns a new ErrorWire
-func NewErrorWire() ErrorWire {
-	we := ErrorWire{
+func NewErrorWire() *ErrorWire {
+	ew := &ErrorWire{
 		tag: TagErrorWire,
 	}
-	return we
+	return ew
 }
 
 // Parse takes the input string and parses the ErrorWire values
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (we *ErrorWire) Parse(record string) {
+func (ew *ErrorWire) Parse(record string) {
+	ew.tag = record[:6]
+	ew.ErrorCategory = ew.parseStringField(record[6:7])
+	ew.ErrorCode = ew.parseStringField(record[7:10])
+	ew.ErrorDescription = ew.parseStringField(record[10:45])
 }
 
 // String writes ErrorWire
-func (we *ErrorWire) String() string {
+func (ew *ErrorWire) String() string {
 	var buf strings.Builder
-	buf.Grow(39)
-	buf.WriteString(we.tag)
+	buf.Grow(45)
+	buf.WriteString(ew.tag)
+	buf.WriteString(ew.ErrorCategoryField())
+	buf.WriteString(ew.ErrorCodeField())
+	buf.WriteString(ew.ErrorDescriptionField())
 	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on ErrorWire and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
-func (we *ErrorWire) Validate() error {
-	if err := we.fieldInclusion(); err != nil {
-		return err
-	}
+func (ew *ErrorWire) Validate() error {
+	// Currently no validation as the FED is responsible for the values
 	return nil
 }
 
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (we *ErrorWire) fieldInclusion() error {
-	return nil
+// ErrorCategoryField gets a string of the ErrorCategory field
+func (ew *ErrorWire) ErrorCategoryField() string {
+	return ew.alphaField(ew.ErrorCategory, 1)
+}
+
+// ErrorCodeField gets a string of the ErrorCode field
+func (ew *ErrorWire) ErrorCodeField() string {
+	return ew.alphaField(ew.ErrorCode, 3)
+}
+
+// ErrorDescriptionField gets a string of the ErrorDescription field
+func (ew *ErrorWire) ErrorDescriptionField() string {
+	return ew.alphaField(ew.ErrorDescription, 35)
 }

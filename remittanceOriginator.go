@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // RemittanceOriginator is remittance originator
 type RemittanceOriginator struct {
@@ -20,8 +23,6 @@ type RemittanceOriginator struct {
 	IdentificationNumberIssuer string `json:"identificationNumberIssuer,omitempty"`
 	// RemittanceData
 	RemittanceData RemittanceData `json:"remittanceData,omitempty"`
-	// CountryOfResidence
-	CountryOfResidence string `json:"countryOfResidence,omitempty"`
 	// ContactName
 	ContactName string `json:"contactName,omitempty"`
 	// ContactPhoneNumber
@@ -53,7 +54,10 @@ func NewRemittanceOriginator() *RemittanceOriginator {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ro *RemittanceOriginator) Parse(record string) {
+func (ro *RemittanceOriginator) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 3442 {
+		return NewTagWrongLengthErr(3442, len(record))
+	}
 	ro.tag = record[:6]
 	ro.IdentificationType = ro.parseStringField(record[6:8])
 	ro.IdentificationCode = ro.parseStringField(record[8:12])
@@ -62,34 +66,35 @@ func (ro *RemittanceOriginator) Parse(record string) {
 	ro.IdentificationNumberIssuer = ro.parseStringField(record[187:222])
 	ro.RemittanceData.DateBirthPlace = ro.parseStringField(record[222:304])
 	ro.RemittanceData.AddressType = ro.parseStringField(record[304:308])
-	ro.RemittanceData.Department = ro.parseStringField(record[308:374])
-	ro.RemittanceData.SubDepartment = ro.parseStringField(record[374:444])
-	ro.RemittanceData.StreetName = ro.parseStringField(record[444:514])
-	ro.RemittanceData.BuildingNumber = ro.parseStringField(record[514:530])
-	ro.RemittanceData.PostCode = ro.parseStringField(record[530:546])
-	ro.RemittanceData.TownName = ro.parseStringField(record[546:581])
-	ro.RemittanceData.CountrySubDivisionState = ro.parseStringField(record[581:616])
-	ro.RemittanceData.Country = ro.parseStringField(record[616:618])
-	ro.RemittanceData.AddressLineOne = ro.parseStringField(record[618:688])
-	ro.RemittanceData.AddressLineTwo = ro.parseStringField(record[688:758])
-	ro.RemittanceData.AddressLineThree = ro.parseStringField(record[758:828])
-	ro.RemittanceData.AddressLineFour = ro.parseStringField(record[828:898])
-	ro.RemittanceData.AddressLineFive = ro.parseStringField(record[898:968])
-	ro.RemittanceData.AddressLineSix = ro.parseStringField(record[968:1038])
-	ro.RemittanceData.AddressLineSeven = ro.parseStringField(record[1038:1108])
-	ro.CountryOfResidence = ro.parseStringField(record[1108:1110])
-	ro.ContactName = ro.parseStringField(record[1110:1250])
-	ro.ContactPhoneNumber = ro.parseStringField(record[1250:1285])
-	ro.ContactMobileNumber = ro.parseStringField(record[1285:1320])
-	ro.ContactFaxNumber = ro.parseStringField(record[1320:1355])
-	ro.ContactElectronicAddress = ro.parseStringField(record[1355:3403])
-	ro.ContactOther = ro.parseStringField(record[3403:3438])
+	ro.RemittanceData.Department = ro.parseStringField(record[308:378])
+	ro.RemittanceData.SubDepartment = ro.parseStringField(record[378:448])
+	ro.RemittanceData.StreetName = ro.parseStringField(record[448:518])
+	ro.RemittanceData.BuildingNumber = ro.parseStringField(record[518:534])
+	ro.RemittanceData.PostCode = ro.parseStringField(record[534:550])
+	ro.RemittanceData.TownName = ro.parseStringField(record[550:585])
+	ro.RemittanceData.CountrySubDivisionState = ro.parseStringField(record[585:620])
+	ro.RemittanceData.Country = ro.parseStringField(record[620:622])
+	ro.RemittanceData.AddressLineOne = ro.parseStringField(record[622:692])
+	ro.RemittanceData.AddressLineTwo = ro.parseStringField(record[692:762])
+	ro.RemittanceData.AddressLineThree = ro.parseStringField(record[762:832])
+	ro.RemittanceData.AddressLineFour = ro.parseStringField(record[832:902])
+	ro.RemittanceData.AddressLineFive = ro.parseStringField(record[902:972])
+	ro.RemittanceData.AddressLineSix = ro.parseStringField(record[972:1042])
+	ro.RemittanceData.AddressLineSeven = ro.parseStringField(record[1042:1112])
+	ro.RemittanceData.CountryOfResidence = ro.parseStringField(record[1112:1114])
+	ro.ContactName = ro.parseStringField(record[1114:1254])
+	ro.ContactPhoneNumber = ro.parseStringField(record[1254:1289])
+	ro.ContactMobileNumber = ro.parseStringField(record[1289:1324])
+	ro.ContactFaxNumber = ro.parseStringField(record[1324:1359])
+	ro.ContactElectronicAddress = ro.parseStringField(record[1359:3407])
+	ro.ContactOther = ro.parseStringField(record[3407:3442])
+	return nil
 }
 
 // String writes RemittanceOriginator
 func (ro *RemittanceOriginator) String() string {
 	var buf strings.Builder
-	buf.Grow(3438)
+	buf.Grow(3442)
 	buf.WriteString(ro.tag)
 	buf.WriteString(ro.IdentificationTypeField())
 	buf.WriteString(ro.IdentificationCodeField())
@@ -203,8 +208,8 @@ func (ro *RemittanceOriginator) Validate() error {
 		return fieldError("AddressLineSeven", err, ro.RemittanceData.AddressLineSeven)
 	}
 
-	if err := ro.isAlphanumeric(ro.CountryOfResidence); err != nil {
-		return fieldError("CountryOfResidence", err, ro.CountryOfResidence)
+	if err := ro.isAlphanumeric(ro.RemittanceData.CountryOfResidence); err != nil {
+		return fieldError("CountryOfResidence", err, ro.RemittanceData.CountryOfResidence)
 	}
 	if err := ro.isAlphanumeric(ro.ContactName); err != nil {
 		return fieldError("ContactName", err, ro.ContactName)
@@ -224,43 +229,31 @@ func (ro *RemittanceOriginator) Validate() error {
 	if err := ro.isAlphanumeric(ro.ContactOther); err != nil {
 		return fieldError("ContactOther", err, ro.ContactOther)
 	}
-	switch ro.IdentificationCode {
-	case PICDateBirthPlace:
-		if ro.IdentificationNumber != "" {
-			return fieldError("IdentificationNumber", ErrInvalidProperty)
-		}
-		if ro.IdentificationNumberIssuer != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
-		}
-	case OICSWIFTBICORBEI:
-		if ro.IdentificationNumberIssuer != "" {
-			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty)
-		}
-		if ro.RemittanceData.DateBirthPlace != "" {
-			return fieldError("DateBirthPlace", ErrInvalidProperty)
-		}
-	default:
-		if ro.RemittanceData.DateBirthPlace != "" {
-			return fieldError("DateBirthPlace", ErrInvalidProperty)
-		}
-		if ro.IdentificationNumber == "" {
-			return fieldError("IdentificationNumber", ErrFieldRequired)
-		}
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ro *RemittanceOriginator) fieldInclusion() error {
-	if ro.IdentificationType == "" {
-		return fieldError("IdentificationType", ErrFieldRequired)
-	}
-	if ro.IdentificationCode == "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	if ro.RemittanceData.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
+	}
+	if ro.IdentificationCode == PICDateBirthPlace {
+		if ro.IdentificationNumber != "" {
+			return fieldError("IdentificationNumber", ErrInvalidProperty, ro.IdentificationNumber)
+		}
+	}
+
+	if ro.IdentificationNumber == "" || ro.IdentificationCode == OICSWIFTBICORBEI ||
+		ro.IdentificationCode == PICDateBirthPlace {
+		if ro.IdentificationNumberIssuer != "" {
+			return fieldError("IdentificationNumberIssuer", ErrInvalidProperty, ro.IdentificationNumberIssuer)
+		}
+	}
+	if ro.IdentificationCode != PICDateBirthPlace {
+		if ro.RemittanceData.DateBirthPlace != "" {
+			return fieldError("DateBirthPlace", ErrInvalidProperty, ro.RemittanceData.DateBirthPlace)
+		}
 	}
 	return nil
 }
@@ -377,7 +370,7 @@ func (ro *RemittanceOriginator) AddressLineSevenField() string {
 
 // CountryOfResidenceField gets a string of the CountryOfResidence field
 func (ro *RemittanceOriginator) CountryOfResidenceField() string {
-	return ro.alphaField(ro.CountryOfResidence, 2)
+	return ro.alphaField(ro.RemittanceData.CountryOfResidence, 2)
 }
 
 // ContactNameField gets a string of the ContactName field

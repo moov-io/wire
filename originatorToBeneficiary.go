@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // OriginatorToBeneficiary is the OriginatorToBeneficiary of the wire
 type OriginatorToBeneficiary struct {
@@ -37,12 +40,16 @@ func NewOriginatorToBeneficiary() *OriginatorToBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ob *OriginatorToBeneficiary) Parse(record string) {
+func (ob *OriginatorToBeneficiary) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 146 {
+		return NewTagWrongLengthErr(146, len(record))
+	}
 	ob.tag = record[:6]
 	ob.LineOne = ob.parseStringField(record[6:41])
 	ob.LineTwo = ob.parseStringField(record[41:76])
 	ob.LineThree = ob.parseStringField(record[76:111])
 	ob.LineFour = ob.parseStringField(record[111:146])
+	return nil
 }
 
 // String writes OriginatorToBeneficiary
@@ -60,9 +67,9 @@ func (ob *OriginatorToBeneficiary) String() string {
 // Validate performs WIRE format rule checks on OriginatorToBeneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (ob *OriginatorToBeneficiary) Validate() error {
-	if err := ob.fieldInclusion(); err != nil {
+	/*	if err := ob.fieldInclusion(); err != nil {
 		return err
-	}
+	}*/
 	if err := ob.isAlphanumeric(ob.LineOne); err != nil {
 		return fieldError("LineOne", err, ob.LineOne)
 	}
@@ -80,9 +87,9 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (ob *OriginatorToBeneficiary) fieldInclusion() error {
+/*func (ob *OriginatorToBeneficiary) fieldInclusion() error {
 	return nil
-}
+}*/
 
 // LineOneField gets a string of the LineOne field
 func (ob *OriginatorToBeneficiary) LineOneField() string {

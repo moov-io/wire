@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // InputMessageAccountabilityData (IMAD) {1520}
 type InputMessageAccountabilityData struct {
@@ -35,11 +38,15 @@ func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (imad *InputMessageAccountabilityData) Parse(record string) {
+func (imad *InputMessageAccountabilityData) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 28 {
+		return NewTagWrongLengthErr(28, len(record))
+	}
 	imad.tag = record[:6]
 	imad.InputCycleDate = imad.parseStringField(record[6:14])
 	imad.InputSource = imad.parseStringField(record[14:22])
 	imad.InputSequenceNumber = imad.parseStringField(record[22:28])
+	return nil
 }
 
 // String writes InputMessageAccountabilityData
@@ -59,10 +66,11 @@ func (imad *InputMessageAccountabilityData) Validate() error {
 	if err := imad.fieldInclusion(); err != nil {
 		return err
 	}
+	// ToDo: Validate Date Fields
 	if err := imad.isAlphanumeric(imad.InputSource); err != nil {
 		return fieldError("InputSource", err, imad.InputSource)
 	}
-	if err := imad.isAlphanumeric(imad.InputSequenceNumber); err != nil {
+	if err := imad.isNumeric(imad.InputSequenceNumber); err != nil {
 		return fieldError("InputSequenceNumber", err, imad.InputSequenceNumber)
 	}
 	return nil

@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // RelatedRemittance is related remittance
 type RelatedRemittance struct {
@@ -37,7 +40,10 @@ func NewRelatedRemittance() *RelatedRemittance {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rr *RelatedRemittance) Parse(record string) {
+func (rr *RelatedRemittance) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 3041 {
+		return NewTagWrongLengthErr(3041, len(record))
+	}
 	rr.tag = record[:6]
 	rr.RemittanceIdentification = rr.parseStringField(record[6:41])
 	rr.RemittanceLocationMethod = rr.parseStringField(record[41:45])
@@ -52,19 +58,20 @@ func (rr *RelatedRemittance) Parse(record string) {
 	rr.RemittanceData.TownName = rr.parseStringField(record[2479:2514])
 	rr.RemittanceData.CountrySubDivisionState = rr.parseStringField(record[2514:2549])
 	rr.RemittanceData.Country = rr.parseStringField(record[2549:2551])
-	rr.RemittanceData.AddressLineOne = rr.parseStringField(record[2551:2619])
-	rr.RemittanceData.AddressLineTwo = rr.parseStringField(record[2619:2689])
-	rr.RemittanceData.AddressLineThree = rr.parseStringField(record[2689:2759])
-	rr.RemittanceData.AddressLineFour = rr.parseStringField(record[2759:2829])
-	rr.RemittanceData.AddressLineFive = rr.parseStringField(record[2829:2899])
-	rr.RemittanceData.AddressLineSix = rr.parseStringField(record[2899:2969])
-	rr.RemittanceData.AddressLineSeven = rr.parseStringField(record[2969:3039])
+	rr.RemittanceData.AddressLineOne = rr.parseStringField(record[2551:2621])
+	rr.RemittanceData.AddressLineTwo = rr.parseStringField(record[2621:2691])
+	rr.RemittanceData.AddressLineThree = rr.parseStringField(record[2691:2761])
+	rr.RemittanceData.AddressLineFour = rr.parseStringField(record[2761:2831])
+	rr.RemittanceData.AddressLineFive = rr.parseStringField(record[2831:2901])
+	rr.RemittanceData.AddressLineSix = rr.parseStringField(record[2901:2971])
+	rr.RemittanceData.AddressLineSeven = rr.parseStringField(record[2971:3041])
+	return nil
 }
 
 // String writes RelatedRemittance
 func (rr *RelatedRemittance) String() string {
 	var buf strings.Builder
-	buf.Grow(3039)
+	buf.Grow(3041)
 	buf.WriteString(rr.tag)
 	buf.WriteString(rr.RemittanceIdentificationField())
 	buf.WriteString(rr.RemittanceLocationMethodField())
@@ -92,9 +99,6 @@ func (rr *RelatedRemittance) String() string {
 // Validate performs WIRE format rule checks on RelatedRemittance and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (rr *RelatedRemittance) Validate() error {
-	if err := rr.fieldInclusion(); err != nil {
-		return err
-	}
 
 	if err := rr.isAlphanumeric(rr.RemittanceIdentification); err != nil {
 		return fieldError("RemittanceIdentification", err, rr.RemittanceIdentification)
@@ -156,12 +160,6 @@ func (rr *RelatedRemittance) Validate() error {
 	if err := rr.isAlphanumeric(rr.RemittanceData.AddressLineSeven); err != nil {
 		return fieldError("AddressLineSeven", err, rr.RemittanceData.AddressLineSeven)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (rr *RelatedRemittance) fieldInclusion() error {
 	return nil
 }
 

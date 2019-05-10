@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // PrimaryRemittanceDocument is primary remittance document
 type PrimaryRemittanceDocument struct {
@@ -37,12 +40,16 @@ func NewPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (prd *PrimaryRemittanceDocument) Parse(record string) {
+func (prd *PrimaryRemittanceDocument) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 115 {
+		return NewTagWrongLengthErr(115, len(record))
+	}
 	prd.tag = record[:6]
 	prd.DocumentTypeCode = record[6:10]
 	prd.ProprietaryDocumentTypeCode = record[10:45]
 	prd.DocumentIdentificationNumber = record[45:80]
 	prd.Issuer = record[80:115]
+	return nil
 }
 
 // String writes PrimaryRemittanceDocument
@@ -90,8 +97,8 @@ func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
 			return fieldError("ProprietaryDocumentTypeCode", ErrFieldRequired)
 		}
 	default:
-		if prd.ProprietaryDocumentTypeCode != "" {
-			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty)
+		if strings.TrimSpace(prd.ProprietaryDocumentTypeCode) != "" {
+			return fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty, prd.ProprietaryDocumentTypeCode)
 		}
 	}
 	return nil

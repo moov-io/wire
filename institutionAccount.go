@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // InstitutionAccount is the institution account
 type InstitutionAccount struct {
@@ -31,7 +34,10 @@ func NewInstitutionAccount() *InstitutionAccount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (iAccount *InstitutionAccount) Parse(record string) {
+func (iAccount *InstitutionAccount) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 186 {
+		return NewTagWrongLengthErr(186, len(record))
+	}
 	iAccount.tag = record[:6]
 	iAccount.CoverPayment.SwiftFieldTag = iAccount.parseStringField(record[6:11])
 	iAccount.CoverPayment.SwiftLineOne = iAccount.parseStringField(record[11:46])
@@ -39,6 +45,7 @@ func (iAccount *InstitutionAccount) Parse(record string) {
 	iAccount.CoverPayment.SwiftLineThree = iAccount.parseStringField(record[81:116])
 	iAccount.CoverPayment.SwiftLineFour = iAccount.parseStringField(record[116:151])
 	iAccount.CoverPayment.SwiftLineFive = iAccount.parseStringField(record[151:186])
+	return nil
 }
 
 // String writes InstitutionAccount
@@ -85,6 +92,9 @@ func (iAccount *InstitutionAccount) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (iAccount *InstitutionAccount) fieldInclusion() error {
+	if iAccount.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty, iAccount.CoverPayment.SwiftLineSix)
+	}
 	return nil
 }
 

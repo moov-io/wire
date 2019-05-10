@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIBeneficiaryFIAdvice is the financial institution beneficiary financial institution
 type FIBeneficiaryFIAdvice struct {
@@ -31,7 +34,10 @@ func NewFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) {
+func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 200 {
+		return NewTagWrongLengthErr(200, len(record))
+	}
 	fibfia.tag = record[:6]
 	fibfia.Advice.AdviceCode = fibfia.parseStringField(record[6:9])
 	fibfia.Advice.LineOne = fibfia.parseStringField(record[9:35])
@@ -40,6 +46,7 @@ func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) {
 	fibfia.Advice.LineFour = fibfia.parseStringField(record[101:134])
 	fibfia.Advice.LineFive = fibfia.parseStringField(record[134:167])
 	fibfia.Advice.LineSix = fibfia.parseStringField(record[167:200])
+	return nil
 }
 
 // String writes FIBeneficiaryFIAdvice
@@ -60,15 +67,27 @@ func (fibfia *FIBeneficiaryFIAdvice) String() string {
 // Validate performs WIRE format rule checks on FIBeneficiaryFIAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fibfia *FIBeneficiaryFIAdvice) Validate() error {
-	if err := fibfia.fieldInclusion(); err != nil {
-		return err
+	if err := fibfia.isAdviceCode(fibfia.Advice.AdviceCode); err != nil {
+		return fieldError("AdviceCode", err, fibfia.Advice.AdviceCode)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fibfia *FIBeneficiaryFIAdvice) fieldInclusion() error {
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineOne); err != nil {
+		return fieldError("LineOne", err, fibfia.Advice.LineOne)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineTwo); err != nil {
+		return fieldError("LineTwo", err, fibfia.Advice.LineTwo)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineThree); err != nil {
+		return fieldError("LineThree", err, fibfia.Advice.LineThree)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineFour); err != nil {
+		return fieldError("LineFour", err, fibfia.Advice.LineFour)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineFive); err != nil {
+		return fieldError("LineFive", err, fibfia.Advice.LineFive)
+	}
+	if err := fibfia.isAlphanumeric(fibfia.Advice.LineSix); err != nil {
+		return fieldError("LineSix", err, fibfia.Advice.LineSix)
+	}
 	return nil
 }
 

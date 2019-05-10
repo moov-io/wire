@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // OrderingInstitution is the ordering institution
 type OrderingInstitution struct {
@@ -31,7 +34,10 @@ func NewOrderingInstitution() *OrderingInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oi *OrderingInstitution) Parse(record string) {
+func (oi *OrderingInstitution) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 186 {
+		return NewTagWrongLengthErr(186, len(record))
+	}
 	oi.tag = record[:6]
 	oi.CoverPayment.SwiftFieldTag = oi.parseStringField(record[6:11])
 	oi.CoverPayment.SwiftLineOne = oi.parseStringField(record[11:46])
@@ -39,6 +45,7 @@ func (oi *OrderingInstitution) Parse(record string) {
 	oi.CoverPayment.SwiftLineThree = oi.parseStringField(record[81:116])
 	oi.CoverPayment.SwiftLineFour = oi.parseStringField(record[116:151])
 	oi.CoverPayment.SwiftLineFive = oi.parseStringField(record[151:186])
+	return nil
 }
 
 // String writes OrderingInstitution
@@ -85,6 +92,9 @@ func (oi *OrderingInstitution) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (oi *OrderingInstitution) fieldInclusion() error {
+	if oi.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty, oi.CoverPayment.SwiftLineSix)
+	}
 	return nil
 }
 

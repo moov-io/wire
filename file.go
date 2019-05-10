@@ -9,7 +9,7 @@ package wire
 // File contains the structures of a parsed WIRE File.
 type File struct {
 	ID             string         `json:"id"`
-	FedWireMessage FedWireMessage `json:"fedWireMessage"`
+	FedWireMessage FEDWireMessage `json:"fedWireMessage"`
 }
 
 // NewFile constructs a file template
@@ -17,8 +17,8 @@ func NewFile() *File {
 	return &File{}
 }
 
-// AddFedWireMessage appends a FedWireMessage to the File
-func (f *File) AddFedWireMessage(fwm FedWireMessage) FedWireMessage {
+// AddFEDWireMessage appends a FEDWireMessage to the File
+func (f *File) AddFEDWireMessage(fwm FEDWireMessage) FEDWireMessage {
 	f.FedWireMessage = fwm
 	return f.FedWireMessage
 }

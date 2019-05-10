@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // Originator is the originator of the wire
 type Originator struct {
@@ -31,13 +34,17 @@ func NewOriginator() *Originator {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (o *Originator) Parse(record string) {
+func (o *Originator) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	o.tag = record[:6]
 	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
 	o.Personal.Identifier = o.parseStringField(record[7:41])
 	o.Personal.Name = o.parseStringField(record[41:76])
 	o.Personal.Address.AddressLineOne = o.parseStringField(record[76:111])
 	o.Personal.Address.AddressLineThree = o.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes Originator
@@ -79,18 +86,18 @@ func (o *Originator) Validate() error {
 	if err := o.isAlphanumeric(o.Personal.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, o.Personal.Address.AddressLineThree)
 	}
-	if o.Personal.IdentificationCode != "" && o.Personal.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if o.Personal.IdentificationCode == "" && o.Personal.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (o *Originator) fieldInclusion() error {
+	if o.Personal.IdentificationCode != "" && o.Personal.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if o.Personal.IdentificationCode == "" && o.Personal.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

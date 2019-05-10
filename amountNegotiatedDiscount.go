@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // AmountNegotiatedDiscount is the amount negotiated discount
 type AmountNegotiatedDiscount struct {
@@ -31,10 +34,14 @@ func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (nd *AmountNegotiatedDiscount) Parse(record string) {
+func (nd *AmountNegotiatedDiscount) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 28 {
+		return NewTagWrongLengthErr(28, len(record))
+	}
 	nd.tag = record[:6]
 	nd.RemittanceAmount.CurrencyCode = nd.parseStringField(record[6:9])
 	nd.RemittanceAmount.Amount = nd.parseStringField(record[9:28])
+	return nil
 }
 
 // String writes AmountNegotiatedDiscount
@@ -65,6 +72,12 @@ func (nd *AmountNegotiatedDiscount) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
+	if nd.RemittanceAmount.Amount == "" {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if nd.RemittanceAmount.CurrencyCode == "" {
+		return fieldError("CurrencyCode", ErrFieldRequired)
+	}
 	return nil
 }
 

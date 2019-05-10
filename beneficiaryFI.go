@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BeneficiaryFI is the financial institution of the beneficiary
 type BeneficiaryFI struct {
@@ -31,7 +34,10 @@ func NewBeneficiaryFI() *BeneficiaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfi *BeneficiaryFI) Parse(record string) {
+func (bfi *BeneficiaryFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	bfi.tag = record[:6]
 	bfi.FinancialInstitution.IdentificationCode = bfi.parseStringField(record[6:7])
 	bfi.FinancialInstitution.Identifier = bfi.parseStringField(record[7:41])
@@ -39,6 +45,7 @@ func (bfi *BeneficiaryFI) Parse(record string) {
 	bfi.FinancialInstitution.Address.AddressLineOne = bfi.parseStringField(record[76:111])
 	bfi.FinancialInstitution.Address.AddressLineTwo = bfi.parseStringField(record[111:146])
 	bfi.FinancialInstitution.Address.AddressLineThree = bfi.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes BeneficiaryFI
@@ -67,7 +74,11 @@ func (bfi *BeneficiaryFI) Validate() error {
 	// Can only be these Identification Codes
 	switch bfi.FinancialInstitution.IdentificationCode {
 	case
-		"B", "C", "D", "F", "U":
+		SWIFTBankIdentifierCode,
+		CHIPSParticipant,
+		DemandDepositAccountNumber,
+		FEDRoutingNumber,
+		CHIPSIdentifier:
 	default:
 		return fieldError("IdentificationCode", ErrIdentificationCode, bfi.FinancialInstitution.IdentificationCode)
 	}
@@ -86,18 +97,18 @@ func (bfi *BeneficiaryFI) Validate() error {
 	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, bfi.FinancialInstitution.Address.AddressLineThree)
 	}
-	if bfi.FinancialInstitution.IdentificationCode != "" && bfi.FinancialInstitution.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if bfi.FinancialInstitution.IdentificationCode == "" && bfi.FinancialInstitution.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (bfi *BeneficiaryFI) fieldInclusion() error {
+	if bfi.FinancialInstitution.IdentificationCode != "" && bfi.FinancialInstitution.Identifier == "" {
+		return fieldError("Identifier", ErrFieldRequired)
+	}
+	if bfi.FinancialInstitution.IdentificationCode == "" && bfi.FinancialInstitution.Identifier != "" {
+		return fieldError("IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

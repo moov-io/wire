@@ -214,8 +214,8 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/File'
-    FedWireMessage:
-      description: FedWireMessage
+    FEDWireMessage:
+      description: FEDWireMessage
       properties:
         id:
           type: string
@@ -426,6 +426,9 @@ components:
         messageDuplicationCode:
           $ref: '#/components/schemas/MessageDuplicationCodeEnum'
           description: MessageDuplicationCode
+        messageStatusIndicator:
+          $ref: '#/components/schemas/MessageStatusIndicatorEnum'
+          description: MessageStatusIndicator
     ReceiptTimeStamp:
       properties:
         receiptDate:
@@ -452,6 +455,11 @@ components:
           maxLength: 8
           description: OutputDestinationID
           example: '12345678'
+        outputSequenceNumber:
+          type: string
+          maxLength: 6
+          description: outputSequenceNumber
+          example: '000001'
         outputDate:
           $ref: '#/components/schemas/DateMMDD'
           description: OutputDate
@@ -502,9 +510,6 @@ components:
         messageDuplicationCode:
           $ref: '#/components/schemas/MessageDuplicationCodeEnum'
           description: MessageDuplicationCode
-        messageStatusIndicator:
-          $ref: '#/components/schemas/MessageStatusIndicator'
-          description: MessageStatusIndicator
       required:
         - formatVersion
         - userRequestCorrelation
@@ -1590,7 +1595,7 @@ components:
 #        - R
 #        - P
       example: ''
-    MessageStatusIndicator:
+    MessageStatusIndicatorEnum:
       type: string
       maxLength: 1
       description: |

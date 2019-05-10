@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // Remittance is the remittance information
 type Remittance struct {
@@ -31,13 +34,17 @@ func NewRemittance() *Remittance {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ri *Remittance) Parse(record string) {
+func (ri *Remittance) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 151 {
+		return NewTagWrongLengthErr(151, len(record))
+	}
 	ri.tag = record[:6]
 	ri.CoverPayment.SwiftFieldTag = ri.parseStringField(record[6:11])
 	ri.CoverPayment.SwiftLineOne = ri.parseStringField(record[11:46])
 	ri.CoverPayment.SwiftLineTwo = ri.parseStringField(record[46:81])
 	ri.CoverPayment.SwiftLineThree = ri.parseStringField(record[81:116])
 	ri.CoverPayment.SwiftLineFour = ri.parseStringField(record[116:151])
+	return nil
 }
 
 // String writes Remittance
@@ -74,18 +81,18 @@ func (ri *Remittance) Validate() error {
 	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftLineFour); err != nil {
 		return fieldError("SwiftLineFour", err, ri.CoverPayment.SwiftLineFour)
 	}
-	if ri.CoverPayment.SwiftLineFive != "" {
-		return fieldError("SwiftLineFive", ErrInvalidProperty, ri.CoverPayment.SwiftLineFive)
-	}
-	if ri.CoverPayment.SwiftLineSix != "" {
-		return fieldError("SwiftLineSix", ErrInvalidProperty, ri.CoverPayment.SwiftLineSix)
-	}
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ri *Remittance) fieldInclusion() error {
+	if ri.CoverPayment.SwiftLineFive != "" {
+		return fieldError("SwiftLineFive", ErrInvalidProperty, ri.CoverPayment.SwiftLineFive)
+	}
+	if ri.CoverPayment.SwiftLineSix != "" {
+		return fieldError("SwiftLineSix", ErrInvalidProperty, ri.CoverPayment.SwiftLineSix)
+	}
 	return nil
 }
 

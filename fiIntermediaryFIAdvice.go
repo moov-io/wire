@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIIntermediaryFIAdvice is the financial institution intermediary financial institution
 type FIIntermediaryFIAdvice struct {
@@ -31,7 +34,10 @@ func NewFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fiifia *FIIntermediaryFIAdvice) Parse(record string) {
+func (fiifia *FIIntermediaryFIAdvice) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 200 {
+		return NewTagWrongLengthErr(200, len(record))
+	}
 	fiifia.tag = record[:6]
 	fiifia.Advice.AdviceCode = fiifia.parseStringField(record[6:9])
 	fiifia.Advice.LineOne = fiifia.parseStringField(record[9:35])
@@ -40,6 +46,7 @@ func (fiifia *FIIntermediaryFIAdvice) Parse(record string) {
 	fiifia.Advice.LineFour = fiifia.parseStringField(record[101:134])
 	fiifia.Advice.LineFive = fiifia.parseStringField(record[134:167])
 	fiifia.Advice.LineSix = fiifia.parseStringField(record[167:200])
+	return nil
 }
 
 // String writes FIIntermediaryFIAdvice
@@ -60,9 +67,6 @@ func (fiifia *FIIntermediaryFIAdvice) String() string {
 // Validate performs WIRE format rule checks on FIIntermediaryFIAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fiifia *FIIntermediaryFIAdvice) Validate() error {
-	if err := fiifia.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := fiifia.isAdviceCode(fiifia.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, fiifia.Advice.AdviceCode)
 	}
@@ -84,12 +88,6 @@ func (fiifia *FIIntermediaryFIAdvice) Validate() error {
 	if err := fiifia.isAlphanumeric(fiifia.Advice.LineSix); err != nil {
 		return fieldError("LineSix", err, fiifia.Advice.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fiifia *FIIntermediaryFIAdvice) fieldInclusion() error {
 	return nil
 }
 

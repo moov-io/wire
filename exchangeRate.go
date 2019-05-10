@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // ExchangeRate is the ExchangeRate of the wire
 type ExchangeRate struct {
@@ -32,9 +35,13 @@ func NewExchangeRate() *ExchangeRate {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (eRate *ExchangeRate) Parse(record string) {
+func (eRate *ExchangeRate) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 18 {
+		return NewTagWrongLengthErr(18, len(record))
+	}
 	eRate.tag = record[:6]
 	eRate.ExchangeRate = eRate.parseStringField(record[6:18])
+	return nil
 }
 
 // String writes ExchangeRate
@@ -49,18 +56,9 @@ func (eRate *ExchangeRate) String() string {
 // Validate performs WIRE format rule checks on ExchangeRate and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (eRate *ExchangeRate) Validate() error {
-	if err := eRate.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := eRate.isAmount(eRate.ExchangeRate); err != nil {
 		return fieldError("ExchangeRate", err, eRate.ExchangeRate)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (eRate *ExchangeRate) fieldInclusion() error {
 	return nil
 }
 

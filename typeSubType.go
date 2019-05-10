@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // TypeSubType {1510}
 type TypeSubType struct {
@@ -33,10 +36,14 @@ func NewTypeSubType() *TypeSubType {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (tst *TypeSubType) Parse(record string) {
+func (tst *TypeSubType) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 10 {
+		return NewTagWrongLengthErr(10, len(record))
+	}
 	tst.tag = tst.parseStringField(record[:6])
 	tst.TypeCode = tst.parseStringField(record[6:8])
 	tst.SubTypeCode = tst.parseStringField(record[8:10])
+	return nil
 }
 
 // String writes TypeSubType
@@ -67,6 +74,12 @@ func (tst *TypeSubType) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (tst *TypeSubType) fieldInclusion() error {
+	if tst.TypeCode == "" {
+		return fieldError("TypeCode", ErrFieldRequired)
+	}
+	if tst.SubTypeCode == "" {
+		return fieldError("SubTypeCode", ErrFieldRequired)
+	}
 	return nil
 }
 

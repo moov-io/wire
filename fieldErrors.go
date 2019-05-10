@@ -17,7 +17,9 @@ var (
 	// ErrNonAlphanumeric is returned when a field has non-alphanumeric characters
 	ErrNonAlphanumeric = errors.New("has non alphanumeric characters")
 	// ErrNonAmount is returned for an incorrect wire amount format
-	ErrNonAmount = errors.New("is an incorrect wire amount format")
+	ErrNonAmount = errors.New("is an incorrect amount format")
+	// ErrNonCurrencyCode is returned for an incorrect currency code
+	ErrNonCurrencyCode = errors.New("is not a recognized currency code")
 	// ErrUpperAlpha is returned when a field is not in uppercase
 	ErrUpperAlpha = errors.New("is not uppercase A-Z or 0-9")
 	// ErrFieldInclusion is returned when a field is mandatory and has a default value
@@ -34,6 +36,8 @@ var (
 	ErrValidYear = errors.New("is an invalid year")
 	// ErrValidCentury is returned for an invalid century
 	ErrValidCentury = errors.New("is an invalid century")
+	// ErrValidDate is returned for an invalid date
+	ErrValidDate = errors.New("is an invalid date format")
 	// ErrInvalidProperty is returned for an invalid type property
 	ErrInvalidProperty = errors.New("is an invalid property")
 
@@ -188,5 +192,25 @@ func NewErrInvalidPropertyForProperty(property, propertyValue, secondProperty, s
 }
 
 func (e ErrInvalidPropertyForProperty) Error() string {
+	return e.Message
+}
+
+// FieldWrongLengthErr is the error given when a Field is the wrong length
+type FieldWrongLengthErr struct {
+	Message     string
+	FieldLength int
+	Length      int
+}
+
+// NewFieldWrongLengthErr creates a new error of the FieldWrongLengthErr type
+func NewFieldWrongLengthErr(FieldLength, length int) FieldWrongLengthErr {
+	return FieldWrongLengthErr{
+		Message:     fmt.Sprintf("must be %d characters and found %d", FieldLength, length),
+		FieldLength: FieldLength,
+		Length:      length,
+	}
+}
+
+func (e FieldWrongLengthErr) Error() string {
 	return e.Message
 }

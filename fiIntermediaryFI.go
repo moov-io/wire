@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // FIIntermediaryFI is the financial institution intermediary financial institution
 type FIIntermediaryFI struct {
@@ -31,7 +34,10 @@ func NewFIIntermediaryFI() *FIIntermediaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fiifi *FIIntermediaryFI) Parse(record string) {
+func (fiifi *FIIntermediaryFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 201 {
+		return NewTagWrongLengthErr(201, len(record))
+	}
 	fiifi.tag = record[:6]
 	fiifi.FIToFI.LineOne = fiifi.parseStringField(record[6:36])
 	fiifi.FIToFI.LineTwo = fiifi.parseStringField(record[36:69])
@@ -39,6 +45,7 @@ func (fiifi *FIIntermediaryFI) Parse(record string) {
 	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[102:135])
 	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[135:168])
 	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[168:201])
+	return nil
 }
 
 // String writes FIIntermediaryFI
@@ -58,9 +65,6 @@ func (fiifi *FIIntermediaryFI) String() string {
 // Validate performs WIRE format rule checks on FIIntermediaryFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fiifi *FIIntermediaryFI) Validate() error {
-	if err := fiifi.fieldInclusion(); err != nil {
-		return err
-	}
 	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fiifi.FIToFI.LineOne)
 	}
@@ -79,12 +83,6 @@ func (fiifi *FIIntermediaryFI) Validate() error {
 	if err := fiifi.isAlphanumeric(fiifi.FIToFI.LineSix); err != nil {
 		return fieldError("LineSix", err, fiifi.FIToFI.LineSix)
 	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (fiifi *FIIntermediaryFI) fieldInclusion() error {
 	return nil
 }
 

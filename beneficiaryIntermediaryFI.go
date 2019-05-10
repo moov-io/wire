@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // BeneficiaryIntermediaryFI {4000}
 type BeneficiaryIntermediaryFI struct {
@@ -31,7 +34,10 @@ func NewBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bifi *BeneficiaryIntermediaryFI) Parse(record string) {
+func (bifi *BeneficiaryIntermediaryFI) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 181 {
+		return NewTagWrongLengthErr(181, len(record))
+	}
 	bifi.tag = record[:6]
 	bifi.FinancialInstitution.IdentificationCode = bifi.parseStringField(record[6:7])
 	bifi.FinancialInstitution.Identifier = bifi.parseStringField(record[7:41])
@@ -39,6 +45,7 @@ func (bifi *BeneficiaryIntermediaryFI) Parse(record string) {
 	bifi.FinancialInstitution.Address.AddressLineOne = bifi.parseStringField(record[76:111])
 	bifi.FinancialInstitution.Address.AddressLineTwo = bifi.parseStringField(record[111:146])
 	bifi.FinancialInstitution.Address.AddressLineThree = bifi.parseStringField(record[146:181])
+	return nil
 }
 
 // String writes BeneficiaryIntermediaryFI
@@ -86,20 +93,18 @@ func (bifi *BeneficiaryIntermediaryFI) Validate() error {
 	if err := bifi.isAlphanumeric(bifi.FinancialInstitution.Address.AddressLineThree); err != nil {
 		return fieldError("AddressLineThree", err, bifi.FinancialInstitution.Address.AddressLineThree)
 	}
-
-	if bifi.FinancialInstitution.IdentificationCode != "" && bifi.FinancialInstitution.Identifier == "" {
-		return fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired)
-	}
-	if bifi.FinancialInstitution.IdentificationCode == "" && bifi.FinancialInstitution.Identifier != "" {
-		return fieldError("fwm.BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired)
-	}
-
 	return nil
 }
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (bifi *BeneficiaryIntermediaryFI) fieldInclusion() error {
+	if bifi.FinancialInstitution.IdentificationCode != "" && bifi.FinancialInstitution.Identifier == "" {
+		return fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired)
+	}
+	if bifi.FinancialInstitution.IdentificationCode == "" && bifi.FinancialInstitution.Identifier != "" {
+		return fieldError("fwm.BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired)
+	}
 	return nil
 }
 

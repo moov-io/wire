@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // PaymentNotification is the PaymentNotification of the wire
 type PaymentNotification struct {
@@ -13,6 +16,7 @@ type PaymentNotification struct {
 	// PaymentNotificationIndicator
 	// * `0 - 6` - Reserved for market practice conventions.
 	// * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+	// ToDo: Change to just Indicator?
 	PaymentNotificationIndicator string `json:"paymentNotificationIndicator,omitempty"`
 	// ContactNotificationElectronicAddress
 	ContactNotificationElectronicAddress string `json:"contactNotificationElectronicAddress,omitempty"`
@@ -45,7 +49,10 @@ func NewPaymentNotification() *PaymentNotification {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pn *PaymentNotification) Parse(record string) {
+func (pn *PaymentNotification) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 2335 {
+		return NewTagWrongLengthErr(2335, len(record))
+	}
 	pn.tag = record[:6]
 	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
 	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[7:2055])
@@ -54,6 +61,7 @@ func (pn *PaymentNotification) Parse(record string) {
 	pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
 	pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
 	pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
+	return nil
 }
 
 // String writes PaymentNotification
@@ -74,9 +82,9 @@ func (pn *PaymentNotification) String() string {
 // Validate performs WIRE format rule checks on PaymentNotification and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (pn *PaymentNotification) Validate() error {
-	if err := pn.fieldInclusion(); err != nil {
+	/*	if err := pn.fieldInclusion(); err != nil {
 		return err
-	}
+	}*/
 	if err := pn.isNumeric(pn.PaymentNotificationIndicator); err != nil {
 		return fieldError("PaymentNotificationIndicator", err, pn.PaymentNotificationIndicator)
 	}
@@ -103,9 +111,9 @@ func (pn *PaymentNotification) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
-func (pn *PaymentNotification) fieldInclusion() error {
+/*func (pn *PaymentNotification) fieldInclusion() error {
 	return nil
-}
+}*/
 
 // PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
 func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
