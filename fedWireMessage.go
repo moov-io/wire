@@ -351,8 +351,8 @@ func (fwm *FEDWireMessage) isBankTransferValid() error {
 		"1500", "1502", "1508",
 		"1600", "1602", "1608":
 	default:
-		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
-			fwm.BusinessFunctionCode.BusinessFunctionCode))
+		return NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
+			fwm.BusinessFunctionCode.BusinessFunctionCode)
 	}
 	return nil
 }
@@ -367,8 +367,10 @@ func (fwm *FEDWireMessage) isBankTransferTags() error {
 
 // isInvalidBankTransferTags
 func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
-	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
-		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
+	if fwm.BusinessFunctionCode != nil {
+		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
+			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
+		}
 	}
 	if fwm.LocalInstrument != nil {
 		return fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument)
@@ -594,15 +596,18 @@ func (fwm *FEDWireMessage) isInvalidCustomerTransferPlusTags() error {
 	if fwm.FIReceiverFI != nil {
 		return fieldError("FIReceiverFI", ErrInvalidProperty, fwm.FIReceiverFI)
 	}
-	if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-		if fwm.Charges != nil {
-			return fieldError("Charges", ErrInvalidProperty, fwm.Charges)
-		}
-		if fwm.InstructedAmount != nil {
-			return fieldError("InstructedAmount", ErrInvalidProperty, fwm.InstructedAmount)
-		}
-		if fwm.ExchangeRate != nil {
-			return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
+
+	if fwm.LocalInstrument != nil {
+		if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+			if fwm.Charges != nil {
+				return fieldError("Charges", ErrInvalidProperty, fwm.Charges)
+			}
+			if fwm.InstructedAmount != nil {
+				return fieldError("InstructedAmount", ErrInvalidProperty, fwm.InstructedAmount)
+			}
+			if fwm.ExchangeRate != nil {
+				return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
+			}
 		}
 	}
 	// ToDo: From the spec - Certain {7xxx} tags & {8xxx} tags may not be permitted depending upon value of {3610}.  I'm not sure how to code this yet
@@ -845,10 +850,12 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 
 // isPreviousMessageIdentifierRequired
 func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
-	switch fwm.TypeSubType.SubTypeCode {
-	case ReversalTransfer, ReversalPriorDayTransfer:
-		if fwm.PreviousMessageIdentifier == nil {
-			return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+	if fwm.TypeSubType != nil {
+		switch fwm.TypeSubType.SubTypeCode {
+		case ReversalTransfer, ReversalPriorDayTransfer:
+			if fwm.PreviousMessageIdentifier == nil {
+				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+			}
 		}
 	}
 	return nil

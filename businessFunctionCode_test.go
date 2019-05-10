@@ -52,8 +52,7 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
-	err := r.parseBusinessFunctionCode()
-	if err != nil {
+	if err := r.parseBusinessFunctionCode(); err != nil {
 		if !base.Match(err, NewTagWrongLengthErr(12, len(r.line))) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -68,13 +67,12 @@ func TestParseBusinessFunctionCodeReaderParseError(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	fwm.SetBusinessFunctionCode(bfc)
-	err := r.parseBusinessFunctionCode()
-	if err != nil {
+	if err := r.parseBusinessFunctionCode(); err != nil {
 		if !base.Match(err, ErrBusinessFunctionCode) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
-	_, err = r.Read()
+	_, err := r.Read()
 	if err != nil {
 		if !base.Has(err, ErrBusinessFunctionCode) {
 			t.Errorf("%T: %s", err, err)

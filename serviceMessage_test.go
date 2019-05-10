@@ -221,8 +221,7 @@ func TestInvalidTransactionTypeCodeForServiceMessage(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.TransactionTypeCode = "COV"
 	fwm.SetBusinessFunctionCode(bfc)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrTransactionTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -236,8 +235,7 @@ func TestInvalidLocalInstrumentForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -251,8 +249,7 @@ func TestInvalidPaymentNotificationForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -266,8 +263,7 @@ func TestInvalidChargesForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	c := mockCharges()
 	fwm.SetCharges(c)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -281,8 +277,7 @@ func TestInvalidInstructedAmountForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	ia := mockInstructedAmount()
 	fwm.SetInstructedAmount(ia)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -296,8 +291,7 @@ func TestInvalidExchangeRateForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -312,8 +306,7 @@ func TestInvalidBeneficiaryIdentificationCodeForServiceMessage(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetBeneficiary(ben)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -328,8 +321,7 @@ func TestInvalidOriginatorIdentificationCodeForServiceMessage(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetOriginator(o)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -343,8 +335,7 @@ func TestInvalidOriginatorOptionFForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	off := mockOriginatorOptionF()
 	fwm.SetOriginatorOptionF(off)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -358,8 +349,7 @@ func TestInvalidUnstructuredAddendaForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -373,8 +363,7 @@ func TestInvalidCurrencyInstructedAmountForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	cia := mockCurrencyInstructedAmount()
 	fwm.SetCurrencyInstructedAmount(cia)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -388,10 +377,10 @@ func TestInvalidRelatedRemittanceForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
-	err := fwm.isInvalidServiceMessageTags()
-	if err != nil {
+	if err := fwm.isInvalidServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
+
 	}
 }
