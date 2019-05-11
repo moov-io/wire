@@ -6,6 +6,7 @@ package wire
 
 import (
 	"strings"
+	"unicode/utf8"
 )
 
 // Charges is the Charges of the wire
@@ -49,13 +50,17 @@ func NewCharges() *Charges {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (c *Charges) Parse(record string) {
+func (c *Charges) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 67 {
+		return NewTagWrongLengthErr(67, len(record))
+	}
 	c.tag = record[:6]
 	c.ChargeDetails = c.parseStringField(record[6:7])
 	c.SendersChargesOne = c.parseStringField(record[7:22])
 	c.SendersChargesTwo = c.parseStringField(record[22:37])
 	c.SendersChargesThree = c.parseStringField(record[37:52])
 	c.SendersChargesFour = c.parseStringField(record[52:67])
+	return nil
 }
 
 // String writes Charges
@@ -145,11 +150,11 @@ func (c *Charges) isChargesValid(s string) error {
 	}
 	currencyCode := s[:3]
 	if err := c.isCurrencyCode(currencyCode); err != nil {
-		return fieldError("CurrencyCode", err)
+		return fieldError("CurrencyCode", err, currencyCode)
 	}
 	amount := s[3:]
 	if err := c.isAmount(amount); err != nil {
-		return fieldError("Amount", err)
+		return fieldError("Amount", err, amount)
 	}
 	return nil
 }
