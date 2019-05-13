@@ -60,3 +60,135 @@ func TestParseChargesReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestChargesChargeDetails validates Charges SendersChargeDetails
+func TestChargesChargeDetails(t *testing.T) {
+	c := mockCharges()
+	c.ChargeDetails = "Z"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrChargeDetails) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesSendersChargesOne validates Charges SendersChargesOne currency code
+func TestChargesSendersChargesOne(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesOne = "ZZZ0,99"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonCurrencyCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesCurrencyCodeTwo validates Charges SendersChargesTwo currency code
+func TestChargesCurrencyCodeTwo(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesTwo = "ZZZ0,99"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonCurrencyCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesCurrencyCodeThree validates Charges SendersChargesThree currency code
+func TestChargesCurrencyCodeThree(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesThree = "ZZZ0,99"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonCurrencyCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesCurrencyCodeFour validates Charges SendersChargesFour currency code
+func TestChargesCurrencyCodeFour(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesFour = "ZZZ0,99"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonCurrencyCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesSendersChargesOneAlphanumeric validates Charges SendersChargesOneAlphanumeric
+func TestChargesCurrencyCodeOneAlphanumeric(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesOne = "®"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesSendersChargesTwoAlphanumeric validates Charges SendersChargesTwoAlphanumeric
+func TestChargesCurrencyCodeTwoAlphanumeric(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesTwo = "®"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesSendersChargesThreeAlphanumeric validates Charges SendersChargesThreeAlphanumeric
+func TestChargesCurrencyCodeThreeAlphanumeric(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesThree = "®"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesSendersChargesFourAlphanumeric validates Charges SendersChargesFourAlphanumeric
+func TestChargesCurrencyCodeFourAlphanumeric(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesFour = "®"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAlphanumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesAmountOne validates Charges SendersChargesOne amount
+func TestChargesAmountOne(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesOne = "USD0,Z9"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAmount) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesAmountOne validates Charges SendersChargesTwo amount
+func TestChargesAmountTwo(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesTwo = "USD0,Z9"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAmount) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestChargesAmountFour validates Charges SendersChargesFour amount
+func TestChargesAmountFour(t *testing.T) {
+	c := mockCharges()
+	c.SendersChargesFour = "USD0,Z9"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrNonAmount) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
