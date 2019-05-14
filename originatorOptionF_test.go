@@ -117,3 +117,14 @@ func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestOriginatorOptionFTagError validates a OriginatorOptionF tag
+func TestOriginatorOptionFTagError(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.tag = "{9999}"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

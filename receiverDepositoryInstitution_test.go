@@ -103,3 +103,14 @@ func TestParseReceiverReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestReceiverDepositoryInstitutionTagError validates a ReceiverDepositoryInstitution tag
+func TestReceiverDepositoryInstitutionTagError(t *testing.T) {
+	rdi := mockReceiverDepositoryInstitution()
+	rdi.tag = "{9999}"
+	if err := rdi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

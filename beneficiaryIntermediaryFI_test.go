@@ -162,3 +162,14 @@ func TestParseBeneficiaryIntermediaryFIReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestBeneficiaryIntermediaryFITagError validates a BeneficiaryFI tag
+func TestBeneficiaryIntermediaryFITagError(t *testing.T) {
+	bifi := mockBeneficiaryIntermediaryFI()
+	bifi.tag = "{9999}"
+	if err := bifi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

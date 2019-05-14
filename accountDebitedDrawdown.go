@@ -73,6 +73,9 @@ func (debitDD *AccountDebitedDrawdown) Validate() error {
 	if err := debitDD.fieldInclusion(); err != nil {
 		return err
 	}
+	if debitDD.tag != TagAccountDebitedDrawdown {
+		return fieldError("tag", ErrValidTagForType, debitDD.tag)
+	}
 	if err := debitDD.isIdentificationCode(debitDD.IdentificationCode); err != nil {
 		return fieldError("IdentificationCode", err, debitDD.IdentificationCode)
 	}

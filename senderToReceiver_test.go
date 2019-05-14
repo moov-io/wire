@@ -141,3 +141,14 @@ func TestParseSenderToReceiverReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestSenderToReceiverTagError validates a SenderToReceiver tag
+func TestSenderToReceiverTagError(t *testing.T) {
+	str := mockSenderToReceiver()
+	str.tag = "{9999}"
+	if err := str.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

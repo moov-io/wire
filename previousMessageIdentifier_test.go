@@ -69,3 +69,14 @@ func TestParsePreviousMessageIdentifierReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestPreviousMessageIdentifierTagError validates a PreviousMessageIdentifier tag
+func TestPreviousMessageIdentifierTagError(t *testing.T) {
+	pmi := mockPreviousMessageIdentifier()
+	pmi.tag = "{9999}"
+	if err := pmi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

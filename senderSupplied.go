@@ -73,6 +73,9 @@ func (ss *SenderSupplied) Validate() error {
 	if err := ss.fieldInclusion(); err != nil {
 		return err
 	}
+	if ss.tag != TagSenderSupplied {
+		return fieldError("tag", ErrValidTagForType, ss.tag)
+	}
 	if ss.FormatVersion != FormatVersion {
 		return fieldError("FormatVersion", ErrFormatVersion, ss.FormatVersion)
 	}

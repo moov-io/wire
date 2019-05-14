@@ -68,6 +68,9 @@ func (ii *IntermediaryInstitution) Validate() error {
 	if err := ii.fieldInclusion(); err != nil {
 		return err
 	}
+	if ii.tag != TagIntermediaryInstitution {
+		return fieldError("tag", ErrValidTagForType, ii.tag)
+	}
 	if err := ii.isAlphanumeric(ii.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, ii.CoverPayment.SwiftFieldTag)
 	}

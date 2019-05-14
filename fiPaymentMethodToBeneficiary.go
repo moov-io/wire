@@ -63,6 +63,9 @@ func (pm *FIPaymentMethodToBeneficiary) Validate() error {
 	if err := pm.fieldInclusion(); err != nil {
 		return err
 	}
+	if pm.tag != TagFIPaymentMethodToBeneficiary {
+		return fieldError("tag", ErrValidTagForType, pm.tag)
+	}
 	if err := pm.isAlphanumeric(pm.AdditionalInformation); err != nil {
 		return fieldError("AdditionalInformation", err, pm.AdditionalInformation)
 	}

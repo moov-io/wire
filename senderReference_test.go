@@ -69,3 +69,14 @@ func TestParseSenderReferenceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestSenderReferenceTagError validates a SenderReference tag
+func TestSenderReferenceTagError(t *testing.T) {
+	sr := mockSenderReference()
+	sr.tag = "{9999}"
+	if err := sr.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

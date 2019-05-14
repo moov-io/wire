@@ -70,3 +70,14 @@ func TestParseDateRemittanceDocumentReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestDateRemittanceDocumentTagError validates a DateRemittanceDocument tag
+func TestDateRemittanceDocumentTagError(t *testing.T) {
+	drd := mockDateRemittanceDocument()
+	drd.tag = "{9999}"
+	if err := drd.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

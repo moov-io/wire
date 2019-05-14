@@ -65,6 +65,9 @@ func (fibfi *FIBeneficiaryFI) String() string {
 // Validate performs WIRE format rule checks on FIBeneficiaryFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fibfi *FIBeneficiaryFI) Validate() error {
+	if fibfi.tag != TagFIBeneficiaryFI {
+		return fieldError("tag", ErrValidTagForType, fibfi.tag)
+	}
 	if err := fibfi.isAlphanumeric(fibfi.FIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, fibfi.FIToFI.LineOne)
 	}

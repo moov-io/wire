@@ -151,3 +151,14 @@ func TestParseBeneficiaryReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestBeneficiaryTagError validates Beneficiary tag
+func TestBeneficiaryTagError(t *testing.T) {
+	ben := mockBeneficiary()
+	ben.tag = "{9999}"
+	if err := ben.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

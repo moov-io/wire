@@ -68,6 +68,9 @@ func (iAccount *InstitutionAccount) Validate() error {
 	if err := iAccount.fieldInclusion(); err != nil {
 		return err
 	}
+	if iAccount.tag != TagInstitutionAccount {
+		return fieldError("tag", ErrValidTagForType, iAccount.tag)
+	}
 	if err := iAccount.isAlphanumeric(iAccount.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, iAccount.CoverPayment.SwiftFieldTag)
 	}

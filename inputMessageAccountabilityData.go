@@ -66,7 +66,12 @@ func (imad *InputMessageAccountabilityData) Validate() error {
 	if err := imad.fieldInclusion(); err != nil {
 		return err
 	}
-	// ToDo: Validate Date Fields
+	if imad.tag != TagInputMessageAccountabilityData {
+		return fieldError("tag", ErrValidTagForType, imad.tag)
+	}
+	if err := imad.validateDate(imad.InputCycleDate); err != nil {
+		return err
+	}
 	if err := imad.isAlphanumeric(imad.InputSource); err != nil {
 		return fieldError("InputSource", err, imad.InputSource)
 	}

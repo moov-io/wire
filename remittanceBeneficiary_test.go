@@ -406,3 +406,14 @@ func TestParseRemittanceBeneficiaryReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestRemittanceBeneficiaryTagError validates a RemittanceBeneficiary tag
+func TestRemittanceBeneficiaryTagError(t *testing.T) {
+	rb := mockRemittanceBeneficiary()
+	rb.tag = "{9999}"
+	if err := rb.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

@@ -70,6 +70,9 @@ func (srd *SecondaryRemittanceDocument) Validate() error {
 	if err := srd.fieldInclusion(); err != nil {
 		return err
 	}
+	if srd.tag != TagSecondaryRemittanceDocument {
+		return fieldError("tag", ErrValidTagForType, srd.tag)
+	}
 	if err := srd.isDocumentTypeCode(srd.DocumentTypeCode); err != nil {
 		return fieldError("DocumentTypeCode", err, srd.DocumentTypeCode)
 	}

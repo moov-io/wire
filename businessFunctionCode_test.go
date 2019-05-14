@@ -79,3 +79,14 @@ func TestParseBusinessFunctionCodeReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestBusinessFunctionCodeTagError validates a BusinessFunctionCode tag
+func TestBusinessFunctionCodeTagError(t *testing.T) {
+	bfc := mockBusinessFunctionCode()
+	bfc.tag = "{9999}"
+	if err := bfc.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

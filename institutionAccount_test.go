@@ -140,3 +140,14 @@ func TestParseInstitutionAccountReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestInstitutionAccountTagError validates a InstitutionAccount tag
+func TestInstitutionAccountTagError(t *testing.T) {
+	iAccount := mockInstitutionAccount()
+	iAccount.tag = "{9999}"
+	if err := iAccount.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

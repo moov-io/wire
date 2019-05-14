@@ -140,3 +140,14 @@ func TestParseOrderingCustomerReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestOrderingCustomerTagError validates a OrderingCustomer tag
+func TestOrderingCustomerTagError(t *testing.T) {
+	oc := mockOrderingCustomer()
+	oc.tag = "{9999}"
+	if err := oc.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

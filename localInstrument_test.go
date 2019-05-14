@@ -93,3 +93,14 @@ func TestParseLocalInstrumentReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestLocalInstrumentTagError validates a LocalInstrument tag
+func TestLocalInstrumentTagError(t *testing.T) {
+	li := mockLocalInstrument()
+	li.tag = "{9999}"
+	if err := li.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

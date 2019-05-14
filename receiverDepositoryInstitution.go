@@ -62,6 +62,9 @@ func (rdi *ReceiverDepositoryInstitution) Validate() error {
 	if err := rdi.fieldInclusion(); err != nil {
 		return err
 	}
+	if rdi.tag != TagReceiverDepositoryInstitution {
+		return fieldError("tag", ErrValidTagForType, rdi.tag)
+	}
 	if err := rdi.isNumeric(rdi.ReceiverABANumber); err != nil {
 		return fieldError("ReceiverABANumber", err, rdi.ReceiverABANumber)
 	}

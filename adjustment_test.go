@@ -150,3 +150,14 @@ func TestParseAdjustmentReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestAdjustmentTagError validates Adjustment tag
+func TestAdjustmentTagError(t *testing.T) {
+	adj := mockAdjustment()
+	adj.tag = "{9999}"
+	if err := adj.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

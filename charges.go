@@ -79,6 +79,9 @@ func (c *Charges) String() string {
 // Validate performs WIRE format rule checks on Charges and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (c *Charges) Validate() error {
+	if c.tag != TagCharges {
+		return fieldError("tag", ErrValidTagForType, c.tag)
+	}
 	if err := c.isChargeDetails(c.ChargeDetails); err != nil {
 		return fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails)
 	}

@@ -129,3 +129,14 @@ func TestParseFIIntermediaryFIReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestFIIntermediaryFITagError validates a FIIntermediaryFI tag
+func TestFIIntermediaryFITagError(t *testing.T) {
+	fiifi := mockFIIntermediaryFI()
+	fiifi.tag = "{9999}"
+	if err := fiifi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

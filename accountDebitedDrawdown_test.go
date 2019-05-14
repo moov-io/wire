@@ -173,3 +173,14 @@ func TestParseAccountDebitedDrawdownReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestAccountDebitedDrawdownTagError validates AccountDebitedDrawdown tag
+func TestAccountDebitedDrawdownTagError(t *testing.T) {
+	debitDD := mockAccountDebitedDrawdown()
+	debitDD.tag = "{9999}"
+	if err := debitDD.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

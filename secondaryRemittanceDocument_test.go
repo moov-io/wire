@@ -141,3 +141,14 @@ func TestParseSecondaryRemittanceDocumentReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestSecondaryRemittanceDocumentTagError validates a SecondaryRemittanceDocument tag
+func TestSecondaryRemittanceDocumentTagError(t *testing.T) {
+	srd := mockSecondaryRemittanceDocument()
+	srd.tag = "{9999}"
+	if err := srd.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

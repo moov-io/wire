@@ -99,7 +99,9 @@ func (rr *RelatedRemittance) String() string {
 // Validate performs WIRE format rule checks on RelatedRemittance and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (rr *RelatedRemittance) Validate() error {
-
+	if rr.tag != TagRelatedRemittance {
+		return fieldError("tag", ErrValidTagForType, rr.tag)
+	}
 	if err := rr.isAlphanumeric(rr.RemittanceIdentification); err != nil {
 		return fieldError("RemittanceIdentification", err, rr.RemittanceIdentification)
 	}

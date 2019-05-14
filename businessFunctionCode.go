@@ -64,6 +64,9 @@ func (bfc *BusinessFunctionCode) Validate() error {
 	if err := bfc.fieldInclusion(); err != nil {
 		return err
 	}
+	if bfc.tag != TagBusinessFunctionCode {
+		return fieldError("tag", ErrValidTagForType, bfc.tag)
+	}
 	if err := bfc.isBusinessFunctionCode(bfc.BusinessFunctionCode); err != nil {
 		return fieldError("BusinessFunctionCode", err, bfc.BusinessFunctionCode)
 	}

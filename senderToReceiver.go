@@ -67,6 +67,9 @@ func (str *SenderToReceiver) String() string {
 // Validate performs WIRE format rule checks on SenderToReceiver and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (str *SenderToReceiver) Validate() error {
+	if str.tag != TagSenderToReceiver {
+		return fieldError("tag", ErrValidTagForType, str.tag)
+	}
 	if err := str.isAlphanumeric(str.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, str.CoverPayment.SwiftFieldTag)
 	}

@@ -81,3 +81,14 @@ func TestParseFIPaymentMethodToBeneficiaryReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestFIPaymentMethodToBeneficiaryTagError validates a FIPaymentMethodToBeneficiary tag
+func TestFIPaymentMethodToBeneficiaryTagError(t *testing.T) {
+	pm := mockFIPaymentMethodToBeneficiary()
+	pm.tag = "{9999}"
+	if err := pm.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

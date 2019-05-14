@@ -81,3 +81,14 @@ func TestParseCurrencyInstructedAmountReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestCurrencyInstructedAmountTagError validates a CurrencyInstructedAmount tag
+func TestCurrencyInstructedAmountTagError(t *testing.T) {
+	cia := mockCurrencyInstructedAmount()
+	cia.tag = "{9999}"
+	if err := cia.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

@@ -69,3 +69,14 @@ func TestParseExchangeRateReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestExchangeRateTagError validates a ExchangeRate tag
+func TestExchangeRateTagError(t *testing.T) {
+	eRate := mockCurrencyInstructedAmount()
+	eRate.tag = "{9999}"
+	if err := eRate.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

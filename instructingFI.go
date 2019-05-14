@@ -68,6 +68,9 @@ func (ifi *InstructingFI) Validate() error {
 	if err := ifi.fieldInclusion(); err != nil {
 		return err
 	}
+	if ifi.tag != TagInstructingFI {
+		return fieldError("tag", ErrValidTagForType, ifi.tag)
+	}
 	if err := ifi.isIdentificationCode(ifi.FinancialInstitution.IdentificationCode); err != nil {
 		return fieldError("IdentificationCode", err, ifi.FinancialInstitution.IdentificationCode)
 	}

@@ -92,3 +92,14 @@ func TestParseUnstructuredAddendaReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestUnstructuredAddendaTagError validates a UnstructuredAddenda tag
+func TestUnstructuredAddendaTagError(t *testing.T) {
+	ua := mockUnstructuredAddenda()
+	ua.tag = "{9999}"
+	if err := ua.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

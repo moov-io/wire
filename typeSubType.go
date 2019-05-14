@@ -62,6 +62,9 @@ func (tst *TypeSubType) Validate() error {
 	if err := tst.fieldInclusion(); err != nil {
 		return err
 	}
+	if tst.tag != TagTypeSubType {
+		return fieldError("tag", ErrValidTagForType, tst.tag)
+	}
 	if err := tst.isTypeCode(tst.TypeCode); err != nil {
 		return fieldError("TypeCode", err, tst.TypeCode)
 	}

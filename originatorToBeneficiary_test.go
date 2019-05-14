@@ -105,3 +105,14 @@ func TestParseOriginatorToBeneficiaryReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestOriginatorToBeneficiaryTagError validates a OriginatorToBeneficiary tag
+func TestOriginatorToBeneficiaryTagError(t *testing.T) {
+	ob := mockOriginatorToBeneficiary()
+	ob.tag = "{9999}"
+	if err := ob.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

@@ -60,6 +60,9 @@ func (gard *GrossAmountRemittanceDocument) Validate() error {
 	if err := gard.fieldInclusion(); err != nil {
 		return err
 	}
+	if gard.tag != TagGrossAmountRemittanceDocument {
+		return fieldError("tag", ErrValidTagForType, gard.tag)
+	}
 	if err := gard.isCurrencyCode(gard.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, gard.RemittanceAmount.CurrencyCode)
 	}

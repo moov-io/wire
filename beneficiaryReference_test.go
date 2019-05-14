@@ -69,3 +69,14 @@ func TestParseBeneficiaryReferenceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestBeneficiaryReferenceTagError validates a BeneficiaryReference tag
+func TestBeneficiaryReferenceTagError(t *testing.T) {
+	br := mockBeneficiaryReference()
+	br.tag = "{9999}"
+	if err := br.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

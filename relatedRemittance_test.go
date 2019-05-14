@@ -309,3 +309,14 @@ func TestParseRelatedRemittanceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestRelatedRemittanceTagError validates a RelatedRemittance tag
+func TestRelatedRemittanceTagError(t *testing.T) {
+	rr := mockRelatedRemittance()
+	rr.tag = "{9999}"
+	if err := rr.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

@@ -103,3 +103,14 @@ func TestParseTypeSubTypeReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestTypeSubTypeTagError validates a TypeSubType tag
+func TestTypeSubTypeTagError(t *testing.T) {
+	tst := mockTypeSubType()
+	tst.tag = "{9999}"
+	if err := tst.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

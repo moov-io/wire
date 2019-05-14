@@ -102,6 +102,9 @@ func (sm *ServiceMessage) Validate() error {
 	if err := sm.fieldInclusion(); err != nil {
 		return err
 	}
+	if sm.tag != TagServiceMessage {
+		return fieldError("tag", ErrValidTagForType, sm.tag)
+	}
 	if err := sm.isAlphanumeric(sm.LineOne); err != nil {
 		return fieldError("LineOne", err, sm.LineOne)
 	}

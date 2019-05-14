@@ -129,3 +129,14 @@ func TestParseFIReceiverFIReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestFIReceiverFITagError validates a FIReceiverFI tag
+func TestFIReceiverFITagError(t *testing.T) {
+	firfi := mockFIReceiverFI()
+	firfi.tag = "{9999}"
+	if err := firfi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

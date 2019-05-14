@@ -129,3 +129,14 @@ func TestParseFIBeneficiaryReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestFIBeneficiaryTagError validates a FIBeneficiary tag
+func TestFIBeneficiaryTagError(t *testing.T) {
+	fib := mockFIBeneficiary()
+	fib.tag = "{9999}"
+	if err := fib.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

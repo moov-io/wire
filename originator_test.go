@@ -151,3 +151,14 @@ func TestParseOriginatorReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestOriginatorTagError validates a Originator tag
+func TestOriginatorTagError(t *testing.T) {
+	o := mockOriginator()
+	o.tag = "{9999}"
+	if err := o.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

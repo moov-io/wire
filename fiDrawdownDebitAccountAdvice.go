@@ -67,6 +67,9 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
 // Validate performs WIRE format rule checks on FIDrawdownDebitAccountAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
+	if debitDDAdvice.tag != TagFIDrawdownDebitAccountAdvice {
+		return fieldError("tag", ErrValidTagForType, debitDDAdvice.tag)
+	}
 	if err := debitDDAdvice.isAdviceCode(debitDDAdvice.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, debitDDAdvice.Advice.AdviceCode)
 	}

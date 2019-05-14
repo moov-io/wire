@@ -55,6 +55,9 @@ func (pmi *PreviousMessageIdentifier) String() string {
 // Validate performs WIRE format rule checks on PreviousMessageIdentifier and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (pmi *PreviousMessageIdentifier) Validate() error {
+	if pmi.tag != TagPreviousMessageIdentifier {
+		return fieldError("tag", ErrValidTagForType, pmi.tag)
+	}
 	if err := pmi.isAlphanumeric(pmi.PreviousMessageIdentifier); err != nil {
 		return fieldError("PreviousMessageIdentifier", err, pmi.PreviousMessageIdentifier)
 	}

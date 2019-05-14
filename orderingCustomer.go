@@ -68,6 +68,9 @@ func (oc *OrderingCustomer) Validate() error {
 	if err := oc.fieldInclusion(); err != nil {
 		return err
 	}
+	if oc.tag != TagOrderingCustomer {
+		return fieldError("tag", ErrValidTagForType, oc.tag)
+	}
 	if err := oc.isAlphanumeric(oc.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, oc.CoverPayment.SwiftFieldTag)
 	}

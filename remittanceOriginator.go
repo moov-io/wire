@@ -134,6 +134,9 @@ func (ro *RemittanceOriginator) Validate() error {
 	if err := ro.fieldInclusion(); err != nil {
 		return err
 	}
+	if ro.tag != TagRemittanceOriginator {
+		return fieldError("tag", ErrValidTagForType, ro.tag)
+	}
 	if err := ro.isIdentificationType(ro.IdentificationType); err != nil {
 		return fieldError("IdentificationType", err, ro.IdentificationType)
 	}

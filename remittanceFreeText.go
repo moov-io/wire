@@ -63,6 +63,9 @@ func (rft *RemittanceFreeText) String() string {
 // Validate performs WIRE format rule checks on RemittanceFreeText and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (rft *RemittanceFreeText) Validate() error {
+	if rft.tag != TagRemittanceFreeText {
+		return fieldError("tag", ErrValidTagForType, rft.tag)
+	}
 	if err := rft.isAlphanumeric(rft.LineOne); err != nil {
 		return fieldError("LineOne", err, rft.LineOne)
 	}

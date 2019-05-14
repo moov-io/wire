@@ -58,6 +58,9 @@ func (drd *DateRemittanceDocument) Validate() error {
 	if err := drd.fieldInclusion(); err != nil {
 		return err
 	}
+	if drd.tag != TagDateRemittanceDocument {
+		return fieldError("tag", ErrValidTagForType, drd.tag)
+	}
 	if err := drd.validateDate(drd.DateRemittanceDocument); err != nil {
 		return err
 	}

@@ -480,3 +480,14 @@ func TestParseRemittanceOriginatorReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestRemittanceOriginatorTagError validates a RemittanceOriginator tag
+func TestRemittanceOriginatorTagError(t *testing.T) {
+	ro := mockRemittanceOriginator()
+	ro.tag = "{9999}"
+	if err := ro.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

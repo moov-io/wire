@@ -141,3 +141,14 @@ func TestParsePaymentNotificationReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestPaymentNotificationTagError validates a PaymentNotification tag
+func TestPaymentNotificationTagError(t *testing.T) {
+	pn := mockPaymentNotification()
+	pn.tag = "{9999}"
+	if err := pn.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

@@ -192,3 +192,14 @@ func TestChargesAmountFour(t *testing.T) {
 		}
 	}
 }
+
+// TestChargesTagError validates a Charges tag
+func TestChargesTagError(t *testing.T) {
+	c := mockCharges()
+	c.tag = "{9999}"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

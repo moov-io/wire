@@ -65,6 +65,9 @@ func (firfi *FIReceiverFI) String() string {
 // Validate performs WIRE format rule checks on FIReceiverFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (firfi *FIReceiverFI) Validate() error {
+	if firfi.tag != TagFIReceiverFI {
+		return fieldError("tag", ErrValidTagForType, firfi.tag)
+	}
 	if err := firfi.isAlphanumeric(firfi.FIToFI.LineOne); err != nil {
 		return fieldError("LineOne", err, firfi.FIToFI.LineOne)
 	}

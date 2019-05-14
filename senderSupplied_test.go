@@ -114,3 +114,14 @@ func TestParseSenderSuppliedReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestSenderSuppliedTagError validates a SenderSupplied tag
+func TestSenderSuppliedTagError(t *testing.T) {
+	ss := mockSenderSupplied()
+	ss.tag = "{9999}"
+	if err := ss.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

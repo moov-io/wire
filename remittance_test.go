@@ -139,3 +139,14 @@ func TestParseRemittanceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestRemittanceTagError validates a Remittance tag
+func TestRemittanceTagError(t *testing.T) {
+	ri := mockRemittance()
+	ri.tag = "{9999}"
+	if err := ri.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

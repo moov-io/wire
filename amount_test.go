@@ -80,3 +80,14 @@ func TestParseAmountReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestAmountTagError validates Amount tag
+func TestAmountTagError(t *testing.T) {
+	a := mockAmount()
+	a.tag = "{9999}"
+	if err := a.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
