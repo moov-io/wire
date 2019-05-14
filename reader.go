@@ -463,7 +463,9 @@ func (r *Reader) parsePaymentNotification() error {
 func (r *Reader) parseCharges() error {
 	r.tagName = "Charges"
 	c := new(Charges)
-	c.Parse(r.line)
+	if err := c.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := c.Validate(); err != nil {
 		return r.parseError(err)
 	}
