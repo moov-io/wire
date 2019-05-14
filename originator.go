@@ -67,6 +67,9 @@ func (o *Originator) Validate() error {
 	if err := o.fieldInclusion(); err != nil {
 		return err
 	}
+	if o.tag != TagOriginator {
+		return fieldError("tag", ErrValidTagForType, o.tag)
+	}
 	// Can be any Identification Code
 	if err := o.isIdentificationCode(o.Personal.IdentificationCode); err != nil {
 		return fieldError("IdentificationCode", err, o.Personal.IdentificationCode)

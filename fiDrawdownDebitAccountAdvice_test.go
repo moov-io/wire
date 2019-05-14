@@ -141,3 +141,14 @@ func TestParseFIDrawdownDebitAccountAdviceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestFIDrawdownDebitAccountAdviceTagError validates a FIDrawdownDebitAccountAdvice tag
+func TestFIDrawdownDebitAccountAdviceTagError(t *testing.T) {
+	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
+	debitDDAdvice.tag = "{9999}"
+	if err := debitDDAdvice.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

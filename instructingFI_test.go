@@ -162,3 +162,14 @@ func TestParseInstructingFIReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestInstructingFITagError validates a InstructingFI tag
+func TestInstructingFITagError(t *testing.T) {
+	ifi := mockInstructingFI()
+	ifi.tag = "{9999}"
+	if err := ifi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

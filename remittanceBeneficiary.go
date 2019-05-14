@@ -110,7 +110,9 @@ func (rb *RemittanceBeneficiary) Validate() error {
 	if err := rb.fieldInclusion(); err != nil {
 		return err
 	}
-
+	if rb.tag != TagRemittanceBeneficiary {
+		return fieldError("tag", ErrValidTagForType, rb.tag)
+	}
 	if err := rb.isAlphanumeric(rb.RemittanceData.Name); err != nil {
 		return fieldError("Name", err, rb.RemittanceData.Name)
 	}

@@ -69,6 +69,9 @@ func (omad *OutputMessageAccountabilityData) String() string {
 // The first error encountered is returned and stops that parsing.
 func (omad *OutputMessageAccountabilityData) Validate() error {
 	// Currently no validation as the FED is responsible for the values
+	if omad.tag != TagOutputMessageAccountabilityData {
+		return fieldError("tag", ErrValidTagForType, omad.tag)
+	}
 	return nil
 }
 

@@ -63,6 +63,9 @@ func (ia *InstructedAmount) Validate() error {
 	if err := ia.fieldInclusion(); err != nil {
 		return err
 	}
+	if ia.tag != TagInstructedAmount {
+		return fieldError("tag", ErrValidTagForType, ia.tag)
+	}
 	if err := ia.isCurrencyCode(ia.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, ia.CurrencyCode)
 	}

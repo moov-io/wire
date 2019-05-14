@@ -141,3 +141,14 @@ func TestParsePrimaryRemittanceDocumentReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestPrimaryRemittanceDocumentTagError validates a PrimaryRemittanceDocument tag
+func TestPrimaryRemittanceDocumentTagError(t *testing.T) {
+	prd := mockPrimaryRemittanceDocument()
+	prd.tag = "{9999}"
+	if err := prd.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

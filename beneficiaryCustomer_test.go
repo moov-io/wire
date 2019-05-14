@@ -140,3 +140,14 @@ func TestParseBeneficiaryCustomerReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestBeneficiaryCustomerTagError validates a BeneficiaryCustomer tag
+func TestBeneficiaryCustomerTagError(t *testing.T) {
+	bc := mockBeneficiaryCustomer()
+	bc.tag = "{9999}"
+	if err := bc.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

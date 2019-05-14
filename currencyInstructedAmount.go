@@ -60,6 +60,9 @@ func (cia *CurrencyInstructedAmount) String() string {
 // Validate performs WIRE format rule checks on CurrencyInstructedAmount and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (cia *CurrencyInstructedAmount) Validate() error {
+	if cia.tag != TagCurrencyInstructedAmount {
+		return fieldError("tag", ErrValidTagForType, cia.tag)
+	}
 	if err := cia.isAlphanumeric(cia.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, cia.SwiftFieldTag)
 	}

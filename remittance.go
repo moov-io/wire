@@ -66,6 +66,9 @@ func (ri *Remittance) Validate() error {
 	if err := ri.fieldInclusion(); err != nil {
 		return err
 	}
+	if ri.tag != TagRemittance {
+		return fieldError("tag", ErrValidTagForType, ri.tag)
+	}
 	if err := ri.isAlphanumeric(ri.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, ri.CoverPayment.SwiftFieldTag)
 	}

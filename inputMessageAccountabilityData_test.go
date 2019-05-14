@@ -120,3 +120,25 @@ func TestParseInputMessageAccountabilityDataReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestInputMessageAccountabilityDataTagError validates a InputMessageAccountabilityData tag
+func TestInputMessageAccountabilityDataTagError(t *testing.T) {
+	imad := mockInputMessageAccountabilityData()
+	imad.tag = "{9999}"
+	if err := imad.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestInputMessageAccountabilityDataInputCycleDateError validates a InputMessageAccountabilityData InputCycleDate
+func TestInputMessageAccountabilityDataInputCycleDateError(t *testing.T) {
+	imad := mockInputMessageAccountabilityData()
+	imad.InputCycleDate = "02010101"
+	if err := imad.Validate(); err != nil {
+		if !base.Match(err, ErrValidDate) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

@@ -69,6 +69,9 @@ func (ua *UnstructuredAddenda) Validate() error {
 	if err := ua.fieldInclusion(); err != nil {
 		return err
 	}
+	if ua.tag != TagUnstructuredAddenda {
+		return fieldError("tag", ErrValidTagForType, ua.tag)
+	}
 	if err := ua.isNumeric(ua.AddendaLength); err != nil {
 		return fieldError("AddendLength", err, ua.AddendaLength)
 	}

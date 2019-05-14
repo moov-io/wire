@@ -67,6 +67,9 @@ func (fibfia *FIBeneficiaryFIAdvice) String() string {
 // Validate performs WIRE format rule checks on FIBeneficiaryFIAdvice and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (fibfia *FIBeneficiaryFIAdvice) Validate() error {
+	if fibfia.tag != TagFIBeneficiaryFIAdvice {
+		return fieldError("tag", ErrValidTagForType, fibfia.tag)
+	}
 	if err := fibfia.isAdviceCode(fibfia.Advice.AdviceCode); err != nil {
 		return fieldError("AdviceCode", err, fibfia.Advice.AdviceCode)
 	}

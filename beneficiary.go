@@ -68,6 +68,9 @@ func (ben *Beneficiary) Validate() error {
 	if err := ben.fieldInclusion(); err != nil {
 		return err
 	}
+	if ben.tag != TagBeneficiary {
+		return fieldError("tag", ErrValidTagForType, ben.tag)
+	}
 	// Can be any Identification Code
 	if err := ben.isIdentificationCode(ben.Personal.IdentificationCode); err != nil {
 		return fieldError("IdentificationCode", err, ben.Personal.IdentificationCode)

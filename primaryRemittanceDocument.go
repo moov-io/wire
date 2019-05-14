@@ -70,6 +70,9 @@ func (prd *PrimaryRemittanceDocument) Validate() error {
 	if err := prd.fieldInclusion(); err != nil {
 		return err
 	}
+	if prd.tag != TagPrimaryRemittanceDocument {
+		return fieldError("tag", ErrValidTagForType, prd.tag)
+	}
 	if err := prd.isDocumentTypeCode(prd.DocumentTypeCode); err != nil {
 		return fieldError("DocumentTypeCode", err, prd.DocumentTypeCode)
 	}

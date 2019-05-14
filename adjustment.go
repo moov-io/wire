@@ -72,6 +72,9 @@ func (adj *Adjustment) Validate() error {
 	if err := adj.fieldInclusion(); err != nil {
 		return err
 	}
+	if adj.tag != TagAdjustment {
+		return fieldError("tag", ErrValidTagForType, adj.tag)
+	}
 	if err := adj.isAdjustmentReasonCode(adj.AdjustmentReasonCode); err != nil {
 		return fieldError("AdjustmentReasonCode", err, adj.AdjustmentReasonCode)
 	}

@@ -140,3 +140,14 @@ func TestParseOrderingInstitutionReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestOrderingInstitutionTagError validates a OrderingInstitution tag
+func TestOrderingInstitutionTagError(t *testing.T) {
+	oi := mockOrderingInstitution()
+	oi.tag = "{9999}"
+	if err := oi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

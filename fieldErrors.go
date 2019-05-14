@@ -12,6 +12,8 @@ import (
 var (
 	// Errors specific to validation
 
+	// ErrValidTagForType is returned when a type has an invalid tag
+	ErrValidTagForType = errors.New("is an invalid tag")
 	// ErrNonNumeric is returned when a field has non-numeric characters
 	ErrNonNumeric = errors.New("has non numeric characters")
 	// ErrNonAlphanumeric is returned when a field has non-alphanumeric characters

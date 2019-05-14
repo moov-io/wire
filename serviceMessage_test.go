@@ -384,3 +384,14 @@ func TestInvalidRelatedRemittanceForServiceMessage(t *testing.T) {
 
 	}
 }
+
+// TestServiceMessageTagError validates a ServiceMessage tag
+func TestServiceMessageTagError(t *testing.T) {
+	sm := mockServiceMessage()
+	sm.tag = "{9999}"
+	if err := sm.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

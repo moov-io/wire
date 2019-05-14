@@ -62,6 +62,9 @@ func (li *LocalInstrument) Validate() error {
 	if err := li.fieldInclusion(); err != nil {
 		return err
 	}
+	if li.tag != TagLocalInstrument {
+		return fieldError("tag", ErrValidTagForType, li.tag)
+	}
 	if err := li.isLocalInstrumentCode(li.LocalInstrumentCode); err != nil {
 		return fieldError("LocalInstrumentCode", err, li.LocalInstrumentCode)
 	}

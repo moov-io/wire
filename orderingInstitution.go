@@ -68,6 +68,9 @@ func (oi *OrderingInstitution) Validate() error {
 	if err := oi.fieldInclusion(); err != nil {
 		return err
 	}
+	if oi.tag != TagOrderingInstitution {
+		return fieldError("tag", ErrValidTagForType, oi.tag)
+	}
 	if err := oi.isAlphanumeric(oi.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, oi.CoverPayment.SwiftFieldTag)
 	}

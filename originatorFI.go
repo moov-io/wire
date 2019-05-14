@@ -68,6 +68,9 @@ func (ofi *OriginatorFI) Validate() error {
 	if err := ofi.fieldInclusion(); err != nil {
 		return err
 	}
+	if ofi.tag != TagOriginatorFI {
+		return fieldError("tag", ErrValidTagForType, ofi.tag)
+	}
 	if err := ofi.isIdentificationCode(ofi.FinancialInstitution.IdentificationCode); err != nil {
 		return fieldError("IdentificationCode", err, ofi.FinancialInstitution.IdentificationCode)
 	}

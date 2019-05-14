@@ -82,9 +82,9 @@ func (pn *PaymentNotification) String() string {
 // Validate performs WIRE format rule checks on PaymentNotification and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (pn *PaymentNotification) Validate() error {
-	/*	if err := pn.fieldInclusion(); err != nil {
-		return err
-	}*/
+	if pn.tag != TagPaymentNotification {
+		return fieldError("tag", ErrValidTagForType, pn.tag)
+	}
 	if err := pn.isNumeric(pn.PaymentNotificationIndicator); err != nil {
 		return fieldError("PaymentNotificationIndicator", err, pn.PaymentNotificationIndicator)
 	}

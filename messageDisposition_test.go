@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"github.com/moov-io/base"
 	"log"
 	"strings"
 	"testing"
@@ -69,5 +70,16 @@ func TestWriteMessageDisposition(t *testing.T) {
 	record := r.currentFEDWireMessage.MessageDisposition
 	if record.String() != line {
 		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
+	}
+}
+
+// TestMessageDispositionTagError validates a MessageDisposition tag
+func TestMessageDispositionTagError(t *testing.T) {
+	md := mockMessageDisposition()
+	md.tag = "{9999}"
+	if err := md.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
 	}
 }

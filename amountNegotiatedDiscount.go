@@ -60,6 +60,9 @@ func (nd *AmountNegotiatedDiscount) Validate() error {
 	if err := nd.fieldInclusion(); err != nil {
 		return err
 	}
+	if nd.tag != TagAmountNegotiatedDiscount {
+		return fieldError("tag", ErrValidTagForType, nd.tag)
+	}
 	if err := nd.isCurrencyCode(nd.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, nd.RemittanceAmount.CurrencyCode)
 	}

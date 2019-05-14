@@ -60,6 +60,9 @@ func (aap *ActualAmountPaid) Validate() error {
 	if err := aap.fieldInclusion(); err != nil {
 		return err
 	}
+	if aap.tag != TagActualAmountPaid {
+		return fieldError("tag", ErrValidTagForType, aap.tag)
+	}
 	if err := aap.isCurrencyCode(aap.RemittanceAmount.CurrencyCode); err != nil {
 		return fieldError("CurrencyCode", err, aap.RemittanceAmount.CurrencyCode)
 	}

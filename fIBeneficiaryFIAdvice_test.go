@@ -141,3 +141,14 @@ func TestParseFIBeneficiaryFIAdviceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestFIBeneficiaryFIAdviceTagError validates a FIBeneficiaryFIAdvice tag
+func TestFIBeneficiaryFIAdviceTagError(t *testing.T) {
+	fibfia := mockFIBeneficiaryFIAdvice()
+	fibfia.tag = "{9999}"
+	if err := fibfia.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

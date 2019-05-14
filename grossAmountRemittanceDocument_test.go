@@ -103,3 +103,14 @@ func TestParseGrossAmountRemittanceReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestGrossAmountRemittanceTagError validates a GrossAmountRemittance tag
+func TestGrossAmountRemittanceTagError(t *testing.T) {
+	gard := mockGrossAmountRemittanceDocument()
+	gard.tag = "{9999}"
+	if err := gard.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

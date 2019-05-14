@@ -63,6 +63,9 @@ func (sdi *SenderDepositoryInstitution) Validate() error {
 	if err := sdi.fieldInclusion(); err != nil {
 		return err
 	}
+	if sdi.tag != TagSenderDepositoryInstitution {
+		return fieldError("tag", ErrValidTagForType, sdi.tag)
+	}
 	if err := sdi.isNumeric(sdi.SenderABANumber); err != nil {
 		return fieldError("SenderABANumber", err, sdi.SenderABANumber)
 	}

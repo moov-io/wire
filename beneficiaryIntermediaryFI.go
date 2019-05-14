@@ -68,6 +68,9 @@ func (bifi *BeneficiaryIntermediaryFI) Validate() error {
 	if err := bifi.fieldInclusion(); err != nil {
 		return err
 	}
+	if bifi.tag != TagBeneficiaryIntermediaryFI {
+		return fieldError("tag", ErrValidTagForType, bifi.tag)
+	}
 	if err := bifi.isIdentificationCode(bifi.FinancialInstitution.IdentificationCode); err != nil {
 		return fieldError("IdentificationCode", err, bifi.FinancialInstitution.IdentificationCode)
 	}

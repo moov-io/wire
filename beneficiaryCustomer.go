@@ -68,6 +68,9 @@ func (bc *BeneficiaryCustomer) Validate() error {
 	if err := bc.fieldInclusion(); err != nil {
 		return err
 	}
+	if bc.tag != TagBeneficiaryCustomer {
+		return fieldError("tag", ErrValidTagForType, bc.tag)
+	}
 	if err := bc.isAlphanumeric(bc.CoverPayment.SwiftFieldTag); err != nil {
 		return fieldError("SwiftFieldTag", err, bc.CoverPayment.SwiftFieldTag)
 	}

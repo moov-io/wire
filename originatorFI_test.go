@@ -162,3 +162,14 @@ func TestParseOriginatorFIReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestOriginatorFITagError validates a OriginatorFI tag
+func TestOriginatorFITagError(t *testing.T) {
+	ofi := mockOriginatorFI()
+	ofi.tag = "{9999}"
+	if err := ofi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

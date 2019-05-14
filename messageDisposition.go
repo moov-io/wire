@@ -64,6 +64,9 @@ func (md *MessageDisposition) String() string {
 // The first error encountered is returned and stops that parsing.
 func (md *MessageDisposition) Validate() error {
 	// Currently no validation as the FED is responsible for the values
+	if md.tag != TagMessageDisposition {
+		return fieldError("tag", ErrValidTagForType, md.tag)
+	}
 	return nil
 }
 

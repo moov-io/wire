@@ -103,3 +103,14 @@ func TestParseSenderReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestSenderDepositoryInstitutionTagError validates a SenderDepositoryInstitution tag
+func TestSenderDepositoryInstitutionTagError(t *testing.T) {
+	sdi := mockSenderDepositoryInstitution()
+	sdi.tag = "{9999}"
+	if err := sdi.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

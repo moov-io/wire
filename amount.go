@@ -58,7 +58,9 @@ func (a *Amount) Validate() error {
 	if err := a.fieldInclusion(); err != nil {
 		return err
 	}
-	// ToDo:  Amount cannot be all zero's except if SubType = 90
+	if a.tag != TagAmount {
+		return fieldError("tag", ErrValidTagForType, a.tag)
+	}
 	if err := a.isAmountImplied(a.Amount); err != nil {
 		return fieldError("Amount", err, a.Amount)
 	}

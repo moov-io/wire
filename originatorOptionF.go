@@ -126,6 +126,9 @@ func (oof *OriginatorOptionF) Validate() error {
 	if err := oof.fieldInclusion(); err != nil {
 		return err
 	}
+	if oof.tag != TagOriginatorOptionF {
+		return fieldError("tag", ErrValidTagForType, oof.tag)
+	}
 	if err := oof.isAlphanumeric(oof.Name); err != nil {
 		return fieldError("Name", err, oof.Name)
 	}

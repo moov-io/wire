@@ -102,3 +102,14 @@ func TestParseAmountNegotiatedDiscountReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestAmountNegotiatedDiscountTagError validates AmountNegotiatedDiscount tag
+func TestAmountNegotiatedDiscountTagError(t *testing.T) {
+	nd := mockAmountNegotiatedDiscount()
+	nd.tag = "{9999}"
+	if err := nd.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

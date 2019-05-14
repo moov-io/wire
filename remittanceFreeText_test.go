@@ -93,3 +93,14 @@ func TestParseRemittanceFreeTextReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestRemittanceFreeTextTagError validates a RemittanceFreeText tag
+func TestRemittanceFreeTextTagError(t *testing.T) {
+	rft := mockRemittanceFreeText()
+	rft.tag = "{9999}"
+	if err := rft.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

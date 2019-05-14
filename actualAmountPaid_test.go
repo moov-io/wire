@@ -103,3 +103,14 @@ func TestParseActualAmountPaidReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestActualAmountPaidTagError validates ActualAmountPaid tag
+func TestActualAmountPaidTagError(t *testing.T) {
+	aap := mockActualAmountPaid()
+	aap.tag = "{9999}"
+	if err := aap.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

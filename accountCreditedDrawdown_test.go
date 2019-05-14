@@ -24,9 +24,9 @@ func TestMockAccountCreditedDrawdown(t *testing.T) {
 // TestAccountCreditedDrawDownNumberAlphaNumeric validates AccountCreditedDrawdown is alphanumeric
 func TestDrawdownCreditAccountNumberAlphaNumeric(t *testing.T) {
 	creditDD := mockAccountCreditedDrawdown()
-	creditDD.DrawdownCreditAccountNumber = "Z"
+	creditDD.DrawdownCreditAccountNumber = "®"
 	if err := creditDD.Validate(); err != nil {
-		if !base.Match(err, ErrNonNumeric) {
+		if !base.Match(err, ErrNonAlphanumeric) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
@@ -76,6 +76,17 @@ func TestParseAccountCreditedDrawdownReaderParseError(t *testing.T) {
 	_, err = r.Read()
 	if err != nil {
 		if !base.Has(err, ErrNonNumeric) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestAccountCreditedDrawdownTagError validates AccountCreditedDrawdown tag
+func TestAccountCreditedDrawdownTagError(t *testing.T) {
+	creditDD := mockAccountCreditedDrawdown()
+	creditDD.tag = "{9999}"
+	if err := creditDD.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

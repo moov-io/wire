@@ -140,3 +140,14 @@ func TestParseIntermediaryInstitutionReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestIntermediaryInstitutionTagError validates a IntermediaryInstitution tag
+func TestIntermediaryInstitutionTagError(t *testing.T) {
+	ii := mockIntermediaryInstitution()
+	ii.tag = "{9999}"
+	if err := ii.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

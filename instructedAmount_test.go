@@ -103,3 +103,14 @@ func TestParseInstructedAmountReaderParseError(t *testing.T) {
 		}
 	}
 }
+
+// TestInstructedAmountTagError validates a InstructedAmount tag
+func TestInstructedAmountTagError(t *testing.T) {
+	ia := mockInstructedAmount()
+	ia.tag = "{9999}"
+	if err := ia.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}

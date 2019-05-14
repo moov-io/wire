@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"github.com/moov-io/base"
 	"log"
 	"strings"
 	"testing"
@@ -77,5 +78,16 @@ func TestWriteOutputMessageAccountabilityData(t *testing.T) {
 	record := r.currentFEDWireMessage.OutputMessageAccountabilityData
 	if record.String() != line {
 		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
+	}
+}
+
+// TestOutputMessageAccountabilityDataTagError validates a OutputMessageAccountabilityData tag
+func TestOutputMessageAccountabilityDataTagError(t *testing.T) {
+	omad := mockOutputMessageAccountabilityData()
+	omad.tag = "{9999}"
+	if err := omad.Validate(); err != nil {
+		if !base.Match(err, ErrValidTagForType) {
+			t.Errorf("%T: %s", err, err)
+		}
 	}
 }
