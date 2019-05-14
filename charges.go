@@ -88,7 +88,6 @@ func (c *Charges) Validate() error {
 	if err := c.isCurrencyCode(c.parseStringField(c.SendersChargesOneField()[:3])); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
 	}
-
 	if err := c.isAmount(c.parseStringField(c.SendersChargesOneField()[3:15])); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
 	}
@@ -107,7 +106,6 @@ func (c *Charges) Validate() error {
 	if err := c.isCurrencyCode(c.parseStringField(c.SendersChargesThreeField()[:3])); err != nil {
 		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
 	}
-
 	if err := c.isAmount(c.parseStringField(c.SendersChargesThreeField()[3:15])); err != nil {
 		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
 	}
