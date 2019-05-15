@@ -167,8 +167,8 @@ paths:
     delete:
       tags:
         - Files
-      summary: Permanently deletes a File and associated Batches. It cannot be undone.
-      operationId: deleteWIREFile
+      summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+      operationId: deleteFile
       security:
         - bearerAuth: []
         - cookieAuth: []

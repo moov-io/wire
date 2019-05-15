@@ -5,7 +5,7 @@ All URIs are relative to *http://localhost:8087*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateFile**](FilesApi.md#CreateFile) | **Post** /files/create | Create a new File object
-[**DeleteWIREFile**](FilesApi.md#DeleteWIREFile) | **Delete** /files/{file_id} | Permanently deletes a File and associated Batches. It cannot be undone.
+[**DeleteFile**](FilesApi.md#DeleteFile) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 [**GetFileByID**](FilesApi.md#GetFileByID) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 [**GetFiles**](FilesApi.md#GetFiles) | **Get** /files | Gets a list of Files
 [**Ping**](FilesApi.md#Ping) | **Get** /ping | Ping the Wire service to check if running
@@ -48,9 +48,9 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **DeleteWIREFile**
-> DeleteWIREFile(ctx, fileId, optional)
-Permanently deletes a File and associated Batches. It cannot be undone.
+# **DeleteFile**
+> DeleteFile(ctx, fileId, optional)
+Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 
 ### Required Parameters
 
@@ -58,10 +58,10 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
   **fileId** | **string**| File ID | 
- **optional** | ***DeleteWIREFileOpts** | optional parameters | nil if no parameters
+ **optional** | ***DeleteFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a DeleteWIREFileOpts struct
+Optional parameters are passed through a pointer to a DeleteFileOpts struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
