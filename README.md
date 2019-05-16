@@ -53,8 +53,6 @@ $ go doc github.com/moov-io/wire BatchHeader
 
 ## Getting Help
 
-If you have ACH specific questions NACHA (National Automated Clearing House Association) has their [complete specification](documentation/2013-Corporate-Rules-and-Guidelines.pdf) for all file formats and message types.
-
  channel | info
  ------- | -------
 [Project Documentation](https://docs.moov.io/en/latest/) | Our project documentation available online.
