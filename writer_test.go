@@ -1032,7 +1032,7 @@ func TestFEDWireMessageWriteDrawdownRequest(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = DrawdownRequest
+	bfc.BusinessFunctionCode = DrawDownRequest
 	bfc.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(bfc)
 
@@ -1110,7 +1110,7 @@ func TestFEDWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = BankDrawdownRequest
+	bfc.BusinessFunctionCode = BankDrawDownRequest
 	bfc.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(bfc)
 

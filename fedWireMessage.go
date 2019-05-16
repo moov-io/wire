@@ -298,7 +298,7 @@ func (fwm *FEDWireMessage) isBusinessCodeValid() error {
 		if err := fwm.isInvalidTags(); err != nil {
 			return err
 		}
-	case DrawdownRequest:
+	case DrawDownRequest:
 		if err := fwm.isDrawdownRequestValid(); err != nil {
 			return err
 		}
@@ -308,7 +308,7 @@ func (fwm *FEDWireMessage) isBusinessCodeValid() error {
 		if err := fwm.isInvalidTags(); err != nil {
 			return err
 		}
-	case BankDrawdownRequest:
+	case BankDrawDownRequest:
 		if err := fwm.isBankDrawdownRequestValid(); err != nil {
 			return err
 		}
@@ -920,7 +920,7 @@ func (fwm *FEDWireMessage) isInvalidTags() error {
 		if err := fwm.invalidRemittanceTags(); err != nil {
 			return err
 		}
-	case DrawdownRequest, BankDrawdownRequest, CustomerCorporateDrawdownRequest:
+	case DrawDownRequest, BankDrawDownRequest, CustomerCorporateDrawdownRequest:
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 		}

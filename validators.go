@@ -163,9 +163,9 @@ func (v *validator) isBusinessFunctionCode(code string) error {
 		CustomerTransferPlus,
 		CustomerTransfer,
 		DepositSendersAccount,
-		BankDrawdownRequest,
+		BankDrawDownRequest,
 		CustomerCorporateDrawdownRequest,
-		DrawdownRequest,
+		DrawDownRequest,
 		FEDFundsReturned,
 		FEDFundsSold,
 		BFCServiceMessage:
