@@ -133,7 +133,7 @@ func (oof *OriginatorOptionF) Validate() error {
 	if err := oof.validatePartyIdentifier(oof.PartyIdentifier); err != nil {
 		return fieldError("PartyIdentifier", err, oof.PartyIdentifier)
 	}
-	if err := oof.isAlphanumeric(oof.Name); err != nil {
+	if err := oof.validateOptionFName(oof.Name); err != nil {
 		return fieldError("Name", err, oof.Name)
 	}
 	if err := oof.validateOptionFLine(oof.LineOne); err != nil {

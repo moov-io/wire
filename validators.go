@@ -568,3 +568,31 @@ func (v *validator) validateOptionFLine(s string) error {
 	}
 	return nil
 }
+
+// validateOptionFName validates OriginatorOptionF Name
+// Name  Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+// e.g., 1/SMITH JOHN.
+func (v *validator) validateOptionFName(s string) error {
+	if s == "" {
+		return nil
+	}
+
+	switch s[:1] {
+	case
+		OptionFName:
+	default:
+		return ErrOptionFName
+	}
+	if s[1:2] != "/" {
+		return ErrOptionFName
+	}
+
+	an := strings.TrimSpace(s[2:])
+	if an == "" {
+		return ErrOptionFName
+	}
+	if alphanumericRegex.MatchString(an) {
+		return ErrOptionFName
+	}
+	return nil
+}

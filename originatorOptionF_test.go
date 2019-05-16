@@ -10,7 +10,7 @@ import (
 func mockOriginatorOptionF() *OriginatorOptionF {
 	oof := NewOriginatorOptionF()
 	oof.PartyIdentifier = "TXID/123-45-6789"
-	oof.Name = "Name"
+	oof.Name = "1/Name"
 	oof.LineOne = "1/1234"
 	oof.LineTwo = "2/1000 Colonial Farm Rd"
 	oof.LineThree = "5/Pottstown"
@@ -41,7 +41,7 @@ func TestOriginatorOptionFNameAlphaNumeric(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.Name = "®"
 	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrOptionFName) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
@@ -106,13 +106,13 @@ func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
 	fwm.SetOriginatorOptionF(oof)
 	err := r.parseOriginatorOptionF()
 	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrOptionFName) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
 	_, err = r.Read()
 	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
+		if !base.Has(err, ErrOptionFName) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

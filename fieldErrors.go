@@ -113,8 +113,11 @@ var (
 	// ErrPartyIdentifier is returned for an invalid party identifier
 	ErrPartyIdentifier = errors.New("is an invalid party identifier")
 
-	// ErrOptionFLine is returned for an invalid Line for OriginatorOptionF
-	ErrOptionFLine = errors.New("is an invalid Line for originator optionF")
+	// ErrOptionFLine is returned for an invalid line for OriginatorOptionF
+	ErrOptionFLine = errors.New("is an invalid line for originator optionF")
+
+	// ErrOptionFName is returned for an invalid name for OriginatorOptionF
+	ErrOptionFName = errors.New("is an invalid name for originator optionF")
 )
 
 // FieldError is returned for errors at a field level in a tag
