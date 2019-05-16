@@ -140,18 +140,18 @@ func (a *FilesApiService) CreateFile(ctx context.Context, createFile CreateFile,
 }
 
 /*
-FilesApiService Permanently deletes a File and associated Batches. It cannot be undone.
+FilesApiService Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
- * @param optional nil or *DeleteWIREFileOpts - Optional Parameters:
+ * @param optional nil or *DeleteFileOpts - Optional Parameters:
  * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 */
 
-type DeleteWIREFileOpts struct {
+type DeleteFileOpts struct {
 	XRequestId optional.String
 }
 
-func (a *FilesApiService) DeleteWIREFile(ctx context.Context, fileId string, localVarOptionals *DeleteWIREFileOpts) (*http.Response, error) {
+func (a *FilesApiService) DeleteFile(ctx context.Context, fileId string, localVarOptionals *DeleteFileOpts) (*http.Response, error) {
 	var (
 		localVarHttpMethod   = strings.ToUpper("Delete")
 		localVarPostBody     interface{}

@@ -121,7 +121,7 @@ paths:
       - Files
   /files/{file_id}:
     delete:
-      operationId: deleteWIREFile
+      operationId: deleteFile
       parameters:
       - description: File ID
         explode: false
@@ -149,7 +149,7 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Permanently deletes a File and associated Batches. It cannot be undone.
+      summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
       tags:
       - Files
     get:

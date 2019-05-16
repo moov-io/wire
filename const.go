@@ -443,4 +443,44 @@ const (
 
 	// PaymentMethod is the payment method to beneficiary.  'CHECK' is the only valid option
 	PaymentMethod = "CHECK"
+
+	// OriginatorOptionF PartyIdentifier
+
+	// PartyIdentifierAlienRegistrationNumber is PartyIdentifier Alien Registration Number
+	PartyIdentifierAlienRegistrationNumber = "ARNU"
+	// PartyIdentifierPassportNumber is PartyIdentifier Passport Number
+	PartyIdentifierPassportNumber = "CCPT"
+	// PartyIdentifierCustomerIdentificationNumber is PartyIdentifier Customer Identification Number
+	PartyIdentifierCustomerIdentificationNumber = "CUST"
+	// PartyIdentifierDriversLicenseNumber is PartyIdentifier Driver’s License Number
+	PartyIdentifierDriversLicenseNumber = "DRLC"
+	// PartyIdentifierEmployerNumber is PartyIdentifier Employer Number
+	PartyIdentifierEmployerNumber = "EMPL"
+	// PartyIdentifierNationalIdentifyNumber is PartyIdentifier National Identify Number
+	PartyIdentifierNationalIdentifyNumber = "NIDN"
+	// PartyIdentifierSocialSecurityNumber is PartyIdentifier Social Security Number
+	PartyIdentifierSocialSecurityNumber = "SOSE"
+	// PartyIdentifierTaxIdentificationNumber is PartyIdentifier Tax Identification Number
+	PartyIdentifierTaxIdentificationNumber = "TXID"
+
+	// OriginatorOptionF LineOne, LineTwo, LineThree
+
+	// OptionFName is Name
+	OptionFName = "1"
+	// OptionFAddress is Address
+	OptionFAddress = "2"
+	// OptionFCountryTown is Country and Town
+	OptionFCountryTown = "3"
+	// OptionFDOB  is Date of Birth
+	OptionFDOB = "4"
+	// OptionFBirthPlace is Place of Birth
+	OptionFBirthPlace = "5"
+	// OptionFCustomerIdentificationNumber is Customer Identification Number
+	OptionFCustomerIdentificationNumber = "6"
+	// OptionFNationalIdentityNumber is National Identity Number
+	OptionFNationalIdentityNumber = "7"
+	// OptionFAdditionalInformation is Additional Information
+	OptionFAdditionalInformation = "8"
+
+
 )
