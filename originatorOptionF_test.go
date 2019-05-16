@@ -52,7 +52,7 @@ func TestOriginatorOptionFLineOneAlphaNumeric(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineOne = "®"
 	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrOptionFLine) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
@@ -63,7 +63,7 @@ func TestOriginatorOptionFLineTwoAlphaNumeric(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineTwo = "®"
 	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrOptionFLine) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
@@ -72,9 +72,9 @@ func TestOriginatorOptionFLineTwoAlphaNumeric(t *testing.T) {
 // TestOriginatorOptionFLineThreeAlphaNumeric validates OriginatorOptionF LineThree is alphanumeric
 func TestOriginatorOptionFLineThreeAlphaNumeric(t *testing.T) {
 	oof := mockOriginatorOptionF()
-	oof.LineThree = "®"
+	oof.LineThree = "1/"
 	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrOptionFLine) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

@@ -476,6 +476,9 @@ func (v *validator) validatePartyIdentifier(s string) error {
 
 	if s[:1] == "/" {
 		an := strings.TrimSpace(s[2:])
+		if an == "" {
+			return ErrPartyIdentifier
+		}
 		if alphanumericRegex.MatchString(an) {
 			return ErrPartyIdentifier
 		}
@@ -510,6 +513,9 @@ func (v *validator) validateUIDPartyIdentifier(s string) error {
 		return ErrPartyIdentifier
 	}
 	an := strings.TrimSpace(s[5:])
+	if an == "" {
+		return ErrPartyIdentifier
+	}
 	if alphanumericRegex.MatchString(an) {
 		return ErrPartyIdentifier
 	}
@@ -549,15 +555,16 @@ func (v *validator) validateOptionFLine(s string) error {
 	default:
 		return ErrOptionFLine
 	}
-
 	if s[1:2] != "/" {
 		return ErrOptionFLine
 	}
 
 	an := strings.TrimSpace(s[2:])
+	if an == "" {
+		return ErrOptionFLine
+	}
 	if alphanumericRegex.MatchString(an) {
 		return ErrOptionFLine
 	}
-
 	return nil
 }

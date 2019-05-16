@@ -481,6 +481,4 @@ const (
 	OptionFNationalIdentityNumber = "7"
 	// OptionFAdditionalInformation is Additional Information
 	OptionFAdditionalInformation = "8"
-
-
 )
