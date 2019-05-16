@@ -14,7 +14,7 @@
 {4200}31234                              Name                               Address One                        Address Two                        Address Three                      
 {4320}Reference       
 {5000}11234                              Name                               Address One                        Address Two                        Address Three                      
-{5010}TXID/123-45-6789                   Name                               LineOne                            LineTwo                            LineThree                          
+{5010}TXID/123-45-6789                   Name                               1/1234                             2/1000 Colonial Farm Rd            5/Pottstown                        
 {5100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {5200}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
 {6000}LineOne                            LineTwo                            LineThree                          LineFour                           

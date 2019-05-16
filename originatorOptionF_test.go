@@ -11,9 +11,9 @@ func mockOriginatorOptionF() *OriginatorOptionF {
 	oof := NewOriginatorOptionF()
 	oof.PartyIdentifier = "TXID/123-45-6789"
 	oof.Name = "Name"
-	oof.LineOne = "LineOne"
-	oof.LineTwo = "LineTwo"
-	oof.LineThree = "LineThree"
+	oof.LineOne = "1/1234"
+	oof.LineTwo = "2/1000 Colonial Farm Rd"
+	oof.LineThree = "5/Pottstown"
 	return oof
 }
 
@@ -28,9 +28,9 @@ func TestMockOriginatorOptionF(t *testing.T) {
 // TestOriginatorOptionFPartyIdentifierAlphaNumeric validates OriginatorOptionF PartyIdentifier is alphanumeric
 func TestOriginatorOptionFPartyIdentifierAlphaNumeric(t *testing.T) {
 	oof := mockOriginatorOptionF()
-	oof.PartyIdentifier = "®"
+	oof.PartyIdentifier = "®®sdaasd"
 	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
+		if !base.Match(err, ErrPartyIdentifier) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}
@@ -113,17 +113,6 @@ func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
 	_, err = r.Read()
 	if err != nil {
 		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
-
-// TestOriginatorOptionFTagError validates a OriginatorOptionF tag
-func TestOriginatorOptionFTagError(t *testing.T) {
-	oof := mockOriginatorOptionF()
-	oof.tag = "{9999}"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
 			t.Errorf("%T: %s", err, err)
 		}
 	}

@@ -109,6 +109,12 @@ var (
 
 	// ErrAdjustmentReasonCode is returned for an invalid adjustment reason code
 	ErrAdjustmentReasonCode = errors.New("is an invalid adjustment reason code")
+
+	// ErrPartyIdentifier is returned for an invalid party identifier
+	ErrPartyIdentifier = errors.New("is an invalid party identifier")
+
+	// ErrOptionFLine is returned for an invalid Line for OriginatorOptionF
+	ErrOptionFLine = errors.New("is an invalid Line for originator optionF")
 )
 
 // FieldError is returned for errors at a field level in a tag
