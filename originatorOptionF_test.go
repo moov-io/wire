@@ -25,8 +25,8 @@ func TestMockOriginatorOptionF(t *testing.T) {
 	}
 }
 
-// TestOriginatorOptionFPartyIdentifierAlphaNumeric validates OriginatorOptionF PartyIdentifier is alphanumeric
-func TestOriginatorOptionFPartyIdentifierAlphaNumeric(t *testing.T) {
+// TestOriginatorOptionFPartyIdentifier validates OriginatorOptionF PartyIdentifier is valid
+func TestOriginatorOptionFPartyIdentifier(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.PartyIdentifier = "®®sdaasd"
 	if err := oof.Validate(); err != nil {
@@ -36,8 +36,78 @@ func TestOriginatorOptionFPartyIdentifierAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestOriginatorOptionFNameAlphaNumeric validates OriginatorOptionF Name is alphanumeric
-func TestOriginatorOptionFNameAlphaNumeric(t *testing.T) {
+// TestOriginatorOptionFPartyIdentifierNull validates OriginatorOptionF PartyIdentifier is not null
+func TestOriginatorOptionFPartyIdentifierNull(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = ""
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFPartyIdentifierCount validates OriginatorOptionF PartyIdentifier count is > 2
+func TestOriginatorOptionFPartyIdentifierCount(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = "X"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFPartyIdentifierUIDCount validates OriginatorOptionF PartyIdentifier unique ID has the
+// correct count
+func TestOriginatorOptionFPartyIdentifierUIDCount(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = "B/C"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFPartyIdentifierUIDSlash validates OriginatorOptionF PartyIdentifier unique ID has the
+// returns an error if '/' is not in the correct spot
+func TestOriginatorOptionFPartyIdentifierSlash(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = "CCPTFGH/"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFPartyIdentifierInvalidAccountSpace validates OriginatorOptionF PartyIdentifier with an invalid
+// empty string in piece 2 for an Account
+func TestOriginatorOptionFPartyInvalidAccountSpace(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = "/ 1"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFPartyIdentifierInvalidSpace validates OriginatorOptionF PartyIdentifier with an invalid
+// empty string in piece 6
+func TestOriginatorOptionFPartyInvalidSpace(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = "CCPT/ BDF"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFName validates OriginatorOptionF Name is valid
+func TestOriginatorOptionFName(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.Name = "®"
 	if err := oof.Validate(); err != nil {
@@ -47,8 +117,19 @@ func TestOriginatorOptionFNameAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestOriginatorOptionFLineOneAlphaNumeric validates OriginatorOptionF LineOne is alphanumeric
-func TestOriginatorOptionFLineOneAlphaNumeric(t *testing.T) {
+// TestOriginatorOptionFNameNull validates OriginatorOptionF Name is not null
+func TestOriginatorOptionFNameNull(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.Name = ""
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrOptionFName) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFLineOne validates OriginatorOptionF LineOne is valid
+func TestOriginatorOptionFLineOne(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineOne = "®"
 	if err := oof.Validate(); err != nil {
@@ -58,8 +139,8 @@ func TestOriginatorOptionFLineOneAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestOriginatorOptionFLineTwoAlphaNumeric validates OriginatorOptionF LineTwo is alphanumeric
-func TestOriginatorOptionFLineTwoAlphaNumeric(t *testing.T) {
+// TestOriginatorOptionFLineTwo validates OriginatorOptionF LineTwo is valid
+func TestOriginatorOptionFLineTwo(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineTwo = "®"
 	if err := oof.Validate(); err != nil {
@@ -69,10 +150,10 @@ func TestOriginatorOptionFLineTwoAlphaNumeric(t *testing.T) {
 	}
 }
 
-// TestOriginatorOptionFLineThreeAlphaNumeric validates OriginatorOptionF LineThree is alphanumeric
-func TestOriginatorOptionFLineThreeAlphaNumeric(t *testing.T) {
+// TestOriginatorOptionFLineThree validates OriginatorOptionF LineThree is valid
+func TestOriginatorOptionFLineThree(t *testing.T) {
 	oof := mockOriginatorOptionF()
-	oof.LineThree = "1/"
+	oof.LineThree = "1/B"
 	if err := oof.Validate(); err != nil {
 		if !base.Match(err, ErrOptionFLine) {
 			t.Errorf("%T: %s", err, err)

@@ -205,11 +205,11 @@ const (
 	CustomerTransfer = "CTR"
 	// DepositSendersAccount is a deposit to a senders account
 	DepositSendersAccount = "DEP"
-	// BankDrawdownRequest is a bank to bank drawdown request
+	// BankDrawDownRequest is a bank to bank drawdown request
 	BankDrawDownRequest = "DRB"
 	// CustomerCorporateDrawdownRequest is a customer or corporate drawdown request
 	CustomerCorporateDrawdownRequest = "DRC"
-	// DrawdownRequest is a drawdown payment
+	// DrawDownRequest is a drawdown payment
 	DrawDownRequest = "DRW"
 	// FEDFundsReturned is FED funds returned
 	FEDFundsReturned = "FFR"

@@ -1,6 +1,9 @@
 package wire
 
-import "testing"
+import (
+	"github.com/moov-io/base"
+	"testing"
+)
 
 // mockCharges creates a Charges
 func mockCharges() *Charges {
@@ -18,5 +21,16 @@ func TestMockCharges(t *testing.T) {
 	c := mockCharges()
 	if err := c.Validate(); err != nil {
 		t.Error("mockCharges does not validate and will break other tests")
+	}
+}
+
+// TestChargeDetailsValid validates ChargeDetails is valid
+func TestPaymentNotificationIndicatorValid(t *testing.T) {
+	c := mockCharges()
+	c.ChargeDetails = "F"
+	if err := c.Validate(); err != nil {
+		if !base.Match(err, ErrChargeDetails) {
+			t.Errorf("%T: %s", err, err)
+		}
 	}
 }

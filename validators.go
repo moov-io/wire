@@ -123,18 +123,6 @@ func (v *validator) isLocalInstrumentCode(code string) error {
 	return ErrLocalInstrumentCode
 }
 
-func (v *validator) isPaymentNotificationIndicator(code string) error {
-	switch code {
-	case
-		// Reserved for market practice conventions.
-		"0", "1", "2", "3", "4", "5", "6",
-		// Reserved for bilateral agreements between Fedwire senders and receivers.
-		"7", "8", "9":
-		return nil
-	}
-	return ErrPaymentNotificationIndicator
-}
-
 func (v *validator) isTestProductionCode(code string) error {
 	switch code {
 	case
@@ -451,21 +439,12 @@ func (v *validator) validateDate(s string) error {
 	return nil
 }
 
+// ToDo: Some type of pattern match instead
+
 // validatePartyIdentifier validates OriginatorOptionF PartyIdentifier
 // PartyIdentifier must be one of the following two formats:
 // 1. /Account Number (slash followed by at least one
 // valid non-space character:  e.g., /123456)
-// 2. Unique Identifier/ (4 character code followed by a slash and at least one valid non-space character:
-// e.g., SOSE/123-456-789)
-//
-// ARNU: Alien Registration Number
-// CCPT: Passport Number
-// CUST: Customer Identification Number
-// DRLC: Driver’s License Number
-// EMPL: Employer Number
-// NIDN: National Identify Number
-// SOSE: Social Security Number
-// TXID: Tax Identification Number
 func (v *validator) validatePartyIdentifier(s string) error {
 	if s == "" {
 		return ErrPartyIdentifier
@@ -475,10 +454,10 @@ func (v *validator) validatePartyIdentifier(s string) error {
 	}
 
 	if s[:1] == "/" {
-		an := strings.TrimSpace(s[2:])
-		if an == "" {
+		if strings.TrimSpace(s[1:2]) == "" {
 			return ErrPartyIdentifier
 		}
+		an := s[2:]
 		if alphanumericRegex.MatchString(an) {
 			return ErrPartyIdentifier
 		}
@@ -491,6 +470,17 @@ func (v *validator) validatePartyIdentifier(s string) error {
 }
 
 // uidPartyIdentifier validates a unique identifier for PartyIdentifier which is not an account number
+// 2. Unique Identifier/ (4 character code followed by a slash and at least one valid non-space character:
+// e.g., SOSE/123-456-789)
+//
+// ARNU: Alien Registration Number
+// CCPT: Passport Number
+// CUST: Customer Identification Number
+// DRLC: Driver’s License Number
+// EMPL: Employer Number
+// NIDN: National Identify Number
+// SOSE: Social Security Number
+// TXID: Tax Identification Number
 func (v *validator) validateUIDPartyIdentifier(s string) error {
 	if utf8.RuneCountInString(s) < 7 {
 		return ErrPartyIdentifier
@@ -512,10 +502,10 @@ func (v *validator) validateUIDPartyIdentifier(s string) error {
 	if s[4:5] != "/" {
 		return ErrPartyIdentifier
 	}
-	an := strings.TrimSpace(s[5:])
-	if an == "" {
+	if strings.TrimSpace(s[5:6]) == "" {
 		return ErrPartyIdentifier
 	}
+	an := s[5:]
 	if alphanumericRegex.MatchString(an) {
 		return ErrPartyIdentifier
 	}
@@ -541,7 +531,10 @@ func (v *validator) validateOptionFLine(s string) error {
 	if s == "" {
 		return nil
 	}
-
+	// Can be "" without an error, but if not it has to be at least 3.
+	if utf8.RuneCountInString(s) < 3 {
+		return ErrOptionFLine
+	}
 	switch s[:1] {
 	case
 		OptionFName,
@@ -558,11 +551,10 @@ func (v *validator) validateOptionFLine(s string) error {
 	if s[1:2] != "/" {
 		return ErrOptionFLine
 	}
-
-	an := strings.TrimSpace(s[2:])
-	if an == "" {
+	if strings.TrimSpace(s[2:3]) == "" {
 		return ErrOptionFLine
 	}
+	an := strings.TrimSpace(s[2:])
 	if alphanumericRegex.MatchString(an) {
 		return ErrOptionFLine
 	}
@@ -574,9 +566,8 @@ func (v *validator) validateOptionFLine(s string) error {
 // e.g., 1/SMITH JOHN.
 func (v *validator) validateOptionFName(s string) error {
 	if s == "" {
-		return nil
+		return ErrOptionFName
 	}
-
 	switch s[:1] {
 	case
 		OptionFName:
@@ -586,11 +577,10 @@ func (v *validator) validateOptionFName(s string) error {
 	if s[1:2] != "/" {
 		return ErrOptionFName
 	}
-
-	an := strings.TrimSpace(s[2:])
-	if an == "" {
+	if strings.TrimSpace(s[2:3]) == "" {
 		return ErrOptionFName
 	}
+	an := strings.TrimSpace(s[2:])
 	if alphanumericRegex.MatchString(an) {
 		return ErrOptionFName
 	}
