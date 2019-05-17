@@ -8,7 +8,7 @@ moov-io/wire
 
 Package `github.com/moov-io/wire` implements a reader and writer written in Go  for creating, parsing and validating FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) 
 
-Docs: [docs.moov.io](https://docs.moov.io/en/latest/) | [api docs](https://api.moov.io)
+Docs: [docs.moov.io](https://docs.moov.io/en/latest/) | [api docs](https://api.moov.io/apps/wire/)
 
 ## Project Status
 
@@ -40,7 +40,7 @@ Moov WIRE is under active development and should not currently be used for produ
 
 ### From Source
 
-This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and thus requires Go 1.11+. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/ach/releases) as well. We highly recommend you use a tagged release for production.
+This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and thus requires Go 1.11+. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io) as well. We highly recommend you use a tagged release for production.
 
 ```
 $ git@github.com:moov-io/wire.git
@@ -52,8 +52,6 @@ $ go doc github.com/moov-io/wire BatchHeader
 ```
 
 ## Getting Help
-
-If you have ACH specific questions NACHA (National Automated Clearing House Association) has their [complete specification](documentation/2013-Corporate-Rules-and-Guidelines.pdf) for all file formats and message types.
 
  channel | info
  ------- | -------
