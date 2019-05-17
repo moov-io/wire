@@ -82,6 +82,17 @@ func TestOriginatorOptionFPartyIdentifierSlash(t *testing.T) {
 	}
 }
 
+// TestOriginatorOptionFPartyIdentifierUIDInvalid validates OriginatorOptionF PartyIdentifier unique ID is valid
+func TestOriginatorOptionFPartyIdentifierUIDInvalid(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.PartyIdentifier = "ZZZZFGH/"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrPartyIdentifier) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
 // TestOriginatorOptionFPartyIdentifierInvalidAccountSpace validates OriginatorOptionF PartyIdentifier with an invalid
 // empty string in piece 2 for an Account
 func TestOriginatorOptionFPartyInvalidAccountSpace(t *testing.T) {
@@ -127,6 +138,29 @@ func TestOriginatorOptionFNameNull(t *testing.T) {
 		}
 	}
 }
+
+// TestOriginatorOptionFLineValid validates OriginatorOptionF Line* is valid
+func TestOriginatorOptionFLineValid(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.LineOne = "Z/123"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrOptionFLine) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
+// TestOriginatorOptionFLineSlash validates OriginatorOptionF Line* slash is valid
+func TestOriginatorOptionFLineSlash(t *testing.T) {
+	oof := mockOriginatorOptionF()
+	oof.LineOne = "11123"
+	if err := oof.Validate(); err != nil {
+		if !base.Match(err, ErrOptionFLine) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
+}
+
 
 // TestOriginatorOptionFLineOne validates OriginatorOptionF LineOne is valid
 func TestOriginatorOptionFLineOne(t *testing.T) {
