@@ -8,7 +8,7 @@ moov-io/wire
 
 Package `github.com/moov-io/wire` implements a reader and writer written in Go  for creating, parsing and validating FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) 
 
-Docs: [docs.moov.io](https://docs.moov.io/en/latest/) | [api docs](https://api.moov.io)
+Docs: [docs.moov.io](https://docs.moov.io/en/latest/) | [api docs](https://api.moov.io/apps/wire/)
 
 ## Project Status
 
