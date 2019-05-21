@@ -17,5 +17,10 @@ type FinancialInstitution struct {
 	Identifier string `json:"identifier"`
 	// Name
 	Name string `json:"name"`
-	Address Address `json:"address"`
+	// AddressLineOne
+	AddressLineOne string `json:"addressLineOne,omitempty"`
+	// AddressLineTwo
+	AddressLineTwo string `json:"addressLineTwo,omitempty"`
+	// AddressLineThree
+	AddressLineThree string `json:"addressLineThree,omitempty"`
 }
