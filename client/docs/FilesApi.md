@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**GetFileByID**](FilesApi.md#GetFileByID) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 [**GetFiles**](FilesApi.md#GetFiles) | **Get** /files | Gets a list of Files
 [**Ping**](FilesApi.md#Ping) | **Get** /ping | Ping the Wire service to check if running
-[**UpdateFile**](FilesApi.md#UpdateFile) | **Post** /files/{file_id} | Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+[**UpdateFile**](FilesApi.md#UpdateFile) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 
 # **CreateFile**
@@ -175,7 +175,7 @@ No authorization required
 
 # **UpdateFile**
 > File UpdateFile(ctx, fileId, createFile, optional)
-Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 ### Required Parameters
 

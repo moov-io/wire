@@ -124,7 +124,7 @@ paths:
     post:
       tags:
         - Files
-      summary: Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: updateFile
       security:
         - bearerAuth: []
@@ -198,7 +198,7 @@ components:
         fedWireMessage:
           type: array
           items:
-            $ref: '#/components/schemas/FedWireMessage'
+            $ref: '#/components/schemas/FEDWireMessage'
     File:
       properties:
         id:
@@ -207,7 +207,7 @@ components:
           example: 3f2d23ee214
         fedWireMessage:
           items:
-            $ref: '#/components/schemas/FedWireMessage'
+            $ref: '#/components/schemas/FEDWireMessage'
       required:
         - fedWireMessage
     Files:
@@ -219,9 +219,9 @@ components:
       properties:
         id:
           type: string
-          description: FedWireMessage ID
+          description: FEDWireMessage ID
           example: 3f2d23ee214
-        # TAGS 1100, 1110, 1120, 1130 is information Appended by the Fedwire Funds Service
+        # TAGS 1100, 1110, 1120, 1130 is information Appended by the FEDwire Funds Service
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
           description: MessageDisposition {1100}

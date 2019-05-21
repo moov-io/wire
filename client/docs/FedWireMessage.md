@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | FedWireMessage ID | [optional] 
+**Id** | **string** | FEDWireMessage ID | [optional] 
 **MessageDisposition** | [**MessageDisposition**](MessageDisposition.md) |  | [optional] 
 **ReceiptTimeStamp** | [**ReceiptTimeStamp**](ReceiptTimeStamp.md) |  | [optional] 
 **OutputMessageAccountabilityData** | [**OutputMessageAccountabilityData**](OutputMessageAccountabilityData.md) |  | [optional] 

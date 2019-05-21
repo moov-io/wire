@@ -11,7 +11,7 @@ package openapi
 
 // FEDWireMessage
 type FedWireMessage struct {
-	// FedWireMessage ID
+	// FEDWireMessage ID
 	Id string `json:"id,omitempty"`
 	MessageDisposition MessageDisposition `json:"messageDisposition,omitempty"`
 	ReceiptTimeStamp ReceiptTimeStamp `json:"receiptTimeStamp,omitempty"`

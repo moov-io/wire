@@ -36,7 +36,7 @@ Class | Method | HTTP request | Description
 *FilesApi* | [**GetFileByID**](docs/FilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 *FilesApi* | [**GetFiles**](docs/FilesApi.md#getfiles) | **Get** /files | Gets a list of Files
 *FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the Wire service to check if running
-*FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 
 ## Documentation For Models
