@@ -109,12 +109,6 @@ func (pn *PaymentNotification) Validate() error {
 	return nil
 }
 
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-/*func (pn *PaymentNotification) fieldInclusion() error {
-	return nil
-}*/
-
 // PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
 func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
 	return pn.alphaField(pn.PaymentNotificationIndicator, 1)

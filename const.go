@@ -205,12 +205,12 @@ const (
 	CustomerTransfer = "CTR"
 	// DepositSendersAccount is a deposit to a senders account
 	DepositSendersAccount = "DEP"
-	// BankDrawdownRequest is a bank to bank drawdown request
-	BankDrawdownRequest = "DRB"
+	// BankDrawDownRequest is a bank to bank drawdown request
+	BankDrawDownRequest = "DRB"
 	// CustomerCorporateDrawdownRequest is a customer or corporate drawdown request
 	CustomerCorporateDrawdownRequest = "DRC"
-	// DrawdownRequest is a drawdown payment
-	DrawdownRequest = "DRW"
+	// DrawDownRequest is a drawdown payment
+	DrawDownRequest = "DRW"
 	// FEDFundsReturned is FED funds returned
 	FEDFundsReturned = "FFR"
 	// FEDFundsSold is FED funds sold
@@ -481,6 +481,4 @@ const (
 	OptionFNationalIdentityNumber = "7"
 	// OptionFAdditionalInformation is Additional Information
 	OptionFAdditionalInformation = "8"
-
-
 )

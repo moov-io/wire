@@ -1030,7 +1030,7 @@ func TestFEDWireMessageWriteDrawdownRequest(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = DrawdownRequest
+	bfc.BusinessFunctionCode = DrawDownRequest
 	bfc.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(bfc)
 
@@ -1108,7 +1108,7 @@ func TestFEDWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = BankDrawdownRequest
+	bfc.BusinessFunctionCode = BankDrawDownRequest
 	bfc.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(bfc)
 
@@ -1287,11 +1287,11 @@ func writeFile(file *File) error {
 	}
 	// ToDo:  Write to disk?
 	// We want to write the file to an io.Writer
-	/*w := NewWriter(os.Stdout)
-	if err := w.Write(file); err != nil {
-		log.Fatalf("Unexpected error: %s\n", err)
-	}
-	w.Flush()*/
+	/*	w := NewWriter(os.Stdout)
+		if err := w.Write(file); err != nil {
+			log.Fatalf("Unexpected error: %s\n", err)
+		}
+		w.Flush()*/
 
 	r := NewReader(strings.NewReader(b.String()))
 	fwmFile, err := r.Read()

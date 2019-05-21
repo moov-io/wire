@@ -123,18 +123,6 @@ func (v *validator) isLocalInstrumentCode(code string) error {
 	return ErrLocalInstrumentCode
 }
 
-func (v *validator) isPaymentNotificationIndicator(code string) error {
-	switch code {
-	case
-		// Reserved for market practice conventions.
-		"0", "1", "2", "3", "4", "5", "6",
-		// Reserved for bilateral agreements between Fedwire senders and receivers.
-		"7", "8", "9":
-		return nil
-	}
-	return ErrPaymentNotificationIndicator
-}
-
 func (v *validator) isTestProductionCode(code string) error {
 	switch code {
 	case
@@ -163,9 +151,9 @@ func (v *validator) isBusinessFunctionCode(code string) error {
 		CustomerTransferPlus,
 		CustomerTransfer,
 		DepositSendersAccount,
-		BankDrawdownRequest,
+		BankDrawDownRequest,
 		CustomerCorporateDrawdownRequest,
-		DrawdownRequest,
+		DrawDownRequest,
 		FEDFundsReturned,
 		FEDFundsSold,
 		BFCServiceMessage:
@@ -447,6 +435,154 @@ func (v *validator) validateDate(s string) error {
 	}
 	if err := v.isDay(mm, dd); err != nil {
 		return ErrValidDate
+	}
+	return nil
+}
+
+// ToDo: Some type of pattern match instead
+
+// validatePartyIdentifier validates OriginatorOptionF PartyIdentifier
+// PartyIdentifier must be one of the following two formats:
+// 1. /Account Number (slash followed by at least one
+// valid non-space character:  e.g., /123456)
+func (v *validator) validatePartyIdentifier(s string) error {
+	if s == "" {
+		return ErrPartyIdentifier
+	}
+	if utf8.RuneCountInString(s) < 2 {
+		return ErrPartyIdentifier
+	}
+
+	if s[:1] == "/" {
+		if strings.TrimSpace(s[1:2]) == "" {
+			return ErrPartyIdentifier
+		}
+		an := s[2:]
+		if alphanumericRegex.MatchString(an) {
+			return ErrPartyIdentifier
+		}
+	} else {
+		if err := v.validateUIDPartyIdentifier(s); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// uidPartyIdentifier validates a unique identifier for PartyIdentifier which is not an account number
+// 2. Unique Identifier/ (4 character code followed by a slash and at least one valid non-space character:
+// e.g., SOSE/123-456-789)
+//
+// ARNU: Alien Registration Number
+// CCPT: Passport Number
+// CUST: Customer Identification Number
+// DRLC: Driver’s License Number
+// EMPL: Employer Number
+// NIDN: National Identify Number
+// SOSE: Social Security Number
+// TXID: Tax Identification Number
+func (v *validator) validateUIDPartyIdentifier(s string) error {
+	if utf8.RuneCountInString(s) < 7 {
+		return ErrPartyIdentifier
+	}
+	uid := s[:4]
+	switch uid {
+	case
+		PartyIdentifierAlienRegistrationNumber,
+		PartyIdentifierPassportNumber,
+		PartyIdentifierCustomerIdentificationNumber,
+		PartyIdentifierDriversLicenseNumber,
+		PartyIdentifierEmployerNumber,
+		PartyIdentifierNationalIdentifyNumber,
+		PartyIdentifierSocialSecurityNumber,
+		PartyIdentifierTaxIdentificationNumber:
+	default:
+		return ErrPartyIdentifier
+	}
+	if s[4:5] != "/" {
+		return ErrPartyIdentifier
+	}
+	if strings.TrimSpace(s[5:6]) == "" {
+		return ErrPartyIdentifier
+	}
+	an := s[5:]
+	if alphanumericRegex.MatchString(an) {
+		return ErrPartyIdentifier
+	}
+	return nil
+}
+
+// validateOptionFLine validates OriginatorOptionF LineOne, LineTwo, LineThree
+// Format: Must begin with one of the following Line Codes followed by a slash and at least one
+// valid non-space character.
+// 1 Name
+// 2 Address
+// 3 Country and Town
+// 4 Date of Birth
+// 5 Place of Birth
+// 6 Customer Identification Number
+// 7 National Identity Number
+// 8 Additional Information
+// For example:
+// 2/123 MAIN STREET
+// 3/US/NEW YORK, NY 10000
+// 7/111-22-3456
+func (v *validator) validateOptionFLine(s string) error {
+	if s == "" {
+		return nil
+	}
+	// Can be "" without an error, but if not it has to be at least 3.
+	if utf8.RuneCountInString(s) < 3 {
+		return ErrOptionFLine
+	}
+	switch s[:1] {
+	case
+		OptionFName,
+		OptionFAddress,
+		OptionFCountryTown,
+		OptionFDOB,
+		OptionFBirthPlace,
+		OptionFCustomerIdentificationNumber,
+		OptionFNationalIdentityNumber,
+		OptionFAdditionalInformation:
+	default:
+		return ErrOptionFLine
+	}
+	if s[1:2] != "/" {
+		return ErrOptionFLine
+	}
+	if strings.TrimSpace(s[2:3]) == "" {
+		return ErrOptionFLine
+	}
+	an := strings.TrimSpace(s[2:])
+	if alphanumericRegex.MatchString(an) {
+		return ErrOptionFLine
+	}
+	return nil
+}
+
+// validateOptionFName validates OriginatorOptionF Name
+// Name  Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+// e.g., 1/SMITH JOHN.
+func (v *validator) validateOptionFName(s string) error {
+	if s == "" {
+		return ErrOptionFName
+	}
+	switch s[:1] {
+	case
+		OptionFName:
+	default:
+		return ErrOptionFName
+	}
+	if s[1:2] != "/" {
+		return ErrOptionFName
+	}
+	if strings.TrimSpace(s[2:3]) == "" {
+		return ErrOptionFName
+	}
+	an := strings.TrimSpace(s[2:])
+	if alphanumericRegex.MatchString(an) {
+		return ErrOptionFName
 	}
 	return nil
 }

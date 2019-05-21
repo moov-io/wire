@@ -80,4 +80,3 @@ To make a release of wire simply open a pull request with `CHANGELOG.md` and `ve
 ## License
 
 Apache License 2.0 See [LICENSE](LICENSE) for details.
-
