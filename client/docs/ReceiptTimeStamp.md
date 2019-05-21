@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ReceiptDate** | [**DateMmdd**](DateMMDD.md) |  | [optional] 
-**ReceiptTime** | [**TimeHhmm**](TimeHHMM.md) |  | [optional] 
+**ReceiptDate** | **string** | Receipt Date MMDD, based on the calendar date  | [optional] 
+**ReceiptTime** | **string** | Receipt Time HHMM, based on a 24-hour clock, Eastern Time  | [optional] 
 **ReceiptApplicationIdentification** | **string** | ApplicationIdentification | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

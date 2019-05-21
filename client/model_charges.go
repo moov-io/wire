@@ -10,7 +10,7 @@
 package openapi
 
 type Charges struct {
-	// ChargeDetails * `B` - Beneficiary * `S` - Shared 
+	// Charge Details * `B` - Beneficiary * `S` - Shared 
 	ChargeDetails string `json:"chargeDetails,omitempty"`
 	// SendersChargesOne  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99. 
 	SendersChargesOne string `json:"sendersChargesOne,omitempty"`

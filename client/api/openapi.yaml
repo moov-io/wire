@@ -312,8 +312,8 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            messageStatusIndicator: messageStatusIndicator
+            messageDuplicationCode: null
+            messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
@@ -365,12 +365,10 @@ components:
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputSequenceNumber: "000001"
-            outputDate:
-              date: "0401"
+            outputDate: "0401"
             outputDestinationID: "12345678"
             outputCycleDate: "20190401"
-            outputTime:
-              receiptTime: "1305"
+            outputTime: "1305"
           charges:
             sendersChargesOne: USD1234,56
             sendersChargesFour: USD1234,56
@@ -412,7 +410,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
+            messageDuplicationCode: null
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -443,10 +441,8 @@ components:
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
-            receiptTime:
-              receiptTime: "1305"
-            receiptDate:
-              date: "0401"
+            receiptTime: "1305"
+            receiptDate: "0401"
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
@@ -515,7 +511,7 @@ components:
             name: name
           senderDepositoryInstitution:
             senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+            senderShortName: MIDWESTONE B&T
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
@@ -661,7 +657,7 @@ components:
             amount: "1234.56789"
             currencyCode: USD
           typeSubType:
-            subTypeCode: "10"
+            subTypeCode: "00"
             typeCode: "10"
           serviceMessage:
             lineNine: Line Nine Text
@@ -677,7 +673,7 @@ components:
             lineThree: Line Three Text
             lineSeven: Line Seven Text
           receiverDepositoryInstitution:
-            receiverShortName: 'PREMIER BANK      '
+            receiverShortName: PREMIER BANK
             receiverABANumber: "091905664"
         - orderingInstitution:
             swiftLineFour: Swift Line Four
@@ -713,8 +709,8 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            messageStatusIndicator: messageStatusIndicator
+            messageDuplicationCode: null
+            messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
@@ -766,12 +762,10 @@ components:
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputSequenceNumber: "000001"
-            outputDate:
-              date: "0401"
+            outputDate: "0401"
             outputDestinationID: "12345678"
             outputCycleDate: "20190401"
-            outputTime:
-              receiptTime: "1305"
+            outputTime: "1305"
           charges:
             sendersChargesOne: USD1234,56
             sendersChargesFour: USD1234,56
@@ -813,7 +807,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
+            messageDuplicationCode: null
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -844,10 +838,8 @@ components:
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
-            receiptTime:
-              receiptTime: "1305"
-            receiptDate:
-              date: "0401"
+            receiptTime: "1305"
+            receiptDate: "0401"
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
@@ -916,7 +908,7 @@ components:
             name: name
           senderDepositoryInstitution:
             senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+            senderShortName: MIDWESTONE B&T
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
@@ -1062,7 +1054,7 @@ components:
             amount: "1234.56789"
             currencyCode: USD
           typeSubType:
-            subTypeCode: "10"
+            subTypeCode: "00"
             typeCode: "10"
           serviceMessage:
             lineNine: Line Nine Text
@@ -1078,7 +1070,7 @@ components:
             lineThree: Line Three Text
             lineSeven: Line Seven Text
           receiverDepositoryInstitution:
-            receiverShortName: 'PREMIER BANK      '
+            receiverShortName: PREMIER BANK
             receiverABANumber: "091905664"
       properties:
         id:
@@ -1127,8 +1119,8 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            messageStatusIndicator: messageStatusIndicator
+            messageDuplicationCode: null
+            messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
@@ -1180,12 +1172,10 @@ components:
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputSequenceNumber: "000001"
-            outputDate:
-              date: "0401"
+            outputDate: "0401"
             outputDestinationID: "12345678"
             outputCycleDate: "20190401"
-            outputTime:
-              receiptTime: "1305"
+            outputTime: "1305"
           charges:
             sendersChargesOne: USD1234,56
             sendersChargesFour: USD1234,56
@@ -1227,7 +1217,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
+            messageDuplicationCode: null
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -1258,10 +1248,8 @@ components:
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
-            receiptTime:
-              receiptTime: "1305"
-            receiptDate:
-              date: "0401"
+            receiptTime: "1305"
+            receiptDate: "0401"
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
@@ -1330,7 +1318,7 @@ components:
             name: name
           senderDepositoryInstitution:
             senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+            senderShortName: MIDWESTONE B&T
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
@@ -1476,7 +1464,7 @@ components:
             amount: "1234.56789"
             currencyCode: USD
           typeSubType:
-            subTypeCode: "10"
+            subTypeCode: "00"
             typeCode: "10"
           serviceMessage:
             lineNine: Line Nine Text
@@ -1492,7 +1480,7 @@ components:
             lineThree: Line Three Text
             lineSeven: Line Seven Text
           receiverDepositoryInstitution:
-            receiverShortName: 'PREMIER BANK      '
+            receiverShortName: PREMIER BANK
             receiverABANumber: "091905664"
         - orderingInstitution:
             swiftLineFour: Swift Line Four
@@ -1528,8 +1516,8 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
-            messageStatusIndicator: messageStatusIndicator
+            messageDuplicationCode: null
+            messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
             drawdownCreditAccountNumber: "121042882"
@@ -1581,12 +1569,10 @@ components:
           outputMessageAccountabilityData:
             outputFRBApplicationIdentification: OB11
             outputSequenceNumber: "000001"
-            outputDate:
-              date: "0401"
+            outputDate: "0401"
             outputDestinationID: "12345678"
             outputCycleDate: "20190401"
-            outputTime:
-              receiptTime: "1305"
+            outputTime: "1305"
           charges:
             sendersChargesOne: USD1234,56
             sendersChargesFour: USD1234,56
@@ -1628,7 +1614,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: messageDuplicationCode
+            messageDuplicationCode: null
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -1659,10 +1645,8 @@ components:
             swiftLineTwo: Swift Line Two
             swiftFieldTag: SWIFT
           receiptTimeStamp:
-            receiptTime:
-              receiptTime: "1305"
-            receiptDate:
-              date: "0401"
+            receiptTime: "1305"
+            receiptDate: "0401"
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
             previousMessageIdentifier: previousMessageIdentifier
@@ -1731,7 +1715,7 @@ components:
             name: name
           senderDepositoryInstitution:
             senderABANumber: "091905114"
-            senderShortName: 'MIDWESTONE B&T    '
+            senderShortName: MIDWESTONE B&T
           beneficiaryReference:
             beneficiaryReference: Test Data
           fiIntermediaryFI:
@@ -1877,7 +1861,7 @@ components:
             amount: "1234.56789"
             currencyCode: USD
           typeSubType:
-            subTypeCode: "10"
+            subTypeCode: "00"
             typeCode: "10"
           serviceMessage:
             lineNine: Line Nine Text
@@ -1893,7 +1877,7 @@ components:
             lineThree: Line Three Text
             lineSeven: Line Seven Text
           receiverDepositoryInstitution:
-            receiverShortName: 'PREMIER BANK      '
+            receiverShortName: PREMIER BANK
             receiverABANumber: "091905664"
       properties:
         id:
@@ -1947,8 +1931,8 @@ components:
           dateRemittanceDocument: "20190401"
         messageDisposition:
           testProductionCode: T
-          messageDuplicationCode: messageDuplicationCode
-          messageStatusIndicator: messageStatusIndicator
+          messageDuplicationCode: null
+          messageStatusIndicator: "0"
           formatVersion: "30"
         accountCreditedDrawdown:
           drawdownCreditAccountNumber: "121042882"
@@ -2000,12 +1984,10 @@ components:
         outputMessageAccountabilityData:
           outputFRBApplicationIdentification: OB11
           outputSequenceNumber: "000001"
-          outputDate:
-            date: "0401"
+          outputDate: "0401"
           outputDestinationID: "12345678"
           outputCycleDate: "20190401"
-          outputTime:
-            receiptTime: "1305"
+          outputTime: "1305"
         charges:
           sendersChargesOne: USD1234,56
           sendersChargesFour: USD1234,56
@@ -2047,7 +2029,7 @@ components:
           lineThree: Line Three
         senderSupplied:
           testProductionCode: T
-          messageDuplicationCode: messageDuplicationCode
+          messageDuplicationCode: null
           userRequestCorrelation: TESTDATA
           formatVersion: "30"
         beneficiary:
@@ -2078,10 +2060,8 @@ components:
           swiftLineTwo: Swift Line Two
           swiftFieldTag: SWIFT
         receiptTimeStamp:
-          receiptTime:
-            receiptTime: "1305"
-          receiptDate:
-            date: "0401"
+          receiptTime: "1305"
+          receiptDate: "0401"
           receiptApplicationIdentification: RB11
         previousMessageIdentifier:
           previousMessageIdentifier: previousMessageIdentifier
@@ -2150,7 +2130,7 @@ components:
           name: name
         senderDepositoryInstitution:
           senderABANumber: "091905114"
-          senderShortName: 'MIDWESTONE B&T    '
+          senderShortName: MIDWESTONE B&T
         beneficiaryReference:
           beneficiaryReference: Test Data
         fiIntermediaryFI:
@@ -2296,7 +2276,7 @@ components:
           amount: "1234.56789"
           currencyCode: USD
         typeSubType:
-          subTypeCode: "10"
+          subTypeCode: "00"
           typeCode: "10"
         serviceMessage:
           lineNine: Line Nine Text
@@ -2312,7 +2292,7 @@ components:
           lineThree: Line Three Text
           lineSeven: Line Seven Text
         receiverDepositoryInstitution:
-          receiverShortName: 'PREMIER BANK      '
+          receiverShortName: PREMIER BANK
           receiverABANumber: "091905664"
       properties:
         id:
@@ -2450,8 +2430,8 @@ components:
     MessageDisposition:
       example:
         testProductionCode: T
-        messageDuplicationCode: messageDuplicationCode
-        messageStatusIndicator: messageStatusIndicator
+        messageDuplicationCode: null
+        messageStatusIndicator: "0"
         formatVersion: "30"
       properties:
         formatVersion:
@@ -2463,7 +2443,17 @@ components:
           minLength: 2
           type: string
         testProductionCode:
-          $ref: '#/components/schemas/TestProductionCodeEnum'
+          description: |
+            Identifies if test or production.
+
+            * `T` - Test
+            * `P` - Production
+          enum:
+          - T
+          - P
+          example: T
+          maxLength: 1
+          type: string
         messageDuplicationCode:
           description: |
             MessageDuplicationCode
@@ -2471,6 +2461,10 @@ components:
             * ` ` - Original Message
             * `R` - Retrieval of an original message
             * `P` - Resend
+          enum:
+          - null
+          - R
+          - P
           maxLength: 1
           type: string
         messageStatusIndicator:
@@ -2486,20 +2480,35 @@ components:
             Incoming Messages
             * `N` - Successful with Accounting (Value)
             * `S` - Successful without Accounting (Non-Value)
+          enum:
+          - "0"
+          - "2"
+          - "3"
+          - "7"
+          - N
+          - S
           maxLength: 1
           type: string
     ReceiptTimeStamp:
       example:
-        receiptTime:
-          receiptTime: "1305"
-        receiptDate:
-          date: "0401"
+        receiptTime: "1305"
+        receiptDate: "0401"
         receiptApplicationIdentification: RB11
       properties:
         receiptDate:
-          $ref: '#/components/schemas/DateMMDD'
+          description: |
+            Receipt Date MMDD, based on the calendar date
+          example: "0401"
+          maxLength: 4
+          minLength: 4
+          type: string
         receiptTime:
-          $ref: '#/components/schemas/TimeHHMM'
+          description: |
+            Receipt Time HHMM, based on a 24-hour clock, Eastern Time
+          example: "1305"
+          maxLength: 4
+          minLength: 4
+          type: string
         receiptApplicationIdentification:
           description: ApplicationIdentification
           example: RB11
@@ -2509,12 +2518,10 @@ components:
       example:
         outputFRBApplicationIdentification: OB11
         outputSequenceNumber: "000001"
-        outputDate:
-          date: "0401"
+        outputDate: "0401"
         outputDestinationID: "12345678"
         outputCycleDate: "20190401"
-        outputTime:
-          receiptTime: "1305"
+        outputTime: "1305"
       properties:
         outputCycleDate:
           description: OutputCycleDate (CCYYMMDD)
@@ -2533,9 +2540,19 @@ components:
           maxLength: 6
           type: string
         outputDate:
-          $ref: '#/components/schemas/DateMMDD'
+          description: |
+            Output Date MMDD, based on the calendar date
+          example: "0401"
+          maxLength: 4
+          minLength: 4
+          type: string
         outputTime:
-          $ref: '#/components/schemas/TimeHHMM'
+          description: |
+            Output Time HHMM, based on a 24-hour clock, Eastern Time
+          example: "1305"
+          maxLength: 4
+          minLength: 4
+          type: string
         outputFRBApplicationIdentification:
           description: OutputFRBApplicationIdentification
           example: OB11
@@ -2549,14 +2566,21 @@ components:
         errorCode: E99
       properties:
         errorCategory:
-          description: |2
-
+          description: |
+            ErrorCategory
             * `E` - Data Error
             * `F` - Insufficient Balance
             * `H` - Accountability Error
             * `I` - In Process or Intercepted
             * `W` - Cutoff Hour Error
             * `X` - Duplicate IMAD
+          enum:
+          - E
+          - F
+          - H
+          - I
+          - W
+          - X
           example: E
           maxLength: 1
           type: string
@@ -2574,7 +2598,7 @@ components:
       description: SenderSupplied
       example:
         testProductionCode: T
-        messageDuplicationCode: messageDuplicationCode
+        messageDuplicationCode: null
         userRequestCorrelation: TESTDATA
         formatVersion: "30"
       properties:
@@ -2584,16 +2608,24 @@ components:
             30
           example: "30"
           maxLength: 2
-          minLength: 2
           type: string
         userRequestCorrelation:
           description: UserRequestCorrelation
           example: TESTDATA
           maxLength: 8
-          minLength: 8
           type: string
         testProductionCode:
-          $ref: '#/components/schemas/TestProductionCodeEnum'
+          description: |
+            Identifies if test or production.
+
+            * `T` - Test
+            * `P` - Production
+          enum:
+          - T
+          - P
+          example: T
+          maxLength: 1
+          type: string
         messageDuplicationCode:
           description: |
             MessageDuplicationCode
@@ -2601,6 +2633,10 @@ components:
             * ` ` - Original Message
             * `R` - Retrieval of an original message
             * `P` - Resend
+          enum:
+          - null
+          - R
+          - P
           maxLength: 1
           type: string
       required:
@@ -2611,13 +2647,49 @@ components:
     TypeSubType:
       description: TypeSubtype is the type and sub type codes
       example:
-        subTypeCode: "10"
+        subTypeCode: "00"
         typeCode: "10"
       properties:
         typeCode:
-          $ref: '#/components/schemas/TypeCodeEnum'
+          description: |
+            TypeCode:
+
+            * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
+            * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
+            * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
+          enum:
+          - "10"
+          - "15"
+          - "16"
+          example: "10"
+          maxLength: 2
+          type: string
         subTypeCode:
-          $ref: '#/components/schemas/SubTypeCodeEnum'
+          description: |
+            SubTypeCode:
+
+            * `00` - Basic Funds Transfer - A basic value funds transfer.
+            * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
+            * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
+            * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
+            * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
+            * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
+            * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
+            * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
+            * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "7"
+          - "8.0"
+          - "31"
+          - "32"
+          - "33"
+          - "90"
+          example: "00"
+          maxLength: 2
+          type: string
       required:
       - subTypeCode
       - typeCode
@@ -2673,7 +2745,7 @@ components:
       description: SenderDepositoryInstitution is the receiver depository institution
       example:
         senderABANumber: "091905114"
-        senderShortName: 'MIDWESTONE B&T    '
+        senderShortName: MIDWESTONE B&T
       properties:
         senderABANumber:
           description: SenderABANumber
@@ -2683,9 +2755,8 @@ components:
           type: string
         senderShortName:
           description: SenderShortName
-          example: 'MIDWESTONE B&T    '
+          example: MIDWESTONE B&T
           maxLength: 18
-          minLength: 18
           type: string
       required:
       - senderABANumber
@@ -2693,7 +2764,7 @@ components:
     ReceiverDepositoryInstitution:
       description: ReceiverDepositoryInstitution is the receiver depository institution
       example:
-        receiverShortName: 'PREMIER BANK      '
+        receiverShortName: PREMIER BANK
         receiverABANumber: "091905664"
       properties:
         receiverABANumber:
@@ -2704,9 +2775,8 @@ components:
           type: string
         receiverShortName:
           description: ReceiverShortName
-          example: 'PREMIER BANK      '
+          example: PREMIER BANK
           maxLength: 18
-          minLength: 18
           type: string
       required:
       - receiverABANumber
@@ -2718,7 +2788,34 @@ components:
         transactionTypeCode: transactionTypeCode
       properties:
         businessFunctionCode:
-          $ref: '#/components/schemas/BusinessFunctionCodeEnum'
+          description: |
+            BusinessFunctionCode
+            * `BTR` - Bank Transfer (Beneficiary is a bank)
+            * `DRC` - Customer or Corporate Drawdown Request
+            * `CKS` - Check Same Day Settlement
+            * `DRW` - Drawdown Payment
+            * `CTP` - Customer Transfer Plus
+            * `FFR` - Fed Funds Returned
+            * `CTR` - Customer Transfer (Beneficiary is a not a bank)
+            * `FFS` - Fed Funds Sold
+            * `DEP` - Deposit to Sender’s Account
+            * `SVC` - Service Message
+            * `DRB` - Bank-to-Bank Drawdown Request
+          enum:
+          - BTR
+          - DRC
+          - CKS
+          - DRW
+          - CTP
+          - FFR
+          - CTR
+          - FFS
+          - DEP
+          - SVC
+          - DRB
+          example: BTR
+          maxLength: 3
+          type: string
         transactionTypeCode:
           description: |-
             TransactionTypeCode
@@ -2736,7 +2833,35 @@ components:
         proprietaryCode: WJD786363
       properties:
         localInstrumentCode:
-          $ref: '#/components/schemas/LocalInstrumentEnum'
+          description: |
+            LocalInstrument
+
+            * `ANSI` - ANSI X12 format
+            * `COVS` - Sequence B Cover Payment Structured
+            * `GXML` - General XML format
+            * `IXML` - ISO 20022 XML formaT
+            * `NARR` - Narrative Text
+            * `PROP` - Proprietary Local Instrument Code
+            * `RMTS` - Remittance Information Structured
+            * `RRMT` - Related Remittance Information
+            * `S820` - STP 820 format
+            * `SWIF` - SWIFT field 70 (Remittance Information)
+            * `UEDI` - UN/EDIFACT format
+          enum:
+          - ANSI
+          - COVS
+          - GXML
+          - IXML
+          - NARR
+          - PROP
+          - RMTS
+          - RRMT
+          - S820
+          - SWIF
+          - UEDI
+          example: ANSI
+          maxLength: 4
+          type: string
         proprietaryCode:
           description: ProprietaryCode
           example: WJD786363
@@ -2755,10 +2880,21 @@ components:
       properties:
         paymentNotificationIndicator:
           description: |
-            PaymentNotificationIndicator
+            Payment Notification Indicator
 
             * `0 - 6` - Reserved for market practice conventions.
             * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+          enum:
+          - "0"
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "7"
+          - "8"
+          - "9"
           example: "1"
           maxLength: 1
           type: string
@@ -2838,7 +2974,7 @@ components:
       properties:
         identificationCode:
           description: |
-            IdentificationCode:
+            Identification Code:
 
             * `B` - SWIFT Bank Identifier Code (BIC)
             * `C` - CHIPS Participant
@@ -2846,6 +2982,13 @@ components:
             * `F` - Fed Routing Number
             * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
             * `U` - CHIPS Identifier
+          enum:
+          - B
+          - C
+          - D
+          - F
+          - T
+          - U
           example: B
           maxLength: 1
           type: string
@@ -2877,7 +3020,7 @@ components:
       properties:
         identificationCode:
           description: |
-            IdentificationCode:
+            Identification Code:
 
             * `1` - Passport Number
             * `2` - Tax Identification Number
@@ -2885,6 +3028,13 @@ components:
             * `4` - Alien Registration Number
             * `5` - Corporate Identification
             * `9` - Other Identification
+          enum:
+          - "1"
+          - "2"
+          - "3"
+          - "4"
+          - "5"
+          - "9"
           example: B
           maxLength: 1
           type: string
@@ -3099,7 +3249,22 @@ components:
         lineThree: Line Three
       properties:
         adviceCode:
-          $ref: '#/components/schemas/AdviceCodeEnum'
+          description: |
+            Advice Code
+
+            * `HLD - Hold
+            * `LTR` - Letter
+            * `PHN` - Phone
+            * `TLX` - Telex
+            * `WRE` - Wire
+          enum:
+          - HLD
+          - LTR
+          - PHN
+          - TLX
+          - WRE
+          example: HLD
+          type: string
         lineOne:
           description: LineOne
           example: Line One
@@ -3277,7 +3442,7 @@ components:
           maxLength: 16
           type: string
     PreviousMessageIdentifier:
-      description: PreviousMessageIdentifier is the identifier for a previous message
+      description: The identifier for a previous message
       example:
         previousMessageIdentifier: previousMessageIdentifier
       properties:
@@ -3295,9 +3460,12 @@ components:
       properties:
         chargeDetails:
           description: |
-            ChargeDetails
+            Charge Details
             * `B` - Beneficiary
             * `S` - Shared
+          enum:
+          - B
+          - S
           example: B
           maxLength: 1
           type: string
@@ -3373,7 +3541,25 @@ components:
           maxLength: 35
           type: string
         remittanceLocationMethod:
-          $ref: '#/components/schemas/RemittanceLocationMethodEnum'
+          description: |
+            RemittanceLocationMethod
+
+            * `EDIC` - Electronic Data Interchange
+            * `EMAL` - Email
+            * `FAXI` - Fax
+            * `POST` - Postal services
+            * `SMS` - Short Message Service (text)
+            * `URI` - Uniform Resource Identifier
+          enum:
+          - EDIC
+          - EMAL
+          - FAXI
+          - POST
+          - SMS
+          - URI
+          example: EDIC
+          maxLength: 4
+          type: string
         remittanceLocationElectronicAddress:
           description: RemittanceLocationElectronicAddress (E-mail or URL address)
           example: https://moov.io
@@ -3417,7 +3603,17 @@ components:
         identificationNumberIssuer: Identification Number Issuer
       properties:
         identificationType:
-          $ref: '#/components/schemas/IdentificationTypeEnum'
+          description: |
+            Identification Type
+
+            * `OI` - Organization ID
+            * `PI` - Private ID
+          enum:
+          - OI
+          - PI
+          example: OI
+          maxLength: 2
+          type: string
         identificationCode:
           description: |
             IdentificationCode
@@ -3528,7 +3724,17 @@ components:
         identificationNumberIssuer: Identification Number Issuer
       properties:
         identificationType:
-          $ref: '#/components/schemas/IdentificationTypeEnum'
+          description: |
+            IdentificationType
+
+            * `OI` - Organization ID
+            * `PI` - Private ID
+          enum:
+          - OI
+          - PI
+          example: OI
+          maxLength: 2
+          type: string
         identificationCode:
           description: |
             IdentificationCode
@@ -3603,7 +3809,25 @@ components:
           maxLength: 140
           type: string
         addressType:
-          $ref: '#/components/schemas/AddressTypeEnum'
+          description: |
+            AddressType
+
+            * `ADDR` - Complete Postal Address
+            * `BIZZ` - Business Address
+            * `DLVY` - Delivery Address
+            * `HOME` - Home Address
+            * `MLTO` - Mail Address
+            * `PBOX` - Post Office Box
+          enum:
+          - ADDR
+          - BIZZ
+          - DLVY
+          - HOME
+          - MLTO
+          - PBOX
+          example: ADDR
+          maxLength: 4
+          type: string
         department:
           description: Department
           example: Buildings
@@ -3693,7 +3917,7 @@ components:
       properties:
         documentTypeCode:
           description: |
-            DocumentTypeCode
+            Document Type Code
 
             * `AROI` - Accounts Receivable Open Item
             * `BOLD` - Bill of Lading Shipping Notice
@@ -3710,6 +3934,22 @@ components:
             * `SBIN` - Self Billed Invoice
             * `SOAC` - Statement of Account
             * `TSUT` - Trade Services Utility Transaction VCHR Voucher
+          enum:
+          - AROI
+          - BOLD
+          - CINV
+          - CMCN
+          - CNFA
+          - CREN
+          - DEBN
+          - DISP
+          - DNFA
+          - MSIN
+          - PROP
+          - PUOR
+          - SBIN
+          - SOAC
+          - TSUT
           example: AROI
           maxLength: 4
           type: string
@@ -3790,7 +4030,7 @@ components:
       properties:
         adjustmentReasonCode:
           description: |
-            Adjustment
+            Adjustment Reason Code
 
             * `01` - Pricing Error
             * `03` - Extension Error
@@ -3803,6 +4043,18 @@ components:
             * `75` - Total Order Not Received
             * `81` - Credit as Agreed
             * `CM` - Covered by Credit Memo
+          enum:
+          - "1"
+          - "3"
+          - "4"
+          - "5"
+          - "6"
+          - "11"
+          - "12"
+          - "59"
+          - "75"
+          - "81"
+          - CM
           example: CM
           maxLength: 4
           type: string
@@ -3848,7 +4100,7 @@ components:
       properties:
         documentTypeCode:
           description: |
-            SecondaryRemittanceDocument
+            Document Type Code
 
             * `AROI` - Accounts Receivable Open Item
             * `DISP` - Dispatch Advice
@@ -3857,6 +4109,14 @@ components:
             * `RADM` - Remittance Advice Message
             * `RPIN` - Related Payment Instruction
             * `SCOR1` - Structured Communication Reference VCHR Voucher
+          enum:
+          - AROI
+          - DISP
+          - FXDR
+          - PROP
+          - RADM
+          - RPIN
+          - SCOR1
           example: AROI
           maxLength: 4
           type: string
@@ -3969,377 +4229,6 @@ components:
           description: AddressLineThree
           maxLength: 35
           type: string
-    DateMMDD:
-      example:
-        date: "0401"
-      properties:
-        date:
-          description: |
-            Date
-
-            MMDD, based on the calendar date
-          example: "0401"
-          maxLength: 4
-          minLength: 4
-          type: string
-    TimeHHMM:
-      example:
-        receiptTime: "1305"
-      properties:
-        receiptTime:
-          description: |
-            ReceiptTime
-
-            HHMM, based on a 24-hour clock, Eastern Time
-          example: "1305"
-          maxLength: 4
-          minLength: 4
-          type: string
-    TestProductionCodeEnum:
-      description: |
-        TestProductionCode
-
-        * `T` - Test
-        * `P` - Production
-      enum:
-      - T
-      - P
-      example: T
-      maxLength: 1
-      type: string
-    MessageDuplicationCodeEnum:
-      description: |
-        MessageDuplicationCode
-
-        * ` ` - Original Message
-        * `R` - Retrieval of an original message
-        * `P` - Resend
-      maxLength: 1
-      type: string
-    MessageStatusIndicatorEnum:
-      description: |
-        Message Status Indicator
-
-        Outgoing Messages
-        * `0` - In process or Intercepted
-        * `2` - Successful with Accounting (Value)
-        * `3` - Rejected due to Error Condition
-        * `7` - Successful without Accounting (Non-Value)
-
-        Incoming Messages
-        * `N` - Successful with Accounting (Value)
-        * `S` - Successful without Accounting (Non-Value)
-      maxLength: 1
-      type: string
-    TypeCodeEnum:
-      description: |
-        TypeCode:
-
-        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
-        * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
-        * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
-      enum:
-      - "10"
-      - "15"
-      - "16"
-      example: "10"
-      maxLength: 2
-      type: string
-    SubTypeCodeEnum:
-      description: |
-        SubTypeCode:
-
-        * `00` - Basic Funds Transfer - A basic value funds transfer.
-        * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
-        * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
-        * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
-        * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
-        * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
-        * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
-        * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
-        * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
-      enum:
-      - "0"
-      - "1"
-      - "2"
-      - "7"
-      - "8.0"
-      - "31"
-      - "32"
-      - "33"
-      - "90"
-      example: "10"
-      maxLength: 2
-      type: string
-    BusinessFunctionCodeEnum:
-      description: |
-        BusinessFunctionCode
-        * `BTR` - Bank Transfer (Beneficiary is a bank)
-        * `DRC` - Customer or Corporate Drawdown Request
-        * `CKS` - Check Same Day Settlement
-        * `DRW` - Drawdown Payment
-        * `CTP` - Customer Transfer Plus
-        * `FFR` - Fed Funds Returned
-        * `CTR` - Customer Transfer (Beneficiary is a not a bank)
-        * `FFS` - Fed Funds Sold
-        * `DEP` - Deposit to Sender’s Account
-        * `SVC` - Service Message
-        * `DRB` - Bank-to-Bank Drawdown Request
-      enum:
-      - BTR
-      - DRC
-      - CKS
-      - DRW
-      - CTP
-      - FFR
-      - CTR
-      - FFS
-      - DEP
-      - SVC
-      - DRB
-      example: BTR
-      maxLength: 3
-      type: string
-    FIIdentificationCodeEnum:
-      description: |
-        IdentificationCode:
-
-        * `B` - SWIFT Bank Identifier Code (BIC)
-        * `C` - CHIPS Participant
-        * `D` - Demand Deposit Account (DDA) Number
-        * `F` - Fed Routing Number
-        * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
-        * `U` - CHIPS Identifier
-      example: B
-      maxLength: 1
-      type: string
-    PersonalIdentificationCodeEnum:
-      description: |
-        IdentificationCode:
-
-        * `1` - Passport Number
-        * `2` - Tax Identification Number
-        * `3` - Driver’s License Number
-        * `4` - Alien Registration Number
-        * `5` - Corporate Identification
-        * `9` - Other Identification
-      example: B
-      maxLength: 1
-      type: string
-    AdviceCodeEnum:
-      description: |
-        AdviceCode
-
-        * `HLD - Hold
-        * `LTR` - Letter
-        * `PHN` - Phone
-        * `TLX` - Telex
-        * `WRE` - Wire
-
-        *
-      enum:
-      - HLD
-      - LTR
-      - PHN
-      - TLX
-      - WRE
-      example: HLD
-      type: string
-    LocalInstrumentEnum:
-      description: |
-        LocalInstrument
-
-        * `ANSI` - ANSI X12 format
-        * `COVS` - Sequence B Cover Payment Structured
-        * `GXML` - General XML format
-        * `IXML` - ISO 20022 XML formaT
-        * `NARR` - Narrative Text
-        * `PROP` - Proprietary Local Instrument Code
-        * `RMTS` - Remittance Information Structured
-        * `RRMT` - Related Remittance Information
-        * `S820` - STP 820 format
-        * `SWIF` - SWIFT field 70 (Remittance Information)
-        * `UEDI` - UN/EDIFACT format
-      enum:
-      - ANSI
-      - COVS
-      - GXML
-      - IXML
-      - NARR
-      - PROP
-      - RMTS
-      - RRMT
-      - S820
-      - SWIF
-      - UEDI
-      example: ANSI
-      maxLength: 4
-      type: string
-    ChargeDetailsEnum:
-      description: |
-        ChargeDetails
-        * `B` - Beneficiary
-        * `S` - Shared
-      example: B
-      maxLength: 1
-      type: string
-    PaymentNotificationIndicatorEnum:
-      description: |
-        PaymentNotificationIndicator
-
-        * `0 - 6` - Reserved for market practice conventions.
-        * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
-      example: "1"
-      maxLength: 1
-      type: string
-    RemittanceLocationMethodEnum:
-      description: |
-        RemittanceLocationMethod
-
-        * `EDIC` - Electronic Data Interchange
-        * `EMAL` - Email
-        * `FAXI` - Fax
-        * `POST` - Postal services
-        * `SMS` - Short Message Service (text)
-        * `URI` - Uniform Resource Identifier
-      enum:
-      - EDIC
-      - EMAL
-      - FAXI
-      - POST
-      - SMS
-      - URI
-      example: EDIC
-      maxLength: 4
-      type: string
-    AddressTypeEnum:
-      description: |
-        addressType
-
-        * `ADDR` - Complete Postal Address
-        * `BIZZ` - Business Address
-        * `DLVY` - Delivery Address
-        * `HOME` - Home Address
-        * `MLTO` - Mail Address
-        * `PBOX` - Post Office Box
-      enum:
-      - ADDR
-      - BIZZ
-      - DLVY
-      - HOME
-      - MLTO
-      - PBOX
-      example: ADDR
-      maxLength: 4
-      type: string
-    IdentificationTypeEnum:
-      description: |
-        IdentificationType
-
-        * `OI` - Organization ID
-        * `PI` - Private ID
-      enum:
-      - OI
-      - PI
-      example: OI
-      maxLength: 2
-      type: string
-    IdentificationCodeEnum:
-      description: |
-        IdentificationCode
-
-        Organization Identification Codes
-
-        * `BANK` - Bank Party Identification
-        * `CUST` - Customer Number
-        * `DUNS` - Data Universal Number System (Dun & Bradstreet)
-        * `EMPL` - Employer Identification Number
-        * `GS1G` - Global Location Number
-        * `PROP` - Proprietary Identification Number
-        * `SWBB` - SWIFT BIC or BEI
-        * `TXID` - Tax Identification Number
-
-        Private Identification Codes
-
-        * `ARNU` - Alien Registration Number
-        * `CCPT` - Passport Number
-        * `CUST` - Customer Number
-        * `DPOB` - Date & Place of Birth
-        * `DRLC` - Driver’s License Number
-        * `EMPL` - Employee Identification Number
-        * `NIDN` - National Identity Number
-        * `PROP` - Proprietary Identification Number
-        * `SOSE` - Social Security Number
-        * `TXID` - Tax Identification Number
-      example: BANK
-      maxLength: 4
-      type: string
-    DocumentTypeCodeEnum:
-      description: |
-        DocumentTypeCode
-
-        * `AROI` - Accounts Receivable Open Item
-        * `BOLD` - Bill of Lading Shipping Notice
-        * `CINV` - Commercial Invoice
-        * `CMCN` - Commercial Contract
-        * `CNFA` - Credit Note Related to Financial Adjustment
-        * `CREN` - Credit Note
-        * `DEBN` - Debit Note
-        * `DISP` - Dispatch Advice
-        * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice
-        * `MSIN` - Metered Service Invoice
-        * `PROP` - Proprietary Document Type
-        * `PUOR` - Purchase Order
-        * `SBIN` - Self Billed Invoice
-        * `SOAC` - Statement of Account
-        * `TSUT` - Trade Services Utility Transaction VCHR Voucher
-      example: AROI
-      maxLength: 4
-      type: string
-    AdjustmentEnum:
-      description: |
-        Adjustment
-
-        * `01` - Pricing Error
-        * `03` - Extension Error
-        * `04` - Item Not Accepted (Damaged)
-        * `05` - Item Not Accepted (Quality)
-        * `06` - Quantity Contested 07   Incorrect Product
-        * `11` - Returns (Damaged)
-        * `12` - Returns (Quality)
-        * `59` - Item Not Received
-        * `75` - Total Order Not Received
-        * `81` - Credit as Agreed
-        * `CM` - Covered by Credit Memo
-      example: CM
-      maxLength: 4
-      type: string
-    SecondaryRemittanceDocumentEnum:
-      description: |
-        SecondaryRemittanceDocument
-
-        * `AROI` - Accounts Receivable Open Item
-        * `DISP` - Dispatch Advice
-        * `FXDR` - Foreign Exchange Deal Reference
-        * `PROP` - Proprietary Document Type PUOR Purchase Order
-        * `RADM` - Remittance Advice Message
-        * `RPIN` - Related Payment Instruction
-        * `SCOR1` - Structured Communication Reference VCHR Voucher
-      example: AROI
-      maxLength: 4
-      type: string
-    ErrorCategoryEnum:
-      description: |2
-
-        * `E` - Data Error
-        * `F` - Insufficient Balance
-        * `H` - Accountability Error
-        * `I` - In Process or Intercepted
-        * `W` - Cutoff Hour Error
-        * `X` - Duplicate IMAD
-      example: E
-      maxLength: 1
-      type: string
     Error:
       properties:
         error:

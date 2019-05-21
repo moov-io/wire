@@ -10,8 +10,10 @@
 package openapi
 
 type ReceiptTimeStamp struct {
-	ReceiptDate DateMmdd `json:"receiptDate,omitempty"`
-	ReceiptTime TimeHhmm `json:"receiptTime,omitempty"`
+	// Receipt Date MMDD, based on the calendar date 
+	ReceiptDate string `json:"receiptDate,omitempty"`
+	// Receipt Time HHMM, based on a 24-hour clock, Eastern Time 
+	ReceiptTime string `json:"receiptTime,omitempty"`
 	// ApplicationIdentification
 	ReceiptApplicationIdentification string `json:"receiptApplicationIdentification,omitempty"`
 }

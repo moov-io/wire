@@ -186,7 +186,6 @@ paths:
           description: Permanently deleted File.
         '404':
           description: A File with the specified ID was not found.
-# ToDo: Revisit enum's re: OpenAPITools/openapi-generator#535
 components:
   schemas:
     CreateFile:
@@ -221,7 +220,7 @@ components:
           type: string
           description: FEDWireMessage ID
           example: 3f2d23ee214
-        # TAGS 1100, 1110, 1120, 1130 is information Appended by the FEDwire Funds Service
+        # TAGS 1100, 1110, 1120, 1130 is information Appended by the FEDWire Funds Service
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
           description: MessageDisposition {1100}
@@ -421,22 +420,69 @@ components:
             30
           example: '30'
         testProductionCode:
-          $ref: '#/components/schemas/TestProductionCodeEnum'
-          description: TestProductionCode
+          type: string
+          maxLength: 1
+          description: |
+            Identifies if test or production.
+
+            * `T` - Test
+            * `P` - Production
+          enum:
+            - T
+            - P
+          example: 'T'
         messageDuplicationCode:
-          $ref: '#/components/schemas/MessageDuplicationCodeEnum'
-          description: MessageDuplicationCode
+          type: string
+          maxLength: 1
+          description: |
+            MessageDuplicationCode
+
+            * ` ` - Original Message
+            * `R` - Retrieval of an original message
+            * `P` - Resend
+          enum:
+            -
+            - R
+            - P
+          example: ''
         messageStatusIndicator:
-          $ref: '#/components/schemas/MessageStatusIndicatorEnum'
-          description: MessageStatusIndicator
+          type: string
+          maxLength: 1
+          description: |
+            Message Status Indicator
+
+            Outgoing Messages
+            * `0` - In process or Intercepted
+            * `2` - Successful with Accounting (Value)
+            * `3` - Rejected due to Error Condition
+            * `7` - Successful without Accounting (Non-Value)
+
+            Incoming Messages
+            * `N` - Successful with Accounting (Value)
+            * `S` - Successful without Accounting (Non-Value)
+          enum:
+            - 0
+            - 2
+            - 3
+            - 7
+            - N
+            - S
     ReceiptTimeStamp:
       properties:
         receiptDate:
-          $ref: '#/components/schemas/DateMMDD'
-          description: ReceiptDate
+          type: string
+          description: |
+            Receipt Date MMDD, based on the calendar date
+          minLength: 4
+          maxLength: 4
+          example: '0401'
         receiptTime:
-          $ref: '#/components/schemas/TimeHHMM'
-          description: ReceiptTime
+          type: string
+          minLength: 4
+          maxLength: 4
+          description: |
+            Receipt Time HHMM, based on a 24-hour clock, Eastern Time
+          example: '1305'
         receiptApplicationIdentification:
           type: string
           maxLength: 4
@@ -461,11 +507,19 @@ components:
           description: outputSequenceNumber
           example: '000001'
         outputDate:
-          $ref: '#/components/schemas/DateMMDD'
-          description: OutputDate
+          type: string
+          description: |
+            Output Date MMDD, based on the calendar date
+          minLength: 4
+          maxLength: 4
+          example: '0401'
         outputTime:
-          $ref: '#/components/schemas/TimeHHMM'
-          description: OutputTime
+          type: string
+          minLength: 4
+          maxLength: 4
+          description: |
+            Output Time HHMM, based on a 24-hour clock, Eastern Time
+          example: '1305'
         outputFRBApplicationIdentification:
           type: string
           maxLength: 4
@@ -475,8 +529,24 @@ components:
        description: ErrorWire
        properties:
          errorCategory:
-           $ref: '#/components/schemas/ErrorCategoryEnum'
-           description: ErrorCategory
+           type: string
+           maxLength: 1
+           description: |
+             ErrorCategory
+             * `E` - Data Error
+             * `F` - Insufficient Balance
+             * `H` - Accountability Error
+             * `I` - In Process or Intercepted
+             * `W` - Cutoff Hour Error
+             * `X` - Duplicate IMAD
+           enum:
+             - E
+             - F
+             - H
+             - I
+             - W
+             - X
+           example: 'E'
          errorCode:
            type: string
            maxLength: 3
@@ -492,7 +562,6 @@ components:
       properties:
         formatVersion:
           type: string
-          minLength: 2
           maxLength: 2
           description: |
             FormatVersion
@@ -500,16 +569,35 @@ components:
           example: '30'
         userRequestCorrelation:
           type: string
-          minLength: 8
           maxLength: 8
           description: UserRequestCorrelation
           example: 'TESTDATA'
         testProductionCode:
-          $ref: '#/components/schemas/TestProductionCodeEnum'
-          description: TestProductionCode
+          type: string
+          maxLength: 1
+          description: |
+            Identifies if test or production.
+
+            * `T` - Test
+            * `P` - Production
+          enum:
+            - T
+            - P
+          example: 'T'
         messageDuplicationCode:
-          $ref: '#/components/schemas/MessageDuplicationCodeEnum'
-          description: MessageDuplicationCode
+          type: string
+          maxLength: 1
+          description: |
+            MessageDuplicationCode
+
+            * ` ` - Original Message
+            * `R` - Retrieval of an original message
+            * `P` - Resend
+          enum:
+            -
+            - R
+            - P
+          example: ''
       required:
         - formatVersion
         - userRequestCorrelation
@@ -519,11 +607,45 @@ components:
       description: TypeSubtype is the type and sub type codes
       properties:
         typeCode:
-          description: TypeCode
-          $ref: '#/components/schemas/TypeCodeEnum'
+          type: string
+          maxLength: 2
+          description: |
+            TypeCode:
+
+            * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
+            * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
+            * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
+          enum:
+            - 10
+            - 15
+            - 16
+          example: '10'
         subTypeCode:
-          description: SubTypeCode
-          $ref: '#/components/schemas/SubTypeCodeEnum'
+          type: string
+          maxLength: 2
+          description: |
+            SubTypeCode:
+
+            * `00` - Basic Funds Transfer - A basic value funds transfer.
+            * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
+            * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
+            * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
+            * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
+            * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
+            * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
+            * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
+            * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
+          enum:
+            - 00
+            - 01
+            - 02
+            - 07
+            - 08
+            - 31
+            - 32
+            - 33
+            - 90
+          example: '00'
       required:
         - typeCode
         - subTypeCode
@@ -580,10 +702,9 @@ components:
           example: '091905114'
         senderShortName:
           type: string
-          minLength: 18
           maxLength: 18
           description: SenderShortName
-          example: 'MIDWESTONE B&T    '
+          example: 'MIDWESTONE B&T'
       required:
         - senderABANumber
         - senderShortName
@@ -598,10 +719,9 @@ components:
           example: '091905664'
         receiverShortName:
           type: string
-          minLength: 18
           maxLength: 18
           description: ReceiverShortName
-          example: 'PREMIER BANK      '
+          example: 'PREMIER BANK'
       required:
         - receiverABANumber
         - receiverShortName
@@ -609,8 +729,34 @@ components:
       description: BusinessFunctionCode is the business function code
       properties:
         businessFunctionCode:
-          description: BusinessFunctionCode
-          $ref: '#/components/schemas/BusinessFunctionCodeEnum'
+          type: string
+          maxLength: 3
+          description: |
+            BusinessFunctionCode
+            * `BTR` - Bank Transfer (Beneficiary is a bank)
+            * `DRC` - Customer or Corporate Drawdown Request
+            * `CKS` - Check Same Day Settlement
+            * `DRW` - Drawdown Payment
+            * `CTP` - Customer Transfer Plus
+            * `FFR` - Fed Funds Returned
+            * `CTR` - Customer Transfer (Beneficiary is a not a bank)
+            * `FFS` - Fed Funds Sold
+            * `DEP` - Deposit to Sender’s Account
+            * `SVC` - Service Message
+            * `DRB` - Bank-to-Bank Drawdown Request
+          enum:
+            - BTR
+            - DRC
+            - CKS
+            - DRW
+            - CTP
+            - FFR
+            - CTR
+            - FFS
+            - DEP
+            - SVC
+            - DRB
+          example: 'BTR'
         transactionTypeCode:
           type: string
           minLength: 3
@@ -626,8 +772,35 @@ components:
       description: LocalInstrument is the local instrument
       properties:
         localInstrumentCode:
-          $ref: '#/components/schemas/LocalInstrumentEnum'
-          description: LocalInstrumentCode
+          type: string
+          maxLength: 4
+          description: |
+            LocalInstrument
+
+            * `ANSI` - ANSI X12 format
+            * `COVS` - Sequence B Cover Payment Structured
+            * `GXML` - General XML format
+            * `IXML` - ISO 20022 XML formaT
+            * `NARR` - Narrative Text
+            * `PROP` - Proprietary Local Instrument Code
+            * `RMTS` - Remittance Information Structured
+            * `RRMT` - Related Remittance Information
+            * `S820` - STP 820 format
+            * `SWIF` - SWIFT field 70 (Remittance Information)
+            * `UEDI` - UN/EDIFACT format
+          enum:
+            - ANSI
+            - COVS
+            - GXML
+            - IXML
+            - NARR
+            - PROP
+            - RMTS
+            - RRMT
+            - S820
+            - SWIF
+            - UEDI
+          example: 'ANSI'
         proprietaryCode:
           type: string
           maxLength: 35
@@ -637,8 +810,25 @@ components:
       description: PaymentNotification is the payment notification
       properties:
         paymentNotificationIndicator:
-          $ref: '#/components/schemas/PaymentNotificationIndicatorEnum'
-          description: PaymentNotificationIndicator
+          type: string
+          maxLength: 1
+          description: |
+            Payment Notification Indicator
+
+            * `0 - 6` - Reserved for market practice conventions.
+            * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+            - 9
+          example: '1'
         contactNotificationElectronicAddress:
           type: string
           maxLength: 2048
@@ -702,8 +892,25 @@ components:
       description: FinancialInstitution is financial institution demographic information
       properties:
         identificationCode:
-          description: Identification Code
-          $ref: '#/components/schemas/FIIdentificationCodeEnum'
+          type: string
+          description: |
+            Identification Code:
+
+            * `B` - SWIFT Bank Identifier Code (BIC)
+            * `C` - CHIPS Participant
+            * `D` - Demand Deposit Account (DDA) Number
+            * `F` - Fed Routing Number
+            * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
+            * `U` - CHIPS Identifier
+          enum:
+            - B
+            - C
+            - D
+            - F
+            - T
+            - U
+          maxLength: 1
+          example: 'B'
         identifier:
           type: string
           maxLength: 34
@@ -724,8 +931,25 @@ components:
       description: Personal is personal demographic information
       properties:
         identificationCode:
-          description: Identification Code
-          $ref: '#/components/schemas/PersonalIdentificationCodeEnum'
+          type: string
+          description: |
+            Identification Code:
+
+            * `1` - Passport Number
+            * `2` - Tax Identification Number
+            * `3` - Driver’s License Number
+            * `4` - Alien Registration Number
+            * `5` - Corporate Identification
+            * `9` - Other Identification
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 9
+          maxLength: 1
+          example: 'B'
         identifier:
           type: string
           maxLength: 34
@@ -945,8 +1169,22 @@ components:
       description: Advice
       properties:
         adviceCode:
-          $ref: '#/components/schemas/AdviceCodeEnum'
-          description: AdviceCode
+          type: string
+          description: |
+            Advice Code
+
+            * `HLD - Hold
+            * `LTR` - Letter
+            * `PHN` - Phone
+            * `TLX` - Telex
+            * `WRE` - Wire
+          enum:
+            - HLD
+            - LTR
+            - PHN
+            - TLX
+            - WRE
+          example: 'HLD'
         lineOne:
           type: string
           maxLength: 26
@@ -1098,7 +1336,7 @@ components:
           description: SenderReference
           example: 'Reference'
     PreviousMessageIdentifier:
-      description: PreviousMessageIdentifier is the identifier for a previous message
+      description: The identifier for a previous message
       properties:
         previousMessageIdentifier:
           type: string
@@ -1109,8 +1347,16 @@ components:
     Charges:
       properties:
         chargeDetails:
-          $ref: '#/components/schemas/ChargeDetailsEnum'
-          description: ChargeDetails
+          type: string
+          maxLength: 1
+          description: |
+            Charge Details
+            * `B` - Beneficiary
+            * `S` - Shared
+          enum:
+            - B
+            - S
+          example: 'B'
         sendersChargesOne:
           type: string
           maxLength: 15
@@ -1160,8 +1406,25 @@ components:
           description: RemittanceIdentification
           example: 'Remittance Identification'
         remittanceLocationMethod:
-          $ref: '#/components/schemas/RemittanceLocationMethodEnum'
-          description: RemittanceLocationMethodEnum
+          type: string
+          maxLength: 4
+          description: |
+            RemittanceLocationMethod
+
+            * `EDIC` - Electronic Data Interchange
+            * `EMAL` - Email
+            * `FAXI` - Fax
+            * `POST` - Postal services
+            * `SMS` - Short Message Service (text)
+            * `URI` - Uniform Resource Identifier
+          enum:
+            - EDIC
+            - EMAL
+            - FAXI
+            - POST
+            - SMS
+            - URI
+          example: 'EDIC'
         remittanceLocationElectronicAddress:
           type: string
           maxLength: 2048
@@ -1174,11 +1437,47 @@ components:
       description: RemittanceOriginator
       properties:
         identificationType:
-          $ref: '#/components/schemas/IdentificationTypeEnum'
-          description: IdentificationType
+          type: string
+          maxLength: 2
+          description: |
+            Identification Type
+
+            * `OI` - Organization ID
+            * `PI` - Private ID
+          enum:
+            - OI
+            - PI
+          example: 'OI'
         identificationCode:
-          $ref: '#/components/schemas/IdentificationCodeEnum'
-          description: IdentificationCode
+          type: string
+          maxLength: 4
+          description: |
+            IdentificationCode
+
+            Organization Identification Codes
+
+            * `BANK` - Bank Party Identification
+            * `CUST` - Customer Number
+            * `DUNS` - Data Universal Number System (Dun & Bradstreet)
+            * `EMPL` - Employer Identification Number
+            * `GS1G` - Global Location Number
+            * `PROP` - Proprietary Identification Number
+            * `SWBB` - SWIFT BIC or BEI
+            * `TXID` - Tax Identification Number
+
+            Private Identification Codes
+
+            * `ARNU` - Alien Registration Number
+            * `CCPT` - Passport Number
+            * `CUST` - Customer Number
+            * `DPOB` - Date & Place of Birth
+            * `DRLC` - Driver’s License Number
+            * `EMPL` - Employee Identification Number
+            * `NIDN` - National Identity Number
+            * `PROP` - Proprietary Identification Number
+            * `SOSE` - Social Security Number
+            * `TXID` - Tax Identification Number
+          example: 'BANK'
         identificationNumber:
           type: string
           maxLength: 35
@@ -1235,11 +1534,47 @@ components:
     RemittanceBeneficiary:
       properties:
         identificationType:
-          $ref: '#/components/schemas/IdentificationTypeEnum'
-          description: identificationType
+          type: string
+          maxLength: 2
+          description: |
+            IdentificationType
+
+            * `OI` - Organization ID
+            * `PI` - Private ID
+          enum:
+            - OI
+            - PI
+          example: 'OI'
         identificationCode:
-          $ref: '#/components/schemas/IdentificationCodeEnum'
-          description: identificationCode
+          type: string
+          maxLength: 4
+          description: |
+            IdentificationCode
+
+            Organization Identification Codes
+
+            * `BANK` - Bank Party Identification
+            * `CUST` - Customer Number
+            * `DUNS` - Data Universal Number System (Dun & Bradstreet)
+            * `EMPL` - Employer Identification Number
+            * `GS1G` - Global Location Number
+            * `PROP` - Proprietary Identification Number
+            * `SWBB` - SWIFT BIC or BEI
+            * `TXID` - Tax Identification Number
+
+            Private Identification Codes
+
+            * `ARNU` - Alien Registration Number
+            * `CCPT` - Passport Number
+            * `CUST` - Customer Number
+            * `DPOB` - Date & Place of Birth
+            * `DRLC` - Driver’s License Number
+            * `EMPL` - Employee Identification Number
+            * `NIDN` - National Identity Number
+            * `PROP` - Proprietary Identification Number
+            * `SOSE` - Social Security Number
+            * `TXID` - Tax Identification Number
+          example: 'BANK'
         identificationNumber:
           type: string
           maxLength: 35
@@ -1266,8 +1601,25 @@ components:
           description: Name
           example: 'Wade Arnold'
         addressType:
-          $ref: '#/components/schemas/AddressTypeEnum'
-          description: AddressType
+          type: string
+          maxLength: 4
+          description: |
+            AddressType
+
+            * `ADDR` - Complete Postal Address
+            * `BIZZ` - Business Address
+            * `DLVY` - Delivery Address
+            * `HOME` - Home Address
+            * `MLTO` - Mail Address
+            * `PBOX` - Post Office Box
+          enum:
+            - ADDR
+            - BIZZ
+            - DLVY
+            - HOME
+            - MLTO
+            - PBOX
+          example: 'ADDR'
         department:
           type: string
           maxLength: 70
@@ -1351,8 +1703,43 @@ components:
     PrimaryRemittanceDocument:
       properties:
         documentTypeCode:
-          $ref: '#/components/schemas/DocumentTypeCodeEnum'
-          description: DocumentTypeCodeEnum
+          type: string
+          maxLength: 4
+          description: |
+            Document Type Code
+
+            * `AROI` - Accounts Receivable Open Item
+            * `BOLD` - Bill of Lading Shipping Notice
+            * `CINV` - Commercial Invoice
+            * `CMCN` - Commercial Contract
+            * `CNFA` - Credit Note Related to Financial Adjustment
+            * `CREN` - Credit Note
+            * `DEBN` - Debit Note
+            * `DISP` - Dispatch Advice
+            * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice
+            * `MSIN` - Metered Service Invoice
+            * `PROP` - Proprietary Document Type
+            * `PUOR` - Purchase Order
+            * `SBIN` - Self Billed Invoice
+            * `SOAC` - Statement of Account
+            * `TSUT` - Trade Services Utility Transaction VCHR Voucher
+          enum:
+            - AROI
+            - BOLD
+            - CINV
+            - CMCN
+            - CNFA
+            - CREN
+            - DEBN
+            - DISP
+            - DNFA
+            - MSIN
+            - PROP
+            - PUOR
+            - SBIN
+            - SOAC
+            - TSUT
+          example:  'AROI'
         proprietaryDocumentTypeCode:
           type: string
           maxLength: 35
@@ -1414,8 +1801,35 @@ components:
       description: Adjustment
       properties:
         adjustmentReasonCode:
-          $ref: '#/components/schemas/AdjustmentEnum'
-          description: AdjustmentReasonCode
+          type: string
+          maxLength: 4
+          description: |
+            Adjustment Reason Code
+
+            * `01` - Pricing Error
+            * `03` - Extension Error
+            * `04` - Item Not Accepted (Damaged)
+            * `05` - Item Not Accepted (Quality)
+            * `06` - Quantity Contested 07   Incorrect Product
+            * `11` - Returns (Damaged)
+            * `12` - Returns (Quality)
+            * `59` - Item Not Received
+            * `75` - Total Order Not Received
+            * `81` - Credit as Agreed
+            * `CM` - Covered by Credit Memo
+          enum:
+            - 01
+            - 03
+            - 04
+            - 05
+            - 06
+            - 11
+            - 12
+            - 59
+            - 75
+            - 81
+            - CM
+          example: 'CM'
         creditDebitIndicator:
           type: string
           maxLength: 4
@@ -1452,8 +1866,27 @@ components:
       description: SecondaryRemittanceDocument
       properties:
         documentTypeCode:
-          $ref: '#/components/schemas/SecondaryRemittanceDocumentEnum'
-          description: DocumentTypeCode
+          type: string
+          maxLength: 4
+          description: |
+            Document Type Code
+
+            * `AROI` - Accounts Receivable Open Item
+            * `DISP` - Dispatch Advice
+            * `FXDR` - Foreign Exchange Deal Reference
+            * `PROP` - Proprietary Document Type PUOR Purchase Order
+            * `RADM` - Remittance Advice Message
+            * `RPIN` - Related Payment Instruction
+            * `SCOR1` - Structured Communication Reference VCHR Voucher
+          enum:
+            - AROI
+            - DISP
+            - FXDR
+            - PROP
+            - RADM
+            - RPIN
+            - SCOR1
+          example: 'AROI'
         proprietaryDocumentTypeCode:
           type: string
           maxLength: 35
@@ -1546,457 +1979,6 @@ components:
           type: string
           maxLength: 35
           description: AddressLineThree
-    DateMMDD:
-      properties:
-       date:
-        type: string
-        minLength: 4
-        maxLength: 4
-        description: |
-          Date
-
-          MMDD, based on the calendar date
-        example: '0401'
-    TimeHHMM:
-      properties:
-        receiptTime:
-          type: string
-          minLength: 4
-          maxLength: 4
-          description: |
-            ReceiptTime
-
-            HHMM, based on a 24-hour clock, Eastern Time
-          example: '1305'
-  # ToDo: Review ENUM's
-  # enumerations
-    TestProductionCodeEnum:
-      type: string
-      maxLength: 1
-      description: |
-        TestProductionCode
-
-        * `T` - Test
-        * `P` - Production
-      enum:
-        - T
-        - P
-      example: 'T'
-    MessageDuplicationCodeEnum:
-      type: string
-      maxLength: 1
-      description: |
-        MessageDuplicationCode
-
-        * ` ` - Original Message
-        * `R` - Retrieval of an original message
-        * `P` - Resend
-#      enum:
-#        - R
-#        - P
-      example: ''
-    MessageStatusIndicatorEnum:
-      type: string
-      maxLength: 1
-      description: |
-        Message Status Indicator
-
-        Outgoing Messages
-        * `0` - In process or Intercepted
-        * `2` - Successful with Accounting (Value)
-        * `3` - Rejected due to Error Condition
-        * `7` - Successful without Accounting (Non-Value)
-
-        Incoming Messages
-        * `N` - Successful with Accounting (Value)
-        * `S` - Successful without Accounting (Non-Value)
-#      enum:
-#        - 0
-#        - 2
-#        - 3
-#        - 7
-#        - N
-#        - S
-    TypeCodeEnum:
-      type: string
-      maxLength: 2
-      description: |
-        TypeCode:
-
-        * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank).
-        * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
-        * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
-      enum:
-        - 10
-        - 15
-        - 16
-      example: '10'
-    SubTypeCodeEnum:
-      type: string
-      maxLength: 2
-      description: |
-        SubTypeCode:
-
-        * `00` - Basic Funds Transfer - A basic value funds transfer.
-        * `01` - Request for Reversal - A non-value request for reversal of a funds transfer originated on the current business day.
-        * `02` - Reversal of Transfer - A value reversal of a funds transfer received on the current business day.  May be used in response to a subtype code ‘01’ Request for Reversal.
-        * `07` - Request for Reversal of a Prior Day Transfer - A non-value request for a reversal of a funds transfer originated on a prior business day.
-        * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
-        * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
-        * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
-        * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
-        * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
-      enum:
-        - 00
-        - 01
-        - 02
-        - 07
-        - 08
-        - 31
-        - 32
-        - 33
-        - 90
-      example: '10'
-    BusinessFunctionCodeEnum:
-      type: string
-      maxLength: 3
-      description: |
-        BusinessFunctionCode
-        * `BTR` - Bank Transfer (Beneficiary is a bank)
-        * `DRC` - Customer or Corporate Drawdown Request
-        * `CKS` - Check Same Day Settlement
-        * `DRW` - Drawdown Payment
-        * `CTP` - Customer Transfer Plus
-        * `FFR` - Fed Funds Returned
-        * `CTR` - Customer Transfer (Beneficiary is a not a bank)
-        * `FFS` - Fed Funds Sold
-        * `DEP` - Deposit to Sender’s Account
-        * `SVC` - Service Message
-        * `DRB` - Bank-to-Bank Drawdown Request
-      enum:
-        - BTR
-        - DRC
-        - CKS
-        - DRW
-        - CTP
-        - FFR
-        - CTR
-        - FFS
-        - DEP
-        - SVC
-        - DRB
-      example: 'BTR'
-    FIIdentificationCodeEnum:
-      type: string
-      description: |
-        IdentificationCode:
-
-        * `B` - SWIFT Bank Identifier Code (BIC)
-        * `C` - CHIPS Participant
-        * `D` - Demand Deposit Account (DDA) Number
-        * `F` - Fed Routing Number
-        * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
-        * `U` - CHIPS Identifier
-#      enum:
-#        - B
-#        - C
-#        - D
-#        - F
-#        - T
-#        - U
-      maxLength: 1
-      example: 'B'
-    PersonalIdentificationCodeEnum:
-      type: string
-      description: |
-        IdentificationCode:
-
-        * `1` - Passport Number
-        * `2` - Tax Identification Number
-        * `3` - Driver’s License Number
-        * `4` - Alien Registration Number
-        * `5` - Corporate Identification
-        * `9` - Other Identification
-#      enum:
-#        - 1
-#        - 2
-#        - 3
-#        - 4
-#        - 5
-#        - 9
-      maxLength: 1
-      example: 'B'
-    AdviceCodeEnum:
-      type: string
-      description: |
-        AdviceCode
-
-        * `HLD - Hold
-        * `LTR` - Letter
-        * `PHN` - Phone
-        * `TLX` - Telex
-        * `WRE` - Wire
-
-        *
-      enum:
-        - HLD
-        - LTR
-        - PHN
-        - TLX
-        - WRE
-      example: 'HLD'
-    LocalInstrumentEnum:
-      type: string
-      maxLength: 4
-      description: |
-        LocalInstrument
-
-        * `ANSI` - ANSI X12 format
-        * `COVS` - Sequence B Cover Payment Structured
-        * `GXML` - General XML format
-        * `IXML` - ISO 20022 XML formaT
-        * `NARR` - Narrative Text
-        * `PROP` - Proprietary Local Instrument Code
-        * `RMTS` - Remittance Information Structured
-        * `RRMT` - Related Remittance Information
-        * `S820` - STP 820 format
-        * `SWIF` - SWIFT field 70 (Remittance Information)
-        * `UEDI` - UN/EDIFACT format
-      enum:
-        - ANSI
-        - COVS
-        - GXML
-        - IXML
-        - NARR
-        - PROP
-        - RMTS
-        - RRMT
-        - S820
-        - SWIF
-        - UEDI
-      example: 'ANSI'
-    ChargeDetailsEnum:
-      type: string
-      maxLength: 1
-      description: |
-        ChargeDetails
-        * `B` - Beneficiary
-        * `S` - Shared
-#      enum:
-#        - B
-#        - S
-      example: 'B'
-    PaymentNotificationIndicatorEnum:
-      type: string
-      maxLength: 1
-      description: |
-        PaymentNotificationIndicator
-
-        * `0 - 6` - Reserved for market practice conventions.
-        * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
-#      enum:
-#        - 0
-#        - 1
-#        - 2
-#        - 3
-#        - 4
-#        - 5
-#        - 6
-#        - 7
-#        - 8
-#        - 9
-      example: '1'
-    RemittanceLocationMethodEnum:
-      type: string
-      maxLength: 4
-      description: |
-        RemittanceLocationMethod
-
-        * `EDIC` - Electronic Data Interchange
-        * `EMAL` - Email
-        * `FAXI` - Fax
-        * `POST` - Postal services
-        * `SMS` - Short Message Service (text)
-        * `URI` - Uniform Resource Identifier
-      enum:
-        - EDIC
-        - EMAL
-        - FAXI
-        - POST
-        - SMS
-        - URI
-      example: 'EDIC'
-    AddressTypeEnum:
-      type: string
-      maxLength: 4
-      description: |
-        addressType
-
-        * `ADDR` - Complete Postal Address
-        * `BIZZ` - Business Address
-        * `DLVY` - Delivery Address
-        * `HOME` - Home Address
-        * `MLTO` - Mail Address
-        * `PBOX` - Post Office Box
-      enum:
-        - ADDR
-        - BIZZ
-        - DLVY
-        - HOME
-        - MLTO
-        - PBOX
-      example: 'ADDR'
-    IdentificationTypeEnum:
-      type: string
-      maxLength: 2
-      description: |
-        IdentificationType
-
-        * `OI` - Organization ID
-        * `PI` - Private ID
-      enum:
-        - OI
-        - PI
-      example: 'OI'
-    IdentificationCodeEnum:
-      type: string
-      maxLength: 4
-      description: |
-        IdentificationCode
-
-        Organization Identification Codes
-
-        * `BANK` - Bank Party Identification
-        * `CUST` - Customer Number
-        * `DUNS` - Data Universal Number System (Dun & Bradstreet)
-        * `EMPL` - Employer Identification Number
-        * `GS1G` - Global Location Number
-        * `PROP` - Proprietary Identification Number
-        * `SWBB` - SWIFT BIC or BEI
-        * `TXID` - Tax Identification Number
-
-        Private Identification Codes
-
-        * `ARNU` - Alien Registration Number
-        * `CCPT` - Passport Number
-        * `CUST` - Customer Number
-        * `DPOB` - Date & Place of Birth
-        * `DRLC` - Driver’s License Number
-        * `EMPL` - Employee Identification Number
-        * `NIDN` - National Identity Number
-        * `PROP` - Proprietary Identification Number
-        * `SOSE` - Social Security Number
-        * `TXID` - Tax Identification Number
-      example: 'BANK'
-    DocumentTypeCodeEnum:
-        type: string
-        maxLength: 4
-        description: |
-          DocumentTypeCode
-
-          * `AROI` - Accounts Receivable Open Item
-          * `BOLD` - Bill of Lading Shipping Notice
-          * `CINV` - Commercial Invoice
-          * `CMCN` - Commercial Contract
-          * `CNFA` - Credit Note Related to Financial Adjustment
-          * `CREN` - Credit Note
-          * `DEBN` - Debit Note
-          * `DISP` - Dispatch Advice
-          * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice
-          * `MSIN` - Metered Service Invoice
-          * `PROP` - Proprietary Document Type
-          * `PUOR` - Purchase Order
-          * `SBIN` - Self Billed Invoice
-          * `SOAC` - Statement of Account
-          * `TSUT` - Trade Services Utility Transaction VCHR Voucher
-#        enum:
-#          - AROI
-#          - BOLD
-#          - CINV
-#          - CMCN
-#          - CNFA
-#          - CREN
-#          - DEBN
-#          - DISP
-#          - DNFA
-#          - MSIN
-#          - PROP
-#          - PUOR
-#          - SBIN
-#          - SOAC
-#          - TSUT
-        example:  'AROI'
-    AdjustmentEnum:
-      type: string
-      maxLength: 4
-      description: |
-        Adjustment
-
-        * `01` - Pricing Error
-        * `03` - Extension Error
-        * `04` - Item Not Accepted (Damaged)
-        * `05` - Item Not Accepted (Quality)
-        * `06` - Quantity Contested 07   Incorrect Product
-        * `11` - Returns (Damaged)
-        * `12` - Returns (Quality)
-        * `59` - Item Not Received
-        * `75` - Total Order Not Received
-        * `81` - Credit as Agreed
-        * `CM` - Covered by Credit Memo
-#      enum:
-#        - 01
-#        - 03
-#        - 04
-#        - 05
-#        - 06
-#        - 11
-#        - 12
-#        - 59
-#        - 75
-#        - 81
-#        - CM
-      example: 'CM'
-    SecondaryRemittanceDocumentEnum:
-      type: string
-      maxLength: 4
-      description: |
-        SecondaryRemittanceDocument
-
-        * `AROI` - Accounts Receivable Open Item
-        * `DISP` - Dispatch Advice
-        * `FXDR` - Foreign Exchange Deal Reference
-        * `PROP` - Proprietary Document Type PUOR Purchase Order
-        * `RADM` - Remittance Advice Message
-        * `RPIN` - Related Payment Instruction
-        * `SCOR1` - Structured Communication Reference VCHR Voucher
-#      enum:
-#        - AROI
-#        - DISP
-#        - FXDR
-#        - PROP
-#        - RADM
-#        - RPIN
-#        - SCOR1
-      example: 'AROI'
-    ErrorCategoryEnum:
-      type: string
-      maxLength: 1
-      description: |
-
-        * `E` - Data Error
-        * `F` - Insufficient Balance
-        * `H` - Accountability Error
-        * `I` - In Process or Intercepted
-        * `W` - Cutoff Hour Error
-        * `X` - Duplicate IMAD
-#      enum:
-#        - E
-#        - F
-#        - H
-#        - I
-#        - W
-#        - X
-      example: 'E'
     Error:
       required:
         - error
