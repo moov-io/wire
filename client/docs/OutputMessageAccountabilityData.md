@@ -5,7 +5,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **OutputCycleDate** | **string** | OutputCycleDate (CCYYMMDD) | [optional] 
 **OutputDestinationID** | **string** | OutputDestinationID | [optional] 
-**OutputSequenceNumber** | **string** | outputSequenceNumber | [optional] 
+**OutputSequenceNumber** | **string** | OutputSequenceNumber | [optional] 
 **OutputDate** | **string** | Output Date MMDD, based on the calendar date  | [optional] 
 **OutputTime** | **string** | Output Time HHMM, based on a 24-hour clock, Eastern Time  | [optional] 
 **OutputFRBApplicationIdentification** | **string** | OutputFRBApplicationIdentification | [optional] 

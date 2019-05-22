@@ -44,6 +44,7 @@ Class | Method | HTTP request | Description
  - [AccountCreditedDrawdown](docs/AccountCreditedDrawdown.md)
  - [AccountDebitedDrawdown](docs/AccountDebitedDrawdown.md)
  - [AdditionalFiToFi](docs/AdditionalFiToFi.md)
+ - [Address](docs/Address.md)
  - [Adjustment](docs/Adjustment.md)
  - [Advice](docs/Advice.md)
  - [Amount](docs/Amount.md)

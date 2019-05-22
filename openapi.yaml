@@ -221,185 +221,125 @@ components:
           example: 3f2d23ee214
         # TAGS 1100, 1110, 1120, 1130 is information Appended by the FEDWire Funds Service
         messageDisposition:
-          items:
-            $ref: '#/components/schemas/MessageDisposition'
+          $ref: '#/components/schemas/MessageDisposition'
         receiptTimeStamp:
-          items:
-            $ref: '#/components/schemas/ReceiptTimeStamp'
+          $ref: '#/components/schemas/ReceiptTimeStamp'
         outputMessageAccountabilityData:
-          items:
-            $ref: '#/components/schemas/OutputMessageAccountabilityData'
+          $ref: '#/components/schemas/OutputMessageAccountabilityData'
         errorWire:
-          items:
-            $ref: '#/components/schemas/ErrorWire'
+          $ref: '#/components/schemas/ErrorWire'
         senderSupplied:
-          items:
-            $ref: '#/components/schemas/SenderSupplied'
+          $ref: '#/components/schemas/SenderSupplied'
         typeSubType:
-          items:
-            $ref: '#/components/schemas/TypeSubType'
+          $ref: '#/components/schemas/TypeSubType'
         inputMessageAccountabilityData:
-          items:
-            $ref: '#/components/schemas/InputMessageAccountabilityData'
+          $ref: '#/components/schemas/InputMessageAccountabilityData'
         amount:
-          items:
-            $ref: '#/components/schemas/Amount'
+          $ref: '#/components/schemas/Amount'
         senderDepositoryInstitution:
-          items:
-            $ref: '#/components/schemas/SenderDepositoryInstitution'
+          $ref: '#/components/schemas/SenderDepositoryInstitution'
         receiverDepositoryInstitution:
-          items:
-            $ref: '#/components/schemas/ReceiverDepositoryInstitution'
+          $ref: '#/components/schemas/ReceiverDepositoryInstitution'
         businessFunctionCode:
-          items:
-            $ref: '#/components/schemas/BusinessFunctionCode'
+          $ref: '#/components/schemas/BusinessFunctionCode'
         senderReference:
-          items:
-            $ref: '#/components/schemas/SenderReference'
+          $ref: '#/components/schemas/SenderReference'
         previousMessageIdentifier:
-          items:
-            $ref: '#/components/schemas/PreviousMessageIdentifier'
+          $ref: '#/components/schemas/PreviousMessageIdentifier'
         localInstrument:
-          items:
-            $ref: '#/components/schemas/LocalInstrument'
+          $ref: '#/components/schemas/LocalInstrument'
         paymentNotification:
-          items:
-            $ref: '#/components/schemas/PaymentNotification'
+          $ref: '#/components/schemas/PaymentNotification'
         charges:
-          items:
-            $ref: '#/components/schemas/Charges'
+          $ref: '#/components/schemas/Charges'
         instructedAmount:
-          items:
-            $ref: '#/components/schemas/InstructedAmount'
+          $ref: '#/components/schemas/InstructedAmount'
         exchangeRate:
-          items:
-            $ref: '#/components/schemas/ExchangeRate'
+          $ref: '#/components/schemas/ExchangeRate'
         beneficiaryIntermediaryFI:
-          items:
-            $ref: '#/components/schemas/FinancialInstitution'
+          $ref: '#/components/schemas/FinancialInstitution'
         beneficiaryFI:
-          items:
-            $ref: '#/components/schemas/FinancialInstitution'
+          $ref: '#/components/schemas/FinancialInstitution'
         beneficiary:
-          items:
-            $ref: '#/components/schemas/Personal'
+          $ref: '#/components/schemas/Personal'
         beneficiaryReference:
-          items:
-            $ref: '#/components/schemas/BeneficiaryReference'
+          $ref: '#/components/schemas/BeneficiaryReference'
         accountDebitedDrawdown:
-          items:
-            $ref: '#/components/schemas/AccountDebitedDrawdown'
+          $ref: '#/components/schemas/AccountDebitedDrawdown'
         originator:
-          items:
-            $ref: '#/components/schemas/Personal'
+          $ref: '#/components/schemas/Personal'
         originatorOptionF:
-          items:
-            $ref: '#/components/schemas/OriginatorOptionF'
+          $ref: '#/components/schemas/OriginatorOptionF'
         originatorFI:
-          items:
-            $ref: '#/components/schemas/FinancialInstitution'
+          $ref: '#/components/schemas/FinancialInstitution'
         instructingFI:
-          items:
-            $ref: '#/components/schemas/FinancialInstitution'
+          $ref: '#/components/schemas/FinancialInstitution'
         accountCreditedDrawdown:
-          items:
-            $ref: '#/components/schemas/AccountCreditedDrawdown'
+          $ref: '#/components/schemas/AccountCreditedDrawdown'
         originatorToBeneficiary:
-          items:
-            $ref: '#/components/schemas/OriginatorToBeneficiary'
+          $ref: '#/components/schemas/OriginatorToBeneficiary'
         fiReceiverFI:
-          items:
-            $ref: '#/components/schemas/FIToFI'
+          $ref: '#/components/schemas/FIToFI'
         fiDrawdownDebitAccountAdvice:
-          items:
-            $ref: '#/components/schemas/Advice'
+          $ref: '#/components/schemas/Advice'
         fiIntermediaryFI:
-          items:
-            $ref: '#/components/schemas/FIToFI'
+          $ref: '#/components/schemas/FIToFI'
         fiIntermediaryFIAdvice:
-          items:
-            $ref: '#/components/schemas/Advice'
+          $ref: '#/components/schemas/Advice'
         fiBeneficiaryFI:
-          items:
-            $ref: '#/components/schemas/FIToFI'
+          $ref: '#/components/schemas/FIToFI'
         fiBeneficiaryFIAdvice:
-          items:
-            $ref: '#/components/schemas/Advice'
+          $ref: '#/components/schemas/Advice'
         fiBeneficiary:
-          items:
-            $ref: '#/components/schemas/FIToFI'
+          $ref: '#/components/schemas/FIToFI'
         fiBeneficiaryAdvice:
-          items:
-            $ref: '#/components/schemas/Advice'
+          $ref: '#/components/schemas/Advice'
         fiPaymentMethodToBeneficiary:
-          items:
-            $ref: '#/components/schemas/FIPaymentMethodToBeneficiary'
+          $ref: '#/components/schemas/FIPaymentMethodToBeneficiary'
         fiAdditionalFIToFI:
-          items:
-            $ref: '#/components/schemas/AdditionalFIToFI'
+          $ref: '#/components/schemas/AdditionalFIToFI'
         currencyInstructedAmount:
-          items:
-            $ref: '#/components/schemas/CurrencyInstructedAmount'
+          $ref: '#/components/schemas/CurrencyInstructedAmount'
         orderingCustomer:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         orderingInstitution:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         intermediaryInstitution:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         institutionAccount:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         beneficiaryCustomer:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         remittance:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         senderToReceiver:
-          items:
-            $ref: '#/components/schemas/CoverPayment'
+          $ref: '#/components/schemas/CoverPayment'
         unstructuredAddenda:
-          items:
-            $ref: '#/components/schemas/UnstructuredAddenda'
+          $ref: '#/components/schemas/UnstructuredAddenda'
         relatedRemittance:
-          items:
-            $ref: '#/components/schemas/RelatedRemittance'
+          $ref: '#/components/schemas/RelatedRemittance'
         remittanceOriginator:
-          items:
-            $ref: '#/components/schemas/RemittanceOriginator'
+          $ref: '#/components/schemas/RemittanceOriginator'
         remittanceBeneficiary:
-          items:
-            $ref: '#/components/schemas/RemittanceBeneficiary'
+          $ref: '#/components/schemas/RemittanceBeneficiary'
         primaryRemittanceDocument:
-          items:
-            $ref: '#/components/schemas/PrimaryRemittanceDocument'
+          $ref: '#/components/schemas/PrimaryRemittanceDocument'
         actualAmountPaid:
-          items:
-            $ref: '#/components/schemas/RemittanceAmount'
+          $ref: '#/components/schemas/RemittanceAmount'
         grossAmountRemittanceDocument:
-          items:
-            $ref: '#/components/schemas/RemittanceAmount'
+          $ref: '#/components/schemas/RemittanceAmount'
         amountNegotiatedDiscount:
-          items:
-            $ref: '#/components/schemas/RemittanceAmount'
+          $ref: '#/components/schemas/RemittanceAmount'
         adjustment:
-          items:
-            $ref: '#/components/schemas/Adjustment'
+          $ref: '#/components/schemas/Adjustment'
         dateRemittanceDocument:
-          items:
-            $ref: '#/components/schemas/DateRemittanceDocument'
+          $ref: '#/components/schemas/DateRemittanceDocument'
         secondaryRemittanceDocument:
-          items:
-            $ref: '#/components/schemas/SecondaryRemittanceDocument'
+          $ref: '#/components/schemas/SecondaryRemittanceDocument'
         remittanceFreeText:
-          items:
-            $ref: '#/components/schemas/RemittanceFreeText'
+          $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
-          items:
-            $ref: '#/components/schemas/ServiceMessage'
+          $ref: '#/components/schemas/ServiceMessage'
       required:
         - senderSupplied
         - typeSubType
@@ -409,20 +349,21 @@ components:
         - receiverDepositoryInstitution
         - businessFunctionCode
     MessageDisposition:
+      description: MessageDisposition
       properties:
         formatVersion:
           type: string
           minLength: 2
           maxLength: 2
           description: |
-            FormatVersion
+            formatVersion identifies the format version
             30
           example: '30'
         testProductionCode:
           type: string
           maxLength: 1
           description: |
-            Identifies if test or production.
+            testProductionCode identifies if test or production.
 
             * `T` - Test
             * `P` - Production
@@ -448,7 +389,7 @@ components:
           type: string
           maxLength: 1
           description: |
-            Message Status Indicator
+            MessageStatusIndicator
 
             Outgoing Messages
             * `0` - In process or Intercepted
@@ -471,7 +412,8 @@ components:
         receiptDate:
           type: string
           description: |
-            Receipt Date MMDD, based on the calendar date
+            ReceiptDate
+            MMDD, based on the calendar date
           minLength: 4
           maxLength: 4
           example: '0401'
@@ -480,7 +422,8 @@ components:
           minLength: 4
           maxLength: 4
           description: |
-            Receipt Time HHMM, based on a 24-hour clock, Eastern Time
+            ReceiptTime
+            HHMM, based on a 24-hour clock, Eastern Time
           example: '1305'
         receiptApplicationIdentification:
           type: string
@@ -503,12 +446,13 @@ components:
         outputSequenceNumber:
           type: string
           maxLength: 6
-          description: outputSequenceNumber
+          description: OutputSequenceNumber
           example: '000001'
         outputDate:
           type: string
           description: |
-            Output Date MMDD, based on the calendar date
+            Output Date
+            MMDD, based on the calendar date
           minLength: 4
           maxLength: 4
           example: '0401'
@@ -517,7 +461,8 @@ components:
           minLength: 4
           maxLength: 4
           description: |
-            Output Time HHMM, based on a 24-hour clock, Eastern Time
+            Output Time
+            HHMM, based on a 24-hour clock, Eastern Time
           example: '1305'
         outputFRBApplicationIdentification:
           type: string
@@ -918,18 +863,8 @@ components:
           type: string
           maxLength: 35
           description: Name
-        addressLineOne:
-          type: string
-          maxLength: 35
-          description: AddressLineOne
-        addressLineTwo:
-          type: string
-          maxLength: 35
-          description: AddressLineTwo
-        addressLineThree:
-          type: string
-          maxLength: 35
-          description: AddressLineThree
+        address :
+          $ref: '#/components/schemas/Address'
       required:
         - identificationCode
         - identifier
@@ -966,18 +901,8 @@ components:
           type: string
           maxLength: 35
           description: Name
-        addressLineOne:
-          type: string
-          maxLength: 35
-          description: AddressLineOne
-        addressLineTwo:
-          type: string
-          maxLength: 35
-          description: AddressLineTwo
-        addressLineThree:
-          type: string
-          maxLength: 35
-          description: AddressLineThree
+        address :
+          $ref: '#/components/schemas/Address'
       required:
         - identificationCode
         - identifier
@@ -1458,7 +1383,6 @@ components:
           example: 'https://moov.io'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
-          description: RemittanceData
     RemittanceOriginator:
       description: RemittanceOriginator
       properties:
@@ -1521,7 +1445,6 @@ components:
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
-          description: RemittanceData
         countryOfResidence:
           type: string
           maxLength: 2
@@ -1618,7 +1541,6 @@ components:
           example: '03062013 Chester'
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
-          description: RemittanceData
     RemittanceData:
       properties:
         name:
@@ -1726,6 +1648,21 @@ components:
           maxLength: 2
           description: CountryOfResidence
           example: 'US'
+    Address:
+      description: Identifies Address
+      properties:
+        addressLineOne:
+          type: string
+          maxLength: 35
+          description: AddressLineOne
+        addressLineTwo:
+          type: string
+          maxLength: 35
+          description: AddressLineTwo
+        addressLineThree:
+          type: string
+          maxLength: 35
+          description: AddressLineThree
     PrimaryRemittanceDocument:
       properties:
         documentTypeCode:

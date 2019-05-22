@@ -17,10 +17,5 @@ type Personal struct {
 	Identifier string `json:"identifier"`
 	// Name
 	Name string `json:"name"`
-	// AddressLineOne
-	AddressLineOne string `json:"addressLineOne,omitempty"`
-	// AddressLineTwo
-	AddressLineTwo string `json:"addressLineTwo,omitempty"`
-	// AddressLineThree
-	AddressLineThree string `json:"addressLineThree,omitempty"`
+	Address Address `json:"address"`
 }

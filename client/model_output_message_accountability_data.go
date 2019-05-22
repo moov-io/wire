@@ -14,7 +14,7 @@ type OutputMessageAccountabilityData struct {
 	OutputCycleDate string `json:"outputCycleDate,omitempty"`
 	// OutputDestinationID
 	OutputDestinationID string `json:"outputDestinationID,omitempty"`
-	// outputSequenceNumber
+	// OutputSequenceNumber
 	OutputSequenceNumber string `json:"outputSequenceNumber,omitempty"`
 	// Output Date MMDD, based on the calendar date 
 	OutputDate string `json:"outputDate,omitempty"`
