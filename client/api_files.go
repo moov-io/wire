@@ -472,7 +472,7 @@ func (a *FilesApiService) Ping(ctx context.Context) (*http.Response, error) {
 }
 
 /*
-FilesApiService Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+FilesApiService Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
  * @param createFile

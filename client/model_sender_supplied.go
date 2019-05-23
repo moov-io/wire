@@ -15,7 +15,8 @@ type SenderSupplied struct {
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation
 	UserRequestCorrelation string `json:"userRequestCorrelation"`
-	TestProductionCode TestProductionCodeEnum `json:"testProductionCode"`
+	// Identifies if test or production.  * `T` - Test * `P` - Production 
+	TestProductionCode string `json:"testProductionCode"`
 	// MessageDuplicationCode  * ` ` - Original Message * `R` - Retrieval of an original message * `P` - Resend 
 	MessageDuplicationCode string `json:"messageDuplicationCode"`
 }

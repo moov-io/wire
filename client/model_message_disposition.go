@@ -9,12 +9,14 @@
 
 package openapi
 
+// MessageDisposition
 type MessageDisposition struct {
-	// FormatVersion 30 
+	// formatVersion identifies the format version 30 
 	FormatVersion string `json:"formatVersion,omitempty"`
-	TestProductionCode TestProductionCodeEnum `json:"testProductionCode,omitempty"`
+	// testProductionCode identifies if test or production.  * `T` - Test * `P` - Production 
+	TestProductionCode string `json:"testProductionCode,omitempty"`
 	// MessageDuplicationCode  * ` ` - Original Message * `R` - Retrieval of an original message * `P` - Resend 
 	MessageDuplicationCode string `json:"messageDuplicationCode,omitempty"`
-	// Message Status Indicator  Outgoing Messages * `0` - In process or Intercepted * `2` - Successful with Accounting (Value) * `3` - Rejected due to Error Condition * `7` - Successful without Accounting (Non-Value)  Incoming Messages * `N` - Successful with Accounting (Value) * `S` - Successful without Accounting (Non-Value) 
+	// MessageStatusIndicator  Outgoing Messages * `0` - In process or Intercepted * `2` - Successful with Accounting (Value) * `3` - Rejected due to Error Condition * `7` - Successful without Accounting (Non-Value)  Incoming Messages * `N` - Successful with Accounting (Value) * `S` - Successful without Accounting (Non-Value) 
 	MessageStatusIndicator string `json:"messageStatusIndicator,omitempty"`
 }

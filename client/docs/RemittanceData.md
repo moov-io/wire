@@ -4,7 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | **string** | Name | [optional] 
-**AddressType** | [**AddressTypeEnum**](AddressTypeEnum.md) |  | [optional] 
+**AddressType** | **string** | AddressType  * &#x60;ADDR&#x60; - Complete Postal Address * &#x60;BIZZ&#x60; - Business Address * &#x60;DLVY&#x60; - Delivery Address * &#x60;HOME&#x60; - Home Address * &#x60;MLTO&#x60; - Mail Address * &#x60;PBOX&#x60; - Post Office Box  | [optional] 
 **Department** | **string** | Department | [optional] 
 **SubDepartment** | **string** | SubDepartment | [optional] 
 **StreetName** | **string** | StreetName | [optional] 

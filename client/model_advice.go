@@ -11,7 +11,8 @@ package openapi
 
 // Advice
 type Advice struct {
-	AdviceCode AdviceCodeEnum `json:"adviceCode,omitempty"`
+	// Advice Code  * `HLD - Hold * `LTR` - Letter * `PHN` - Phone * `TLX` - Telex * `WRE` - Wire 
+	AdviceCode string `json:"adviceCode,omitempty"`
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo

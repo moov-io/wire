@@ -12,7 +12,7 @@ type MessageDisposition struct {
 	tag string
 	// FormatVersion 30
 	FormatVersion string `json:"formatVersion,omitempty"`
-	// TestTestProductionCode determines if test or production
+	// TestTestProductionCode identifies if test or production
 	TestProductionCode string `json:"testProductionCode,omitempty"`
 	// MessageDuplicationCode  * ` ` - Original Message * `R` - Retrieval of an original message * `P` - Resend
 	MessageDuplicationCode string `json:"messageDuplicationCode,omitempty"`

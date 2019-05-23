@@ -36,7 +36,7 @@ Class | Method | HTTP request | Description
 *FilesApi* | [**GetFileByID**](docs/FilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 *FilesApi* | [**GetFiles**](docs/FilesApi.md#getfiles) | **Get** /files | Gets a list of Files
 *FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the Wire service to check if running
-*FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified FedWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 
 ## Documentation For Models
@@ -45,19 +45,15 @@ Class | Method | HTTP request | Description
  - [AccountDebitedDrawdown](docs/AccountDebitedDrawdown.md)
  - [AdditionalFiToFi](docs/AdditionalFiToFi.md)
  - [Address](docs/Address.md)
- - [AddressTypeEnum](docs/AddressTypeEnum.md)
  - [Adjustment](docs/Adjustment.md)
  - [Advice](docs/Advice.md)
- - [AdviceCodeEnum](docs/AdviceCodeEnum.md)
  - [Amount](docs/Amount.md)
  - [BeneficiaryReference](docs/BeneficiaryReference.md)
  - [BusinessFunctionCode](docs/BusinessFunctionCode.md)
- - [BusinessFunctionCodeEnum](docs/BusinessFunctionCodeEnum.md)
  - [Charges](docs/Charges.md)
  - [CoverPayment](docs/CoverPayment.md)
  - [CreateFile](docs/CreateFile.md)
  - [CurrencyInstructedAmount](docs/CurrencyInstructedAmount.md)
- - [DateMmdd](docs/DateMmdd.md)
  - [DateRemittanceDocument](docs/DateRemittanceDocument.md)
  - [Error](docs/Error.md)
  - [ErrorWire](docs/ErrorWire.md)
@@ -67,11 +63,9 @@ Class | Method | HTTP request | Description
  - [FiToFi](docs/FiToFi.md)
  - [File](docs/File.md)
  - [FinancialInstitution](docs/FinancialInstitution.md)
- - [IdentificationTypeEnum](docs/IdentificationTypeEnum.md)
  - [InputMessageAccountabilityData](docs/InputMessageAccountabilityData.md)
  - [InstructedAmount](docs/InstructedAmount.md)
  - [LocalInstrument](docs/LocalInstrument.md)
- - [LocalInstrumentEnum](docs/LocalInstrumentEnum.md)
  - [MessageDisposition](docs/MessageDisposition.md)
  - [OriginatorOptionF](docs/OriginatorOptionF.md)
  - [OriginatorToBeneficiary](docs/OriginatorToBeneficiary.md)
@@ -87,17 +81,12 @@ Class | Method | HTTP request | Description
  - [RemittanceBeneficiary](docs/RemittanceBeneficiary.md)
  - [RemittanceData](docs/RemittanceData.md)
  - [RemittanceFreeText](docs/RemittanceFreeText.md)
- - [RemittanceLocationMethodEnum](docs/RemittanceLocationMethodEnum.md)
  - [RemittanceOriginator](docs/RemittanceOriginator.md)
  - [SecondaryRemittanceDocument](docs/SecondaryRemittanceDocument.md)
  - [SenderDepositoryInstitution](docs/SenderDepositoryInstitution.md)
  - [SenderReference](docs/SenderReference.md)
  - [SenderSupplied](docs/SenderSupplied.md)
  - [ServiceMessage](docs/ServiceMessage.md)
- - [SubTypeCodeEnum](docs/SubTypeCodeEnum.md)
- - [TestProductionCodeEnum](docs/TestProductionCodeEnum.md)
- - [TimeHhmm](docs/TimeHhmm.md)
- - [TypeCodeEnum](docs/TypeCodeEnum.md)
  - [TypeSubType](docs/TypeSubType.md)
  - [UnstructuredAddenda](docs/UnstructuredAddenda.md)
 
