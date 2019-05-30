@@ -21,20 +21,20 @@ Moov WIRE is under active development and should not currently be used for produ
 `github.com/moov-io/wire` offers a Go based ACH file reader and writer. To get started checkout a specific example:
 
 <details>
-<summary>Supported Standard Entry Class (SEC) codes</summary>
+<summary>Supported Business Function Codes</summary>
 
 | Business Function Code | Name                                  | Example |
-|----------|---------------------------------------|-----------------------------------|------------------------------------|
+|----------|---------------------------------------|-----------------------------------|
 | BTR      | BankTransfer                          | [Link](test/testdata/fedWireMessage-BankTransfer.txt) |
 | CKS      | CheckSameDaySettlement                | [Link](test/testdata/fedWireMessage-CheckSameDaySettlement.txt) |
-| CTP      | CustomerTransferPlus                  | [Link](test/testdata/fedWireMessage-CustomerTransferPlus.txt)) |
+| CTP      | CustomerTransferPlus                  | [Link](test/testdata/fedWireMessage-CustomerTransferPlus.txt) |
 | CTR      | CustomerTransfer                      | [Link](test/testdata/fedWireMessage-CustomerTransfer.txt) |
 | DEP      | DepositSendersAccount                 | [Link](test/testdata/fedWireMessage-DepositSendersAccount.txt) |
-| DRB      | BankDrawdownRequest                   | [Link](test/testdata/fedWireMessage-BankDrawDownRequest.txt)) |
+| DRB      | BankDrawdownRequest                   | [Link](test/testdata/fedWireMessage-BankDrawDownRequest.txt) |
 | DRC      | CustomerCorporateDrawdownRequest      | [Link](test/testdata/fedWireMessage-CustomerCorporateDrawdownRequest.txt) |
-| DRW      | DrawdownRequest                       | [Link](test/testdata/fedWireMessage-DrawDownRequest.txt)) |
-| FFR      | FEDFundsReturned                      | [Link](test/testdata/fedWireMessage-FEDFundsReturned.txt)) |
-| FFS      | FEDFundsSold                          | [Link](test/testdata/fedWireMessage-FEDFundsSold.txt)) |
+| DRW      | DrawdownRequest                       | [Link](test/testdata/fedWireMessage-DrawDownRequest.txt) |
+| FFR      | FEDFundsReturned                      | [Link](test/testdata/fedWireMessage-FEDFundsReturned.txt) |
+| FFS      | FEDFundsSold                          | [Link](test/testdata/fedWireMessage-FEDFundsSold.txt) |
 | SVC      | ServiceMessage                        | [Link](test/testdata/fedWireMessage-ServiceMessage.txt) |
 </details>
 
