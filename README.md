@@ -48,7 +48,7 @@ $ git@github.com:moov-io/wire.git
 # Pull down into the Go Module cache
 $ go get -u github.com/moov-io/wire
 
-$ go doc github.com/moov-io/wire BatchHeader
+$ go doc github.com/moov-io/wire fedWireMessage
 ```
 
 ## Getting Help
