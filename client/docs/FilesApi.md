@@ -4,55 +4,17 @@ All URIs are relative to *http://localhost:8087*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddFEDWireMessageToFile**](FilesApi.md#AddFEDWireMessageToFile) | **Post** /files/{file_id}/fedWireMessage | Add FEDWireMessage to File
 [**CreateFile**](FilesApi.md#CreateFile) | **Post** /files/create | Create a new File object
 [**DeleteFile**](FilesApi.md#DeleteFile) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+[**DeleteFileFEDWireMessage**](FilesApi.md#DeleteFileFEDWireMessage) | **Delete** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Delete a FEDWireMessage from a File
 [**GetFileByID**](FilesApi.md#GetFileByID) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 [**GetFileContents**](FilesApi.md#GetFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
-[**GetFileFEDWireMessage**](FilesApi.md#GetFileFEDWireMessage) | **Get** /files/{file_id}/fedWireMessage | Get the fEDWireMessage on a File.
+[**GetFileFEDWireMessage**](FilesApi.md#GetFileFEDWireMessage) | **Get** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
 [**GetFiles**](FilesApi.md#GetFiles) | **Get** /files | Gets a list of Files
 [**Ping**](FilesApi.md#Ping) | **Get** /ping | Ping the Wire service to check if running
 [**UpdateFile**](FilesApi.md#UpdateFile) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 [**ValidateFile**](FilesApi.md#ValidateFile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
-
-# **AddFEDWireMessageToFile**
-> AddFEDWireMessageToFile(ctx, fileId, fedWireMessage, optional)
-Add FEDWireMessage to File
-
-### Required Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
-  **fedWireMessage** | [**FedWireMessage**](FedWireMessage.md)|  | 
- **optional** | ***AddFEDWireMessageToFileOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-Optional parameters are passed through a pointer to a AddFEDWireMessageToFileOpts struct
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
- **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
-
-### Return type
-
- (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: Not defined
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **CreateFile**
 > File CreateFile(ctx, createFile, optional)
@@ -107,6 +69,43 @@ Optional parameters are passed through a pointer to a DeleteFileOpts struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+
+ **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **DeleteFileFEDWireMessage**
+> DeleteFileFEDWireMessage(ctx, fileId, fEDWireMessageId, optional)
+Delete a FEDWireMessage from a File
+
+### Required Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+  **fileId** | **string**| File ID | 
+  **fEDWireMessageId** | **string**| FEDWireMessage ID | 
+ **optional** | ***DeleteFileFEDWireMessageOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+Optional parameters are passed through a pointer to a DeleteFileFEDWireMessageOpts struct
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
 
  **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
 
@@ -196,8 +195,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **GetFileFEDWireMessage**
-> FedWireMessage GetFileFEDWireMessage(ctx, fileId, optional)
-Get the fEDWireMessage on a File.
+> FedWireMessage GetFileFEDWireMessage(ctx, fileId, fEDWireMessageId, optional)
+Get a specific FEDWireMessage on a FIle
 
 ### Required Parameters
 
@@ -205,6 +204,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
   **fileId** | **string**| File ID | 
+  **fEDWireMessageId** | **string**| FEDWireMessage ID | 
  **optional** | ***GetFileFEDWireMessageOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -212,6 +212,7 @@ Optional parameters are passed through a pointer to a GetFileFEDWireMessageOpts 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+
 
  **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
 

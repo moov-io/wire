@@ -27,90 +27,6 @@ var (
 type FilesApiService service
 
 /*
-FilesApiService Add FEDWireMessage to File
- * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
- * @param fedWireMessage
- * @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
-*/
-
-type AddFEDWireMessageToFileOpts struct {
-	XRequestId optional.String
-	XIdempotencyKey optional.String
-}
-
-func (a *FilesApiService) AddFEDWireMessageToFile(ctx context.Context, fileId string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*http.Response, error) {
-	var (
-		localVarHttpMethod   = strings.ToUpper("Post")
-		localVarPostBody     interface{}
-		localVarFormFileName string
-		localVarFileName     string
-		localVarFileBytes    []byte
-	)
-
-	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/fedWireMessage"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
-
-	// to determine the Content-Type header
-	localVarHttpContentTypes := []string{"application/json"}
-
-	// set Content-Type header
-	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
-	if localVarHttpContentType != "" {
-		localVarHeaderParams["Content-Type"] = localVarHttpContentType
-	}
-
-	// to determine the Accept header
-	localVarHttpHeaderAccepts := []string{}
-
-	// set Accept header
-	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
-	if localVarHttpHeaderAccept != "" {
-		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
-	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
-	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
-	}
-	// body params
-	localVarPostBody = &fedWireMessage
-	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	localVarHttpResponse, err := a.client.callAPI(r)
-	if err != nil || localVarHttpResponse == nil {
-		return localVarHttpResponse, err
-	}
-
-	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
-	localVarHttpResponse.Body.Close()
-	if err != nil {
-		return localVarHttpResponse, err
-	}
-
-	if localVarHttpResponse.StatusCode >= 300 {
-		newErr := GenericOpenAPIError{
-			body:  localVarBody,
-			error: localVarHttpResponse.Status,
-		}
-		return localVarHttpResponse, newErr
-	}
-
-	return localVarHttpResponse, nil
-}
-
-/*
 FilesApiService Create a new File object
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param createFile Content of the WIRE file (in json or raw text)
@@ -247,6 +163,84 @@ func (a *FilesApiService) DeleteFile(ctx context.Context, fileId string, localVa
 	// create path and map variables
 	localVarPath := a.client.cfg.BasePath + "/files/{file_id}"
 	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHttpContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHttpContentType := selectHeaderContentType(localVarHttpContentTypes)
+	if localVarHttpContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHttpContentType
+	}
+
+	// to determine the Accept header
+	localVarHttpHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHttpHeaderAccept := selectHeaderAccept(localVarHttpHeaderAccepts)
+	if localVarHttpHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
+	}
+	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
+		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	}
+	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHttpResponse, err := a.client.callAPI(r)
+	if err != nil || localVarHttpResponse == nil {
+		return localVarHttpResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
+	localVarHttpResponse.Body.Close()
+	if err != nil {
+		return localVarHttpResponse, err
+	}
+
+	if localVarHttpResponse.StatusCode >= 300 {
+		newErr := GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHttpResponse.Status,
+		}
+		return localVarHttpResponse, newErr
+	}
+
+	return localVarHttpResponse, nil
+}
+
+/*
+FilesApiService Delete a FEDWireMessage from a File
+ * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ * @param fileId File ID
+ * @param fEDWireMessageId FEDWireMessage ID
+ * @param optional nil or *DeleteFileFEDWireMessageOpts - Optional Parameters:
+ * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+*/
+
+type DeleteFileFEDWireMessageOpts struct {
+	XRequestId optional.String
+}
+
+func (a *FilesApiService) DeleteFileFEDWireMessage(ctx context.Context, fileId string, fEDWireMessageId string, localVarOptionals *DeleteFileFEDWireMessageOpts) (*http.Response, error) {
+	var (
+		localVarHttpMethod   = strings.ToUpper("Delete")
+		localVarPostBody     interface{}
+		localVarFormFileName string
+		localVarFileName     string
+		localVarFileBytes    []byte
+	)
+
+	// create path and map variables
+	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/fEDWireMessage/{fEDWireMessage_id}"
+	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fEDWireMessage_id"+"}", fmt.Sprintf("%v", fEDWireMessageId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -494,9 +488,10 @@ func (a *FilesApiService) GetFileContents(ctx context.Context, fileId string, lo
 }
 
 /*
-FilesApiService Get the fEDWireMessage on a File.
+FilesApiService Get a specific FEDWireMessage on a FIle
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
+ * @param fEDWireMessageId FEDWireMessage ID
  * @param optional nil or *GetFileFEDWireMessageOpts - Optional Parameters:
  * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return FedWireMessage
@@ -506,7 +501,7 @@ type GetFileFEDWireMessageOpts struct {
 	XRequestId optional.String
 }
 
-func (a *FilesApiService) GetFileFEDWireMessage(ctx context.Context, fileId string, localVarOptionals *GetFileFEDWireMessageOpts) (FedWireMessage, *http.Response, error) {
+func (a *FilesApiService) GetFileFEDWireMessage(ctx context.Context, fileId string, fEDWireMessageId string, localVarOptionals *GetFileFEDWireMessageOpts) (FedWireMessage, *http.Response, error) {
 	var (
 		localVarHttpMethod   = strings.ToUpper("Get")
 		localVarPostBody     interface{}
@@ -517,8 +512,9 @@ func (a *FilesApiService) GetFileFEDWireMessage(ctx context.Context, fileId stri
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/fedWireMessage"
+	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/fEDWireMessage/{fEDWireMessage_id}"
 	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"fEDWireMessage_id"+"}", fmt.Sprintf("%v", fEDWireMessageId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
