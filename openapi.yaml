@@ -8,7 +8,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-# ToDO: Update Schema descriptions
+# ToDo: Update Schema descriptions
 servers:
   - url: http://localhost:8087
     description: Local development
@@ -186,6 +186,143 @@ paths:
           description: Permanently deleted File.
         '404':
           description: A File with the specified ID was not found.
+  /files/{file_id}/contents:
+    get:
+      tags:
+        - Files
+      summary: Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+      operationId: getFileContents
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: File built successfully without errors.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/RawFile'
+  /files/{file_id}/validate:
+    get:
+      tags:
+        - Files
+      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      operationId: validateFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+      responses:
+        '200':
+          description: File validated successfully without errors.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        '400':
+          description: Validation failed. Check response for errors
+  /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
+       get:
+         tags:
+           - Files
+         summary: Get a specific FEDWireMessage on a FIle
+         operationId: getFileFEDWireMessage
+         security:
+           - bearerAuth: []
+           - cookieAuth: []
+         parameters:
+           - name: X-Request-Id
+             in: header
+             description: Optional Request ID allows application developer to trace requests through the systems logs
+             example: rs4f9915
+             schema:
+               type: string
+           - name: file_id
+             in: path
+             description: File ID
+             required: true
+             schema:
+               type: string
+               example: 3f2d23ee214
+           - name: fEDWireMessage_id
+             in: path
+             description: FEDWireMessage ID
+             required: true
+             schema:
+               type: string
+               example: 45758063
+         responses:
+           '200':
+             description: FEDWireMessage object
+             content:
+               application/json:
+                 schema:
+                   $ref: '#/components/schemas/FEDWireMessage'
+           '404':
+             description: FEDWireMessage or File not found
+       delete:
+         tags:
+           - Files
+         summary: Delete a FEDWireMessage from a File
+         operationId: deleteFileFEDWireMessage
+         security:
+           - bearerAuth: []
+           - cookieAuth: []
+         parameters:
+           - name: X-Request-Id
+             in: header
+             description: Optional Request ID allows application developer to trace requests through the systems logs
+             example: rs4f9915
+             schema:
+               type: string
+           - name: file_id
+             in: path
+             description: File ID
+             required: true
+             schema:
+               type: string
+               example: 3f2d23ee214
+           - name: fEDWireMessage_id
+             in: path
+             description: FEDWireMessage ID
+             required: true
+             schema:
+               type: string
+               example: 45758063
+         responses:
+           '200':
+             description: FEDWireMessage deleted
+           '404':
+             description: FEDWireMessage or File not found
+
+
 components:
   schemas:
     CreateFile:
@@ -213,6 +350,10 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/File'
+    RawFile:
+      type: string
+      description: Plaintext FedWire file
+      example: "{3100}121042882Wells Fargo NA"
     FEDWireMessage:
       properties:
         id:

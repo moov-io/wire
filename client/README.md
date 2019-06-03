@@ -31,12 +31,16 @@ All URIs are relative to *http://localhost:8087*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*FilesApi* | [**AddFEDWireMessageToFile**](docs/FilesApi.md#addfedwiremessagetofile) | **Post** /files/{file_id}/fedWireMessage | Add FEDWireMessage to File
 *FilesApi* | [**CreateFile**](docs/FilesApi.md#createfile) | **Post** /files/create | Create a new File object
 *FilesApi* | [**DeleteFile**](docs/FilesApi.md#deletefile) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 *FilesApi* | [**GetFileByID**](docs/FilesApi.md#getfilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+*FilesApi* | [**GetFileContents**](docs/FilesApi.md#getfilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+*FilesApi* | [**GetFileFEDWireMessage**](docs/FilesApi.md#getfilefedwiremessage) | **Get** /files/{file_id}/fedWireMessage | Get the fEDWireMessage on a File.
 *FilesApi* | [**GetFiles**](docs/FilesApi.md#getfiles) | **Get** /files | Gets a list of Files
 *FilesApi* | [**Ping**](docs/FilesApi.md#ping) | **Get** /ping | Ping the Wire service to check if running
 *FilesApi* | [**UpdateFile**](docs/FilesApi.md#updatefile) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*FilesApi* | [**ValidateFile**](docs/FilesApi.md#validatefile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
 ## Documentation For Models

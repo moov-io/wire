@@ -323,7 +323,48 @@ paths:
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       tags:
       - Files
-  /files/{file_id}/fedWireMessage:
+  /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
+    delete:
+      operationId: deleteFileFEDWireMessage
+      parameters:
+      - description: Optional Request ID allows application developer to trace requests through the systems logs
+        example: rs4f9915
+        explode: false
+        in: header
+        name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: File ID
+        explode: false
+        in: path
+        name: file_id
+        required: true
+        schema:
+          example: 3f2d23ee214
+          type: string
+        style: simple
+      - description: FEDWireMessage ID
+        explode: false
+        in: path
+        name: fEDWireMessage_id
+        required: true
+        schema:
+          example: "45758063"
+          type: string
+        style: simple
+      responses:
+        200:
+          description: FEDWireMessage deleted
+        404:
+          description: FEDWireMessage or File not found
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      summary: Delete a FEDWireMessage from a File
+      tags:
+      - Files
     get:
       operationId: getFileFEDWireMessage
       parameters:
@@ -345,70 +386,28 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
+      - description: FEDWireMessage ID
+        explode: false
+        in: path
+        name: fEDWireMessage_id
+        required: true
+        schema:
+          example: "45758063"
+          type: string
+        style: simple
       responses:
         200:
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/FEDWireMessage'
-          description: A list of FEDWireMessage objects
-          headers:
-            X-Total-Count:
-              description: The total number of FEDWireMessage on the File (Should be one).
-              explode: false
-              schema:
-                format: int32
-                type: integer
-              style: simple
+          description: FEDWireMessage object
+        404:
+          description: FEDWireMessage or File not found
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Get the fEDWireMessage on a File.
-      tags:
-      - Files
-    post:
-      operationId: addFEDWireMessageToFile
-      parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
-        example: rs4f9915
-        explode: false
-        in: header
-        name: X-Request-Id
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
-        example: a4f88150
-        explode: false
-        in: header
-        name: X-Idempotency-Key
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: File ID
-        explode: false
-        in: path
-        name: file_id
-        required: true
-        schema:
-          example: 3f2d23ee214
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FEDWireMessage'
-        required: true
-      responses:
-        200:
-          description: FEdWireMessage added to File
-      security:
-      - bearerAuth: []
-      - cookieAuth: []
-      summary: Add FEDWireMessage to File
+      summary: Get a specific FEDWireMessage on a FIle
       tags:
       - Files
 components:
