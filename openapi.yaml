@@ -314,7 +314,6 @@ paths:
            '404':
              description: FEDWireMessage or File not found
 
-
 components:
   schemas:
     CreateFile:
