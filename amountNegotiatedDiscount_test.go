@@ -39,6 +39,7 @@ func TestAmountNegotiatedDiscountCurrencyCodeValid(t *testing.T) {
 	nd.RemittanceAmount.CurrencyCode = "XZP"
 	if err := nd.Validate(); err != nil {
 		if !base.Match(err, ErrNonCurrencyCode) {
+			t.Errorf("%T: %s", err, err)
 		}
 	}
 }

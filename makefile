@@ -8,6 +8,17 @@ build:
 	@mkdir -p ./bin/
 	go build github.com/moov-io/wire
 
+.PHONY: client
+client:
+# Versions from https://github.com/OpenAPITools/openapi-generator/releases
+	@chmod +x ./openapi-generator
+	@rm -rf ./client
+	OPENAPI_GENERATOR_VERSION=4.0.0-SNAPSHOT ./openapi-generator generate -i openapi.yaml -g go -o ./client
+	go fmt ./client
+	go build github.com/moov-io/wire/client
+	go test ./client
+
+
 # From https://github.com/genuinetools/img
 .PHONY: AUTHORS
 AUTHORS:

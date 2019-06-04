@@ -18,7 +18,7 @@ type ErrorWire struct {
 	ErrorDescription string `json:"errorDescription,omitempty"`
 
 	// validator is composed for data validation
-	validator
+	// validator
 	// converters is composed for WIRE to GoLang Converters
 	converters
 }

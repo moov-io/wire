@@ -161,7 +161,6 @@ func TestOriginatorOptionFLineSlash(t *testing.T) {
 	}
 }
 
-
 // TestOriginatorOptionFLineOne validates OriginatorOptionF LineOne is valid
 func TestOriginatorOptionFLineOne(t *testing.T) {
 	oof := mockOriginatorOptionF()

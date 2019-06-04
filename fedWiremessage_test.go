@@ -33,7 +33,6 @@ func TestFEDWireMessage_isAmountValid(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	fwm.Amount.Amount = "000000000000"
-	//fwm.SetAmount(fwm.Amount)
 	// Beneficiary
 	ben := mockBeneficiary()
 	fwm.SetBeneficiary(ben)
@@ -647,13 +646,23 @@ func TestFEDWireMessage_isSecondaryRemittanceDocumentValid(t *testing.T) {
 	}
 }
 
-func TestFEDWireMessage_isRemittanceFreeText(t *testing.T) {
-}
-
-func TestFEDWireMessage_isGrossAmountRemittanceDocumentValid(t *testing.T) {
-}
-
 func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
+	file := NewFile()
+	fwm := mockCustomerTransferData()
+	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
+	li := NewLocalInstrument()
+	li.LocalInstrumentCode = RelatedRemittanceInformation
+	fwm.SetLocalInstrument(li)
+	rft := mockRemittanceFreeText()
+	fwm.SetRemittanceFreeText(rft)
+	file.AddFEDWireMessage(fwm)
+	// RemittanceFreeTextValid Invalid Property
+	if err := fwm.isRemittanceFreeTextValid(); err != nil {
+		if err != NewErrInvalidPropertyForProperty("RemittanceFreeText", fwm.RemittanceFreeText.String(),
+			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 }
 
 // TestBankTransferInValid test an invalid BankTransfer
