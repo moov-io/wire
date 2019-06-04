@@ -7,9 +7,6 @@ import (
 	"testing"
 )
 
-
-
-
 // TestRead reads wire Files with different BusinessFunctionCodes
 func TestRead(t *testing.T) {
 	t.Run("BankTransfer", testRead(filepath.Join("test", "testdata", "fedWireMessage-BankTransfer.txt")))
