@@ -24,7 +24,7 @@ type OutputMessageAccountabilityData struct {
 	OutputFRBApplicationIdentification string `json:"outputFRBApplicationIdentification,omitempty"`
 
 	// validator is composed for data validation
-	validator
+	// validator
 	// converters is composed for WIRE to GoLang Converters
 	converters
 }

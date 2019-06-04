@@ -20,7 +20,7 @@ type MessageDisposition struct {
 	MessageStatusIndicator string `json:"messageStatusIndicator,omitempty"`
 
 	// validator is composed for data validation
-	validator
+	// validator
 	// converters is composed for WIRE to GoLang Converters
 	converters
 }

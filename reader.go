@@ -55,9 +55,9 @@ func NewReader(r io.Reader) *Reader {
 
 // addCurrentFEDWireMessage creates the current FEDWireMessage for the file being read. A successful
 // current FEDWireMessage will be added to r.File once parsed.
-func (r *Reader) addCurrentFEDWireMessage(fwm FEDWireMessage) {
+/*func (r *Reader) addCurrentFEDWireMessage(fwm FEDWireMessage) {
 	r.currentFEDWireMessage = FEDWireMessage{}
-}
+}*/
 
 // Read reads each line of the FED Wire file and defines which parser to use based
 // on the first character of each line. It also enforces FED Wire formatting rules and returns

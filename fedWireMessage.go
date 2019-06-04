@@ -193,7 +193,9 @@ func (fwm *FEDWireMessage) verify() error {
 	if err := fwm.isUnstructuredAddendaValid(); err != nil {
 		return err
 	}
-
+	if err := fwm.isRemittanceValid(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -2002,7 +2004,7 @@ func (fwm *FEDWireMessage) otherTransferInformation() error {
 	return nil
 }
 
-func (fwm *FEDWireMessage) remittance() error {
+func (fwm *FEDWireMessage) isRemittanceValid() error {
 	if fwm.RelatedRemittance != nil {
 		if err := fwm.isRelatedRemittanceValid(); err != nil {
 			return err
