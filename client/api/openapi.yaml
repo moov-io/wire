@@ -14,7 +14,7 @@ servers:
 tags:
 - description: |
     File contains FEDWireMessages of a WIRE File.
-  name: Files
+  name: Wire Files
 paths:
   /ping:
     get:
@@ -58,7 +58,7 @@ paths:
       - cookieAuth: []
       summary: Gets a list of Files
       tags:
-      - Files
+      - Wire Files
   /files/create:
     post:
       operationId: createFile
@@ -118,7 +118,7 @@ paths:
       - cookieAuth: []
       summary: Create a new File object
       tags:
-      - Files
+      - Wire Files
   /files/{file_id}:
     delete:
       operationId: deleteFile
@@ -151,7 +151,7 @@ paths:
       - cookieAuth: []
       summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
       tags:
-      - Files
+      - Wire Files
     get:
       operationId: getFileByID
       parameters:
@@ -250,7 +250,7 @@ paths:
       - cookieAuth: []
       summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       tags:
-      - Files
+      - Wire Files
   /files/{file_id}/contents:
     get:
       operationId: getFileContents
@@ -285,7 +285,7 @@ paths:
       - cookieAuth: []
       summary: Assembles the existing file witha FEDWireMessage, Returns plaintext file.
       tags:
-      - Files
+      - Wire Files
   /files/{file_id}/validate:
     get:
       operationId: validateFile
@@ -322,7 +322,7 @@ paths:
       - cookieAuth: []
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       tags:
-      - Files
+      - Wire Files
   /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
     delete:
       operationId: deleteFileFEDWireMessage
@@ -364,7 +364,7 @@ paths:
       - cookieAuth: []
       summary: Delete a FEDWireMessage from a File
       tags:
-      - Files
+      - Wire Files
     get:
       operationId: getFileFEDWireMessage
       parameters:
@@ -409,7 +409,7 @@ paths:
       - cookieAuth: []
       summary: Get a specific FEDWireMessage on a FIle
       tags:
-      - Files
+      - Wire Files
 components:
   parameters:
     requestId:
