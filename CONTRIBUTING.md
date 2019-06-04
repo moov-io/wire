@@ -58,7 +58,7 @@ A good quality PR will have the following characteristics:
 
 A good PR should be able to flow through a peer review system easily and quickly.
 
-Our Build pipeline utilizes [Travis-CI](https://travis-ci.org/moov-io/wire) to enforce many tools that you should add to your editor before issuing a pull request. Learn more about these tools on our [Go Report card](https://goreportcard.com/report/github.com/moov-io/wire)
+Our Build pipeline utilizes [Travis-CI](https://travis-ci.com/moov-io/wire) to enforce many tools that you should add to your editor before issuing a pull request. Learn more about these tools on our [Go Report card](https://goreportcard.com/report/github.com/moov-io/wire)
 
 
 ##
