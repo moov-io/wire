@@ -14,9 +14,9 @@ import (
 
 var (
 	// upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	alphanumericRegex      = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	numericRegex           = regexp.MustCompile(`[^0-9]`)
-	amountRegex            = regexp.MustCompile("[^0-9,.]")
+	alphanumericRegex = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
+	numericRegex      = regexp.MustCompile(`[^0-9]`)
+	amountRegex       = regexp.MustCompile("[^0-9,.]")
 )
 
 // validator is common validation and formatting of golang types to WIRE type strings
