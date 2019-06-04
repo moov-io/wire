@@ -14,7 +14,7 @@ servers:
     description: Local development
 
 tags:
-  - name: Files
+  - name: 'Wire Files'
     description: |
       File contains FEDWireMessages of a WIRE File.
 
@@ -30,8 +30,7 @@ paths:
           description: Service is running properly
   /files:
     get:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Gets a list of Files
       operationId: getFiles
       security:
@@ -53,8 +52,7 @@ paths:
                 $ref: '#/components/schemas/Files'
   /files/create:
     post:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Create a new File object
       operationId: createFile
       security:
@@ -122,8 +120,7 @@ paths:
         '404':
           description: A resource with the specified ID was not found
     post:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
       operationId: updateFile
       security:
@@ -165,8 +162,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
       operationId: deleteFile
       security:
@@ -188,8 +184,7 @@ paths:
           description: A File with the specified ID was not found.
   /files/{file_id}/contents:
     get:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Assembles the existing file witha FEDWireMessage, Returns plaintext file.
       operationId: getFileContents
       security:
@@ -218,8 +213,7 @@ paths:
                 $ref: '#/components/schemas/RawFile'
   /files/{file_id}/validate:
     get:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       operationId: validateFile
       security:
@@ -250,8 +244,7 @@ paths:
           description: Validation failed. Check response for errors
   /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
        get:
-         tags:
-           - Files
+         tags: ['Wire Files']
          summary: Get a specific FEDWireMessage on a FIle
          operationId: getFileFEDWireMessage
          security:
@@ -288,8 +281,7 @@ paths:
            '404':
              description: FEDWireMessage or File not found
        delete:
-         tags:
-           - Files
+         tags: ['Wire Files']
          summary: Delete a FEDWireMessage from a File
          operationId: deleteFileFEDWireMessage
          security:
