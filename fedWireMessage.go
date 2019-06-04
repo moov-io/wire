@@ -2,9 +2,6 @@
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
-// ToDo: Remove empty functions after all validation checks are coded
-// ToDo: if utf8.RuneCountInString(record) != NNN {..}  checks  see BusinessFunctionCode.go and reader.parseBusinessFunctionCode
-
 package wire
 
 import "strings"
@@ -860,9 +857,6 @@ func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
 	}
 	return nil
 }
-
-// ToDo:  May revisit this create separate functions for each of the case BusinessFunctionCode statements as I did with
-//  Valid and Tags or vice versa
 
 // isInvalidTags
 // isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
@@ -1858,7 +1852,6 @@ func (fwm *FEDWireMessage) isUnstructuredAddendaValid() error {
 				ProprietaryLocalInstrumentCode,
 				RemittanceInformationStructured,
 				RelatedRemittanceInformation:
-				// ToDo: may want to also check Addenda Length
 				if len(fwm.UnstructuredAddenda.Addenda) > 1 {
 					return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
 						"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)

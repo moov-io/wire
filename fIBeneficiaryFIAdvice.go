@@ -14,7 +14,7 @@ type FIBeneficiaryFIAdvice struct {
 	// tag
 	tag string
 	// Advice
-	Advice Advice `json:"advice,omitEmpty"`
+	Advice Advice `json:"advice,omitempty"`
 
 	// validator is composed for data validation
 	validator
