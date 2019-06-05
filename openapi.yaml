@@ -512,7 +512,6 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
-            -
             - R
             - P
           example: ''
@@ -669,7 +668,6 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
-            -
             - R
             - P
           example: ''
