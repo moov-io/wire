@@ -11,8 +11,6 @@ matrix:
       cache:
         directories:
           - "/home/travis/.cache/go-build"
-    - os: linux
-      go: master
     - os: osx
       go: 1.12.x
       cache:
