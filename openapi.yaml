@@ -499,6 +499,7 @@ components:
             * `T` - Test
             * `P` - Production
           enum:
+            - " "
             - T
             - P
           example: 'T'
@@ -668,9 +669,10 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
+            - " "
             - R
             - P
-          example: ''
+          example: " "
       required:
         - formatVersion
         - userRequestCorrelation
