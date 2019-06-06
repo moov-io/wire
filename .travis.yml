@@ -1,5 +1,8 @@
 language: go
+dist: xenial
 sudo: false
+services:
+  - docker
 env:
   matrix:
     - GO111MODULE=on
@@ -24,8 +27,6 @@ before_install:
   - GO111MODULE=off go get github.com/fzipp/gocyclo
   - GO111MODULE=off go get -u honnef.co/go/tools/cmd/staticcheck
   - GO111MODULE=off go get golang.org/x/tools/cmd/cover
-  # Install gcc, from https://travis-ci.community/t/go-cant-find-gcc-with-go1-11-1-on-windows/293/5
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y mingw; export PATH=/c/tools/mingw64/bin:"$PATH"; fi
 before_script:
   - GOFILES=$(find . -type f -name '*.go' | grep -v client)
 script:
@@ -35,7 +36,27 @@ script:
   - misspell -error -locale US $GOFILES
   #- gocyclo -over $GOFILES
   - golint -set_exit_status $GOFILES
-  #- staticcheck *.go
+  - staticcheck ./cmd/*/*.go *.go # TODO(brooke): later add ./pkg/*/*.go
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y mingw; export PATH=/c/tools/mingw64/bin:"$PATH";fi
 after_success:
-  # - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
+  - make
+  - make client
+  - make docker
+before_deploy:
+  - make dist
+after_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - make release-push
+deploy:
+  provider: releases
+  api_key:
+    # secure: Ai7efi3yilhxCCjCW6QSQrkk0aYF6unjBDdVywotXg1jTzrNnL1KFPR7vK5AHcU9iakhSrvRYY/wYHs9MV/al+FmTEBHD5QB5+V7QdqiOVVCDjbItP3M16ni14q5s2MwfPsgELIAJoKGIgjdJ7Rwbtd04Oqa1GmA4BzVkr+0TIbbRO85ds7jZUUnpQY3T0MGT8sPoLr4K/iBj6M9BLDlT6j9sEWjVscFkNlN5Q9q7M3/QyZvRlASvXg6FaBhDud1Sn0AOAOJLu0Nq4rv3ZK9+PeURovNalFcq20EwHyoan9IacZ73nPWerwov2JMWBCVcdGffmkZ2DlUa/T15kQkrflPn48CSn1hq5jut9yZpNg7a+BTEOSdlzSb78aS10JRjQ5Ke0Y/6xc5bIeKzgWeICpSGkl1A3rQ6DN8ZRL3gIfx4FfaBDoszQcZQFrmMm21g/QdN1m+MxP9U5bEODWdl9PAo27n11UY5ItMymHw5qaGw3HXUbHk7X+qUHjEWtW/z4dQQJMAzfXCWrx92tEavFE9/gvYtybpn1dfw1O2FlxCxSCkk2AejC/E6RMCgGaDV3SvIzYn+ai0ijwn8o4/fKoaKc8vjIpCDXGvWxAfBkhFRkQ38n3fpBhgYp8THD98jU3XNXsN0ltFfCEJQ3KpPGyCUbbvBnsqPvols0HuaX4=
+  file_glob: true
+  file:
+    - bin/wire-*
+  on:
+    repo: moov-io/wire
+    tags: true
+    go: 1.12.x
+  skip_cleanup: true

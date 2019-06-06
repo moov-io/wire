@@ -1,23 +1,58 @@
 PLATFORM=$(shell uname -s | tr '[:upper:]' '[:lower:]')
-VERSION := $(shell grep -Eo '(v[0-9]+[\.][0-9]+[\.][0-9]+([-a-zA-Z0-9]*)?)' version.go)
+VERSION := $(shell grep -Eo '(v[0-9]+[\.][0-9]+[\.][0-9]+(-[a-zA-Z0-9]*)?)' version.go)
 
-.PHONY: build generate
+.PHONY: build build-server build-examples docker release check
 
-build:
+build: check build-server
+
+build-server:
+	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/wire/cmd/server
+
+check:
 	go fmt ./...
 	@mkdir -p ./bin/
-	go build github.com/moov-io/wire
 
 .PHONY: client
 client:
 # Versions from https://github.com/OpenAPITools/openapi-generator/releases
 	@chmod +x ./openapi-generator
 	@rm -rf ./client
-	OPENAPI_GENERATOR_VERSION=4.0.0-SNAPSHOT ./openapi-generator generate -i openapi.yaml -g go -o ./client
-	go fmt ./client
+	OPENAPI_GENERATOR_VERSION=4.0.1 ./openapi-generator generate -i openapi.yaml -g go -o ./client
+	rm -f client/go.mod client/go.sum
+	go fmt ./...
 	go build github.com/moov-io/wire/client
 	go test ./client
 
+.PHONY: clean
+clean:
+	@rm -rf client/
+	@rm -f openapi-generator-cli-*.jar
+
+dist: clean client build
+ifeq ($(OS),Windows_NT)
+	CGO_ENABLED=1 GOOS=windows go build -o bin/wire-windows-amd64.exe github.com/moov-io/wire/cmd/server
+else
+	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/wire-$(PLATFORM)-amd64 github.com/moov-io/wire/cmd/server
+endif
+
+docker:
+# Main wire server Docker image
+	docker build --pull -t moov/wire:$(VERSION) -f Dockerfile .
+	docker tag moov/wire:$(VERSION) moov/wire:latest
+
+release: docker AUTHORS
+	go vet ./...
+	go test -coverprofile=cover-$(VERSION).out ./...
+	git tag -f $(VERSION)
+
+release-push:
+	docker push moov/wire:$(VERSION)
+
+.PHONY: cover-test cover-web
+cover-test:
+	go test -coverprofile=cover.out ./...
+cover-web:
+	go tool cover -html=cover.out
 
 # From https://github.com/genuinetools/img
 .PHONY: AUTHORS

@@ -13,5 +13,12 @@
 
 # code coverage
 coverage.html
-cover.out
+
+/bin/
+
+# OpenAPITools/openapi-generator
+openapi-generator-cli-*.jar
+
+# macOS
+.DS_Store
 
