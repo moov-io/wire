@@ -32,7 +32,7 @@ paths:
     get:
       tags: ['Wire Files']
       summary: Gets a list of Files
-      operationId: getFiles
+      operationId: getWireFiles
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -54,7 +54,7 @@ paths:
     post:
       tags: ['Wire Files']
       summary: Create a new File object
-      operationId: createFile
+      operationId: createWireFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -97,7 +97,7 @@ paths:
       tags:
         - Files
       summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-      operationId: getFileByID
+      operationId: getWireFileByID
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -122,7 +122,7 @@ paths:
     post:
       tags: ['Wire Files']
       summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-      operationId: updateFile
+      operationId: updateWireFileByID
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -164,7 +164,7 @@ paths:
     delete:
       tags: ['Wire Files']
       summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-      operationId: deleteFile
+      operationId: deleteWireFileByID
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -186,7 +186,7 @@ paths:
     get:
       tags: ['Wire Files']
       summary: Assembles the existing file witha FEDWireMessage, Returns plaintext file.
-      operationId: getFileContents
+      operationId: getWireFileContents
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -215,7 +215,7 @@ paths:
     get:
       tags: ['Wire Files']
       summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
-      operationId: validateFile
+      operationId: validateWireFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -246,7 +246,7 @@ paths:
        get:
          tags: ['Wire Files']
          summary: Get a specific FEDWireMessage on a FIle
-         operationId: getFileFEDWireMessage
+         operationId: getFEDWireMessageFromFile
          security:
            - bearerAuth: []
            - cookieAuth: []
@@ -283,7 +283,7 @@ paths:
        delete:
          tags: ['Wire Files']
          summary: Delete a FEDWireMessage from a File
-         operationId: deleteFileFEDWireMessage
+         operationId: deleteFEDWireMessageFromFile
          security:
            - bearerAuth: []
            - cookieAuth: []
@@ -351,7 +351,7 @@ components:
           type: string
           description: FEDWireMessage ID
           example: 3f2d23ee214
-        # TAGS 1100, 1110, 1120, 1130 is information Appended by the FEDWire Funds Service
+        # messageDisposition, receiptTimeStamp, outputMessageAccountabilityData, errorWire is information Appended by the FEDWire Funds Service
         messageDisposition:
           $ref: '#/components/schemas/MessageDisposition'
         receiptTimeStamp:
