@@ -6,8 +6,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/moov-io/wire"
 )
 
 func main() {
-	fmt.Printf("Starting moov-io/wire version %s\n", "v-0.1.0-dev")
+	fmt.Printf("Starting moov-io/wire version %s\n", wire.Version)
 }
