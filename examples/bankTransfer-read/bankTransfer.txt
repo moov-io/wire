@@ -1,0 +1,26 @@
+{1500}30User ReqP 
+{1510}1000
+{1520}20190610Source08000001
+{2000}000001234567
+{3100}121042882Wells Fargo NA    
+{3400}231380104Citadel           
+{3600}BTR   
+{3320}Sender Reference
+{3500}Previous Message Ident
+{4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
+{4100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
+{4200}31234                              Name                               Address One                        Address Two                        Address Three                      
+{4320}Reference       
+{5000}11234                              Name                               Address One                        Address Two                        Address Three                      
+{5100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
+{5200}D123456789                         FI Name                            Address One                        Address Two                        Address Three                      
+{6000}LineOne                            LineTwo                            LineThree                          LineFour                           
+{6100}FIToFI Line Six                                                                                                                                                                                    
+{6200}FIIntermediaryFI Line Six                                                                                                                                                                          
+{6210}LTRFIInterFIAdvice Line One  FIInterFIAdvice Line Two         FIInterFIAdvice Line Three       FIInterFIAdvice Line Four        FIInterFIAdvice Line Five        FIInterFIAdvice Line Six         
+{6300}FIBenFI Line One              FIBenFI Line Two                 FIBenFI Line Three               FIBenFI Line Four                FIBenFI Line Five                FIBenFI Line Six                 
+{6310}TLXFIBenFIAdvice Line One    FIBenFIAdvice Line Two           FIBenFIAdvice Line Three         FIBenFIAdvice Line Four          FIBenFIAdvice Line Five          FIBenFIAdvice Line Six           
+{6400}FIBen Line One                FIBen Line Two                   FIBen Line Three                 FIBen Line Four                  FIBen Line Five                  FIBen Line Six                   
+{6410}LTRFIBenAdvice Line One      FIBenAdvice Line Two             FIBenAdvice Line Three           FIBenAdvice Line Four            FIBenAdvice Line Five            FIBenAdvice Line Six             
+{6420}CHECKAdditional Information        
+{6500}FIAddFI Line One                   FIAddFI Line Two                   FIAddFI Line Three                 FIAddFI Line Four                  FIAddFI Line Five                  FIAddFI Line Six                   
