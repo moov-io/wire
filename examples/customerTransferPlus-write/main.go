@@ -154,9 +154,9 @@ func main() {
 	ifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	ifi.FinancialInstitution.Identifier = "123456789"
 	ifi.FinancialInstitution.Name = "FI Name"
-	ifi.FinancialInstitution.Address.AddressLineOne = "Address One"
-	ifi.FinancialInstitution.Address.AddressLineTwo = "Address Two"
-	ifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
+	ifi.FinancialInstitution.Address.AddressLineOne = "FI Address One"
+	ifi.FinancialInstitution.Address.AddressLineTwo = "FI Address Two"
+	ifi.FinancialInstitution.Address.AddressLineThree = "FI Address Three"
 	fwm.SetInstructingFI(ifi)
 
 	ob := wire.NewOriginatorToBeneficiary()
@@ -168,31 +168,31 @@ func main() {
 
 	// FI to FI
 	fiifi := wire.NewFIIntermediaryFI()
-	fiifi.FIToFI.LineOne = "Line One"
-	fiifi.FIToFI.LineOne = "Line Two"
-	fiifi.FIToFI.LineOne = "Line Three"
-	fiifi.FIToFI.LineOne = "Line Four"
-	fiifi.FIToFI.LineOne = "Line Five"
-	fiifi.FIToFI.LineOne = "Line Six"
+	fiifi.FIToFI.LineOne = "FI Intermediary Line One"
+	fiifi.FIToFI.LineOne = "FI Intermediary Line Two"
+	fiifi.FIToFI.LineOne = "FI Intermediary Line Three"
+	fiifi.FIToFI.LineOne = ""
+	fiifi.FIToFI.LineOne = ""
+	fiifi.FIToFI.LineOne = ""
 	fwm.SetFIIntermediaryFI(fiifi)
 
 	fiifia := wire.NewFIIntermediaryFIAdvice()
 	fiifia.Advice.AdviceCode = wire.AdviceCodeLetter
-	fiifia.Advice.LineOne = "Line One"
-	fiifia.Advice.LineTwo = "Line Two"
-	fiifia.Advice.LineThree = "Line Three"
-	fiifia.Advice.LineFour = "Line Four"
+	fiifia.Advice.LineOne = "Intermediary Advice Line One"
+	fiifia.Advice.LineTwo = "Intermediary Advice Line Two"
+	fiifia.Advice.LineThree = "Intermediary Advice Line Three"
+	fiifia.Advice.LineFour = "Intermediary Advice Line Four"
 	fiifia.Advice.LineFive = "Line Five"
 	fiifia.Advice.LineSix = "Line Six"
 	fwm.SetFIIntermediaryFIAdvice(fiifia)
 
 	fibfi := wire.NewFIBeneficiaryFI()
-	fibfi.FIToFI.LineOne = "Line One"
-	fibfi.FIToFI.LineTwo = "Line Two"
-	fibfi.FIToFI.LineThree = "Line Three"
-	fibfi.FIToFI.LineFour = "Line Four"
-	fibfi.FIToFI.LineFive = "Line Five"
-	fibfi.FIToFI.LineSix = "Line Six"
+	fibfi.FIToFI.LineOne = "Beneficiary FI Line One"
+	fibfi.FIToFI.LineTwo = "Beneficiary FI Line Two"
+	fibfi.FIToFI.LineThree = "Beneficiary FI Line Three"
+	fibfi.FIToFI.LineFour = "Beneficiary FI Line Four"
+	fibfi.FIToFI.LineFive = "Beneficiary FI Line Five"
+	fibfi.FIToFI.LineSix = "Beneficiary FI Line Six"
 	fwm.SetFIBeneficiaryFI(fibfi)
 
 	fibfia := wire.NewFIBeneficiaryFIAdvice()

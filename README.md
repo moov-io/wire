@@ -26,7 +26,7 @@ Moov WIRE is under active development and should not currently be used for produ
 | Business Function Code | Name                                  | Example |
 |----------|---------------------------------------|-----------------------------------|
 | BTR      | BankTransfer                          | [Link](test/testdata/fedWireMessage-BankTransfer.txt) |
-| CKS      | CheckSameDaySettlement                | [Link](test/testdata/fedWireMessage-CheckSameDaySettlement.txt) |
+| CKS      | CheckSameDaySettlement                | [Link](examples/checkSameDaySettlement-read/fedWireMessage-CheckSameDaySettlement.txt) |
 | CTP      | CustomerTransferPlus                  | [Link](test/testdata/fedWireMessage-CustomerTransferPlus.txt) |
 | CTR      | CustomerTransfer                      | [Link](test/testdata/fedWireMessage-CustomerTransfer.txt) |
 | DEP      | DepositSendersAccount                 | [Link](test/testdata/fedWireMessage-DepositSendersAccount.txt) |
