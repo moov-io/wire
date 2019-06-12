@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-
 func main() {
 	file := wire.NewFile()
 	fwm := wire.NewFEDWireMessage()
