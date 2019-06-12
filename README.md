@@ -25,17 +25,18 @@ Moov WIRE is under active development and should not currently be used for produ
 
 | Business Function Code | Name                                  | Example |
 |----------|---------------------------------------|-----------------------------------|
-| BTR      | BankTransfer                          | [Link](test/testdata/fedWireMessage-BankTransfer.txt) |
-| CKS      | CheckSameDaySettlement                | [Link](examples/checkSameDaySettlement-read/fedWireMessage-CheckSameDaySettlement.txt) |
-| CTP      | CustomerTransferPlus                  | [Link](test/testdata/fedWireMessage-CustomerTransferPlus.txt) |
-| CTR      | CustomerTransfer                      | [Link](test/testdata/fedWireMessage-CustomerTransfer.txt) |
-| DEP      | DepositSendersAccount                 | [Link](test/testdata/fedWireMessage-DepositSendersAccount.txt) |
-| DRB      | BankDrawdownRequest                   | [Link](test/testdata/fedWireMessage-BankDrawDownRequest.txt) |
-| DRC      | CustomerCorporateDrawdownRequest      | [Link](test/testdata/fedWireMessage-CustomerCorporateDrawdownRequest.txt) |
-| DRW      | DrawdownRequest                       | [Link](test/testdata/fedWireMessage-DrawDownRequest.txt) |
-| FFR      | FEDFundsReturned                      | [Link](test/testdata/fedWireMessage-FEDFundsReturned.txt) |
-| FFS      | FEDFundsSold                          | [Link](test/testdata/fedWireMessage-FEDFundsSold.txt) |
-| SVC      | ServiceMessage                        | [Link](test/testdata/fedWireMessage-ServiceMessage.txt) |
+| DRB      | Bank DrawDown Request                 | [Link](examples/bankDrawDownRequest-read/bankDrawDownRequest.txt) |
+| BTR      | BankTransfer                          | [Link](examples/bankTransfer-read/bankTransfer.txt) |
+| CKS      | CheckSameDaySettlement                | [Link](examples/checkSameDaySettlement-read/checkSameDaySettlement.txt) |
+| DRC      | CustomerCorporateDrawdownRequest      | [Link](examples/customerCorporateDrawDownRequest-read/customerCorporateDrawDownRequest.txt) |
+| CTR      | CustomerTransfer                      | [Link](examples/customerTransfer-read/customerTransfer.txt) |
+| CTP      | CustomerTransferPlus                  | [Link](examples/customerTransferPlus-read/customerTransferPlus.txt) |
+| CTP      | CustomerTransferPlusCOVS              | [Link](examples/customerTransferPlusCOVS-read/customerTransferPlusCOVS.txt) |
+| DEP      | DepositSendersAccount                 | [Link](examples/depositSendersAccount-read/depositSendersAccount.txt) |
+| DRW      | DrawdownRequest                       | [Link](examples/drawDownRequest-read/drawDownRequest.txt) |
+| FFR      | FEDFundsReturned                      | [Link](examples/fedFundsReturned-read/fedFundsReturned.txt) |
+| FFS      | FEDFundsSold                          | [Link](examples/fedFundsSold-read/fedFundsSold.txt) |
+| SVC      | ServiceMessage                        | [Link](examples/serviceMessage-read/serviceMessage.txt) |
 </details>
 
 ### From Source
