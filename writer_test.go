@@ -706,8 +706,8 @@ func TestFEDWireMessageWriteCheckSameDaySettlement(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	tst.TypeCode = "16"
-	tst.SubTypeCode = "00"
+	tst.TypeCode = SettlementTransfer
+	tst.SubTypeCode = BasicFundsTransfer
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
@@ -1018,8 +1018,8 @@ func TestFEDWireMessageWriteDrawdownRequest(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	tst.TypeCode = "10"
-	tst.SubTypeCode = "32"
+	tst.TypeCode = FundsTransfer
+	tst.SubTypeCode = FundsTransferRequestCredit
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
