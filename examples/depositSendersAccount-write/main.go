@@ -22,20 +22,23 @@ func main() {
 	fwm.SetSenderSupplied(ss)
 
 	tst := wire.NewTypeSubType()
-	tst.TypeCode = wire.FundsTransfer
+	tst.TypeCode = wire.SettlementTransfer
 	tst.SubTypeCode = wire.BasicFundsTransfer
 	fwm.SetTypeSubType(tst)
 
+	// InputMessageAccountabilityData
 	imad := wire.NewInputMessageAccountabilityData()
 	imad.InputCycleDate = time.Now().Format("20060102")
 	imad.InputSource = "Source08"
 	imad.InputSequenceNumber = "000001"
 	fwm.SetInputMessageAccountabilityData(imad)
 
+	// Amount
 	amt := wire.NewAmount()
 	amt.Amount = "000001234567"
 	fwm.SetAmount(amt)
 
+	// SenderDepositoryInstitution
 	sdi := wire.NewSenderDepositoryInstitution()
 	sdi.SenderABANumber = "121042882"
 	sdi.SenderShortName = "Wells Fargo NA"
@@ -47,34 +50,23 @@ func main() {
 	fwm.SetReceiverDepositoryInstitution(rdi)
 
 	bfc := wire.NewBusinessFunctionCode()
-	bfc.BusinessFunctionCode = wire.CustomerTransferPlus
+	bfc.BusinessFunctionCode = wire.DepositSendersAccount
 	bfc.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(bfc)
 
 	// Other Transfer Information
+	// Sender Reference
 	sr := wire.NewSenderReference()
 	sr.SenderReference = "Sender Reference"
 	fwm.SetSenderReference(sr)
 
+	// Previous Message Identifier
 	pmi := wire.NewPreviousMessageIdentifier()
 	pmi.PreviousMessageIdentifier = "Previous Message Ident"
 	fwm.SetPreviousMessageIdentifier(pmi)
 
-	li := wire.NewLocalInstrument()
-	li.LocalInstrumentCode = wire.SequenceBCoverPaymentStructured
-	li.ProprietaryCode = ""
-	fwm.SetLocalInstrument(li)
-
-	pn := wire.NewPaymentNotification()
-	pn.PaymentNotificationIndicator = "1"
-	pn.ContactNotificationElectronicAddress = "http://moov.io"
-	pn.ContactName = "Contact Name"
-	pn.ContactPhoneNumber = "5555551212"
-	pn.ContactMobileNumber = "5551231212"
-	pn.ContactFaxNumber = "5554561212"
-	fwm.SetPaymentNotification(pn)
-
 	// Beneficiary
+	// Beneficiary Intermediary FI
 	bifi := wire.NewBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	bifi.FinancialInstitution.Identifier = "123456789"
@@ -84,6 +76,7 @@ func main() {
 	bifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
 
+	// Beneficiary FI
 	bfi := wire.NewBeneficiaryFI()
 	bfi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	bfi.FinancialInstitution.Identifier = "123456789"
@@ -93,6 +86,7 @@ func main() {
 	bfi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.SetBeneficiaryFI(bfi)
 
+	// Beneficiary
 	ben := wire.NewBeneficiary()
 	ben.Personal.IdentificationCode = wire.DriversLicenseNumber
 	ben.Personal.Identifier = "1234"
@@ -102,6 +96,7 @@ func main() {
 	ben.Personal.Address.AddressLineThree = "Address Three"
 	fwm.SetBeneficiary(ben)
 
+	// Beneficiary Reference
 	br := wire.NewBeneficiaryReference()
 	br.BeneficiaryReference = "Reference"
 	fwm.SetBeneficiaryReference(br)
@@ -116,14 +111,7 @@ func main() {
 	o.Personal.Address.AddressLineThree = "Address Three"
 	fwm.SetOriginator(o)
 
-	oof := wire.NewOriginatorOptionF()
-	oof.PartyIdentifier = "TXID/123-45-6789"
-	oof.Name = "1/Name"
-	oof.LineOne = "1/1234"
-	oof.LineTwo = "2/1000 Colonial Farm Rd"
-	oof.LineThree = "5/Pottstown"
-	fwm.SetOriginatorOptionF(oof)
-
+	// Originator FI
 	ofi := wire.NewOriginatorFI()
 	ofi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	ofi.FinancialInstitution.Identifier = "123456789"
@@ -133,6 +121,7 @@ func main() {
 	ofi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.SetOriginatorFI(ofi)
 
+	// Instructing FI
 	ifi := wire.NewInstructingFI()
 	ifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	ifi.FinancialInstitution.Identifier = "123456789"
@@ -142,6 +131,7 @@ func main() {
 	ifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.SetInstructingFI(ifi)
 
+	// Originator To Beneficiary
 	ob := wire.NewOriginatorToBeneficiary()
 	ob.LineOne = "LineOne"
 	ob.LineTwo = "LineTwo"
@@ -150,137 +140,94 @@ func main() {
 	fwm.SetOriginatorToBeneficiary(ob)
 
 	// FI to FI
+	// FIReceiverFI
+	firfi := wire.NewFIReceiverFI()
+	firfi.FIToFI.LineOne = "FIToFI Line One"
+	firfi.FIToFI.LineOne = "FIToFI Line Two"
+	firfi.FIToFI.LineOne = "FIToFI Line Three"
+	firfi.FIToFI.LineOne = "FIToFI Line Four"
+	firfi.FIToFI.LineOne = "FIToFI Line Five"
+	firfi.FIToFI.LineOne = "FIToFI Line Six"
+	fwm.SetFIReceiverFI(firfi)
+
+	// FIIntermediaryFI
 	fiifi := wire.NewFIIntermediaryFI()
-	fiifi.FIToFI.LineOne = "Line One"
-	fiifi.FIToFI.LineOne = "Line Two"
-	fiifi.FIToFI.LineOne = "Line Three"
-	fiifi.FIToFI.LineOne = "Line Four"
-	fiifi.FIToFI.LineOne = "Line Five"
-	fiifi.FIToFI.LineOne = "Line Six"
+	fiifi.FIToFI.LineOne = "FIIntermediaryFI Line One"
+	fiifi.FIToFI.LineOne = "FIIntermediaryFI Line Two"
+	fiifi.FIToFI.LineOne = "FIIntermediaryFI Line Three"
+	fiifi.FIToFI.LineOne = "FIIntermediaryFI Line Four"
+	fiifi.FIToFI.LineOne = "FIIntermediaryFI Line Five"
+	fiifi.FIToFI.LineOne = "FIIntermediaryFI Line Six"
 	fwm.SetFIIntermediaryFI(fiifi)
 
+	// FIIntermediaryFIAdvice
 	fiifia := wire.NewFIIntermediaryFIAdvice()
 	fiifia.Advice.AdviceCode = wire.AdviceCodeLetter
-	fiifia.Advice.LineOne = "Line One"
-	fiifia.Advice.LineTwo = "Line Two"
-	fiifia.Advice.LineThree = "Line Three"
-	fiifia.Advice.LineFour = "Line Four"
-	fiifia.Advice.LineFive = "Line Five"
-	fiifia.Advice.LineSix = "Line Six"
+	fiifia.Advice.LineOne = "FIInterFIAdvice Line One"
+	fiifia.Advice.LineTwo = "FIInterFIAdvice Line Two"
+	fiifia.Advice.LineThree = "FIInterFIAdvice Line Three"
+	fiifia.Advice.LineFour = "FIInterFIAdvice Line Four"
+	fiifia.Advice.LineFive = "FIInterFIAdvice Line Five"
+	fiifia.Advice.LineSix = "FIInterFIAdvice Line Six"
 	fwm.SetFIIntermediaryFIAdvice(fiifia)
 
+	// FIBeneficiaryFI
 	fibfi := wire.NewFIBeneficiaryFI()
-	fibfi.FIToFI.LineOne = "Line One"
-	fibfi.FIToFI.LineTwo = "Line Two"
-	fibfi.FIToFI.LineThree = "Line Three"
-	fibfi.FIToFI.LineFour = "Line Four"
-	fibfi.FIToFI.LineFive = "Line Five"
-	fibfi.FIToFI.LineSix = "Line Six"
+	fibfi.FIToFI.LineOne = "FIBenFI Line One"
+	fibfi.FIToFI.LineTwo = "FIBenFI Line Two"
+	fibfi.FIToFI.LineThree = "FIBenFI Line Three"
+	fibfi.FIToFI.LineFour = "FIBenFI Line Four"
+	fibfi.FIToFI.LineFive = "FIBenFI Line Five"
+	fibfi.FIToFI.LineSix = "FIBenFI Line Six"
 	fwm.SetFIBeneficiaryFI(fibfi)
 
+	// FIBeneficiaryFIAdvice
 	fibfia := wire.NewFIBeneficiaryFIAdvice()
 	fibfia.Advice.AdviceCode = wire.AdviceCodeTelex
-	fibfia.Advice.LineOne = "Line One"
-	fibfia.Advice.LineTwo = "Line Two"
-	fibfia.Advice.LineThree = "Line Three"
-	fibfia.Advice.LineFour = "Line Four"
-	fibfia.Advice.LineFive = "Line Five"
-	fibfia.Advice.LineSix = "Line Six"
+	fibfia.Advice.LineOne = "FIBenFIAdvice Line One"
+	fibfia.Advice.LineTwo = "FIBenFIAdvice Line Two"
+	fibfia.Advice.LineThree = "FIBenFIAdvice Line Three"
+	fibfia.Advice.LineFour = "FIBenFIAdvice Line Four"
+	fibfia.Advice.LineFive = "FIBenFIAdvice Line Five"
+	fibfia.Advice.LineSix = "FIBenFIAdvice Line Six"
 	fwm.SetFIBeneficiaryFIAdvice(fibfia)
 
+	// FIBeneficiary
 	fib := wire.NewFIBeneficiary()
-	fib.FIToFI.LineOne = "Line One"
-	fib.FIToFI.LineTwo = "Line Two"
-	fib.FIToFI.LineThree = "Line Three"
-	fib.FIToFI.LineFour = "Line Four"
-	fib.FIToFI.LineFive = "Line Five"
-	fib.FIToFI.LineSix = "Line Six"
+	fib.FIToFI.LineOne = "FIBen Line One"
+	fib.FIToFI.LineTwo = "FIBen Line Two"
+	fib.FIToFI.LineThree = "FIBen Line Three"
+	fib.FIToFI.LineFour = "FIBen Line Four"
+	fib.FIToFI.LineFive = "FIBen Line Five"
+	fib.FIToFI.LineSix = "FIBen Line Six"
 	fwm.SetFIBeneficiary(fib)
 
+	// FIBeneficiaryAdvice
 	fiba := wire.NewFIBeneficiaryAdvice()
 	fiba.Advice.AdviceCode = wire.AdviceCodeLetter
-	fiba.Advice.LineOne = "Line One"
-	fiba.Advice.LineTwo = "Line Two"
-	fiba.Advice.LineThree = "Line Three"
-	fiba.Advice.LineFour = "Line Four"
-	fiba.Advice.LineFive = "Line Five"
-	fiba.Advice.LineSix = "Line Six"
+	fiba.Advice.LineOne = "FIBenAdvice Line One"
+	fiba.Advice.LineTwo = "FIBenAdvice Line Two"
+	fiba.Advice.LineThree = "FIBenAdvice Line Three"
+	fiba.Advice.LineFour = "FIBenAdvice Line Four"
+	fiba.Advice.LineFive = "FIBenAdvice Line Five"
+	fiba.Advice.LineSix = "FIBenAdvice Line Six"
 	fwm.SetFIBeneficiaryAdvice(fiba)
 
+	// FIPaymentMethodToBeneficiary
 	pm := wire.NewFIPaymentMethodToBeneficiary()
+	pm.PaymentMethod = "CHECK"
 	pm.AdditionalInformation = "Additional Information"
 	fwm.SetFIPaymentMethodToBeneficiary(pm)
 
+	// FIAdditionalFIToFI
 	fifi := wire.NewFIAdditionalFIToFI()
-	fifi.AdditionalFIToFI.LineOne = "Line One"
-	fifi.AdditionalFIToFI.LineTwo = "Line Two"
-	fifi.AdditionalFIToFI.LineThree = "Line Three"
-	fifi.AdditionalFIToFI.LineFour = "Line Four"
-	fifi.AdditionalFIToFI.LineFive = "Line Five"
-	fifi.AdditionalFIToFI.LineSix = "Line Six"
+	fifi.AdditionalFIToFI.LineOne = "FIAddFI Line One"
+	fifi.AdditionalFIToFI.LineTwo = "FIAddFI Line Two"
+	fifi.AdditionalFIToFI.LineThree = "FIAddFI Line Three"
+	fifi.AdditionalFIToFI.LineFour = "FIAddFI Line Four"
+	fifi.AdditionalFIToFI.LineFive = "FIAddFI Line Five"
+	fifi.AdditionalFIToFI.LineSix = "FIAddFI Line Six"
 	fwm.SetFIAdditionalFIToFI(fifi)
-
-	// Cover Payment Information
-	cia := wire.NewCurrencyInstructedAmount()
-	cia.SwiftFieldTag = "Swift Field Tag"
-	cia.Amount = "1500,49"
-	fwm.SetCurrencyInstructedAmount(cia)
-	oc := wire.NewOrderingCustomer()
-	oc.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	oc.CoverPayment.SwiftLineOne = "Swift Line One"
-	oc.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	oc.CoverPayment.SwiftLineThree = "Swift Line Three"
-	oc.CoverPayment.SwiftLineFour = "Swift Line Four"
-	oc.CoverPayment.SwiftLineFive = "Swift Line Five"
-	fwm.SetOrderingCustomer(oc)
-	oi := wire.NewOrderingInstitution()
-	oi.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	oi.CoverPayment.SwiftLineOne = "Swift Line One"
-	oi.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	oi.CoverPayment.SwiftLineThree = "Swift Line Three"
-	oi.CoverPayment.SwiftLineFour = "Swift Line Four"
-	oi.CoverPayment.SwiftLineFive = "Swift Line Five"
-	fwm.SetOrderingInstitution(oi)
-	ii := wire.NewIntermediaryInstitution()
-	ii.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	ii.CoverPayment.SwiftLineOne = "Swift Line One"
-	ii.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	ii.CoverPayment.SwiftLineThree = "Swift Line Three"
-	ii.CoverPayment.SwiftLineFour = "Swift Line Four"
-	ii.CoverPayment.SwiftLineFive = "Swift Line Five"
-	fwm.SetIntermediaryInstitution(ii)
-	iAccount := wire.NewInstitutionAccount()
-	iAccount.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	iAccount.CoverPayment.SwiftLineOne = "Swift Line One"
-	iAccount.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	iAccount.CoverPayment.SwiftLineThree = "Swift Line Three"
-	iAccount.CoverPayment.SwiftLineFour = "Swift Line Four"
-	iAccount.CoverPayment.SwiftLineFive = "Swift Line Five"
-	fwm.SetInstitutionAccount(iAccount)
-	bc := wire.NewBeneficiaryCustomer()
-	bc.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	bc.CoverPayment.SwiftLineOne = "Swift Line One"
-	bc.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	bc.CoverPayment.SwiftLineThree = "Swift Line Three"
-	bc.CoverPayment.SwiftLineFour = "Swift Line Four"
-	bc.CoverPayment.SwiftLineFive = "Swift Line Five"
-	fwm.SetBeneficiaryCustomer(bc)
-	ri := wire.NewRemittance()
-	ri.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	ri.CoverPayment.SwiftLineOne = "Swift Line One"
-	ri.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	ri.CoverPayment.SwiftLineThree = "Swift Line Three"
-	ri.CoverPayment.SwiftLineFour = "Swift Line Four"
-	fwm.SetRemittance(ri)
-	str := wire.NewSenderToReceiver()
-	str.CoverPayment.SwiftFieldTag = "Swift Field Tag"
-	str.CoverPayment.SwiftLineOne = "Swift Line One"
-	str.CoverPayment.SwiftLineTwo = "Swift Line Two"
-	str.CoverPayment.SwiftLineThree = "Swift Line Three"
-	str.CoverPayment.SwiftLineFour = "Swift Line Four"
-	str.CoverPayment.SwiftLineFive = "Swift Line Five"
-	str.CoverPayment.SwiftLineSix = "Swift Line Six"
-	fwm.SetSenderToReceiver(str)
 
 	file.AddFEDWireMessage(fwm)
 

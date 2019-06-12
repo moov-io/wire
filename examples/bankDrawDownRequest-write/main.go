@@ -20,8 +20,8 @@ func main() {
 	fwm.SetSenderSupplied(ss)
 
 	tst := wire.NewTypeSubType()
-	tst.TypeCode = "16"
-	tst.SubTypeCode = "31"
+	tst.TypeCode = wire.SettlementTransfer
+	tst.SubTypeCode = wire.RequestCredit
 	fwm.SetTypeSubType(tst)
 
 	imad := wire.NewInputMessageAccountabilityData()

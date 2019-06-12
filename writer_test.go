@@ -784,8 +784,8 @@ func TestFEDWireMessageWriteDepositSendersAccount(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	tst.TypeCode = "16"
-	tst.SubTypeCode = "00"
+	tst.TypeCode = SettlementTransfer
+	tst.SubTypeCode = BasicFundsTransfer
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
@@ -940,8 +940,8 @@ func TestFEDWireMessageWriteFEDFundsSold(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	tst.TypeCode = "16"
-	tst.SubTypeCode = "00"
+	tst.TypeCode = SettlementTransfer
+	tst.SubTypeCode = BasicFundsTransfer
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
@@ -1096,8 +1096,8 @@ func TestFEDWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	tst.TypeCode = "16"
-	tst.SubTypeCode = "31"
+	tst.TypeCode = SettlementTransfer
+	tst.SubTypeCode = RequestCredit
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
@@ -1179,8 +1179,8 @@ func TestFEDWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
 	fwm.SetTypeSubType(tst)
-	tst.TypeCode = "10"
-	tst.SubTypeCode = "31"
+	tst.TypeCode = FundsTransfer
+	tst.SubTypeCode = RequestCredit
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
 	amt := mockAmount()
@@ -1257,8 +1257,8 @@ func TestFEDWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 func TestFEDWireMessageWriteServiceMessage(t *testing.T) {
 	file := NewFile()
 	fwm := createMockServiceMessageData()
-	fwm.TypeSubType.TypeCode = "10"
-	fwm.TypeSubType.SubTypeCode = "01"
+	fwm.TypeSubType.TypeCode = FundsTransfer
+	fwm.TypeSubType.SubTypeCode = RequestReversal
 	fwm.SetTypeSubType(fwm.TypeSubType)
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = BFCServiceMessage
@@ -1311,8 +1311,8 @@ func createMockServiceMessageData() FEDWireMessage {
 	ss := mockSenderSupplied()
 	fwm.SetSenderSupplied(ss)
 	tst := mockTypeSubType()
-	tst.TypeCode = "10"
-	tst.SubTypeCode = "01"
+	tst.TypeCode = FundsTransfer
+	tst.SubTypeCode = RequestReversal
 	fwm.SetTypeSubType(tst)
 	imad := mockInputMessageAccountabilityData()
 	fwm.SetInputMessageAccountabilityData(imad)
