@@ -6,6 +6,8 @@ package main
 
 import (
 	"github.com/moov-io/wire"
+	"log"
+	"os"
 	"time"
 )
 
@@ -220,4 +222,17 @@ func main() {
 	fwm.SetFIAdditionalFIToFI(fifi)
 
 	file.AddFEDWireMessage(fwm)
+
+	if err := file.Create(); err != nil {
+		log.Fatalf("Could not create FEDWireMessage: %s\n", err)
+	}
+	if err := file.Validate(); err != nil {
+		log.Fatalf("Could not validate FEDWireMessage: %s\n", err)
+	}
+
+	w := wire.NewWriter(os.Stdout)
+	if err := w.Write(file); err != nil {
+		log.Fatalf("Unexpected error: %s\n", err)
+	}
+	w.Flush()
 }
