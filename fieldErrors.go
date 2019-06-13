@@ -129,10 +129,7 @@ type FieldError struct {
 }
 
 // Error message is constructed
-// FieldName Msg Value
-// ToDo:
-// Example1:
-// Example2:
+
 func (e *FieldError) Error() string {
 	return fmt.Sprintf("%s %v %s", e.FieldName, e.Value, e.Err)
 }

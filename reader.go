@@ -4,8 +4,6 @@
 
 package wire
 
-// ToDo:  Add Tag checks in validate of each type
-
 import (
 	"bufio"
 	"github.com/moov-io/base"
