@@ -18,7 +18,7 @@ Moov WIRE is under active development and should not currently be used for produ
 
 ### Go library
 
-`github.com/moov-io/wire` offers a Go based ACH file reader and writer. To get started checkout a specific example:
+`github.com/moov-io/wire` offers a Go based FED Wire Message reader and writer. To get started checkout a specific example:
 
 <details>
 <summary>Supported Business Function Codes</summary>
