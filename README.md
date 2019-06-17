@@ -18,24 +18,24 @@ Moov WIRE is under active development and should not currently be used for produ
 
 ### Go library
 
-`github.com/moov-io/wire` offers a Go based ACH file reader and writer. To get started checkout a specific example:
+`github.com/moov-io/wire` offers a Go based FED Wire Message reader and writer. To get started checkout a specific example:
 
 <details>
 <summary>Supported Business Function Codes</summary>
 
-| Business Function Code | Name                                  | Example |
-|----------|---------------------------------------|-----------------------------------|
-| BTR      | BankTransfer                          | [Link](test/testdata/fedWireMessage-BankTransfer.txt) |
-| CKS      | CheckSameDaySettlement                | [Link](test/testdata/fedWireMessage-CheckSameDaySettlement.txt) |
-| CTP      | CustomerTransferPlus                  | [Link](test/testdata/fedWireMessage-CustomerTransferPlus.txt) |
-| CTR      | CustomerTransfer                      | [Link](test/testdata/fedWireMessage-CustomerTransfer.txt) |
-| DEP      | DepositSendersAccount                 | [Link](test/testdata/fedWireMessage-DepositSendersAccount.txt) |
-| DRB      | BankDrawdownRequest                   | [Link](test/testdata/fedWireMessage-BankDrawDownRequest.txt) |
-| DRC      | CustomerCorporateDrawdownRequest      | [Link](test/testdata/fedWireMessage-CustomerCorporateDrawdownRequest.txt) |
-| DRW      | DrawdownRequest                       | [Link](test/testdata/fedWireMessage-DrawDownRequest.txt) |
-| FFR      | FEDFundsReturned                      | [Link](test/testdata/fedWireMessage-FEDFundsReturned.txt) |
-| FFS      | FEDFundsSold                          | [Link](test/testdata/fedWireMessage-FEDFundsSold.txt) |
-| SVC      | ServiceMessage                        | [Link](test/testdata/fedWireMessage-ServiceMessage.txt) |
+| Business Function Code | Name               | Example | Read | Write |
+|----------|----------------------------------|---------|------|-------|
+| DRB      | Bank DrawDown Request            | [Link](examples/bankDrawDownRequest-read/bankDrawDownRequest.txt) | [Link](examples/bankDrawDownRequest-read/main.go) | [Link](examples/bankDrawDownRequest-write/main.go) | 
+| BTR      | BankTransfer                     | [Link](examples/bankTransfer-read/bankTransfer.txt) | [Link](examples/bankTransfer-read/main.go) | [Link](examples/bankTransfer-write/main.go) |
+| CKS      | CheckSameDaySettlement           | [Link](examples/checkSameDaySettlement-read/checkSameDaySettlement.txt) | [Link](examples/checkSameDaySettlement-read/main.go) | [Link](examples/checkSameDaySettlement-write/main.go) |
+| DRC      | CustomerCorporateDrawdownRequest | [Link](examples/customerCorporateDrawDownRequest-read/customerCorporateDrawDownRequest.txt) | [Link](examples/customerCorporateDrawDownRequest-read/main.go) | [Link](examples/customerCorporateDrawDownRequest-write/main.go) |
+| CTR      | CustomerTransfer                 | [Link](examples/customerTransfer-read/customerTransfer.txt) | [Link](examples/customerTransfer-read/main.go) | [Link](examples/customerTransfer-write/main.go) |
+| CTP      | CustomerTransferPlus             | [Link](examples/customerTransferPlus-read/customerTransferPlus.txt) | [Link](examples/customerTransferPlus-read/main.go) | [Link](examples/customerTransferPlus-write/main.go) |
+| CTP      | CustomerTransferPlusCOVS         | [Link](examples/customerTransferPlusCOVS-read/customerTransferPlusCOVS.txt) | [Link](examples/customerTransferPlusCOVS-read/main.go) | [Link](examples/customerTransferPlusCOVS-write/main.go) |
+| DEP      | DepositSendersAccount            | [Link](examples/depositSendersAccount-read/depositSendersAccount.txt) | [Link](examples/depositSendersAccount-read/main.go) | [Link](examples/depositSendersAccount-write/main.go) |
+| FFR      | FEDFundsReturned                 | [Link](examples/fedFundsReturned-read/fedFundsReturned.txt) | [Link](examples/fedFundsReturned-read/main.go) | [Link](examples/fedFundsReturned-write/main.go) |
+| FFS      | FEDFundsSold                     | [Link](examples/fedFundsSold-read/fedFundsSold.txt) | [Link](examples/fedFundsSold-read/main.go) | [Link](examples/fedFundsSold-write/main.go) |
+| SVC      | ServiceMessage                   | [Link](examples/serviceMessage-read/serviceMessage.txt) | [Link](examples/serviceMessage-read/main.go) | [Link](examples/serviceMessage-write/main.go) |
 </details>
 
 ### From Source

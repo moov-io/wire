@@ -8,7 +8,6 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-# ToDo: Update Schema descriptions
 servers:
   - url: http://localhost:8087
     description: Local development
@@ -933,7 +932,6 @@ components:
           type: string
           maxLength: 35
           description: EndToEndIdentification
-          #ToDo Review
           example: 'WireTransfer 10001'
     InstructedAmount:
       description: InstructedAmount is the instructed amount
@@ -1424,7 +1422,6 @@ components:
           type: string
           maxLength: 22
           description: PreviousMessageIdentifier
-          # ToDo: find previousMessageIdentifier example
       example: ''
     Charges:
       properties:

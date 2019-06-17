@@ -40,7 +40,7 @@ func (v *validator) isNumeric(s string) error {
 	return nil
 }
 
-// ToDo: Amount Decimal and AmountComma (only 1 per each)
+// ToDo: Amount Decimal and AmountComma (only 1 per each) ?
 
 // isAmount checks if a string only contains onc comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
@@ -438,8 +438,6 @@ func (v *validator) validateDate(s string) error {
 	}
 	return nil
 }
-
-// ToDo: Some type of pattern match instead
 
 // validatePartyIdentifier validates OriginatorOptionF PartyIdentifier
 // PartyIdentifier must be one of the following two formats:

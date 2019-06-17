@@ -5,7 +5,6 @@
 package wire
 
 const (
-
 	// TagMessageDisposition is MessageDisposition
 	TagMessageDisposition = "{1100}"
 	// TagReceiptTimeStamp is ReceiptTimeStamp
