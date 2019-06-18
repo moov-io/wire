@@ -98,7 +98,8 @@ type testFile struct {
 }
 
 func getTestFiles() []testFile {
-	matches, err := filepath.Glob("../cmd/test/testdata/*.txt")
+
+	matches, err := filepath.Glob("../test/testdata/*.txt")
 	if err != nil {
 		return nil
 	}
