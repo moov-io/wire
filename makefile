@@ -39,6 +39,9 @@ docker:
 # Main wire server Docker image
 	docker build --pull -t moov/wire:$(VERSION) -f Dockerfile .
 	docker tag moov/wire:$(VERSION) moov/wire:latest
+# Wire Fuzzing docker image
+	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile-fuzz
+	docker tag moov/wirefuzz:$(VERSION) moov/wirefuzz:latest
 
 release: docker AUTHORS
 	go vet ./...
@@ -47,6 +50,7 @@ release: docker AUTHORS
 
 release-push:
 	docker push moov/wire:$(VERSION)
+	docker push moov/wirefuzz:$(VERSION)
 
 .PHONY: cover-test cover-web
 cover-test:
