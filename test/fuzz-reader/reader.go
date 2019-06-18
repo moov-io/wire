@@ -6,6 +6,7 @@ package fuzzreader
 
 import (
 	"bytes"
+
 	"github.com/moov-io/wire"
 )
 
@@ -17,25 +18,20 @@ import (
 // added to corpus even if gives new coverage; and 0 otherwise; other values are
 // reserved for future use.
 func Fuzz(data []byte) int {
-	r := wire.NewReader(bytes.NewReader(data))
-	f, err := r.Read()
+	f, err := wire.NewReader(bytes.NewReader(data)).Read()
 	if err != nil {
 		return 0
 	}
-
 	if f.ID != "" {
 		return 1
 	}
-	if f.FedWireMessage.SenderSupplied != nil {
-		return 1
-	}
-	if n := checkSenderSupplied(f.FedWireMessage.SenderSupplied); n > 0 {
-
-	}
-	return 0
+	return checkSenderSupplied(f.FedWireMessage.SenderSupplied)
 }
 
 func checkSenderSupplied(ss *wire.SenderSupplied) int {
+	if ss == nil {
+		return -1 // depriortize
+	}
 	if ss.FormatVersion != "" {
 		return 1
 	}
