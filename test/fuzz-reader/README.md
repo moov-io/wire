@@ -26,7 +26,7 @@ $ kubectl get pods -n apps | grep wirefuzz
 wirefuzz-6bbdc574f5-pl2zm        1/1       Running     0          1h
 ```
 
-Then using the [volume's mount path](https://github.com/moov-io/infra/blob/master/lib/apps/10-wirefuzz.yml) select any crasher files.
+Then using the [volume's mount path](https://github.com/moov-io/infra/blob/master/lib/apps/18-wirefuzz.yml) select any crasher files.
 
 ```
 $ kubectl exec -n apps wirefuzz-6bbdc574f5-pl2zm -- ls -la /go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/
