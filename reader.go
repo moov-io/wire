@@ -6,8 +6,11 @@ package wire
 
 import (
 	"bufio"
-	"github.com/moov-io/base"
+	"fmt"
 	"io"
+	"unicode/utf8"
+
+	"github.com/moov-io/base"
 )
 
 // Reader reads records from a ACH-encoded file.
@@ -83,6 +86,9 @@ func (r *Reader) Read() (File, error) {
 }
 
 func (r *Reader) parseLine() error {
+	if n := utf8.RuneCountInString(r.line); n < 6 {
+		return fmt.Errorf("line %q is too short for tag", r.line)
+	}
 	switch r.line[:6] {
 	case TagSenderSupplied:
 		if err := r.parseSenderSupplied(); err != nil {

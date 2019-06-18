@@ -51,6 +51,11 @@ $ go get -u github.com/moov-io/wire
 $ go doc github.com/moov-io/wire fedWireMessage
 ```
 
+### Fuzzing
+
+We currently run fuzzing over wire in the form of a [`moov/wirefuzz`](https://hub.docker.com/r/moov/wirefuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
+
+
 ## Getting Help
 
  channel | info
