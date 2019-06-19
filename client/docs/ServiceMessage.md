@@ -1,6 +1,7 @@
 # ServiceMessage
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **LineOne** | **string** | LineOne | [optional] 

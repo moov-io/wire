@@ -1,6 +1,7 @@
 # BeneficiaryReference
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **BeneficiaryReference** | **string** | BeneficiaryReference | [optional] 

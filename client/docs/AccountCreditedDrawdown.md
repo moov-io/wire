@@ -1,6 +1,7 @@
 # AccountCreditedDrawdown
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **DrawdownCreditAccountNumber** | **string** | DrawdownCreditAccountNumber  9 character ABA  | [optional] 

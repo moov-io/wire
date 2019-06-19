@@ -1,6 +1,7 @@
 # FiPaymentMethodToBeneficiary
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **PaymentMethod** | **string** | PaymentMethod | [optional] 

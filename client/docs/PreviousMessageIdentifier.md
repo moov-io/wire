@@ -1,6 +1,7 @@
 # PreviousMessageIdentifier
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **PreviousMessageIdentifier** | **string** | PreviousMessageIdentifier | [optional] 

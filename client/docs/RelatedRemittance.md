@@ -1,6 +1,7 @@
 # RelatedRemittance
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **RemittanceIdentification** | **string** | RemittanceIdentification | [optional] 

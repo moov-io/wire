@@ -1,6 +1,7 @@
 # RemittanceData
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | **string** | Name | [optional] 

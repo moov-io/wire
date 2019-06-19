@@ -13,6 +13,6 @@ package openapi
 type InstructedAmount struct {
 	// CurrencyCode
 	CurrencyCode string `json:"currencyCode,omitempty"`
-	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as 
+	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
 	Amount string `json:"amount,omitempty"`
 }
