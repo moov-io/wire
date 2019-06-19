@@ -11,12 +11,12 @@ package openapi
 
 import (
 	"context"
-	"fmt"
-	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"fmt"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -37,13 +37,13 @@ WireFilesApiService Create a new File object
 */
 
 type CreateWireFileOpts struct {
-	XRequestId      optional.String
+	XRequestId optional.String
 	XIdempotencyKey optional.String
 }
 
 func (a *WireFilesApiService) CreateWireFile(ctx context.Context, createFile CreateFile, localVarOptionals *CreateWireFileOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Post")
+		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -154,7 +154,7 @@ type DeleteFEDWireMessageFromFileOpts struct {
 
 func (a *WireFilesApiService) DeleteFEDWireMessageFromFile(ctx context.Context, fileId string, fEDWireMessageId string, localVarOptionals *DeleteFEDWireMessageFromFileOpts) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Delete")
+		localVarHttpMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -162,9 +162,9 @@ func (a *WireFilesApiService) DeleteFEDWireMessageFromFile(ctx context.Context, 
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/fEDWireMessage/{fEDWireMessage_id}"
+	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/FEDWireMessage/{FEDWireMessage_id}"
 	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"fEDWireMessage_id"+"}", fmt.Sprintf("%v", fEDWireMessageId), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"FEDWireMessage_id"+"}", fmt.Sprintf("%v", fEDWireMessageId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -231,7 +231,7 @@ type DeleteWireFileByIDOpts struct {
 
 func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileId string, localVarOptionals *DeleteWireFileByIDOpts) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Delete")
+		localVarHttpMethod   = http.MethodDelete
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -309,7 +309,7 @@ type GetFEDWireMessageFromFileOpts struct {
 
 func (a *WireFilesApiService) GetFEDWireMessageFromFile(ctx context.Context, fileId string, fEDWireMessageId string, localVarOptionals *GetFEDWireMessageFromFileOpts) (FedWireMessage, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -318,9 +318,9 @@ func (a *WireFilesApiService) GetFEDWireMessageFromFile(ctx context.Context, fil
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/fEDWireMessage/{fEDWireMessage_id}"
+	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/FEDWireMessage/{FEDWireMessage_id}"
 	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
-	localVarPath = strings.Replace(localVarPath, "{"+"fEDWireMessage_id"+"}", fmt.Sprintf("%v", fEDWireMessageId), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"FEDWireMessage_id"+"}", fmt.Sprintf("%v", fEDWireMessageId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -407,7 +407,7 @@ type GetWireFileContentsOpts struct {
 
 func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileId string, localVarOptionals *GetWireFileContentsOpts) (string, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -503,7 +503,7 @@ type GetWireFilesOpts struct {
 
 func (a *WireFilesApiService) GetWireFiles(ctx context.Context, localVarOptionals *GetWireFilesOpts) ([]File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -596,13 +596,13 @@ WireFilesApiService Updates the specified FEDWire Message by setting the values 
 */
 
 type UpdateWireFileByIDOpts struct {
-	XRequestId      optional.String
+	XRequestId optional.String
 	XIdempotencyKey optional.String
 }
 
 func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileId string, createFile CreateFile, localVarOptionals *UpdateWireFileByIDOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Post")
+		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -714,7 +714,7 @@ type ValidateWireFileOpts struct {
 
 func (a *WireFilesApiService) ValidateWireFile(ctx context.Context, fileId string, localVarOptionals *ValidateWireFileOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string

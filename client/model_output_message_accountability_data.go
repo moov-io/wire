@@ -16,9 +16,9 @@ type OutputMessageAccountabilityData struct {
 	OutputDestinationID string `json:"outputDestinationID,omitempty"`
 	// OutputSequenceNumber
 	OutputSequenceNumber string `json:"outputSequenceNumber,omitempty"`
-	// Output Date MMDD, based on the calendar date
+	// Output Date MMDD, based on the calendar date 
 	OutputDate string `json:"outputDate,omitempty"`
-	// Output Time HHMM, based on a 24-hour clock, Eastern Time
+	// Output Time HHMM, based on a 24-hour clock, Eastern Time 
 	OutputTime string `json:"outputTime,omitempty"`
 	// OutputFRBApplicationIdentification
 	OutputFRBApplicationIdentification string `json:"outputFRBApplicationIdentification,omitempty"`

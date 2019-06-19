@@ -11,6 +11,6 @@ package openapi
 
 type FiPaymentMethodToBeneficiary struct {
 	// PaymentMethod
-	PaymentMethod         string `json:"paymentMethod,omitempty"`
+	PaymentMethod string `json:"paymentMethod,omitempty"`
 	AdditionalInformation string `json:"AdditionalInformation,omitempty"`
 }

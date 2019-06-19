@@ -11,12 +11,12 @@ package openapi
 
 import (
 	"context"
-	"fmt"
-	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"fmt"
 	"strings"
+	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -41,7 +41,7 @@ type GetWireFileByIDOpts struct {
 
 func (a *FilesApiService) GetWireFileByID(ctx context.Context, fileId string, localVarOptionals *GetWireFileByIDOpts) (File, *http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string
@@ -129,7 +129,7 @@ FilesApiService Ping the Wire service to check if running
 */
 func (a *FilesApiService) Ping(ctx context.Context) (*http.Response, error) {
 	var (
-		localVarHttpMethod   = strings.ToUpper("Get")
+		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		localVarFormFileName string
 		localVarFileName     string

@@ -263,7 +263,7 @@ paths:
              schema:
                type: string
                example: 3f2d23ee214
-           - name: fEDWireMessage_id
+           - name: FEDWireMessage_id
              in: path
              description: FEDWireMessage ID
              required: true
@@ -300,7 +300,7 @@ paths:
              schema:
                type: string
                example: 3f2d23ee214
-           - name: fEDWireMessage_id
+           - name: FEDWireMessage_id
              in: path
              description: FEDWireMessage ID
              required: true
