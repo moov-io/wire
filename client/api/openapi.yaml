@@ -339,7 +339,7 @@ paths:
         that was returned upon creation.
       tags:
       - Wire Files
-  /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
+  /files/{file_id}/FEDWireMessage/{FEDWireMessage_id}:
     delete:
       operationId: deleteFEDWireMessageFromFile
       parameters:
@@ -365,7 +365,7 @@ paths:
       - description: FEDWireMessage ID
         explode: false
         in: path
-        name: fEDWireMessage_id
+        name: FEDWireMessage_id
         required: true
         schema:
           example: "45758063"
@@ -407,7 +407,7 @@ paths:
       - description: FEDWireMessage ID
         explode: false
         in: path
-        name: fEDWireMessage_id
+        name: FEDWireMessage_id
         required: true
         schema:
           example: "45758063"

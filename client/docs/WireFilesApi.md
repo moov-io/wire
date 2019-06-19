@@ -5,9 +5,9 @@ All URIs are relative to *http://localhost:8087*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create a new File object
-[**DeleteFEDWireMessageFromFile**](WireFilesApi.md#DeleteFEDWireMessageFromFile) | **Delete** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Delete a FEDWireMessage from a File
+[**DeleteFEDWireMessageFromFile**](WireFilesApi.md#DeleteFEDWireMessageFromFile) | **Delete** /files/{file_id}/FEDWireMessage/{FEDWireMessage_id} | Delete a FEDWireMessage from a File
 [**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-[**GetFEDWireMessageFromFile**](WireFilesApi.md#GetFEDWireMessageFromFile) | **Get** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
+[**GetFEDWireMessageFromFile**](WireFilesApi.md#GetFEDWireMessageFromFile) | **Get** /files/{file_id}/FEDWireMessage/{FEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
 [**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
 [**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Gets a list of Files
 [**UpdateWireFileByID**](WireFilesApi.md#UpdateWireFileByID) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.

@@ -10,14 +10,14 @@
 package openapi
 
 type Charges struct {
-	// Charge Details * `B` - Beneficiary * `S` - Shared
+	// Charge Details * `B` - Beneficiary * `S` - Shared 
 	ChargeDetails string `json:"chargeDetails,omitempty"`
-	// SendersChargesOne  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+	// SendersChargesOne  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99. 
 	SendersChargesOne string `json:"sendersChargesOne,omitempty"`
-	// SendersChargesTwo  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+	// SendersChargesTwo  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99. 
 	SendersChargesTwo string `json:"sendersChargesTwo,omitempty"`
-	// SendersChargesThree  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+	// SendersChargesThree  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99. 
 	SendersChargesThree string `json:"sendersChargesThree,omitempty"`
-	// SendersChargesFour  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+	// SendersChargesFour  The first three characters must contain an alpha currency code (e.g., USD).  The remaining characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99. 
 	SendersChargesFour string `json:"sendersChargesFour,omitempty"`
 }
