@@ -241,7 +241,7 @@ paths:
                 $ref: '#/components/schemas/File'
         '400':
           description: Validation failed. Check response for errors
-  /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
+  /files/{file_id}/FEDWireMessage/{FEDWireMessage_id}:
        get:
          tags: ['Wire Files']
          summary: Get a specific FEDWireMessage on a FIle
