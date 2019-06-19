@@ -60,10 +60,10 @@ func createFileEndpoint(s Service, r Repository, logger log.Logger) endpoint.End
 			}, err
 		}
 
-		/*		// record a metric for files created
-				if req.File != nil && req.File.Header.ImmediateDestination != "" && req.File.Header.ImmediateOrigin != "" {
-					filesCreated.With("destination", req.File.Header.ImmediateDestination, "origin", req.File.Header.ImmediateOrigin).Add(1)
-				}*/
+		// record a metric for files created
+		if req.File != nil && req.File.FedWireMessage.SenderSupplied != nil {
+			filesCreated.With("Sender Supplied", req.File.FedWireMessage.SenderSupplied.String())
+		}
 
 		// Create a random file ID if none was provided
 		if req.File.ID == "" {
@@ -287,8 +287,7 @@ func decodeGetFileContentsRequest(_ context.Context, r *http.Request) (interface
 }
 
 type validateFileRequest struct {
-	ID string
-
+	ID        string
 	requestId string
 }
 

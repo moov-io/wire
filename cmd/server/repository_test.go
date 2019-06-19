@@ -5,6 +5,7 @@
 package main
 
 import (
+	"github.com/go-kit/kit/log"
 	"github.com/moov-io/wire"
 	"testing"
 	"time"
@@ -44,13 +45,19 @@ func TestRepositoryFiles(t *testing.T) {
 	}
 }
 
-/*func TestRepository__cleanupOldFiles(t *testing.T) {
+func TestRepository__cleanupOldFiles(t *testing.T) {
 	r := NewRepositoryInMemory(testTTLDuration, nil)
 	if repo, ok := r.(*repositoryInMemory); !ok {
 		t.Fatalf("unexpected repository: %T %#v", r, r)
 	} else {
 		// write a file and later verify it's cleaned up
 		file := wire.NewFile()
+		fwm := wire.NewFEDWireMessage()
+		rts := wire.NewReceiptTimeStamp()
+		rd := time.Now().Add(-1 * 24 * time.Hour).Format("060102")
+		rts.ReceiptDate = rd[2:6]
+		fwm.SetReceiptTimeStamp(rts)
+		file.AddFEDWireMessage(fwm)
 		repo.StoreFile(file)
 		if n := len(repo.FindAllFiles()); n != 1 {
 			t.Errorf("got %d WIRE files", n)
@@ -68,4 +75,4 @@ func TestRepositoryFiles(t *testing.T) {
 	} else {
 		repo.cleanupOldFiles() // make sure we don't panic
 	}
-}*/
+}
