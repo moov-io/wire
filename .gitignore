@@ -22,3 +22,6 @@ openapi-generator-cli-*.jar
 # macOS
 .DS_Store
 
+# fuzzing
+test/fuzz-reader/fuzzreader-fuzz.zip
+

@@ -4,30 +4,35 @@ All URIs are relative to *http://localhost:8087*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CreateFile**](WireFilesApi.md#CreateFile) | **Post** /files/create | Create a new File object
-[**DeleteFile**](WireFilesApi.md#DeleteFile) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-[**DeleteFileFEDWireMessage**](WireFilesApi.md#DeleteFileFEDWireMessage) | **Delete** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Delete a FEDWireMessage from a File
-[**GetFileContents**](WireFilesApi.md#GetFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
-[**GetFileFEDWireMessage**](WireFilesApi.md#GetFileFEDWireMessage) | **Get** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
-[**GetFiles**](WireFilesApi.md#GetFiles) | **Get** /files | Gets a list of Files
-[**UpdateFile**](WireFilesApi.md#UpdateFile) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-[**ValidateFile**](WireFilesApi.md#ValidateFile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+[**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create a new File object
+[**DeleteFEDWireMessageFromFile**](WireFilesApi.md#DeleteFEDWireMessageFromFile) | **Delete** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Delete a FEDWireMessage from a File
+[**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+[**GetFEDWireMessageFromFile**](WireFilesApi.md#GetFEDWireMessageFromFile) | **Get** /files/{file_id}/fEDWireMessage/{fEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
+[**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+[**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Gets a list of Files
+[**UpdateWireFileByID**](WireFilesApi.md#UpdateWireFileByID) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+[**ValidateWireFile**](WireFilesApi.md#ValidateWireFile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
-# **CreateFile**
-> File CreateFile(ctx, createFile, optional)
+
+## CreateWireFile
+
+> File CreateWireFile(ctx, createFile, optional)
 Create a new File object
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **createFile** | [**CreateFile**](CreateFile.md)| Content of the WIRE file (in json or raw text) | 
- **optional** | ***CreateFileOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**createFile** | [**CreateFile**](CreateFile.md)| Content of the WIRE file (in json or raw text) | 
+ **optional** | ***CreateWireFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a CreateFileOpts struct
+
+Optional parameters are passed through a pointer to a CreateWireFileOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -45,61 +50,33 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, text/plain
- - **Accept**: application/json
+- **Content-Type**: application/json, text/plain
+- **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
-# **DeleteFile**
-> DeleteFile(ctx, fileId, optional)
-Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 
-### Required Parameters
+## DeleteFEDWireMessageFromFile
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
- **optional** | ***DeleteFileOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-Optional parameters are passed through a pointer to a DeleteFileOpts struct
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
- **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
-
-### Return type
-
- (empty response body)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: Not defined
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **DeleteFileFEDWireMessage**
-> DeleteFileFEDWireMessage(ctx, fileId, fEDWireMessageId, optional)
+> DeleteFEDWireMessageFromFile(ctx, fileId, fEDWireMessageId, optional)
 Delete a FEDWireMessage from a File
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
-  **fEDWireMessageId** | **string**| FEDWireMessage ID | 
- **optional** | ***DeleteFileFEDWireMessageOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+**fEDWireMessageId** | **string**| FEDWireMessage ID | 
+ **optional** | ***DeleteFEDWireMessageFromFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a DeleteFileFEDWireMessageOpts struct
+
+Optional parameters are passed through a pointer to a DeleteFEDWireMessageFromFileOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -117,25 +94,32 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: Not defined
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
-# **GetFileContents**
-> string GetFileContents(ctx, fileId, optional)
-Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+
+## DeleteWireFileByID
+
+> DeleteWireFileByID(ctx, fileId, optional)
+Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
- **optional** | ***GetFileContentsOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+ **optional** | ***DeleteWireFileByIDOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a GetFileContentsOpts struct
+
+Optional parameters are passed through a pointer to a DeleteWireFileByIDOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -144,7 +128,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -152,26 +136,33 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: text/plain
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
-# **GetFileFEDWireMessage**
-> FedWireMessage GetFileFEDWireMessage(ctx, fileId, fEDWireMessageId, optional)
+
+## GetFEDWireMessageFromFile
+
+> FedWireMessage GetFEDWireMessageFromFile(ctx, fileId, fEDWireMessageId, optional)
 Get a specific FEDWireMessage on a FIle
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
-  **fEDWireMessageId** | **string**| FEDWireMessage ID | 
- **optional** | ***GetFileFEDWireMessageOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+**fEDWireMessageId** | **string**| FEDWireMessage ID | 
+ **optional** | ***GetFEDWireMessageFromFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a GetFileFEDWireMessageOpts struct
+
+Optional parameters are passed through a pointer to a GetFEDWireMessageFromFileOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -189,24 +180,73 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
-# **GetFiles**
-> []File GetFiles(ctx, optional)
+
+## GetWireFileContents
+
+> string GetWireFileContents(ctx, fileId, optional)
+Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+
+### Required Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+ **optional** | ***GetWireFileContentsOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a GetWireFileContentsOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+
+### Return type
+
+**string**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: text/plain
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetWireFiles
+
+> []File GetWireFiles(ctx, optional)
 Gets a list of Files
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
- **optional** | ***GetFilesOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+ **optional** | ***GetWireFilesOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a GetFilesOpts struct
+
+Optional parameters are passed through a pointer to a GetWireFilesOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -222,26 +262,33 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
-# **UpdateFile**
-> File UpdateFile(ctx, fileId, createFile, optional)
+
+## UpdateWireFileByID
+
+> File UpdateWireFileByID(ctx, fileId, createFile, optional)
 Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
-  **createFile** | [**CreateFile**](CreateFile.md)|  | 
- **optional** | ***UpdateFileOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+**createFile** | [**CreateFile**](CreateFile.md)|  | 
+ **optional** | ***UpdateWireFileByIDOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a UpdateFileOpts struct
+
+Optional parameters are passed through a pointer to a UpdateWireFileByIDOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -260,25 +307,32 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
- - **Accept**: application/json
+- **Content-Type**: application/json
+- **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
-# **ValidateFile**
-> File ValidateFile(ctx, fileId, optional)
+
+## ValidateWireFile
+
+> File ValidateWireFile(ctx, fileId, optional)
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 ### Required Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **fileId** | **string**| File ID | 
- **optional** | ***ValidateFileOpts** | optional parameters | nil if no parameters
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+ **optional** | ***ValidateWireFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
-Optional parameters are passed through a pointer to a ValidateFileOpts struct
+
+Optional parameters are passed through a pointer to a ValidateWireFileOpts struct
+
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
@@ -295,8 +349,10 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
+- **Content-Type**: Not defined
+- **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 

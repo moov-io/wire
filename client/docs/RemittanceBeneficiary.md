@@ -1,6 +1,7 @@
 # RemittanceBeneficiary
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **IdentificationType** | **string** | IdentificationType  * &#x60;OI&#x60; - Organization ID * &#x60;PI&#x60; - Private ID  | [optional] 

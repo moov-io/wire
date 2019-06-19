@@ -1,6 +1,7 @@
 # Charges
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ChargeDetails** | **string** | Charge Details * &#x60;B&#x60; - Beneficiary * &#x60;S&#x60; - Shared  | [optional] 

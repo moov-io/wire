@@ -1,6 +1,7 @@
 # MessageDisposition
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **FormatVersion** | **string** | formatVersion identifies the format version 30  | [optional] 

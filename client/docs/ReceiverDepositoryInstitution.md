@@ -1,6 +1,7 @@
 # ReceiverDepositoryInstitution
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ReceiverABANumber** | **string** | ReceiverABANumber | 

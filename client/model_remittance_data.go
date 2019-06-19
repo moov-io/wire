@@ -12,7 +12,7 @@ package openapi
 type RemittanceData struct {
 	// Name
 	Name string `json:"name,omitempty"`
-	// AddressType  * `ADDR` - Complete Postal Address * `BIZZ` - Business Address * `DLVY` - Delivery Address * `HOME` - Home Address * `MLTO` - Mail Address * `PBOX` - Post Office Box 
+	// AddressType  * `ADDR` - Complete Postal Address * `BIZZ` - Business Address * `DLVY` - Delivery Address * `HOME` - Home Address * `MLTO` - Mail Address * `PBOX` - Post Office Box
 	AddressType string `json:"addressType,omitempty"`
 	// Department
 	Department string `json:"department,omitempty"`

@@ -1,6 +1,7 @@
 # PaymentNotification
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **PaymentNotificationIndicator** | **string** | Payment Notification Indicator  * &#x60;0 - 6&#x60; - Reserved for market practice conventions. * &#x60;7 - 9&#x60; - Reserved for bilateral agreements between Fedwire senders and receivers.  | [optional] 

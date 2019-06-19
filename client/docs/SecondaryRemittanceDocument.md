@@ -1,6 +1,7 @@
 # SecondaryRemittanceDocument
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **DocumentTypeCode** | **string** | Document Type Code  * &#x60;AROI&#x60; - Accounts Receivable Open Item * &#x60;DISP&#x60; - Dispatch Advice * &#x60;FXDR&#x60; - Foreign Exchange Deal Reference * &#x60;PROP&#x60; - Proprietary Document Type PUOR Purchase Order * &#x60;RADM&#x60; - Remittance Advice Message * &#x60;RPIN&#x60; - Related Payment Instruction * &#x60;SCOR1&#x60; - Structured Communication Reference VCHR Voucher  | [optional] 

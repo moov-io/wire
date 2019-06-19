@@ -1,6 +1,7 @@
 # OriginatorOptionF
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **PartyIdentifier** | **string** | PartyIdentifier  Must be one of the following two formats: 1. /Account Number (slash followed by at least one valid non-space character:  e.g., /123456)  2. Unique Identifier/ (4 character code followed by a slash and at least one valid non-space character:    e.g., SOSE/123-456-789) ARNU: Alien Registration Number CCPT: Passport Number CUST: Customer Identification Number  DRLC/    Driver’s License Number  EMPL/    Employer Number NIDN: National Identify Number  SOSE/    Social Security Number TXID: Tax Identification Number  | [optional] 

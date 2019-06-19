@@ -1,6 +1,7 @@
 # CurrencyInstructedAmount
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **SwiftFieldTag** | **string** | SwiftFieldTag | [optional] 

@@ -2,7 +2,8 @@ openapi: 3.0.2
 info:
   contact:
     url: https://github.com/moov-io/wire
-  description: Moov WIRE () implements an HTTP API for creating, parsing and validating WIRE files.
+  description: Moov WIRE () implements an HTTP API for creating, parsing and validating
+    WIRE files.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -27,9 +28,10 @@ paths:
       - Files
   /files:
     get:
-      operationId: getFiles
+      operationId: getWireFiles
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -50,7 +52,6 @@ paths:
               description: The total number of WIRE files
               explode: false
               schema:
-                format: int32
                 type: integer
               style: simple
       security:
@@ -61,9 +62,10 @@ paths:
       - Wire Files
   /files/create:
     post:
-      operationId: createFile
+      operationId: createWireFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -72,7 +74,9 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      - description: Idempotent key in the header which expires after 24 hours. These
+          strings should contain enough entropy for to not collide with each other
+          in your requests.
         example: a4f88150
         explode: false
         in: header
@@ -121,7 +125,7 @@ paths:
       - Wire Files
   /files/{file_id}:
     delete:
-      operationId: deleteFile
+      operationId: deleteWireFileByID
       parameters:
       - description: File ID
         explode: false
@@ -132,7 +136,8 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -149,13 +154,15 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+      summary: Permanently deletes a File and associated FEDWireMessage. It cannot
+        be undone.
       tags:
       - Wire Files
     get:
-      operationId: getFileByID
+      operationId: getWireFileByID
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -185,13 +192,15 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      summary: Retrieves the details of an existing File. You need only supply the
+        unique File identifier that was returned upon creation.
       tags:
       - Files
     post:
-      operationId: updateFile
+      operationId: updateWireFileByID
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -200,7 +209,9 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      - description: Idempotent key in the header which expires after 24 hours. These
+          strings should contain enough entropy for to not collide with each other
+          in your requests.
         example: a4f88150
         explode: false
         in: header
@@ -248,14 +259,16 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+      summary: Updates the specified FEDWire Message by setting the values of the
+        parameters passed. Any parameters not provided will be left unchanged.
       tags:
       - Wire Files
   /files/{file_id}/contents:
     get:
-      operationId: getFileContents
+      operationId: getWireFileContents
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -283,14 +296,16 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+      summary: Assembles the existing file witha FEDWireMessage, Returns plaintext
+        file.
       tags:
       - Wire Files
   /files/{file_id}/validate:
     get:
-      operationId: validateFile
+      operationId: validateWireFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -320,14 +335,16 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      summary: Validates the existing file. You need only supply the unique File identifier
+        that was returned upon creation.
       tags:
       - Wire Files
   /files/{file_id}/fEDWireMessage/{fEDWireMessage_id}:
     delete:
-      operationId: deleteFileFEDWireMessage
+      operationId: deleteFEDWireMessageFromFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -366,9 +383,10 @@ paths:
       tags:
       - Wire Files
     get:
-      operationId: getFileFEDWireMessage
+      operationId: getFEDWireMessageFromFile
       parameters:
-      - description: Optional Request ID allows application developer to trace requests through the systems logs
+      - description: Optional Request ID allows application developer to trace requests
+          through the systems logs
         example: rs4f9915
         explode: false
         in: header
@@ -413,7 +431,8 @@ paths:
 components:
   parameters:
     requestId:
-      description: Optional Request ID allows application developer to trace requests through the systems logs
+      description: Optional Request ID allows application developer to trace requests
+        through the systems logs
       example: rs4f9915
       explode: false
       in: header
@@ -423,7 +442,9 @@ components:
         type: string
       style: simple
     idempotencyKey:
-      description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+      description: Idempotent key in the header which expires after 24 hours. These
+        strings should contain enough entropy for to not collide with each other in
+        your requests.
       example: a4f88150
       explode: false
       in: header
@@ -471,7 +492,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: R
             messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
@@ -569,7 +590,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -867,7 +888,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: R
             messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
@@ -965,7 +986,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -1276,7 +1297,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: R
             messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
@@ -1374,7 +1395,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -1672,7 +1693,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: R
             messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
@@ -1770,7 +1791,7 @@ components:
             lineThree: Line Three
           senderSupplied:
             testProductionCode: T
-            messageDuplicationCode: null
+            messageDuplicationCode: ' '
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
@@ -2089,7 +2110,7 @@ components:
           dateRemittanceDocument: "20190401"
         messageDisposition:
           testProductionCode: T
-          messageDuplicationCode: null
+          messageDuplicationCode: R
           messageStatusIndicator: "0"
           formatVersion: "30"
         accountCreditedDrawdown:
@@ -2187,7 +2208,7 @@ components:
           lineThree: Line Three
         senderSupplied:
           testProductionCode: T
-          messageDuplicationCode: null
+          messageDuplicationCode: ' '
           userRequestCorrelation: TESTDATA
           formatVersion: "30"
         beneficiary:
@@ -2587,7 +2608,7 @@ components:
     MessageDisposition:
       example:
         testProductionCode: T
-        messageDuplicationCode: null
+        messageDuplicationCode: R
         messageStatusIndicator: "0"
         formatVersion: "30"
       properties:
@@ -2606,6 +2627,7 @@ components:
             * `T` - Test
             * `P` - Production
           enum:
+          - ' '
           - T
           - P
           example: T
@@ -2619,7 +2641,6 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
-          - null
           - R
           - P
           maxLength: 1
@@ -2759,7 +2780,7 @@ components:
       description: SenderSupplied
       example:
         testProductionCode: T
-        messageDuplicationCode: null
+        messageDuplicationCode: ' '
         userRequestCorrelation: TESTDATA
         formatVersion: "30"
       properties:
@@ -2795,7 +2816,7 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
-          - null
+          - ' '
           - R
           - P
           maxLength: 1

@@ -1,6 +1,7 @@
 # DateRemittanceDocument
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **DateRemittanceDocument** | **string** | DateRemittanceDocument CCYYMMDD | [optional] 

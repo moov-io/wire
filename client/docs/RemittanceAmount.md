@@ -1,6 +1,7 @@
 # RemittanceAmount
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **CurrencyCode** | **string** | CurrencyCode | [optional] 

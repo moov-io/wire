@@ -1,6 +1,7 @@
 # RemittanceOriginator
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **IdentificationType** | **string** | Identification Type  * &#x60;OI&#x60; - Organization ID * &#x60;PI&#x60; - Private ID  | [optional] 

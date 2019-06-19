@@ -1,0 +1,1 @@
+../../testdata/fedWireMessage-CheckSameDaySettlement.txt

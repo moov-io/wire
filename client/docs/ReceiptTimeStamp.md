@@ -1,6 +1,7 @@
 # ReceiptTimeStamp
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **ReceiptDate** | **string** | ReceiptDate MMDD, based on the calendar date  | [optional] 

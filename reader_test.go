@@ -1,10 +1,12 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
 )
 
 // TestRead reads wire Files with different BusinessFunctionCodes
@@ -58,5 +60,12 @@ func TestReadInvalidTag(t *testing.T) {
 		if !base.Has(err, NewErrInvalidTag(r.line[:6])) {
 			t.Errorf("%T: %s", err, err)
 		}
+	}
+}
+
+func TestReadShortLine(t *testing.T) {
+	f, err := NewReader(strings.NewReader("00")).Read()
+	if err == nil {
+		t.Errorf("expected error, file=%v", f)
 	}
 }

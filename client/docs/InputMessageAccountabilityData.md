@@ -1,6 +1,7 @@
 # InputMessageAccountabilityData
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **InputCycleDate** | **string** | InputCycleDate CCYYMMDD  | 

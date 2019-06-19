@@ -1,6 +1,7 @@
 # AccountDebitedDrawdown
 
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **IdentificationCode** | **string** | Identification Code * &#x60;D&#x60; - Debit  | 
