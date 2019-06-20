@@ -12,7 +12,7 @@ Docs: [docs.moov.io](https://docs.moov.io/en/latest/) | [api docs](https://api.m
 
 ## Project Status
 
-Moov WIRE is under active development and should not currently be used for production. Please star the project if you are interested in its progress.
+Moov WIRE is under active development and in production for multiple companies.  Please star the project if you are interested in its progress.
 
 ## Usage
 
