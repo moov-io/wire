@@ -25,7 +25,7 @@ paths:
           description: Service is running properly
       summary: Ping the Wire service to check if running
       tags:
-      - Files
+      - Wire Files
   /files:
     get:
       operationId: getWireFiles
@@ -195,7 +195,7 @@ paths:
       summary: Retrieves the details of an existing File. You need only supply the
         unique File identifier that was returned upon creation.
       tags:
-      - Files
+      - Wire Files
     post:
       operationId: updateWireFileByID
       parameters:

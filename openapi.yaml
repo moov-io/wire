@@ -20,8 +20,7 @@ tags:
 paths:
   /ping:
     get:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Ping the Wire service to check if running
       operationId: ping
       responses:
@@ -109,8 +108,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   /files/{file_id}:
     get:
-      tags:
-        - Files
+      tags: ['Wire Files']
       summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
       operationId: getWireFileByID
       security:

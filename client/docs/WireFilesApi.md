@@ -8,8 +8,10 @@ Method | HTTP request | Description
 [**DeleteFEDWireMessageFromFile**](WireFilesApi.md#DeleteFEDWireMessageFromFile) | **Delete** /files/{file_id}/FEDWireMessage/{FEDWireMessage_id} | Delete a FEDWireMessage from a File
 [**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 [**GetFEDWireMessageFromFile**](WireFilesApi.md#GetFEDWireMessageFromFile) | **Get** /files/{file_id}/FEDWireMessage/{FEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
+[**GetWireFileByID**](WireFilesApi.md#GetWireFileByID) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 [**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
 [**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Gets a list of Files
+[**Ping**](WireFilesApi.md#Ping) | **Get** /ping | Ping the Wire service to check if running
 [**UpdateWireFileByID**](WireFilesApi.md#UpdateWireFileByID) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 [**ValidateWireFile**](WireFilesApi.md#ValidateWireFile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
@@ -188,6 +190,48 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## GetWireFileByID
+
+> File GetWireFileByID(ctx, fileId, optional)
+Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+
+### Required Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileId** | **string**| File ID | 
+ **optional** | ***GetWireFileByIDOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a GetWireFileByIDOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+ **xRequestId** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+
+### Return type
+
+[**File**](File.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetWireFileContents
 
 > string GetWireFileContents(ctx, fileId, optional)
@@ -264,6 +308,33 @@ No authorization required
 
 - **Content-Type**: Not defined
 - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## Ping
+
+> Ping(ctx, )
+Ping the Wire service to check if running
+
+### Required Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)
