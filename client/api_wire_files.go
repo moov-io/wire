@@ -11,12 +11,12 @@ package openapi
 
 import (
 	"context"
+	"fmt"
+	"github.com/antihax/optional"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"fmt"
 	"strings"
-	"github.com/antihax/optional"
 )
 
 // Linger please
@@ -37,7 +37,7 @@ WireFilesApiService Create a new File object
 */
 
 type CreateWireFileOpts struct {
-	XRequestId optional.String
+	XRequestId      optional.String
 	XIdempotencyKey optional.String
 }
 
@@ -596,7 +596,7 @@ WireFilesApiService Updates the specified FEDWire Message by setting the values 
 */
 
 type UpdateWireFileByIDOpts struct {
-	XRequestId optional.String
+	XRequestId      optional.String
 	XIdempotencyKey optional.String
 }
 

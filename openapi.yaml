@@ -36,7 +36,12 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - $ref: '#/components/parameters/requestId'
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
       responses:
         '200':
           description: A list of File objects
@@ -58,8 +63,19 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - $ref: '#/components/parameters/requestId'
-        - $ref: '#/components/parameters/idempotencyKey'
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
       requestBody:
         description: Content of the WIRE file (in json or raw text)
         required: true
@@ -101,7 +117,12 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - $ref: '#/components/parameters/requestId'
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
         - name: file_id
           in: path
           description: File ID
@@ -126,8 +147,19 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - $ref: '#/components/parameters/requestId'
-        - $ref: '#/components/parameters/idempotencyKey'
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: X-Idempotency-Key
+          in: header
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
+          schema:
+            type: string
         - name: file_id
           in: path
           description: File ID
@@ -175,7 +207,12 @@ paths:
           schema:
             type: string
             example: 3f2d23ee214
-        - $ref: '#/components/parameters/requestId'
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
       responses:
         '200':
           description: Permanently deleted File.
@@ -242,76 +279,76 @@ paths:
         '400':
           description: Validation failed. Check response for errors
   /files/{file_id}/FEDWireMessage/{FEDWireMessage_id}:
-       get:
-         tags: ['Wire Files']
-         summary: Get a specific FEDWireMessage on a FIle
-         operationId: getFEDWireMessageFromFile
-         security:
-           - bearerAuth: []
-           - cookieAuth: []
-         parameters:
-           - name: X-Request-Id
-             in: header
-             description: Optional Request ID allows application developer to trace requests through the systems logs
-             example: rs4f9915
-             schema:
-               type: string
-           - name: file_id
-             in: path
-             description: File ID
-             required: true
-             schema:
-               type: string
-               example: 3f2d23ee214
-           - name: FEDWireMessage_id
-             in: path
-             description: FEDWireMessage ID
-             required: true
-             schema:
-               type: string
-               example: 45758063
-         responses:
-           '200':
-             description: FEDWireMessage object
-             content:
-               application/json:
-                 schema:
-                   $ref: '#/components/schemas/FEDWireMessage'
-           '404':
-             description: FEDWireMessage or File not found
-       delete:
-         tags: ['Wire Files']
-         summary: Delete a FEDWireMessage from a File
-         operationId: deleteFEDWireMessageFromFile
-         security:
-           - bearerAuth: []
-           - cookieAuth: []
-         parameters:
-           - name: X-Request-Id
-             in: header
-             description: Optional Request ID allows application developer to trace requests through the systems logs
-             example: rs4f9915
-             schema:
-               type: string
-           - name: file_id
-             in: path
-             description: File ID
-             required: true
-             schema:
-               type: string
-               example: 3f2d23ee214
-           - name: FEDWireMessage_id
-             in: path
-             description: FEDWireMessage ID
-             required: true
-             schema:
-               type: string
-               example: 45758063
-         responses:
-           '200':
-             description: FEDWireMessage deleted
-           '404':
-             description: FEDWireMessage or File not found
+    get:
+      tags: ['Wire Files']
+      summary: Get a specific FEDWireMessage on a FIle
+      operationId: getFEDWireMessageFromFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: FEDWireMessage_id
+          in: path
+          description: FEDWireMessage ID
+          required: true
+          schema:
+            type: string
+            example: 45758063
+      responses:
+        '200':
+          description: FEDWireMessage object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FEDWireMessage'
+        '404':
+          description: FEDWireMessage or File not found
+    delete:
+      tags: ['Wire Files']
+      summary: Delete a FEDWireMessage from a File
+      operationId: deleteFEDWireMessageFromFile
+      security:
+        - bearerAuth: []
+        - cookieAuth: []
+      parameters:
+        - name: X-Request-Id
+          in: header
+          description: Optional Request ID allows application developer to trace requests through the systems logs
+          example: rs4f9915
+          schema:
+            type: string
+        - name: file_id
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+            example: 3f2d23ee214
+        - name: FEDWireMessage_id
+          in: path
+          description: FEDWireMessage ID
+          required: true
+          schema:
+            type: string
+            example: 45758063
+      responses:
+        '200':
+          description: FEDWireMessage deleted
+        '404':
+          description: FEDWireMessage or File not found
 
 components:
   schemas:
@@ -2063,19 +2100,3 @@ components:
           type: string
           description: An error message describing the problem intended for humans.
           example: Validation error(s) present.
-  parameters:
-    requestId:
-      in: header
-      name: X-Request-Id
-      description: Optional Request ID allows application developer to trace requests through the systems logs
-      example: rs4f9915
-      schema:
-        type: string
-    idempotencyKey:
-      in: header
-      name: X-Idempotency-Key
-      description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
-      example: a4f88150
-      required: false
-      schema:
-        type: string

@@ -429,30 +429,6 @@ paths:
       tags:
       - Wire Files
 components:
-  parameters:
-    requestId:
-      description: Optional Request ID allows application developer to trace requests
-        through the systems logs
-      example: rs4f9915
-      explode: false
-      in: header
-      name: X-Request-Id
-      required: false
-      schema:
-        type: string
-      style: simple
-    idempotencyKey:
-      description: Idempotent key in the header which expires after 24 hours. These
-        strings should contain enough entropy for to not collide with each other in
-        your requests.
-      example: a4f88150
-      explode: false
-      in: header
-      name: X-Idempotency-Key
-      required: false
-      schema:
-        type: string
-      style: simple
   schemas:
     CreateFile:
       example:

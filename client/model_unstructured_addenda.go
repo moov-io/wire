@@ -10,7 +10,7 @@
 package openapi
 
 type UnstructuredAddenda struct {
-	// AddendaLength  Addenda Length must be numeric, padded with leading zeros if less than four characters and must equal length of content in Addenda Information (e.g., if content of Addenda Information is 987 characters, Addenda Length must be 0987). 
+	// AddendaLength  Addenda Length must be numeric, padded with leading zeros if less than four characters and must equal length of content in Addenda Information (e.g., if content of Addenda Information is 987 characters, Addenda Length must be 0987).
 	AddendaLength string `json:"addendaLength,omitempty"`
 	// Addenda
 	Addenda string `json:"addenda,omitempty"`
