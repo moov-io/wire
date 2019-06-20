@@ -6,6 +6,7 @@ package wire
 
 import (
 	"strings"
+	"unicode/utf8"
 )
 
 // Charges is the Charges of the wire
@@ -50,6 +51,9 @@ func NewCharges() *Charges {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (c *Charges) Parse(record string) {
+	if utf8.RuneCountInString(record) < 67 {
+		return // line too short
+	}
 	c.tag = record[:6]
 	c.ChargeDetails = c.parseStringField(record[6:7])
 	c.SendersChargesOne = c.parseStringField(record[7:22])

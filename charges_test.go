@@ -34,3 +34,15 @@ func TestPaymentNotificationIndicatorValid(t *testing.T) {
 		}
 	}
 }
+
+func TestChargesCrash(t *testing.T) {
+	c := &Charges{}
+	c.Parse("{3700}") // invalid, caused a fuzz crash
+
+	if c.tag != "" {
+		t.Errorf("c.tag=%s", c.tag)
+	}
+	if c.ChargeDetails != "" {
+		t.Errorf("unexpected c.ChargeDetails=%s", c.ChargeDetails)
+	}
+}
