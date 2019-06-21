@@ -50,6 +50,7 @@ release: docker AUTHORS
 
 release-push:
 	docker push moov/wire:$(VERSION)
+	docker push moov/wire:latest
 	docker push moov/wirefuzz:$(VERSION)
 
 .PHONY: cover-test cover-web
