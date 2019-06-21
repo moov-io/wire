@@ -6,7 +6,7 @@ moov-io/wire
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/wire)](https://goreportcard.com/report/github.com/moov-io/wire)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/ach/master/LICENSE)
 
-Package `github.com/moov-io/wire` implements a reader and writer written in Go  for creating, parsing and validating FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) 
+Package `github.com/moov-io/wire` implements a reader and writer written in Go  for creating, parsing and validating FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire))
 
 Docs: [docs.moov.io](https://docs.moov.io/en/latest/) | [api docs](https://api.moov.io/apps/wire/)
 
@@ -25,7 +25,7 @@ Moov WIRE is under active development and in production for multiple companies. 
 
 | Business Function Code | Name               | Example | Read | Write |
 |----------|----------------------------------|---------|------|-------|
-| DRB      | Bank DrawDown Request            | [Link](examples/bankDrawDownRequest-read/bankDrawDownRequest.txt) | [Link](examples/bankDrawDownRequest-read/main.go) | [Link](examples/bankDrawDownRequest-write/main.go) | 
+| DRB      | Bank DrawDown Request            | [Link](examples/bankDrawDownRequest-read/bankDrawDownRequest.txt) | [Link](examples/bankDrawDownRequest-read/main.go) | [Link](examples/bankDrawDownRequest-write/main.go) |
 | BTR      | BankTransfer                     | [Link](examples/bankTransfer-read/bankTransfer.txt) | [Link](examples/bankTransfer-read/main.go) | [Link](examples/bankTransfer-write/main.go) |
 | CKS      | CheckSameDaySettlement           | [Link](examples/checkSameDaySettlement-read/checkSameDaySettlement.txt) | [Link](examples/checkSameDaySettlement-read/main.go) | [Link](examples/checkSameDaySettlement-write/main.go) |
 | DRC      | CustomerCorporateDrawdownRequest | [Link](examples/customerCorporateDrawDownRequest-read/customerCorporateDrawDownRequest.txt) | [Link](examples/customerCorporateDrawDownRequest-read/main.go) | [Link](examples/customerCorporateDrawDownRequest-write/main.go) |
@@ -37,6 +37,20 @@ Moov WIRE is under active development and in production for multiple companies. 
 | FFS      | FEDFundsSold                     | [Link](examples/fedFundsSold-read/fedFundsSold.txt) | [Link](examples/fedFundsSold-read/main.go) | [Link](examples/fedFundsSold-write/main.go) |
 | SVC      | ServiceMessage                   | [Link](examples/serviceMessage-read/serviceMessage.txt) | [Link](examples/serviceMessage-read/main.go) | [Link](examples/serviceMessage-write/main.go) |
 </details>
+
+### Docker
+
+We publish a [public docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format.
+
+```
+$ docker run -p 8080:8080 -p 9090:9090 moov/wire:latest
+ts=2019-06-20T23:58:44.4931106Z caller=main.go:75 startup="Starting wire server version v0.1.0"
+ts=2019-06-20T23:58:44.5010238Z caller=main.go:135 transport=HTTP addr=:8088
+ts=2019-06-20T23:58:44.5018409Z caller=main.go:125 admin="listening on :9098"
+
+$ curl localhost:8080/files
+{"files":[],"error":null}
+```
 
 ### From Source
 
@@ -50,6 +64,14 @@ $ go get -u github.com/moov-io/wire
 
 $ go doc github.com/moov-io/wire fedWireMessage
 ```
+
+### Configuration
+
+| Environmental Variable | Description | Default |
+|-----|-----|-----|
+| `WIRE_FILE_TTL` | Time to live (TTL) for `*wire.File` objects stored in the in-memory repository. | 0 = No TTL / Never delete files (Example: `240m`) |
+
+Note: By design Wire **does not persist** (save) any data about the files, batches or entry details created. The only storage occurs in memory of the process and upon restart Wire will have no files, batches, or data saved. Also, no in memory encryption of the data is performed.
 
 ### Fuzzing
 
