@@ -26,8 +26,8 @@ import (
 )
 
 var (
-	httpAddr  = flag.String("http.addr", bind.HTTP("fed"), "HTTP listen address")
-	adminAddr = flag.String("admin.addr", bind.Admin("fed"), "Admin HTTP listen address")
+	httpAddr  = flag.String("http.addr", bind.HTTP("wire"), "HTTP listen address")
+	adminAddr = flag.String("admin.addr", bind.Admin("wire"), "Admin HTTP listen address")
 
 	flagLogFormat = flag.String("log.format", "", "Format for log lines (Options: json, plain")
 )
@@ -44,7 +44,7 @@ func main() {
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 	logger = log.With(logger, "caller", log.DefaultCaller)
 
-	logger.Log("startup", fmt.Sprintf("Starting fed server version %s", wire.Version))
+	logger.Log("startup", fmt.Sprintf("Starting wire server version %s", wire.Version))
 
 	// Channel for errors
 	errs := make(chan error)
