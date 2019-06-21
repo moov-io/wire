@@ -17,7 +17,7 @@ client:
 # Versions from https://github.com/OpenAPITools/openapi-generator/releases
 	@chmod +x ./openapi-generator
 	@rm -rf ./client
-	OPENAPI_GENERATOR_VERSION=4.0.1 ./openapi-generator generate -i openapi.yaml -g go -o ./client
+	OPENAPI_GENERATOR_VERSION=4.0.2 ./openapi-generator generate -i openapi.yaml -g go -o ./client
 	rm -f client/go.mod client/go.sum
 	go fmt ./...
 	go build github.com/moov-io/wire/client
@@ -50,6 +50,7 @@ release: docker AUTHORS
 
 release-push:
 	docker push moov/wire:$(VERSION)
+	docker push moov/wire:latest
 	docker push moov/wirefuzz:$(VERSION)
 
 .PHONY: cover-test cover-web

@@ -25,7 +25,7 @@ paths:
           description: Service is running properly
       summary: Ping the Wire service to check if running
       tags:
-      - Files
+      - Wire Files
   /files:
     get:
       operationId: getWireFiles
@@ -195,7 +195,7 @@ paths:
       summary: Retrieves the details of an existing File. You need only supply the
         unique File identifier that was returned upon creation.
       tags:
-      - Files
+      - Wire Files
     post:
       operationId: updateWireFileByID
       parameters:
@@ -429,30 +429,6 @@ paths:
       tags:
       - Wire Files
 components:
-  parameters:
-    requestId:
-      description: Optional Request ID allows application developer to trace requests
-        through the systems logs
-      example: rs4f9915
-      explode: false
-      in: header
-      name: X-Request-Id
-      required: false
-      schema:
-        type: string
-      style: simple
-    idempotencyKey:
-      description: Idempotent key in the header which expires after 24 hours. These
-        strings should contain enough entropy for to not collide with each other in
-        your requests.
-      example: a4f88150
-      explode: false
-      in: header
-      name: X-Idempotency-Key
-      required: false
-      schema:
-        type: string
-      style: simple
   schemas:
     CreateFile:
       example:

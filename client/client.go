@@ -45,8 +45,6 @@ type APIClient struct {
 
 	// API Services
 
-	FilesApi *FilesApiService
-
 	WireFilesApi *WireFilesApiService
 }
 
@@ -66,7 +64,6 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.common.client = c
 
 	// API Services
-	c.FilesApi = (*FilesApiService)(&c.common)
 	c.WireFilesApi = (*WireFilesApiService)(&c.common)
 
 	return c
