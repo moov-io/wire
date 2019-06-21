@@ -44,8 +44,9 @@ func (w *Writer) Write(file *File) error {
 
 // Flush writes any buffered data to the underlying io.Writer.
 // To check if an error occurred during the Flush, call Error.
-func (w *Writer) Flush() {
-	w.w.Flush()
+// Flush writes any buffered data to the underlying io.Writer.
+func (w *Writer) Flush() error {
+	return w.w.Flush()
 }
 
 func (w *Writer) writeFedWireMessage(file *File) error {
