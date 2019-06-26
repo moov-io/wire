@@ -174,7 +174,6 @@ func TestFiles__getFile(t *testing.T) {
 	}
 }
 
-
 func TestFiles__deleteFile(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("DELETE", "/files/foo", nil)

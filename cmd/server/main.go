@@ -23,8 +23,6 @@ import (
 	moovhttp "github.com/moov-io/base/http"
 	"github.com/moov-io/base/http/bind"
 	"github.com/moov-io/wire"
-
-
 )
 
 var (

@@ -31,13 +31,9 @@ var (
 		Help: "The number of WIRE files deleted",
 	}, nil)
 
-	errNoFileId       = errors.New("no File ID found")
+	errNoFileId           = errors.New("no File ID found")
 	errNoFEDWireMessageID = errors.New("No FEDWireMessage ID found")
 )
-
-
-
-
 
 func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
 	r.Methods("GET").Path("/files").HandlerFunc(getFiles(logger, repo))
