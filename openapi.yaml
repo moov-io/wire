@@ -279,7 +279,7 @@ paths:
   /files/{file_id}/FEDWireMessage/{FEDWireMessage_id}:
     get:
       tags: ['Wire Files']
-      summary: Get a specific FEDWireMessage on a FIle
+      summary: Get a specific FEDWireMessage on a File
       operationId: getFEDWireMessageFromFile
       security:
         - bearerAuth: []

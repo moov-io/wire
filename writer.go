@@ -11,8 +11,8 @@ import (
 
 // A Writer writes an fedWireMessage to an encoded file.
 //
-// As returned by NewWriter, a Writer writes FedWireMessage file structs into
-// FedWireMessage formatted files.
+// As returned by NewWriter, a Writer writes FEDWireMessage file structs into
+// FEDWireMessage formatted files.
 
 // Writer struct
 type Writer struct {
@@ -27,14 +27,14 @@ func NewWriter(w io.Writer) *Writer {
 	}
 }
 
-// Writer writes a single FedWireMessage record to w
+// Writer writes a single FEDWireMessage record to w
 func (w *Writer) Write(file *File) error {
 	if err := file.Validate(); err != nil {
 		return err
 	}
 	w.lineNum = 0
 	// Iterate over all records in the file
-	if err := w.writeFedWireMessage(file); err != nil {
+	if err := w.writeFEDWireMessage(file); err != nil {
 		return err
 	}
 	w.lineNum++
@@ -49,8 +49,8 @@ func (w *Writer) Flush() error {
 	return w.w.Flush()
 }
 
-func (w *Writer) writeFedWireMessage(file *File) error {
-	fwm := file.FedWireMessage
+func (w *Writer) writeFEDWireMessage(file *File) error {
+	fwm := file.FEDWireMessage
 	if err := w.writeMandatory(fwm); err != nil {
 		return err
 	}

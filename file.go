@@ -13,7 +13,7 @@ import (
 // File contains the structures of a parsed WIRE File.
 type File struct {
 	ID             string         `json:"id"`
-	FedWireMessage FEDWireMessage `json:"fedWireMessage"`
+	FEDWireMessage FEDWireMessage `json:"fedWireMessage"`
 }
 
 // NewFile constructs a file template
@@ -27,8 +27,8 @@ type file struct {
 
 // AddFEDWireMessage appends a FEDWireMessage to the File
 func (f *File) AddFEDWireMessage(fwm FEDWireMessage) FEDWireMessage {
-	f.FedWireMessage = fwm
-	return f.FedWireMessage
+	f.FEDWireMessage = fwm
+	return f.FEDWireMessage
 }
 
 // Create will tabulate and assemble an WIRE file into a valid state.
@@ -41,7 +41,7 @@ func (f *File) Create() error {
 
 // Validate will never modify the file.
 func (f *File) Validate() error {
-	if err := f.FedWireMessage.verify(); err != nil {
+	if err := f.FEDWireMessage.verify(); err != nil {
 		return err
 	}
 	return nil
