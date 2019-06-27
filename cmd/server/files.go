@@ -42,9 +42,7 @@ func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
 	r.Methods("DELETE").Path("/files/{fileId}").HandlerFunc(deleteFile(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/contents").HandlerFunc(getFileContents(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/validate").HandlerFunc(validateFile(logger, repo))
-
 	r.Methods("POST").Path("/files/{fileId}/FEDWireMessage").HandlerFunc(addFEDWireMessageToFile(logger, repo))
-	//r.Methods("DELETE").Path("/files/{fileId}/cashLetters/{cashLetterId}").HandlerFunc(removeCashLetterFromFile(logger, repo))*/
 }
 
 func getFileId(w http.ResponseWriter, r *http.Request) string {

@@ -273,7 +273,7 @@ func TestFiles__validateFile(t *testing.T) {
 	}
 }
 
-/*func TestFiles__addFEDWireMessageToFile(t *testing.T) {
+func TestFiles__addFEDWireMessageToFile(t *testing.T) {
 	f, err := readFile("fedWireMessage-NoMessage.txt")
 	if err != nil {
 		t.Fatal(err)
@@ -319,7 +319,7 @@ func TestFiles__validateFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
-}*/
+}
 
 /*func TestFiles__removeFEDWireMessageFromFile(t *testing.T) {
 	f, err := readFile("fedWireMessage-CustomerTransfer.txt")

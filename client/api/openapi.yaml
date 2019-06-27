@@ -339,9 +339,9 @@ paths:
         that was returned upon creation.
       tags:
       - Wire Files
-  /files/{file_id}/FEDWireMessage/{FEDWireMessage_id}:
-    delete:
-      operationId: deleteFEDWireMessageFromFile
+  /files/{file_id}/FEDWireMessage:
+    post:
+      operationId: addFEDWireMessageToFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
           through the systems logs
@@ -349,6 +349,17 @@ paths:
         explode: false
         in: header
         name: X-Request-Id
+        required: false
+        schema:
+          type: string
+        style: simple
+      - description: Idempotent key in the header which expires after 24 hours. These
+          strings should contain enough entropy for to not collide with each other
+          in your requests.
+        example: a4f88150
+        explode: false
+        in: header
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string
@@ -362,72 +373,21 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
-      - description: FEDWireMessage ID
-        explode: false
-        in: path
-        name: FEDWireMessage_id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FEDWireMessage'
         required: true
-        schema:
-          example: "45758063"
-          type: string
-        style: simple
       responses:
         200:
-          description: FEDWireMessage deleted
-        404:
-          description: FEDWireMessage or File not found
+          description: FEDWireMessage added to File
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Delete a FEDWireMessage from a File
+      summary: Add FEDWireMessage to File
       tags:
-      - Wire Files
-    get:
-      operationId: getFEDWireMessageFromFile
-      parameters:
-      - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
-        example: rs4f9915
-        explode: false
-        in: header
-        name: X-Request-Id
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: File ID
-        explode: false
-        in: path
-        name: file_id
-        required: true
-        schema:
-          example: 3f2d23ee214
-          type: string
-        style: simple
-      - description: FEDWireMessage ID
-        explode: false
-        in: path
-        name: FEDWireMessage_id
-        required: true
-        schema:
-          example: "45758063"
-          type: string
-        style: simple
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FEDWireMessage'
-          description: FEDWireMessage object
-        404:
-          description: FEDWireMessage or File not found
-      security:
-      - bearerAuth: []
-      - cookieAuth: []
-      summary: Get a specific FEDWireMessage on a FIle
-      tags:
-      - Wire Files
+      - FEDWireMessage File
 components:
   schemas:
     CreateFile:
