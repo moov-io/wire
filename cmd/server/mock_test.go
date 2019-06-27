@@ -15,7 +15,7 @@ import (
 	return NewStorage(repository)
 }*/
 
-func mockFEDWireMessage() *wire.FEDWireMessage {
+func mockFEDWireMessage() wire.FEDWireMessage {
 	fwm := wire.NewFEDWireMessage()
 	fwm.ID = "12345"
 
@@ -228,5 +228,5 @@ func mockFEDWireMessage() *wire.FEDWireMessage {
 	fifi.AdditionalFIToFI.LineSix = "Line Six"
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	return &fwm
+	return fwm
 }

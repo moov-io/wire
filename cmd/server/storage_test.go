@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/moov-io/base"
 	"github.com/moov-io/wire"
+	"testing"
 )
 
 type testWireFileRepository struct {
@@ -35,7 +37,7 @@ func (r *testWireFileRepository) deleteFile(fileId string) error {
 	return r.err
 }
 
-/*func TestMemoryStorage(t *testing.T) {
+func TestMemoryStorage(t *testing.T) {
 	repo := &memoryWireFileRepository{
 		files: make(map[string]*wire.File),
 	}
@@ -45,7 +47,7 @@ func (r *testWireFileRepository) deleteFile(fileId string) error {
 		t.Errorf("files=%#v error=%v", files, err)
 	}
 
-	f, err := readFile("BNK20180905121042882-A.icl")
+	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,4 +77,4 @@ func (r *testWireFileRepository) deleteFile(fileId string) error {
 	if err != nil || len(files) != 0 {
 		t.Errorf("files=%#v error=%v", files, err)
 	}
-}*/
+}

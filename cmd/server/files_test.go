@@ -5,6 +5,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"github.com/moov-io/wire"
@@ -12,6 +13,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/moov-io/base"
@@ -32,7 +34,7 @@ func TestFileId(t *testing.T) {
 	}
 }
 
-/*func TestFEDWireMessageID(t *testing.T) {
+func TestFEDWireMessageID(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/foo", nil)
 
@@ -43,7 +45,7 @@ func TestFileId(t *testing.T) {
 		t.Errorf("unexpected HTTP status: %d", w.Code)
 	}
 }
-*/
+
 func TestFiles__getFiles(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/files", nil)
@@ -91,8 +93,8 @@ func readFile(filename string) (*wire.File, error) {
 	return &f, err
 }
 
-/*func TestFiles__createFile(t *testing.T) {
-	f, err := readFile("BNK20180905121042882-A.icl")
+func TestFiles__createFile(t *testing.T) {
+	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -120,7 +122,6 @@ func readFile(filename string) (*wire.File, error) {
 		t.Fatal(err)
 	}
 
-
 	// error case
 	repo.err = errors.New("bad error")
 	if err := json.NewEncoder(&buf).Encode(f); err != nil {
@@ -134,7 +135,7 @@ func readFile(filename string) (*wire.File, error) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
-}*/
+}
 
 func TestFiles__getFile(t *testing.T) {
 	w := httptest.NewRecorder()
@@ -201,13 +202,16 @@ func TestFiles__deleteFile(t *testing.T) {
 	}
 }
 
-/*func TestFiles__getFileContents(t *testing.T) {
+func TestFiles__getFileContents(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
 
+	fwm := mockFEDWireMessage()
+
 	repo := &testWireFileRepository{
 		file: &wire.File{
-			ID: base.ID(),
+			ID:             base.ID(),
+			FEDWireMessage: fwm,
 		},
 	}
 
@@ -233,13 +237,13 @@ func TestFiles__deleteFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
-}*/
+}
 
-/*func TestFiles__validateFile(t *testing.T) {
+func TestFiles__validateFile(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/files/foo/validate", nil)
 
-	f, err := readFile("BNK20180905121042882-A.icl")
+	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -267,24 +271,24 @@ func TestFiles__deleteFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
-}*/
+}
 
 /*func TestFiles__addFEDWireMessageToFile(t *testing.T) {
-	f, err := readFile("BNK20180905121042882-A.icl")
+	f, err := readFile("fedWireMessage-NoMessage.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
-	fwm := f.FEDWireMessage
+	fwm := mockFEDWireMessage()
 	repo := &testWireFileRepository{file: f}
 
-	// encode our CashLetter into JSON
+	// encode our FEDWireMessage into JSON
 	var buf bytes.Buffer
 	if err := json.NewEncoder(&buf).Encode(fwm); err != nil {
 		t.Fatal(err)
 	}
 
 	w := httptest.NewRecorder()
-	req := httptest.NewRequest("POST", "/files/foo/cashLetters", &buf)
+	req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
 
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
@@ -298,13 +302,13 @@ func TestFiles__deleteFile(t *testing.T) {
 	if err := json.NewDecoder(w.Body).Decode(&out); err != nil {
 		t.Fatal(err)
 	}
-	if len(out.FEDWireMessage) != 1 {
-		t.Errorf("CashLetters: %#v", out.CashLetters)
+	if out.FEDWireMessage.SenderSupplied == nil {
+		t.Errorf("FEDWireMessage: %#v", out.FEDWireMessage)
 	}
 
 	// error case
 	repo.err = errors.New("bad error")
-	if err := json.NewEncoder(&buf).Encode(cashLetter); err != nil {
+	if err := json.NewEncoder(&buf).Encode(fwm); err != nil {
 		t.Fatal(err)
 	}
 
@@ -315,20 +319,20 @@ func TestFiles__deleteFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
-}
+}*/
 
-func TestFiles__removeCashLetterFromFile(t *testing.T) {
-	f, err := readFile("BNK20180905121042882-A.icl")
+/*func TestFiles__removeFEDWireMessageFromFile(t *testing.T) {
+	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
 	repo := &testWireFileRepository{file: f}
 
-	cashLetterId := base.ID()
-	repo.file.CashLetters[0].ID = cashLetterId
+	FEDWireMessageID := base.ID()
+	repo.file.FEDWireMessage.ID = FedWireMessageID
 
 	w := httptest.NewRecorder()
-	req := httptest.NewRequest("DELETE", fmt.Sprintf("/files/foo/cashLetters/%s", cashLetterId), nil)
+	req := httptest.NewRequest("DELETE", fmt.Sprintf("/files/foo/FEDWireMessage/%s", FEDWireMessageID), nil)
 
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
@@ -349,5 +353,4 @@ func TestFiles__removeCashLetterFromFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
-}
-*/
+}*/

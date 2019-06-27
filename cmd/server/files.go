@@ -42,9 +42,9 @@ func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
 	r.Methods("DELETE").Path("/files/{fileId}").HandlerFunc(deleteFile(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/contents").HandlerFunc(getFileContents(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/validate").HandlerFunc(validateFile(logger, repo))
-	/*
-		r.Methods("POST").Path("/files/{fileId}/cashLetters").HandlerFunc(addCashLetterToFile(logger, repo))
-	r.Methods("DELETE").Path("/files/{fileId}/cashLetters/{cashLetterId}").HandlerFunc(removeCashLetterFromFile(logger, repo))*/
+
+	r.Methods("POST").Path("/files/{fileId}/FEDWireMessage").HandlerFunc(addFEDWireMessageToFile(logger, repo))
+	//r.Methods("DELETE").Path("/files/{fileId}/cashLetters/{cashLetterId}").HandlerFunc(removeCashLetterFromFile(logger, repo))*/
 }
 
 func getFileId(w http.ResponseWriter, r *http.Request) string {
@@ -56,7 +56,7 @@ func getFileId(w http.ResponseWriter, r *http.Request) string {
 	return v
 }
 
-func getFEDWireMessageId(w http.ResponseWriter, r *http.Request) string {
+func getFEDWireMessageID(w http.ResponseWriter, r *http.Request) string {
 	v, ok := mux.Vars(r)["FEDWireMessageID"]
 	if !ok || v == "" {
 		moovhttp.Problem(w, errNoFEDWireMessageID)
@@ -209,5 +209,38 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(`{"error": null}`)
+	}
+}
+
+func addFEDWireMessageToFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
+
+		var req wire.FEDWireMessage
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
+		}
+		file, err := repo.getFile(fileId)
+		if err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		file.FEDWireMessage = file.AddFEDWireMessage(req)
+		if err := repo.saveFile(file); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("added FEDWireMessage=%s to file=%s", req.ID, fileId), "requestId", requestId)
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(file)
 	}
 }
