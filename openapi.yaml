@@ -276,11 +276,11 @@ paths:
                 $ref: '#/components/schemas/File'
         '400':
           description: Validation failed. Check response for errors
-  /files/{file_id}/FEDWireMessage/{FEDWireMessage_id}:
-    get:
-      tags: ['Wire Files']
-      summary: Get a specific FEDWireMessage on a FIle
-      operationId: getFEDWireMessageFromFile
+  /files/{file_id}/FEDWireMessage:
+    post:
+      tags: ['FEDWireMessage File']
+      summary: Add FEDWireMessage to File
+      operationId: addFEDWireMessageToFile
       security:
         - bearerAuth: []
         - cookieAuth: []
@@ -291,41 +291,11 @@ paths:
           example: rs4f9915
           schema:
             type: string
-        - name: file_id
-          in: path
-          description: File ID
-          required: true
-          schema:
-            type: string
-            example: 3f2d23ee214
-        - name: FEDWireMessage_id
-          in: path
-          description: FEDWireMessage ID
-          required: true
-          schema:
-            type: string
-            example: 45758063
-      responses:
-        '200':
-          description: FEDWireMessage object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FEDWireMessage'
-        '404':
-          description: FEDWireMessage or File not found
-    delete:
-      tags: ['Wire Files']
-      summary: Delete a FEDWireMessage from a File
-      operationId: deleteFEDWireMessageFromFile
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-      parameters:
-        - name: X-Request-Id
+        - name: X-Idempotency-Key
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
-          example: rs4f9915
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          example: a4f88150
+          required: false
           schema:
             type: string
         - name: file_id
@@ -335,18 +305,15 @@ paths:
           schema:
             type: string
             example: 3f2d23ee214
-        - name: FEDWireMessage_id
-          in: path
-          description: FEDWireMessage ID
-          required: true
-          schema:
-            type: string
-            example: 45758063
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FEDWireMessage'
       responses:
         '200':
-          description: FEDWireMessage deleted
-        '404':
-          description: FEDWireMessage or File not found
+          description: FEDWireMessage added to File
 
 components:
   schemas:

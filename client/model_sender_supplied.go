@@ -11,12 +11,12 @@ package openapi
 
 // SenderSupplied
 type SenderSupplied struct {
-	// FormatVersion 30
+	// FormatVersion 30 
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation
 	UserRequestCorrelation string `json:"userRequestCorrelation"`
-	// Identifies if test or production.  * `T` - Test * `P` - Production
+	// Identifies if test or production.  * `T` - Test * `P` - Production 
 	TestProductionCode string `json:"testProductionCode"`
-	// MessageDuplicationCode  * ` ` - Original Message * `R` - Retrieval of an original message * `P` - Resend
+	// MessageDuplicationCode  * ` ` - Original Message * `R` - Retrieval of an original message * `P` - Resend 
 	MessageDuplicationCode string `json:"messageDuplicationCode"`
 }

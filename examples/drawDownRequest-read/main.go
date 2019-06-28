@@ -30,11 +30,11 @@ func main() {
 		log.Fatalf("Could not validate FEDWireMessage: %s\n", err)
 	}
 
-	fmt.Printf("Sender Supplied: %v \n", fwmFile.FedWireMessage.SenderSupplied)
-	fmt.Printf("Type and Subtype: %v \n", fwmFile.FedWireMessage.TypeSubType)
-	fmt.Printf("Input Message Accountability Data: %v \n", fwmFile.FedWireMessage.InputMessageAccountabilityData)
-	fmt.Printf("Amount: %v \n", fwmFile.FedWireMessage.Amount)
-	fmt.Printf("Sender Depository Institution: %v \n", fwmFile.FedWireMessage.SenderDepositoryInstitution)
-	fmt.Printf("Receiver Depository Institution: %v \n", fwmFile.FedWireMessage.ReceiverDepositoryInstitution)
-	fmt.Printf("Business Function Code: %v \n", fwmFile.FedWireMessage.BusinessFunctionCode)
+	fmt.Printf("Sender Supplied: %v \n", fwmFile.FEDWireMessage.SenderSupplied)
+	fmt.Printf("Type and Subtype: %v \n", fwmFile.FEDWireMessage.TypeSubType)
+	fmt.Printf("Input Message Accountability Data: %v \n", fwmFile.FEDWireMessage.InputMessageAccountabilityData)
+	fmt.Printf("Amount: %v \n", fwmFile.FEDWireMessage.Amount)
+	fmt.Printf("Sender Depository Institution: %v \n", fwmFile.FEDWireMessage.SenderDepositoryInstitution)
+	fmt.Printf("Receiver Depository Institution: %v \n", fwmFile.FEDWireMessage.ReceiverDepositoryInstitution)
+	fmt.Printf("Business Function Code: %v \n", fwmFile.FEDWireMessage.BusinessFunctionCode)
 }

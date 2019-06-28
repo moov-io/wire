@@ -25,7 +25,7 @@ func Fuzz(data []byte) int {
 	if f.ID != "" {
 		return 1
 	}
-	return checkSenderSupplied(f.FedWireMessage.SenderSupplied)
+	return checkSenderSupplied(f.FEDWireMessage.SenderSupplied)
 }
 
 func checkSenderSupplied(ss *wire.SenderSupplied) int {

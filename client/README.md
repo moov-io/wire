@@ -33,10 +33,9 @@ All URIs are relative to *http://localhost:8087*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*FEDWireMessageFileApi* | [**AddFEDWireMessageToFile**](docs/FEDWireMessageFileApi.md#addfedwiremessagetofile) | **Post** /files/{file_id}/FEDWireMessage | Add FEDWireMessage to File
 *WireFilesApi* | [**CreateWireFile**](docs/WireFilesApi.md#createwirefile) | **Post** /files/create | Create a new File object
-*WireFilesApi* | [**DeleteFEDWireMessageFromFile**](docs/WireFilesApi.md#deletefedwiremessagefromfile) | **Delete** /files/{file_id}/FEDWireMessage/{FEDWireMessage_id} | Delete a FEDWireMessage from a File
 *WireFilesApi* | [**DeleteWireFileByID**](docs/WireFilesApi.md#deletewirefilebyid) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-*WireFilesApi* | [**GetFEDWireMessageFromFile**](docs/WireFilesApi.md#getfedwiremessagefromfile) | **Get** /files/{file_id}/FEDWireMessage/{FEDWireMessage_id} | Get a specific FEDWireMessage on a FIle
 *WireFilesApi* | [**GetWireFileByID**](docs/WireFilesApi.md#getwirefilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 *WireFilesApi* | [**GetWireFileContents**](docs/WireFilesApi.md#getwirefilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
 *WireFilesApi* | [**GetWireFiles**](docs/WireFilesApi.md#getwirefiles) | **Get** /files | Gets a list of Files

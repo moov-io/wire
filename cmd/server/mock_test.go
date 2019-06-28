@@ -9,13 +9,13 @@ import (
 	"time"
 )
 
-func mockServiceInMemory() Service {
-	repository := NewRepositoryInMemory(testTTLDuration, nil)
+/*func mockServiceInMemory() Storage {
+	repository := NewW(testTTLDuration, nil)
 	repository.StoreFile(&wire.File{ID: "98765"})
-	return NewService(repository)
-}
+	return NewStorage(repository)
+}*/
 
-func mockFEDWireMessage() *wire.FEDWireMessage {
+func mockFEDWireMessage() wire.FEDWireMessage {
 	fwm := wire.NewFEDWireMessage()
 	fwm.ID = "12345"
 
@@ -228,5 +228,5 @@ func mockFEDWireMessage() *wire.FEDWireMessage {
 	fifi.AdditionalFIToFI.LineSix = "Line Six"
 	fwm.SetFIAdditionalFIToFI(fifi)
 
-	return &fwm
+	return fwm
 }

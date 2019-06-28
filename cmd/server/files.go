@@ -5,20 +5,15 @@
 package main
 
 import (
-	"bytes"
-	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"strings"
-
+	"github.com/moov-io/base"
+	"github.com/moov-io/wire"
 	"net/http"
 
 	moovhttp "github.com/moov-io/base/http"
-	"github.com/moov-io/wire"
 
-	"github.com/go-kit/kit/endpoint"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics/prometheus"
 	"github.com/gorilla/mux"
@@ -35,297 +30,215 @@ var (
 		Name: "wire_files_deleted",
 		Help: "The number of WIRE files deleted",
 	}, nil)
+
+	errNoFileId           = errors.New("no File ID found")
+	errNoFEDWireMessageID = errors.New("No FEDWireMessage ID found")
 )
 
-type createFileRequest struct {
-	File *wire.File
-
-	requestId string
+func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
+	r.Methods("GET").Path("/files").HandlerFunc(getFiles(logger, repo))
+	r.Methods("POST").Path("/files/create").HandlerFunc(createFile(logger, repo))
+	r.Methods("GET").Path("/files/{fileId}").HandlerFunc(getFile(logger, repo))
+	r.Methods("DELETE").Path("/files/{fileId}").HandlerFunc(deleteFile(logger, repo))
+	r.Methods("GET").Path("/files/{fileId}/contents").HandlerFunc(getFileContents(logger, repo))
+	r.Methods("GET").Path("/files/{fileId}/validate").HandlerFunc(validateFile(logger, repo))
+	r.Methods("POST").Path("/files/{fileId}/FEDWireMessage").HandlerFunc(addFEDWireMessageToFile(logger, repo))
 }
 
-type createFileResponse struct {
-	ID  string `json:"id"`
-	Err error  `json:"error"`
-}
-
-func (r createFileResponse) error() error { return r.Err }
-
-func createFileEndpoint(s Service, r Repository, logger log.Logger) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(createFileRequest)
-		if !ok {
-			err := errors.New("invalid request")
-			return createFileResponse{
-				Err: err,
-			}, err
-		}
-
-		// record a metric for files created
-		if req.File != nil && req.File.FedWireMessage.SenderSupplied != nil {
-			filesCreated.With("Sender Supplied", req.File.FedWireMessage.SenderSupplied.String())
-		}
-
-		// Create a random file ID if none was provided
-		if req.File.ID == "" {
-			req.File.ID = NextID()
-		}
-
-		err := r.StoreFile(req.File)
-		if req.requestId != "" && logger != nil {
-			logger.Log("files", "createFile", "requestId", req.requestId, "error", err)
-		}
-
-		return createFileResponse{
-			ID:  req.File.ID,
-			Err: err,
-		}, nil
+func getFileId(w http.ResponseWriter, r *http.Request) string {
+	v, ok := mux.Vars(r)["fileId"]
+	if !ok || v == "" {
+		moovhttp.Problem(w, errNoFileId)
+		return ""
 	}
+	return v
 }
 
-func decodeCreateFileRequest(_ context.Context, request *http.Request) (interface{}, error) {
-	var r io.Reader
-	var req createFileRequest
-
-	req.requestId = moovhttp.GetRequestId(request)
-
-	// Sets default values
-	req.File = wire.NewFile()
-	bs, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		return nil, err
+func getFEDWireMessageID(w http.ResponseWriter, r *http.Request) string {
+	v, ok := mux.Vars(r)["FEDWireMessageID"]
+	if !ok || v == "" {
+		moovhttp.Problem(w, errNoFEDWireMessageID)
+		return ""
 	}
+	return v
+}
 
-	h := request.Header.Get("Content-Type")
-	if strings.Contains(h, "application/json") {
-		// Read body as WIRE file in JSON
-		f, err := wire.FileFromJSON(bs)
+func getFiles(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
+
+		files, err := repo.getFiles() // TODO(adam): implement soft and hard limits
 		if err != nil {
-			return nil, err
+			logger.Log("files", fmt.Sprintf("error getting Wire files: %v", err), "requestId", moovhttp.GetRequestId(r))
+			moovhttp.Problem(w, err)
+			return
 		}
-		req.File = f
-	} else {
-		// Attempt parsing body as an WIRE File
-		r = bytes.NewReader(bs)
-		f, err := wire.NewReader(r).Read()
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("found %d files", len(files)), "requestId", requestId)
+		}
+
+		w.Header().Set("X-Total-Count", fmt.Sprintf("%d", len(files)))
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(files)
+	}
+}
+
+func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
+
+		var req wire.File
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		if req.ID == "" {
+			req.ID = base.ID()
+		}
+		if err := repo.saveFile(&req); err != nil {
+			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestId", moovhttp.GetRequestId(r))
+			moovhttp.Problem(w, err)
+			return
+		}
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("creatd file=%s", req.ID), "requestId", requestId)
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(req)
+	}
+}
+
+func getFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
+
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
+		}
+		file, err := repo.getFile(fileId)
 		if err != nil {
-			return nil, err
+			logger.Log("files", fmt.Sprintf("problem reading file=%s: %v", fileId, err), "requestId", moovhttp.GetRequestId(r))
+			moovhttp.Problem(w, err)
+			return
 		}
-		req.File = &f
-	}
-	return req, nil
-}
-
-type getFilesRequest struct {
-	requestId string
-}
-
-type getFilesResponse struct {
-	Files []*wire.File `json:"files"`
-	Err   error        `json:"error"`
-}
-
-func (r getFilesResponse) count() int { return len(r.Files) }
-
-func (r getFilesResponse) error() error { return r.Err }
-
-func getFilesEndpoint(s Service) endpoint.Endpoint {
-	return func(_ context.Context, _ interface{}) (interface{}, error) {
-		return getFilesResponse{
-			Files: s.GetFiles(),
-			Err:   nil,
-		}, nil
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("rendering file=%s", fileId), "requestId", requestId)
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(file)
 	}
 }
 
-func decodeGetFilesRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	return getFilesRequest{
-		requestId: moovhttp.GetRequestId(r),
-	}, nil
-}
+func deleteFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
 
-type getFileRequest struct {
-	ID string
-
-	requestId string
-}
-
-type getFileResponse struct {
-	File *wire.File `json:"file"`
-	Err  error      `json:"error"`
-}
-
-func (r getFileResponse) error() error { return r.Err }
-
-func getFileEndpoint(s Service, logger log.Logger) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(getFileRequest)
-		if !ok {
-			err := errors.New("invalid request")
-			return getFileResponse{
-				Err: err,
-			}, err
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
 		}
-
-		f, err := s.GetFile(req.ID)
-
-		if req.requestId != "" && logger != nil {
-			logger.Log("files", "getFile", "requestId", req.requestId, "error", err)
+		if err := repo.deleteFile(fileId); err != nil {
+			moovhttp.Problem(w, err)
+			return
 		}
-
-		return getFileResponse{
-			File: f,
-			Err:  err,
-		}, nil
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("deleted file=%s", fileId), "requestId", requestId)
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(`{"error": null}`)
 	}
 }
 
-func decodeGetFileRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	vars := mux.Vars(r)
-	id, ok := vars["id"]
-	if !ok {
-		return nil, ErrBadRouting
-	}
-	return getFileRequest{
-		ID:        id,
-		requestId: moovhttp.GetRequestId(r),
-	}, nil
-}
+func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
 
-type deleteFileRequest struct {
-	ID string
-
-	requestId string
-}
-
-type deleteFileResponse struct {
-	Err error `json:"err"`
-}
-
-func (r deleteFileResponse) error() error { return r.Err }
-
-func deleteFileEndpoint(s Service, logger log.Logger) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(deleteFileRequest)
-		if !ok {
-			err := errors.New("invalid request")
-			return deleteFileResponse{
-				Err: err,
-			}, err
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
 		}
-
-		filesDeleted.Add(1)
-
-		err := s.DeleteFile(req.ID)
-
-		if req.requestId != "" && logger != nil {
-			logger.Log("files", "deleteFile", "requestId", req.requestId, "error", err)
-		}
-
-		return deleteFileResponse{
-			Err: err,
-		}, nil
-	}
-}
-
-func decodeDeleteFileRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	vars := mux.Vars(r)
-	id, ok := vars["id"]
-	if !ok {
-		return nil, ErrBadRouting
-	}
-	return deleteFileRequest{
-		ID:        id,
-		requestId: moovhttp.GetRequestId(r),
-	}, nil
-}
-
-type getFileContentsRequest struct {
-	ID string
-
-	requestId string
-}
-
-type getFileContentsResponse struct {
-	Err error `json:"error"`
-}
-
-func (v getFileContentsResponse) error() error { return v.Err }
-
-func getFileContentsEndpoint(s Service, logger log.Logger) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(getFileContentsRequest)
-		if !ok {
-			err := errors.New("invalid request")
-			return getFileContentsResponse{
-				Err: err,
-			}, err
-		}
-
-		r, err := s.GetFileContents(req.ID)
-
-		if req.requestId != "" && logger != nil {
-			logger.Log("files", "getFileContents", "requestId", req.requestId, "error", err)
-		}
+		file, err := repo.getFile(fileId)
 		if err != nil {
-			return getFileContentsResponse{Err: err}, nil
+			moovhttp.Problem(w, err)
+			return
 		}
-
-		return r, nil
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("rendering file=%s contents", fileId), "requestId", requestId)
+		}
+		w.Header().Set("Content-Type", "text/plain")
+		if err := wire.NewWriter(w).Write(file); err != nil {
+			logger.Log("files", fmt.Sprintf("problem rendering file=%s contents: %v", fileId, err))
+			moovhttp.Problem(w, err)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
-func decodeGetFileContentsRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	vars := mux.Vars(r)
-	id, ok := vars["id"]
-	if !ok {
-		return nil, ErrBadRouting
-	}
-	return getFileContentsRequest{
-		ID:        id,
-		requestId: moovhttp.GetRequestId(r),
-	}, nil
-}
+func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
 
-type validateFileRequest struct {
-	ID        string
-	requestId string
-}
-
-type validateFileResponse struct {
-	Err error `json:"error"`
-}
-
-func (v validateFileResponse) error() error { return v.Err }
-
-func validateFileEndpoint(s Service, logger log.Logger) endpoint.Endpoint {
-	return func(_ context.Context, request interface{}) (interface{}, error) {
-		req, ok := request.(validateFileRequest)
-		if !ok {
-			err := errors.New("invalid request")
-			return validateFileResponse{
-				Err: err,
-			}, err
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
 		}
-
-		err := s.ValidateFile(req.ID)
-		if req.requestId != "" && logger != nil {
-			logger.Log("files", "validateFile", "requestId", req.requestId, "error", err)
+		file, err := repo.getFile(fileId)
+		if err != nil {
+			moovhttp.Problem(w, err)
+			return
 		}
-		if err != nil { // wrap err with context
-			err = fmt.Errorf("%v: %v", errInvalidFile, err)
+		if err := file.Create(); err != nil { // Create calls Validate
+			if requestId := moovhttp.GetRequestId(r); requestId != "" {
+				logger.Log("files", fmt.Sprintf("file=%s was invalid: %v", fileId, err), "requestId", requestId)
+			}
+			moovhttp.Problem(w, err)
+			return
 		}
-		return validateFileResponse{err}, nil
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("validated file=%s", fileId), "requestId", requestId)
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(`{"error": null}`)
 	}
 }
 
-func decodeValidateFileRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	vars := mux.Vars(r)
-	id, ok := vars["id"]
-	if !ok {
-		return nil, ErrBadRouting
+func addFEDWireMessageToFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w = wrapResponseWriter(logger, w, r)
+
+		var req wire.FEDWireMessage
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+
+		fileId := getFileId(w, r)
+		if fileId == "" {
+			return
+		}
+		file, err := repo.getFile(fileId)
+		if err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		file.FEDWireMessage = file.AddFEDWireMessage(req)
+		if err := repo.saveFile(file); err != nil {
+			moovhttp.Problem(w, err)
+			return
+		}
+		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			logger.Log("files", fmt.Sprintf("added FEDWireMessage=%s to file=%s", req.ID, fileId), "requestId", requestId)
+		}
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(file)
 	}
-	return validateFileRequest{
-		ID:        id,
-		requestId: moovhttp.GetRequestId(r),
-	}, nil
 }

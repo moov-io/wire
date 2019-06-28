@@ -11,7 +11,7 @@ package openapi
 
 // AccountDebitedDrawdown is the account which is debited in a drawdown
 type AccountDebitedDrawdown struct {
-	// Identification Code * `D` - Debit
+	// Identification Code * `D` - Debit 
 	IdentificationCode string `json:"identificationCode"`
 	// Identifier
 	Identifier string `json:"identifier"`

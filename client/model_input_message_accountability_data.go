@@ -11,7 +11,7 @@ package openapi
 
 // InputMessageAccountabilityData (IMAD)
 type InputMessageAccountabilityData struct {
-	// InputCycleDate CCYYMMDD
+	// InputCycleDate CCYYMMDD 
 	InputCycleDate string `json:"inputCycleDate"`
 	// InputSource
 	InputSource string `json:"inputSource"`
