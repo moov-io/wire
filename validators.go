@@ -563,13 +563,10 @@ func (v *validator) validateOptionFLine(s string) error {
 // Name  Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
 // e.g., 1/SMITH JOHN.
 func (v *validator) validateOptionFName(s string) error {
-	if s == "" {
+	if utf8.RuneCountInString(s) < 3 {
 		return ErrOptionFName
 	}
-	switch s[:1] {
-	case
-		OptionFName:
-	default:
+	if s[:1] != OptionFName {
 		return ErrOptionFName
 	}
 	if s[1:2] != "/" {
