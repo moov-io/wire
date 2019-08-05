@@ -56,7 +56,7 @@ func NewRemittanceOriginator() *RemittanceOriginator {
 // successful parsing and data validity.
 func (ro *RemittanceOriginator) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 3442 {
-		return NewTagWrongLengthErr(3442, len(record))
+		return NewTagWrongLengthErr(3442, utf8.RuneCountInString(record))
 	}
 	ro.tag = record[:6]
 	ro.IdentificationType = ro.parseStringField(record[6:8])

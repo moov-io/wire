@@ -39,14 +39,14 @@ func NewUnstructuredAddenda() *UnstructuredAddenda {
 func (ua *UnstructuredAddenda) Parse(record string) error {
 	// First check ua.tag and ua.AddendaLength
 	if utf8.RuneCountInString(record) < 10 {
-		return NewTagWrongLengthErr(10, len(record))
+		return NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
 	}
 	ua.tag = record[:6]
 	ua.AddendaLength = record[6:10]
 	al := ua.parseNumField(ua.AddendaLength)
 	// check RuneCount for entire record
 	if utf8.RuneCountInString(record) != 10+al {
-		return NewTagWrongLengthErr(10+al, len(record))
+		return NewTagWrongLengthErr(10+al, utf8.RuneCountInString(record))
 	}
 	ua.Addenda = ua.parseStringField(record[10 : 10+al])
 	return nil

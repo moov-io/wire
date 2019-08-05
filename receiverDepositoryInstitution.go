@@ -38,7 +38,7 @@ func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 // successful parsing and data validity.
 func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, len(record))
+		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
 	}
 	rdi.tag = record[:6]
 	rdi.ReceiverABANumber = rdi.parseStringField(record[6:15])

@@ -38,7 +38,7 @@ func NewTypeSubType() *TypeSubType {
 // successful parsing and data validity.
 func (tst *TypeSubType) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 10 {
-		return NewTagWrongLengthErr(10, len(record))
+		return NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
 	}
 	tst.tag = tst.parseStringField(record[:6])
 	tst.TypeCode = tst.parseStringField(record[6:8])

@@ -44,7 +44,7 @@ func NewRemittanceBeneficiary() *RemittanceBeneficiary {
 // successful parsing and data validity.
 func (rb *RemittanceBeneficiary) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 1114 {
-		return NewTagWrongLengthErr(1114, len(record))
+		return NewTagWrongLengthErr(1114, utf8.RuneCountInString(record))
 	}
 	rb.tag = record[:6]
 	rb.RemittanceData.Name = rb.parseStringField(record[6:146])

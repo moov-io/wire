@@ -36,7 +36,7 @@ func NewSenderToReceiver() *SenderToReceiver {
 // successful parsing and data validity.
 func (str *SenderToReceiver) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 221 {
-		return NewTagWrongLengthErr(221, len(record))
+		return NewTagWrongLengthErr(221, utf8.RuneCountInString(record))
 	}
 	str.tag = record[:6]
 	str.CoverPayment.SwiftFieldTag = str.parseStringField(record[6:11])

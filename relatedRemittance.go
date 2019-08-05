@@ -42,7 +42,7 @@ func NewRelatedRemittance() *RelatedRemittance {
 // successful parsing and data validity.
 func (rr *RelatedRemittance) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 3041 {
-		return NewTagWrongLengthErr(3041, len(record))
+		return NewTagWrongLengthErr(3041, utf8.RuneCountInString(record))
 	}
 	rr.tag = record[:6]
 	rr.RemittanceIdentification = rr.parseStringField(record[6:41])

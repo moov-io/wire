@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+	"unicode/utf8"
+)
 
 // ReceiptTimeStamp is the receipt time stamp of the wire
 type ReceiptTimeStamp struct {
@@ -35,11 +38,16 @@ func NewReceiptTimeStamp() *ReceiptTimeStamp {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rts *ReceiptTimeStamp) Parse(record string) {
+func (rts *ReceiptTimeStamp) Parse(record string) error {
+	if utf8.RuneCountInString(record) != 18 {
+		return NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
+	}
+
 	rts.tag = record[:6]
 	rts.ReceiptDate = rts.parseStringField(record[6:10])
 	rts.ReceiptTime = rts.parseStringField(record[10:14])
 	rts.ReceiptApplicationIdentification = rts.parseStringField(record[14:18])
+	return nil
 }
 
 // String writes ReceiptTimeStamp
