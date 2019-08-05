@@ -42,7 +42,7 @@ func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 // successful parsing and data validity.
 func (srd *SecondaryRemittanceDocument) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 115 {
-		return NewTagWrongLengthErr(115, len(record))
+		return NewTagWrongLengthErr(115, utf8.RuneCountInString(record))
 	}
 	srd.tag = record[:6]
 	srd.DocumentTypeCode = srd.parseStringField(record[6:10])

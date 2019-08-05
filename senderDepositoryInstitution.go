@@ -38,7 +38,7 @@ func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 // successful parsing and data validity.
 func (sdi *SenderDepositoryInstitution) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, len(record))
+		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
 	}
 
 	sdi.tag = record[:6]

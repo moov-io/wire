@@ -58,7 +58,7 @@ func NewServiceMessage() *ServiceMessage {
 // successful parsing and data validity.
 func (sm *ServiceMessage) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 426 {
-		return NewTagWrongLengthErr(426, len(record))
+		return NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
 	}
 	sm.tag = record[:6]
 	sm.LineOne = sm.parseStringField(record[6:41])

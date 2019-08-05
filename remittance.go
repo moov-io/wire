@@ -36,7 +36,7 @@ func NewRemittance() *Remittance {
 // successful parsing and data validity.
 func (ri *Remittance) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 151 {
-		return NewTagWrongLengthErr(151, len(record))
+		return NewTagWrongLengthErr(151, utf8.RuneCountInString(record))
 	}
 	ri.tag = record[:6]
 	ri.CoverPayment.SwiftFieldTag = ri.parseStringField(record[6:11])

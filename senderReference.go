@@ -36,7 +36,7 @@ func NewSenderReference() *SenderReference {
 // successful parsing and data validity.
 func (sr *SenderReference) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 22 {
-		return NewTagWrongLengthErr(22, len(record))
+		return NewTagWrongLengthErr(22, utf8.RuneCountInString(record))
 	}
 	sr.tag = record[:6]
 	sr.SenderReference = record[6:22]

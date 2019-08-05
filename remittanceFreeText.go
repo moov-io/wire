@@ -40,7 +40,7 @@ func NewRemittanceFreeText() *RemittanceFreeText {
 // successful parsing and data validity.
 func (rft *RemittanceFreeText) Parse(record string) error {
 	if utf8.RuneCountInString(record) != 426 {
-		return NewTagWrongLengthErr(426, len(record))
+		return NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
 	}
 	rft.tag = record[:6]
 	rft.LineOne = rft.parseStringField(record[6:146])
