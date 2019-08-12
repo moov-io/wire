@@ -35,7 +35,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -69,7 +69,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -80,7 +80,7 @@ paths:
         example: a4f88150
         explode: false
         in: header
-        name: X-Idempotency-Key
+        name: X-IDempotency-Key
         required: false
         schema:
           type: string
@@ -141,7 +141,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -166,7 +166,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -204,7 +204,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -215,7 +215,7 @@ paths:
         example: a4f88150
         explode: false
         in: header
-        name: X-Idempotency-Key
+        name: X-IDempotency-Key
         required: false
         schema:
           type: string
@@ -272,7 +272,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -309,7 +309,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -348,7 +348,7 @@ paths:
         example: rs4f9915
         explode: false
         in: header
-        name: X-Request-Id
+        name: X-Request-ID
         required: false
         schema:
           type: string
@@ -359,7 +359,7 @@ paths:
         example: a4f88150
         explode: false
         in: header
-        name: X-Idempotency-Key
+        name: X-IDempotency-Key
         required: false
         schema:
           type: string

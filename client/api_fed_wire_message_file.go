@@ -32,13 +32,13 @@ FEDWireMessageFileApiService Add FEDWireMessage to File
  * @param fileId File ID
  * @param fedWireMessage
  * @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
 */
 
 type AddFEDWireMessageToFileOpts struct {
-	XRequestId      optional.String
-	XIdempotencyKey optional.String
+	XRequestID      optional.String
+	XIDempotencyKey optional.String
 }
 
 func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Context, fileId string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*http.Response, error) {
@@ -75,11 +75,11 @@ func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Conte
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XIDempotencyKey.IsSet() {
+		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &fedWireMessage

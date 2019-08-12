@@ -31,14 +31,14 @@ WireFilesApiService Create a new File object
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param createFile Content of the WIRE file (in json or raw text)
  * @param optional nil or *CreateWireFileOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
 @return File
 */
 
 type CreateWireFileOpts struct {
-	XRequestId      optional.String
-	XIdempotencyKey optional.String
+	XRequestID      optional.String
+	XIDempotencyKey optional.String
 }
 
 func (a *WireFilesApiService) CreateWireFile(ctx context.Context, createFile CreateFile, localVarOptionals *CreateWireFileOpts) (File, *http.Response, error) {
@@ -75,11 +75,11 @@ func (a *WireFilesApiService) CreateWireFile(ctx context.Context, createFile Cre
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XIDempotencyKey.IsSet() {
+		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &createFile
@@ -144,11 +144,11 @@ WireFilesApiService Permanently deletes a File and associated FEDWireMessage. It
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
  * @param optional nil or *DeleteWireFileByIDOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 */
 
 type DeleteWireFileByIDOpts struct {
-	XRequestId optional.String
+	XRequestID optional.String
 }
 
 func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileId string, localVarOptionals *DeleteWireFileByIDOpts) (*http.Response, error) {
@@ -185,8 +185,8 @@ func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileId str
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
@@ -220,12 +220,12 @@ WireFilesApiService Retrieves the details of an existing File. You need only sup
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
  * @param optional nil or *GetWireFileByIDOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return File
 */
 
 type GetWireFileByIDOpts struct {
-	XRequestId optional.String
+	XRequestID optional.String
 }
 
 func (a *WireFilesApiService) GetWireFileByID(ctx context.Context, fileId string, localVarOptionals *GetWireFileByIDOpts) (File, *http.Response, error) {
@@ -263,8 +263,8 @@ func (a *WireFilesApiService) GetWireFileByID(ctx context.Context, fileId string
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
@@ -317,12 +317,12 @@ WireFilesApiService Assembles the existing file witha FEDWireMessage, Returns pl
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
  * @param optional nil or *GetWireFileContentsOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return string
 */
 
 type GetWireFileContentsOpts struct {
-	XRequestId optional.String
+	XRequestID optional.String
 }
 
 func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileId string, localVarOptionals *GetWireFileContentsOpts) (string, *http.Response, error) {
@@ -360,8 +360,8 @@ func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileId st
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
@@ -413,12 +413,12 @@ func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileId st
 WireFilesApiService Gets a list of Files
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param optional nil or *GetWireFilesOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return []File
 */
 
 type GetWireFilesOpts struct {
-	XRequestId optional.String
+	XRequestID optional.String
 }
 
 func (a *WireFilesApiService) GetWireFiles(ctx context.Context, localVarOptionals *GetWireFilesOpts) ([]File, *http.Response, error) {
@@ -455,8 +455,8 @@ func (a *WireFilesApiService) GetWireFiles(ctx context.Context, localVarOptional
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {
@@ -574,14 +574,14 @@ WireFilesApiService Updates the specified FEDWire Message by setting the values 
  * @param fileId File ID
  * @param createFile
  * @param optional nil or *UpdateWireFileByIDOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
 @return File
 */
 
 type UpdateWireFileByIDOpts struct {
-	XRequestId      optional.String
-	XIdempotencyKey optional.String
+	XRequestID      optional.String
+	XIDempotencyKey optional.String
 }
 
 func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileId string, createFile CreateFile, localVarOptionals *UpdateWireFileByIDOpts) (File, *http.Response, error) {
@@ -619,11 +619,11 @@ func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileId str
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XIDempotencyKey.IsSet() {
+		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &createFile
@@ -688,12 +688,12 @@ WireFilesApiService Validates the existing file. You need only supply the unique
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param fileId File ID
  * @param optional nil or *ValidateWireFileOpts - Optional Parameters:
- * @param "XRequestId" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
+ * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return File
 */
 
 type ValidateWireFileOpts struct {
-	XRequestId optional.String
+	XRequestID optional.String
 }
 
 func (a *WireFilesApiService) ValidateWireFile(ctx context.Context, fileId string, localVarOptionals *ValidateWireFileOpts) (File, *http.Response, error) {
@@ -731,8 +731,8 @@ func (a *WireFilesApiService) ValidateWireFile(ctx context.Context, fileId strin
 	if localVarHttpHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHttpHeaderAccept
 	}
-	if localVarOptionals != nil && localVarOptionals.XRequestId.IsSet() {
-		localVarHeaderParams["X-Request-Id"] = parameterToString(localVarOptionals.XRequestId.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
+		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
 	if err != nil {

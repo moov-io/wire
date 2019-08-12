@@ -35,7 +35,7 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
@@ -62,13 +62,13 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
           schema:
             type: string
-        - name: X-Idempotency-Key
+        - name: X-IDempotency-Key
           in: header
           description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
           example: a4f88150
@@ -115,7 +115,7 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
@@ -145,13 +145,13 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
           schema:
             type: string
-        - name: X-Idempotency-Key
+        - name: X-IDempotency-Key
           in: header
           description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
           example: a4f88150
@@ -205,7 +205,7 @@ paths:
           schema:
             type: string
             example: 3f2d23ee214
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
@@ -225,7 +225,7 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
@@ -254,7 +254,7 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
@@ -285,13 +285,13 @@ paths:
         - bearerAuth: []
         - cookieAuth: []
       parameters:
-        - name: X-Request-Id
+        - name: X-Request-ID
           in: header
           description: Optional Request ID allows application developer to trace requests through the systems logs
           example: rs4f9915
           schema:
             type: string
-        - name: X-Idempotency-Key
+        - name: X-IDempotency-Key
           in: header
           description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
           example: a4f88150
