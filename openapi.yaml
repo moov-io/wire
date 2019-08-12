@@ -319,7 +319,7 @@ components:
   schemas:
     CreateFile:
       properties:
-        id:
+        ID:
           type: string
           description: File ID
           example: 3f2d23ee214
@@ -329,7 +329,7 @@ components:
             $ref: '#/components/schemas/FEDWireMessage'
     File:
       properties:
-        id:
+        ID:
           type: string
           description: File ID
           example: 3f2d23ee214
@@ -348,7 +348,7 @@ components:
       example: "{3100}121042882Wells Fargo NA"
     FEDWireMessage:
       properties:
-        id:
+        ID:
           type: string
           description: FEDWireMessage ID
           example: 3f2d23ee214

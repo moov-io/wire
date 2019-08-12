@@ -392,7 +392,7 @@ components:
   schemas:
     CreateFile:
       example:
-        id: 3f2d23ee214
+        ID: 3f2d23ee214
         fedWireMessage:
         - orderingInstitution:
             swiftLineFour: Swift Line Four
@@ -446,7 +446,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          id: 3f2d23ee214
+          ID: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -842,7 +842,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          id: 3f2d23ee214
+          ID: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1187,7 +1187,7 @@ components:
             receiverShortName: PREMIER BANK
             receiverABANumber: "091905664"
       properties:
-        id:
+        ID:
           description: File ID
           example: 3f2d23ee214
           type: string
@@ -1197,7 +1197,7 @@ components:
           type: array
     File:
       example:
-        id: 3f2d23ee214
+        ID: 3f2d23ee214
         fedWireMessage:
         - orderingInstitution:
             swiftLineFour: Swift Line Four
@@ -1251,7 +1251,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          id: 3f2d23ee214
+          ID: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1647,7 +1647,7 @@ components:
           instructedAmount:
             amount: amount
             currencyCode: USD
-          id: 3f2d23ee214
+          ID: 3f2d23ee214
           remittance:
             swiftLineFour: Swift Line Four
             swiftLineOne: Swift Line One
@@ -1992,7 +1992,7 @@ components:
             receiverShortName: PREMIER BANK
             receiverABANumber: "091905664"
       properties:
-        id:
+        ID:
           description: File ID
           example: 3f2d23ee214
           type: string
@@ -2064,7 +2064,7 @@ components:
         instructedAmount:
           amount: amount
           currencyCode: USD
-        id: 3f2d23ee214
+        ID: 3f2d23ee214
         remittance:
           swiftLineFour: Swift Line Four
           swiftLineOne: Swift Line One
@@ -2409,7 +2409,7 @@ components:
           receiverShortName: PREMIER BANK
           receiverABANumber: "091905664"
       properties:
-        id:
+        ID:
           description: FEDWireMessage ID
           example: 3f2d23ee214
           type: string

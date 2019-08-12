@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | FEDWireMessage ID | [optional] 
+**ID** | **string** | FEDWireMessage ID | [optional] 
 **MessageDisposition** | [**MessageDisposition**](MessageDisposition.md) |  | [optional] 
 **ReceiptTimeStamp** | [**ReceiptTimeStamp**](ReceiptTimeStamp.md) |  | [optional] 
 **OutputMessageAccountabilityData** | [**OutputMessageAccountabilityData**](OutputMessageAccountabilityData.md) |  | [optional] 
