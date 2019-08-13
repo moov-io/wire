@@ -80,7 +80,7 @@ paths:
         example: a4f88150
         explode: false
         in: header
-        name: X-IDempotency-Key
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string
@@ -215,7 +215,7 @@ paths:
         example: a4f88150
         explode: false
         in: header
-        name: X-IDempotency-Key
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string
@@ -359,7 +359,7 @@ paths:
         example: a4f88150
         explode: false
         in: header
-        name: X-IDempotency-Key
+        name: X-Idempotency-Key
         required: false
         schema:
           type: string

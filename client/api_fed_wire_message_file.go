@@ -33,12 +33,12 @@ FEDWireMessageFileApiService Add FEDWireMessage to File
  * @param fedWireMessage
  * @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+ * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
 */
 
 type AddFEDWireMessageToFileOpts struct {
 	XRequestID      optional.String
-	XIDempotencyKey optional.String
+	XIdempotencyKey optional.String
 }
 
 func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Context, fileID string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*http.Response, error) {
@@ -78,8 +78,8 @@ func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Conte
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIDempotencyKey.IsSet() {
-		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
+		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &fedWireMessage

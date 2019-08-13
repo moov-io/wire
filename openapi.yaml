@@ -68,7 +68,7 @@ paths:
           example: rs4f9915
           schema:
             type: string
-        - name: X-IDempotency-Key
+        - name: X-Idempotency-Key
           in: header
           description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
           example: a4f88150
@@ -151,7 +151,7 @@ paths:
           example: rs4f9915
           schema:
             type: string
-        - name: X-IDempotency-Key
+        - name: X-Idempotency-Key
           in: header
           description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
           example: a4f88150
@@ -291,7 +291,7 @@ paths:
           example: rs4f9915
           schema:
             type: string
-        - name: X-IDempotency-Key
+        - name: X-Idempotency-Key
           in: header
           description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
           example: a4f88150

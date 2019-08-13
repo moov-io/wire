@@ -32,13 +32,13 @@ WireFilesApiService Create a new File object
  * @param createFile Content of the WIRE file (in json or raw text)
  * @param optional nil or *CreateWireFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+ * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
 @return File
 */
 
 type CreateWireFileOpts struct {
 	XRequestID      optional.String
-	XIDempotencyKey optional.String
+	XIdempotencyKey optional.String
 }
 
 func (a *WireFilesApiService) CreateWireFile(ctx context.Context, createFile CreateFile, localVarOptionals *CreateWireFileOpts) (File, *http.Response, error) {
@@ -78,8 +78,8 @@ func (a *WireFilesApiService) CreateWireFile(ctx context.Context, createFile Cre
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIDempotencyKey.IsSet() {
-		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
+		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &createFile
@@ -575,13 +575,13 @@ WireFilesApiService Updates the specified FEDWire Message by setting the values 
  * @param createFile
  * @param optional nil or *UpdateWireFileByIDOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
- * @param "XIDempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+ * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
 @return File
 */
 
 type UpdateWireFileByIDOpts struct {
 	XRequestID      optional.String
-	XIDempotencyKey optional.String
+	XIdempotencyKey optional.String
 }
 
 func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileID string, createFile CreateFile, localVarOptionals *UpdateWireFileByIDOpts) (File, *http.Response, error) {
@@ -622,8 +622,8 @@ func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileID str
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIDempotencyKey.IsSet() {
-		localVarHeaderParams["X-IDempotency-Key"] = parameterToString(localVarOptionals.XIDempotencyKey.Value(), "")
+	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
+		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &createFile
