@@ -123,14 +123,14 @@ paths:
       summary: Create a new File object
       tags:
       - Wire Files
-  /files/{file_id}:
+  /files/{fileID}:
     delete:
       operationId: deleteWireFileByID
       parameters:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -174,7 +174,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -223,7 +223,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -263,7 +263,7 @@ paths:
         parameters passed. Any parameters not provided will be left unchanged.
       tags:
       - Wire Files
-  /files/{file_id}/contents:
+  /files/{fileID}/contents:
     get:
       operationId: getWireFileContents
       parameters:
@@ -280,7 +280,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -300,7 +300,7 @@ paths:
         file.
       tags:
       - Wire Files
-  /files/{file_id}/validate:
+  /files/{fileID}/validate:
     get:
       operationId: validateWireFile
       parameters:
@@ -317,7 +317,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214
@@ -339,7 +339,7 @@ paths:
         that was returned upon creation.
       tags:
       - Wire Files
-  /files/{file_id}/FEDWireMessage:
+  /files/{fileID}/FEDWireMessage:
     post:
       operationId: addFEDWireMessageToFile
       parameters:
@@ -367,7 +367,7 @@ paths:
       - description: File ID
         explode: false
         in: path
-        name: file_id
+        name: fileID
         required: true
         schema:
           example: 3f2d23ee214

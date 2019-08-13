@@ -4,13 +4,13 @@ All URIs are relative to *http://localhost:8087*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddFEDWireMessageToFile**](FEDWireMessageFileApi.md#AddFEDWireMessageToFile) | **Post** /files/{file_id}/FEDWireMessage | Add FEDWireMessage to File
+[**AddFEDWireMessageToFile**](FEDWireMessageFileApi.md#AddFEDWireMessageToFile) | **Post** /files/{fileID}/FEDWireMessage | Add FEDWireMessage to File
 
 
 
 ## AddFEDWireMessageToFile
 
-> AddFEDWireMessageToFile(ctx, fileId, fedWireMessage, optional)
+> AddFEDWireMessageToFile(ctx, fileID, fedWireMessage, optional)
 Add FEDWireMessage to File
 
 ### Required Parameters
@@ -19,7 +19,7 @@ Add FEDWireMessage to File
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileId** | **string**| File ID | 
+**fileID** | **string**| File ID | 
 **fedWireMessage** | [**FedWireMessage**](FedWireMessage.md)|  | 
  **optional** | ***AddFEDWireMessageToFileOpts** | optional parameters | nil if no parameters
 

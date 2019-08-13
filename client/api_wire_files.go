@@ -142,7 +142,7 @@ func (a *WireFilesApiService) CreateWireFile(ctx context.Context, createFile Cre
 /*
 WireFilesApiService Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
+ * @param fileID File ID
  * @param optional nil or *DeleteWireFileByIDOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 */
@@ -151,7 +151,7 @@ type DeleteWireFileByIDOpts struct {
 	XRequestID optional.String
 }
 
-func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileId string, localVarOptionals *DeleteWireFileByIDOpts) (*http.Response, error) {
+func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileID string, localVarOptionals *DeleteWireFileByIDOpts) (*http.Response, error) {
 	var (
 		localVarHttpMethod   = http.MethodDelete
 		localVarPostBody     interface{}
@@ -161,8 +161,8 @@ func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileId str
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath := a.client.cfg.BasePath + "/files/{fileID}"
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", fmt.Sprintf("%v", fileID), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -218,7 +218,7 @@ func (a *WireFilesApiService) DeleteWireFileByID(ctx context.Context, fileId str
 /*
 WireFilesApiService Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
+ * @param fileID File ID
  * @param optional nil or *GetWireFileByIDOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return File
@@ -228,7 +228,7 @@ type GetWireFileByIDOpts struct {
 	XRequestID optional.String
 }
 
-func (a *WireFilesApiService) GetWireFileByID(ctx context.Context, fileId string, localVarOptionals *GetWireFileByIDOpts) (File, *http.Response, error) {
+func (a *WireFilesApiService) GetWireFileByID(ctx context.Context, fileID string, localVarOptionals *GetWireFileByIDOpts) (File, *http.Response, error) {
 	var (
 		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -239,8 +239,8 @@ func (a *WireFilesApiService) GetWireFileByID(ctx context.Context, fileId string
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath := a.client.cfg.BasePath + "/files/{fileID}"
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", fmt.Sprintf("%v", fileID), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -315,7 +315,7 @@ func (a *WireFilesApiService) GetWireFileByID(ctx context.Context, fileId string
 /*
 WireFilesApiService Assembles the existing file witha FEDWireMessage, Returns plaintext file.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
+ * @param fileID File ID
  * @param optional nil or *GetWireFileContentsOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return string
@@ -325,7 +325,7 @@ type GetWireFileContentsOpts struct {
 	XRequestID optional.String
 }
 
-func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileId string, localVarOptionals *GetWireFileContentsOpts) (string, *http.Response, error) {
+func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileID string, localVarOptionals *GetWireFileContentsOpts) (string, *http.Response, error) {
 	var (
 		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -336,8 +336,8 @@ func (a *WireFilesApiService) GetWireFileContents(ctx context.Context, fileId st
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/contents"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/contents"
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", fmt.Sprintf("%v", fileID), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -571,7 +571,7 @@ func (a *WireFilesApiService) Ping(ctx context.Context) (*http.Response, error) 
 /*
 WireFilesApiService Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
+ * @param fileID File ID
  * @param createFile
  * @param optional nil or *UpdateWireFileByIDOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
@@ -584,7 +584,7 @@ type UpdateWireFileByIDOpts struct {
 	XIDempotencyKey optional.String
 }
 
-func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileId string, createFile CreateFile, localVarOptionals *UpdateWireFileByIDOpts) (File, *http.Response, error) {
+func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileID string, createFile CreateFile, localVarOptionals *UpdateWireFileByIDOpts) (File, *http.Response, error) {
 	var (
 		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -595,8 +595,8 @@ func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileId str
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath := a.client.cfg.BasePath + "/files/{fileID}"
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", fmt.Sprintf("%v", fileID), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -686,7 +686,7 @@ func (a *WireFilesApiService) UpdateWireFileByID(ctx context.Context, fileId str
 /*
 WireFilesApiService Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
+ * @param fileID File ID
  * @param optional nil or *ValidateWireFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
 @return File
@@ -696,7 +696,7 @@ type ValidateWireFileOpts struct {
 	XRequestID optional.String
 }
 
-func (a *WireFilesApiService) ValidateWireFile(ctx context.Context, fileId string, localVarOptionals *ValidateWireFileOpts) (File, *http.Response, error) {
+func (a *WireFilesApiService) ValidateWireFile(ctx context.Context, fileID string, localVarOptionals *ValidateWireFileOpts) (File, *http.Response, error) {
 	var (
 		localVarHttpMethod   = http.MethodGet
 		localVarPostBody     interface{}
@@ -707,8 +707,8 @@ func (a *WireFilesApiService) ValidateWireFile(ctx context.Context, fileId strin
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/validate"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/validate"
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", fmt.Sprintf("%v", fileID), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

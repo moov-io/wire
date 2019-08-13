@@ -33,15 +33,15 @@ All URIs are relative to *http://localhost:8087*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*FEDWireMessageFileApi* | [**AddFEDWireMessageToFile**](docs/FEDWireMessageFileApi.md#addfedwiremessagetofile) | **Post** /files/{file_id}/FEDWireMessage | Add FEDWireMessage to File
+*FEDWireMessageFileApi* | [**AddFEDWireMessageToFile**](docs/FEDWireMessageFileApi.md#addfedwiremessagetofile) | **Post** /files/{fileID}/FEDWireMessage | Add FEDWireMessage to File
 *WireFilesApi* | [**CreateWireFile**](docs/WireFilesApi.md#createwirefile) | **Post** /files/create | Create a new File object
-*WireFilesApi* | [**DeleteWireFileByID**](docs/WireFilesApi.md#deletewirefilebyid) | **Delete** /files/{file_id} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-*WireFilesApi* | [**GetWireFileByID**](docs/WireFilesApi.md#getwirefilebyid) | **Get** /files/{file_id} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-*WireFilesApi* | [**GetWireFileContents**](docs/WireFilesApi.md#getwirefilecontents) | **Get** /files/{file_id}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+*WireFilesApi* | [**DeleteWireFileByID**](docs/WireFilesApi.md#deletewirefilebyid) | **Delete** /files/{fileID} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+*WireFilesApi* | [**GetWireFileByID**](docs/WireFilesApi.md#getwirefilebyid) | **Get** /files/{fileID} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+*WireFilesApi* | [**GetWireFileContents**](docs/WireFilesApi.md#getwirefilecontents) | **Get** /files/{fileID}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
 *WireFilesApi* | [**GetWireFiles**](docs/WireFilesApi.md#getwirefiles) | **Get** /files | Gets a list of Files
 *WireFilesApi* | [**Ping**](docs/WireFilesApi.md#ping) | **Get** /ping | Ping the Wire service to check if running
-*WireFilesApi* | [**UpdateWireFileByID**](docs/WireFilesApi.md#updatewirefilebyid) | **Post** /files/{file_id} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-*WireFilesApi* | [**ValidateWireFile**](docs/WireFilesApi.md#validatewirefile) | **Get** /files/{file_id}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+*WireFilesApi* | [**UpdateWireFileByID**](docs/WireFilesApi.md#updatewirefilebyid) | **Post** /files/{fileID} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+*WireFilesApi* | [**ValidateWireFile**](docs/WireFilesApi.md#validatewirefile) | **Get** /files/{fileID}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
 
 ## Documentation For Models

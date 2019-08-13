@@ -29,7 +29,7 @@ type FEDWireMessageFileApiService service
 /*
 FEDWireMessageFileApiService Add FEDWireMessage to File
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileId File ID
+ * @param fileID File ID
  * @param fedWireMessage
  * @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
  * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the systems logs
@@ -41,7 +41,7 @@ type AddFEDWireMessageToFileOpts struct {
 	XIDempotencyKey optional.String
 }
 
-func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Context, fileId string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*http.Response, error) {
+func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Context, fileID string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*http.Response, error) {
 	var (
 		localVarHttpMethod   = http.MethodPost
 		localVarPostBody     interface{}
@@ -51,8 +51,8 @@ func (a *FEDWireMessageFileApiService) AddFEDWireMessageToFile(ctx context.Conte
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/files/{file_id}/FEDWireMessage"
-	localVarPath = strings.Replace(localVarPath, "{"+"file_id"+"}", fmt.Sprintf("%v", fileId), -1)
+	localVarPath := a.client.cfg.BasePath + "/files/{fileID}/FEDWireMessage"
+	localVarPath = strings.Replace(localVarPath, "{"+"fileID"+"}", fmt.Sprintf("%v", fileID), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
