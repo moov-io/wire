@@ -24,7 +24,7 @@ var (
 	filesCreated = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
 		Name: "wire_files_created",
 		Help: "The number of WIRE files created",
-	}, []string{"destination", "origin"})
+	}, nil) // TODO(adam): add key/value pairs []string{"destination", "origin"}
 
 	filesDeleted = prometheus.NewCounterFrom(stdprometheus.CounterOpts{
 		Name: "wire_files_deleted",
@@ -32,7 +32,7 @@ var (
 	}, nil)
 
 	errNoFileId           = errors.New("no File ID found")
-	errNoFEDWireMessageID = errors.New("No FEDWireMessage ID found")
+	errNoFEDWireMessageID = errors.New("no FEDWireMessage ID found")
 )
 
 func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
@@ -105,6 +105,9 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			logger.Log("files", fmt.Sprintf("creatd file=%s", req.ID), "requestId", requestId)
 		}
 
+		// record a metric for files created
+		filesCreated.Add(1) // TODO(adam): add key/value pairs (like in ACH)
+
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(req)
@@ -149,6 +152,9 @@ func deleteFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 		if requestId := moovhttp.GetRequestId(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("deleted file=%s", fileId), "requestId", requestId)
 		}
+
+		filesDeleted.Add(1)
+
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(`{"error": null}`)
