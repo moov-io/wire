@@ -32,7 +32,7 @@ var (
 	}, nil)
 
 	errNoFileId           = errors.New("no File ID found")
-	errNoFEDWireMessageID = errors.New("No FEDWireMessage ID found")
+	errNoFEDWireMessageID = errors.New("no FEDWireMessage ID found")
 )
 
 func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
