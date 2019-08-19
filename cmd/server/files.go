@@ -69,11 +69,11 @@ func getFiles(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 
 		files, err := repo.getFiles() // TODO(adam): implement soft and hard limits
 		if err != nil {
-			logger.Log("files", fmt.Sprintf("error getting Wire files: %v", err), "requestId", moovhttp.GetRequestId(r))
+			logger.Log("files", fmt.Sprintf("error getting Wire files: %v", err), "requestId", moovhttp.GetRequestID(r))
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("found %d files", len(files)), "requestId", requestId)
 		}
 
@@ -97,11 +97,11 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			req.ID = base.ID()
 		}
 		if err := repo.saveFile(&req); err != nil {
-			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestId", moovhttp.GetRequestId(r))
+			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestId", moovhttp.GetRequestID(r))
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("creatd file=%s", req.ID), "requestId", requestId)
 		}
 
@@ -124,11 +124,11 @@ func getFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 		}
 		file, err := repo.getFile(fileId)
 		if err != nil {
-			logger.Log("files", fmt.Sprintf("problem reading file=%s: %v", fileId, err), "requestId", moovhttp.GetRequestId(r))
+			logger.Log("files", fmt.Sprintf("problem reading file=%s: %v", fileId, err), "requestId", moovhttp.GetRequestID(r))
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("rendering file=%s", fileId), "requestId", requestId)
 		}
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -149,7 +149,7 @@ func deleteFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("deleted file=%s", fileId), "requestId", requestId)
 		}
 
@@ -174,7 +174,7 @@ func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFun
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("rendering file=%s contents", fileId), "requestId", requestId)
 		}
 		w.Header().Set("Content-Type", "text/plain")
@@ -201,13 +201,13 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			return
 		}
 		if err := file.Create(); err != nil { // Create calls Validate
-			if requestId := moovhttp.GetRequestId(r); requestId != "" {
+			if requestId := moovhttp.GetRequestID(r); requestId != "" {
 				logger.Log("files", fmt.Sprintf("file=%s was invalid: %v", fileId, err), "requestId", requestId)
 			}
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("validated file=%s", fileId), "requestId", requestId)
 		}
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -240,7 +240,7 @@ func addFEDWireMessageToFile(logger log.Logger, repo WireFileRepository) http.Ha
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestId(r); requestId != "" {
+		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("added FEDWireMessage=%s to file=%s", req.ID, fileId), "requestId", requestId)
 		}
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
