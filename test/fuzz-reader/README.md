@@ -36,3 +36,19 @@ drwxr-xr-x    1 root     root          4096 Jan 14 17:30 ..
 # Download files, replace <file> with a crasher file
 $ kubectl cp 'apps/wirefuzz-6bbdc574f5-pl2zm:/go/src/github.com/moov-io/wire/test/fuzz-reader/crashers/<file>' ./
 ```
+
+### fuzzit integration
+
+[fuzzit](https://fuzzit.dev/) is a free SaaS for automated fuzzing. They offer free fuzzing for OSS projects so we've setup wirefuzz for their service. After creating a target in the web UI we copied our corpus up (`tar cf wirefuzz.tar *.txt` in `test/fuzz-reader/corpus/` then `gzip wirefuzz.tar`).
+
+We need to then copy down their bash script (`fuzzit completion > fuzzit.sh && chmod +x ./fuzzit.sh`) and create our job:
+
+```
+# In test/fuzz-reader/
+$ fuzzit create job --type=fuzzing wirefuzz fuzzit.sh
+2019/08/19 10:50:59 Creating job...
+2019/08/19 10:50:59 Uploading fuzzer...
+2019/08/19 10:51:05 Starting job
+2019/08/19 10:51:05 Job baAZGS3OQfeCEL1D6HtL started succesfully
+2019/08/19 10:51:05 Job created successfully
+```
