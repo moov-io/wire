@@ -9,6 +9,7 @@
 
 package openapi
 
+// ServiceMessage struct for ServiceMessage
 type ServiceMessage struct {
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`

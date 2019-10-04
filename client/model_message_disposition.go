@@ -9,6 +9,7 @@
 
 package openapi
 
+// MessageDisposition struct for MessageDisposition
 type MessageDisposition struct {
 	// formatVersion identifies the format version 30
 	FormatVersion string `json:"formatVersion,omitempty"`

@@ -9,6 +9,7 @@
 
 package openapi
 
+// BeneficiaryReference struct for BeneficiaryReference
 type BeneficiaryReference struct {
 	// BeneficiaryReference
 	BeneficiaryReference string `json:"beneficiaryReference,omitempty"`

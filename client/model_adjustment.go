@@ -9,7 +9,7 @@
 
 package openapi
 
-// Adjustment
+// Adjustment Adjustment
 type Adjustment struct {
 	// Adjustment Reason Code  * `01` - Pricing Error * `03` - Extension Error * `04` - Item Not Accepted (Damaged) * `05` - Item Not Accepted (Quality) * `06` - Quantity Contested 07   Incorrect Product * `11` - Returns (Damaged) * `12` - Returns (Quality) * `59` - Item Not Received * `75` - Total Order Not Received * `81` - Credit as Agreed * `CM` - Covered by Credit Memo
 	AdjustmentReasonCode string `json:"adjustmentReasonCode,omitempty"`

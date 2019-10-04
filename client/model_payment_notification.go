@@ -9,7 +9,7 @@
 
 package openapi
 
-// PaymentNotification is the payment notification
+// PaymentNotification PaymentNotification is the payment notification
 type PaymentNotification struct {
 	// Payment Notification Indicator  * `0 - 6` - Reserved for market practice conventions. * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
 	PaymentNotificationIndicator string `json:"paymentNotificationIndicator,omitempty"`

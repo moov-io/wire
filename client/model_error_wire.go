@@ -9,7 +9,7 @@
 
 package openapi
 
-// ErrorWire
+// ErrorWire ErrorWire
 type ErrorWire struct {
 	// ErrorCategory * `E` - Data Error * `F` - Insufficient Balance * `H` - Accountability Error * `I` - In Process or Intercepted * `W` - Cutoff Hour Error * `X` - Duplicate IMAD
 	ErrorCategory string `json:"errorCategory,omitempty"`

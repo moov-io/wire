@@ -9,6 +9,7 @@
 
 package openapi
 
+// RemittanceBeneficiary struct for RemittanceBeneficiary
 type RemittanceBeneficiary struct {
 	// IdentificationType  * `OI` - Organization ID * `PI` - Private ID
 	IdentificationType string `json:"identificationType,omitempty"`

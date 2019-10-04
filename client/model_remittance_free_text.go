@@ -9,6 +9,7 @@
 
 package openapi
 
+// RemittanceFreeText struct for RemittanceFreeText
 type RemittanceFreeText struct {
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`

@@ -9,7 +9,7 @@
 
 package openapi
 
-// Identifies Address
+// Address Identifies Address
 type Address struct {
 	// AddressLineOne
 	AddressLineOne string `json:"addressLineOne,omitempty"`

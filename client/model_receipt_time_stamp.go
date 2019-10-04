@@ -9,6 +9,7 @@
 
 package openapi
 
+// ReceiptTimeStamp struct for ReceiptTimeStamp
 type ReceiptTimeStamp struct {
 	// ReceiptDate MMDD, based on the calendar date
 	ReceiptDate string `json:"receiptDate,omitempty"`

@@ -9,7 +9,7 @@
 
 package openapi
 
-// SecondaryRemittanceDocument
+// SecondaryRemittanceDocument SecondaryRemittanceDocument
 type SecondaryRemittanceDocument struct {
 	// Document Type Code  * `AROI` - Accounts Receivable Open Item * `DISP` - Dispatch Advice * `FXDR` - Foreign Exchange Deal Reference * `PROP` - Proprietary Document Type PUOR Purchase Order * `RADM` - Remittance Advice Message * `RPIN` - Related Payment Instruction * `SCOR1` - Structured Communication Reference VCHR Voucher
 	DocumentTypeCode string `json:"documentTypeCode,omitempty"`

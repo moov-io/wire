@@ -9,7 +9,7 @@
 
 package openapi
 
-// Personal is personal demographic information
+// Personal Personal is personal demographic information
 type Personal struct {
 	// Identification Code:  * `1` - Passport Number * `2` - Tax Identification Number * `3` - Driver’s License Number * `4` - Alien Registration Number * `5` - Corporate Identification * `9` - Other Identification
 	IdentificationCode string `json:"identificationCode"`

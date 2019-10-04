@@ -9,7 +9,7 @@
 
 package openapi
 
-// SenderReference is sender reference
+// SenderReference SenderReference is sender reference
 type SenderReference struct {
 	// SenderReference
 	SenderReference string `json:"senderReference,omitempty"`

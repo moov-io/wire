@@ -9,6 +9,7 @@
 
 package openapi
 
+// Charges struct for Charges
 type Charges struct {
 	// Charge Details * `B` - Beneficiary * `S` - Shared
 	ChargeDetails string `json:"chargeDetails,omitempty"`

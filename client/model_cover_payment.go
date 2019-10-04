@@ -9,7 +9,7 @@
 
 package openapi
 
-// CoverPayment
+// CoverPayment CoverPayment
 type CoverPayment struct {
 	// SwiftFieldTag
 	SwiftFieldTag string `json:"swiftFieldTag,omitempty"`

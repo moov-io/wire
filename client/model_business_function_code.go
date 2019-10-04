@@ -9,7 +9,7 @@
 
 package openapi
 
-// BusinessFunctionCode is the business function code
+// BusinessFunctionCode BusinessFunctionCode is the business function code
 type BusinessFunctionCode struct {
 	// BusinessFunctionCode * `BTR` - Bank Transfer (Beneficiary is a bank) * `DRC` - Customer or Corporate Drawdown Request * `CKS` - Check Same Day Settlement * `DRW` - Drawdown Payment * `CTP` - Customer Transfer Plus * `FFR` - Fed Funds Returned * `CTR` - Customer Transfer (Beneficiary is a not a bank) * `FFS` - Fed Funds Sold * `DEP` - Deposit to Sender’s Account * `SVC` - Service Message * `DRB` - Bank-to-Bank Drawdown Request
 	BusinessFunctionCode string `json:"businessFunctionCode"`

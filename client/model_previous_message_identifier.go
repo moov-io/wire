@@ -9,7 +9,7 @@
 
 package openapi
 
-// The identifier for a previous message
+// PreviousMessageIdentifier The identifier for a previous message
 type PreviousMessageIdentifier struct {
 	// PreviousMessageIdentifier
 	PreviousMessageIdentifier string `json:"previousMessageIdentifier,omitempty"`

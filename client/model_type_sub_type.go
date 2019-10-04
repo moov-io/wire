@@ -9,7 +9,7 @@
 
 package openapi
 
-// TypeSubtype is the type and sub type codes
+// TypeSubType TypeSubtype is the type and sub type codes
 type TypeSubType struct {
 	// TypeCode:  * `10` - Funds Transfer - A funds transfer in which the sender and/or receiver may be a bank or a third party (i.e., customer of a bank). * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York. * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
 	TypeCode string `json:"typeCode"`

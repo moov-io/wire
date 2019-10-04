@@ -9,7 +9,7 @@
 
 package openapi
 
-// AccountCreditedDrawdown is the account which is credited in a drawdown
+// AccountCreditedDrawdown AccountCreditedDrawdown is the account which is credited in a drawdown
 type AccountCreditedDrawdown struct {
 	// DrawdownCreditAccountNumber  9 character ABA
 	DrawdownCreditAccountNumber string `json:"drawdownCreditAccountNumber,omitempty"`

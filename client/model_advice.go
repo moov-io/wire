@@ -9,7 +9,7 @@
 
 package openapi
 
-// Advice
+// Advice Advice
 type Advice struct {
 	// Advice Code  * `HLD - Hold * `LTR` - Letter * `PHN` - Phone * `TLX` - Telex * `WRE` - Wire
 	AdviceCode string `json:"adviceCode,omitempty"`

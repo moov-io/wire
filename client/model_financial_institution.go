@@ -9,7 +9,7 @@
 
 package openapi
 
-// FinancialInstitution is financial institution demographic information
+// FinancialInstitution FinancialInstitution is financial institution demographic information
 type FinancialInstitution struct {
 	// Identification Code:  * `B` - SWIFT Bank Identifier Code (BIC) * `C` - CHIPS Participant * `D` - Demand Deposit Account (DDA) Number * `F` - Fed Routing Number * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number * `U` - CHIPS Identifier
 	IdentificationCode string `json:"identificationCode"`
