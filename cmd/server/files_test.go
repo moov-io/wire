@@ -8,13 +8,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/moov-io/wire"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/wire"
 
 	"github.com/moov-io/base"
 
@@ -94,18 +96,13 @@ func readFile(filename string) (*wire.File, error) {
 }
 
 func TestFiles__createFile(t *testing.T) {
-	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
+	bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-CustomerTransfer.txt"))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(f); err != nil {
-		t.Fatal(err)
-	}
-
 	w := httptest.NewRecorder()
-	req := httptest.NewRequest("POST", "/files/create", &buf)
+	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
 
 	repo := &testWireFileRepository{}
 
@@ -121,12 +118,12 @@ func TestFiles__createFile(t *testing.T) {
 	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
 		t.Fatal(err)
 	}
+	if resp.ID == "" {
+		t.Errorf("empty response File: %#v", resp)
+	}
 
 	// error case
 	repo.err = errors.New("bad error")
-	if err := json.NewEncoder(&buf).Encode(f); err != nil {
-		t.Fatal(err)
-	}
 
 	w = httptest.NewRecorder()
 	router.ServeHTTP(w, req)
@@ -134,6 +131,51 @@ func TestFiles__createFile(t *testing.T) {
 
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+	}
+}
+
+func TestFiles__createFileJSON(t *testing.T) {
+	bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-BankTransfer.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
+	req.Header.Set("content-type", "application/json")
+
+	repo := &testWireFileRepository{}
+
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("bogus HTTP status: %d", w.Code)
+	}
+
+	var resp wire.File
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
+		t.Fatal(err)
+	}
+	if resp.ID == "" {
+		t.Errorf("empty response File: %#v", resp)
+	}
+	if resp.FEDWireMessage.FIAdditionalFIToFI == nil {
+		t.Error("FIAdditionalFIToFI shouldn't be nil")
+	}
+
+	// send invalid JSON
+	w = httptest.NewRecorder()
+	req = httptest.NewRequest("POST", "/files/create", strings.NewReader(`{...invalid-json`))
+	req.Header.Set("content-type", "application/json")
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("bogus HTTP status: %d", w.Code)
 	}
 }
 
