@@ -8,9 +8,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/moov-io/base"
 	"github.com/moov-io/wire"
-	"net/http"
 
 	moovhttp "github.com/moov-io/base/http"
 
@@ -88,22 +90,33 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w = wrapResponseWriter(logger, w, r)
 
-		var req wire.File
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			moovhttp.Problem(w, err)
-			return
+		req := wire.NewFile()
+		req.ID = base.ID()
+
+		if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
+			if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+				moovhttp.Problem(w, err)
+				return
+			}
+		} else {
+			file, err := wire.NewReader(r.Body).Read()
+			if err != nil {
+				moovhttp.Problem(w, err)
+				return
+			}
+			req = &file
 		}
 		if req.ID == "" {
 			req.ID = base.ID()
 		}
-		if err := repo.saveFile(&req); err != nil {
-			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestId", moovhttp.GetRequestID(r))
+
+		requestID := moovhttp.GetRequestID(r)
+		if err := repo.saveFile(req); err != nil {
+			logger.Log("files", fmt.Sprintf("problem saving file %s: %v", req.ID, err), "requestId", requestID)
 			moovhttp.Problem(w, err)
 			return
 		}
-		if requestId := moovhttp.GetRequestID(r); requestId != "" {
-			logger.Log("files", fmt.Sprintf("creatd file=%s", req.ID), "requestId", requestId)
-		}
+		logger.Log("files", fmt.Sprintf("creatd file=%s", req.ID), "requestId", requestID)
 
 		// record a metric for files created
 		filesCreated.Add(1) // TODO(adam): add key/value pairs (like in ACH)

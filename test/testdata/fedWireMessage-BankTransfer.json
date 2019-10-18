@@ -1,0 +1,199 @@
+{
+    "fedWireMessage": {
+        "fiAdditionalFiToFi": {
+            "additionalFiToFi": {
+                "lineSix": "Line Six",
+                "lineFive": "Line Five",
+                "lineFour": "Line Four",
+                "lineThree": "Line Three",
+                "lineTwo": "Line Two",
+                "lineOne": "Line One"
+            }
+        },
+        "fiPaymentMethodToBeneficiary": {
+            "Additional": "Additional Information",
+            "paymentMethod": "CHECK"
+        },
+        "fiBeneficiaryAdvice": {
+            "advice": {
+                "lineSix": "Line Six",
+                "lineFive": "Line Five",
+                "lineFour": "Line Four",
+                "lineThree": "Line Three",
+                "lineTwo": "Line Two",
+                "lineOne": "Line One",
+                "adviceCode": "LTR"
+            }
+        },
+        "fiBeneficiary": {
+            "fiToFI": {
+                "lineSix": "Line Six",
+                "lineFive": "Line Five",
+                "lineFour": "Line Four",
+                "lineThree": "Line Three",
+                "lineTwo": "Line Two",
+                "lineOne": "Line One"
+            }
+        },
+        "fiBeneficiaryFIAdvice": {
+            "advice": {
+                "lineSix": "Line Six",
+                "lineFive": "Line Five",
+                "lineFour": "Line Four",
+                "lineThree": "Line Three",
+                "lineTwo": "Line Two",
+                "lineOne": "Line One",
+                "adviceCode": "TLX"
+            }
+        },
+        "fiBeneficiaryFI": {
+            "fiToFI": {
+                "lineSix": "Line Six",
+                "lineFive": "Line Five",
+                "lineFour": "Line Four",
+                "lineThree": "Line Three",
+                "lineTwo": "Line Two",
+                "lineOne": "Line One"
+            }
+        },
+        "fiIntermediaryFIAdvice": {
+            "advice": {
+                "lineSix": "Line Six",
+                "lineFive": "Line Five",
+                "lineFour": "Line Four",
+                "lineThree": "Line Three",
+                "lineTwo": "Line Two",
+                "lineOne": "Line One",
+                "adviceCode": "LTR"
+            }
+        },
+        "fiIntermediaryFI": {
+            "fiToFI": {
+                "lineOne": "Line Six"
+            }
+        },
+        "fiReceiverFI": {
+            "fiToFI": {
+                "lineOne": "Line Six"
+            }
+        },
+        "originatorToBeneficiary": {
+            "lineFour": "LineFour",
+            "lineThree": "LineThree",
+            "lineTwo": "LineTwo",
+            "lineOne": "LineOne"
+        },
+        "instructingFI": {
+            "financialInstitution": {
+                "address": {
+                    "addressLineThree": "Address Three",
+                    "addressLineTwo": "Address Two",
+                    "addressLineOne": "Address One"
+                },
+                "name": "FI Name",
+                "identifier": "123456789",
+                "identificationCode": "D"
+            }
+        },
+        "originatorFI": {
+            "financialInstitution": {
+                "address": {
+                    "addressLineThree": "Address Three",
+                    "addressLineTwo": "Address Two",
+                    "addressLineOne": "Address One"
+                },
+                "name": "FI Name",
+                "identifier": "123456789",
+                "identificationCode": "D"
+            }
+        },
+        "originator": {
+            "personal": {
+                "address": {
+                    "addressLineThree": "Address Three",
+                    "addressLineOne": "Address One"
+                },
+                "name": "Name",
+                "identifier": "1234",
+                "identificationCode": "1"
+            }
+        },
+        "beneficiaryReference": {
+            "beneficiaryReference": "Reference"
+        },
+        "beneficiary": {
+            "personal": {
+                "address": {
+                    "addressLineThree": "Address Three",
+                    "addressLineTwo": "Address Two",
+                    "addressLineOne": "Address One"
+                },
+                "name": "Name",
+                "identifier": "1234",
+                "identificationCode": "3"
+            }
+        },
+        "beneficiaryFI": {
+            "financialInstitution": {
+                "address": {
+                    "addressLineThree": "Address Three",
+                    "addressLineTwo": "Address Two",
+                    "addressLineOne": "Address One"
+                },
+                "name": "FI Name",
+                "identifier": "123456789",
+                "identificationCode": "D"
+            }
+        },
+        "beneficiaryIntermediaryFI": {
+            "financialInstitution": {
+                "address": {
+                    "addressLineThree": "Address Three",
+                    "addressLineTwo": "Address Two",
+                    "addressLineOne": "Address One"
+                },
+                "name": "FI Name",
+                "identifier": "123456789",
+                "identificationCode": "D"
+            }
+        },
+        "previousMessageIdentifier": {
+            "PreviousMessageIdentifier": "Previous Message Ident"
+        },
+        "senderReference": {
+            "senderReference": "Sender Reference"
+        },
+        "businessFunctionCode": {
+            "transactionTypeCode": "   ",
+            "businessFunctionCode": "BTR"
+        },
+        "receiverDepositoryInstitution": {
+            "receiverShortName": "Citadel",
+            "receiverABANumber": "231380104"
+        },
+        "senderDepositoryInstitution": {
+            "senderShortName": "Wells Fargo NA",
+            "senderABANumber": "121042882"
+        },
+        "amount": {
+            "amount": "000001234567"
+        },
+        "inputMessageAccountabilityData": {
+            "inputSequenceNumber": "000001",
+            "inputSource": "Source08",
+            "inputCycleDate": "20190410"
+        },
+        "typeSubType": {
+            "subTypeCode": "00",
+            "typeCode": "10"
+        },
+        "senderSupplied": {
+            "messageDuplicationCode": "",
+            "testProductionCode": "T",
+            "userRequestCorrelation": "User Req",
+            "formatVersion": "30"
+        },
+        "id": ""
+    },
+    "id": ""
+}

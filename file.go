@@ -21,10 +21,6 @@ func NewFile() *File {
 	return &File{}
 }
 
-type file struct {
-	ID string `json:"id"`
-}
-
 // AddFEDWireMessage appends a FEDWireMessage to the File
 func (f *File) AddFEDWireMessage(fwm FEDWireMessage) FEDWireMessage {
 	f.FEDWireMessage = fwm
@@ -59,13 +55,9 @@ func FileFromJSON(bs []byte) (*File, error) {
 		return nil, nil
 	}
 
-	// read file root level
-	var f file
 	file := NewFile()
-	if err := json.NewDecoder(bytes.NewReader(bs)).Decode(&f); err != nil {
+	if err := json.NewDecoder(bytes.NewReader(bs)).Decode(file); err != nil {
 		return nil, fmt.Errorf("problem reading File: %v", err)
 	}
-	file.ID = f.ID
-
 	return file, nil
 }
