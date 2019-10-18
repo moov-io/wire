@@ -1,3 +1,14 @@
+## v0.4.0 (Released 2019-10-18)
+
+ADDITIONS
+
+- cmd/server: allow creating Wire files from JSON and plain text
+
+BUILD
+
+- build: upgrade to Go 1.13 and Debian 10
+- build: update openapi-generator to v4.1.3
+
 ## v0.3.0 (Released 2019-08-20)
 
 BREAKING CHANGE
