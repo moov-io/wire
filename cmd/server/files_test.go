@@ -121,6 +121,9 @@ func TestFiles__createFile(t *testing.T) {
 	if resp.ID == "" {
 		t.Errorf("empty response File: %#v", resp)
 	}
+	if resp.FEDWireMessage.FIAdditionalFIToFI == nil {
+		t.Error("FIAdditionalFIToFI shouldn't be nil")
+	}
 
 	// error case
 	repo.err = errors.New("bad error")
