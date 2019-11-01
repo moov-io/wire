@@ -11,6 +11,7 @@ Method | HTTP request | Description
 ## AddFEDWireMessageToFile
 
 > AddFEDWireMessageToFile(ctx, fileID, fedWireMessage, optional)
+
 Add FEDWireMessage to File
 
 ### Required Parameters
