@@ -1,4 +1,4 @@
-// Copyright 2019 The WIRE Authors
+// Copyright 2020 The WIRE Authors
 // Use of this source code is governed by an Apache License
 // license that can be found in the LICENSE file.
 
