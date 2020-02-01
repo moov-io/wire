@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  description: Moov WIRE () implements an HTTP API for creating, parsing and validating WIRE files.
+  description: Moov WIRE implements an HTTP API for creating, parsing and validating WIRE files.
   version: v1
   title: WIRE API
   contact:
@@ -219,7 +219,7 @@ paths:
   /files/{fileID}/contents:
     get:
       tags: ['Wire Files']
-      summary: Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+      summary: Assembles the existing file with a FEDWireMessage, Returns plaintext file.
       operationId: getWireFileContents
       security:
         - bearerAuth: []
