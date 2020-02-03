@@ -43,6 +43,17 @@ docker:
 	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile-fuzz
 	docker tag moov/wirefuzz:$(VERSION) moov/wirefuzz:latest
 
+.PHONY: clean-integration test-integration
+
+clean-integration:
+	docker-compose kill
+	docker-compose rm -v -f
+
+test-integration: clean-integration
+	docker-compose up -d
+	sleep 5
+	curl -v http://localhost:8088/files
+
 release: docker AUTHORS
 	go vet ./...
 	go test -coverprofile=cover-$(VERSION).out ./...

@@ -1,0 +1,7 @@
+version: '3'
+services:
+  wire:
+    image: moov/wire:latest
+    ports:
+      - "8088:8088"
+      - "8098:8098"

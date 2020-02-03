@@ -64,6 +64,7 @@ after_success:
   - make
   - make client
   - make docker
+  - make test-integration && make clean-integration
 before_deploy:
   - make dist
 after_deploy:
