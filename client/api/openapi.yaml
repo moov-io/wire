@@ -115,7 +115,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WireError'
+                $ref: '#/components/schemas/Error'
           description: Invalid File Header Object
       security:
       - bearerAuth: []
@@ -254,7 +254,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WireError'
+                $ref: '#/components/schemas/Error'
           description: Invalid File Header Object
       security:
       - bearerAuth: []
@@ -4356,7 +4356,7 @@ components:
           example: Line Twelve Text
           maxLength: 35
           type: string
-    WireError:
+    Error:
       properties:
         error:
           description: An error message describing the problem intended for humans.

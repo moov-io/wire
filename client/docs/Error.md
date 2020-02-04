@@ -1,4 +1,4 @@
-# WireError
+# Error
 
 ## Properties
 

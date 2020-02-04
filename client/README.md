@@ -58,6 +58,7 @@ Class | Method | HTTP request | Description
  - [CreateWireFile](docs/CreateWireFile.md)
  - [CurrencyInstructedAmount](docs/CurrencyInstructedAmount.md)
  - [DateRemittanceDocument](docs/DateRemittanceDocument.md)
+ - [Error](docs/Error.md)
  - [ErrorWire](docs/ErrorWire.md)
  - [ExchangeRate](docs/ExchangeRate.md)
  - [FedWireMessage](docs/FedWireMessage.md)
@@ -92,7 +93,6 @@ Class | Method | HTTP request | Description
  - [UnstructuredAddenda](docs/UnstructuredAddenda.md)
  - [WireAddress](docs/WireAddress.md)
  - [WireAmount](docs/WireAmount.md)
- - [WireError](docs/WireError.md)
  - [WireFile](docs/WireFile.md)
 
 
