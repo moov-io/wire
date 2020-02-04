@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   contact:
     url: https://github.com/moov-io/wire
-  description: Moov WIRE () implements an HTTP API for creating, parsing and validating
+  description: Moov WIRE implements an HTTP API for creating, parsing and validating
     WIRE files.
   license:
     name: Apache 2.0
@@ -45,7 +45,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Files'
+                $ref: '#/components/schemas/WireFiles'
           description: A list of File objects
           headers:
             X-Total-Count:
@@ -89,7 +89,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFile'
+              $ref: '#/components/schemas/CreateWireFile'
           text/plain:
             schema:
               description: A plaintext FED WIRE file
@@ -101,7 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
           description: A JSON object containing a new File
           headers:
             Location:
@@ -115,7 +115,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/WireError'
           description: Invalid File Header Object
       security:
       - bearerAuth: []
@@ -185,7 +185,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
           description: A File object for the supplied ID
         404:
           description: A resource with the specified ID was not found
@@ -233,14 +233,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFile'
+              $ref: '#/components/schemas/CreateWireFile'
         required: true
       responses:
         201:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
           description: A JSON object containing a new File
           headers:
             Location:
@@ -254,7 +254,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/WireError'
           description: Invalid File Header Object
       security:
       - bearerAuth: []
@@ -291,12 +291,12 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/RawFile'
+                $ref: '#/components/schemas/RawWireFile'
           description: File built successfully without errors.
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Assembles the existing file witha FEDWireMessage, Returns plaintext
+      summary: Assembles the existing file with a FEDWireMessage, Returns plaintext
         file.
       tags:
       - Wire Files
@@ -328,7 +328,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
           description: File validated successfully without errors.
         400:
           description: Validation failed. Check response for errors
@@ -387,10 +387,10 @@ paths:
       - cookieAuth: []
       summary: Add FEDWireMessage to File
       tags:
-      - FEDWireMessage File
+      - Wire Files
 components:
   schemas:
-    CreateFile:
+    CreateWireFile:
       example:
         ID: 3f2d23ee214
         fedWireMessage:
@@ -1195,7 +1195,7 @@ components:
           items:
             $ref: '#/components/schemas/FEDWireMessage'
           type: array
-    File:
+    WireFile:
       example:
         ID: 3f2d23ee214
         fedWireMessage:
@@ -2002,11 +2002,11 @@ components:
           type: array
       required:
       - fedWireMessage
-    Files:
+    WireFiles:
       items:
-        $ref: '#/components/schemas/File'
+        $ref: '#/components/schemas/WireFile'
       type: array
-    RawFile:
+    RawWireFile:
       description: Plaintext FedWire file
       example: '{3100}121042882Wells Fargo NA'
       type: string
@@ -2428,7 +2428,7 @@ components:
         inputMessageAccountabilityData:
           $ref: '#/components/schemas/InputMessageAccountabilityData'
         amount:
-          $ref: '#/components/schemas/Amount'
+          $ref: '#/components/schemas/WireAmount'
         senderDepositoryInstitution:
           $ref: '#/components/schemas/SenderDepositoryInstitution'
         receiverDepositoryInstitution:
@@ -2842,7 +2842,7 @@ components:
       - inputCycleDate
       - inputSequenceNumber
       - inputSource
-    Amount:
+    WireAmount:
       description: Amount is an amount up to a penny less than $10 billion
       example:
         amount: "000000100000"
@@ -3119,7 +3119,7 @@ components:
           maxLength: 35
           type: string
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: '#/components/schemas/WireAddress'
       required:
       - address
       - identificationCode
@@ -3165,7 +3165,7 @@ components:
           maxLength: 35
           type: string
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: '#/components/schemas/WireAddress'
       required:
       - address
       - identificationCode
@@ -4035,7 +4035,7 @@ components:
           example: US
           maxLength: 2
           type: string
-    Address:
+    WireAddress:
       description: Identifies Address
       example:
         addressLineTwo: addressLineTwo
@@ -4356,7 +4356,7 @@ components:
           example: Line Twelve Text
           maxLength: 35
           type: string
-    Error:
+    WireError:
       properties:
         error:
           description: An error message describing the problem intended for humans.

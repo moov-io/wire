@@ -4,10 +4,11 @@ All URIs are relative to *http://localhost:8087*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**AddFEDWireMessageToFile**](WireFilesApi.md#AddFEDWireMessageToFile) | **Post** /files/{fileID}/FEDWireMessage | Add FEDWireMessage to File
 [**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create a new File object
 [**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{fileID} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
 [**GetWireFileByID**](WireFilesApi.md#GetWireFileByID) | **Get** /files/{fileID} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-[**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{fileID}/contents | Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+[**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{fileID}/contents | Assembles the existing file with a FEDWireMessage, Returns plaintext file.
 [**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Gets a list of Files
 [**Ping**](WireFilesApi.md#Ping) | **Get** /ping | Ping the Wire service to check if running
 [**UpdateWireFileByID**](WireFilesApi.md#UpdateWireFileByID) | **Post** /files/{fileID} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
@@ -15,9 +16,55 @@ Method | HTTP request | Description
 
 
 
+## AddFEDWireMessageToFile
+
+> AddFEDWireMessageToFile(ctx, fileID, fedWireMessage, optional)
+
+Add FEDWireMessage to File
+
+### Required Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**fileID** | **string**| File ID | 
+**fedWireMessage** | [**FedWireMessage**](FedWireMessage.md)|  | 
+ **optional** | ***AddFEDWireMessageToFileOpts** | optional parameters | nil if no parameters
+
+### Optional Parameters
+
+Optional parameters are passed through a pointer to a AddFEDWireMessageToFileOpts struct
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
+
+### Return type
+
+ (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: Not defined
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## CreateWireFile
 
-> File CreateWireFile(ctx, createFile, optional)
+> WireFile CreateWireFile(ctx, createWireFile, optional)
 
 Create a new File object
 
@@ -27,7 +74,7 @@ Create a new File object
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**createFile** | [**CreateFile**](CreateFile.md)| Content of the WIRE file (in json or raw text) | 
+**createWireFile** | [**CreateWireFile**](CreateWireFile.md)| Content of the WIRE file (in json or raw text) | 
  **optional** | ***CreateWireFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -43,7 +90,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**WireFile**](WireFile.md)
 
 ### Authorization
 
@@ -104,7 +151,7 @@ No authorization required
 
 ## GetWireFileByID
 
-> File GetWireFileByID(ctx, fileID, optional)
+> WireFile GetWireFileByID(ctx, fileID, optional)
 
 Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
 
@@ -129,7 +176,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**WireFile**](WireFile.md)
 
 ### Authorization
 
@@ -149,7 +196,7 @@ No authorization required
 
 > string GetWireFileContents(ctx, fileID, optional)
 
-Assembles the existing file witha FEDWireMessage, Returns plaintext file.
+Assembles the existing file with a FEDWireMessage, Returns plaintext file.
 
 ### Required Parameters
 
@@ -190,7 +237,7 @@ No authorization required
 
 ## GetWireFiles
 
-> []File GetWireFiles(ctx, optional)
+> []WireFile GetWireFiles(ctx, optional)
 
 Gets a list of Files
 
@@ -213,7 +260,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**[]File**](File.md)
+[**[]WireFile**](WireFile.md)
 
 ### Authorization
 
@@ -259,7 +306,7 @@ No authorization required
 
 ## UpdateWireFileByID
 
-> File UpdateWireFileByID(ctx, fileID, createFile, optional)
+> WireFile UpdateWireFileByID(ctx, fileID, createWireFile, optional)
 
 Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
 
@@ -270,7 +317,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
 **fileID** | **string**| File ID | 
-**createFile** | [**CreateFile**](CreateFile.md)|  | 
+**createWireFile** | [**CreateWireFile**](CreateWireFile.md)|  | 
  **optional** | ***UpdateWireFileByIDOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -287,7 +334,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**WireFile**](WireFile.md)
 
 ### Authorization
 
@@ -305,7 +352,7 @@ No authorization required
 
 ## ValidateWireFile
 
-> File ValidateWireFile(ctx, fileID, optional)
+> WireFile ValidateWireFile(ctx, fileID, optional)
 
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 
@@ -330,7 +377,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**File**](File.md)
+[**WireFile**](WireFile.md)
 
 ### Authorization
 

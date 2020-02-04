@@ -52,7 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Files'
+                $ref: '#/components/schemas/WireFiles'
   /files/create:
     post:
       tags: ['Wire Files']
@@ -81,7 +81,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFile'
+              $ref: '#/components/schemas/CreateWireFile'
           text/plain:
             schema:
               description: A plaintext FED WIRE file
@@ -99,13 +99,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
         '400':
           description: "Invalid File Header Object"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/WireError'
   /files/{fileID}:
     get:
       tags: ['Wire Files']
@@ -134,7 +134,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
         '404':
           description: A resource with the specified ID was not found
     post:
@@ -170,7 +170,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFile'
+              $ref: '#/components/schemas/CreateWireFile'
       responses:
         '201':
           description: A JSON object containing a new File
@@ -183,13 +183,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
         '400':
           description: "Invalid File Header Object"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/WireError'
     delete:
       tags: ['Wire Files']
       summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
@@ -244,7 +244,7 @@ paths:
           content:
             text/plain:
               schema:
-                $ref: '#/components/schemas/RawFile'
+                $ref: '#/components/schemas/RawWireFile'
   /files/{fileID}/validate:
     get:
       tags: ['Wire Files']
@@ -273,7 +273,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/WireFile'
         '400':
           description: Validation failed. Check response for errors
   /files/{fileID}/FEDWireMessage:
@@ -317,7 +317,7 @@ paths:
 
 components:
   schemas:
-    CreateFile:
+    CreateWireFile:
       properties:
         ID:
           type: string
@@ -327,7 +327,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FEDWireMessage'
-    File:
+    WireFile:
       properties:
         ID:
           type: string
@@ -338,11 +338,11 @@ components:
             $ref: '#/components/schemas/FEDWireMessage'
       required:
         - fedWireMessage
-    Files:
+    WireFiles:
       type: array
       items:
-        $ref: '#/components/schemas/File'
-    RawFile:
+        $ref: '#/components/schemas/WireFile'
+    RawWireFile:
       type: string
       description: Plaintext FedWire file
       example: "{3100}121042882Wells Fargo NA"
@@ -368,7 +368,7 @@ components:
         inputMessageAccountabilityData:
           $ref: '#/components/schemas/InputMessageAccountabilityData'
         amount:
-          $ref: '#/components/schemas/Amount'
+          $ref: '#/components/schemas/WireAmount'
         senderDepositoryInstitution:
           $ref: '#/components/schemas/SenderDepositoryInstitution'
         receiverDepositoryInstitution:
@@ -752,7 +752,7 @@ components:
         - inputCycleDate
         - inputSource
         - inputSequenceNumber
-    Amount:
+    WireAmount:
       description: Amount is an amount up to a penny less than $10 billion
       properties:
         amount:
@@ -995,7 +995,7 @@ components:
           maxLength: 35
           description: Name
         address :
-          $ref: '#/components/schemas/Address'
+          $ref: '#/components/schemas/WireAddress'
       required:
         - identificationCode
         - identifier
@@ -1033,7 +1033,7 @@ components:
           maxLength: 35
           description: Name
         address :
-          $ref: '#/components/schemas/Address'
+          $ref: '#/components/schemas/WireAddress'
       required:
         - identificationCode
         - identifier
@@ -1778,7 +1778,7 @@ components:
           maxLength: 2
           description: CountryOfResidence
           example: 'US'
-    Address:
+    WireAddress:
       description: Identifies Address
       properties:
         addressLineOne:
@@ -2057,7 +2057,7 @@ components:
           maxLength: 35
           description: LineTwelve
           example: 'Line Twelve Text'
-    Error:
+    WireError:
       required:
         - error
       properties:
