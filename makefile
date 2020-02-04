@@ -6,7 +6,7 @@ VERSION := $(shell grep -Eo '(v[0-9]+[\.][0-9]+[\.][0-9]+(-[a-zA-Z0-9]*)?)' vers
 build: check build-server
 
 build-server:
-	CGO_ENABLED=1 go build -o ./bin/server github.com/moov-io/wire/cmd/server
+	CGO_ENABLED=0 go build -o ./bin/server github.com/moov-io/wire/cmd/server
 
 check:
 	go fmt ./...
@@ -32,7 +32,7 @@ dist: clean client build
 ifeq ($(OS),Windows_NT)
 	CGO_ENABLED=1 GOOS=windows go build -o bin/wire-windows-amd64.exe github.com/moov-io/wire/cmd/server
 else
-	CGO_ENABLED=1 GOOS=$(PLATFORM) go build -o bin/wire-$(PLATFORM)-amd64 github.com/moov-io/wire/cmd/server
+	CGO_ENABLED=0 GOOS=$(PLATFORM) go build -o bin/wire-$(PLATFORM)-amd64 github.com/moov-io/wire/cmd/server
 endif
 
 docker:
@@ -42,6 +42,17 @@ docker:
 # Wire Fuzzing docker image
 	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile-fuzz
 	docker tag moov/wirefuzz:$(VERSION) moov/wirefuzz:latest
+
+.PHONY: clean-integration test-integration
+
+clean-integration:
+	docker-compose kill
+	docker-compose rm -v -f
+
+test-integration: clean-integration
+	docker-compose up -d
+	sleep 5
+	curl -v http://localhost:8088/files
 
 release: docker AUTHORS
 	go vet ./...
