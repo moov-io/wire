@@ -105,7 +105,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WireError'
+                $ref: '#/components/schemas/Error'
   /files/{fileID}:
     get:
       tags: ['Wire Files']
@@ -189,7 +189,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WireError'
+                $ref: '#/components/schemas/Error'
     delete:
       tags: ['Wire Files']
       summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
@@ -2057,7 +2057,7 @@ components:
           maxLength: 35
           description: LineTwelve
           example: 'Line Twelve Text'
-    WireError:
+    Error:
       required:
         - error
       properties:
