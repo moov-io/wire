@@ -278,7 +278,7 @@ paths:
           description: Validation failed. Check response for errors
   /files/{fileID}/FEDWireMessage:
     post:
-      tags: ['FEDWireMessage File']
+      tags: ['Wire Files']
       summary: Add FEDWireMessage to File
       operationId: addFEDWireMessageToFile
       security:
