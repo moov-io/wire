@@ -79,6 +79,11 @@ Note: By design Wire **does not persist** (save) any data about the files, batch
 
 We currently run fuzzing over wire in the form of a [`moov/wirefuzz`](https://hub.docker.com/r/moov/wirefuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
 
+## Documentation
+
+### Videos
+
+- [Sending or Receiving International Wires via the Fedwire Funds Service](https://www.youtube.com/watch?v=GSd2gZ8-bzQ)
 
 ## Getting Help
 
