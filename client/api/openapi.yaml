@@ -19,15 +19,18 @@ tags:
 paths:
   /ping:
     get:
+      description: Check the Wire service is running
       operationId: ping
       responses:
         200:
           description: Service is running properly
-      summary: Ping the Wire service to check if running
+      summary: Ping Wire
       tags:
       - Wire Files
   /files:
     get:
+      description: List all Wire files created with the Wire service. These files
+        are not persisted through multiple runs of the service.
       operationId: getWireFiles
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -57,11 +60,12 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Gets a list of Files
+      summary: Get files
       tags:
       - Wire Files
   /files/create:
     post:
+      description: Create a new File object from either the plaintext or JSON representation.
       operationId: createWireFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -120,11 +124,13 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Create a new File object
+      summary: Create File
       tags:
       - Wire Files
   /files/{fileID}:
     delete:
+      description: Permanently deletes a File and associated Batches. It cannot be
+        undone.
       operationId: deleteWireFileByID
       parameters:
       - description: File ID
@@ -154,11 +160,12 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Permanently deletes a File and associated FEDWireMessage. It cannot
-        be undone.
+      summary: Delete file
       tags:
       - Wire Files
     get:
+      description: Get the details of an existing File using the unique File identifier
+        that was returned upon creation.
       operationId: getWireFileByID
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -192,79 +199,13 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Retrieves the details of an existing File. You need only supply the
-        unique File identifier that was returned upon creation.
-      tags:
-      - Wire Files
-    post:
-      operationId: updateWireFileByID
-      parameters:
-      - description: Optional Request ID allows application developer to trace requests
-          through the systems logs
-        example: rs4f9915
-        explode: false
-        in: header
-        name: X-Request-ID
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These
-          strings should contain enough entropy for to not collide with each other
-          in your requests.
-        example: a4f88150
-        explode: false
-        in: header
-        name: X-Idempotency-Key
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: File ID
-        explode: false
-        in: path
-        name: fileID
-        required: true
-        schema:
-          example: 3f2d23ee214
-          type: string
-        style: simple
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateWireFile'
-        required: true
-      responses:
-        201:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WireFile'
-          description: A JSON object containing a new File
-          headers:
-            Location:
-              description: The location of the new resource
-              explode: false
-              schema:
-                format: uri
-                type: string
-              style: simple
-        400:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: Invalid File Header Object
-      security:
-      - bearerAuth: []
-      - cookieAuth: []
-      summary: Updates the specified FEDWire Message by setting the values of the
-        parameters passed. Any parameters not provided will be left unchanged.
+      summary: Retrieve a file
       tags:
       - Wire Files
   /files/{fileID}/contents:
     get:
+      description: |
+        Assembles the existing file, computes sequence numbers and totals. Returns plaintext file.
       operationId: getWireFileContents
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -296,12 +237,13 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Assembles the existing file with a FEDWireMessage, Returns plaintext
-        file.
+      summary: Get file contents
       tags:
       - Wire Files
   /files/{fileID}/validate:
     get:
+      description: Validates the existing file. You need only supply the unique File
+        identifier that was returned upon creation.
       operationId: validateWireFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -335,12 +277,12 @@ paths:
       security:
       - bearerAuth: []
       - cookieAuth: []
-      summary: Validates the existing file. You need only supply the unique File identifier
-        that was returned upon creation.
+      summary: Validate file
       tags:
       - Wire Files
   /files/{fileID}/FEDWireMessage:
     post:
+      description: Add a FEDWireMessage to the specified file
       operationId: addFEDWireMessageToFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests

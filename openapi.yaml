@@ -21,7 +21,8 @@ paths:
   /ping:
     get:
       tags: ['Wire Files']
-      summary: Ping the Wire service to check if running
+      summary: Ping Wire
+      description: Check the Wire service is running
       operationId: ping
       responses:
         '200':
@@ -29,7 +30,8 @@ paths:
   /files:
     get:
       tags: ['Wire Files']
-      summary: Gets a list of Files
+      summary: Get files
+      description: List all Wire files created with the Wire service. These files are not persisted through multiple runs of the service.
       operationId: getWireFiles
       security:
         - bearerAuth: []
@@ -56,7 +58,8 @@ paths:
   /files/create:
     post:
       tags: ['Wire Files']
-      summary: Create a new File object
+      summary: Create File
+      description: Create a new File object from either the plaintext or JSON representation.
       operationId: createWireFile
       security:
         - bearerAuth: []
@@ -109,7 +112,8 @@ paths:
   /files/{fileID}:
     get:
       tags: ['Wire Files']
-      summary: Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+      summary: Retrieve a file
+      description: Get the details of an existing File using the unique File identifier that was returned upon creation.
       operationId: getWireFileByID
       security:
         - bearerAuth: []
@@ -137,62 +141,63 @@ paths:
                 $ref: '#/components/schemas/WireFile'
         '404':
           description: A resource with the specified ID was not found
-    post:
-      tags: ['Wire Files']
-      summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-      operationId: updateWireFileByID
-      security:
-        - bearerAuth: []
-        - cookieAuth: []
-      parameters:
-        - name: X-Request-ID
-          in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
-          example: rs4f9915
-          schema:
-            type: string
-        - name: X-Idempotency-Key
-          in: header
-          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
-          example: a4f88150
-          required: false
-          schema:
-            type: string
-        - name: fileID
-          in: path
-          description: File ID
-          required: true
-          schema:
-            type: string
-            example: 3f2d23ee214
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateWireFile'
-      responses:
-        '201':
-          description: A JSON object containing a new File
-          headers:
-            Location:
-              description: The location of the new resource
-              schema:
-                type: string
-                format: uri
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/WireFile'
-        '400':
-          description: "Invalid File Header Object"
-          content:
-            application/json:
-              schema:
-                $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
+    # post:
+    #   tags: ['Wire Files']
+    #   summary: Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+    #   operationId: updateWireFileByID
+    #   security:
+    #     - bearerAuth: []
+    #     - cookieAuth: []
+    #   parameters:
+    #     - name: X-Request-ID
+    #       in: header
+    #       description: Optional Request ID allows application developer to trace requests through the systems logs
+    #       example: rs4f9915
+    #       schema:
+    #         type: string
+    #     - name: X-Idempotency-Key
+    #       in: header
+    #       description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+    #       example: a4f88150
+    #       required: false
+    #       schema:
+    #         type: string
+    #     - name: fileID
+    #       in: path
+    #       description: File ID
+    #       required: true
+    #       schema:
+    #         type: string
+    #         example: 3f2d23ee214
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/CreateWireFile'
+    #   responses:
+    #     '201':
+    #       description: A JSON object containing a new File
+    #       headers:
+    #         Location:
+    #           description: The location of the new resource
+    #           schema:
+    #             type: string
+    #             format: uri
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/WireFile'
+    #     '400':
+    #       description: "Invalid File Header Object"
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
     delete:
       tags: ['Wire Files']
-      summary: Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+      summary: Delete file
+      description: Permanently deletes a File and associated Batches. It cannot be undone.
       operationId: deleteWireFileByID
       security:
         - bearerAuth: []
@@ -219,7 +224,9 @@ paths:
   /files/{fileID}/contents:
     get:
       tags: ['Wire Files']
-      summary: Assembles the existing file with a FEDWireMessage, Returns plaintext file.
+      summary: Get file contents
+      description: |
+        Assembles the existing file, computes sequence numbers and totals. Returns plaintext file.
       operationId: getWireFileContents
       security:
         - bearerAuth: []
@@ -248,7 +255,8 @@ paths:
   /files/{fileID}/validate:
     get:
       tags: ['Wire Files']
-      summary: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+      summary: Validate file
+      description: Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
       operationId: validateWireFile
       security:
         - bearerAuth: []
@@ -280,6 +288,7 @@ paths:
     post:
       tags: ['Wire Files']
       summary: Add FEDWireMessage to File
+      description: Add a FEDWireMessage to the specified file
       operationId: addFEDWireMessageToFile
       security:
         - bearerAuth: []
