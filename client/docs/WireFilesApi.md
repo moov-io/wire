@@ -5,14 +5,13 @@ All URIs are relative to *http://localhost:8087*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**AddFEDWireMessageToFile**](WireFilesApi.md#AddFEDWireMessageToFile) | **Post** /files/{fileID}/FEDWireMessage | Add FEDWireMessage to File
-[**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create a new File object
-[**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{fileID} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-[**GetWireFileByID**](WireFilesApi.md#GetWireFileByID) | **Get** /files/{fileID} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-[**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{fileID}/contents | Assembles the existing file with a FEDWireMessage, Returns plaintext file.
-[**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Gets a list of Files
-[**Ping**](WireFilesApi.md#Ping) | **Get** /ping | Ping the Wire service to check if running
-[**UpdateWireFileByID**](WireFilesApi.md#UpdateWireFileByID) | **Post** /files/{fileID} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-[**ValidateWireFile**](WireFilesApi.md#ValidateWireFile) | **Get** /files/{fileID}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+[**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create File
+[**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{fileID} | Delete file
+[**GetWireFileByID**](WireFilesApi.md#GetWireFileByID) | **Get** /files/{fileID} | Retrieve a file
+[**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{fileID}/contents | Get file contents
+[**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Get files
+[**Ping**](WireFilesApi.md#Ping) | **Get** /ping | Ping Wire
+[**ValidateWireFile**](WireFilesApi.md#ValidateWireFile) | **Get** /files/{fileID}/validate | Validate file
 
 
 
@@ -21,6 +20,8 @@ Method | HTTP request | Description
 > AddFEDWireMessageToFile(ctx, fileID, fedWireMessage, optional)
 
 Add FEDWireMessage to File
+
+Add a FEDWireMessage to the specified file
 
 ### Required Parameters
 
@@ -66,7 +67,9 @@ No authorization required
 
 > WireFile CreateWireFile(ctx, createWireFile, optional)
 
-Create a new File object
+Create File
+
+Create a new File object from either the plaintext or JSON representation.
 
 ### Required Parameters
 
@@ -110,7 +113,9 @@ No authorization required
 
 > DeleteWireFileByID(ctx, fileID, optional)
 
-Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
+Delete file
+
+Permanently deletes a File and associated Batches. It cannot be undone.
 
 ### Required Parameters
 
@@ -153,7 +158,9 @@ No authorization required
 
 > WireFile GetWireFileByID(ctx, fileID, optional)
 
-Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
+Retrieve a file
+
+Get the details of an existing File using the unique File identifier that was returned upon creation.
 
 ### Required Parameters
 
@@ -196,7 +203,9 @@ No authorization required
 
 > string GetWireFileContents(ctx, fileID, optional)
 
-Assembles the existing file with a FEDWireMessage, Returns plaintext file.
+Get file contents
+
+Assembles the existing file, computes sequence numbers and totals. Returns plaintext file. 
 
 ### Required Parameters
 
@@ -239,7 +248,9 @@ No authorization required
 
 > []WireFile GetWireFiles(ctx, optional)
 
-Gets a list of Files
+Get files
+
+List all Wire files created with the Wire service. These files are not persisted through multiple runs of the service.
 
 ### Required Parameters
 
@@ -280,7 +291,9 @@ No authorization required
 
 > Ping(ctx, )
 
-Ping the Wire service to check if running
+Ping Wire
+
+Check the Wire service is running
 
 ### Required Parameters
 
@@ -304,55 +317,11 @@ No authorization required
 [[Back to README]](../README.md)
 
 
-## UpdateWireFileByID
-
-> WireFile UpdateWireFileByID(ctx, fileID, createWireFile, optional)
-
-Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-
-### Required Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**fileID** | **string**| File ID | 
-**createWireFile** | [**CreateWireFile**](CreateWireFile.md)|  | 
- **optional** | ***UpdateWireFileByIDOpts** | optional parameters | nil if no parameters
-
-### Optional Parameters
-
-Optional parameters are passed through a pointer to a UpdateWireFileByIDOpts struct
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
-
-
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
-
-### Return type
-
-[**WireFile**](WireFile.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: application/json
-- **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
-
-
 ## ValidateWireFile
 
 > WireFile ValidateWireFile(ctx, fileID, optional)
+
+Validate file
 
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
 

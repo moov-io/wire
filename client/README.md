@@ -34,14 +34,13 @@ All URIs are relative to *http://localhost:8087*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *WireFilesApi* | [**AddFEDWireMessageToFile**](docs/WireFilesApi.md#addfedwiremessagetofile) | **Post** /files/{fileID}/FEDWireMessage | Add FEDWireMessage to File
-*WireFilesApi* | [**CreateWireFile**](docs/WireFilesApi.md#createwirefile) | **Post** /files/create | Create a new File object
-*WireFilesApi* | [**DeleteWireFileByID**](docs/WireFilesApi.md#deletewirefilebyid) | **Delete** /files/{fileID} | Permanently deletes a File and associated FEDWireMessage. It cannot be undone.
-*WireFilesApi* | [**GetWireFileByID**](docs/WireFilesApi.md#getwirefilebyid) | **Get** /files/{fileID} | Retrieves the details of an existing File. You need only supply the unique File identifier that was returned upon creation.
-*WireFilesApi* | [**GetWireFileContents**](docs/WireFilesApi.md#getwirefilecontents) | **Get** /files/{fileID}/contents | Assembles the existing file with a FEDWireMessage, Returns plaintext file.
-*WireFilesApi* | [**GetWireFiles**](docs/WireFilesApi.md#getwirefiles) | **Get** /files | Gets a list of Files
-*WireFilesApi* | [**Ping**](docs/WireFilesApi.md#ping) | **Get** /ping | Ping the Wire service to check if running
-*WireFilesApi* | [**UpdateWireFileByID**](docs/WireFilesApi.md#updatewirefilebyid) | **Post** /files/{fileID} | Updates the specified FEDWire Message by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
-*WireFilesApi* | [**ValidateWireFile**](docs/WireFilesApi.md#validatewirefile) | **Get** /files/{fileID}/validate | Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
+*WireFilesApi* | [**CreateWireFile**](docs/WireFilesApi.md#createwirefile) | **Post** /files/create | Create File
+*WireFilesApi* | [**DeleteWireFileByID**](docs/WireFilesApi.md#deletewirefilebyid) | **Delete** /files/{fileID} | Delete file
+*WireFilesApi* | [**GetWireFileByID**](docs/WireFilesApi.md#getwirefilebyid) | **Get** /files/{fileID} | Retrieve a file
+*WireFilesApi* | [**GetWireFileContents**](docs/WireFilesApi.md#getwirefilecontents) | **Get** /files/{fileID}/contents | Get file contents
+*WireFilesApi* | [**GetWireFiles**](docs/WireFilesApi.md#getwirefiles) | **Get** /files | Get files
+*WireFilesApi* | [**Ping**](docs/WireFilesApi.md#ping) | **Get** /ping | Ping Wire
+*WireFilesApi* | [**ValidateWireFile**](docs/WireFilesApi.md#validatewirefile) | **Get** /files/{fileID}/validate | Validate file
 
 
 ## Documentation For Models
