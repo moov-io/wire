@@ -1,3 +1,23 @@
+## v0.5.0 (Released 2020-04-14)
+
+IMPROVEMENTS
+
+- build: minify Dockerfile, remove cgo
+- api: remove strange "FEDWireMessage File" tag
+- api,client: rename models whose names are shared across projects
+
+BUG FIXES
+
+- wire: log crasher file after it's parsed
+
+BUILD
+
+- Update module prometheus/client_golang to v1.2.1
+- build: add slack notifications
+- build: run sonatype-nexus-community/nancy in CI
+- build: upgrade openapi-generator to 4.2.0
+- chore(deps): update golang docker tag to v1.14
+
 ## v0.4.0 (Released 2019-10-18)
 
 ADDITIONS
