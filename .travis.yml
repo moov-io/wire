@@ -31,8 +31,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget -O staticcheck.tar.gz https://github.com/dominikh/go-tools/releases/download/2020.1.3/staticcheck_darwin_amd64.tar.gz; fi
   - tar xf staticcheck.tar.gz && cp ./staticcheck/staticcheck ./bin/staticcheck
   # nancy (vulnerable dependencies)
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.0/nancy-linux.amd64-v0.1.0; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.0/nancy-darwin.amd64-v0.1.0; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.17/nancy-linux.amd64-v0.1.17; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then curl -L -o ./bin/nancy https://github.com/sonatype-nexus-community/nancy/releases/download/v0.1.17/nancy-darwin.amd64-v0.1.17; fi
   - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then chmod +x ./bin/nancy; fi
   # golint
   - go get -u golang.org/x/lint/golint
@@ -54,7 +54,7 @@ script:
   - golint -set_exit_status $GOFILES
   - staticcheck *.go
   - staticcheck ./cmd/server/*.go
-  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then go list -m all | ./bin/nancy; fi
+  - if [[ "$TRAVIS_OS_NAME" != "windows" ]]; then go list -m all | ./bin/nancy -exclude-vulnerability CVE-2020-7219,CVE-2018-19653; fi # Consul Enterprise
   - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install -y mingw; export PATH=/c/tools/mingw64/bin:"$PATH";fi
 after_success:
   - bash <(curl -s https://codecov.io/bash)
