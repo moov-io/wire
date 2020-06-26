@@ -8,7 +8,7 @@ moov-io/wire
 
 Package `github.com/moov-io/wire` implements a reader and writer written in Go  for creating, parsing and validating FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire))
 
-Docs: [docs.moov.io](https://docs.moov.io/) | [api docs](https://moov-io.github.io/wire/)
+Docs: [Project](https://moov-io.github.io/wire/) | [API Endpoints](https://moov-io.github.io/wire/api/)
 
 ## Project Status
 
@@ -89,7 +89,7 @@ We currently run fuzzing over wire in the form of a [`moov/wirefuzz`](https://hu
 
  channel | info
  ------- | -------
-[Project Documentation](https://docs.moov.io/) | Our project documentation available online.
+[Project Documentation](https://moov-io.github.io/wire/) | Our project documentation available online.
 Google Group [moov-users](https://groups.google.com/forum/#!forum/moov-users)| The Moov users Google group is for contributors other people contributing to the Moov project. You can join them without a google account by sending an email to [moov-users+subscribe@googlegroups.com](mailto:moov-users+subscribe@googlegroups.com). After receiving the join-request message, you can simply reply to that to confirm the subscription.
 Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
 [GitHub Issue](https://github.com/moov-io) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
