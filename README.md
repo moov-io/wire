@@ -40,7 +40,7 @@ This project is currently under development and could introduce breaking changes
 
 ### Docker
 
-We publish a [public docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format.
+We publish a [public docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags).
 
 ```
 $ docker run -p 8080:8080 -p 9090:9090 moov/wire:latest
