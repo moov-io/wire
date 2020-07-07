@@ -67,6 +67,10 @@ release-push:
 	docker push moov/wire:latest
 	docker push moov/wirefuzz:$(VERSION)
 
+quay-push:
+	docker push quay.io/moov/wire:$(VERSION)
+	docker push quay.io/moov/wire:latest
+
 .PHONY: cover-test cover-web
 cover-test:
 	go test -coverprofile=cover.out ./...
