@@ -6,19 +6,15 @@ moov-io/wire
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/wire)](https://goreportcard.com/report/github.com/moov-io/wire)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/ach/master/LICENSE)
 
-Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available to use for all.
+Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available.
 
 Docs: [Project](https://moov-io.github.io/wire/) | [API Endpoints](https://moov-io.github.io/wire/api/)
-
-## Project Status
-
-This project is currently under development and could introduce breaking changes to reach a stable status. We are looking for community feedback so please try out our code or give us feedback!
 
 ## Usage
 
 ### Docker
 
-We publish a [public docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags).
+We publish a [public Docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags).
 
 Start the Docker image:
 ```
