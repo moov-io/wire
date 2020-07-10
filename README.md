@@ -6,7 +6,7 @@ moov-io/wire
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/wire)](https://goreportcard.com/report/github.com/moov-io/wire)
 [![Apache 2 licensed](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/ach/master/LICENSE)
 
-Package `github.com/moov-io/wire` implements a reader and writer written in Go  for creating, parsing and validating FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire))
+Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available to use for all.
 
 Docs: [Project](https://moov-io.github.io/wire/) | [API Endpoints](https://moov-io.github.io/wire/api/)
 
@@ -15,6 +15,31 @@ Docs: [Project](https://moov-io.github.io/wire/) | [API Endpoints](https://moov-
 This project is currently under development and could introduce breaking changes to reach a stable status. We are looking for community feedback so please try out our code or give us feedback!
 
 ## Usage
+
+### Docker
+
+We publish a [public docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags).
+
+Start the Docker image:
+```
+docker run -p 8088:8088 -p 9098:9098 moov/wire:latest
+```
+
+List files stored in-memory
+```
+curl localhost:8088/files
+```
+```
+{"files":[],"error":null}
+```
+
+Create a file on the HTTP server
+```
+curl -XPOST --data-binary "@./test/testdata/fedWireMessage-CustomerTransfer.txt" http://localhost:8088/files/create
+```
+```
+{"id":"970f45b9d6e4b9b8c44345520605be1eca0a54af","fedWireMessage":{"id":"","senderSupplied":{"formatVersion":"30", .....
+```
 
 ### Go library
 
@@ -38,19 +63,6 @@ This project is currently under development and could introduce breaking changes
 | SVC      | ServiceMessage                   | [Link](examples/serviceMessage-read/serviceMessage.txt) | [Link](examples/serviceMessage-read/main.go) | [Link](examples/serviceMessage-write/main.go) |
 </details>
 
-### Docker
-
-We publish a [public docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags).
-
-```
-$ docker run -p 8080:8080 -p 9090:9090 moov/wire:latest
-ts=2019-06-20T23:58:44.4931106Z caller=main.go:75 startup="Starting wire server version v0.1.0"
-ts=2019-06-20T23:58:44.5010238Z caller=main.go:135 transport=HTTP addr=:8088
-ts=2019-06-20T23:58:44.5018409Z caller=main.go:125 admin="listening on :9098"
-
-$ curl localhost:8080/files
-{"files":[],"error":null}
-```
 
 ### From Source
 
