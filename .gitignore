@@ -25,3 +25,9 @@ openapi-generator-cli-*.jar
 # fuzzing
 test/fuzz-reader/fuzzreader-fuzz.zip
 test/fuzz-reader/corpus/*.tar.gz
+
+# wasm build
+/cmd/webui/assets/wire.wasm
+
+# GoLand
+/.idea/*
