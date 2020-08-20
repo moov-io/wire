@@ -14,6 +14,6 @@ COPY --from=builder /go/src/github.com/moov-io/wire/cmd/webui/assets/ /assets/
 
 ENV ASSETS_PATH=../assets/
 
-EXPOSE 8083
-EXPOSE 9093
+EXPOSE 8088
+EXPOSE 9098
 ENTRYPOINT ["/bin/webui"]
