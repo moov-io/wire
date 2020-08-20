@@ -13,9 +13,15 @@ build-webui:
 	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/wire.wasm github.com/moov-io/wire/cmd/webui/wire/
 	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
 
+.PHONY: check
 check:
-	go fmt ./...
-	@mkdir -p ./bin/
+ifeq ($(OS),Windows_NT)
+	@echo "Skipping checks on Windows, currently unsupported."
+else
+	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
+	@chmod +x ./lint-project.sh
+	GOOS=js GOARCH=wasm GOCYCLO_LIMIT=45 time ./lint-project.sh
+endif
 
 .PHONY: client
 client:

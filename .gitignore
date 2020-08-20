@@ -22,6 +22,16 @@ openapi-generator-cli-*.jar
 # macOS
 .DS_Store
 
+# code coverage
+coverage.html
+cover.out
+coverage.txt
+misspell*
+staticcheck*
+/lint-project.sh
+bin/
+tmp/
+
 # fuzzing
 test/fuzz-reader/fuzzreader-fuzz.zip
 test/fuzz-reader/corpus/*.tar.gz
