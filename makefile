@@ -36,8 +36,7 @@ client:
 
 .PHONY: clean
 clean:
-	@rm -rf ./bin/
-	@rm -f openapi-generator-cli-*.jar
+	@rm -rf ./bin/ ./tmp/ coverage.txt misspell* staticcheck lint-project.sh
 
 dist: clean client build
 ifeq ($(OS),Windows_NT)
