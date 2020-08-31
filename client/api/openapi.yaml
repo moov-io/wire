@@ -3082,6 +3082,12 @@ components:
           description: |
             Identification Code:
 
+            * `B` - SWIFT Bank Identifier Code (BIC)
+            * `C` - CHIPS Participant
+            * `D` - Demand Deposit Account (DDA) Number
+            * `F` - Fed Routing Number
+            * `T` - SWIFT BIC or Bank Entity Identifier (BEI) and Account Number
+            * `U` - CHIPS Identifier
             * `1` - Passport Number
             * `2` - Tax Identification Number
             * `3` - Driver’s License Number
@@ -3089,6 +3095,12 @@ components:
             * `5` - Corporate Identification
             * `9` - Other Identification
           enum:
+          - B
+          - C
+          - D
+          - F
+          - T
+          - U
           - "1"
           - "2"
           - "3"
