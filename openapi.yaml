@@ -333,9 +333,9 @@ components:
           description: File ID
           example: 3f2d23ee214
         fedWireMessage:
-          type: array
-          items:
-            $ref: '#/components/schemas/FEDWireMessage'
+          $ref: '#/components/schemas/FEDWireMessage'
+      required:
+        - fedWireMessage
     WireFile:
       properties:
         ID:
@@ -343,8 +343,7 @@ components:
           description: File ID
           example: 3f2d23ee214
         fedWireMessage:
-          items:
-            $ref: '#/components/schemas/FEDWireMessage'
+          $ref: '#/components/schemas/FEDWireMessage'
       required:
         - fedWireMessage
     WireFiles:
