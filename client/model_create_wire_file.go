@@ -12,6 +12,6 @@ package openapi
 // CreateWireFile struct for CreateWireFile
 type CreateWireFile struct {
 	// File ID
-	ID             string           `json:"ID,omitempty"`
-	FedWireMessage []FedWireMessage `json:"fedWireMessage,omitempty"`
+	ID             string         `json:"ID,omitempty"`
+	FedWireMessage FedWireMessage `json:"fedWireMessage"`
 }
