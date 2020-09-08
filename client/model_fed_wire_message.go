@@ -33,10 +33,10 @@ type FedWireMessage struct {
 	ExchangeRate                    ExchangeRate                    `json:"exchangeRate,omitempty"`
 	BeneficiaryIntermediaryFI       FinancialInstitution            `json:"beneficiaryIntermediaryFI,omitempty"`
 	BeneficiaryFI                   FinancialInstitution            `json:"beneficiaryFI,omitempty"`
-	Beneficiary                     Personal                        `json:"beneficiary,omitempty"`
+	Beneficiary                     Beneficiary                     `json:"beneficiary,omitempty"`
 	BeneficiaryReference            BeneficiaryReference            `json:"beneficiaryReference,omitempty"`
 	AccountDebitedDrawdown          AccountDebitedDrawdown          `json:"accountDebitedDrawdown,omitempty"`
-	Originator                      Personal                        `json:"originator,omitempty"`
+	Originator                      Beneficiary                     `json:"originator,omitempty"`
 	OriginatorOptionF               OriginatorOptionF               `json:"originatorOptionF,omitempty"`
 	OriginatorFI                    FinancialInstitution            `json:"originatorFI,omitempty"`
 	InstructingFI                   FinancialInstitution            `json:"instructingFI,omitempty"`

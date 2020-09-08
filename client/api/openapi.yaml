@@ -472,13 +472,14 @@ components:
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
-            identificationCode: B
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            personal:
+              identificationCode: B
+              identifier: identifier
+              address:
+                addressLineTwo: addressLineTwo
+                addressLineOne: addressLineOne
+                addressLineThree: addressLineThree
+              name: name
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -560,13 +561,14 @@ components:
               addressLineThree: addressLineThree
             name: name
           originator:
-            identificationCode: B
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            personal:
+              identificationCode: B
+              identifier: identifier
+              address:
+                addressLineTwo: addressLineTwo
+                addressLineOne: addressLineOne
+                addressLineThree: addressLineThree
+              name: name
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: MIDWESTONE B&T
@@ -881,13 +883,14 @@ components:
             userRequestCorrelation: TESTDATA
             formatVersion: "30"
           beneficiary:
-            identificationCode: B
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            personal:
+              identificationCode: B
+              identifier: identifier
+              address:
+                addressLineTwo: addressLineTwo
+                addressLineOne: addressLineOne
+                addressLineThree: addressLineThree
+              name: name
           businessFunctionCode:
             businessFunctionCode: BTR
             transactionTypeCode: transactionTypeCode
@@ -969,13 +972,14 @@ components:
               addressLineThree: addressLineThree
             name: name
           originator:
-            identificationCode: B
-            identifier: identifier
-            address:
-              addressLineTwo: addressLineTwo
-              addressLineOne: addressLineOne
-              addressLineThree: addressLineThree
-            name: name
+            personal:
+              identificationCode: B
+              identifier: identifier
+              address:
+                addressLineTwo: addressLineTwo
+                addressLineOne: addressLineOne
+                addressLineThree: addressLineThree
+              name: name
           senderDepositoryInstitution:
             senderABANumber: "091905114"
             senderShortName: MIDWESTONE B&T
@@ -1296,13 +1300,14 @@ components:
           userRequestCorrelation: TESTDATA
           formatVersion: "30"
         beneficiary:
-          identificationCode: B
-          identifier: identifier
-          address:
-            addressLineTwo: addressLineTwo
-            addressLineOne: addressLineOne
-            addressLineThree: addressLineThree
-          name: name
+          personal:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
         businessFunctionCode:
           businessFunctionCode: BTR
           transactionTypeCode: transactionTypeCode
@@ -1384,13 +1389,14 @@ components:
             addressLineThree: addressLineThree
           name: name
         originator:
-          identificationCode: B
-          identifier: identifier
-          address:
-            addressLineTwo: addressLineTwo
-            addressLineOne: addressLineOne
-            addressLineThree: addressLineThree
-          name: name
+          personal:
+            identificationCode: B
+            identifier: identifier
+            address:
+              addressLineTwo: addressLineTwo
+              addressLineOne: addressLineOne
+              addressLineThree: addressLineThree
+            name: name
         senderDepositoryInstitution:
           senderABANumber: "091905114"
           senderShortName: MIDWESTONE B&T
@@ -1602,13 +1608,13 @@ components:
         beneficiaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiary:
-          $ref: '#/components/schemas/Personal'
+          $ref: '#/components/schemas/Beneficiary'
         beneficiaryReference:
           $ref: '#/components/schemas/BeneficiaryReference'
         accountDebitedDrawdown:
           $ref: '#/components/schemas/AccountDebitedDrawdown'
         originator:
-          $ref: '#/components/schemas/Personal'
+          $ref: '#/components/schemas/Beneficiary'
         originatorOptionF:
           $ref: '#/components/schemas/OriginatorOptionF'
         originatorFI:
@@ -2273,6 +2279,21 @@ components:
       - identificationCode
       - identifier
       - name
+    Beneficiary:
+      example:
+        personal:
+          identificationCode: B
+          identifier: identifier
+          address:
+            addressLineTwo: addressLineTwo
+            addressLineOne: addressLineOne
+            addressLineThree: addressLineThree
+          name: name
+      properties:
+        personal:
+          $ref: '#/components/schemas/Personal'
+      required:
+      - personal
     Personal:
       description: Personal is personal demographic information
       example:

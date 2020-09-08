@@ -50,6 +50,7 @@ Class | Method | HTTP request | Description
  - [AdditionalFiToFi](docs/AdditionalFiToFi.md)
  - [Adjustment](docs/Adjustment.md)
  - [Advice](docs/Advice.md)
+ - [Beneficiary](docs/Beneficiary.md)
  - [BeneficiaryReference](docs/BeneficiaryReference.md)
  - [BusinessFunctionCode](docs/BusinessFunctionCode.md)
  - [Charges](docs/Charges.md)
