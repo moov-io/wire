@@ -402,13 +402,13 @@ components:
         beneficiaryFI:
           $ref: '#/components/schemas/FinancialInstitution'
         beneficiary:
-          $ref: '#/components/schemas/Personal'
+          $ref: '#/components/schemas/Beneficiary'
         beneficiaryReference:
           $ref: '#/components/schemas/BeneficiaryReference'
         accountDebitedDrawdown:
           $ref: '#/components/schemas/AccountDebitedDrawdown'
         originator:
-          $ref: '#/components/schemas/Personal'
+          $ref: '#/components/schemas/Beneficiary'
         originatorOptionF:
           $ref: '#/components/schemas/OriginatorOptionF'
         originatorFI:
@@ -1009,6 +1009,12 @@ components:
         - identifier
         - name
         - address
+    Beneficiary:
+      properties:
+        personal:
+          $ref: '#/components/schemas/Personal'
+      required:
+        - personal
     Personal:
       description: Personal is personal demographic information
       properties:
@@ -1061,11 +1067,11 @@ components:
         - address
     BeneficiaryReference:
       properties:
-          beneficiaryReference:
-            type: string
-            maxLength: 16
-            example: 'Test Data'
-            description: BeneficiaryReference
+        beneficiaryReference:
+          type: string
+          maxLength: 16
+          example: 'Test Data'
+          description: BeneficiaryReference
     AccountDebitedDrawdown:
       description: AccountDebitedDrawdown is the account which is debited in a drawdown
       properties:
