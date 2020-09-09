@@ -522,9 +522,10 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
+            - " "
             - R
             - P
-          example: ''
+          example: " "
         messageStatusIndicator:
           type: string
           maxLength: 1

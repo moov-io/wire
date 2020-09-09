@@ -370,7 +370,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: R
+            messageDuplicationCode: ' '
             messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
@@ -781,7 +781,7 @@ components:
             dateRemittanceDocument: "20190401"
           messageDisposition:
             testProductionCode: T
-            messageDuplicationCode: R
+            messageDuplicationCode: ' '
             messageStatusIndicator: "0"
             formatVersion: "30"
           accountCreditedDrawdown:
@@ -1198,7 +1198,7 @@ components:
           dateRemittanceDocument: "20190401"
         messageDisposition:
           testProductionCode: T
-          messageDuplicationCode: R
+          messageDuplicationCode: ' '
           messageStatusIndicator: "0"
           formatVersion: "30"
         accountCreditedDrawdown:
@@ -1698,7 +1698,7 @@ components:
     MessageDisposition:
       example:
         testProductionCode: T
-        messageDuplicationCode: R
+        messageDuplicationCode: ' '
         messageStatusIndicator: "0"
         formatVersion: "30"
       properties:
@@ -1731,6 +1731,7 @@ components:
             * `R` - Retrieval of an original message
             * `P` - Resend
           enum:
+          - ' '
           - R
           - P
           maxLength: 1
