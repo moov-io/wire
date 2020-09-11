@@ -3,14 +3,23 @@ VERSION := $(shell grep -Eo '(v[0-9]+[\.][0-9]+[\.][0-9]+(-[a-zA-Z0-9]*)?)' vers
 
 .PHONY: build build-server docker release check
 
-build: check build-server
-
-build-server:
+build:
 	CGO_ENABLED=0 go build -o ./bin/server github.com/moov-io/wire/cmd/server
 
+build-webui:
+	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./cmd/webui/assets/wasm_exec.js
+	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/wire.wasm github.com/moov-io/wire/cmd/webui/wire/
+	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
+
+.PHONY: check
 check:
-	go fmt ./...
-	@mkdir -p ./bin/
+ifeq ($(OS),Windows_NT)
+	@echo "Skipping checks on Windows, currently unsupported."
+else
+	@wget -O lint-project.sh https://raw.githubusercontent.com/moov-io/infra/master/go/lint-project.sh
+	@chmod +x ./lint-project.sh
+	GOOS=js GOARCH=wasm GOCYCLO_LIMIT=115 time ./lint-project.sh
+endif
 
 .PHONY: client
 client:
@@ -25,8 +34,7 @@ client:
 
 .PHONY: clean
 clean:
-	@rm -rf ./bin/
-	@rm -f openapi-generator-cli-*.jar
+	@rm -rf ./bin/ ./tmp/ coverage.txt misspell* staticcheck lint-project.sh
 
 dist: clean client build
 ifeq ($(OS),Windows_NT)
@@ -45,6 +53,9 @@ docker: clean
 # Wire Fuzzing docker image
 	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile-fuzz
 	docker tag moov/wirefuzz:$(VERSION) moov/wirefuzz:latest
+# webui Docker image
+	docker build --pull -t moov/wire-webui:$(VERSION) -f Dockerfile-webui .
+	docker tag moov/wire-webui:$(VERSION) moov/wire-webui:latest
 
 .PHONY: clean-integration test-integration
 

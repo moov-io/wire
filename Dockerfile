@@ -1,9 +1,8 @@
 FROM golang:1.15-alpine as builder
 WORKDIR /go/src/github.com/moov-io/wire
-RUN apk add -U make
+RUN apk add -U make bash gcc
 RUN adduser -D -g '' --shell /bin/false moov
 COPY . .
-RUN go mod download
 RUN make build
 USER moov
 
