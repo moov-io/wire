@@ -1,3 +1,25 @@
+## v0.6.0 (Unreleased)
+
+ADDITIONS
+
+- cmd/webui: initial setup for client-side file parsing to their JSON forms in a web browser
+
+BUG FIXES
+
+- api,client: 'beneficiary' has a Personal sub-object
+- api: match openapi spec to Go library (and HTTP server) expectations
+- api: update Personal identification codes
+- api,client: add MessageDisposition.messageDuplicationCode " " enum value
+
+IMPROVEMENTS
+
+- docs: readme improvements, prioritize HTTP server / docker image
+
+BUILD
+
+- chore(deps): update golang docker tag to v1.15
+- chore(deps): update module gorilla/mux to v1.8.0
+
 ## v0.5.1 (Released 2020-07-07)
 
 BUILD
