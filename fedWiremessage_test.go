@@ -1459,7 +1459,7 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
-	err := fwm.checkProhibitedCustomerTransferPlugTags()
+	err := fwm.checkProhibitedCustomerTransferPlusTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1475,7 +1475,7 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
-	err := fwm.checkProhibitedCustomerTransferPlugTags()
+	err := fwm.checkProhibitedCustomerTransferPlusTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)

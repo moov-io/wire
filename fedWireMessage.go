@@ -535,7 +535,7 @@ func (fwm *FEDWireMessage) validateCustomerTransferPlus() error {
 	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		return err
 	}
-	if err := fwm.checkProhibitedCustomerTransferPlugTags(); err != nil {
+	if err := fwm.checkProhibitedCustomerTransferPlusTags(); err != nil {
 		return err
 	}
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
@@ -607,12 +607,12 @@ func (fwm *FEDWireMessage) checkMandatoryCustomerTransferPlusTags() error {
 	return nil
 }
 
-// checkProhibitedCustomerTransferPlugTags ensures there are no tags present in the message that are incompatible with the CustomerTransferPlus code
+// checkProhibitedCustomerTransferPlusTags ensures there are no tags present in the message that are incompatible with the CustomerTransferPlus code
 // Tags NOT permitted:
 //   BusinessFunctionCode.TransactionTypeCode, AccountDebitedDrawdown, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice, ServiceMessage
 // If LocalInstrument = SequenceBCoverPaymentStructured, Charges, InstructedAmount & ExchangeRate are not permitted.
 // Certain {7xxx} tags & {8xxx} tags may not be permitted depending upon value of LocalInstrument.
-func (fwm *FEDWireMessage) checkProhibitedCustomerTransferPlugTags() error {
+func (fwm *FEDWireMessage) checkProhibitedCustomerTransferPlusTags() error {
 	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
