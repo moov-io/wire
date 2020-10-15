@@ -460,13 +460,8 @@ func (fwm *FEDWireMessage) checkProhibitedBankTransferTags() error {
 }
 
 // validateCustomerTransfer validates the CustomerTransfer business function code
-// Additional mandatory tags: Beneficiary, Originator
-// If TypeSubType = ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
 func (fwm *FEDWireMessage) validateCustomerTransfer() error {
 	if err := fwm.checkMandatoryCustomerTransferTags(); err != nil {
-		return err
-	}
-	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
 		return err
 	}
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
@@ -477,13 +472,18 @@ func (fwm *FEDWireMessage) validateCustomerTransfer() error {
 	return nil
 }
 
-// checkMandatoryCustomerTransferTags checks for the tags required by CustomerTransfer in addition to the standard mandatoryFields
+// checkMandatoryCustomerTransferTags checks for the tags required by CustomerTransfer in addition to the standard mandatoryFields.
+// Additional mandatory tags: Beneficiary, Originator
+// If TypeSubType = ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
 func (fwm *FEDWireMessage) checkMandatoryCustomerTransferTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
-	if fwm.Originator == nil && fwm.OriginatorFI == nil {
-		return fieldError("Originator or OriginatorFI", ErrFieldRequired)
+	if fwm.Originator == nil {
+		return fieldError("Originator", ErrFieldRequired)
+	}
+	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
+		return err
 	}
 	return nil
 }
