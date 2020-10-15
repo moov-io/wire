@@ -15,7 +15,7 @@ func (t associatedTypeSubTypes) Contains(target string) bool {
 }
 
 // btrTypeSubTypes contains the types/subtypes associated with a BankTransfer BusinessFunctionCode
-var btrTypeSubTypes associatedTypeSubTypes = []string{
+var btrTypeSubTypes = associatedTypeSubTypes{
 	FundsTransfer + BasicFundsTransfer,
 	FundsTransfer + ReversalTransfer,
 	FundsTransfer + ReversalPriorDayTransfer,
@@ -28,7 +28,7 @@ var btrTypeSubTypes associatedTypeSubTypes = []string{
 }
 
 // ctrTypeSubTypes contains the types/subtypes associated with a CustomerTransfer BusinessFunctionCode
-var ctrTypeSubTypes associatedTypeSubTypes = []string{
+var ctrTypeSubTypes = associatedTypeSubTypes{
 	FundsTransfer + BasicFundsTransfer,
 	FundsTransfer + ReversalTransfer,
 	FundsTransfer + ReversalPriorDayTransfer,
@@ -37,5 +37,23 @@ var ctrTypeSubTypes associatedTypeSubTypes = []string{
 	ForeignTransfer + ReversalPriorDayTransfer,
 	SettlementTransfer + BasicFundsTransfer,
 	SettlementTransfer + ReversalTransfer,
+	SettlementTransfer + ReversalPriorDayTransfer,
+}
+
+var ctpTypeSubTypes = associatedTypeSubTypes{
+	FundsTransfer + BasicFundsTransfer,
+	FundsTransfer + RequestReversal,
+	FundsTransfer + ReversalTransfer,
+	FundsTransfer + RequestReversalPriorDayTransfer,
+	FundsTransfer + ReversalPriorDayTransfer,
+	ForeignTransfer + BasicFundsTransfer,
+	ForeignTransfer + RequestReversal,
+	ForeignTransfer + ReversalTransfer,
+	ForeignTransfer + RequestReversalPriorDayTransfer,
+	ForeignTransfer + ReversalPriorDayTransfer,
+	SettlementTransfer + BasicFundsTransfer,
+	SettlementTransfer + RequestReversal,
+	SettlementTransfer + ReversalTransfer,
+	SettlementTransfer + RequestReversalPriorDayTransfer,
 	SettlementTransfer + ReversalPriorDayTransfer,
 }

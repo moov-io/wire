@@ -1207,7 +1207,7 @@ func TestLocalInstrumentUnstructuredAddendaForCustomerTransferPlus(t *testing.T)
 	fwm.SetOriginator(o)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1228,7 +1228,7 @@ func TestLocalInstrumentRelatedRemittanceForCustomerTransferPlus(t *testing.T) {
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1249,7 +1249,7 @@ func TestLocalInstrumentBeneficiaryReferenceForCustomerTransferPlus(t *testing.T
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1272,7 +1272,7 @@ func TestLocalInstrumentOrderingCustomerForCustomerTransferPlus(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	br := mockBeneficiaryReference()
 	fwm.SetBeneficiaryReference(br)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1297,7 +1297,7 @@ func TestLocalInstrumentBeneficiaryCustomerForCustomerTransferPlus(t *testing.T)
 	fwm.SetBeneficiaryReference(br)
 	oc := mockOrderingCustomer()
 	fwm.SetOrderingCustomer(oc)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1318,7 +1318,7 @@ func TestLocalInstrumentProprietaryCodeForCustomerTransferPlus(t *testing.T) {
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = ProprietaryLocalInstrumentCode
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1339,7 +1339,7 @@ func TestLocalInstrumentRemittanceOriginatorForCustomerTransferPlus(t *testing.T
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1362,7 +1362,7 @@ func TestLocalInstrumentRemittanceBeneficiaryForCustomerTransferPlus(t *testing.
 	fwm.SetLocalInstrument(li)
 	ro := mockRemittanceOriginator()
 	fwm.SetRemittanceOriginator(ro)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1387,7 +1387,7 @@ func TestLocalInstrumentPrimaryRemittanceDocumentForCustomerTransferPlus(t *test
 	fwm.SetRemittanceOriginator(ro)
 	rb := mockRemittanceBeneficiary()
 	fwm.SetRemittanceBeneficiary(rb)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1414,7 +1414,7 @@ func TestLocalInstrumentActualAmountPaidForCustomerTransferPlus(t *testing.T) {
 	fwm.SetRemittanceBeneficiary(rb)
 	prd := mockPrimaryRemittanceDocument()
 	fwm.SetPrimaryRemittanceDocument(prd)
-	if err := fwm.isCustomerTransferPlusTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -1427,7 +1427,7 @@ func TestBeneficiaryIdentificationCodeForCustomerTransferPlus(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
 	fwm.SetBusinessFunctionCode(bfc)
-	err := fwm.isCustomerTransferPlusTags()
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
 	if err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
@@ -1443,7 +1443,7 @@ func TestOriginatorIdentificationCodeForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ben := mockBeneficiary()
 	fwm.SetBeneficiary(ben)
-	err := fwm.isCustomerTransferPlusTags()
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
 	if err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
@@ -1459,7 +1459,7 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
-	err := fwm.isInvalidCustomerTransferPlusTags()
+	err := fwm.checkProhibitedCustomerTransferPlugTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1475,7 +1475,7 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
-	err := fwm.isInvalidCustomerTransferPlusTags()
+	err := fwm.checkProhibitedCustomerTransferPlugTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)

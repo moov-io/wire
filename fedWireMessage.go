@@ -292,13 +292,7 @@ func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 			return err
 		}
 	case CustomerTransferPlus:
-		if err := fwm.isCustomerTransferPlusValid(); err != nil {
-			return err
-		}
-		if err := fwm.isCustomerTransferPlusTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidCustomerTransferPlusTags(); err != nil {
+		if err := fwm.validateCustomerTransferPlus(); err != nil {
 			return err
 		}
 	case CheckSameDaySettlement:
@@ -392,7 +386,7 @@ func (fwm *FEDWireMessage) validateBankTransfer() error {
 	if err := fwm.checkProhibitedBankTransferTags(); err != nil {
 		return err
 	}
-	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
 		return err
 	}
 
@@ -469,10 +463,10 @@ func (fwm *FEDWireMessage) checkProhibitedBankTransferTags() error {
 // Additional mandatory tags: Beneficiary, Originator
 // If TypeSubType = ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
 func (fwm *FEDWireMessage) validateCustomerTransfer() error {
-	if err := fwm.checkCustomerTransferMandatoryTags(); err != nil {
+	if err := fwm.checkMandatoryCustomerTransferTags(); err != nil {
 		return err
 	}
-	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
 		return err
 	}
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
@@ -483,8 +477,8 @@ func (fwm *FEDWireMessage) validateCustomerTransfer() error {
 	return nil
 }
 
-// checkCustomerTransferMandatoryTags checks for the tags required by CustomerTransfer in addition to the standard mandatoryFields
-func (fwm *FEDWireMessage) checkCustomerTransferMandatoryTags() error {
+// checkMandatoryCustomerTransferTags checks for the tags required by CustomerTransfer in addition to the standard mandatoryFields
+func (fwm *FEDWireMessage) checkMandatoryCustomerTransferTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -536,44 +530,42 @@ func (fwm *FEDWireMessage) checkProhibitedCustomerTransferTags() error {
 	return nil
 }
 
-// isCustomerTransferPlusValid
-func (fwm *FEDWireMessage) isCustomerTransferPlusValid() error {
+// validateCustomerTransferPlus validates the CustomerTransferPlus business function code
+func (fwm *FEDWireMessage) validateCustomerTransferPlus() error {
+	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
+		return err
+	}
+	if err := fwm.checkProhibitedCustomerTransferPlugTags(); err != nil {
+		return err
+	}
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		FundsTransfer + BasicFundsTransfer,
-		FundsTransfer + RequestReversal,
-		FundsTransfer + ReversalTransfer,
-		FundsTransfer + RequestReversalPriorDayTransfer,
-		FundsTransfer + ReversalPriorDayTransfer,
-		ForeignTransfer + BasicFundsTransfer,
-		ForeignTransfer + RequestReversal,
-		ForeignTransfer + ReversalTransfer,
-		ForeignTransfer + RequestReversalPriorDayTransfer,
-		ForeignTransfer + ReversalPriorDayTransfer,
-		SettlementTransfer + BasicFundsTransfer,
-		SettlementTransfer + RequestReversal,
-		SettlementTransfer + ReversalTransfer,
-		SettlementTransfer + RequestReversalPriorDayTransfer,
-		SettlementTransfer + ReversalPriorDayTransfer:
-	default:
+	if !ctpTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
 	return nil
 }
 
-// isCustomerTransferPlusTags
-func (fwm *FEDWireMessage) isCustomerTransferPlusTags() error {
+// checkMandatoryCustomerTransferPlusTags checks for the tags required by CustomerTransferPlus in addition to the standard mandatoryFields
+// Additional mandatory fields:
+//   Beneficiary and Originator OR OriginatorOptionF
+// If TypeSubType = ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
+// If LocalInstrument = SequenceBCoverPaymentStructured, then BeneficiaryReference, OrderingCustomer & BeneficiaryCustomer are mandatory.
+// If LocalInstrument = ANSIX12format, GeneralXMLformat, ISO20022XMLformat, NarrativeText, STP820format, SWIFTfield70 or UNEDIFACTformat, then UnstructuredAddenda is mandatory.
+// If LocalInstrument = RelatedRemittanceInformation, then RelatedRemittance is mandatory.
+// If LocalInstrument = RemittanceInformationStructured, then RemittanceOriginator, RemittanceBeneficiary, PrimaryRemittanceDocument & ActualAmountPaid are mandatory.
+// If LocalInstrument = ProprietaryLocalInstrumentCode, then LocalInstrument Element 02 is mandatory.
+func (fwm *FEDWireMessage) checkMandatoryCustomerTransferPlusTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
-	if fwm.Originator == nil {
-		return fieldError("Originator", ErrFieldRequired)
+	if fwm.Originator == nil && fwm.OriginatorOptionF == nil { // one or the other must be present
+		return fieldError("Originator OR OriginatorOptionF", ErrFieldRequired)
 	}
-	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
 		return err
 	}
+
 	switch fwm.LocalInstrument.LocalInstrumentCode {
 	case SequenceBCoverPaymentStructured:
 		if fwm.BeneficiaryReference == nil {
@@ -612,16 +604,15 @@ func (fwm *FEDWireMessage) isCustomerTransferPlusTags() error {
 			return fieldError("ProprietaryCode", ErrFieldRequired)
 		}
 	}
-	if fwm.LocalInstrument.LocalInstrumentCode != SequenceBCoverPaymentStructured {
-		if err := fwm.invalidCoverPaymentTags(); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
-// isInvalidCustomerTransferPlusTags
-func (fwm *FEDWireMessage) isInvalidCustomerTransferPlusTags() error {
+// checkProhibitedCustomerTransferPlugTags ensures there are no tags present in the message that are incompatible with the CustomerTransferPlus code
+// Tags NOT permitted:
+//   BusinessFunctionCode.TransactionTypeCode, AccountDebitedDrawdown, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice, ServiceMessage
+// If LocalInstrument = SequenceBCoverPaymentStructured, Charges, InstructedAmount & ExchangeRate are not permitted.
+// Certain {7xxx} tags & {8xxx} tags may not be permitted depending upon value of LocalInstrument.
+func (fwm *FEDWireMessage) checkProhibitedCustomerTransferPlugTags() error {
 	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
 	}
@@ -647,13 +638,19 @@ func (fwm *FEDWireMessage) isInvalidCustomerTransferPlusTags() error {
 				return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 			}
 		}
+		if fwm.LocalInstrument.LocalInstrumentCode != SequenceBCoverPaymentStructured {
+			if err := fwm.invalidCoverPaymentTags(); err != nil {
+				return err
+			}
+		}
 	}
+
 	// ToDo: From the spec - Certain {7xxx} tags & {8xxx} tags may not be permitted depending upon value of {3610}.  I'm not sure how to code this yet
 	return nil
 }
 
-// isPreviousMessageIdentifierRequired
-func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
+// checkPreviousMessageIdentifier returns an error if ReversalTransfer or ReversalPriorDayTransfer options are set and PreviousMessageIdentifier is missing
+func (fwm *FEDWireMessage) checkPreviousMessageIdentifier() error {
 	if fwm.TypeSubType != nil {
 		switch fwm.TypeSubType.SubTypeCode {
 		case ReversalTransfer, ReversalPriorDayTransfer:
@@ -899,7 +896,6 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	return nil
 }
 
-// isInvalidTags
 // isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
 // BusinessFunctionCode, create function isInvalidBusinessFunctionCodeTag() with the specific invalid tags for that
 // BusinessFunctionCode (e.g. checkProhibitedBankTransferTags)
@@ -999,6 +995,8 @@ func (fwm *FEDWireMessage) isInvalidTags() error {
 	return nil
 }
 
+// invalidRemittanceTags returns an error if certain {8xxx} range tags are present.
+// The validity of these tags generally depends on the value of the LocalInstrument tag.
 func (fwm *FEDWireMessage) invalidRemittanceTags() error {
 	if fwm.RelatedRemittance != nil {
 		return fieldError("RelatedRemittance", ErrInvalidProperty, "RelatedRemittance")
@@ -1036,6 +1034,8 @@ func (fwm *FEDWireMessage) invalidRemittanceTags() error {
 	return nil
 }
 
+// invalidCoverPaymentTags returns an error if certain {7xxx} range tags are present.
+// The validity of these tags generally depends on the value of the LocalInstrument tag.
 func (fwm *FEDWireMessage) invalidCoverPaymentTags() error {
 	if fwm.CurrencyInstructedAmount != nil {
 		return fieldError("CurrencyInstructedAmount ", ErrInvalidProperty, fwm.CurrencyInstructedAmount)
