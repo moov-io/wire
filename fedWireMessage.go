@@ -311,44 +311,20 @@ func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 		if err := fwm.validateFEDFundsSold(); err != nil {
 			return err
 		}
-	case DrawDownRequest:
-		if err := fwm.isDrawdownRequestValid(); err != nil {
-			return err
-		}
-		if err := fwm.isDrawdownRequestTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+	case DrawdownResponse:
+		if err := fwm.validateDrawdownResponse(); err != nil {
 			return err
 		}
 	case BankDrawDownRequest:
-		if err := fwm.isBankDrawdownRequestValid(); err != nil {
-			return err
-		}
-		if err := fwm.isBankDrawdownRequestTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+		if err := fwm.validateBankDrawdownRequest(); err != nil {
 			return err
 		}
 	case CustomerCorporateDrawdownRequest:
-		if err := fwm.isCustomerCorporateDrawdownRequestValid(); err != nil {
-			return err
-		}
-		if err := fwm.isCustomerCorporateDrawdownRequestTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+		if err := fwm.validateCustomerCorporateDrawdownRequest(); err != nil {
 			return err
 		}
 	case BFCServiceMessage:
-		if err := fwm.isServiceMessageValid(); err != nil {
-			return err
-		}
-		if err := fwm.isServiceMessageTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidServiceMessageTags(); err != nil {
+		if err := fwm.validateServiceMessage(); err != nil {
 			return err
 		}
 	}
@@ -645,7 +621,7 @@ func (fwm *FEDWireMessage) validateCheckSameDaySettlement() error {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return fwm.isInvalidTags()
+	return fwm.checkSharedProhibitedTags()
 }
 
 // validateDepositSendersAccount validates the DepositSendersAccount business function code
@@ -655,7 +631,7 @@ func (fwm *FEDWireMessage) validateDepositSendersAccount() error {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return fwm.isInvalidTags()
+	return fwm.checkSharedProhibitedTags()
 }
 
 // validateFEDFundsReturned validates the FEDFundsReturned business function code
@@ -665,7 +641,7 @@ func (fwm *FEDWireMessage) validateFEDFundsReturned() error {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return fwm.isInvalidTags()
+	return fwm.checkSharedProhibitedTags()
 }
 
 // validateFEDFundsSold validates the FEDFundsSold business function code
@@ -675,25 +651,25 @@ func (fwm *FEDWireMessage) validateFEDFundsSold() error {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return fwm.isInvalidTags()
+	return fwm.checkSharedProhibitedTags()
 }
 
-// isDrawdownRequestValid
-func (fwm *FEDWireMessage) isDrawdownRequestValid() error {
+// validateDrawdownResponse validates the DrawdownResponse business function code
+func (fwm *FEDWireMessage) validateDrawdownResponse() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		FundsTransfer + FundsTransferRequestCredit,
-		SettlementTransfer + FundsTransferRequestCredit:
-	default:
+	if !drwTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
+	if err := fwm.checkMandatoryDrawdownResponseTags(); err != nil {
+		return err
+	}
+	return fwm.checkSharedProhibitedTags()
 }
 
-// isDrawdownRequestTags
-func (fwm *FEDWireMessage) isDrawdownRequestTags() error {
+// checkMandatoryDrawdownResponseTags checks for the tags required by DrawdownResponse in addition to the standard mandatoryFields
+// Additional mandatory fields: Beneficiary, Originator
+func (fwm *FEDWireMessage) checkMandatoryDrawdownResponseTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -703,22 +679,22 @@ func (fwm *FEDWireMessage) isDrawdownRequestTags() error {
 	return nil
 }
 
-// isBankDrawdownRequestValid
-func (fwm *FEDWireMessage) isBankDrawdownRequestValid() error {
+// validateBankDrawdownRequest validates the BankDrawDownRequest business function code
+func (fwm *FEDWireMessage) validateBankDrawdownRequest() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		SettlementTransfer + RequestCredit,
-		SettlementTransfer + RefusalRequestCredit:
-	default:
+	if !drbTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
+	if err := fwm.checkMandatoryBankDrawdownRequestTags(); err != nil {
+		return err
+	}
+	return fwm.checkSharedProhibitedTags()
 }
 
-// isBankDrawdownRequestTags
-func (fwm *FEDWireMessage) isBankDrawdownRequestTags() error {
+// checkMandatoryBankDrawdownRequestTags checks for the tags required by BankDrawDownRequest in addition to the standard mandatoryFields
+// Additional mandatory fields: AccountDebitedDrawdown, AccountCreditedDrawdown
+func (fwm *FEDWireMessage) checkMandatoryBankDrawdownRequestTags() error {
 	if fwm.AccountDebitedDrawdown == nil {
 		return fieldError("AccountDebitedDrawdown", ErrFieldRequired)
 	}
@@ -728,22 +704,22 @@ func (fwm *FEDWireMessage) isBankDrawdownRequestTags() error {
 	return nil
 }
 
-// isCustomerCorporateDrawdownRequestValid
-func (fwm *FEDWireMessage) isCustomerCorporateDrawdownRequestValid() error {
+// validateCustomerCorporateDrawdownRequest validates the CustomerCorporateDrawdownRequest business function code
+func (fwm *FEDWireMessage) validateCustomerCorporateDrawdownRequest() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		FundsTransfer + RequestCredit,
-		FundsTransfer + RefusalRequestCredit:
-	default:
+	if !drcTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
+	if err := fwm.checkMandatoryCustomerCorporateDrawdownRequestTags(); err != nil {
+		return err
+	}
+	return fwm.checkSharedProhibitedTags()
 }
 
-// isCustomerCorporateDrawdownRequestTags
-func (fwm *FEDWireMessage) isCustomerCorporateDrawdownRequestTags() error {
+// checkMandatoryCustomerCorporateDrawdownRequestTags checks for the tags required by CustomerCorporateDrawdownRequest in addition to the standard mandatoryFields
+// Additional mandatory fields: Beneficiary, AccountDebitedDrawdown, AccountCreditedDrawdown
+func (fwm *FEDWireMessage) checkMandatoryCustomerCorporateDrawdownRequestTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
@@ -756,36 +732,25 @@ func (fwm *FEDWireMessage) isCustomerCorporateDrawdownRequestTags() error {
 	return nil
 }
 
-// isServiceMessageValid
-func (fwm *FEDWireMessage) isServiceMessageValid() error {
+// validateServiceMessage validates the BFCServiceMessage business function code
+func (fwm *FEDWireMessage) validateServiceMessage() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		FundsTransfer + RequestReversal,
-		FundsTransfer + RequestReversalPriorDayTransfer,
-		FundsTransfer + RefusalRequestCredit,
-		FundsTransfer + SSIServiceMessage,
-		ForeignTransfer + RequestReversal,
-		ForeignTransfer + RequestReversalPriorDayTransfer,
-		ForeignTransfer + SSIServiceMessage,
-		SettlementTransfer + RequestReversal,
-		SettlementTransfer + RequestReversalPriorDayTransfer,
-		SettlementTransfer + RefusalRequestCredit,
-		SettlementTransfer + SSIServiceMessage:
-	default:
+	if !svcTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
+	}
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
+		return err
 	}
 	return nil
 }
 
-// isServiceMessageTags
-func (fwm *FEDWireMessage) isServiceMessageTags() error {
-	return nil
-}
-
-// isInvalidServiceMessageTags
-func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
+// checkProhibitedServiceMessageTags ensures there are no tags present in the message that are incompatible with the BFCServiceMessage code
+// Tags NOT permitted:
+//   BusinessFunctionCode.TransactionTypeCode, LocalInstrument, PaymentNotification, Charges, InstructedAmount, ExchangeRate,
+//   Beneficiary Code = SWIFTBICORBEIANDAccountNumber, Originator Code = SWIFTBICORBEIANDAccountNumber, OriginatorOptionF,
+//   any {7xxx} tag, any {8xxx} tag
+func (fwm *FEDWireMessage) checkProhibitedServiceMessageTags() error {
 	// BusinessFunctionCode.TransactionTypeCode (Element 02) is invalid
 	if fwm.BusinessFunctionCode != nil {
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
@@ -807,15 +772,11 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	if fwm.ExchangeRate != nil {
 		return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 	}
-	if fwm.Beneficiary != nil {
-		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
-		}
+	if fwm.Beneficiary != nil && fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+		return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
 	}
-	if fwm.Originator != nil {
-		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
-		}
+	if fwm.Originator != nil && fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+		return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
 	}
 	if fwm.OriginatorOptionF != nil {
 		return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
@@ -832,44 +793,56 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	return nil
 }
 
-// isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
+// checkSharedProhibitedTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
 // BusinessFunctionCode, create function isInvalidBusinessFunctionCodeTag() with the specific invalid tags for that
 // BusinessFunctionCode (e.g. checkProhibitedBankTransferTags)
-func (fwm *FEDWireMessage) isInvalidTags() error {
+func (fwm *FEDWireMessage) checkSharedProhibitedTags() error {
+	// shared between CheckSameDaySettlement, DepositSendersAccount, FEDFundsReturned, FEDFundsSold, DrawdownResponse, BankDrawDownRequest, and CustomerCorporateDrawdownRequest
+	if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
+		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
+	}
+	if fwm.LocalInstrument != nil {
+		return fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument)
+	}
+	if fwm.PaymentNotification != nil {
+		return fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification)
+	}
+	if fwm.Charges != nil {
+		return fieldError("Charges", ErrInvalidProperty, fwm.Charges)
+	}
+	if fwm.InstructedAmount != nil {
+		return fieldError("InstructedAmount", ErrInvalidProperty, fwm.InstructedAmount)
+	}
+	if fwm.ExchangeRate != nil {
+		return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
+	}
+	if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+		return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+	}
+	if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+		return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+	}
+	if fwm.OriginatorOptionF != nil {
+		return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
+	}
+	if fwm.ServiceMessage != nil {
+		return fieldError("BusinessFunctionCode", ErrInvalidProperty, "ServiceMessage")
+	}
+	if fwm.UnstructuredAddenda != nil {
+		return fieldError("BusinessFunctionCode", ErrInvalidProperty, "Unstructured Addenda")
+	}
+	if err := fwm.invalidCoverPaymentTags(); err != nil {
+		return err
+	}
+	if err := fwm.invalidRemittanceTags(); err != nil {
+		return err
+	}
+
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
-	// Not permitted: BusinessFunctionCode.TransactionTypeCode, LocalInstrument, PaymentNotification, Charges, InstructedAmount, ExchangeRate,
-	// Beneficiary Code = SWIFTBICORBEIANDAccountNumber, AccountDebitedDrawdown, Originator Code = SWIFTBICORBEIANDAccountNumber,
-	// OriginatorOptionF, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice, any {7xxx} tag, any {8xxx} tag, ServiceMessage
 	case CheckSameDaySettlement, DepositSendersAccount, FEDFundsReturned, FEDFundsSold:
-		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
-			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
-		}
-		if fwm.LocalInstrument != nil {
-			return fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument)
-		}
-		if fwm.PaymentNotification != nil {
-			return fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification)
-		}
-		if fwm.Charges != nil {
-			return fieldError("Charges", ErrInvalidProperty, fwm.Charges)
-		}
-		if fwm.InstructedAmount != nil {
-			return fieldError("InstructedAmount", ErrInvalidProperty, fwm.InstructedAmount)
-		}
-		if fwm.ExchangeRate != nil {
-			return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
-		}
-		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
-		}
+		// unique exclusions: AccountDebitedDrawdown, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice
 		if fwm.AccountDebitedDrawdown != nil {
 			return fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown)
-		}
-		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
-		}
-		if fwm.OriginatorOptionF != nil {
-			return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
 		}
 		if fwm.AccountCreditedDrawdown != nil {
 			return fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown)
@@ -877,59 +850,8 @@ func (fwm *FEDWireMessage) isInvalidTags() error {
 		if fwm.FIDrawdownDebitAccountAdvice != nil {
 			return fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice)
 		}
-		if fwm.ServiceMessage != nil {
-			return fieldError("BusinessFunctionCode", ErrInvalidProperty, "ServiceMessage")
-		}
-		if fwm.UnstructuredAddenda != nil {
-			return fieldError("BusinessFunctionCode", ErrInvalidProperty, "Unstructured Addenda")
-		}
-		if err := fwm.invalidCoverPaymentTags(); err != nil {
-			return err
-		}
-
-		if err := fwm.invalidRemittanceTags(); err != nil {
-			return err
-		}
-	case DrawDownRequest, BankDrawDownRequest, CustomerCorporateDrawdownRequest:
-		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
-			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
-		}
-		if fwm.LocalInstrument != nil {
-			return fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument)
-		}
-		if fwm.PaymentNotification != nil {
-			return fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification)
-		}
-		if fwm.Charges != nil {
-			return fieldError("Charges", ErrInvalidProperty, fwm.Charges)
-		}
-		if fwm.InstructedAmount != nil {
-			return fieldError("InstructedAmount", ErrInvalidProperty, fwm.InstructedAmount)
-		}
-		if fwm.ExchangeRate != nil {
-			return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
-		}
-		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
-		}
-		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
-		}
-		if fwm.OriginatorOptionF != nil {
-			return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
-		}
-		if fwm.ServiceMessage != nil {
-			return fieldError("BusinessFunctionCode", ErrInvalidProperty, "ServiceMessage")
-		}
-		if fwm.UnstructuredAddenda != nil {
-			return fieldError("BusinessFunctionCode", ErrInvalidProperty, "Unstructured Addenda")
-		}
-		if err := fwm.invalidCoverPaymentTags(); err != nil {
-			return err
-		}
-		if err := fwm.invalidRemittanceTags(); err != nil {
-			return err
-		}
+	case DrawdownResponse, BankDrawDownRequest, CustomerCorporateDrawdownRequest:
+		// this group has no unique exclusions
 	}
 	return nil
 }

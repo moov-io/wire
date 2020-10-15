@@ -67,3 +67,32 @@ var cksTypeSubTypes = associatedTypeSubTypes{
 var depTypeSubTypes = cksTypeSubTypes
 var ffrTypeSubTypes = cksTypeSubTypes
 var ffsTypeSubTypes = cksTypeSubTypes
+
+var drwTypeSubTypes = associatedTypeSubTypes{
+	FundsTransfer + FundsTransferRequestCredit,
+	SettlementTransfer + FundsTransferRequestCredit,
+}
+
+var drbTypeSubTypes = associatedTypeSubTypes{
+	SettlementTransfer + RequestCredit,
+	SettlementTransfer + RefusalRequestCredit,
+}
+
+var drcTypeSubTypes = associatedTypeSubTypes{
+	FundsTransfer + RequestCredit,
+	FundsTransfer + RefusalRequestCredit,
+}
+
+var svcTypeSubTypes = associatedTypeSubTypes{
+	FundsTransfer + RequestReversal,
+	FundsTransfer + RequestReversalPriorDayTransfer,
+	FundsTransfer + RefusalRequestCredit,
+	FundsTransfer + SSIServiceMessage,
+	ForeignTransfer + RequestReversal,
+	ForeignTransfer + RequestReversalPriorDayTransfer,
+	ForeignTransfer + SSIServiceMessage,
+	SettlementTransfer + RequestReversal,
+	SettlementTransfer + RequestReversalPriorDayTransfer,
+	SettlementTransfer + RefusalRequestCredit,
+	SettlementTransfer + SSIServiceMessage,
+}

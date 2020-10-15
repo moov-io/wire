@@ -2,9 +2,10 @@ package wire
 
 import (
 	"bytes"
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
 )
 
 /*// TestFEDWireMessageWriteCustomerTransfer writes a FEDWireMessage to a file with BusinessFunctionCode = CTR
@@ -1030,7 +1031,7 @@ func TestFEDWireMessageWriteDrawdownRequest(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	fwm.SetReceiverDepositoryInstitution(rdi)
 	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = DrawDownRequest
+	bfc.BusinessFunctionCode = DrawdownResponse
 	bfc.TransactionTypeCode = "   "
 	fwm.SetBusinessFunctionCode(bfc)
 
