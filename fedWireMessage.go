@@ -217,7 +217,7 @@ func (fwm *FEDWireMessage) mandatoryFields() error {
 	if err := fwm.isReceiverDIValid(); err != nil {
 		return err
 	}
-	if err := fwm.isBusinessFunctionCodeValid(); err != nil {
+	if err := fwm.validateBusinessFunctionCode(); err != nil {
 		return err
 	}
 	return nil
@@ -277,24 +277,18 @@ func (fwm *FEDWireMessage) isReceiverDIValid() error {
 }
 
 // BusinessFunctionCode is mandatory for all requests
-func (fwm *FEDWireMessage) isBusinessFunctionCodeValid() error {
+func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 	if fwm.BusinessFunctionCode == nil {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired)
 	}
 
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 	case BankTransfer:
-		if err := fwm.isBFBankTransferValid(); err != nil {
+		if err := fwm.validateBankTransfer(); err != nil {
 			return err
 		}
 	case CustomerTransfer:
-		if err := fwm.isCustomerTransferValid(); err != nil {
-			return err
-		}
-		if err := fwm.isCustomerTransferTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidCustomerTransferTags(); err != nil {
+		if err := fwm.validateCustomerTransfer(); err != nil {
 			return err
 		}
 	case CustomerTransferPlus:
@@ -391,11 +385,11 @@ func (fwm *FEDWireMessage) isBusinessFunctionCodeValid() error {
 	return fwm.BusinessFunctionCode.Validate()
 }
 
-// isBFBankTransferValid validates the BankTransfer code and associated tags
+// validateBankTransfer validates the BankTransfer code and associated tags
 // Requires the standard "mandatory" tags checked in mandatoryFields
 // If TypeSubType is ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
-func (fwm *FEDWireMessage) isBFBankTransferValid() error {
-	if err := fwm.isInvalidBankTransferTags(); err != nil {
+func (fwm *FEDWireMessage) validateBankTransfer() error {
+	if err := fwm.checkProhibitedBankTransferTags(); err != nil {
 		return err
 	}
 	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
@@ -403,38 +397,21 @@ func (fwm *FEDWireMessage) isBFBankTransferValid() error {
 	}
 
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case // check associated type/subtypes
-		"1000", "1002", "1008",
-		"1500", "1502", "1508",
-		"1600", "1602", "1608":
-	default:
+	if !btrTypeSubTypes.Contains(typeSubType) {
 		return NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode)
 	}
+
 	return nil
 }
 
-// isPreviousMessageIdentifierRequired
-func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
-	if fwm.TypeSubType != nil {
-		switch fwm.TypeSubType.SubTypeCode {
-		case ReversalTransfer, ReversalPriorDayTransfer:
-			if fwm.PreviousMessageIdentifier == nil {
-				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
-			}
-		}
-	}
-	return nil
-}
-
-// isInvalidBankTransferTags ensures there are no tags present in the message that are incompatible with the BankTransfer code
+// checkProhibitedBankTransferTags ensures there are no tags present in the message that are incompatible with the BankTransfer code
 // Tags NOT permitted:
 //   BusinessFunctionCode Element 02, LocalInstrument, PaymentNotification, Charges, InstructedAmount, ExchangeRate,
 //   Beneficiary Code SWIFTBICORBEIANDAccountNumber, AccountDebitedDrawdown, Originator Code SWIFTBICORBEIANDAccountNumber,
 //   OriginatorOptionF, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice, Any CoverPayment Information tag ({7xxx}),
 //   Any UnstructuredAddenda or remittance tags ({8xxx}), and ServiceMessage
-func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
+func (fwm *FEDWireMessage) checkProhibitedBankTransferTags() error {
 	if fwm.BusinessFunctionCode != nil {
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
@@ -488,45 +465,40 @@ func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
 	return nil
 }
 
-// isCustomerTransferValid validates the CustomerTransfer business function code
+// validateCustomerTransfer validates the CustomerTransfer business function code
 // Additional mandatory tags: Beneficiary, Originator
 // If TypeSubType = ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
-func (fwm *FEDWireMessage) isCustomerTransferValid() error {
+func (fwm *FEDWireMessage) validateCustomerTransfer() error {
+	if err := fwm.checkCustomerTransferMandatoryTags(); err != nil {
+		return err
+	}
+	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+		return err
+	}
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		FundsTransfer + BasicFundsTransfer,
-		FundsTransfer + ReversalTransfer,
-		FundsTransfer + ReversalPriorDayTransfer,
-		ForeignTransfer + BasicFundsTransfer,
-		ForeignTransfer + ReversalTransfer,
-		ForeignTransfer + ReversalPriorDayTransfer,
-		SettlementTransfer + BasicFundsTransfer,
-		SettlementTransfer + ReversalTransfer,
-		SettlementTransfer + ReversalPriorDayTransfer:
-	default:
+	if !ctrTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
 	return nil
 }
 
-// isCustomerTransferTags
-func (fwm *FEDWireMessage) isCustomerTransferTags() error {
+// checkCustomerTransferMandatoryTags checks for the tags required by CustomerTransfer in addition to the standard mandatoryFields
+func (fwm *FEDWireMessage) checkCustomerTransferMandatoryTags() error {
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
 	if fwm.Originator == nil && fwm.OriginatorFI == nil {
 		return fieldError("Originator or OriginatorFI", ErrFieldRequired)
 	}
-	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
-		return err
-	}
 	return nil
 }
 
-// isInvalidCustomerTransferTags
-func (fwm *FEDWireMessage) isInvalidCustomerTransferTags() error {
+// checkProhibitedCustomerTransferTags ensures there are no tags present in the message that are incompatible with the CustomerTransfer code
+// Tags NOT permitted:
+//   BusinessFunctionCode Element 02 = COV, LocalInstrument, PaymentNotification, AccountDebitedDrawdown, OriginatorOptionF, AccountCreditedDrawdown,
+//   FIDrawdownDebitAccountAdvice, any CoverPayment Information tag ({7xxx}), any UnstructuredAddenda or remittance tags ({8xxx}) and ServiceMessage
+func (fwm *FEDWireMessage) checkProhibitedCustomerTransferTags() error {
 	// This covers the edit requirement
 	if fwm.BusinessFunctionCode.TransactionTypeCode == "COV" {
 		return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
@@ -677,6 +649,19 @@ func (fwm *FEDWireMessage) isInvalidCustomerTransferPlusTags() error {
 		}
 	}
 	// ToDo: From the spec - Certain {7xxx} tags & {8xxx} tags may not be permitted depending upon value of {3610}.  I'm not sure how to code this yet
+	return nil
+}
+
+// isPreviousMessageIdentifierRequired
+func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
+	if fwm.TypeSubType != nil {
+		switch fwm.TypeSubType.SubTypeCode {
+		case ReversalTransfer, ReversalPriorDayTransfer:
+			if fwm.PreviousMessageIdentifier == nil {
+				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+			}
+		}
+	}
 	return nil
 }
 
@@ -917,7 +902,7 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 // isInvalidTags
 // isInvalidTags uses case logic for BusinessFunctionCodes that have the same invalid tags.  If this were to change per
 // BusinessFunctionCode, create function isInvalidBusinessFunctionCodeTag() with the specific invalid tags for that
-// BusinessFunctionCode (e.g. isInvalidBankTransferTags)
+// BusinessFunctionCode (e.g. checkProhibitedBankTransferTags)
 func (fwm *FEDWireMessage) isInvalidTags() error {
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 	case CheckSameDaySettlement, DepositSendersAccount, FEDFundsReturned, FEDFundsSold:

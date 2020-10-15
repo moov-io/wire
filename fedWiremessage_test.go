@@ -676,7 +676,7 @@ func TestBankTransferInValid(t *testing.T) {
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = RequestCredit
 	fwm.SetTypeSubType(tst)
-	if err := fwm.isBFBankTransferValid(); err != nil {
+	if err := fwm.validateBankTransfer(); err != nil {
 		if err != NewErrBusinessFunctionCodeProperty("TypeSubType", tst.TypeCode+tst.SubTypeCode,
 			fwm.BusinessFunctionCode.BusinessFunctionCode) {
 			t.Errorf("%T: %s", err, err)
@@ -691,7 +691,7 @@ func TestInvalidTransactionTypeCodeForBankTransfer(t *testing.T) {
 	bfc.BusinessFunctionCode = BankTransfer
 	bfc.TransactionTypeCode = "COV"
 	fwm.SetBusinessFunctionCode(bfc)
-	if err := fwm.isInvalidBankTransferTags(); err != nil {
+	if err := fwm.checkProhibitedBankTransferTags(); err != nil {
 		if !base.Match(err, ErrTransactionTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -706,7 +706,7 @@ func TestInvalidLocalInstrumentForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isInvalidBankTransferTags(); err != nil {
+	if err := fwm.checkProhibitedBankTransferTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -721,7 +721,7 @@ func TestInvalidPaymentNotificationForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -737,7 +737,7 @@ func TestInvalidChargesForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	c := mockCharges()
 	fwm.SetCharges(c)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -753,7 +753,7 @@ func TestInvalidInstructedAmountForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ia := mockInstructedAmount()
 	fwm.SetInstructedAmount(ia)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -769,7 +769,7 @@ func TestInvalidExchangeRateForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -786,7 +786,7 @@ func TestInvalidBeneficiaryIdentificationCodeForBankTransfer(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetBeneficiary(ben)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -802,7 +802,7 @@ func TestInvalidAccountDebitedDrawdownForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -819,7 +819,7 @@ func TestInvalidOriginatorIdentificationCodeForBankTransfer(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetOriginator(o)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -835,7 +835,7 @@ func TestInvalidOriginatorOptionFForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	off := mockOriginatorOptionF()
 	fwm.SetOriginatorOptionF(off)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -851,7 +851,7 @@ func TestInvalidAccountCreditedDrawdownForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -867,7 +867,7 @@ func TestInvalidFIDrawdownDebitAccountAdviceForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
 	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -883,7 +883,7 @@ func TestInvalidServiceMessageForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -899,7 +899,7 @@ func TestInvalidUnstructuredAddendaForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -915,7 +915,7 @@ func TestInvalidCurrencyInstructedAmountForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	cia := mockCurrencyInstructedAmount()
 	fwm.SetCurrencyInstructedAmount(cia)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -931,7 +931,7 @@ func TestInvalidRelatedRemittanceForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
-	err := fwm.isInvalidBankTransferTags()
+	err := fwm.checkProhibitedBankTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -946,7 +946,7 @@ func TestInvalidTransactionTypeCodeForCustomerTransfer(t *testing.T) {
 	bfc.BusinessFunctionCode = CustomerTransfer
 	bfc.TransactionTypeCode = "COV"
 	fwm.SetBusinessFunctionCode(bfc)
-	if err := fwm.isInvalidCustomerTransferTags(); err != nil {
+	if err := fwm.checkProhibitedCustomerTransferTags(); err != nil {
 		if !base.Match(err, ErrTransactionTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -961,7 +961,7 @@ func TestInvalidLocalInstrumentForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isInvalidCustomerTransferTags(); err != nil {
+	if err := fwm.checkProhibitedCustomerTransferTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -976,7 +976,7 @@ func TestInvalidPaymentNotificationForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -992,7 +992,7 @@ func TestInvalidChargesForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	c := mockCharges()
 	fwm.SetCharges(c)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1008,7 +1008,7 @@ func TestInvalidInstructedAmountForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ia := mockInstructedAmount()
 	fwm.SetInstructedAmount(ia)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1024,7 +1024,7 @@ func TestInvalidExchangeRateForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1041,7 +1041,7 @@ func TestInvalidBeneficiaryIdentificationCodeForCustomerTransfer(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetBeneficiary(ben)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1057,7 +1057,7 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1074,7 +1074,7 @@ func TestInvalidOriginatorIdentificationCodeForCustomerTransfer(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetOriginator(o)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1090,7 +1090,7 @@ func TestInvalidOriginatorOptionFForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	off := mockOriginatorOptionF()
 	fwm.SetOriginatorOptionF(off)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1106,7 +1106,7 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1122,7 +1122,7 @@ func TestInvalidFIDrawdownDebitAccountAdviceForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
 	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1138,7 +1138,7 @@ func TestInvalidServiceMessageForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1154,7 +1154,7 @@ func TestInvalidUnstructuredAddendaForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1170,7 +1170,7 @@ func TestInvalidCurrencyInstructedAmountForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	cia := mockCurrencyInstructedAmount()
 	fwm.SetCurrencyInstructedAmount(cia)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
@@ -1186,7 +1186,7 @@ func TestInvalidRelatedRemittanceForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
-	err := fwm.isInvalidCustomerTransferTags()
+	err := fwm.checkProhibitedCustomerTransferTags()
 	if err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
