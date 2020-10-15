@@ -429,6 +429,11 @@ func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
 }
 
 // isInvalidBankTransferTags ensures there are no tags present in the message that are incompatible with the BankTransfer code
+// Tags NOT permitted:
+//   BusinessFunctionCode Element 02, LocalInstrument, PaymentNotification, Charges, InstructedAmount, ExchangeRate,
+//   Beneficiary Code SWIFTBICORBEIANDAccountNumber, AccountDebitedDrawdown, Originator Code SWIFTBICORBEIANDAccountNumber,
+//   OriginatorOptionF, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice, Any CoverPayment Information tag ({7xxx}),
+//   Any UnstructuredAddenda or remittance tags ({8xxx}), and ServiceMessage
 func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
 	if fwm.BusinessFunctionCode != nil {
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
@@ -450,18 +455,14 @@ func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
 	if fwm.ExchangeRate != nil {
 		return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 	}
-	if fwm.Beneficiary != nil {
-		if fwm.Beneficiary.Personal.IdentificationCode == "T" {
-			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
-		}
+	if fwm.Beneficiary != nil && fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+		return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
 	}
 	if fwm.AccountDebitedDrawdown != nil {
 		return fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown)
 	}
-	if fwm.Originator != nil {
-		if fwm.Originator.Personal.IdentificationCode == "T" {
-			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
-		}
+	if fwm.Originator != nil && fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+		return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
 	}
 	if fwm.OriginatorOptionF != nil {
 		return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
@@ -487,7 +488,9 @@ func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
 	return nil
 }
 
-// isCustomerTransferValid
+// isCustomerTransferValid validates the CustomerTransfer business function code
+// Additional mandatory tags: Beneficiary, Originator
+// If TypeSubType = ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
 func (fwm *FEDWireMessage) isCustomerTransferValid() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
