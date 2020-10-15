@@ -1,8 +1,9 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"testing"
+
+	"github.com/moov-io/base"
 )
 
 func mockCustomerTransferData() FEDWireMessage {
@@ -675,7 +676,7 @@ func TestBankTransferInValid(t *testing.T) {
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = RequestCredit
 	fwm.SetTypeSubType(tst)
-	if err := fwm.isBankTransferValid(); err != nil {
+	if err := fwm.isBFBankTransferValid(); err != nil {
 		if err != NewErrBusinessFunctionCodeProperty("TypeSubType", tst.TypeCode+tst.SubTypeCode,
 			fwm.BusinessFunctionCode.BusinessFunctionCode) {
 			t.Errorf("%T: %s", err, err)

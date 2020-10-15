@@ -140,17 +140,15 @@ func NewFEDWireMessage() FEDWireMessage {
 }
 
 // verify checks basic WIRE rules. Assumes properly parsed records.
+// Each validation func should check for the expected relationships between fields within a
+// FedWireMessage, then call the individual field's Validate() method to check for integrity
+// within that field.
 func (fwm *FEDWireMessage) verify() error {
 
-	if err := fwm.isMandatory(); err != nil {
+	if err := fwm.mandatoryFields(); err != nil {
 		return err
 	}
-	if err := fwm.isBusinessCodeValid(); err != nil {
-		return err
-	}
-	if err := fwm.isAmountValid(); err != nil {
-		return err
-	}
+
 	if err := fwm.otherTransferInformation(); err != nil {
 		return err
 	}
@@ -199,42 +197,94 @@ func (fwm *FEDWireMessage) verify() error {
 	return nil
 }
 
-// isMandatory validates mandatory tags for a FEDWireMessage are defined
-func (fwm *FEDWireMessage) isMandatory() error {
-	if fwm.SenderSupplied == nil {
-		return fieldError("SenderSupplied", ErrFieldRequired)
+// mandatoryFields validates mandatory tags for a FEDWireMessage are defined
+func (fwm *FEDWireMessage) mandatoryFields() error {
+	if err := fwm.isSenderSuppliedValid(); err != nil {
+		return err
 	}
-	if fwm.TypeSubType == nil {
-		return fieldError("TypeSubType", ErrFieldRequired)
+	if err := fwm.isTypeSubTypeValid(); err != nil {
+		return err
 	}
-	if fwm.InputMessageAccountabilityData == nil {
-		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
+	if err := fwm.isIMADValid(); err != nil {
+		return err
 	}
-	if fwm.Amount == nil {
-		return fieldError("Amount", ErrFieldRequired)
+	if err := fwm.isAmountValid(); err != nil {
+		return err
 	}
-	if fwm.SenderDepositoryInstitution == nil {
-		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
+	if err := fwm.isSenderDIValid(); err != nil {
+		return err
 	}
-	if fwm.ReceiverDepositoryInstitution == nil {
-		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
+	if err := fwm.isReceiverDIValid(); err != nil {
+		return err
 	}
-	if fwm.BusinessFunctionCode == nil {
-		return fieldError("BusinessFunctionCode", ErrFieldRequired)
+	if err := fwm.isBusinessFunctionCodeValid(); err != nil {
+		return err
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isBusinessCodeValid() error {
+// SenderSupplied is mandatory for all requests
+func (fwm *FEDWireMessage) isSenderSuppliedValid() error {
+	if fwm.SenderSupplied == nil {
+		return fieldError("SenderSupplied", ErrFieldRequired)
+	}
+	return fwm.SenderSupplied.Validate()
+}
+
+// TypeSubType is mandatory for all requests
+func (fwm *FEDWireMessage) isTypeSubTypeValid() error {
+	if fwm.TypeSubType == nil {
+		return fieldError("TypeSubType", ErrFieldRequired)
+	}
+	return fwm.TypeSubType.Validate()
+}
+
+// InputMessageAccountabilityData is mandatory for all requests
+func (fwm *FEDWireMessage) isIMADValid() error {
+	if fwm.InputMessageAccountabilityData == nil {
+		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
+	}
+	return fwm.InputMessageAccountabilityData.Validate()
+}
+
+// Amount is mandatory for all requests
+// Can be all zeros for TypeSubType code 90
+func (fwm *FEDWireMessage) isAmountValid() error {
+	if fwm.Amount == nil {
+		return fieldError("Amount", ErrFieldRequired)
+	}
+	if fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
+		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
+			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
+	}
+	return fwm.Amount.Validate()
+}
+
+// SenderDepositoryInstitution is mandatory for all requests
+func (fwm *FEDWireMessage) isSenderDIValid() error {
+	if fwm.SenderDepositoryInstitution == nil {
+		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
+	}
+	return fwm.SenderDepositoryInstitution.Validate()
+}
+
+// ReceiverDepositoryInstitution is mandatory for all requests
+func (fwm *FEDWireMessage) isReceiverDIValid() error {
+	if fwm.ReceiverDepositoryInstitution == nil {
+		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
+	}
+	return fwm.ReceiverDepositoryInstitution.Validate()
+}
+
+// BusinessFunctionCode is mandatory for all requests
+func (fwm *FEDWireMessage) isBusinessFunctionCodeValid() error {
+	if fwm.BusinessFunctionCode == nil {
+		return fieldError("BusinessFunctionCode", ErrFieldRequired)
+	}
+
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 	case BankTransfer:
-		if err := fwm.isBankTransferValid(); err != nil {
-			return err
-		}
-		if err := fwm.isBankTransferTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidBankTransferTags(); err != nil {
+		if err := fwm.isBFBankTransferValid(); err != nil {
 			return err
 		}
 	case CustomerTransfer:
@@ -338,14 +388,23 @@ func (fwm *FEDWireMessage) isBusinessCodeValid() error {
 			return err
 		}
 	}
-	return nil
+	return fwm.BusinessFunctionCode.Validate()
 }
 
-// isBankTransferValid
-func (fwm *FEDWireMessage) isBankTransferValid() error {
+// isBFBankTransferValid validates the BankTransfer code and associated tags
+// Requires the standard "mandatory" tags checked in mandatoryFields
+// If TypeSubType is ReversalTransfer or ReversalPriorDayTransfer, then PreviousMessageIdentifier is mandatory.
+func (fwm *FEDWireMessage) isBFBankTransferValid() error {
+	if err := fwm.isInvalidBankTransferTags(); err != nil {
+		return err
+	}
+	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
+		return err
+	}
+
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
 	switch typeSubType {
-	case
+	case // check associated type/subtypes
 		"1000", "1002", "1008",
 		"1500", "1502", "1508",
 		"1600", "1602", "1608":
@@ -356,15 +415,20 @@ func (fwm *FEDWireMessage) isBankTransferValid() error {
 	return nil
 }
 
-// isBankTransferTags
-func (fwm *FEDWireMessage) isBankTransferTags() error {
-	if err := fwm.isPreviousMessageIdentifierRequired(); err != nil {
-		return err
+// isPreviousMessageIdentifierRequired
+func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
+	if fwm.TypeSubType != nil {
+		switch fwm.TypeSubType.SubTypeCode {
+		case ReversalTransfer, ReversalPriorDayTransfer:
+			if fwm.PreviousMessageIdentifier == nil {
+				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
+			}
+		}
 	}
 	return nil
 }
 
-// isInvalidBankTransferTags
+// isInvalidBankTransferTags ensures there are no tags present in the message that are incompatible with the BankTransfer code
 func (fwm *FEDWireMessage) isInvalidBankTransferTags() error {
 	if fwm.BusinessFunctionCode != nil {
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
@@ -843,19 +907,6 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 	}
 	if err := fwm.invalidRemittanceTags(); err != nil {
 		return err
-	}
-	return nil
-}
-
-// isPreviousMessageIdentifierRequired
-func (fwm *FEDWireMessage) isPreviousMessageIdentifierRequired() error {
-	if fwm.TypeSubType != nil {
-		switch fwm.TypeSubType.SubTypeCode {
-		case ReversalTransfer, ReversalPriorDayTransfer:
-			if fwm.PreviousMessageIdentifier == nil {
-				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
-			}
-		}
 	}
 	return nil
 }
@@ -1625,39 +1676,32 @@ func (fwm *FEDWireMessage) GetErrorWire() *ErrorWire {
 	return fwm.ErrorWire
 }
 
-func (fwm *FEDWireMessage) isAmountValid() error {
-	if fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
-		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
-			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
-	}
-	return nil
-}
-
+// mandatory if TypeSubType is 02 or 08 and BusinessFunctionCode is BankTransfer, CustomerTransfer, or CustomerTransferPlus
 func (fwm *FEDWireMessage) isPreviousMessageIdentifierValid() error {
-	if fwm.TypeSubType != nil {
-		if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
-			if fwm.BusinessFunctionCode != nil {
-				switch fwm.BusinessFunctionCode.BusinessFunctionCode {
-				case BankTransfer, CustomerTransfer, CustomerTransferPlus:
-					if fwm.PreviousMessageIdentifier == nil {
-						return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
-					}
-				}
+	if fwm.TypeSubType == nil || fwm.BusinessFunctionCode == nil {
+		return nil
+	}
+
+	if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
+		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+		case BankTransfer, CustomerTransfer, CustomerTransferPlus:
+			if fwm.PreviousMessageIdentifier == nil {
+				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
 			}
 		}
 	}
 	return nil
 }
 
+// only allowed if BusinessFunctionCode is CustomerTransferPlus
 func (fwm *FEDWireMessage) isLocalInstrumentCodeValid() error {
-	if fwm.LocalInstrument != nil {
-		if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-			if fwm.BeneficiaryReference == nil {
-				return fieldError("BeneficiaryReference", ErrFieldRequired)
-			}
-		}
+	if fwm.LocalInstrument == nil {
+		return nil
 	}
-	return nil
+	if fwm.BusinessFunctionCode.BusinessFunctionCode != CustomerTransferPlus {
+		return fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted)
+	}
+	return fwm.LocalInstrument.Validate()
 }
 
 func (fwm *FEDWireMessage) isChargesValid() error {

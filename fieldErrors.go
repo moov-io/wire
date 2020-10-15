@@ -66,6 +66,8 @@ var (
 	// ErrTransactionTypeCode is returned for an invalid transaction type code
 	ErrTransactionTypeCode = errors.New("is an invalid transaction type code")
 
+	// ErrLocalInstrumentNotPermitted is returned when LocalInstrument is included and BusinessFunctionCode is NOT CustomerTransferPlus
+	ErrLocalInstrumentNotPermitted = errors.New("is only permitted for business function code CTP")
 	// ErrLocalInstrumentCode is returned for an invalid local instrument code tag {3610}
 	ErrLocalInstrumentCode = errors.New("is an invalid local instrument Code")
 	// ErrPaymentNotificationIndicator is returned for an invalid payment notification indicator {3620}
