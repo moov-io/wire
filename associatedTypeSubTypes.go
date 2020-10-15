@@ -57,3 +57,13 @@ var ctpTypeSubTypes = associatedTypeSubTypes{
 	SettlementTransfer + RequestReversalPriorDayTransfer,
 	SettlementTransfer + ReversalPriorDayTransfer,
 }
+
+// these TypeSubType associations are shared between CKS, DEP, FFR, and FFS
+var cksTypeSubTypes = associatedTypeSubTypes{
+	SettlementTransfer + BasicFundsTransfer,
+	SettlementTransfer + ReversalTransfer,
+	SettlementTransfer + ReversalPriorDayTransfer,
+}
+var depTypeSubTypes = cksTypeSubTypes
+var ffrTypeSubTypes = cksTypeSubTypes
+var ffsTypeSubTypes = cksTypeSubTypes

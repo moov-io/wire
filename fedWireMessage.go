@@ -296,43 +296,19 @@ func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 			return err
 		}
 	case CheckSameDaySettlement:
-		if err := fwm.isCheckSameDaySettlementValid(); err != nil {
-			return err
-		}
-		if err := fwm.isCheckSameDaySettlementTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+		if err := fwm.validateCheckSameDaySettlement(); err != nil {
 			return err
 		}
 	case DepositSendersAccount:
-		if err := fwm.isDepositSendersAccountValid(); err != nil {
-			return err
-		}
-		if err := fwm.isDepositSendersAccountTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+		if err := fwm.validateDepositSendersAccount(); err != nil {
 			return err
 		}
 	case FEDFundsReturned:
-		if err := fwm.isFEDFundsReturnedValid(); err != nil {
-			return err
-		}
-		if err := fwm.isFEDFundsReturnedTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+		if err := fwm.validateFEDFundsReturned(); err != nil {
 			return err
 		}
 	case FEDFundsSold:
-		if err := fwm.isFEDFundsSoldValid(); err != nil {
-			return err
-		}
-		if err := fwm.isFEDFundsSoldTags(); err != nil {
-			return err
-		}
-		if err := fwm.isInvalidTags(); err != nil {
+		if err := fwm.validateFEDFundsSold(); err != nil {
 			return err
 		}
 	case DrawDownRequest:
@@ -662,84 +638,44 @@ func (fwm *FEDWireMessage) checkPreviousMessageIdentifier() error {
 	return nil
 }
 
-// isCheckSameDaySettlementValid
-func (fwm *FEDWireMessage) isCheckSameDaySettlementValid() error {
+// validateCheckSameDaySettlement validates the CheckSameDaySettlement business function code
+func (fwm *FEDWireMessage) validateCheckSameDaySettlement() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		SettlementTransfer + BasicFundsTransfer,
-		SettlementTransfer + ReversalTransfer,
-		SettlementTransfer + ReversalPriorDayTransfer:
-	default:
+	if !cksTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
+	return fwm.isInvalidTags()
 }
 
-// isCheckSameDaySettlementTags
-func (fwm *FEDWireMessage) isCheckSameDaySettlementTags() error {
-	return nil
-}
-
-// isDepositSendersAccountValid
-func (fwm *FEDWireMessage) isDepositSendersAccountValid() error {
+// validateDepositSendersAccount validates the DepositSendersAccount business function code
+func (fwm *FEDWireMessage) validateDepositSendersAccount() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		SettlementTransfer + BasicFundsTransfer,
-		SettlementTransfer + ReversalTransfer,
-		SettlementTransfer + ReversalPriorDayTransfer:
-	default:
+	if !depTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
+	return fwm.isInvalidTags()
 }
 
-// isDepositSendersAccountTags
-func (fwm *FEDWireMessage) isDepositSendersAccountTags() error {
-	return nil
-}
-
-// isFEDFundsReturnedValid
-func (fwm *FEDWireMessage) isFEDFundsReturnedValid() error {
+// validateFEDFundsReturned validates the FEDFundsReturned business function code
+func (fwm *FEDWireMessage) validateFEDFundsReturned() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		SettlementTransfer + BasicFundsTransfer,
-		SettlementTransfer + ReversalTransfer,
-		SettlementTransfer + ReversalPriorDayTransfer:
-	default:
+	if !ffrTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
+	return fwm.isInvalidTags()
 }
 
-// isFEDFundsReturnedTag
-func (fwm *FEDWireMessage) isFEDFundsReturnedTags() error {
-	return nil
-}
-
-// isFEDFundsSoldValid
-func (fwm *FEDWireMessage) isFEDFundsSoldValid() error {
+// validateFEDFundsSold validates the FEDFundsSold business function code
+func (fwm *FEDWireMessage) validateFEDFundsSold() error {
 	typeSubType := fwm.TypeSubType.TypeCode + fwm.TypeSubType.SubTypeCode
-	switch typeSubType {
-	case
-		SettlementTransfer + BasicFundsTransfer,
-		SettlementTransfer + ReversalTransfer,
-		SettlementTransfer + ReversalPriorDayTransfer:
-	default:
+	if !ffsTypeSubTypes.Contains(typeSubType) {
 		return fieldError("TypeSubType", NewErrBusinessFunctionCodeProperty("TypeSubType", typeSubType,
 			fwm.BusinessFunctionCode.BusinessFunctionCode))
 	}
-	return nil
-}
-
-// isFEDFundsSoldTags
-func (fwm *FEDWireMessage) isFEDFundsSoldTags() error {
-	return nil
+	return fwm.isInvalidTags()
 }
 
 // isDrawdownRequestValid
@@ -901,6 +837,9 @@ func (fwm *FEDWireMessage) isInvalidServiceMessageTags() error {
 // BusinessFunctionCode (e.g. checkProhibitedBankTransferTags)
 func (fwm *FEDWireMessage) isInvalidTags() error {
 	switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+	// Not permitted: BusinessFunctionCode.TransactionTypeCode, LocalInstrument, PaymentNotification, Charges, InstructedAmount, ExchangeRate,
+	// Beneficiary Code = SWIFTBICORBEIANDAccountNumber, AccountDebitedDrawdown, Originator Code = SWIFTBICORBEIANDAccountNumber,
+	// OriginatorOptionF, AccountCreditedDrawdown, FIDrawdownDebitAccountAdvice, any {7xxx} tag, any {8xxx} tag, ServiceMessage
 	case CheckSameDaySettlement, DepositSendersAccount, FEDFundsReturned, FEDFundsSold:
 		if strings.TrimSpace(fwm.BusinessFunctionCode.TransactionTypeCode) != "" {
 			return fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode, fwm.BusinessFunctionCode.TransactionTypeCode)
@@ -920,13 +859,13 @@ func (fwm *FEDWireMessage) isInvalidTags() error {
 		if fwm.ExchangeRate != nil {
 			return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 		}
-		if fwm.Beneficiary.Personal.IdentificationCode == "T" {
+		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
 			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
 		}
 		if fwm.AccountDebitedDrawdown != nil {
 			return fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown)
 		}
-		if fwm.Originator.Personal.IdentificationCode == "T" {
+		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
 			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
 		}
 		if fwm.OriginatorOptionF != nil {
@@ -970,10 +909,10 @@ func (fwm *FEDWireMessage) isInvalidTags() error {
 		if fwm.ExchangeRate != nil {
 			return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 		}
-		if fwm.Beneficiary.Personal.IdentificationCode == "T" {
+		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
 			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
 		}
-		if fwm.Originator.Personal.IdentificationCode == "T" {
+		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
 			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
 		}
 		if fwm.OriginatorOptionF != nil {
