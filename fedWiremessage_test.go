@@ -103,7 +103,7 @@ func TestFEDWireMessage_isChargesValid(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	if err := fwm.isChargesValid(); err != nil {
+	if err := fwm.validateCharges(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
 			"Charges", fwm.Charges.String()) {
 			t.Errorf("%T: %s", err, err)

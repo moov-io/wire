@@ -603,12 +603,14 @@ func (fwm *FEDWireMessage) checkProhibitedCustomerTransferPlusTags() error {
 
 // checkPreviousMessageIdentifier returns an error if ReversalTransfer or ReversalPriorDayTransfer options are set and PreviousMessageIdentifier is missing
 func (fwm *FEDWireMessage) checkPreviousMessageIdentifier() error {
-	if fwm.TypeSubType != nil {
-		switch fwm.TypeSubType.SubTypeCode {
-		case ReversalTransfer, ReversalPriorDayTransfer:
-			if fwm.PreviousMessageIdentifier == nil {
-				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
-			}
+	if fwm.TypeSubType == nil || fwm.BusinessFunctionCode == nil {
+		return nil
+	}
+
+	switch fwm.TypeSubType.SubTypeCode {
+	case ReversalTransfer, ReversalPriorDayTransfer:
+		if fwm.PreviousMessageIdentifier == nil {
+			return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
 		}
 	}
 	return nil
@@ -1525,24 +1527,7 @@ func (fwm *FEDWireMessage) GetErrorWire() *ErrorWire {
 	return fwm.ErrorWire
 }
 
-// mandatory if TypeSubType is 02 or 08 and BusinessFunctionCode is BankTransfer, CustomerTransfer, or CustomerTransferPlus
-func (fwm *FEDWireMessage) isPreviousMessageIdentifierValid() error {
-	if fwm.TypeSubType == nil || fwm.BusinessFunctionCode == nil {
-		return nil
-	}
-
-	if fwm.TypeSubType.SubTypeCode == "02" || fwm.TypeSubType.SubTypeCode == "08" {
-		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
-		case BankTransfer, CustomerTransfer, CustomerTransferPlus:
-			if fwm.PreviousMessageIdentifier == nil {
-				return fieldError("PreviousMessageIdentifier", ErrFieldRequired)
-			}
-		}
-	}
-	return nil
-}
-
-// only allowed if BusinessFunctionCode is CustomerTransferPlus
+// Only allowed if BusinessFunctionCode is CustomerTransferPlus.
 func (fwm *FEDWireMessage) isLocalInstrumentCodeValid() error {
 	if fwm.LocalInstrument == nil {
 		return nil
@@ -1553,14 +1538,19 @@ func (fwm *FEDWireMessage) isLocalInstrumentCodeValid() error {
 	return fwm.LocalInstrument.Validate()
 }
 
-func (fwm *FEDWireMessage) isChargesValid() error {
-	if fwm.Charges != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-				return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-					"Charges", fwm.Charges.String())
-			}
-		}
+// BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus. Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
+func (fwm *FEDWireMessage) validateCharges() error {
+	if fwm.Charges == nil {
+		return nil
+	}
+
+	bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
+	if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
+		return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "Charges", fwm.Charges.String())
+	}
+	if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+			"Charges", fwm.Charges.String())
 	}
 	return nil
 }
@@ -1878,13 +1868,10 @@ func (fwm *FEDWireMessage) isRemittanceFreeTextValid() error {
 }
 
 func (fwm *FEDWireMessage) otherTransferInformation() error {
-	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
-		return err
-	}
 	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
 		return err
 	}
-	if err := fwm.isChargesValid(); err != nil {
+	if err := fwm.validateCharges(); err != nil {
 		return err
 	}
 	if err := fwm.isInstructedAmountValid(); err != nil {
