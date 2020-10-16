@@ -155,7 +155,7 @@ func (fwm *FEDWireMessage) verify() error {
 	if err := fwm.validateBeneficiaryIntermediaryFI(); err != nil {
 		return err
 	}
-	if err := fwm.isBeneficiaryFIValid(); err != nil {
+	if err := fwm.validateBeneficiaryFI(); err != nil {
 		return err
 	}
 	if err := fwm.isOriginatorFIValid(); err != nil {
@@ -1616,11 +1616,15 @@ func (fwm *FEDWireMessage) validateBeneficiaryIntermediaryFI() error {
 	return fwm.BeneficiaryIntermediaryFI.Validate()
 }
 
-func (fwm *FEDWireMessage) isBeneficiaryFIValid() error {
+// If present, the Beneficiary tag is mandatory.
+func (fwm *FEDWireMessage) validateBeneficiaryFI() error {
+	if fwm.BeneficiaryFI == nil {
+		return nil
+	}
 	if fwm.Beneficiary == nil {
 		return fieldError("Beneficiary", ErrFieldRequired)
 	}
-	return nil
+	return fwm.Beneficiary.Validate()
 }
 
 func (fwm *FEDWireMessage) isOriginatorFIValid() error {

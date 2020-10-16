@@ -211,7 +211,7 @@ func TestFEDWireMessage_isBeneficiaryFIValid(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 	// Beneficiary required field check
-	if err := fwm.isBeneficiaryFIValid(); err != nil {
+	if err := fwm.validateBeneficiaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
