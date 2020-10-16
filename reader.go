@@ -77,6 +77,10 @@ func (r *Reader) Read() (File, error) {
 	}
 
 	r.File.AddFEDWireMessage(r.currentFEDWireMessage)
+	if err := r.File.Validate(); err != nil {
+		return r.File, err
+	}
+
 	r.currentFEDWireMessage = NewFEDWireMessage()
 
 	if r.errors.Empty() {
