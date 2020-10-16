@@ -83,7 +83,7 @@ func TestFEDWireMessage_isLocalInstrumentCodeValid(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+	if err := fwm.validateLocalInstrumentCode(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -124,7 +124,7 @@ func TestFEDWireMessage_isInstructedAmountValid(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	if err := fwm.isInstructedAmountValid(); err != nil {
+	if err := fwm.validateInstructedAmount(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode",
 			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String()) {
 			t.Errorf("%T: %s", err, err)

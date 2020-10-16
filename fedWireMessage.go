@@ -1528,7 +1528,7 @@ func (fwm *FEDWireMessage) GetErrorWire() *ErrorWire {
 }
 
 // Only allowed if BusinessFunctionCode is CustomerTransferPlus.
-func (fwm *FEDWireMessage) isLocalInstrumentCodeValid() error {
+func (fwm *FEDWireMessage) validateLocalInstrumentCode() error {
 	if fwm.LocalInstrument == nil {
 		return nil
 	}
@@ -1555,14 +1555,25 @@ func (fwm *FEDWireMessage) validateCharges() error {
 	return nil
 }
 
-func (fwm *FEDWireMessage) isInstructedAmountValid() error {
-	if fwm.InstructedAmount != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-				return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-					fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
-			}
+// Mandatory if ExchangeRate is present.
+// BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus.
+// Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
+func (fwm *FEDWireMessage) validateInstructedAmount() error {
+	if fwm.InstructedAmount == nil {
+		if fwm.ExchangeRate != nil {
+			return fieldError("InstructedAmount", ErrFieldRequired)
 		}
+		return nil
+	}
+
+	bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
+	if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
+		return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "InstructedAmount", fwm.InstructedAmount.String())
+	}
+
+	if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+		return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
+			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
 	}
 	return nil
 }
@@ -1868,13 +1879,13 @@ func (fwm *FEDWireMessage) isRemittanceFreeTextValid() error {
 }
 
 func (fwm *FEDWireMessage) otherTransferInformation() error {
-	if err := fwm.isLocalInstrumentCodeValid(); err != nil {
+	if err := fwm.validateLocalInstrumentCode(); err != nil {
 		return err
 	}
 	if err := fwm.validateCharges(); err != nil {
 		return err
 	}
-	if err := fwm.isInstructedAmountValid(); err != nil {
+	if err := fwm.validateInstructedAmount(); err != nil {
 		return err
 	}
 
