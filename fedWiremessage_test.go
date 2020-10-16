@@ -184,7 +184,7 @@ func TestFEDWireMessage_isBeneficiaryIntermediaryFIValid(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	// BeneficiaryFI required field check
-	if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
+	if err := fwm.validateBeneficiaryIntermediaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -194,7 +194,7 @@ func TestFEDWireMessage_isBeneficiaryIntermediaryFIValid(t *testing.T) {
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.isBeneficiaryIntermediaryFIValid(); err != nil {
+	if err := fwm.validateBeneficiaryIntermediaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
