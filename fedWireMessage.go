@@ -1552,7 +1552,7 @@ func (fwm *FEDWireMessage) validateCharges() error {
 		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
 			"Charges", fwm.Charges.String())
 	}
-	return nil
+	return fwm.Charges.Validate()
 }
 
 // Mandatory if ExchangeRate is present.
@@ -1575,22 +1575,31 @@ func (fwm *FEDWireMessage) validateInstructedAmount() error {
 		return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
 			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
 	}
-	return nil
+	return fwm.InstructedAmount.Validate()
 }
 
-func (fwm *FEDWireMessage) isExchangeRateValid() error {
-	if fwm.ExchangeRate != nil {
-		if fwm.InstructedAmount == nil {
+// If present, InstructedAmount is mandatory.
+// BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus.
+// Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
+func (fwm *FEDWireMessage) validateExchangeRate() error {
+	if fwm.ExchangeRate == nil {
+		if fwm.InstructedAmount != nil {
 			return fieldError("InstructedAmount", ErrFieldRequired)
 		}
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-				return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-					fwm.LocalInstrument.LocalInstrumentCode, "ExchangeRate", fwm.ExchangeRate.ExchangeRate)
-			}
-		}
+		return nil
 	}
-	return nil
+
+	bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
+	if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
+		return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "InstructedAmount", fwm.InstructedAmount.String())
+	}
+
+	if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+		return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
+			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
+	}
+
+	return fwm.ExchangeRate.Validate()
 }
 
 func (fwm *FEDWireMessage) isBeneficiaryIntermediaryFIValid() error {
@@ -1889,7 +1898,7 @@ func (fwm *FEDWireMessage) otherTransferInformation() error {
 		return err
 	}
 
-	if err := fwm.isExchangeRateValid(); err != nil {
+	if err := fwm.validateExchangeRate(); err != nil {
 		return err
 	}
 	return nil

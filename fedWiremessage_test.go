@@ -142,7 +142,7 @@ func TestFEDWireMessage_isExchangeRateRequired(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	if err := fwm.isExchangeRateValid(); err != nil {
+	if err := fwm.validateExchangeRate(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -164,7 +164,7 @@ func TestFEDWireMessage_isExchangeRateValid(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	if err := fwm.isExchangeRateValid(); err != nil {
+	if err := fwm.validateExchangeRate(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode",
 			fwm.LocalInstrument.LocalInstrumentCode, "ExchangeRate", fwm.ExchangeRate.ExchangeRate) {
 			t.Errorf("%T: %s", err, err)
