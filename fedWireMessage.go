@@ -139,10 +139,8 @@ func NewFEDWireMessage() FEDWireMessage {
 	return fwm
 }
 
-// verify checks basic WIRE rules. Assumes properly parsed records.
-// Each validation func should check for the expected relationships between fields within a
-// FedWireMessage, then call the individual field's Validate() method to check for integrity
-// within that field.
+// verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
+// check for the expected relationships between fields within a FedWireMessage.
 func (fwm *FEDWireMessage) verify() error {
 
 	if err := fwm.mandatoryFields(); err != nil {
@@ -158,37 +156,37 @@ func (fwm *FEDWireMessage) verify() error {
 	if err := fwm.validateBeneficiaryFI(); err != nil {
 		return err
 	}
-	if err := fwm.isOriginatorFIValid(); err != nil {
+	if err := fwm.validateOriginatorFI(); err != nil {
 		return err
 	}
-	if err := fwm.isInstructingFIValid(); err != nil {
+	if err := fwm.validateInstructingFI(); err != nil {
 		return err
 	}
-	if err := fwm.isOriginatorToBeneficiaryValid(); err != nil {
+	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
 		return err
 	}
-	if err := fwm.isFIIntermediaryFIValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFI(); err != nil {
 		return err
 	}
-	if err := fwm.isFIIntermediaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
 		return err
 	}
-	if err := fwm.isFIBeneficiaryFIValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryFI(); err != nil {
 		return err
 	}
-	if err := fwm.isFIBeneficiaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryFIAdvice(); err != nil {
 		return err
 	}
-	if err := fwm.isFIBeneficiaryValid(); err != nil {
+	if err := fwm.validateFIBeneficiary(); err != nil {
 		return err
 	}
-	if err := fwm.isFIBeneficiaryAdviceValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryAdvice(); err != nil {
 		return err
 	}
-	if err := fwm.isFIPaymentMethodToBeneficiaryValid(); err != nil {
+	if err := fwm.validateFIPaymentMethodToBeneficiary(); err != nil {
 		return err
 	}
-	if err := fwm.isUnstructuredAddendaValid(); err != nil {
+	if err := fwm.validateUnstructuredAddenda(); err != nil {
 		return err
 	}
 	if err := fwm.isRemittanceValid(); err != nil {
@@ -228,7 +226,7 @@ func (fwm *FEDWireMessage) isSenderSuppliedValid() error {
 	if fwm.SenderSupplied == nil {
 		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
-	return fwm.SenderSupplied.Validate()
+	return nil
 }
 
 // TypeSubType is mandatory for all requests
@@ -236,7 +234,7 @@ func (fwm *FEDWireMessage) isTypeSubTypeValid() error {
 	if fwm.TypeSubType == nil {
 		return fieldError("TypeSubType", ErrFieldRequired)
 	}
-	return fwm.TypeSubType.Validate()
+	return nil
 }
 
 // InputMessageAccountabilityData is mandatory for all requests
@@ -244,7 +242,7 @@ func (fwm *FEDWireMessage) isIMADValid() error {
 	if fwm.InputMessageAccountabilityData == nil {
 		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
-	return fwm.InputMessageAccountabilityData.Validate()
+	return nil
 }
 
 // Amount is mandatory for all requests
@@ -257,7 +255,7 @@ func (fwm *FEDWireMessage) isAmountValid() error {
 		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
 			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
 	}
-	return fwm.Amount.Validate()
+	return nil
 }
 
 // SenderDepositoryInstitution is mandatory for all requests
@@ -265,7 +263,7 @@ func (fwm *FEDWireMessage) isSenderDIValid() error {
 	if fwm.SenderDepositoryInstitution == nil {
 		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
 	}
-	return fwm.SenderDepositoryInstitution.Validate()
+	return nil
 }
 
 // ReceiverDepositoryInstitution is mandatory for all requests
@@ -273,7 +271,7 @@ func (fwm *FEDWireMessage) isReceiverDIValid() error {
 	if fwm.ReceiverDepositoryInstitution == nil {
 		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
-	return fwm.ReceiverDepositoryInstitution.Validate()
+	return nil
 }
 
 // BusinessFunctionCode is mandatory for all requests
@@ -328,7 +326,7 @@ func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 			return err
 		}
 	}
-	return fwm.BusinessFunctionCode.Validate()
+	return nil
 }
 
 // validateBankTransfer validates the BankTransfer code and associated tags
@@ -1529,164 +1527,181 @@ func (fwm *FEDWireMessage) GetErrorWire() *ErrorWire {
 
 // Only allowed if BusinessFunctionCode is CustomerTransferPlus.
 func (fwm *FEDWireMessage) validateLocalInstrumentCode() error {
-	if fwm.LocalInstrument == nil {
+	if fwm.LocalInstrument != nil {
+		if fwm.BusinessFunctionCode.BusinessFunctionCode != CustomerTransferPlus {
+			return fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted)
+		}
 		return nil
 	}
-	if fwm.BusinessFunctionCode.BusinessFunctionCode != CustomerTransferPlus {
-		return fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted)
-	}
-	return fwm.LocalInstrument.Validate()
+	return nil
+
 }
 
 // BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus. Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
 func (fwm *FEDWireMessage) validateCharges() error {
-	if fwm.Charges == nil {
+	if fwm.Charges != nil {
+		bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
+		if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
+			return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "Charges", fwm.Charges.String())
+		}
+		if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+			return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+				"Charges", fwm.Charges.String())
+		}
 		return nil
 	}
-
-	bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
-	if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
-		return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "Charges", fwm.Charges.String())
-	}
-	if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-		return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-			"Charges", fwm.Charges.String())
-	}
-	return fwm.Charges.Validate()
+	return nil
 }
 
 // Mandatory if ExchangeRate is present.
 // BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus.
 // Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
 func (fwm *FEDWireMessage) validateInstructedAmount() error {
-	if fwm.InstructedAmount == nil {
-		if fwm.ExchangeRate != nil {
-			return fieldError("InstructedAmount", ErrFieldRequired)
+	if fwm.ExchangeRate != nil && fwm.InstructedAmount == nil {
+		return fieldError("InstructedAmount", ErrFieldRequired)
+
+	}
+	if fwm.InstructedAmount != nil {
+		bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
+		if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
+			return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "InstructedAmount", fwm.InstructedAmount.String())
+		}
+		if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+			return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
+				fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
 		}
 		return nil
 	}
-
-	bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
-	if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
-		return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "InstructedAmount", fwm.InstructedAmount.String())
-	}
-
-	if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-		return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
-	}
-	return fwm.InstructedAmount.Validate()
+	return nil
 }
 
 // If present, InstructedAmount is mandatory.
 // BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus.
 // Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
 func (fwm *FEDWireMessage) validateExchangeRate() error {
-	if fwm.ExchangeRate == nil {
-		if fwm.InstructedAmount != nil {
+	if fwm.ExchangeRate != nil {
+		if fwm.InstructedAmount == nil {
 			return fieldError("InstructedAmount", ErrFieldRequired)
+		}
+		bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
+		if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
+			return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "InstructedAmount", fwm.InstructedAmount.String())
+		}
+		if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
+			return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
+				fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
 		}
 		return nil
 	}
-
-	bfc := fwm.BusinessFunctionCode.BusinessFunctionCode
-	if !(bfc == CustomerTransfer || bfc == CustomerTransferPlus) {
-		return NewErrInvalidPropertyForProperty("BusinessFunctionCode", bfc, "InstructedAmount", fwm.InstructedAmount.String())
-	}
-
-	if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
-		return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
-	}
-
-	return fwm.ExchangeRate.Validate()
+	return nil
 }
 
 // If present, tags BeneficiaryFI and Beneficiary are mandatory.
 func (fwm *FEDWireMessage) validateBeneficiaryIntermediaryFI() error {
-	if fwm.BeneficiaryIntermediaryFI == nil {
+	if fwm.BeneficiaryIntermediaryFI != nil {
+		if fwm.BeneficiaryFI == nil {
+			return fieldError("BeneficiaryFI", ErrFieldRequired)
+		}
+		if fwm.Beneficiary == nil {
+			return fieldError("Beneficiary", ErrFieldRequired)
+		}
 		return nil
 	}
-	if fwm.BeneficiaryFI == nil {
-		return fieldError("BeneficiaryFI", ErrFieldRequired)
-	}
-	if fwm.Beneficiary == nil {
-		return fieldError("Beneficiary", ErrFieldRequired)
-	}
-	return fwm.BeneficiaryIntermediaryFI.Validate()
+	return nil
 }
 
 // If present, the Beneficiary tag is mandatory.
 func (fwm *FEDWireMessage) validateBeneficiaryFI() error {
-	if fwm.BeneficiaryFI == nil {
+	if fwm.BeneficiaryFI != nil {
+		if fwm.Beneficiary == nil {
+			return fieldError("Beneficiary", ErrFieldRequired)
+		}
 		return nil
 	}
-	if fwm.Beneficiary == nil {
-		return fieldError("Beneficiary", ErrFieldRequired)
-	}
-	return fwm.Beneficiary.Validate()
+	return nil
 }
 
-func (fwm *FEDWireMessage) isOriginatorFIValid() error {
+// If present, Originator (or OriginatorOptionF if BusinessFunctionCode is CustomerTransferPlus) is mandatory.
+func (fwm *FEDWireMessage) validateOriginatorFI() error {
 	if fwm.OriginatorFI != nil {
-		if fwm.Originator == nil {
-			return fieldError("Originator", ErrFieldRequired)
-		}
-		if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
+		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+		case CustomerTransferPlus:
 			if fwm.OriginatorOptionF == nil {
 				return fieldError("OriginatorOptionF", ErrFieldRequired)
 			}
+		default:
+			if fwm.Originator == nil {
+				return fieldError("Originator", ErrFieldRequired)
+			}
 		}
-
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isInstructingFIValid() error {
+// If present, Originator (or OriginatorOptionF if BusinessFunctionCode is CustomerTransferPlus) and OriginatorFI are mandatory.
+func (fwm *FEDWireMessage) validateInstructingFI() error {
 	if fwm.InstructingFI != nil {
-		if fwm.Originator == nil {
-			return fieldError("Originator", ErrFieldRequired)
-		}
-		if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
+		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+		case CustomerTransferPlus:
 			if fwm.OriginatorOptionF == nil {
 				return fieldError("OriginatorOptionF", ErrFieldRequired)
 			}
+		default:
+			if fwm.Originator == nil {
+				return fieldError("Originator", ErrFieldRequired)
+			}
 		}
+		if fwm.OriginatorFI == nil {
+			return fieldError("OriginatorFI", ErrFieldRequired)
+		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isOriginatorToBeneficiaryValid() error {
+// If present, Beneficiary and Originator (or OriginatorOptionF if BusinessFunctionCode is CustomerTransferPlus) are mandatory.
+func (fwm *FEDWireMessage) validateOriginatorToBeneficiary() error {
 	if fwm.OriginatorToBeneficiary != nil {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		if fwm.Originator == nil {
-			return fieldError("Originator", ErrFieldRequired)
-		}
-		if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus {
+		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
+		case CustomerTransferPlus:
 			if fwm.OriginatorOptionF == nil {
 				return fieldError("OriginatorOptionF", ErrFieldRequired)
 			}
+		default:
+			if fwm.Originator == nil {
+				return fieldError("Originator", ErrFieldRequired)
+			}
 		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isFIIntermediaryFIValid() error {
-	if fwm.BeneficiaryIntermediaryFI == nil {
-		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
-	}
-	if fwm.BeneficiaryFI == nil {
-		return fieldError("BeneficiaryFI", ErrFieldRequired)
-	}
-	if fwm.Beneficiary == nil {
-		return fieldError("Beneficiary", ErrFieldRequired)
+// validateFIIntermediaryFI validates TagFIIntermediaryFI within a FEDWireMessage
+// If present, BeneficiaryIntermediaryFI, BeneficiaryFI and Beneficiary are required.
+func (fwm *FEDWireMessage) validateFIIntermediaryFI() error {
+	if fwm.FIIntermediaryFI != nil {
+		if fwm.BeneficiaryIntermediaryFI == nil {
+			return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
+		}
+		if fwm.BeneficiaryFI == nil {
+			return fieldError("BeneficiaryFI", ErrFieldRequired)
+		}
+		if fwm.Beneficiary == nil {
+			return fieldError("Beneficiary", ErrFieldRequired)
+		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isFIIntermediaryFIAdviceValid() error {
+// validateFIIntermediaryFIAdvice validates TagFIIntermediaryFIAdvice within a FEDWireMessage
+// If present, BeneficiaryIntermediaryFI, BeneficiaryFI and Beneficiary are required.
+func (fwm *FEDWireMessage) validateFIIntermediaryFIAdvice() error {
 	if fwm.FIIntermediaryFIAdvice != nil {
 		if fwm.BeneficiaryIntermediaryFI == nil {
 			return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
@@ -1697,11 +1712,14 @@ func (fwm *FEDWireMessage) isFIIntermediaryFIAdviceValid() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isFIBeneficiaryFIValid() error {
+// validateFIBeneficiaryFI validates TagFIBeneficiaryFI within a FEDWireMessage
+// If present, BeneficiaryFI and Beneficiary are required.
+func (fwm *FEDWireMessage) validateFIBeneficiaryFI() error {
 	if fwm.FIBeneficiaryFI != nil {
 		if fwm.BeneficiaryFI == nil {
 			return fieldError("BeneficiaryFI", ErrFieldRequired)
@@ -1709,11 +1727,14 @@ func (fwm *FEDWireMessage) isFIBeneficiaryFIValid() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isFIBeneficiaryFIAdviceValid() error {
+// validateFIBeneficiaryFIAdvice validates TagFIBeneficiaryFIAdvice within a FEDWireMessage
+// If present, BeneficiaryFI and Beneficiary are required.
+func (fwm *FEDWireMessage) validateFIBeneficiaryFIAdvice() error {
 	if fwm.FIBeneficiaryFIAdvice != nil {
 		if fwm.BeneficiaryFI == nil {
 			return fieldError("BeneficiaryFI", ErrFieldRequired)
@@ -1721,55 +1742,85 @@ func (fwm *FEDWireMessage) isFIBeneficiaryFIAdviceValid() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isFIBeneficiaryValid() error {
+// validateFIBeneficiary validates TagFIBeneficiary within a FEDWireMessage
+// If present, Beneficiary is required.
+func (fwm *FEDWireMessage) validateFIBeneficiary() error {
 	if fwm.FIBeneficiary != nil {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
+		return nil
 	}
 	return nil
 }
-func (fwm *FEDWireMessage) isFIBeneficiaryAdviceValid() error {
+
+// validateFIBeneficiaryAdvice validates TagFIBeneficiaryAdvice within a FEDWireMessage
+// If present, Beneficiary is required.
+func (fwm *FEDWireMessage) validateFIBeneficiaryAdvice() error {
 	if fwm.FIBeneficiaryAdvice != nil {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isFIPaymentMethodToBeneficiaryValid() error {
+// validateFIPaymentMethodToBeneficiary validates TagFIPaymentMethodToBeneficiary within a FEDWireMessage
+// If present, FIBeneficiaryAdvice and Beneficiary are required.
+func (fwm *FEDWireMessage) validateFIPaymentMethodToBeneficiary() error {
 	if fwm.FIPaymentMethodToBeneficiary != nil {
-		if fwm.FIBeneficiary == nil {
-			return fieldError("FIBeneficiary", ErrFieldRequired)
+		if fwm.FIBeneficiaryAdvice == nil {
+			return fieldError("FIBeneficiaryAdvice", ErrFieldRequired)
 		}
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
+		return nil
 	}
 	return nil
 }
 
-func (fwm *FEDWireMessage) isUnstructuredAddendaValid() error {
-	if fwm.UnstructuredAddenda != nil {
-		if fwm.LocalInstrument != nil {
-			switch fwm.LocalInstrument.LocalInstrumentCode {
-			case
-				SequenceBCoverPaymentStructured,
-				ProprietaryLocalInstrumentCode,
-				RemittanceInformationStructured,
-				RelatedRemittanceInformation:
-				if len(fwm.UnstructuredAddenda.Addenda) > 1 {
-					return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
-						"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-				}
+// validateUnstructuredAddenda validates TagUnstructuredAddenda within a FEDWireMessage
+// * Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument is ANSIX12format,
+//    GeneralXMLformat, ISO20022XMLformat, NarrativeText, STP820format, SWIFTfield70 or UNEDIFACTformat;
+//    otherwise not permitted.
+// * If LocalInstrument is ANSIX12format or STP820format, only the X12 Character Set* is permitted in
+//    Addenda Information element.
+// * If LocalInstrument is GeneralXMLformat, ISO20022XMLformat, NarrativeText, SWIFTfield70 or
+//    UNEDIFACTformat, only the SWIFT MX ISO 20022 Character Set* is permitted in Addenda Information
+//    element.
+func (fwm *FEDWireMessage) validateUnstructuredAddenda() error {
+	if fwm.BusinessFunctionCode == nil || fwm.BusinessFunctionCode.BusinessFunctionCode != CustomerTransferPlus || fwm.LocalInstrument == nil {
+		if fwm.UnstructuredAddenda != nil {
+			return fieldError("UnstructuredAddenda", ErrNotPermitted)
+		}
+	}
+	if fwm.LocalInstrument != nil {
+		switch fwm.LocalInstrument.LocalInstrumentCode {
+		case ANSIX12format, GeneralXMLformat, ISO20022XMLformat, NarrativeText, STP820format, SWIFTfield70, UNEDIFACTformat:
+			if fwm.UnstructuredAddenda == nil {
+				return fieldError("UnstructuredAddenda", ErrFieldRequired)
+			}
+		default:
+			if fwm.UnstructuredAddenda != nil {
+				return fieldError("UnstructuredAddenda", ErrNotPermitted)
 			}
 		}
 	}
+
+	// TODO: if LocalInstrument is ANSIX12format or STP820format, make sure Addenda Information only contains charaters within the X12 character set
+	// TODO: if LocalInstrument is any of the other permitted formats, make sure Addenda Information only contains charaters within the SWIFT MX ISO 20022 character set
+
+	if fwm.UnstructuredAddenda != nil {
+		return nil
+	}
+
 	return nil
 }
 

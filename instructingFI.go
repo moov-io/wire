@@ -64,6 +64,7 @@ func (ifi *InstructingFI) String() string {
 
 // Validate performs WIRE format rule checks on InstructingFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// If ID Code is present, Identifier is mandatory and vice versa.
 func (ifi *InstructingFI) Validate() error {
 	if err := ifi.fieldInclusion(); err != nil {
 		return err

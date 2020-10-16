@@ -30,6 +30,8 @@ var (
 	ErrConstructor = errors.New("is a mandatory field and has a default value. Use the constructor")
 	// ErrFieldRequired is returned when a field is required
 	ErrFieldRequired = errors.New("is a required field")
+	// ErrNotPermitted is returned when a field is included, but not permitted in combination with the other tags present in the message
+	ErrNotPermitted = errors.New("is not permitted in this context")
 	// ErrValidMonth is returned for an invalid month
 	ErrValidMonth = errors.New("is an invalid month")
 	// ErrValidDay is returned for an invalid day

@@ -65,7 +65,7 @@ func TestFEDWireMessage_isPreviousMessageIdentifierValid(t *testing.T) {
 	if err := file.Create(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
-	if err := fwm.isPreviousMessageIdentifierValid(); err != nil {
+	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -227,7 +227,7 @@ func TestFEDWireMessage_isOriginatorFIValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// Originator required field check
-	if err := fwm.isOriginatorFIValid(); err != nil {
+	if err := fwm.validateOriginatorFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -239,7 +239,7 @@ func TestFEDWireMessage_isOriginatorFIValid(t *testing.T) {
 	fwm.SetOriginator(o)
 	file.AddFEDWireMessage(fwm)
 	// OriginatorOptionF required field check
-	if err := fwm.isOriginatorFIValid(); err != nil {
+	if err := fwm.validateOriginatorFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -254,7 +254,7 @@ func TestFEDWireMessage_isInstructingFIValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// Originator required field check
-	if err := fwm.isInstructingFIValid(); err != nil {
+	if err := fwm.validateInstructingFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -266,7 +266,7 @@ func TestFEDWireMessage_isInstructingFIValid(t *testing.T) {
 	fwm.SetOriginator(o)
 	file.AddFEDWireMessage(fwm)
 	// OriginatorOptionF required field check
-	if err := fwm.isInstructingFIValid(); err != nil {
+	if err := fwm.validateInstructingFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -281,7 +281,7 @@ func TestNewFEDWireMessage_isOriginatorToBeneficiaryValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// Originator required field check
-	if err := fwm.isOriginatorToBeneficiaryValid(); err != nil {
+	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -290,7 +290,7 @@ func TestNewFEDWireMessage_isOriginatorToBeneficiaryValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	file.AddFEDWireMessage(fwm)
 	// Beneficiary required field check
-	if err := fwm.isOriginatorToBeneficiaryValid(); err != nil {
+	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -298,7 +298,7 @@ func TestNewFEDWireMessage_isOriginatorToBeneficiaryValid(t *testing.T) {
 	ben := mockBeneficiary()
 	fwm.SetBeneficiary(ben)
 	// Originator required Field check
-	if err := fwm.isOriginatorToBeneficiaryValid(); err != nil {
+	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -308,7 +308,7 @@ func TestNewFEDWireMessage_isOriginatorToBeneficiaryValid(t *testing.T) {
 	fwm.SetOriginator(o)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	// OriginatorOptionF required Field check
-	if err := fwm.isOriginatorToBeneficiaryValid(); err != nil {
+	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -323,7 +323,7 @@ func TestFEDWireMessage_isFIIntermediaryFIValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// BeneficiaryIntermediaryFI required field check
-	if err := fwm.isFIIntermediaryFIValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -331,7 +331,7 @@ func TestFEDWireMessage_isFIIntermediaryFIValid(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
 	// BeneficiaryFI required field check
-	if err := fwm.isFIIntermediaryFIValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -340,7 +340,7 @@ func TestFEDWireMessage_isFIIntermediaryFIValid(t *testing.T) {
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.isFIIntermediaryFIValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -355,7 +355,7 @@ func TestFEDWireMessage_isFIIntermediaryFIAdviceValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// BeneficiaryIntermediaryFI required field check
-	if err := fwm.isFIIntermediaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -363,7 +363,7 @@ func TestFEDWireMessage_isFIIntermediaryFIAdviceValid(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
 	// BeneficiaryFI required field check
-	if err := fwm.isFIIntermediaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -372,7 +372,7 @@ func TestFEDWireMessage_isFIIntermediaryFIAdviceValid(t *testing.T) {
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.isFIIntermediaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -387,7 +387,7 @@ func TestFEDWireMessage_FIBeneficiaryFIValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// BeneficiaryFI required field check
-	if err := fwm.isFIBeneficiaryFIValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -396,7 +396,7 @@ func TestFEDWireMessage_FIBeneficiaryFIValid(t *testing.T) {
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.isFIBeneficiaryFIValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryFI(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -411,7 +411,7 @@ func TestFEDWireMessage_isFIBeneficiaryFIAdvice(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// BeneficiaryFI required field check
-	if err := fwm.isFIBeneficiaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryFIAdvice(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -420,7 +420,7 @@ func TestFEDWireMessage_isFIBeneficiaryFIAdvice(t *testing.T) {
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.isFIBeneficiaryFIAdviceValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryFIAdvice(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -435,7 +435,7 @@ func TestFEDWireMessage_isFIBeneficiary(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// Beneficiary required field check
-	if err := fwm.isFIBeneficiaryValid(); err != nil {
+	if err := fwm.validateFIBeneficiary(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -450,7 +450,7 @@ func TestFEDWireMessage_isFIBeneficiaryAdvice(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 	file.AddFEDWireMessage(fwm)
 	// Beneficiary required field check
-	if err := fwm.isFIBeneficiaryAdviceValid(); err != nil {
+	if err := fwm.validateFIBeneficiaryAdvice(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -468,7 +468,7 @@ func TestFEDWireMessage_isUnstructuredAddendaValid(t *testing.T) {
 	fwm.SetUnstructuredAddenda(ua)
 	file.AddFEDWireMessage(fwm)
 	// UnstructuredAddenda Invalid Property
-	if err := fwm.isUnstructuredAddendaValid(); err != nil {
+	if err := fwm.validateUnstructuredAddenda(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)

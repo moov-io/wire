@@ -187,6 +187,10 @@ func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFun
 			moovhttp.Problem(w, err)
 			return
 		}
+		if file == nil {
+			http.NotFound(w, r)
+			return
+		}
 		if requestId := moovhttp.GetRequestID(r); requestId != "" {
 			logger.Log("files", fmt.Sprintf("rendering file=%s contents", fileId), "requestId", requestId)
 		}

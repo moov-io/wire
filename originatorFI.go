@@ -64,6 +64,7 @@ func (ofi *OriginatorFI) String() string {
 
 // Validate performs WIRE format rule checks on OriginatorFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// If ID Code is present, Identifier is mandatory and vice versa.
 func (ofi *OriginatorFI) Validate() error {
 	if err := ofi.fieldInclusion(); err != nil {
 		return err

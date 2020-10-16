@@ -66,6 +66,7 @@ func (ob *OriginatorToBeneficiary) String() string {
 
 // Validate performs WIRE format rule checks on OriginatorToBeneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// See latest version of the FAIM manual for Line Limits for Tags {6000} to {6500}.
 func (ob *OriginatorToBeneficiary) Validate() error {
 	if ob.tag != TagOriginatorToBeneficiary {
 		return fieldError("tag", ErrValidTagForType, ob.tag)
