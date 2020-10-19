@@ -48,13 +48,13 @@ docker: clean
 	docker build --pull -t moov/wire:$(VERSION) -f Dockerfile .
 	docker tag moov/wire:$(VERSION) moov/wire:latest
 # OpenShift Docker image
-	docker build --pull -t quay.io/moov/wire:$(VERSION) -f Dockerfile-openshift --build-arg VERSION=$(VERSION) .
+	docker build --pull -t quay.io/moov/wire:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/wire:$(VERSION) quay.io/moov/wire:latest
 # Wire Fuzzing docker image
-	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile-fuzz
+	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile.fuzz
 	docker tag moov/wirefuzz:$(VERSION) moov/wirefuzz:latest
 # webui Docker image
-	docker build --pull -t moov/wire-webui:$(VERSION) -f Dockerfile-webui .
+	docker build --pull -t moov/wire-webui:$(VERSION) -f Dockerfile.webui .
 	docker tag moov/wire-webui:$(VERSION) moov/wire-webui:latest
 
 .PHONY: clean-integration test-integration
