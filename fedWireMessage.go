@@ -1699,6 +1699,7 @@ func (fwm *FEDWireMessage) isExchangeRateValid() error {
 	return nil
 }
 
+// If present, tags BeneficiaryFI and Beneficiary are mandatory.
 func (fwm *FEDWireMessage) isBeneficiaryIntermediaryFIValid() error {
 	if fwm.BeneficiaryIntermediaryFI != nil {
 		if fwm.BeneficiaryFI == nil {
@@ -1764,15 +1765,19 @@ func (fwm *FEDWireMessage) isOriginatorToBeneficiaryValid() error {
 	return nil
 }
 
+// If present, BeneficiaryIntermediaryFI, BeneficiaryFI and Beneficiary are required.
 func (fwm *FEDWireMessage) isFIIntermediaryFIValid() error {
-	if fwm.BeneficiaryIntermediaryFI == nil {
-		return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
-	}
-	if fwm.BeneficiaryFI == nil {
-		return fieldError("BeneficiaryFI", ErrFieldRequired)
-	}
-	if fwm.Beneficiary == nil {
-		return fieldError("Beneficiary", ErrFieldRequired)
+	if fwm.FIIntermediaryFI != nil {
+		if fwm.BeneficiaryIntermediaryFI == nil {
+			return fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired)
+		}
+		if fwm.BeneficiaryFI == nil {
+			return fieldError("BeneficiaryFI", ErrFieldRequired)
+		}
+		if fwm.Beneficiary == nil {
+			return fieldError("Beneficiary", ErrFieldRequired)
+		}
+		return nil
 	}
 	return nil
 }
