@@ -1,3 +1,10 @@
+## v0.6.1 (Released 2020-10-19)
+
+BUILD
+
+- build: push moov/wire-webui image in make tasks
+- build: upgrade to Go 1.15 for other docker images
+
 ## v0.6.0 (Released 2020-10-19)
 
 ADDITIONS
