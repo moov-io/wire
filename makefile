@@ -77,6 +77,7 @@ release-push:
 	docker push moov/wire:$(VERSION)
 	docker push moov/wire:latest
 	docker push moov/wirefuzz:$(VERSION)
+	docker push moov/wire-webui:$(VERSION)
 
 quay-push:
 	docker push quay.io/moov/wire:$(VERSION)
