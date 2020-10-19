@@ -1,8 +1,9 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"testing"
+
+	"github.com/moov-io/base"
 )
 
 func mockCustomerTransferData() FEDWireMessage {
