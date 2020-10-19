@@ -1,4 +1,4 @@
-## v0.6.0 (Released 2020-10-19)
+## v0.6.0 (Unreleased)
 
 ADDITIONS
 
@@ -10,7 +10,6 @@ BUG FIXES
 - api: match openapi spec to Go library (and HTTP server) expectations
 - api: update Personal identification codes
 - api,client: add MessageDisposition.messageDuplicationCode " " enum value
-- api: fix bug in validation of FIIntermediaryFI tag
 
 IMPROVEMENTS
 
