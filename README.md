@@ -8,7 +8,7 @@ moov-io/wire
 
 Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available.
 
-Docs: [Project](https://moov-io.github.io/wire/) | [API Endpoints](https://moov-io.github.io/wire/api/)
+Docs: [Project](https://moov-io.github.io/wire/) | [API Endpoints](https://moov-io.github.io/wire/api/) | [In-Browser Parser](https://demo.moov.io/wire/)
 
 ## Usage
 

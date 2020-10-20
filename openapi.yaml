@@ -108,7 +108,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
+                $ref: 'https://raw.githubusercontent.com/moov-io/base/master/api/common.yaml#/components/schemas/Error'
   /files/{fileID}:
     get:
       tags: ['Wire Files']
@@ -193,7 +193,7 @@ paths:
     #       content:
     #         application/json:
     #           schema:
-    #             $ref: 'https://raw.githubusercontent.com/moov-io/api/master/openapi-common.yaml#/components/schemas/Error'
+    #             $ref: 'https://raw.githubusercontent.com/moov-io/base/master/api/common.yaml#/components/schemas/Error'
     delete:
       tags: ['Wire Files']
       summary: Delete file

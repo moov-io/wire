@@ -1,4 +1,11 @@
-## v0.6.0 (Unreleased)
+## v0.6.1 (Released 2020-10-19)
+
+BUILD
+
+- build: push moov/wire-webui image in make tasks
+- build: upgrade to Go 1.15 for other docker images
+
+## v0.6.0 (Released 2020-10-19)
 
 ADDITIONS
 
@@ -10,6 +17,7 @@ BUG FIXES
 - api: match openapi spec to Go library (and HTTP server) expectations
 - api: update Personal identification codes
 - api,client: add MessageDisposition.messageDuplicationCode " " enum value
+- api: fix bug in validation of FIIntermediaryFI tag
 
 IMPROVEMENTS
 
