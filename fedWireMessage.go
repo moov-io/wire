@@ -260,7 +260,7 @@ func (fwm *FEDWireMessage) validateAmount() error {
 	if fwm.Amount == nil {
 		return fieldError("Amount", ErrFieldRequired)
 	}
-	if fwm.TypeSubType.SubTypeCode != "90" && fwm.Amount.Amount == "000000000000" {
+	if fwm.Amount.Amount == "000000000000" && fwm.TypeSubType.SubTypeCode != "90" {
 		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
 			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
 	}
@@ -1587,9 +1587,10 @@ func (fwm *FEDWireMessage) validateInstructedAmount() error {
 	return nil
 }
 
-// If present, InstructedAmount is mandatory.
-// BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus.
-// Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
+// validateExchangeRate validates TagExchangeRate within a FEDWireMessage
+// * If present, InstructedAmount is mandatory.
+// * BusinessFunctionCode must be CustomerTransfer or CustomerTransferPlus.
+// * Not permitted if LocalInstrument Code is SequenceBCoverPaymentStructured.
 func (fwm *FEDWireMessage) validateExchangeRate() error {
 	if fwm.ExchangeRate != nil {
 		if fwm.InstructedAmount == nil {
@@ -1601,7 +1602,7 @@ func (fwm *FEDWireMessage) validateExchangeRate() error {
 		}
 		if fwm.LocalInstrument != nil && fwm.LocalInstrument.LocalInstrumentCode == SequenceBCoverPaymentStructured {
 			return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-				fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
+				fwm.LocalInstrument.LocalInstrumentCode, "ExchangeRate", fwm.ExchangeRate.ExchangeRate)
 		}
 		return nil
 	}
@@ -1814,11 +1815,16 @@ func (fwm *FEDWireMessage) validateUnstructuredAddenda() error {
 			if fwm.UnstructuredAddenda == nil {
 				return fieldError("UnstructuredAddenda", ErrFieldRequired)
 			}
-			return nil
+		default:
+			if fwm.UnstructuredAddenda != nil {
+				return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
+					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
+			}
 		}
-	}
-	if fwm.UnstructuredAddenda != nil {
-		return fieldError("UnstructuredAddenda", ErrNotPermitted)
+	} else {
+		if fwm.UnstructuredAddenda != nil {
+			return fieldError("UnstructuredAddenda", ErrNotPermitted)
+		}
 	}
 
 	// TODO: if LocalInstrument is ANSIX12format or STP820format, make sure Addenda Information only contains charaters within the X12 character set
@@ -1873,7 +1879,7 @@ func (fwm *FEDWireMessage) validateRemittanceBeneficiary() error {
 			return fieldError("RemittanceBeneficiary", ErrFieldRequired)
 		}
 	} else {
-		if fwm.RemittanceOriginator != nil {
+		if fwm.RemittanceBeneficiary != nil {
 			return fieldError("RemittanceBeneficiary", ErrNotPermitted)
 		}
 	}

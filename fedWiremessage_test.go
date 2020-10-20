@@ -3,6 +3,8 @@ package wire
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/moov-io/base"
 )
 
@@ -29,10 +31,10 @@ func mockCustomerTransferData() FEDWireMessage {
 	return fwm
 }
 
-func TestFEDWireMessage_isAmountValid(t *testing.T) {
+func TestFEDWireMessage_invalidAmount(t *testing.T) {
 	file := NewFile()
 	fwm := mockCustomerTransferData()
-	// Override to trigger error
+	// Override to trigger error (can only be zeros is TypeSubType code is 90)
 	fwm.Amount.Amount = "000000000000"
 	// Beneficiary
 	ben := mockBeneficiary()
@@ -45,53 +47,38 @@ func TestFEDWireMessage_isAmountValid(t *testing.T) {
 	if err := file.Create(); err != nil {
 		t.Errorf("%T: %s", err, err)
 	}
+
 	// Validate File
-	if err := file.Validate(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode",
-			fwm.TypeSubType.SubTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := file.Validate()
+
+	require.Equal(t, NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode",
+		fwm.TypeSubType.SubTypeCode), err)
 }
 
-func TestFEDWireMessage_isPreviousMessageIdentifierValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_previousMessageIdentifierInvalid(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
-	fwm.TypeSubType.SubTypeCode = "02"
-	file.AddFEDWireMessage(fwm)
+	fwm.TypeSubType.SubTypeCode = ReversalTransfer
+	fwm.PreviousMessageIdentifier = nil // required when SubTypeCode is ReversalTransfer
 
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
-	}
-	if err := fwm.checkPreviousMessageIdentifier(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.checkPreviousMessageIdentifier()
+
+	require.Equal(t, fieldError("PreviousMessageIdentifier", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isLocalInstrumentCodeValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_invalidLocalInstrument(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	// Override to trigger error
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
 	fwm.SetLocalInstrument(li)
-	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
+	fwm.BusinessFunctionCode.BusinessFunctionCode = BankTransfer // local instrument only permitted for CTP
 
-	file.AddFEDWireMessage(fwm)
+	err := fwm.validateLocalInstrumentCode()
 
-	if err := fwm.validateLocalInstrumentCode(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.Equal(t, fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted), err)
 }
 
-func TestFEDWireMessage_isChargesValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_invalidCharges(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	li := mockLocalInstrument()
@@ -101,18 +88,13 @@ func TestFEDWireMessage_isChargesValid(t *testing.T) {
 	fwm.SetCharges(c)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFEDWireMessage(fwm)
+	err := fwm.validateCharges()
 
-	if err := fwm.validateCharges(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-			"Charges", fwm.Charges.String()) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.Equal(t, NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+		"Charges", fwm.Charges.String()), err)
 }
 
-func TestFEDWireMessage_isInstructedAmountValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_invalidInstructedAmount(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	li := mockLocalInstrument()
@@ -122,35 +104,25 @@ func TestFEDWireMessage_isInstructedAmountValid(t *testing.T) {
 	fwm.SetInstructedAmount(ia)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFEDWireMessage(fwm)
+	err := fwm.validateInstructedAmount()
 
-	if err := fwm.validateInstructedAmount(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-			fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String()) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.Equal(t, NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+		"Instructed Amount", fwm.InstructedAmount.String()), err)
 }
 
-func TestFEDWireMessage_isExchangeRateRequired(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateExchangeRate_missingInstructedAmount(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFEDWireMessage(fwm)
+	err := fwm.validateExchangeRate()
 
-	if err := fwm.validateExchangeRate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.Equal(t, fieldError("InstructedAmount", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isExchangeRateValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_isExchangeRateValid_missingLocalInstrumentCode(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
 	li := mockLocalInstrument()
@@ -162,18 +134,13 @@ func TestFEDWireMessage_isExchangeRateValid(t *testing.T) {
 	fwm.SetInstructedAmount(ia)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
-	file.AddFEDWireMessage(fwm)
+	err := fwm.validateExchangeRate()
 
-	if err := fwm.validateExchangeRate(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("LocalInstrumentCode",
-			fwm.LocalInstrument.LocalInstrumentCode, "ExchangeRate", fwm.ExchangeRate.ExchangeRate) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.Equal(t, NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+		"ExchangeRate", fwm.ExchangeRate.ExchangeRate), err)
 }
 
-func TestFEDWireMessage_isBeneficiaryIntermediaryFIValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateBeneficiaryIntermediaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
 
 	bifi := mockBeneficiaryIntermediaryFI()
@@ -181,259 +148,187 @@ func TestFEDWireMessage_isBeneficiaryIntermediaryFIValid(t *testing.T) {
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
-	file.AddFEDWireMessage(fwm)
-
 	// BeneficiaryFI required field check
-	if err := fwm.validateBeneficiaryIntermediaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateBeneficiaryIntermediaryFI()
+	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
 
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.validateBeneficiaryIntermediaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateBeneficiaryIntermediaryFI()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isBeneficiaryFIValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateBeneficiaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
-	file.AddFEDWireMessage(fwm)
 	// Beneficiary required field check
-	if err := fwm.validateBeneficiaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateBeneficiaryFI()
 
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isOriginatorFIValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	ofi := mockOriginatorFI()
 	fwm.SetOriginatorFI(ofi)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// Originator required field check
-	if err := fwm.validateOriginatorFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateOriginatorFI()
+	require.Equal(t, fieldError("Originator", ErrFieldRequired), err)
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	// Originator
 	o := mockOriginator()
 	fwm.SetOriginator(o)
-	file.AddFEDWireMessage(fwm)
+
 	// OriginatorOptionF required field check
-	if err := fwm.validateOriginatorFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateOriginatorFI()
+	require.Equal(t, fieldError("OriginatorOptionF", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isInstructingFIValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	ifi := mockInstructingFI()
 	fwm.SetInstructingFI(ifi)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// Originator required field check
-	if err := fwm.validateInstructingFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateInstructingFI()
+	require.Equal(t, fieldError("Originator", ErrFieldRequired), err)
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	// Originator
 	o := mockOriginator()
 	fwm.SetOriginator(o)
-	file.AddFEDWireMessage(fwm)
+
 	// OriginatorOptionF required field check
-	if err := fwm.validateInstructingFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateInstructingFI()
+	require.Equal(t, fieldError("OriginatorOptionF", ErrFieldRequired), err)
 }
 
-func TestNewFEDWireMessage_isOriginatorToBeneficiaryValid(t *testing.T) {
-	file := NewFile()
+func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	ob := mockOriginatorToBeneficiary()
 	fwm.SetOriginatorToBeneficiary(ob)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
-	// Originator required field check
-	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
 
-	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	file.AddFEDWireMessage(fwm)
 	// Beneficiary required field check
-	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateOriginatorToBeneficiary()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
 	ben := mockBeneficiary()
 	fwm.SetBeneficiary(ben)
 	// Originator required Field check
-	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-	// Originator
+	err = fwm.validateOriginatorToBeneficiary()
+	require.Equal(t, fieldError("Originator", ErrFieldRequired), err)
+
 	o := mockOriginator()
 	fwm.SetOriginator(o)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	// OriginatorOptionF required Field check
-	if err := fwm.validateOriginatorToBeneficiary(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateOriginatorToBeneficiary()
+	require.Equal(t, fieldError("OriginatorOptionF", ErrFieldRequired), err)
+
+	// check beneficiary still required
+	fwm.SetBeneficiary(nil)
+	err = fwm.validateOriginatorToBeneficiary()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isFIIntermediaryFIValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fiifi := mockFIIntermediaryFI()
 	fwm.SetFIIntermediaryFI(fiifi)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
 	// BeneficiaryIntermediaryFI required field check
-	if err := fwm.validateFIIntermediaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateFIIntermediaryFI()
+	require.Equal(t, fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired), err)
+
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
 	// BeneficiaryFI required field check
-	if err := fwm.validateFIIntermediaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateFIIntermediaryFI()
+	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.validateFIIntermediaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateFIIntermediaryFI()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isFIIntermediaryFIAdviceValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateFIIntermediaryFIAdvice(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fiifia := mockFIIntermediaryFIAdvice()
 	fwm.SetFIIntermediaryFIAdvice(fiifia)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// BeneficiaryIntermediaryFI required field check
-	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateFIIntermediaryFIAdvice()
+	require.Equal(t, fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired), err)
+
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
 	// BeneficiaryFI required field check
-	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateFIIntermediaryFIAdvice()
+	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.validateFIIntermediaryFIAdvice(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateFIIntermediaryFIAdvice()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_FIBeneficiaryFIValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateFIBeneficiaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fibfi := mockFIBeneficiaryFI()
 	fwm.SetFIBeneficiaryFI(fibfi)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// BeneficiaryFI required field check
-	if err := fwm.validateFIBeneficiaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateFIBeneficiaryFI()
+	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.validateFIBeneficiaryFI(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateFIBeneficiaryFI()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isFIBeneficiaryFIAdvice(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateFIBeneficiaryFIAdvice(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fibfia := mockFIBeneficiaryFIAdvice()
 	fwm.SetFIBeneficiaryFIAdvice(fibfia)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// BeneficiaryFI required field check
-	if err := fwm.validateFIBeneficiaryFIAdvice(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateFIBeneficiaryFIAdvice()
+	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
-	if err := fwm.validateFIBeneficiaryFIAdvice(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err = fwm.validateFIBeneficiaryFIAdvice()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isFIBeneficiary(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateFIBeneficiary(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fib := mockFIBeneficiary()
 	fwm.SetFIBeneficiary(fib)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// Beneficiary required field check
 	if err := fwm.validateFIBeneficiary(); err != nil {
 		if !base.Match(err, ErrFieldRequired) {
@@ -442,23 +337,18 @@ func TestFEDWireMessage_isFIBeneficiary(t *testing.T) {
 	}
 }
 
-func TestFEDWireMessage_isFIBeneficiaryAdvice(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateFIBeneficiaryAdvice(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fiba := mockFIBeneficiaryAdvice()
 	fwm.SetFIBeneficiaryAdvice(fiba)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
-	file.AddFEDWireMessage(fwm)
+
 	// Beneficiary required field check
-	if err := fwm.validateFIBeneficiaryAdvice(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateFIBeneficiaryAdvice()
+	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isUnstructuredAddendaValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateUnstructuredAddenda(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -466,18 +356,14 @@ func TestFEDWireMessage_isUnstructuredAddendaValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
-	file.AddFEDWireMessage(fwm)
+
 	// UnstructuredAddenda Invalid Property
-	if err := fwm.validateUnstructuredAddenda(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateUnstructuredAddenda()
+	require.Equal(t, NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
+		"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode), err)
 }
 
-func TestFEDWireMessage_isRelatedRemittanceValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateRelatedRemittance(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -485,18 +371,13 @@ func TestFEDWireMessage_isRelatedRemittanceValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
-	file.AddFEDWireMessage(fwm)
+
 	// RelatedRemittance Invalid Property
-	if err := fwm.validateRelatedRemittance(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("RelatedRemittance", fwm.RelatedRemittance.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateRelatedRemittance()
+	require.Equal(t, fieldError("RelatedRemittance", ErrNotPermitted), err)
 }
 
-func TestFEDWireMessage_isRemittanceOriginatorValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateRemittanceOriginator(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -504,18 +385,13 @@ func TestFEDWireMessage_isRemittanceOriginatorValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	ro := mockRemittanceOriginator()
 	fwm.SetRemittanceOriginator(ro)
-	file.AddFEDWireMessage(fwm)
+
 	// RemittanceOriginator Invalid Property
-	if err := fwm.validateRemittanceOriginator(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("RemittanceOriginator", fwm.RemittanceOriginator.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateRemittanceOriginator()
+	require.Equal(t, fieldError("RemittanceOriginator", ErrNotPermitted), err)
 }
 
-func TestFEDWireMessage_isRemittanceBeneficiaryValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateRemittanceBeneficiary(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -523,18 +399,19 @@ func TestFEDWireMessage_isRemittanceBeneficiaryValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	rb := mockRemittanceBeneficiary()
 	fwm.SetRemittanceBeneficiary(rb)
-	file.AddFEDWireMessage(fwm)
+
 	// RemittanceBeneficiary Invalid Property
-	if err := fwm.isRemittanceBeneficiaryValid(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("RemittanceBeneficiary", fwm.RemittanceBeneficiary.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateRemittanceBeneficiary()
+	require.Equal(t, fieldError("RemittanceBeneficiary", ErrNotPermitted), err)
+
+	fwm.RemittanceBeneficiary = nil
+	fwm.LocalInstrument.LocalInstrumentCode = RemittanceInformationStructured
+	// RemittanceBeneficiary Invalid Property
+	err = fwm.validateRemittanceBeneficiary()
+	require.Equal(t, fieldError("RemittanceBeneficiary", ErrFieldRequired), err)
 }
 
-func TestFEDWireMessage_isPrimaryRemittanceDocumentValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validatePrimaryRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -542,13 +419,12 @@ func TestFEDWireMessage_isPrimaryRemittanceDocumentValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	prd := mockPrimaryRemittanceDocument()
 	fwm.SetPrimaryRemittanceDocument(prd)
-	file.AddFEDWireMessage(fwm)
+
 	// PrimaryRemittanceDocument Invalid Property
-	if err := fwm.validatePrimaryRemittanceDocument(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", fwm.PrimaryRemittanceDocument.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
+	err := fwm.validatePrimaryRemittanceDocument()
+	if err != NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", fwm.PrimaryRemittanceDocument.String(),
+		"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
+		t.Errorf("%T: %s", err, err)
 	}
 }
 
