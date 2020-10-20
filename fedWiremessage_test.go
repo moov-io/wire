@@ -487,7 +487,7 @@ func TestFEDWireMessage_isRelatedRemittanceValid(t *testing.T) {
 	fwm.SetRelatedRemittance(rr)
 	file.AddFEDWireMessage(fwm)
 	// RelatedRemittance Invalid Property
-	if err := fwm.isRelatedRemittanceValid(); err != nil {
+	if err := fwm.validateRelatedRemittance(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("RelatedRemittance", fwm.RelatedRemittance.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -506,7 +506,7 @@ func TestFEDWireMessage_isRemittanceOriginatorValid(t *testing.T) {
 	fwm.SetRemittanceOriginator(ro)
 	file.AddFEDWireMessage(fwm)
 	// RemittanceOriginator Invalid Property
-	if err := fwm.isRemittanceOriginatorValid(); err != nil {
+	if err := fwm.validateRemittanceOriginator(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("RemittanceOriginator", fwm.RemittanceOriginator.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -544,7 +544,7 @@ func TestFEDWireMessage_isPrimaryRemittanceDocumentValid(t *testing.T) {
 	fwm.SetPrimaryRemittanceDocument(prd)
 	file.AddFEDWireMessage(fwm)
 	// PrimaryRemittanceDocument Invalid Property
-	if err := fwm.isPrimaryRemittanceDocumentValid(); err != nil {
+	if err := fwm.validatePrimaryRemittanceDocument(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", fwm.PrimaryRemittanceDocument.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -563,7 +563,7 @@ func TestFEDWireMessage_isActualAmountPaidValid(t *testing.T) {
 	fwm.SetActualAmountPaid(aap)
 	file.AddFEDWireMessage(fwm)
 	// ActualAmountPaid Invalid Property
-	if err := fwm.isActualAmountPaidValid(); err != nil {
+	if err := fwm.validateActualAmountPaid(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("ActualAmountPaid", fwm.ActualAmountPaid.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -582,7 +582,7 @@ func TestFEDWireMessage_isGrossAmountRemittanceDocument(t *testing.T) {
 	fwm.SetGrossAmountRemittanceDocument(gard)
 	file.AddFEDWireMessage(fwm)
 	// GrossAmountRemittanceDocument Invalid Property
-	if err := fwm.isGrossAmountRemittanceDocumentValid(); err != nil {
+	if err := fwm.validateGrossAmountRemittanceDocument(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("GrossAmountRemittanceDocument", fwm.GrossAmountRemittanceDocument.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -601,7 +601,7 @@ func TestFEDWireMessage_isAdjustmentValid(t *testing.T) {
 	fwm.SetAdjustment(adj)
 	file.AddFEDWireMessage(fwm)
 	// Adjustment Invalid Property
-	if err := fwm.isAdjustmentValid(); err != nil {
+	if err := fwm.validateAdjustment(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("Adjustment", fwm.Adjustment.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -620,7 +620,7 @@ func TestFEDWireMessage_isDateRemittanceDocumentValid(t *testing.T) {
 	fwm.SetDateRemittanceDocument(drd)
 	file.AddFEDWireMessage(fwm)
 	// DateRemittanceDocument Invalid Property
-	if err := fwm.isDateRemittanceDocumentValid(); err != nil {
+	if err := fwm.validateDateRemittanceDocument(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("DateRemittanceDocument", fwm.DateRemittanceDocument.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -639,7 +639,7 @@ func TestFEDWireMessage_isSecondaryRemittanceDocumentValid(t *testing.T) {
 	fwm.SetSecondaryRemittanceDocument(srd)
 	file.AddFEDWireMessage(fwm)
 	// SecondaryRemittanceDocument Invalid Property
-	if err := fwm.isSecondaryRemittanceDocumentValid(); err != nil {
+	if err := fwm.validateSecondaryRemittanceDocument(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("SecondaryRemittanceDocument", fwm.SecondaryRemittanceDocument.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)
@@ -658,7 +658,7 @@ func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
 	fwm.SetRemittanceFreeText(rft)
 	file.AddFEDWireMessage(fwm)
 	// RemittanceFreeTextValid Invalid Property
-	if err := fwm.isRemittanceFreeTextValid(); err != nil {
+	if err := fwm.validateRemittanceFreeText(); err != nil {
 		if err != NewErrInvalidPropertyForProperty("RemittanceFreeText", fwm.RemittanceFreeText.String(),
 			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
 			t.Errorf("%T: %s", err, err)

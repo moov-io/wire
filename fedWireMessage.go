@@ -189,6 +189,11 @@ func (fwm *FEDWireMessage) verify() error {
 	if err := fwm.validateUnstructuredAddenda(); err != nil {
 		return err
 	}
+
+	if err := fwm.validateRelatedRemittance(); err != nil {
+		return err
+	}
+
 	if err := fwm.isRemittanceValid(); err != nil {
 		return err
 	}
@@ -197,22 +202,22 @@ func (fwm *FEDWireMessage) verify() error {
 
 // mandatoryFields validates mandatory tags for a FEDWireMessage are defined
 func (fwm *FEDWireMessage) mandatoryFields() error {
-	if err := fwm.isSenderSuppliedValid(); err != nil {
+	if err := fwm.validateSenderSupplied(); err != nil {
 		return err
 	}
-	if err := fwm.isTypeSubTypeValid(); err != nil {
+	if err := fwm.validateTypeSubType(); err != nil {
 		return err
 	}
-	if err := fwm.isIMADValid(); err != nil {
+	if err := fwm.validateIMAD(); err != nil {
 		return err
 	}
-	if err := fwm.isAmountValid(); err != nil {
+	if err := fwm.validateAmount(); err != nil {
 		return err
 	}
-	if err := fwm.isSenderDIValid(); err != nil {
+	if err := fwm.validateSenderDI(); err != nil {
 		return err
 	}
-	if err := fwm.isReceiverDIValid(); err != nil {
+	if err := fwm.validateReceiverDI(); err != nil {
 		return err
 	}
 	if err := fwm.validateBusinessFunctionCode(); err != nil {
@@ -221,33 +226,37 @@ func (fwm *FEDWireMessage) mandatoryFields() error {
 	return nil
 }
 
-// SenderSupplied is mandatory for all requests
-func (fwm *FEDWireMessage) isSenderSuppliedValid() error {
+// validateSenderSupplied validates TagSenderSupplied within a FEDWireMessage
+// Mandatory for all requests
+func (fwm *FEDWireMessage) validateSenderSupplied() error {
 	if fwm.SenderSupplied == nil {
 		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
 	return nil
 }
 
-// TypeSubType is mandatory for all requests
-func (fwm *FEDWireMessage) isTypeSubTypeValid() error {
+// validateTypeSubType validates TagTypeSubType within a FEDWireMessage
+// Mandatory for all requests
+func (fwm *FEDWireMessage) validateTypeSubType() error {
 	if fwm.TypeSubType == nil {
 		return fieldError("TypeSubType", ErrFieldRequired)
 	}
 	return nil
 }
 
-// InputMessageAccountabilityData is mandatory for all requests
-func (fwm *FEDWireMessage) isIMADValid() error {
+// validateIMAD validates TagInputMessageAccountabilityData within a FEDWireMessage
+// Mandatory for all requests
+func (fwm *FEDWireMessage) validateIMAD() error {
 	if fwm.InputMessageAccountabilityData == nil {
 		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
 	return nil
 }
 
-// Amount is mandatory for all requests
-// Can be all zeros for TypeSubType code 90
-func (fwm *FEDWireMessage) isAmountValid() error {
+// validateAmount validates TagAmount within a FEDWireMessage
+// * Mandatory for all requests
+// * Can be all zeros for TypeSubType code 90
+func (fwm *FEDWireMessage) validateAmount() error {
 	if fwm.Amount == nil {
 		return fieldError("Amount", ErrFieldRequired)
 	}
@@ -258,23 +267,26 @@ func (fwm *FEDWireMessage) isAmountValid() error {
 	return nil
 }
 
-// SenderDepositoryInstitution is mandatory for all requests
-func (fwm *FEDWireMessage) isSenderDIValid() error {
+// validateSenderDI validates TagSenderDepositoryInstitution within a FEDWireMessage
+// Mandatory for all requests
+func (fwm *FEDWireMessage) validateSenderDI() error {
 	if fwm.SenderDepositoryInstitution == nil {
 		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
 	}
 	return nil
 }
 
-// ReceiverDepositoryInstitution is mandatory for all requests
-func (fwm *FEDWireMessage) isReceiverDIValid() error {
+// validateReceiverDI validates TagReceiverDepositoryInstitution within a FEDWireMessage
+// Mandatory for all requests
+func (fwm *FEDWireMessage) validateReceiverDI() error {
 	if fwm.ReceiverDepositoryInstitution == nil {
 		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
 	return nil
 }
 
-// BusinessFunctionCode is mandatory for all requests
+// validateBusinessFunctionCode validates TagBusinessFunctionCode within a FEDWireMessage
+// Mandatory for all requests
 func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 	if fwm.BusinessFunctionCode == nil {
 		return fieldError("BusinessFunctionCode", ErrFieldRequired)
@@ -1796,151 +1808,202 @@ func (fwm *FEDWireMessage) validateFIPaymentMethodToBeneficiary() error {
 //    UNEDIFACTformat, only the SWIFT MX ISO 20022 Character Set* is permitted in Addenda Information
 //    element.
 func (fwm *FEDWireMessage) validateUnstructuredAddenda() error {
-	if fwm.BusinessFunctionCode == nil || fwm.BusinessFunctionCode.BusinessFunctionCode != CustomerTransferPlus || fwm.LocalInstrument == nil {
-		if fwm.UnstructuredAddenda != nil {
-			return fieldError("UnstructuredAddenda", ErrNotPermitted)
-		}
-	}
-	if fwm.LocalInstrument != nil {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil {
 		switch fwm.LocalInstrument.LocalInstrumentCode {
 		case ANSIX12format, GeneralXMLformat, ISO20022XMLformat, NarrativeText, STP820format, SWIFTfield70, UNEDIFACTformat:
 			if fwm.UnstructuredAddenda == nil {
 				return fieldError("UnstructuredAddenda", ErrFieldRequired)
 			}
-		default:
-			if fwm.UnstructuredAddenda != nil {
-				return fieldError("UnstructuredAddenda", ErrNotPermitted)
-			}
+			return nil
 		}
+	}
+	if fwm.UnstructuredAddenda != nil {
+		return fieldError("UnstructuredAddenda", ErrNotPermitted)
 	}
 
 	// TODO: if LocalInstrument is ANSIX12format or STP820format, make sure Addenda Information only contains charaters within the X12 character set
 	// TODO: if LocalInstrument is any of the other permitted formats, make sure Addenda Information only contains charaters within the SWIFT MX ISO 20022 character set
 
-	if fwm.UnstructuredAddenda != nil {
-		return nil
+	return nil
+}
+
+// validateRelatedRemittance validates TagRelatedRemittance within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument is
+//  RelatedRemittanceInformation; otherwise not permitted.
+func (fwm *FEDWireMessage) validateRelatedRemittance() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RelatedRemittanceInformation {
+		if fwm.RelatedRemittance == nil {
+			return fieldError("RelatedRemittance", ErrFieldRequired)
+		}
+	} else {
+		if fwm.RelatedRemittance != nil {
+			return fieldError("RelatedRemittance", ErrNotPermitted)
+		}
 	}
 
 	return nil
 }
 
-func (fwm *FEDWireMessage) isRelatedRemittanceValid() error {
-	if fwm.RelatedRemittance != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RelatedRemittanceInformation {
-				return NewErrInvalidPropertyForProperty("RelatedRemittance", fwm.RelatedRemittance.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateRemittanceOriginator validates TagRemittanceOriginator within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateRemittanceOriginator() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.RemittanceOriginator == nil {
+			return fieldError("RemittanceOriginator", ErrFieldRequired)
+		}
+	} else {
+		if fwm.RemittanceOriginator != nil {
+			return fieldError("RemittanceOriginator", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isRemittanceOriginatorValid() error {
-	if fwm.RemittanceOriginator != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("RemittanceOriginator", fwm.RemittanceOriginator.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateRemittanceBeneficiary validates TagRemittanceBeneficiary within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateRemittanceBeneficiary() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.RemittanceBeneficiary == nil {
+			return fieldError("RemittanceBeneficiary", ErrFieldRequired)
+		}
+	} else {
+		if fwm.RemittanceOriginator != nil {
+			return fieldError("RemittanceBeneficiary", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isRemittanceBeneficiaryValid() error {
-	if fwm.RemittanceBeneficiary != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("RemittanceBeneficiary", fwm.RemittanceBeneficiary.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// PrimaryRemittanceDocument validates TagPrimaryRemittanceDocument within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validatePrimaryRemittanceDocument() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.PrimaryRemittanceDocument == nil {
+			return fieldError("PrimaryRemittanceDocument", ErrFieldRequired)
+		}
+	} else {
+		if fwm.PrimaryRemittanceDocument != nil {
+			return fieldError("PrimaryRemittanceDocument", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isPrimaryRemittanceDocumentValid() error {
-	if fwm.PrimaryRemittanceDocument != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", fwm.PrimaryRemittanceDocument.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateActualAmountPaid validates TagActualAmountPaid within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateActualAmountPaid() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.ActualAmountPaid == nil {
+			return fieldError("ActualAmountPaid", ErrFieldRequired)
+		}
+	} else {
+		if fwm.ActualAmountPaid != nil {
+			return fieldError("ActualAmountPaid", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isActualAmountPaidValid() error {
-	if fwm.ActualAmountPaid != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("ActualAmountPaid", fwm.ActualAmountPaid.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateGrossAmountRemittanceDocument validates TagGrossAmountRemittanceDocument within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateGrossAmountRemittanceDocument() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.GrossAmountRemittanceDocument == nil {
+			return fieldError("GrossAmountRemittanceDocument", ErrFieldRequired)
+		}
+	} else {
+		if fwm.GrossAmountRemittanceDocument != nil {
+			return fieldError("GrossAmountRemittanceDocument", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isGrossAmountRemittanceDocumentValid() error {
-	if fwm.GrossAmountRemittanceDocument != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("GrossAmountRemittanceDocument", fwm.GrossAmountRemittanceDocument.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateAdjustment validates TagAdjustment within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateAdjustment() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.Adjustment == nil {
+			return fieldError("Adjustment", ErrFieldRequired)
+		}
+	} else {
+		if fwm.Adjustment != nil {
+			return fieldError("Adjustment", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isAdjustmentValid() error {
-	if fwm.Adjustment != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("Adjustment", fwm.Adjustment.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateDateRemittanceDocument validates TagDateRemittanceDocument within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateDateRemittanceDocument() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.DateRemittanceDocument == nil {
+			return fieldError("DateRemittanceDocument", ErrFieldRequired)
+		}
+	} else {
+		if fwm.DateRemittanceDocument != nil {
+			return fieldError("DateRemittanceDocument", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isDateRemittanceDocumentValid() error {
-	if fwm.DateRemittanceDocument != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("DateRemittanceDocument", fwm.DateRemittanceDocument.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateSecondaryRemittanceDocument validates a TagSecondaryRemittanceDocument within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateSecondaryRemittanceDocument() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.SecondaryRemittanceDocument == nil {
+			return fieldError("SecondaryRemittanceDocument", ErrFieldRequired)
+		}
+	} else {
+		if fwm.SecondaryRemittanceDocument != nil {
+			return fieldError("SecondaryRemittanceDocument", ErrNotPermitted)
 		}
 	}
+
 	return nil
 }
 
-func (fwm *FEDWireMessage) isSecondaryRemittanceDocumentValid() error {
-	if fwm.SecondaryRemittanceDocument != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("SecondaryRemittanceDocument", fwm.SecondaryRemittanceDocument.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
+// validateRemittanceFreeText validates a TagRemittanceFreeText within a FEDWireMessage
+// Must be present if BusinessFunctionCode is CustomerTransferPlus and LocalInstrument code
+//  is RemittanceInformationStructured; otherwise not permitted.
+func (fwm *FEDWireMessage) validateRemittanceFreeText() error {
+	if fwm.BusinessFunctionCode.BusinessFunctionCode == CustomerTransferPlus && fwm.LocalInstrument != nil &&
+		fwm.LocalInstrument.LocalInstrumentCode == RemittanceInformationStructured {
+		if fwm.RemittanceFreeText == nil {
+			return fieldError("RemittanceFreeText", ErrFieldRequired)
+		}
+	} else {
+		if fwm.RemittanceFreeText != nil {
+			return fieldError("RemittanceFreeText", ErrNotPermitted)
 		}
 	}
-	return nil
-}
 
-func (fwm *FEDWireMessage) isRemittanceFreeTextValid() error {
-	if fwm.RemittanceFreeText != nil {
-		if fwm.LocalInstrument != nil {
-			if fwm.LocalInstrument.LocalInstrumentCode != RemittanceInformationStructured {
-				return NewErrInvalidPropertyForProperty("RemittanceFreeText", fwm.RemittanceFreeText.String(),
-					"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode)
-			}
-		}
-	}
 	return nil
 }
 
@@ -1961,50 +2024,29 @@ func (fwm *FEDWireMessage) otherTransferInformation() error {
 }
 
 func (fwm *FEDWireMessage) isRemittanceValid() error {
-	if fwm.RelatedRemittance != nil {
-		if err := fwm.isRelatedRemittanceValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateRemittanceOriginator(); err != nil {
+		return err
 	}
-	if fwm.RemittanceOriginator != nil {
-		if err := fwm.isRemittanceOriginatorValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateRemittanceBeneficiary(); err != nil {
+		return err
 	}
-	if fwm.RemittanceBeneficiary != nil {
-		if err := fwm.isRemittanceBeneficiaryValid(); err != nil {
-			return err
-		}
+	if err := fwm.validatePrimaryRemittanceDocument(); err != nil {
+		return err
 	}
-	if fwm.PrimaryRemittanceDocument != nil {
-		if err := fwm.isPrimaryRemittanceDocumentValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateActualAmountPaid(); err != nil {
+		return err
 	}
-	if fwm.ActualAmountPaid != nil {
-		if err := fwm.isActualAmountPaidValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateGrossAmountRemittanceDocument(); err != nil {
+		return err
 	}
-	if fwm.GrossAmountRemittanceDocument != nil {
-		if err := fwm.isGrossAmountRemittanceDocumentValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateAdjustment(); err != nil {
+		return err
 	}
-	if fwm.Adjustment != nil {
-		if err := fwm.isAdjustmentValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateDateRemittanceDocument(); err != nil {
+		return err
 	}
-	if fwm.DateRemittanceDocument != nil {
-		if err := fwm.isDateRemittanceDocumentValid(); err != nil {
-			return err
-		}
-	}
-	if fwm.RemittanceFreeText != nil {
-		if err := fwm.isRemittanceFreeTextValid(); err != nil {
-			return err
-		}
+	if err := fwm.validateRemittanceFreeText(); err != nil {
+		return err
 	}
 	return nil
 }

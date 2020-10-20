@@ -56,6 +56,7 @@ func (aap *ActualAmountPaid) String() string {
 
 // Validate performs WIRE format rule checks on ActualAmountPaid and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// Currency Code and Amount are mandatory for each set of remittance data.
 func (aap *ActualAmountPaid) Validate() error {
 	if err := aap.fieldInclusion(); err != nil {
 		return err

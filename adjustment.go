@@ -68,6 +68,7 @@ func (adj *Adjustment) String() string {
 
 // Validate performs WIRE format rule checks on Adjustment and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// Adjustment Reason, Credit Debit Indicator, Currency Code and Amount are mandatory.
 func (adj *Adjustment) Validate() error {
 	if err := adj.fieldInclusion(); err != nil {
 		return err

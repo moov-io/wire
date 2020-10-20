@@ -66,6 +66,8 @@ func (prd *PrimaryRemittanceDocument) String() string {
 
 // Validate performs WIRE format rule checks on PrimaryRemittanceDocument and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// Document Type Code and Document Identification Number are mandatory for each set of remittance data.
+// Proprietary Document Type Code is mandatory for Document Type Code PROP; otherwise not permitted.
 func (prd *PrimaryRemittanceDocument) Validate() error {
 	if err := prd.fieldInclusion(); err != nil {
 		return err
