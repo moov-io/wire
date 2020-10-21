@@ -407,10 +407,10 @@ func (fwm *FEDWireMessage) checkProhibitedBankTransferTags() error {
 		return fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice)
 	}
 	if fwm.ServiceMessage != nil {
-		return fieldError("BusinessFunctionCode", ErrInvalidProperty, "ServiceMessage")
+		return fieldError("ServiceMessage", ErrInvalidProperty, fwm.ServiceMessage)
 	}
 	if fwm.UnstructuredAddenda != nil {
-		return fieldError("BusinessFunctionCode", ErrInvalidProperty, "Unstructured Addenda")
+		return fieldError("UnstructuredAddenda", ErrInvalidProperty, fwm.UnstructuredAddenda)
 	}
 	if err := fwm.invalidCoverPaymentTags(); err != nil {
 		return err
@@ -478,10 +478,10 @@ func (fwm *FEDWireMessage) checkProhibitedCustomerTransferTags() error {
 		return fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice)
 	}
 	if fwm.ServiceMessage != nil {
-		return fieldError("BusinessFunctionCode", ErrInvalidProperty, "ServiceMessage")
+		return fieldError("ServiceMessage", ErrInvalidProperty, fwm.ServiceMessage)
 	}
 	if fwm.UnstructuredAddenda != nil {
-		return fieldError("BusinessFunctionCode", ErrInvalidProperty, "Unstructured Addenda")
+		return fieldError("UnstructuredAddenda", ErrInvalidProperty, fwm.UnstructuredAddenda)
 	}
 	if err := fwm.invalidCoverPaymentTags(); err != nil {
 		return err
@@ -531,10 +531,10 @@ func (fwm *FEDWireMessage) checkMandatoryCustomerTransferPlusTags() error {
 	switch fwm.LocalInstrument.LocalInstrumentCode {
 	case SequenceBCoverPaymentStructured:
 		if fwm.BeneficiaryReference == nil {
-			return fieldError("Beneficiary Reference", ErrFieldRequired)
+			return fieldError("BeneficiaryReference", ErrFieldRequired)
 		}
 		if fwm.OrderingCustomer == nil {
-			return fieldError("Ordering Customer", ErrFieldRequired)
+			return fieldError("OrderingCustomer", ErrFieldRequired)
 		}
 		if fwm.BeneficiaryCustomer == nil {
 			return fieldError("BeneficiaryCustomer", ErrFieldRequired)
@@ -872,7 +872,7 @@ func (fwm *FEDWireMessage) checkSharedProhibitedTags() error {
 // The validity of these tags generally depends on the value of the LocalInstrument tag.
 func (fwm *FEDWireMessage) invalidRemittanceTags() error {
 	if fwm.RelatedRemittance != nil {
-		return fieldError("RelatedRemittance", ErrInvalidProperty, "RelatedRemittance")
+		return fieldError("RelatedRemittance", ErrInvalidProperty, fwm.RelatedRemittance)
 	}
 	if fwm.RemittanceOriginator != nil {
 		return fieldError("RemittanceOriginator", ErrInvalidProperty, "RemittanceOriginator")
@@ -911,7 +911,7 @@ func (fwm *FEDWireMessage) invalidRemittanceTags() error {
 // The validity of these tags generally depends on the value of the LocalInstrument tag.
 func (fwm *FEDWireMessage) invalidCoverPaymentTags() error {
 	if fwm.CurrencyInstructedAmount != nil {
-		return fieldError("CurrencyInstructedAmount ", ErrInvalidProperty, fwm.CurrencyInstructedAmount)
+		return fieldError("CurrencyInstructedAmount", ErrInvalidProperty, fwm.CurrencyInstructedAmount)
 	}
 	if fwm.OrderingCustomer != nil {
 		return fieldError("OrderingCustomer", ErrInvalidProperty, fwm.OrderingCustomer)

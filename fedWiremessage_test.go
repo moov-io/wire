@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-
-	"github.com/moov-io/base"
 )
 
 func mockCustomerTransferData() FEDWireMessage {
@@ -45,14 +43,16 @@ func TestFEDWireMessage_invalidAmount(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 	// Create file
 	if err := file.Create(); err != nil {
-		t.Errorf("%T: %s", err, err)
+		t.Fatalf("%T: %s", err, err)
 	}
 
 	// Validate File
 	err := file.Validate()
 
-	require.Equal(t, NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode",
-		fwm.TypeSubType.SubTypeCode), err)
+	require.NotNil(t, err)
+	expected := NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount, "SubTypeCode",
+		fwm.TypeSubType.SubTypeCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_previousMessageIdentifierInvalid(t *testing.T) {
@@ -63,7 +63,9 @@ func TestFEDWireMessage_previousMessageIdentifierInvalid(t *testing.T) {
 
 	err := fwm.checkPreviousMessageIdentifier()
 
-	require.Equal(t, fieldError("PreviousMessageIdentifier", ErrFieldRequired), err)
+	require.NotNil(t, err)
+	expected := fieldError("PreviousMessageIdentifier", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_invalidLocalInstrument(t *testing.T) {
@@ -75,7 +77,9 @@ func TestFEDWireMessage_invalidLocalInstrument(t *testing.T) {
 
 	err := fwm.validateLocalInstrumentCode()
 
-	require.Equal(t, fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted), err)
+	require.NotNil(t, err)
+	expected := fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_invalidCharges(t *testing.T) {
@@ -90,8 +94,10 @@ func TestFEDWireMessage_invalidCharges(t *testing.T) {
 
 	err := fwm.validateCharges()
 
-	require.Equal(t, NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-		"Charges", fwm.Charges.String()), err)
+	require.NotNil(t, err)
+	expected := NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+		"Charges", fwm.Charges.String()).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_invalidInstructedAmount(t *testing.T) {
@@ -106,8 +112,10 @@ func TestFEDWireMessage_invalidInstructedAmount(t *testing.T) {
 
 	err := fwm.validateInstructedAmount()
 
-	require.Equal(t, NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-		"Instructed Amount", fwm.InstructedAmount.String()), err)
+	require.NotNil(t, err)
+	expected := NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+		"Instructed Amount", fwm.InstructedAmount.String()).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateExchangeRate_missingInstructedAmount(t *testing.T) {
@@ -119,7 +127,9 @@ func TestFEDWireMessage_validateExchangeRate_missingInstructedAmount(t *testing.
 
 	err := fwm.validateExchangeRate()
 
-	require.Equal(t, fieldError("InstructedAmount", ErrFieldRequired), err)
+	require.NotNil(t, err)
+	expected := fieldError("InstructedAmount", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_isExchangeRateValid_missingLocalInstrumentCode(t *testing.T) {
@@ -136,8 +146,10 @@ func TestFEDWireMessage_isExchangeRateValid_missingLocalInstrumentCode(t *testin
 
 	err := fwm.validateExchangeRate()
 
-	require.Equal(t, NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
-		"ExchangeRate", fwm.ExchangeRate.ExchangeRate), err)
+	require.NotNil(t, err)
+	expected := NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
+		"ExchangeRate", fwm.ExchangeRate.ExchangeRate).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateBeneficiaryIntermediaryFI(t *testing.T) {
@@ -150,14 +162,20 @@ func TestFEDWireMessage_validateBeneficiaryIntermediaryFI(t *testing.T) {
 
 	// BeneficiaryFI required field check
 	err := fwm.validateBeneficiaryIntermediaryFI()
-	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
 	err = fwm.validateBeneficiaryIntermediaryFI()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateBeneficiaryFI(t *testing.T) {
@@ -170,7 +188,9 @@ func TestFEDWireMessage_validateBeneficiaryFI(t *testing.T) {
 	// Beneficiary required field check
 	err := fwm.validateBeneficiaryFI()
 
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+	require.NotNil(t, err)
+	expected := fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
@@ -181,7 +201,10 @@ func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 
 	// Originator required field check
 	err := fwm.validateOriginatorFI()
-	require.Equal(t, fieldError("Originator", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("Originator", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	o := mockOriginator()
@@ -189,7 +212,10 @@ func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 
 	// OriginatorOptionF required field check
 	err = fwm.validateOriginatorFI()
-	require.Equal(t, fieldError("OriginatorOptionF", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("OriginatorOptionF", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
@@ -200,7 +226,10 @@ func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 
 	// Originator required field check
 	err := fwm.validateInstructingFI()
-	require.Equal(t, fieldError("Originator", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("Originator", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	o := mockOriginator()
@@ -208,7 +237,10 @@ func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 
 	// OriginatorOptionF required field check
 	err = fwm.validateInstructingFI()
-	require.Equal(t, fieldError("OriginatorOptionF", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("OriginatorOptionF", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
@@ -219,25 +251,40 @@ func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 
 	// Beneficiary required field check
 	err := fwm.validateOriginatorToBeneficiary()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	ben := mockBeneficiary()
 	fwm.SetBeneficiary(ben)
+
 	// Originator required Field check
 	err = fwm.validateOriginatorToBeneficiary()
-	require.Equal(t, fieldError("Originator", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Originator", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	o := mockOriginator()
 	fwm.SetOriginator(o)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
+
 	// OriginatorOptionF required Field check
 	err = fwm.validateOriginatorToBeneficiary()
-	require.Equal(t, fieldError("OriginatorOptionF", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("OriginatorOptionF", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	// check beneficiary still required
 	fwm.SetBeneficiary(nil)
+
 	err = fwm.validateOriginatorToBeneficiary()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
@@ -245,22 +292,33 @@ func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
 	fiifi := mockFIIntermediaryFI()
 	fwm.SetFIIntermediaryFI(fiifi)
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
+
 	// BeneficiaryIntermediaryFI required field check
 	err := fwm.validateFIIntermediaryFI()
-	require.Equal(t, fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
+
 	// BeneficiaryFI required field check
 	err = fwm.validateFIIntermediaryFI()
-	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("BeneficiaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
 	err = fwm.validateFIIntermediaryFI()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateFIIntermediaryFIAdvice(t *testing.T) {
@@ -271,20 +329,29 @@ func TestFEDWireMessage_validateFIIntermediaryFIAdvice(t *testing.T) {
 
 	// BeneficiaryIntermediaryFI required field check
 	err := fwm.validateFIIntermediaryFIAdvice()
-	require.Equal(t, fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
 	// BeneficiaryFI required field check
 	err = fwm.validateFIIntermediaryFIAdvice()
-	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("BeneficiaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
 	err = fwm.validateFIIntermediaryFIAdvice()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateFIBeneficiaryFI(t *testing.T) {
@@ -295,14 +362,20 @@ func TestFEDWireMessage_validateFIBeneficiaryFI(t *testing.T) {
 
 	// BeneficiaryFI required field check
 	err := fwm.validateFIBeneficiaryFI()
-	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
 	err = fwm.validateFIBeneficiaryFI()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateFIBeneficiaryFIAdvice(t *testing.T) {
@@ -313,14 +386,20 @@ func TestFEDWireMessage_validateFIBeneficiaryFIAdvice(t *testing.T) {
 
 	// BeneficiaryFI required field check
 	err := fwm.validateFIBeneficiaryFIAdvice()
-	require.Equal(t, fieldError("BeneficiaryFI", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryFI", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 
 	bfi := mockBeneficiaryFI()
 	fwm.SetBeneficiaryFI(bfi)
 
 	// Beneficiary required field check
 	err = fwm.validateFIBeneficiaryFIAdvice()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateFIBeneficiary(t *testing.T) {
@@ -330,11 +409,11 @@ func TestFEDWireMessage_validateFIBeneficiary(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Beneficiary required field check
-	if err := fwm.validateFIBeneficiary(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateFIBeneficiary()
+
+	require.NotNil(t, err)
+	expected := fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateFIBeneficiaryAdvice(t *testing.T) {
@@ -345,7 +424,10 @@ func TestFEDWireMessage_validateFIBeneficiaryAdvice(t *testing.T) {
 
 	// Beneficiary required field check
 	err := fwm.validateFIBeneficiaryAdvice()
-	require.Equal(t, fieldError("Beneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateUnstructuredAddenda(t *testing.T) {
@@ -359,8 +441,11 @@ func TestFEDWireMessage_validateUnstructuredAddenda(t *testing.T) {
 
 	// UnstructuredAddenda Invalid Property
 	err := fwm.validateUnstructuredAddenda()
-	require.Equal(t, NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
-		"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode), err)
+
+	require.NotNil(t, err)
+	expected := NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
+		"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateRelatedRemittance(t *testing.T) {
@@ -374,7 +459,10 @@ func TestFEDWireMessage_validateRelatedRemittance(t *testing.T) {
 
 	// RelatedRemittance Invalid Property
 	err := fwm.validateRelatedRemittance()
-	require.Equal(t, fieldError("RelatedRemittance", ErrNotPermitted), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("RelatedRemittance", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateRemittanceOriginator(t *testing.T) {
@@ -388,7 +476,10 @@ func TestFEDWireMessage_validateRemittanceOriginator(t *testing.T) {
 
 	// RemittanceOriginator Invalid Property
 	err := fwm.validateRemittanceOriginator()
-	require.Equal(t, fieldError("RemittanceOriginator", ErrNotPermitted), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("RemittanceOriginator", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validateRemittanceBeneficiary(t *testing.T) {
@@ -402,13 +493,20 @@ func TestFEDWireMessage_validateRemittanceBeneficiary(t *testing.T) {
 
 	// RemittanceBeneficiary Invalid Property
 	err := fwm.validateRemittanceBeneficiary()
-	require.Equal(t, fieldError("RemittanceBeneficiary", ErrNotPermitted), err)
+
+	require.NotNil(t, err)
+	expected := fieldError("RemittanceBeneficiary", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 
 	fwm.RemittanceBeneficiary = nil
 	fwm.LocalInstrument.LocalInstrumentCode = RemittanceInformationStructured
+
 	// RemittanceBeneficiary Invalid Property
 	err = fwm.validateRemittanceBeneficiary()
-	require.Equal(t, fieldError("RemittanceBeneficiary", ErrFieldRequired), err)
+
+	require.NotNil(t, err)
+	expected = fieldError("RemittanceBeneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_validatePrimaryRemittanceDocument(t *testing.T) {
@@ -422,14 +520,13 @@ func TestFEDWireMessage_validatePrimaryRemittanceDocument(t *testing.T) {
 
 	// PrimaryRemittanceDocument Invalid Property
 	err := fwm.validatePrimaryRemittanceDocument()
-	if err != NewErrInvalidPropertyForProperty("PrimaryRemittanceDocument", fwm.PrimaryRemittanceDocument.String(),
-		"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-		t.Errorf("%T: %s", err, err)
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("PrimaryRemittanceDocument", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
-func TestFEDWireMessage_isActualAmountPaidValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateActualAmountPaid(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -437,18 +534,17 @@ func TestFEDWireMessage_isActualAmountPaidValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	aap := mockActualAmountPaid()
 	fwm.SetActualAmountPaid(aap)
-	file.AddFEDWireMessage(fwm)
-	// ActualAmountPaid Invalid Property
-	if err := fwm.validateActualAmountPaid(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("ActualAmountPaid", fwm.ActualAmountPaid.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	// ActualAmountPaid only permitted for CTP and RMTS
+	err := fwm.validateActualAmountPaid()
+
+	require.NotNil(t, err)
+	expected := fieldError("ActualAmountPaid", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
+
 }
 
-func TestFEDWireMessage_isGrossAmountRemittanceDocument(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateGrossAmountRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -456,18 +552,16 @@ func TestFEDWireMessage_isGrossAmountRemittanceDocument(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	gard := mockGrossAmountRemittanceDocument()
 	fwm.SetGrossAmountRemittanceDocument(gard)
-	file.AddFEDWireMessage(fwm)
-	// GrossAmountRemittanceDocument Invalid Property
-	if err := fwm.validateGrossAmountRemittanceDocument(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("GrossAmountRemittanceDocument", fwm.GrossAmountRemittanceDocument.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	// GrossAmountRemittanceDocument only permitted for CTP and RMTS
+	err := fwm.validateGrossAmountRemittanceDocument()
+
+	require.NotNil(t, err)
+	expected := fieldError("GrossAmountRemittanceDocument", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
-func TestFEDWireMessage_isAdjustmentValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateAdjustment(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -475,18 +569,17 @@ func TestFEDWireMessage_isAdjustmentValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	adj := mockAdjustment()
 	fwm.SetAdjustment(adj)
-	file.AddFEDWireMessage(fwm)
+
 	// Adjustment Invalid Property
-	if err := fwm.validateAdjustment(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("Adjustment", fwm.Adjustment.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateAdjustment()
+
+	require.NotNil(t, err)
+	expected := fieldError("Adjustment", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
+
 }
 
-func TestFEDWireMessage_isDateRemittanceDocumentValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateDateRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -494,18 +587,16 @@ func TestFEDWireMessage_isDateRemittanceDocumentValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	drd := mockDateRemittanceDocument()
 	fwm.SetDateRemittanceDocument(drd)
-	file.AddFEDWireMessage(fwm)
+
 	// DateRemittanceDocument Invalid Property
-	if err := fwm.validateDateRemittanceDocument(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("DateRemittanceDocument", fwm.DateRemittanceDocument.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateDateRemittanceDocument()
+
+	require.NotNil(t, err)
+	expected := fieldError("DateRemittanceDocument", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
-func TestFEDWireMessage_isSecondaryRemittanceDocumentValid(t *testing.T) {
-	file := NewFile()
+func TestFEDWireMessage_validateSecondaryRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -513,18 +604,16 @@ func TestFEDWireMessage_isSecondaryRemittanceDocumentValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	srd := mockSecondaryRemittanceDocument()
 	fwm.SetSecondaryRemittanceDocument(srd)
-	file.AddFEDWireMessage(fwm)
+
 	// SecondaryRemittanceDocument Invalid Property
-	if err := fwm.validateSecondaryRemittanceDocument(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("SecondaryRemittanceDocument", fwm.SecondaryRemittanceDocument.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateSecondaryRemittanceDocument()
+
+	require.NotNil(t, err)
+	expected := fieldError("SecondaryRemittanceDocument", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
-	file := NewFile()
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
@@ -532,18 +621,17 @@ func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	rft := mockRemittanceFreeText()
 	fwm.SetRemittanceFreeText(rft)
-	file.AddFEDWireMessage(fwm)
+
 	// RemittanceFreeTextValid Invalid Property
-	if err := fwm.validateRemittanceFreeText(); err != nil {
-		if err != NewErrInvalidPropertyForProperty("RemittanceFreeText", fwm.RemittanceFreeText.String(),
-			"LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fwm.validateRemittanceFreeText()
+
+	require.NotNil(t, err)
+	expected := fieldError("RemittanceFreeText", ErrNotPermitted).Error()
+	require.Equal(t, expected, err.Error())
 }
 
-// TestBankTransferInValid test an invalid BankTransfer
-func TestBankTransferInValid(t *testing.T) {
+// TestFEDWireMessage_validateBankTransfer test an invalid BankTransfer
+func TestFEDWireMessage_validateBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
@@ -552,26 +640,29 @@ func TestBankTransferInValid(t *testing.T) {
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = RequestCredit
 	fwm.SetTypeSubType(tst)
-	if err := fwm.validateBankTransfer(); err != nil {
-		if err != NewErrBusinessFunctionCodeProperty("TypeSubType", tst.TypeCode+tst.SubTypeCode,
-			fwm.BusinessFunctionCode.BusinessFunctionCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.validateBankTransfer()
+
+	require.NotNil(t, err)
+	expected := NewErrBusinessFunctionCodeProperty("TypeSubType", tst.TypeCode+tst.SubTypeCode,
+		fwm.BusinessFunctionCode.BusinessFunctionCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
-// TestTransactionTypeCodeForBankTransfer test an invalid TransactionTypeCode
-func TestInvalidTransactionTypeCodeForBankTransfer(t *testing.T) {
+// TestFEDWireMessage_invalidTransTypeCodeBankTransfer test an invalid TransactionTypeCode
+func TestFEDWireMessage_invalidTransTypeCodeBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
 	bfc.TransactionTypeCode = "COV"
 	fwm.SetBusinessFunctionCode(bfc)
-	if err := fwm.checkProhibitedBankTransferTags(); err != nil {
-		if !base.Match(err, ErrTransactionTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkProhibitedBankTransferTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode,
+		fwm.BusinessFunctionCode.TransactionTypeCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidLocalInstrumentForBankTransfer test an invalid LocalInstrument
@@ -582,11 +673,12 @@ func TestInvalidLocalInstrumentForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkProhibitedBankTransferTags(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkProhibitedBankTransferTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidPaymentNotificationForBankTransfer test an invalid PaymentNotification
@@ -597,12 +689,12 @@ func TestInvalidPaymentNotificationForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidChargesForBankTransfer test an invalid Charges
@@ -613,12 +705,12 @@ func TestInvalidChargesForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	c := mockCharges()
 	fwm.SetCharges(c)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("Charges", ErrInvalidProperty, fwm.Charges).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidInstructedAmountForBankTransfer test an invalid InstructedAmount
@@ -629,12 +721,12 @@ func TestInvalidInstructedAmountForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ia := mockInstructedAmount()
 	fwm.SetInstructedAmount(ia)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("InstructedAmount", ErrInvalidProperty, fwm.InstructedAmount).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidExchangeRateForBankTransfer test an invalid ExchangeRate
@@ -645,12 +737,12 @@ func TestInvalidExchangeRateForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidBeneficiaryIdentificationCodeForBankTransfer test an invalid BeneficiaryIdentificationCode
@@ -662,12 +754,13 @@ func TestInvalidBeneficiaryIdentificationCodeForBankTransfer(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetBeneficiary(ben)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty,
+		fwm.Beneficiary.Personal.IdentificationCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidAccountDebitedDrawdownForBankTransfer test an invalid AccountDebitedDrawdown
@@ -678,15 +771,15 @@ func TestInvalidAccountDebitedDrawdownForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown).Error()
+	require.Equal(t, expected, err.Error())
 }
 
-// TestInvalidOriginatorIdentificationCodeForBankTransfer test an invalid OriginatorIdentificationCode
+// TestInvalidOriginatorIdentificationCodeForBankTransfer test an invalid Originator Personal.IdentificationCode
 func TestInvalidOriginatorIdentificationCodeForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
@@ -695,12 +788,13 @@ func TestInvalidOriginatorIdentificationCodeForBankTransfer(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetOriginator(o)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty,
+		fwm.Originator.Personal.IdentificationCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidOriginatorOptionFForBankTransfer test an invalid OriginatorOptionF
@@ -711,12 +805,12 @@ func TestInvalidOriginatorOptionFForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	off := mockOriginatorOptionF()
 	fwm.SetOriginatorOptionF(off)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidAccountCreditedDrawdownForBankTransfer test an invalid AccountCreditedDrawdown
@@ -727,12 +821,12 @@ func TestInvalidAccountCreditedDrawdownForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidFIDrawdownDebitAccountAdviceForBankTransfer test an invalid FIDrawdownDebitAccountAdvice
@@ -743,12 +837,12 @@ func TestInvalidFIDrawdownDebitAccountAdviceForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
 	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidServiceMessageForBankTransfer test an invalid ServiceMessage
@@ -759,12 +853,12 @@ func TestInvalidServiceMessageForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("ServiceMessage", ErrInvalidProperty, fwm.ServiceMessage).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidUnstructuredAddendaForBankTransfer test an invalid UnstructuredAddenda
@@ -775,12 +869,12 @@ func TestInvalidUnstructuredAddendaForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("CurrencyInstructedAmount", ErrInvalidProperty, fwm.CurrencyInstructedAmount).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidCurrencyInstructedAmountForBankTransfer test an invalid CurrencyInstructedAmount
@@ -791,12 +885,12 @@ func TestInvalidCurrencyInstructedAmountForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	cia := mockCurrencyInstructedAmount()
 	fwm.SetCurrencyInstructedAmount(cia)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("CurrencyInstructedAmount", ErrInvalidProperty, fwm.CurrencyInstructedAmount).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidRelatedRemittanceForBankTransfer test an invalid RelatedRemittance
@@ -807,12 +901,12 @@ func TestInvalidRelatedRemittanceForBankTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
+
 	err := fwm.checkProhibitedBankTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("RelatedRemittance", ErrInvalidProperty, fwm.RelatedRemittance).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestTransactionTypeCodeForCustomerTransfer test an invalid TransactionTypeCode
@@ -822,11 +916,13 @@ func TestInvalidTransactionTypeCodeForCustomerTransfer(t *testing.T) {
 	bfc.BusinessFunctionCode = CustomerTransfer
 	bfc.TransactionTypeCode = "COV"
 	fwm.SetBusinessFunctionCode(bfc)
-	if err := fwm.checkProhibitedCustomerTransferTags(); err != nil {
-		if !base.Match(err, ErrTransactionTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkProhibitedCustomerTransferTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("BusinessFunctionCode.TransactionTypeCode", ErrTransactionTypeCode,
+		fwm.BusinessFunctionCode.TransactionTypeCode).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidLocalInstrumentForCustomerTransfer test an invalid LocalInstrument
@@ -837,11 +933,12 @@ func TestInvalidLocalInstrumentForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkProhibitedCustomerTransferTags(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkProhibitedCustomerTransferTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidPaymentNotificationForCustomerTransfer test an invalid PaymentNotification
@@ -852,77 +949,12 @@ func TestInvalidPaymentNotificationForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
-	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
 
-// TestInvalidChargesForCustomerTransfer test an invalid Charges
-func TestInvalidChargesForCustomerTransfer(t *testing.T) {
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	c := mockCharges()
-	fwm.SetCharges(c)
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
 
-// TestInvalidInstructedAmountForCustomerTransfer test an invalid InstructedAmount
-func TestInvalidInstructedAmountForCustomerTransfer(t *testing.T) {
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
-	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
-
-// TestInvalidExchangeRateForCustomerTransfer test an invalid ExchangeRate
-func TestInvalidExchangeRateForCustomerTransfer(t *testing.T) {
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	eRate := mockExchangeRate()
-	fwm.SetExchangeRate(eRate)
-	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
-
-// TestInvalidBeneficiaryIdentificationCodeForCustomerTransfer test an invalid BeneficiaryIdentificationCode
-func TestInvalidBeneficiaryIdentificationCodeForCustomerTransfer(t *testing.T) {
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
-	fwm.SetBeneficiary(ben)
-	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.NotNil(t, err)
+	expected := fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidAccountDebitedDrawdownForCustomerTransfer test an invalid AccountDebitedDrawdown
@@ -933,29 +965,12 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
-	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
 
-// TestInvalidOriginatorIdentificationCodeForCustomerTransfer test an invalid OriginatorIdentificationCode
-func TestInvalidOriginatorIdentificationCodeForCustomerTransfer(t *testing.T) {
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	o := mockOriginator()
-	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
-	fwm.SetOriginator(o)
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidOriginatorOptionFForCustomerTransfer test an invalid OriginatorOptionF
@@ -966,12 +981,12 @@ func TestInvalidOriginatorOptionFForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	off := mockOriginatorOptionF()
 	fwm.SetOriginatorOptionF(off)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidAccountCreditedDrawdownForCustomerTransfer test an invalid AccountCreditedDrawdown
@@ -982,12 +997,12 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidFIDrawdownDebitAccountAdviceForCustomerTransfer test an invalid FIDrawdownDebitAccountAdvice
@@ -998,12 +1013,12 @@ func TestInvalidFIDrawdownDebitAccountAdviceForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
 	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidServiceMessageForCustomerTransfer test an invalid ServiceMessage
@@ -1014,12 +1029,12 @@ func TestInvalidServiceMessageForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	sm := mockServiceMessage()
 	fwm.SetServiceMessage(sm)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("ServiceMessage", ErrInvalidProperty, fwm.ServiceMessage).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidUnstructuredAddendaForCustomerTransfer test an invalid UnstructuredAddenda
@@ -1030,12 +1045,12 @@ func TestInvalidUnstructuredAddendaForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("UnstructuredAddenda", ErrInvalidProperty, fwm.UnstructuredAddenda).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidCurrencyInstructedAmountForCustomerTransfer test an invalid CurrencyInstructedAmount
@@ -1046,12 +1061,12 @@ func TestInvalidCurrencyInstructedAmountForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	cia := mockCurrencyInstructedAmount()
 	fwm.SetCurrencyInstructedAmount(cia)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("CurrencyInstructedAmount", ErrInvalidProperty, fwm.CurrencyInstructedAmount).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidRelatedRemittanceForCustomerTransfer test an invalid RelatedRemittance
@@ -1062,12 +1077,12 @@ func TestInvalidRelatedRemittanceForCustomerTransfer(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
+
 	err := fwm.checkProhibitedCustomerTransferTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("RelatedRemittance", ErrInvalidProperty, fwm.RelatedRemittance).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentUnstructuredAddendaForCustomerTransferPlus tests UnstructuredAddenda is required for
@@ -1083,11 +1098,12 @@ func TestLocalInstrumentUnstructuredAddendaForCustomerTransferPlus(t *testing.T)
 	fwm.SetOriginator(o)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("UnstructuredAddenda", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentRelatedRemittanceForCustomerTransferPlus tests RelatedRemittance is required for
@@ -1104,11 +1120,12 @@ func TestLocalInstrumentRelatedRemittanceForCustomerTransferPlus(t *testing.T) {
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("RelatedRemittance", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentBeneficiaryReferenceForCustomerTransferPlus tests BeneficiaryReference is required for
@@ -1125,11 +1142,12 @@ func TestLocalInstrumentBeneficiaryReferenceForCustomerTransferPlus(t *testing.T
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryReference", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentOrderingCustomerForCustomerTransferPlus tests OrderingCustomer is required for
@@ -1148,11 +1166,12 @@ func TestLocalInstrumentOrderingCustomerForCustomerTransferPlus(t *testing.T) {
 	fwm.SetLocalInstrument(li)
 	br := mockBeneficiaryReference()
 	fwm.SetBeneficiaryReference(br)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("OrderingCustomer", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentBeneficiaryCustomerForCustomerTransferPlus tests BeneficiaryCustomer is required for
@@ -1173,11 +1192,12 @@ func TestLocalInstrumentBeneficiaryCustomerForCustomerTransferPlus(t *testing.T)
 	fwm.SetBeneficiaryReference(br)
 	oc := mockOrderingCustomer()
 	fwm.SetOrderingCustomer(oc)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("BeneficiaryCustomer", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentProprietaryCodeForCustomerTransferPlus tests ProprietaryCode is required for
@@ -1194,11 +1214,12 @@ func TestLocalInstrumentProprietaryCodeForCustomerTransferPlus(t *testing.T) {
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = ProprietaryLocalInstrumentCode
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("ProprietaryCode", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentRemittanceOriginatorForCustomerTransferPlus tests RemittanceOriginator is required for
@@ -1215,11 +1236,12 @@ func TestLocalInstrumentRemittanceOriginatorForCustomerTransferPlus(t *testing.T
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
 	fwm.SetLocalInstrument(li)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("RemittanceOriginator", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentRemittanceBeneficiaryForCustomerTransferPlus tests RemittanceBeneficiary is required for
@@ -1238,11 +1260,12 @@ func TestLocalInstrumentRemittanceBeneficiaryForCustomerTransferPlus(t *testing.
 	fwm.SetLocalInstrument(li)
 	ro := mockRemittanceOriginator()
 	fwm.SetRemittanceOriginator(ro)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("RemittanceBeneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentPrimaryRemittanceDocumentForCustomerTransferPlus tests PrimaryRemittanceDocument is required for
@@ -1263,11 +1286,12 @@ func TestLocalInstrumentPrimaryRemittanceDocumentForCustomerTransferPlus(t *test
 	fwm.SetRemittanceOriginator(ro)
 	rb := mockRemittanceBeneficiary()
 	fwm.SetRemittanceBeneficiary(rb)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("PrimaryRemittanceDocument", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestLocalInstrumentActualAmountPaidForCustomerTransferPlus tests ActualAmountPaid is required for
@@ -1290,11 +1314,12 @@ func TestLocalInstrumentActualAmountPaidForCustomerTransferPlus(t *testing.T) {
 	fwm.SetRemittanceBeneficiary(rb)
 	prd := mockPrimaryRemittanceDocument()
 	fwm.SetPrimaryRemittanceDocument(prd)
-	if err := fwm.checkMandatoryCustomerTransferPlusTags(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fwm.checkMandatoryCustomerTransferPlusTags()
+
+	require.NotNil(t, err)
+	expected := fieldError("ActualAmountPaid", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestBeneficiaryForCustomerTransferPlus tests a Beneficiary is required
@@ -1303,12 +1328,12 @@ func TestBeneficiaryIdentificationCodeForCustomerTransferPlus(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
 	fwm.SetBusinessFunctionCode(bfc)
+
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
-	if err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("Beneficiary", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestOriginatorForCustomerTransferPlus tests an Originator is required
@@ -1319,12 +1344,12 @@ func TestOriginatorIdentificationCodeForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	ben := mockBeneficiary()
 	fwm.SetBeneficiary(ben)
+
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
-	if err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("Originator OR OriginatorOptionF", ErrFieldRequired).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidAccountDebitedDrawdownForCustomerTransferPlus test an invalid AccountDebitedDrawdown
@@ -1335,12 +1360,12 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	debitDD := mockAccountDebitedDrawdown()
 	fwm.SetAccountDebitedDrawdown(debitDD)
+
 	err := fwm.checkProhibitedCustomerTransferPlusTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("AccountDebitedDrawdown", ErrInvalidProperty, fwm.AccountDebitedDrawdown).Error()
+	require.Equal(t, expected, err.Error())
 }
 
 // TestInvalidAccountCreditedDrawdownForCustomerTransferPlus test an invalid AccountCreditedDrawdown
@@ -1351,18 +1376,10 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm.SetBusinessFunctionCode(bfc)
 	creditDD := mockAccountCreditedDrawdown()
 	fwm.SetAccountCreditedDrawdown(creditDD)
+
 	err := fwm.checkProhibitedCustomerTransferPlusTags()
-	if err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown).Error()
+	require.Equal(t, expected, err.Error())
 }
-
-/*// Beneficiary
-ben := mockBeneficiary()
-fwm.SetBeneficiary(ben)
-
-// Originator
-o := mockOriginator()
-fwm.SetOriginator(o)*/
