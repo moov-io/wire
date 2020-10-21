@@ -61,7 +61,7 @@ func (creditDD *AccountCreditedDrawdown) Validate() error {
 	if creditDD.tag != TagAccountCreditedDrawdown {
 		return fieldError("tag", ErrValidTagForType, creditDD.tag)
 	}
-	if err := creditDD.isAlphanumeric(creditDD.DrawdownCreditAccountNumber); err != nil {
+	if err := creditDD.isNumeric(creditDD.DrawdownCreditAccountNumber); err != nil {
 		return fieldError("DrawdownCreditAccountNumber", err, creditDD.DrawdownCreditAccountNumber)
 	}
 	return nil
