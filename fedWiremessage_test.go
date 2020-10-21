@@ -873,7 +873,7 @@ func TestInvalidUnstructuredAddendaForBankTransfer(t *testing.T) {
 	err := fwm.checkProhibitedBankTransferTags()
 
 	require.NotNil(t, err)
-	expected := fieldError("CurrencyInstructedAmount", ErrInvalidProperty, fwm.CurrencyInstructedAmount).Error()
+	expected := fieldError("UnstructuredAddenda", ErrInvalidProperty, fwm.UnstructuredAddenda).Error()
 	require.Equal(t, expected, err.Error())
 }
 
