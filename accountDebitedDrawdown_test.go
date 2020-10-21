@@ -159,20 +159,14 @@ func TestParseAccountDebitedDrawdownReaderParseError(t *testing.T) {
 	var line = "{4400}D123456789                         debitDD ®ame                       Address One                        Address Two                        Address Three                      "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
+	fwm := new(FEDWireMessage)
+	debitDD := mockAccountDebitedDrawdown()
+	fwm.SetAccountDebitedDrawdown(debitDD)
 
 	err := r.parseAccountDebitedDrawdown()
 
 	require.NotNil(t, err)
 	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
-
-	fwm := mockCustomerTransferData()
-	fwm.AccountDebitedDrawdown = &AccountDebitedDrawdown{}
-	if err := fwm.AccountDebitedDrawdown.Parse(line); err != nil {
-		t.Fatal(err)
-	}
-	fwm.Beneficiary = mockBeneficiary()
-	fwm.Originator = mockOriginator()
-	r.currentFEDWireMessage = fwm
 
 	_, err = r.Read()
 
