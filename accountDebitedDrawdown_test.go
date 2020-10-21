@@ -167,7 +167,9 @@ func TestParseAccountDebitedDrawdownReaderParseError(t *testing.T) {
 
 	fwm := mockCustomerTransferData()
 	fwm.AccountDebitedDrawdown = &AccountDebitedDrawdown{}
-	require.NoError(t, fwm.AccountDebitedDrawdown.Parse(line))
+	if err := fwm.AccountDebitedDrawdown.Parse(line); err != nil {
+		t.Fatal(err)
+	}
 	fwm.Beneficiary = mockBeneficiary()
 	fwm.Originator = mockOriginator()
 	r.currentFEDWireMessage = fwm

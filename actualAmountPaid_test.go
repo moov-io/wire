@@ -1,12 +1,9 @@
 package wire
 
 import (
+	"github.com/moov-io/base"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/require"
-
-	"github.com/moov-io/base"
 )
 
 // ActualAmountPaid creates a ActualAmountPaid
@@ -90,33 +87,21 @@ func TestParseActualAmountPaidReaderParseError(t *testing.T) {
 	var line = "{8450}USD1234.56Z           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-
+	fwm := new(FEDWireMessage)
+	aap := mockActualAmountPaid()
+	fwm.SetActualAmountPaid(aap)
 	err := r.parseActualAmountPaid()
-
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
-
-	fwm := mockCustomerTransferData()
-	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	fwm.LocalInstrument = mockLocalInstrument()
-	fwm.LocalInstrument.LocalInstrumentCode = RemittanceInformationStructured
-	fwm.ActualAmountPaid = &ActualAmountPaid{}
-	require.NoError(t, fwm.ActualAmountPaid.Parse(line))
-	fwm.Beneficiary = mockBeneficiary()
-	fwm.Originator = mockOriginator()
-	fwm.RemittanceOriginator = mockRemittanceOriginator()
-	fwm.RemittanceBeneficiary = mockRemittanceBeneficiary()
-	fwm.DateRemittanceDocument = mockDateRemittanceDocument()
-	fwm.PrimaryRemittanceDocument = mockPrimaryRemittanceDocument()
-	fwm.GrossAmountRemittanceDocument = mockGrossAmountRemittanceDocument()
-	fwm.RemittanceFreeText = mockRemittanceFreeText()
-	fwm.Adjustment = mockAdjustment()
-	r.currentFEDWireMessage = fwm
-
+	if err != nil {
+		if !base.Match(err, ErrNonAmount) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 	_, err = r.Read()
-
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	if err != nil {
+		if !base.Has(err, ErrNonAmount) {
+			t.Errorf("%T: %s", err, err)
+		}
+	}
 }
 
 // TestActualAmountPaidTagError validates ActualAmountPaid tag
