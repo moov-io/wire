@@ -3,7 +3,7 @@
 BUG FIXES
 
 - api: update validation of `AccountCreditedDrawdown.DrawdownCreditAccountNumber` (tag `{5400}`)
-  - after reviewing the specification for the Account Credited in Drawdown tag we've chagned 
+  - After reviewing the specification for the Account Credited in Drawdown tag we've changed 
   the validation logic to ensure the value of Drawdown Credit Account Number is numeric. Our 
   previous understanding was that this field could be alphanumeric. If you're aware of 
   implementations or use-cases for the previous formatting please contact us and/or submit an Issue. 
