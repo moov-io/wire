@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
 )
 
 // mockServiceMessage creates a ServiceMessage
@@ -221,7 +222,7 @@ func TestInvalidTransactionTypeCodeForServiceMessage(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.TransactionTypeCode = "COV"
 	fwm.SetBusinessFunctionCode(bfc)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrTransactionTypeCode) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -235,7 +236,7 @@ func TestInvalidLocalInstrumentForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	li := mockLocalInstrument()
 	fwm.SetLocalInstrument(li)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -249,7 +250,7 @@ func TestInvalidPaymentNotificationForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	pn := mockPaymentNotification()
 	fwm.SetPaymentNotification(pn)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -263,7 +264,7 @@ func TestInvalidChargesForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	c := mockCharges()
 	fwm.SetCharges(c)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -277,7 +278,7 @@ func TestInvalidInstructedAmountForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	ia := mockInstructedAmount()
 	fwm.SetInstructedAmount(ia)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -291,7 +292,7 @@ func TestInvalidExchangeRateForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	eRate := mockExchangeRate()
 	fwm.SetExchangeRate(eRate)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -306,7 +307,7 @@ func TestInvalidBeneficiaryIdentificationCodeForServiceMessage(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetBeneficiary(ben)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -321,7 +322,7 @@ func TestInvalidOriginatorIdentificationCodeForServiceMessage(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
 	fwm.SetOriginator(o)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -335,7 +336,7 @@ func TestInvalidOriginatorOptionFForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	off := mockOriginatorOptionF()
 	fwm.SetOriginatorOptionF(off)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -349,7 +350,7 @@ func TestInvalidUnstructuredAddendaForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	ua := mockUnstructuredAddenda()
 	fwm.SetUnstructuredAddenda(ua)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -363,7 +364,7 @@ func TestInvalidCurrencyInstructedAmountForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	cia := mockCurrencyInstructedAmount()
 	fwm.SetCurrencyInstructedAmount(cia)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}
@@ -377,7 +378,7 @@ func TestInvalidRelatedRemittanceForServiceMessage(t *testing.T) {
 	fwm.SetServiceMessage(sm)
 	rr := mockRelatedRemittance()
 	fwm.SetRelatedRemittance(rr)
-	if err := fwm.isInvalidServiceMessageTags(); err != nil {
+	if err := fwm.checkProhibitedServiceMessageTags(); err != nil {
 		if !base.Match(err, ErrInvalidProperty) {
 			t.Errorf("%T: %s", err, err)
 		}

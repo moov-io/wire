@@ -66,6 +66,8 @@ func (srd *SecondaryRemittanceDocument) String() string {
 
 // Validate performs WIRE format rule checks on SecondaryRemittanceDocument and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// * Document Type Code and Document Identification Number are mandatory.
+// * Proprietary Document Type Code is mandatory for Document Type Code PROP; otherwise not permitted.
 func (srd *SecondaryRemittanceDocument) Validate() error {
 	if err := srd.fieldInclusion(); err != nil {
 		return err

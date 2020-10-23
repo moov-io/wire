@@ -64,6 +64,7 @@ func (ben *Beneficiary) String() string {
 
 // Validate performs WIRE format rule checks on Beneficiary and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// If ID Code is present, Identifier is mandatory and vice versa.
 func (ben *Beneficiary) Validate() error {
 	if err := ben.fieldInclusion(); err != nil {
 		return err

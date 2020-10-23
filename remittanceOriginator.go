@@ -130,6 +130,11 @@ func (ro *RemittanceOriginator) String() string {
 
 // Validate performs WIRE format rule checks on RemittanceOriginator and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// * Identification Type, Identification Code and Name are mandatory.
+// * Identification Number is mandatory for all Identification Codes except PICDateBirthPlace.
+// * Identification Number is not permitted for Identification Code PICDateBirthPlace.
+// * Identification Number Issuer is not permitted for Identification Code OICSWIFTBICORBEI and PICDateBirthPlace.
+// * Date & Place of Birth is only permitted for Identification Code PICDateBirthPlace.
 func (ro *RemittanceOriginator) Validate() error {
 	if err := ro.fieldInclusion(); err != nil {
 		return err

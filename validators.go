@@ -153,7 +153,7 @@ func (v *validator) isBusinessFunctionCode(code string) error {
 		DepositSendersAccount,
 		BankDrawDownRequest,
 		CustomerCorporateDrawdownRequest,
-		DrawDownRequest,
+		DrawdownResponse,
 		FEDFundsReturned,
 		FEDFundsSold,
 		BFCServiceMessage:

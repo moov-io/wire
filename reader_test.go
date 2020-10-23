@@ -18,7 +18,7 @@ func TestRead(t *testing.T) {
 	t.Run("DepositSendersAccount", testRead(filepath.Join("test", "testdata", "fedWireMessage-DepositSendersAccount.txt")))
 	t.Run("FEDFundsReturned", testRead(filepath.Join("test", "testdata", "fedWireMessage-FEDFundsReturned.txt")))
 	t.Run("FEDFundsSold", testRead(filepath.Join("test", "testdata", "fedWireMessage-FEDFundsSold.txt")))
-	t.Run("DrawDownRequest", testRead(filepath.Join("test", "testdata", "fedWireMessage-DrawDownRequest.txt")))
+	t.Run("DrawdownResponse", testRead(filepath.Join("test", "testdata", "fedWireMessage-DrawdownResponse.txt")))
 	t.Run("BankDrawDownRequest", testRead(filepath.Join("test", "testdata", "fedWireMessage-BankDrawDownRequest.txt")))
 	t.Run("CustomerCorporateDrawDownRequest", testRead(filepath.Join("test", "testdata", "fedWireMessage-CustomerCorporateDrawDownRequest.txt")))
 	t.Run("ServiceMessage", testRead(filepath.Join("test", "testdata", "fedWireMessage-ServiceMessage.txt")))

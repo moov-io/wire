@@ -76,6 +76,7 @@ func (li *LocalInstrument) Validate() error {
 
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
+// ProprietaryCode is only allowed if LocalInstrument Code is PROP
 func (li *LocalInstrument) fieldInclusion() error {
 	if li.LocalInstrumentCode != ProprietaryLocalInstrumentCode && li.ProprietaryCode != "" {
 		return fieldError("ProprietaryCode", ErrInvalidProperty, li.ProprietaryCode)

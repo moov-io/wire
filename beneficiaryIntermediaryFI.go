@@ -64,6 +64,7 @@ func (bifi *BeneficiaryIntermediaryFI) String() string {
 
 // Validate performs WIRE format rule checks on BeneficiaryIntermediaryFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
+// If ID Code is present, Identifier is mandatory and vice versa.
 func (bifi *BeneficiaryIntermediaryFI) Validate() error {
 	if err := bifi.fieldInclusion(); err != nil {
 		return err

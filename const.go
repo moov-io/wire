@@ -208,8 +208,8 @@ const (
 	BankDrawDownRequest = "DRB"
 	// CustomerCorporateDrawdownRequest is a customer or corporate drawdown request
 	CustomerCorporateDrawdownRequest = "DRC"
-	// DrawDownRequest is a drawdown payment
-	DrawDownRequest = "DRW"
+	// DrawdownResponse is a drawdown payment
+	DrawdownResponse = "DRW"
 	// FEDFundsReturned is FED funds returned
 	FEDFundsReturned = "FFR"
 	// FEDFundsSold is FED funds sold
