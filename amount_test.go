@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockAmount creates an a Amount
@@ -16,31 +17,30 @@ func mockAmount() *Amount {
 // TestMockAmount validates mockAmount
 func TestMockAmount(t *testing.T) {
 	a := mockAmount()
-	if err := a.Validate(); err != nil {
-		t.Error("mockAmount does not validate and will break other tests")
-	}
+
+	require.NoError(t, a.Validate(), "mockAmount does not validate and will break other tests")
 }
 
 // TestAmountValid validates Amount
 func TestAmountValid(t *testing.T) {
 	a := mockAmount()
 	a.Amount = "X,"
-	if err := a.Validate(); err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := a.Validate()
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAmount.Error())
 }
 
 // TestAmountRequired validates Amount is required
 func TestAmountRequired(t *testing.T) {
 	a := mockAmount()
 	a.Amount = ""
-	if err := a.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := a.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("Amount", ErrFieldRequired).Error(), err.Error())
 }
 
 // TestParseAmountWrongLength parses a wrong Amount record length
@@ -48,15 +48,11 @@ func TestParseAmountWrongLength(t *testing.T) {
 	var line = "{2000}00"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	amt := mockAmount()
-	fwm.SetAmount(amt)
+
 	err := r.parseAmount()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(18, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), NewTagWrongLengthErr(18, len(r.line)).Error())
 }
 
 // TestParseAmountReaderParseError parses a wrong Amount reader parse error
@@ -64,30 +60,25 @@ func TestParseAmountReaderParseError(t *testing.T) {
 	var line = "{2000}00000Z030022"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	amt := mockAmount()
-	fwm.SetAmount(amt)
+
 	err := r.parseAmount()
-	if err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAmount.Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAmount.Error())
 }
 
 // TestAmountTagError validates Amount tag
 func TestAmountTagError(t *testing.T) {
 	a := mockAmount()
 	a.tag = "{9999}"
-	if err := a.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := a.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("tag", ErrValidTagForType, a.tag).Error(), err.Error())
 }
