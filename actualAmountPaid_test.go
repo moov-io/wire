@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // ActualAmountPaid creates a ActualAmountPaid
@@ -17,53 +18,52 @@ func mockActualAmountPaid() *ActualAmountPaid {
 // TestMockActualAmountPaid validates mockActualAmountPaid
 func TestMockActualAmountPaid(t *testing.T) {
 	aap := mockActualAmountPaid()
-	if err := aap.Validate(); err != nil {
-		t.Error("mockActualAmountPaid does not validate and will break other tests")
-	}
+
+	require.NoError(t, aap.Validate(), "mockActualAmountPaid does not validate and will break other tests")
 }
 
 // TestActualAmountPaidAmountRequired validates ActualAmountPaid Amount is required
 func TestActualAmountPaidAmountRequired(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.Amount = ""
-	if err := aap.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := aap.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("Amount", ErrFieldRequired).Error(), err.Error())
 }
 
 // TestActualAmountPaidCurrencyCodeRequired validates ActualAmountPaid CurrencyCode is required
 func TestCurrencyCodeRequired(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.CurrencyCode = ""
-	if err := aap.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := aap.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("CurrencyCode", ErrFieldRequired).Error(), err.Error())
 }
 
 // TestActualAmountPaidAmountValid validates Amount
 func TestActualAmountPaidAmountValid(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.Amount = "X,"
-	if err := aap.Validate(); err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := aap.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("Amount", ErrNonAmount, aap.RemittanceAmount.Amount).Error(), err.Error())
 }
 
 // TestActualAmountPaidCurrencyCodeValid validates Amount
 func TestActualAmountPaidCurrencyCodeValid(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.RemittanceAmount.CurrencyCode = "XZP"
-	if err := aap.Validate(); err != nil {
-		if !base.Match(err, ErrNonCurrencyCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := aap.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("CurrencyCode", ErrNonCurrencyCode, aap.RemittanceAmount.CurrencyCode).Error(), err.Error())
 }
 
 // TestParseActualAmountPaidWrongLength parses a wrong ActualAmountPaid record length
@@ -74,12 +74,12 @@ func TestParseActualAmountPaidWrongLength(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	aap := mockActualAmountPaid()
 	fwm.SetActualAmountPaid(aap)
+
 	err := r.parseActualAmountPaid()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(28, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	expected := NewTagWrongLengthErr(28, len(r.line))
+	require.Contains(t, err.Error(), expected.Error())
 }
 
 // TestParseActualAmountPaidReaderParseError parses a wrong ActualAmountPaid reader parse error
@@ -90,27 +90,25 @@ func TestParseActualAmountPaidReaderParseError(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	aap := mockActualAmountPaid()
 	fwm.SetActualAmountPaid(aap)
+
 	err := r.parseActualAmountPaid()
-	if err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAmount.Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAmount.Error())
 }
 
 // TestActualAmountPaidTagError validates ActualAmountPaid tag
 func TestActualAmountPaidTagError(t *testing.T) {
 	aap := mockActualAmountPaid()
 	aap.tag = "{9999}"
-	if err := aap.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := aap.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("tag", ErrValidTagForType, aap.tag).Error(), err.Error())
 }
