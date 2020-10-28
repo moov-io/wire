@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -43,6 +44,20 @@ func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
 	rdi.tag = record[:6]
 	rdi.ReceiverABANumber = rdi.parseStringField(record[6:15])
 	rdi.ReceiverShortName = rdi.parseStringField(record[15:33])
+	return nil
+}
+
+func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
+	type Alias ReceiverDepositoryInstitution
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(rdi),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	rdi.tag = TagReceiverDepositoryInstitution
 	return nil
 }
 

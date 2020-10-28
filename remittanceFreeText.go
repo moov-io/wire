@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -46,6 +47,20 @@ func (rft *RemittanceFreeText) Parse(record string) error {
 	rft.LineOne = rft.parseStringField(record[6:146])
 	rft.LineTwo = rft.parseStringField(record[146:286])
 	rft.LineThree = rft.parseStringField(record[286:426])
+	return nil
+}
+
+func (rft *RemittanceFreeText) UnmarshalJSON(data []byte) error {
+	type Alias RemittanceFreeText
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(rft),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	rft.tag = TagRemittanceFreeText
 	return nil
 }
 

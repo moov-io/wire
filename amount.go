@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -40,6 +41,20 @@ func (a *Amount) Parse(record string) error {
 	}
 	a.tag = record[:6]
 	a.Amount = a.parseStringField(record[6:18])
+	return nil
+}
+
+func (a *Amount) UnmarshalJSON(data []byte) error {
+	type Alias Amount
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(a),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	a.tag = TagAmount
 	return nil
 }
 

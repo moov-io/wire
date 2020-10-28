@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"encoding/json"
+	"strings"
+)
 
 // OutputMessageAccountabilityData is the Output Message Accountability Data (OMAD) of the wire
 type OutputMessageAccountabilityData struct {
@@ -49,6 +52,20 @@ func (omad *OutputMessageAccountabilityData) Parse(record string) {
 	omad.OutputDate = omad.parseStringField(record[28:32])
 	omad.OutputTime = omad.parseStringField(record[32:36])
 	omad.OutputFRBApplicationIdentification = omad.parseStringField(record[36:40])
+}
+
+func (omad *OutputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
+	type Alias OutputMessageAccountabilityData
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(omad),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	omad.tag = TagOutputMessageAccountabilityData
+	return nil
 }
 
 // String writes OutputMessageAccountabilityData

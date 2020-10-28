@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -60,6 +61,20 @@ func (c *Charges) Parse(record string) {
 	c.SendersChargesTwo = c.parseStringField(record[22:37])
 	c.SendersChargesThree = c.parseStringField(record[37:52])
 	c.SendersChargesFour = c.parseStringField(record[52:67])
+}
+
+func (c *Charges) UnmarshalJSON(data []byte) error {
+	type Alias Charges
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(c),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	c.tag = TagCharges
+	return nil
 }
 
 // String writes Charges

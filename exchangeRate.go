@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -41,6 +42,20 @@ func (eRate *ExchangeRate) Parse(record string) error {
 	}
 	eRate.tag = record[:6]
 	eRate.ExchangeRate = eRate.parseStringField(record[6:18])
+	return nil
+}
+
+func (eRate *ExchangeRate) UnmarshalJSON(data []byte) error {
+	type Alias ExchangeRate
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(eRate),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	eRate.tag = TagExchangeRate
 	return nil
 }
 

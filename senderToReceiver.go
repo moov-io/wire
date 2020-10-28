@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -46,6 +47,20 @@ func (str *SenderToReceiver) Parse(record string) error {
 	str.CoverPayment.SwiftLineFour = str.parseStringField(record[116:151])
 	str.CoverPayment.SwiftLineFive = str.parseStringField(record[151:186])
 	str.CoverPayment.SwiftLineSix = str.parseStringField(record[186:221])
+	return nil
+}
+
+func (str *SenderToReceiver) UnmarshalJSON(data []byte) error {
+	type Alias SenderToReceiver
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(str),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	str.tag = TagSenderToReceiver
 	return nil
 }
 

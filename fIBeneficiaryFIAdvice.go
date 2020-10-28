@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -46,6 +47,20 @@ func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) error {
 	fibfia.Advice.LineFour = fibfia.parseStringField(record[101:134])
 	fibfia.Advice.LineFive = fibfia.parseStringField(record[134:167])
 	fibfia.Advice.LineSix = fibfia.parseStringField(record[167:200])
+	return nil
+}
+
+func (fibfia *FIBeneficiaryFIAdvice) UnmarshalJSON(data []byte) error {
+	type Alias FIBeneficiaryFIAdvice
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(fibfia),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	fibfia.tag = TagFIBeneficiaryFIAdvice
 	return nil
 }
 

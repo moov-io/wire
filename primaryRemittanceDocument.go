@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -49,6 +50,20 @@ func (prd *PrimaryRemittanceDocument) Parse(record string) error {
 	prd.ProprietaryDocumentTypeCode = record[10:45]
 	prd.DocumentIdentificationNumber = record[45:80]
 	prd.Issuer = record[80:115]
+	return nil
+}
+
+func (prd *PrimaryRemittanceDocument) UnmarshalJSON(data []byte) error {
+	type Alias PrimaryRemittanceDocument
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(prd),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	prd.tag = TagPrimaryRemittanceDocument
 	return nil
 }
 

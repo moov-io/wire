@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -45,6 +46,20 @@ func (bfi *BeneficiaryFI) Parse(record string) error {
 	bfi.FinancialInstitution.Address.AddressLineOne = bfi.parseStringField(record[76:111])
 	bfi.FinancialInstitution.Address.AddressLineTwo = bfi.parseStringField(record[111:146])
 	bfi.FinancialInstitution.Address.AddressLineThree = bfi.parseStringField(record[146:181])
+	return nil
+}
+
+func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {
+	type Alias BeneficiaryFI
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(bfi),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	bfi.tag = TagBeneficiaryFI
 	return nil
 }
 
