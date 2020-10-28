@@ -43,17 +43,21 @@ else
 	CGO_ENABLED=0 GOOS=$(PLATFORM) go build -o bin/wire-$(PLATFORM)-amd64 github.com/moov-io/wire/cmd/server
 endif
 
-docker: clean
-# Main wire server Docker image
+docker: clean docker-hub docker-openshift docker-fuzz docker-webui
+
+docker-hub:
 	docker build --pull -t moov/wire:$(VERSION) -f Dockerfile .
 	docker tag moov/wire:$(VERSION) moov/wire:latest
-# OpenShift Docker image
+
+docker-openshift:
 	docker build --pull -t quay.io/moov/wire:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/wire:$(VERSION) quay.io/moov/wire:latest
-# Wire Fuzzing docker image
+
+docker-fuzz:
 	docker build --pull -t moov/wirefuzz:$(VERSION) . -f Dockerfile.fuzz
 	docker tag moov/wirefuzz:$(VERSION) moov/wirefuzz:latest
-# webui Docker image
+
+docker-webui:
 	docker build --pull -t moov/wire-webui:$(VERSION) -f Dockerfile.webui .
 	docker tag moov/wire-webui:$(VERSION) moov/wire-webui:latest
 
