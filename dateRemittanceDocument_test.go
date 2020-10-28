@@ -1,10 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/require"
 )
 
 // DateRemittanceDocument creates a DateRemittanceDocument
@@ -17,20 +18,19 @@ func mockDateRemittanceDocument() *DateRemittanceDocument {
 // TestMockDateRemittanceDocument validates mockDateRemittanceDocument
 func TestMockDateRemittanceDocument(t *testing.T) {
 	drd := mockDateRemittanceDocument()
-	if err := drd.Validate(); err != nil {
-		t.Error("mockDateRemittanceDocument does not validate and will break other tests")
-	}
+
+	require.NoError(t, drd.Validate(), "mockDateRemittanceDocument does not validate and will break other tests")
 }
 
 // TestDateRemittanceDocumentRequired validates DateRemittanceDocument DateRemittanceDocument is required
 func TestDateRemittanceDocumentDateRemittanceDocumentRequired(t *testing.T) {
 	drd := mockDateRemittanceDocument()
 	drd.DateRemittanceDocument = ""
-	if err := drd.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := drd.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("DateRemittanceDocument", ErrFieldRequired).Error(), err.Error())
 }
 
 // TestParseDateRemittanceDocumentWrongLength parses a wrong DateRemittanceDocument record length
@@ -38,15 +38,11 @@ func TestParseDateRemittanceDocumentWrongLength(t *testing.T) {
 	var line = "{8650}20190509  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rd := mockDateRemittanceDocument()
-	fwm.SetDateRemittanceDocument(rd)
+
 	err := r.parseDateRemittanceDocument()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(14, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), NewTagWrongLengthErr(14, len(r.line)).Error())
 }
 
 // TestParseDateRemittanceDocumentReaderParseError parses a wrong DateRemittanceDocument reader parse error
@@ -54,30 +50,25 @@ func TestParseDateRemittanceDocumentReaderParseError(t *testing.T) {
 	var line = "{8650}14190509"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rd := mockDateRemittanceDocument()
-	fwm.SetDateRemittanceDocument(rd)
+
 	err := r.parseDateRemittanceDocument()
-	if err != nil {
-		if !base.Match(err, ErrValidDate) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrValidDate.Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrValidDate) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrValidDate.Error())
 }
 
 // TestDateRemittanceDocumentTagError validates a DateRemittanceDocument tag
 func TestDateRemittanceDocumentTagError(t *testing.T) {
 	drd := mockDateRemittanceDocument()
 	drd.tag = "{9999}"
-	if err := drd.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := drd.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("tag", ErrValidTagForType, drd.tag).Error(), err.Error())
 }

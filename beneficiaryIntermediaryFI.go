@@ -107,7 +107,7 @@ func (bifi *BeneficiaryIntermediaryFI) fieldInclusion() error {
 		return fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired)
 	}
 	if bifi.FinancialInstitution.IdentificationCode == "" && bifi.FinancialInstitution.Identifier != "" {
-		return fieldError("fwm.BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired)
+		return fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired)
 	}
 	return nil
 }

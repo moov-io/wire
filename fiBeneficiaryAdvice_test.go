@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockFIBeneficiaryAdvice creates a FIBeneficiaryAdvice
@@ -22,86 +23,85 @@ func mockFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
 // TestMockFIBeneficiaryAdvice validates mockFIBeneficiaryAdvice
 func TestMockFIBeneficiaryAdvice(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
-	if err := fiba.Validate(); err != nil {
-		t.Error("mockFIBeneficiary does not validate and will break other tests")
-	}
+
+	require.NoError(t, fiba.Validate(), "mockFIBeneficiaryAdvice does not validate and will break other tests")
 }
 
 // TestFIBeneficiaryAdviceCodeValid validates FIBeneficiaryAdvice AdviceCode is alphanumeric
 func TestFIBeneficiaryAdviceCodeValid(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.AdviceCode = "Z"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrAdviceCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("AdviceCode", ErrAdviceCode, fiba.Advice.AdviceCode).Error(), err.Error())
 }
 
 // TestFIBeneficiaryAdviceLineOneAlphaNumeric validates FIBeneficiaryAdvice LineOne is alphanumeric
 func TestFIBeneficiaryAdviceLineOneAlphaNumeric(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.LineOne = "®"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("LineOne", ErrNonAlphanumeric, fiba.Advice.LineOne).Error(), err.Error())
 }
 
 // TestFIBeneficiaryAdviceLineTwoAlphaNumeric validates FIBeneficiaryAdvice LineTwo is alphanumeric
 func TestFIBeneficiaryAdviceLineTwoAlphaNumeric(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.LineTwo = "®"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("LineTwo", ErrNonAlphanumeric, fiba.Advice.LineTwo).Error(), err.Error())
 }
 
 // TestFIBeneficiaryAdviceLineThreeAlphaNumeric validates FIBeneficiaryAdvice LineThree is alphanumeric
 func TestFIBeneficiaryAdviceLineThreeAlphaNumeric(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.LineThree = "®"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("LineThree", ErrNonAlphanumeric, fiba.Advice.LineThree).Error(), err.Error())
 }
 
 // TestFIBeneficiaryAdviceLineFourAlphaNumeric validates FIBeneficiaryAdvice LineFour is alphanumeric
 func TestFIBeneficiaryAdviceLineFourAlphaNumeric(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.LineFour = "®"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("LineFour", ErrNonAlphanumeric, fiba.Advice.LineFour).Error(), err.Error())
 }
 
 // TestFIBeneficiaryAdviceLineFiveAlphaNumeric validates FIBeneficiaryAdvice LineFive is alphanumeric
 func TestFIBeneficiaryAdviceLineFiveAlphaNumeric(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.LineFive = "®"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("LineFive", ErrNonAlphanumeric, fiba.Advice.LineFive).Error(), err.Error())
 }
 
 // TestFIBeneficiaryAdviceLineSixAlphaNumeric validates FIBeneficiaryAdvice LineSix is alphanumeric
 func TestFIBeneficiaryAdviceLineSixAlphaNumeric(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.Advice.LineSix = "®"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("LineSix", ErrNonAlphanumeric, fiba.Advice.LineSix).Error(), err.Error())
 }
 
 // TestParseFIBeneficiaryAdviceWrongLength parses a wrong FIBeneficiaryAdvice record length
@@ -109,15 +109,11 @@ func TestParseFIBeneficiaryAdviceWrongLength(t *testing.T) {
 	var line = "{6410}LTRLine One                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                       "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	fiba := mockFIBeneficiaryAdvice()
-	fwm.SetFIBeneficiaryAdvice(fiba)
+
 	err := r.parseFIBeneficiaryAdvice()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(200, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), NewTagWrongLengthErr(200, len(r.line)).Error(), err.Error())
 }
 
 // TestParseFIBeneficiaryAdviceReaderParseError parses a wrong FIBeneficiaryAdvice reader parse error
@@ -125,30 +121,24 @@ func TestParseFIBeneficiaryAdviceReaderParseError(t *testing.T) {
 	var line = "{6410}LTRLine ®ne                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                         "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	fiba := mockFIBeneficiaryAdvice()
-	fwm.SetFIBeneficiaryAdvice(fiba)
+
 	err := r.parseFIBeneficiaryAdvice()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.NotNil(t, err)
+	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
 }
 
 // TestFIBeneficiaryAdviceTagError validates a FIBeneficiaryAdvice tag
 func TestFIBeneficiaryAdviceTagError(t *testing.T) {
 	fiba := mockFIBeneficiaryAdvice()
 	fiba.tag = "{9999}"
-	if err := fiba.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	err := fiba.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("tag", ErrValidTagForType, fiba.tag).Error(), err.Error())
 }

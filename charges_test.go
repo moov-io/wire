@@ -1,8 +1,9 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockCharges creates a Charges
@@ -19,30 +20,25 @@ func mockCharges() *Charges {
 // TestMockCharges validates mockCharges
 func TestMockCharges(t *testing.T) {
 	c := mockCharges()
-	if err := c.Validate(); err != nil {
-		t.Error("mockCharges does not validate and will break other tests")
-	}
+
+	require.NoError(t, c.Validate(), "mockCharges does not validate and will break other tests")
 }
 
 // TestChargeDetailsValid validates ChargeDetails is valid
 func TestPaymentNotificationIndicatorValid(t *testing.T) {
 	c := mockCharges()
 	c.ChargeDetails = "F"
-	if err := c.Validate(); err != nil {
-		if !base.Match(err, ErrChargeDetails) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := c.Validate()
+
+	require.NotNil(t, err)
+	require.Equal(t, fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails).Error(), err.Error())
 }
 
 func TestChargesCrash(t *testing.T) {
 	c := &Charges{}
 	c.Parse("{3700}") // invalid, caused a fuzz crash
 
-	if c.tag != "" {
-		t.Errorf("c.tag=%s", c.tag)
-	}
-	if c.ChargeDetails != "" {
-		t.Errorf("unexpected c.ChargeDetails=%s", c.ChargeDetails)
-	}
+	require.Empty(t, c.tag)
+	require.Empty(t, c.ChargeDetails)
 }
