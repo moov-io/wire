@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -47,6 +48,20 @@ func (rts *ReceiptTimeStamp) Parse(record string) error {
 	rts.ReceiptDate = rts.parseStringField(record[6:10])
 	rts.ReceiptTime = rts.parseStringField(record[10:14])
 	rts.ReceiptApplicationIdentification = rts.parseStringField(record[14:18])
+	return nil
+}
+
+func (rts *ReceiptTimeStamp) UnmarshalJSON(data []byte) error {
+	type Alias ReceiptTimeStamp
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(rts),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	rts.tag = TagReceiptTimeStamp
 	return nil
 }
 

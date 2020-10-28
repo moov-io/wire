@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -45,6 +46,20 @@ func (oi *OrderingInstitution) Parse(record string) error {
 	oi.CoverPayment.SwiftLineThree = oi.parseStringField(record[81:116])
 	oi.CoverPayment.SwiftLineFour = oi.parseStringField(record[116:151])
 	oi.CoverPayment.SwiftLineFive = oi.parseStringField(record[151:186])
+	return nil
+}
+
+func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
+	type Alias OrderingInstitution
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(oi),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	oi.tag = TagOrderingInstitution
 	return nil
 }
 

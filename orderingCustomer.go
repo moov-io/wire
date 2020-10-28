@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -45,6 +46,20 @@ func (oc *OrderingCustomer) Parse(record string) error {
 	oc.CoverPayment.SwiftLineThree = oc.parseStringField(record[81:116])
 	oc.CoverPayment.SwiftLineFour = oc.parseStringField(record[116:151])
 	oc.CoverPayment.SwiftLineFive = oc.parseStringField(record[151:186])
+	return nil
+}
+
+func (oc *OrderingCustomer) UnmarshalJSON(data []byte) error {
+	type Alias OrderingCustomer
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(oc),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	oc.tag = TagOrderingCustomer
 	return nil
 }
 

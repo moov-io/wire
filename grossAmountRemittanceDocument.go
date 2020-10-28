@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -41,6 +42,20 @@ func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
 	gard.tag = record[:6]
 	gard.RemittanceAmount.CurrencyCode = gard.parseStringField(record[6:9])
 	gard.RemittanceAmount.Amount = gard.parseStringField(record[9:28])
+	return nil
+}
+
+func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
+	type Alias GrossAmountRemittanceDocument
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(gard),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	gard.tag = TagGrossAmountRemittanceDocument
 	return nil
 }
 

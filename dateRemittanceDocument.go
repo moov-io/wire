@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -40,6 +41,20 @@ func (drd *DateRemittanceDocument) Parse(record string) error {
 	}
 	drd.tag = record[:6]
 	drd.DateRemittanceDocument = drd.parseStringField(record[6:14])
+	return nil
+}
+
+func (drd *DateRemittanceDocument) UnmarshalJSON(data []byte) error {
+	type Alias DateRemittanceDocument
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(drd),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	drd.tag = TagDateRemittanceDocument
 	return nil
 }
 

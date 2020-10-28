@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"encoding/json"
+	"strings"
+)
 
 // MessageDisposition is the message disposition of the wire
 type MessageDisposition struct {
@@ -46,6 +49,20 @@ func (md *MessageDisposition) Parse(record string) {
 	md.TestProductionCode = md.parseStringField(record[8:9])
 	md.MessageDuplicationCode = md.parseStringField(record[9:10])
 	md.MessageStatusIndicator = md.parseStringField(record[10:11])
+}
+
+func (md *MessageDisposition) UnmarshalJSON(data []byte) error {
+	type Alias MessageDisposition
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(md),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	md.tag = TagMessageDisposition
+	return nil
 }
 
 // String writes MessageDisposition

@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -43,6 +44,20 @@ func (tst *TypeSubType) Parse(record string) error {
 	tst.tag = tst.parseStringField(record[:6])
 	tst.TypeCode = tst.parseStringField(record[6:8])
 	tst.SubTypeCode = tst.parseStringField(record[8:10])
+	return nil
+}
+
+func (tst *TypeSubType) UnmarshalJSON(data []byte) error {
+	type Alias TypeSubType
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(tst),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	tst.tag = TagTypeSubType
 	return nil
 }
 

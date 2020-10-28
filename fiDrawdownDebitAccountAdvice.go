@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -46,6 +47,20 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) error {
 	debitDDAdvice.Advice.LineFour = debitDDAdvice.parseStringField(record[101:134])
 	debitDDAdvice.Advice.LineFive = debitDDAdvice.parseStringField(record[134:167])
 	debitDDAdvice.Advice.LineSix = debitDDAdvice.parseStringField(record[167:200])
+	return nil
+}
+
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) error {
+	type Alias FIDrawdownDebitAccountAdvice
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(debitDDAdvice),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	debitDDAdvice.tag = TagFIDrawdownDebitAccountAdvice
 	return nil
 }
 

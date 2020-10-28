@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -45,6 +46,20 @@ func (fiifi *FIIntermediaryFI) Parse(record string) error {
 	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[102:135])
 	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[135:168])
 	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[168:201])
+	return nil
+}
+
+func (fiifi *FIIntermediaryFI) UnmarshalJSON(data []byte) error {
+	type Alias FIIntermediaryFI
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(fiifi),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	fiifi.tag = TagFIIntermediaryFI
 	return nil
 }
 
