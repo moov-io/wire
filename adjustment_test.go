@@ -32,8 +32,7 @@ func TestAdjustmentReasonCodeValid(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrAdjustmentReasonCode.Error())
+	require.EqualError(t, err, fieldError("AdjustmentReasonCode", ErrAdjustmentReasonCode, adj.AdjustmentReasonCode).Error())
 }
 
 // TestCreditDebitIndicatorValid validates Adjustment CreditDebitIndicator
@@ -43,8 +42,7 @@ func TestCreditDebitIndicatorValid(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrCreditDebitIndicator.Error())
+	require.EqualError(t, err, fieldError("CreditDebitIndicator", ErrCreditDebitIndicator, adj.CreditDebitIndicator).Error())
 }
 
 // TestAdjustmentAmountValid validates Adjustment Amount
@@ -54,8 +52,7 @@ func TestAdjustmentAmountValid(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, adj.RemittanceAmount.Amount).Error())
 }
 
 // TestAdjustmentCurrencyCodeValid validates Adjustment CurrencyCode
@@ -65,8 +62,7 @@ func TestAdjustmentCurrencyCodeValid(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonCurrencyCode.Error())
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrNonCurrencyCode, adj.RemittanceAmount.CurrencyCode).Error())
 }
 
 // TestAdjustmentReasonCodeRequired validates Adjustment AdjustmentReasonCode is required
@@ -76,8 +72,7 @@ func TestAdjustmentReasonCodeRequired(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AdjustmentReasonCode", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AdjustmentReasonCode", ErrFieldRequired).Error())
 }
 
 // TestCreditDebitIndicatorRequired validates Adjustment CreditDebitIndicator is required
@@ -87,8 +82,7 @@ func TestCreditDebitIndicatorRequired(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("CreditDebitIndicator", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("CreditDebitIndicator", ErrFieldRequired).Error())
 }
 
 // TestAdjustmentAmountRequired validates Adjustment Amount is required
@@ -98,8 +92,7 @@ func TestAdjustmentAmountRequired(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Amount", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
 }
 
 // TestAdjustmentCurrencyCodeRequired validates Adjustment CurrencyCode is required
@@ -109,8 +102,7 @@ func TestAdjustmentCurrencyCodeRequired(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("CurrencyCode", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrFieldRequired).Error())
 }
 
 // TestParseAdjustmentWrongLength parses a wrong Adjustment record length
@@ -121,8 +113,7 @@ func TestParseAdjustmentWrongLength(t *testing.T) {
 
 	err := r.parseAdjustment()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(174, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(174, len(r.line))).Error())
 }
 
 // TestParseAdjustmentReaderParseError parses a wrong Adjustment reader parse error
@@ -133,13 +124,13 @@ func TestParseAdjustmentReaderParseError(t *testing.T) {
 
 	err := r.parseAdjustment()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected := r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected = r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestAdjustmentTagError validates Adjustment tag
@@ -149,6 +140,5 @@ func TestAdjustmentTagError(t *testing.T) {
 
 	err := adj.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, adj.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, adj.tag).Error())
 }

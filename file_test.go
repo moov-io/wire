@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestFile__FileFromJSON(t *testing.T) {
@@ -20,15 +22,8 @@ func TestFile__FileFromJSON(t *testing.T) {
 	}
 
 	file, err := FileFromJSON(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Logf("file=%#v", file)
 
-	if file.ID != "" {
-		t.Error("id isn't set in JSON")
-	}
-	if file.FEDWireMessage.FIAdditionalFIToFI == nil {
-		t.Error("FIAdditionalFIToFI shouldn't be nil")
-	}
+	require.NoError(t, err)
+	require.Empty(t, file.ID, "id should not have been set")
+	require.NotNil(t, file.FEDWireMessage.FIAdditionalFIToFI, "FIAdditionalFIToFI shouldn't be nil")
 }

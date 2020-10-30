@@ -33,8 +33,7 @@ func TestFIBeneficiaryFILineOneAlphaNumeric(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineOne", ErrNonAlphanumeric, fibfi.FIToFI.LineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, fibfi.FIToFI.LineOne).Error())
 }
 
 // TestFIBeneficiaryFILineTwoAlphaNumeric validates FIBeneficiaryFI LineTwo is alphanumeric
@@ -44,8 +43,7 @@ func TestFIBeneficiaryFILineTwoAlphaNumeric(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineTwo", ErrNonAlphanumeric, fibfi.FIToFI.LineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, fibfi.FIToFI.LineTwo).Error())
 }
 
 // TestFIBeneficiaryFILineThreeAlphaNumeric validates FIBeneficiaryFI LineThree is alphanumeric
@@ -55,8 +53,7 @@ func TestFIBeneficiaryFILineThreeAlphaNumeric(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineThree", ErrNonAlphanumeric, fibfi.FIToFI.LineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, fibfi.FIToFI.LineThree).Error())
 }
 
 // TestFIBeneficiaryFILineFourAlphaNumeric validates FIBeneficiaryFI LineFour is alphanumeric
@@ -66,8 +63,7 @@ func TestFIBeneficiaryFILineFourAlphaNumeric(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFour", ErrNonAlphanumeric, fibfi.FIToFI.LineFour).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, fibfi.FIToFI.LineFour).Error())
 }
 
 // TestFIBeneficiaryFILineFiveAlphaNumeric validates FIBeneficiaryFI LineFive is alphanumeric
@@ -77,8 +73,7 @@ func TestFIBeneficiaryFILineFiveAlphaNumeric(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFive", ErrNonAlphanumeric, fibfi.FIToFI.LineFive).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFive", ErrNonAlphanumeric, fibfi.FIToFI.LineFive).Error())
 }
 
 // TestFIBeneficiaryFILineSixAlphaNumeric validates FIBeneficiaryFI LineSix is alphanumeric
@@ -88,8 +83,7 @@ func TestFIBeneficiaryFILineSixAlphaNumeric(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineSix", ErrNonAlphanumeric, fibfi.FIToFI.LineSix).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, fibfi.FIToFI.LineSix).Error())
 }
 
 // TestParseFIBeneficiaryFIWrongLength parses a wrong FIBeneficiaryFI record length
@@ -100,8 +94,7 @@ func TestParseFIBeneficiaryFIWrongLength(t *testing.T) {
 
 	err := r.parseFIBeneficiaryFI()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(201, len(r.line)).Error(), err.Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(201, len(r.line))).Error())
 }
 
 // TestParseFIBeneficiaryFIReaderParseError parses a wrong FIBeneficiaryFI reader parse error
@@ -112,13 +105,13 @@ func TestParseFIBeneficiaryFIReaderParseError(t *testing.T) {
 
 	err := r.parseFIBeneficiaryFI()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line ®ne")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line ®ne")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestFIBeneficiaryFITagError validates a FIBeneficiaryFI tag
@@ -128,6 +121,5 @@ func TestFIBeneficiaryFITagError(t *testing.T) {
 
 	err := fibfi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, fibfi.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fibfi.tag).Error())
 }

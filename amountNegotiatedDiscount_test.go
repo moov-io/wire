@@ -29,8 +29,7 @@ func TestAmountNegotiatedDiscountValid(t *testing.T) {
 
 	err := nd.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, nd.RemittanceAmount.Amount).Error())
 }
 
 // TestAmountNegotiatedDiscountCurrencyCodeValid validates AmountNegotiatedDiscount CurrencyCode
@@ -40,8 +39,7 @@ func TestAmountNegotiatedDiscountCurrencyCodeValid(t *testing.T) {
 
 	err := nd.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonCurrencyCode.Error())
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrNonCurrencyCode, nd.RemittanceAmount.CurrencyCode).Error())
 }
 
 // TestAmountNegotiatedDiscountAmountRequired validates AmountNegotiatedDiscount Amount is required
@@ -51,8 +49,7 @@ func TestAmountNegotiatedDiscountRequired(t *testing.T) {
 
 	err := nd.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Amount", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
 }
 
 // TestAmountNegotiatedDiscountCurrencyCodeRequired validates AmountNegotiatedDiscount CurrencyCode is required
@@ -62,8 +59,7 @@ func TestAmountNegotiatedDiscountCurrencyCodeRequired(t *testing.T) {
 
 	err := nd.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("CurrencyCode", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrFieldRequired).Error())
 }
 
 // TestParseAmountNegotiatedDiscountWrongLength parses a wrong AmountNegotiatedDiscount record length
@@ -74,8 +70,7 @@ func TestParseAmountNegotiatedDiscountWrongLength(t *testing.T) {
 
 	err := r.parseAmountNegotiatedDiscount()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(28, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
 }
 
 // TestParseAmountNegotiatedDiscountReaderParseError parses a wrong AmountNegotiatedDiscount reader parse error
@@ -86,13 +81,13 @@ func TestParseAmountNegotiatedDiscountReaderParseError(t *testing.T) {
 
 	err := r.parseAmountNegotiatedDiscount()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected := r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected = r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestAmountNegotiatedDiscountTagError validates AmountNegotiatedDiscount tag
@@ -102,6 +97,5 @@ func TestAmountNegotiatedDiscountTagError(t *testing.T) {
 
 	err := nd.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, nd.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, nd.tag).Error())
 }

@@ -28,8 +28,7 @@ func TestBeneficiaryReferenceAlphaNumeric(t *testing.T) {
 
 	err := br.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("BeneficiaryReference", ErrNonAlphanumeric, br.BeneficiaryReference).Error(), err.Error())
+	require.EqualError(t, err, fieldError("BeneficiaryReference", ErrNonAlphanumeric, br.BeneficiaryReference).Error())
 }
 
 // TestParseBeneficiaryReferenceWrongLength parses a wrong BeneficiaryReference record length
@@ -40,8 +39,7 @@ func TestParseBeneficiaryReferenceWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryReference()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(22, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(22, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryReferenceReaderParseError parses a wrong BeneficiaryReference reader parse error
@@ -52,13 +50,13 @@ func TestParseBeneficiaryReferenceReaderParseError(t *testing.T) {
 
 	err := r.parseBeneficiaryReference()
 
-	require.NotNil(t, err.Error())
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("BeneficiaryReference", ErrNonAlphanumeric, "Reference®")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err.Error())
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("BeneficiaryReference", ErrNonAlphanumeric, "Reference®")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryReferenceTagError validates a BeneficiaryReference tag
@@ -68,6 +66,5 @@ func TestBeneficiaryReferenceTagError(t *testing.T) {
 
 	err := br.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, br.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, br.tag).Error())
 }

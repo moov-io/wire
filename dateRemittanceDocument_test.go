@@ -29,8 +29,7 @@ func TestDateRemittanceDocumentDateRemittanceDocumentRequired(t *testing.T) {
 
 	err := drd.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("DateRemittanceDocument", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("DateRemittanceDocument", ErrFieldRequired).Error())
 }
 
 // TestParseDateRemittanceDocumentWrongLength parses a wrong DateRemittanceDocument record length
@@ -41,8 +40,7 @@ func TestParseDateRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parseDateRemittanceDocument()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(14, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(14, len(r.line))).Error())
 }
 
 // TestParseDateRemittanceDocumentReaderParseError parses a wrong DateRemittanceDocument reader parse error
@@ -53,13 +51,11 @@ func TestParseDateRemittanceDocumentReaderParseError(t *testing.T) {
 
 	err := r.parseDateRemittanceDocument()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrValidDate.Error())
+	require.EqualError(t, err, r.parseError(ErrValidDate).Error())
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrValidDate.Error())
+	require.EqualError(t, err, r.parseError(ErrValidDate).Error())
 }
 
 // TestDateRemittanceDocumentTagError validates a DateRemittanceDocument tag
@@ -69,6 +65,5 @@ func TestDateRemittanceDocumentTagError(t *testing.T) {
 
 	err := drd.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, drd.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, drd.tag).Error())
 }

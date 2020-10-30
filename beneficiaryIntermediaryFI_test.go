@@ -33,8 +33,7 @@ func TestBeneficiaryIntermediaryFIIdentificationCodeValid(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentificationCodeFI validates BeneficiaryIntermediaryFI IdentificationCode is an FI code
@@ -44,8 +43,7 @@ func TestBeneficiaryIntermediaryFIIdentificationCodeFI(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentifierAlphaNumeric validates BeneficiaryIntermediaryFI Identifier is alphanumeric
@@ -55,8 +53,7 @@ func TestBeneficiaryIntermediaryFIIdentifierAlphaNumeric(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Identifier", ErrNonAlphanumeric, bifi.FinancialInstitution.Identifier).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Identifier", ErrNonAlphanumeric, bifi.FinancialInstitution.Identifier).Error())
 }
 
 // TestBeneficiaryIntermediaryFINameAlphaNumeric validates BeneficiaryIntermediaryFI Name is alphanumeric
@@ -66,8 +63,7 @@ func TestBeneficiaryIntermediaryFINameAlphaNumeric(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Name", ErrNonAlphanumeric, bifi.FinancialInstitution.Name).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, bifi.FinancialInstitution.Name).Error())
 }
 
 // TestBeneficiaryIntermediaryFIAddressLineOneAlphaNumeric validates BeneficiaryIntermediaryFI AddressLineOne is alphanumeric
@@ -77,8 +73,7 @@ func TestBeneficiaryIntermediaryFIAddressLineOneAlphaNumeric(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AddressLineOne", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AddressLineOne", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineOne).Error())
 }
 
 // TestBeneficiaryIntermediaryFIAddressLineTwoAlphaNumeric validates BeneficiaryIntermediaryFI AddressLineTwo is alphanumeric
@@ -88,8 +83,7 @@ func TestBeneficiaryIntermediaryFIAddressLineTwoAlphaNumeric(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AddressLineTwo", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AddressLineTwo", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineTwo).Error())
 }
 
 // TestBeneficiaryIntermediaryFIAddressLineThreeAlphaNumeric validates BeneficiaryIntermediaryFI AddressLineThree is alphanumeric
@@ -99,8 +93,7 @@ func TestBeneficiaryIntermediaryFIAddressLineThreeAlphaNumeric(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AddressLineThree", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineThree).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentificationCodeRequired validates BeneficiaryIntermediaryFI IdentificationCode is required
@@ -110,8 +103,7 @@ func TestBeneficiaryIntermediaryFIIdentificationCodeRequired(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentifierRequired validates BeneficiaryIntermediaryFI Identifier is required
@@ -121,8 +113,7 @@ func TestBeneficiaryIntermediaryFIIdentifierRequired(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIWrongLength parses a wrong BeneficiaryIntermediaryFI record length
@@ -133,8 +124,7 @@ func TestParseBeneficiaryIntermediaryFIWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryIntermediaryFI()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(181, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIReaderParseError parses a wrong BeneficiaryIntermediaryFI reader parse error
@@ -148,13 +138,13 @@ func TestParseBeneficiaryIntermediaryFIReaderParseError(t *testing.T) {
 
 	err := r.parseBeneficiaryIntermediaryFI()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("Name", ErrNonAlphanumeric, "F® Name")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("Name", ErrNonAlphanumeric, "F® Name")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryIntermediaryFITagError validates a BeneficiaryFI tag
@@ -164,6 +154,5 @@ func TestBeneficiaryIntermediaryFITagError(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, bifi.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bifi.tag).Error())
 }

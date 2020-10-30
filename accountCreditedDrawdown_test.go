@@ -25,24 +25,18 @@ func TestMockAccountCreditedDrawdown(t *testing.T) {
 func TestDrawdownCreditAccountNumberAlphaNumeric(t *testing.T) {
 	creditDD := mockAccountCreditedDrawdown()
 	creditDD.DrawdownCreditAccountNumber = "®"
-
-	err := creditDD.Validate()
-
-	require.NotNil(t, err)
 	expected := fieldError("DrawdownCreditAccountNumber", ErrNonNumeric, creditDD.DrawdownCreditAccountNumber).Error()
-	require.Equal(t, expected, err.Error())
+
+	require.EqualError(t, creditDD.Validate(), expected)
 }
 
 // TestAccountCreditedDrawdownNumberRequired validates AccountCreditedDrawdown is required
 func TestDrawdownCreditAccountNumberRequired(t *testing.T) {
 	creditDD := mockAccountCreditedDrawdown()
 	creditDD.DrawdownCreditAccountNumber = ""
-
-	err := creditDD.Validate()
-
-	require.NotNil(t, err)
 	expected := fieldError("DrawdownCreditAccountNumber", ErrFieldRequired).Error()
-	require.Equal(t, expected, err.Error())
+
+	require.EqualError(t, creditDD.Validate(), expected)
 }
 
 // TestParseAccountCreditedDrawdownWrongLength parses a wrong AccountCreditedDrawdown record length
@@ -53,9 +47,8 @@ func TestParseAccountCreditedDrawdownWrongLength(t *testing.T) {
 
 	err := r.parseAccountCreditedDrawdown()
 
-	require.NotNil(t, err)
 	expected := r.parseError(NewTagWrongLengthErr(15, len(r.line))).Error()
-	require.Equal(t, expected, err.Error())
+	require.EqualError(t, err, expected)
 }
 
 // TestParseAccountCreditedDrawdownReaderParseError parses a wrong AccountCreditedDrawdown reader parse error
@@ -63,21 +56,16 @@ func TestParseAccountCreditedDrawdownReaderParseError(t *testing.T) {
 	var line = "{5400}12345678Z"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	crediDD := mockAccountCreditedDrawdown()
-	fwm.SetAccountCreditedDrawdown(crediDD)
 
 	err := r.parseAccountCreditedDrawdown()
 
-	require.NotNil(t, err)
 	expected := r.parseError(fieldError("DrawdownCreditAccountNumber", ErrNonNumeric, "12345678Z")).Error()
-	require.Equal(t, expected, err.Error())
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
 	expected = r.parseError(fieldError("DrawdownCreditAccountNumber", ErrNonNumeric, "12345678Z")).Error()
-	require.Equal(t, expected, err.Error())
+	require.EqualError(t, err, expected)
 }
 
 // TestAccountCreditedDrawdownTagError validates AccountCreditedDrawdown tag
@@ -87,7 +75,6 @@ func TestAccountCreditedDrawdownTagError(t *testing.T) {
 
 	err := creditDD.Validate()
 
-	require.NotNil(t, err)
 	expected := fieldError("tag", ErrValidTagForType, creditDD.tag).Error()
-	require.Equal(t, expected, err.Error())
+	require.EqualError(t, err, expected)
 }

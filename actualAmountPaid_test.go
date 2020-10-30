@@ -29,8 +29,7 @@ func TestActualAmountPaidAmountRequired(t *testing.T) {
 
 	err := aap.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Amount", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
 }
 
 // TestActualAmountPaidCurrencyCodeRequired validates ActualAmountPaid CurrencyCode is required
@@ -40,8 +39,7 @@ func TestCurrencyCodeRequired(t *testing.T) {
 
 	err := aap.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("CurrencyCode", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrFieldRequired).Error())
 }
 
 // TestActualAmountPaidAmountValid validates Amount
@@ -51,8 +49,7 @@ func TestActualAmountPaidAmountValid(t *testing.T) {
 
 	err := aap.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Amount", ErrNonAmount, aap.RemittanceAmount.Amount).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, aap.RemittanceAmount.Amount).Error())
 }
 
 // TestActualAmountPaidCurrencyCodeValid validates Amount
@@ -62,8 +59,7 @@ func TestActualAmountPaidCurrencyCodeValid(t *testing.T) {
 
 	err := aap.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("CurrencyCode", ErrNonCurrencyCode, aap.RemittanceAmount.CurrencyCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrNonCurrencyCode, aap.RemittanceAmount.CurrencyCode).Error())
 }
 
 // TestParseActualAmountPaidWrongLength parses a wrong ActualAmountPaid record length
@@ -71,15 +67,10 @@ func TestParseActualAmountPaidWrongLength(t *testing.T) {
 	var line = "{8450}USD1234.56          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	aap := mockActualAmountPaid()
-	fwm.SetActualAmountPaid(aap)
 
 	err := r.parseActualAmountPaid()
 
-	require.NotNil(t, err)
-	expected := NewTagWrongLengthErr(28, len(r.line))
-	require.Contains(t, err.Error(), expected.Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
 }
 
 // TestParseActualAmountPaidReaderParseError parses a wrong ActualAmountPaid reader parse error
@@ -87,19 +78,16 @@ func TestParseActualAmountPaidReaderParseError(t *testing.T) {
 	var line = "{8450}USD1234.56Z           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	aap := mockActualAmountPaid()
-	fwm.SetActualAmountPaid(aap)
 
 	err := r.parseActualAmountPaid()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected := r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected = r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestActualAmountPaidTagError validates ActualAmountPaid tag
@@ -109,6 +97,5 @@ func TestActualAmountPaidTagError(t *testing.T) {
 
 	err := aap.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, aap.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, aap.tag).Error())
 }

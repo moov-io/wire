@@ -31,8 +31,7 @@ func TestPaymentNotificationIndicatorValid(t *testing.T) {
 
 	err := c.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails).Error(), err.Error())
+	require.EqualError(t, err, fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails).Error())
 }
 
 func TestChargesCrash(t *testing.T) {

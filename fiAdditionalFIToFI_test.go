@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -34,8 +33,7 @@ func TestFIAdditionalFIToFILineOneAlphaNumeric(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineOne", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineOne).Error())
 }
 
 // TestFIAdditionalFIToFILineTwoAlphaNumeric validates FIAdditionalFIToFI LineTwo is alphanumeric
@@ -45,8 +43,7 @@ func TestFIAdditionalFIToFILineTwoAlphaNumeric(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineTwo", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineTwo).Error())
 }
 
 // TestFIAdditionalFIToFILineThreeAlphaNumeric validates FIAdditionalFIToFI LineThree is alphanumeric
@@ -56,8 +53,7 @@ func TestFIAdditionalFIToFILineThreeAlphaNumeric(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineThree", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineThree).Error())
 }
 
 // TestFIAdditionalFIToFILineFourAlphaNumeric validates FIAdditionalFIToFI LineFour is alphanumeric
@@ -67,8 +63,7 @@ func TestFIAdditionalFIToFILineFourAlphaNumeric(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFour", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineFour).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineFour).Error())
 }
 
 // TestFIAdditionalFIToFILineFiveAlphaNumeric validates FIAdditionalFIToFI LineFive is alphanumeric
@@ -78,8 +73,7 @@ func TestFIAdditionalFIToFILineFiveAlphaNumeric(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFive", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineFive).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFive", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineFive).Error())
 }
 
 // TestFIAdditionalFIToFILineSixAlphaNumeric validates FIAdditionalFIToFI LineSix is alphanumeric
@@ -89,8 +83,7 @@ func TestFIAdditionalFIToFILineSixAlphaNumeric(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineSix", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineSix).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineSix).Error())
 }
 
 // TestParseFIAdditionalFIToFIWrongLength parses a wrong FIAdditionalFIToFI record length
@@ -100,9 +93,7 @@ func TestParseFIAdditionalFIToFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIAdditionalFIToFI()
-
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(216, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(216, len(r.line))).Error())
 }
 
 // TestParseFIAdditionalFIToFIReaderParseError parses a wrong FIAdditionalFIToFI reader parse error
@@ -113,20 +104,13 @@ func TestParseFIAdditionalFIToFIReaderParseError(t *testing.T) {
 
 	err := r.parseFIAdditionalFIToFI()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
-	if !base.Match(err, ErrNonAlphanumeric) {
-		t.Errorf("%T: %s", err, err)
-	}
+	expected := r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "®ine One")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
-
-	if !base.Has(err, ErrNonAlphanumeric) {
-		t.Errorf("%T: %s", err, err)
-	}
+	expected = r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "®ine One")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestFIAdditionalFIToFITagError validates a FIAdditionalFIToFI tag
@@ -136,6 +120,5 @@ func TestFIAdditionalFIToFITagError(t *testing.T) {
 
 	err := fifi.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, fifi.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fifi.tag).Error())
 }

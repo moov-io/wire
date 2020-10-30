@@ -33,8 +33,7 @@ func TestBeneficiaryCustomerSwiftFieldTagAlphaNumeric(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftFieldTag", ErrNonAlphanumeric, bc.CoverPayment.SwiftFieldTag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, bc.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineOneAlphaNumeric validates BeneficiaryCustomer SwiftLineOne is alphanumeric
@@ -44,8 +43,7 @@ func TestBeneficiaryCustomerSwiftLineOneAlphaNumeric(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftLineOne", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineTwoAlphaNumeric validates BeneficiaryCustomer SwiftLineTwo is alphanumeric
@@ -55,8 +53,7 @@ func TestBeneficiaryCustomerSwiftLineTwoAlphaNumeric(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftLineTwo", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineThreeAlphaNumeric validates BeneficiaryCustomer SwiftLineThree is alphanumeric
@@ -66,8 +63,7 @@ func TestBeneficiaryCustomerSwiftLineThreeAlphaNumeric(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftLineThree", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineFourAlphaNumeric validates BeneficiaryCustomer SwiftLineFour is alphanumeric
@@ -77,8 +73,7 @@ func TestBeneficiaryCustomerSwiftLineFourAlphaNumeric(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftLineFour", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineFour).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric validates BeneficiaryCustomer SwiftLineFive is alphanumeric
@@ -88,8 +83,7 @@ func TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftLineFive", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineFive).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineFive).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineSixAlphaNumeric validates BeneficiaryCustomer SwiftLineSix is alphanumeric
@@ -99,8 +93,7 @@ func TestBeneficiaryCustomerSwiftLineSixAlphaNumeric(t *testing.T) {
 
 	err := sr.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("SwiftLineSix", ErrInvalidProperty, sr.CoverPayment.SwiftLineSix).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, sr.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseBeneficiaryCustomerWrongLength parses a wrong BeneficiaryCustomer record length
@@ -111,8 +104,7 @@ func TestParseBeneficiaryCustomerWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryCustomer()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(186, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryCustomerReaderParseError parses a wrong BeneficiaryCustomer reader parse error
@@ -123,13 +115,13 @@ func TestParseBeneficiaryCustomerReaderParseError(t *testing.T) {
 
 	err := r.parseBeneficiaryCustomer()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryCustomerTagError validates a BeneficiaryCustomer tag
@@ -139,6 +131,5 @@ func TestBeneficiaryCustomerTagError(t *testing.T) {
 
 	err := bc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, bc.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bc.tag).Error())
 }

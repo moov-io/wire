@@ -34,8 +34,7 @@ func TestFIDrawdownDebitAccountAdviceCodeValid(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AdviceCode", ErrAdviceCode, debitDDAdvice.Advice.AdviceCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AdviceCode", ErrAdviceCode, debitDDAdvice.Advice.AdviceCode).Error())
 }
 
 // TestFIDrawdownDebitAccountAdviceLineOneAlphaNumeric validates FIDrawdownDebitAccountAdvice LineOne is alphanumeric
@@ -45,8 +44,7 @@ func TestFIDrawdownDebitAccountAdviceLineOneAlphaNumeric(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineOne", ErrNonAlphanumeric, debitDDAdvice.Advice.LineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, debitDDAdvice.Advice.LineOne).Error())
 }
 
 // TestFIDrawdownDebitAccountAdviceLineTwoAlphaNumeric validates FIDrawdownDebitAccountAdvice LineTwo is alphanumeric
@@ -56,8 +54,7 @@ func TestFIDrawdownDebitAccountAdviceLineTwoAlphaNumeric(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineTwo", ErrNonAlphanumeric, debitDDAdvice.Advice.LineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, debitDDAdvice.Advice.LineTwo).Error())
 }
 
 // TestFIDrawdownDebitAccountAdviceLineThreeAlphaNumeric validates FIDrawdownDebitAccountAdvice LineThree is alphanumeric
@@ -67,8 +64,7 @@ func TestFIDrawdownDebitAccountAdviceLineThreeAlphaNumeric(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineThree", ErrNonAlphanumeric, debitDDAdvice.Advice.LineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, debitDDAdvice.Advice.LineThree).Error())
 }
 
 // TestFIDrawdownDebitAccountAdviceLineFourAlphaNumeric validates FIDrawdownDebitAccountAdvice LineFour is alphanumeric
@@ -78,8 +74,7 @@ func TestFIDrawdownDebitAccountAdviceLineFourAlphaNumeric(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFour", ErrNonAlphanumeric, debitDDAdvice.Advice.LineFour).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, debitDDAdvice.Advice.LineFour).Error())
 }
 
 // TestFIDrawdownDebitAccountAdviceLineFiveAlphaNumeric validates FIDrawdownDebitAccountAdvice LineFive is alphanumeric
@@ -89,8 +84,7 @@ func TestFIDrawdownDebitAccountAdviceLineFiveAlphaNumeric(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFive", ErrNonAlphanumeric, debitDDAdvice.Advice.LineFive).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFive", ErrNonAlphanumeric, debitDDAdvice.Advice.LineFive).Error())
 }
 
 // TestFIDrawdownDebitAccountAdviceLineSixAlphaNumeric validates FIDrawdownDebitAccountAdvice LineSix is alphanumeric
@@ -100,8 +94,7 @@ func TestFIDrawdownDebitAccountAdviceLineSixAlphaNumeric(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineSix", ErrNonAlphanumeric, debitDDAdvice.Advice.LineSix).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, debitDDAdvice.Advice.LineSix).Error())
 }
 
 // TestParseFIDrawdownDebitAccountAdviceWrongLength parses a wrong FIDrawdownDebitAccountAdvice record length
@@ -112,8 +105,7 @@ func TestParseFIDrawdownDebitAccountAdviceWrongLength(t *testing.T) {
 
 	err := r.parseFIDrawdownDebitAccountAdvice()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(200, len(r.line)).Error(), err.Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(200, len(r.line))).Error())
 }
 
 // TestParseFIDrawdownDebitAccountAdviceReaderParseError parses a wrong FIDrawdownDebitAccountAdvice reader parse error
@@ -124,13 +116,13 @@ func TestParseFIDrawdownDebitAccountAdviceReaderParseError(t *testing.T) {
 
 	err := r.parseFIDrawdownDebitAccountAdvice()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "®ine One")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "®ine One")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestFIDrawdownDebitAccountAdviceTagError validates a FIDrawdownDebitAccountAdvice tag
@@ -140,6 +132,5 @@ func TestFIDrawdownDebitAccountAdviceTagError(t *testing.T) {
 
 	err := debitDDAdvice.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, debitDDAdvice.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, debitDDAdvice.tag).Error())
 }

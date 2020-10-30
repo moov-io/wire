@@ -28,8 +28,7 @@ func TestAmountValid(t *testing.T) {
 
 	err := a.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, a.Amount).Error())
 }
 
 // TestAmountRequired validates Amount is required
@@ -39,8 +38,7 @@ func TestAmountRequired(t *testing.T) {
 
 	err := a.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Amount", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
 }
 
 // TestParseAmountWrongLength parses a wrong Amount record length
@@ -51,8 +49,7 @@ func TestParseAmountWrongLength(t *testing.T) {
 
 	err := r.parseAmount()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(18, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error())
 }
 
 // TestParseAmountReaderParseError parses a wrong Amount reader parse error
@@ -63,13 +60,13 @@ func TestParseAmountReaderParseError(t *testing.T) {
 
 	err := r.parseAmount()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected := r.parseError(fieldError("Amount", ErrNonAmount, "00000Z030022")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	expected = r.parseError(fieldError("Amount", ErrNonAmount, "00000Z030022")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestAmountTagError validates Amount tag
@@ -79,6 +76,5 @@ func TestAmountTagError(t *testing.T) {
 
 	err := a.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, a.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, a.tag).Error())
 }

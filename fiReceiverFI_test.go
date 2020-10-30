@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockFIReceiverFI creates a FIReceiverFI
@@ -21,75 +22,68 @@ func mockFIReceiverFI() *FIReceiverFI {
 // TestMockFIReceiverFI validates mockFIReceiverFI
 func TestMockFIReceiverFI(t *testing.T) {
 	firfi := mockFIReceiverFI()
-	if err := firfi.Validate(); err != nil {
-		t.Error("mockFIReceiverFI does not validate and will break other tests")
-	}
+
+	require.NoError(t, firfi.Validate(), "mockFIReceiverFI does not validate and will break other tests")
 }
 
 // TestFIReceiverFILineOneAlphaNumeric validates FIReceiverFI LineOne is alphanumeric
 func TestFIReceiverFILineOneAlphaNumeric(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.FIToFI.LineOne = "®"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, firfi.FIToFI.LineOne).Error())
 }
 
 // TestFIReceiverFILineTwoAlphaNumeric validates FIReceiverFI LineTwo is alphanumeric
 func TestFIReceiverFILineTwoAlphaNumeric(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.FIToFI.LineTwo = "®"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, firfi.FIToFI.LineTwo).Error())
 }
 
 // TestFIReceiverFILineThreeAlphaNumeric validates FIReceiverFI LineThree is alphanumeric
 func TestFIReceiverFILineThreeAlphaNumeric(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.FIToFI.LineThree = "®"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, firfi.FIToFI.LineThree).Error())
 }
 
 // TestFIReceiverFILineFourAlphaNumeric validates FIReceiverFI LineFour is alphanumeric
 func TestFIReceiverFILineFourAlphaNumeric(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.FIToFI.LineFour = "®"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, firfi.FIToFI.LineFour).Error())
 }
 
 // TestFIReceiverFILineFiveAlphaNumeric validates FIReceiverFI LineFive is alphanumeric
 func TestFIReceiverFILineFiveAlphaNumeric(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.FIToFI.LineFive = "®"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("LineFive", ErrNonAlphanumeric, firfi.FIToFI.LineFive).Error())
 }
 
 // TestFIReceiverFILineSixAlphaNumeric validates FIReceiverFI LineSix is alphanumeric
 func TestFIReceiverFILineSixAlphaNumeric(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.FIToFI.LineSix = "®"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, firfi.FIToFI.LineSix).Error())
 }
 
 // TestParseFIReceiverFIWrongLength parses a wrong FIReceiverFI record length
@@ -97,15 +91,9 @@ func TestParseFIReceiverFIWrongLength(t *testing.T) {
 	var line = "{6100}Line Six                                                                                                                                                                                         "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	firfi := mockFIReceiverFI()
-	fwm.SetFIReceiverFI(firfi)
+
 	err := r.parseFIReceiverFI()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(201, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(201, len(r.line))).Error())
 }
 
 // TestParseFIReceiverFIReaderParseError parses a wrong FIReceiverFI reader parse error
@@ -113,30 +101,24 @@ func TestParseFIReceiverFIReaderParseError(t *testing.T) {
 	var line = "{6100}Line Si®                                                                                                                                                                                           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	firfi := mockFIReceiverFI()
-	fwm.SetFIReceiverFI(firfi)
+
 	err := r.parseFIReceiverFI()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected := r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line Si®")).Error()
+	require.EqualError(t, err, expected)
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected = r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line Si®")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestFIReceiverFITagError validates a FIReceiverFI tag
 func TestFIReceiverFITagError(t *testing.T) {
 	firfi := mockFIReceiverFI()
 	firfi.tag = "{9999}"
-	if err := firfi.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := firfi.Validate()
+
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, firfi.tag).Error())
 }

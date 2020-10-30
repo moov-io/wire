@@ -33,8 +33,7 @@ func TestBeneficiaryIdentificationCodeValid(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("IdentificationCode", ErrIdentificationCode, ben.Personal.IdentificationCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrIdentificationCode, ben.Personal.IdentificationCode).Error())
 }
 
 // TestBeneficiaryIdentifierAlphaNumeric validates Beneficiary Identifier is alphanumeric
@@ -44,8 +43,7 @@ func TestBeneficiaryIdentifierAlphaNumeric(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Identifier", ErrNonAlphanumeric, ben.Personal.Identifier).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Identifier", ErrNonAlphanumeric, ben.Personal.Identifier).Error())
 }
 
 // TestBeneficiaryNameAlphaNumeric validates Beneficiary Name is alphanumeric
@@ -55,8 +53,7 @@ func TestBeneficiaryNameAlphaNumeric(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Name", ErrNonAlphanumeric, ben.Personal.Name).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, ben.Personal.Name).Error())
 }
 
 // TestBeneficiaryAddressLineOneAlphaNumeric validates Beneficiary AddressLineOne is alphanumeric
@@ -66,8 +63,7 @@ func TestBeneficiaryAddressLineOneAlphaNumeric(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AddressLineOne", ErrNonAlphanumeric, ben.Personal.Address.AddressLineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AddressLineOne", ErrNonAlphanumeric, ben.Personal.Address.AddressLineOne).Error())
 }
 
 // TestBeneficiaryAddressLineTwoAlphaNumeric validates Beneficiary AddressLineTwo is alphanumeric
@@ -77,8 +73,7 @@ func TestBeneficiaryAddressLineTwoAlphaNumeric(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AddressLineTwo", ErrNonAlphanumeric, ben.Personal.Address.AddressLineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AddressLineTwo", ErrNonAlphanumeric, ben.Personal.Address.AddressLineTwo).Error())
 }
 
 // TestBeneficiaryAddressLineThreeAlphaNumeric validates Beneficiary AddressLineThree is alphanumeric
@@ -88,8 +83,7 @@ func TestBeneficiaryAddressLineThreeAlphaNumeric(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AddressLineThree", ErrNonAlphanumeric, ben.Personal.Address.AddressLineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, ben.Personal.Address.AddressLineThree).Error())
 }
 
 // TestBeneficiaryIdentificationCodeRequired validates Beneficiary IdentificationCode is required
@@ -99,8 +93,7 @@ func TestBeneficiaryIdentificationCodeRequired(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("IdentificationCode", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestBeneficiaryIdentifierRequired validates Beneficiary Identifier is required
@@ -110,8 +103,7 @@ func TestBeneficiaryIdentifierRequired(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Identifier", ErrFieldRequired).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
 }
 
 // TestParseBeneficiaryWrongLength parses a wrong Beneficiary record length
@@ -122,8 +114,7 @@ func TestParseBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiary()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(181, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryReaderParseError parses a wrong Beneficiary reader parse error
@@ -134,13 +125,13 @@ func TestParseBeneficiaryReaderParseError(t *testing.T) {
 
 	err := r.parseBeneficiary()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("Name", ErrNonAlphanumeric, "Na®e")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("Name", ErrNonAlphanumeric, "Na®e")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryTagError validates Beneficiary tag
@@ -150,6 +141,5 @@ func TestBeneficiaryTagError(t *testing.T) {
 
 	err := ben.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, ben.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, ben.tag).Error())
 }

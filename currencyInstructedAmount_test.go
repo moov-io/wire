@@ -29,8 +29,7 @@ func TestCurrencyInstructedAmountSwiftFieldTagAlphaNumeric(t *testing.T) {
 
 	err := cia.Validate()
 
-	require.NotEmpty(t, err)
-	require.Equal(t, fieldError("SwiftFieldTag", ErrNonAlphanumeric, cia.SwiftFieldTag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, cia.SwiftFieldTag).Error())
 }
 
 // TestCurrencyInstructedAmountValid validates CurrencyInstructedAmount Amount is valid
@@ -40,8 +39,7 @@ func TestCurrencyInstructedAmountValid(t *testing.T) {
 
 	err := cia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("Amount", ErrNonAmount, cia.Amount).Error(), err.Error())
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, cia.Amount).Error())
 }
 
 // TestParseCurrencyInstructedAmountWrongLength parses a wrong CurrencyInstructedAmount record length
@@ -52,8 +50,13 @@ func TestParseCurrencyInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseCurrencyInstructedAmount()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(29, len(r.line)).Error())
+	expected := r.parseError(NewTagWrongLengthErr(29, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	_, err = r.Read()
+
+	expected = r.parseError(NewTagWrongLengthErr(29, len(r.line))).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestParseCurrencyInstructedAmountReaderParseError parses a wrong CurrencyInstructedAmount reader parse error
@@ -64,13 +67,11 @@ func TestParseCurrencyInstructedAmountReaderParseError(t *testing.T) {
 
 	err := r.parseCurrencyInstructedAmount()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrNonAmount, "00000000Z001500,49")).Error())
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrNonAmount, "00000000Z001500,49")).Error())
 }
 
 // TestCurrencyInstructedAmountTagError validates a CurrencyInstructedAmount tag
@@ -80,6 +81,5 @@ func TestCurrencyInstructedAmountTagError(t *testing.T) {
 
 	err := cia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, cia.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, cia.tag).Error())
 }

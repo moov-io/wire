@@ -28,8 +28,7 @@ func TestExchangeRateNumeric(t *testing.T) {
 
 	err := eRate.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("ExchangeRate", ErrNonAmount, eRate.ExchangeRate).Error(), err.Error())
+	require.EqualError(t, err, fieldError("ExchangeRate", ErrNonAmount, eRate.ExchangeRate).Error())
 }
 
 // TestParseExchangeRateWrongLength parses a wrong ExchangeRate record length
@@ -40,8 +39,13 @@ func TestParseExchangeRateWrongLength(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(18, len(r.line)).Error())
+	expected := r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	_, err = r.Read()
+
+	expected = r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestParseExchangeRateReaderParseError parses a wrong ExchangeRate reader parse error
@@ -52,13 +56,11 @@ func TestParseExchangeRateReaderParseError(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrNonAmount, "1,2345Z")).Error())
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAmount.Error())
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrNonAmount, "1,2345Z")).Error())
 }
 
 // TestExchangeRateTagError validates a ExchangeRate tag
@@ -68,6 +70,5 @@ func TestExchangeRateTagError(t *testing.T) {
 
 	err := eRate.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, eRate.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, eRate.tag).Error())
 }

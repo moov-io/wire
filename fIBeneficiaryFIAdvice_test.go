@@ -34,8 +34,7 @@ func TestFIBeneficiaryFIAdviceAdviceCodeValid(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AdviceCode", ErrAdviceCode, fibfia.Advice.AdviceCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AdviceCode", ErrAdviceCode, fibfia.Advice.AdviceCode).Error())
 }
 
 // TestFIBeneficiaryFIAdviceLineOneAlphaNumeric validates FIBeneficiaryFIAdvice LineOne is alphanumeric
@@ -45,8 +44,7 @@ func TestFIBeneficiaryFIAdviceLineOneAlphaNumeric(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineOne", ErrNonAlphanumeric, fibfia.Advice.LineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, fibfia.Advice.LineOne).Error())
 }
 
 // TestFIBeneficiaryFIAdviceLineTwoAlphaNumeric validates FIBeneficiaryFIAdvice LineTwo is alphanumeric
@@ -56,8 +54,7 @@ func TestFIBeneficiaryFIAdviceLineTwoAlphaNumeric(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineTwo", ErrNonAlphanumeric, fibfia.Advice.LineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, fibfia.Advice.LineTwo).Error())
 }
 
 // TestFIBeneficiaryFIAdviceLineThreeAlphaNumeric validates FIBeneficiaryFIAdvice LineThree is alphanumeric
@@ -67,8 +64,7 @@ func TestFIBeneficiaryFIAdviceLineThreeAlphaNumeric(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineThree", ErrNonAlphanumeric, fibfia.Advice.LineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, fibfia.Advice.LineThree).Error())
 }
 
 // TestFIBeneficiaryFIAdviceLineFourAlphaNumeric validates FIBeneficiaryFIAdvice LineFour is alphanumeric
@@ -78,8 +74,7 @@ func TestFIBeneficiaryFIAdviceLineFourAlphaNumeric(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFour", ErrNonAlphanumeric, fibfia.Advice.LineFour).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, fibfia.Advice.LineFour).Error())
 }
 
 // TestFIBeneficiaryFIAdviceLineFiveAlphaNumeric validates FIBeneficiaryFIAdvice LineFive is alphanumeric
@@ -89,8 +84,7 @@ func TestFIBeneficiaryFIAdviceLineFiveAlphaNumeric(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFive", ErrNonAlphanumeric, fibfia.Advice.LineFive).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFive", ErrNonAlphanumeric, fibfia.Advice.LineFive).Error())
 }
 
 // TestFIBeneficiaryFIAdviceLineSixAlphaNumeric validates FIBeneficiaryFIAdvice LineSix is alphanumeric
@@ -100,8 +94,7 @@ func TestFIBeneficiaryFIAdviceLineSixAlphaNumeric(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineSix", ErrNonAlphanumeric, fibfia.Advice.LineSix).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, fibfia.Advice.LineSix).Error())
 }
 
 // TestParseFIBeneficiaryFIAdviceWrongLength parses a wrong FIBeneficiaryFIAdvice record length
@@ -112,8 +105,7 @@ func TestParseFIBeneficiaryFIAdviceWrongLength(t *testing.T) {
 
 	err := r.parseFIBeneficiaryFIAdvice()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(200, len(r.line)).Error(), err.Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(200, len(r.line))).Error())
 }
 
 // TestParseFIBeneficiaryFIAdviceReaderParseError parses a wrong FIBeneficiaryFIAdvice reader parse error
@@ -124,13 +116,13 @@ func TestParseFIBeneficiaryFIAdviceReaderParseError(t *testing.T) {
 
 	err := r.parseFIBeneficiaryFIAdvice()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line ®ne")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line ®ne")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestFIBeneficiaryFIAdviceTagError validates a FIBeneficiaryFIAdvice tag
@@ -140,6 +132,5 @@ func TestFIBeneficiaryFIAdviceTagError(t *testing.T) {
 
 	err := fibfia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, fibfia.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fibfia.tag).Error())
 }

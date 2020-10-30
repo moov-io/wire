@@ -29,8 +29,7 @@ func TestBusinessFunctionCodeValid(t *testing.T) {
 
 	err := bfc.Validate()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrBusinessFunctionCode.Error())
+	require.EqualError(t, err, fieldError("BusinessFunctionCode", ErrBusinessFunctionCode, bfc.BusinessFunctionCode).Error())
 }
 
 // TestBusinessFunctionCodeRequired validates BusinessFunctionCode is required
@@ -40,8 +39,7 @@ func TestBusinessFunctionCodeRequired(t *testing.T) {
 
 	err := bfc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode).Error())
 }
 
 // TestParseBusinessFunctionCodeWrongLength parses a wrong BusinessFunctionCode record length
@@ -52,8 +50,7 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 
 	err := r.parseBusinessFunctionCode()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(12, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(12, len(r.line))).Error())
 }
 
 // TestParseBusinessFunctionCodeReaderParseError parses a wrong BusinessFunctionCode reader parse error
@@ -64,13 +61,13 @@ func TestParseBusinessFunctionCodeReaderParseError(t *testing.T) {
 
 	err := r.parseBusinessFunctionCode()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrBusinessFunctionCode.Error())
+	expected := r.parseError(fieldError("BusinessFunctionCode", ErrBusinessFunctionCode, "CTA")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrBusinessFunctionCode.Error())
+	expected = r.parseError(fieldError("BusinessFunctionCode", ErrBusinessFunctionCode, "CTA")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBusinessFunctionCodeTagError validates a BusinessFunctionCode tag
@@ -80,6 +77,5 @@ func TestBusinessFunctionCodeTagError(t *testing.T) {
 
 	err := bfc.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, bfc.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bfc.tag).Error())
 }

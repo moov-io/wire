@@ -34,8 +34,7 @@ func TestFIIntermediaryFIAdviceAdviceCodeValid(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("AdviceCode", ErrAdviceCode, fiifia.Advice.AdviceCode).Error(), err.Error())
+	require.EqualError(t, err, fieldError("AdviceCode", ErrAdviceCode, fiifia.Advice.AdviceCode).Error())
 }
 
 // TestFIIntermediaryFIAdviceLineOneAlphaNumeric validates FIIntermediaryFIAdvice LineOne is alphanumeric
@@ -45,8 +44,7 @@ func TestFIIntermediaryFIAdviceLineOneAlphaNumeric(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineOne", ErrNonAlphanumeric, fiifia.Advice.LineOne).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, fiifia.Advice.LineOne).Error())
 }
 
 // TestFIIntermediaryFIAdviceLineTwoAlphaNumeric validates FIIntermediaryFIAdvice LineTwo is alphanumeric
@@ -56,8 +54,7 @@ func TestFIIntermediaryFIAdviceLineTwoAlphaNumeric(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineTwo", ErrNonAlphanumeric, fiifia.Advice.LineTwo).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, fiifia.Advice.LineTwo).Error())
 }
 
 // TestFIIntermediaryFIAdviceLineThreeAlphaNumeric validates FIIntermediaryFIAdvice LineThree is alphanumeric
@@ -67,8 +64,7 @@ func TestFIIntermediaryFIAdviceLineThreeAlphaNumeric(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineThree", ErrNonAlphanumeric, fiifia.Advice.LineThree).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, fiifia.Advice.LineThree).Error())
 }
 
 // TestFIIntermediaryFIAdviceLineFourAlphaNumeric validates FIIntermediaryFIAdvice LineFour is alphanumeric
@@ -78,8 +74,7 @@ func TestFIIntermediaryFIAdviceLineFourAlphaNumeric(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFour", ErrNonAlphanumeric, fiifia.Advice.LineFour).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, fiifia.Advice.LineFour).Error())
 }
 
 // TestFIIntermediaryFIAdviceLineFiveAlphaNumeric validates FIIntermediaryFIAdvice LineFive is alphanumeric
@@ -89,8 +84,7 @@ func TestFIIntermediaryFIAdviceLineFiveAlphaNumeric(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineFive", ErrNonAlphanumeric, fiifia.Advice.LineFive).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineFive", ErrNonAlphanumeric, fiifia.Advice.LineFive).Error())
 }
 
 // TestFIIntermediaryFIAdviceLineSixAlphaNumeric validates FIIntermediaryFIAdvice LineSix is alphanumeric
@@ -100,8 +94,7 @@ func TestFIIntermediaryFIAdviceLineSixAlphaNumeric(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("LineSix", ErrNonAlphanumeric, fiifia.Advice.LineSix).Error(), err.Error())
+	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, fiifia.Advice.LineSix).Error())
 }
 
 // TestParseFIIntermediaryFIAdviceWrongLength parses a wrong FIIntermediaryFIAdvice record length
@@ -111,7 +104,7 @@ func TestParseFIIntermediaryFIAdviceWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIIntermediaryFIAdvice()
-	require.Contains(t, err.Error(), NewTagWrongLengthErr(200, len(r.line)).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(200, len(r.line))).Error())
 }
 
 // TestParseFIIntermediaryFIAdviceReaderParseError parses a wrong FIIntermediaryFIAdvice reader parse error
@@ -122,13 +115,13 @@ func TestParseFIIntermediaryFIAdviceReaderParseError(t *testing.T) {
 
 	err := r.parseFIIntermediaryFIAdvice()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected := r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line ®ne")).Error()
+	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	require.NotNil(t, err)
-	require.Contains(t, err.Error(), ErrNonAlphanumeric.Error())
+	expected = r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Line ®ne")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestFIIntermediaryFIAdviceTagError validates a FIIntermediaryFIAdvice tag
@@ -138,6 +131,5 @@ func TestFIIntermediaryFIAdviceTagError(t *testing.T) {
 
 	err := fiifia.Validate()
 
-	require.NotNil(t, err)
-	require.Equal(t, fieldError("tag", ErrValidTagForType, fiifia.tag).Error(), err.Error())
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fiifia.tag).Error())
 }
