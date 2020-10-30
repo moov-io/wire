@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockLocalInstrument creates a LocalInstrument
@@ -17,9 +19,8 @@ func mockLocalInstrument() *LocalInstrument {
 // TestMockLocalInstrument validates mockLocalInstrument
 func TestMockLocalInstrument(t *testing.T) {
 	li := mockLocalInstrument()
-	if err := li.Validate(); err != nil {
-		t.Error("mockLocalInstrument does not validate and will break other tests")
-	}
+
+	require.NoError(t, li.Validate(), "mockLocalInstrument does not validate and will break other tests")
 }
 
 // TestLocalInstrumentCodeValid validates LocalInstrumentCode
@@ -98,9 +99,6 @@ func TestParseLocalInstrumentReaderParseError(t *testing.T) {
 func TestLocalInstrumentTagError(t *testing.T) {
 	li := mockLocalInstrument()
 	li.tag = "{9999}"
-	if err := li.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, li.Validate(), fieldError("tag", ErrValidTagForType, li.tag).Error())
 }

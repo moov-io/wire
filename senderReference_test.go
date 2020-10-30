@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockSenderReference creates a SenderReference
@@ -16,9 +18,8 @@ func mockSenderReference() *SenderReference {
 // TestMockSenderReference validates mockSenderReference
 func TestMockSenderReference(t *testing.T) {
 	sr := mockSenderReference()
-	if err := sr.Validate(); err != nil {
-		t.Error("mockSenderReference does not validate and will break other tests")
-	}
+
+	require.NoError(t, sr.Validate(), "mockSenderReference does not validate and will break other tests")
 }
 
 // TestSenderReferenceAlphaNumeric validates SenderReference is alphanumeric
@@ -74,9 +75,6 @@ func TestParseSenderReferenceReaderParseError(t *testing.T) {
 func TestSenderReferenceTagError(t *testing.T) {
 	sr := mockSenderReference()
 	sr.tag = "{9999}"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, sr.Validate(), fieldError("tag", ErrValidTagForType, sr.tag).Error())
 }

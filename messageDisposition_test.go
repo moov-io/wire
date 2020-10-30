@@ -1,10 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockMessageDisposition creates a MessageDisposition
@@ -20,9 +21,8 @@ func mockMessageDisposition() *MessageDisposition {
 // TestMockMessageDisposition validates mockMessageDisposition
 func TestMockMessageDisposition(t *testing.T) {
 	md := mockMessageDisposition()
-	if err := md.Validate(); err != nil {
-		t.Error("mockMessageDisposition does not validate and will break other tests")
-	}
+
+	require.NoError(t, md.Validate(), "mockMessageDisposition does not validate and will break other tests")
 }
 
 // TestParseMessageDisposition parses a known MessageDisposition record string
@@ -77,9 +77,6 @@ func TestWriteMessageDisposition(t *testing.T) {
 func TestMessageDispositionTagError(t *testing.T) {
 	md := mockMessageDisposition()
 	md.tag = "{9999}"
-	if err := md.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, md.Validate(), fieldError("tag", ErrValidTagForType, md.tag).Error())
 }

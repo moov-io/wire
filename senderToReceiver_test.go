@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // SenderToReceiver creates a SenderToReceiver
@@ -22,9 +24,8 @@ func mockSenderToReceiver() *SenderToReceiver {
 // TestMockSenderToReceiver validates mockSenderToReceiver
 func TestMockSenderToReceiver(t *testing.T) {
 	sr := mockSenderToReceiver()
-	if err := sr.Validate(); err != nil {
-		t.Error("mockSenderToReceiver does not validate and will break other tests")
-	}
+
+	require.NoError(t, sr.Validate(), "mockSenderToReceiver does not validate and will break other tests")
 }
 
 // TestSenderToReceiverSwiftFieldTagAlphaNumeric validates SenderToReceiver SwiftFieldTag is alphanumeric
@@ -146,9 +147,6 @@ func TestParseSenderToReceiverReaderParseError(t *testing.T) {
 func TestSenderToReceiverTagError(t *testing.T) {
 	str := mockSenderToReceiver()
 	str.tag = "{9999}"
-	if err := str.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, str.Validate(), fieldError("tag", ErrValidTagForType, str.tag).Error())
 }

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockOriginatorToBeneficiary creates a OriginatorToBeneficiary
@@ -19,9 +21,8 @@ func mockOriginatorToBeneficiary() *OriginatorToBeneficiary {
 // TestMockOriginatorToBeneficiary validates mockOriginatorToBeneficiary
 func TestMockOriginatorToBeneficiary(t *testing.T) {
 	ob := mockOriginatorToBeneficiary()
-	if err := ob.Validate(); err != nil {
-		t.Error("mockOriginatorToBeneficiary does not validate and will break other tests")
-	}
+
+	require.NoError(t, ob.Validate(), "mockOriginatorToBeneficiary does not validate and will break other tests")
 }
 
 // TestOriginatorToBeneficiaryLineOneAlphaNumeric validates OriginatorToBeneficiary LineOne is alphanumeric
@@ -110,9 +111,6 @@ func TestParseOriginatorToBeneficiaryReaderParseError(t *testing.T) {
 func TestOriginatorToBeneficiaryTagError(t *testing.T) {
 	ob := mockOriginatorToBeneficiary()
 	ob.tag = "{9999}"
-	if err := ob.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ob.Validate(), fieldError("tag", ErrValidTagForType, ob.tag).Error())
 }

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockOriginatorOptionF creates a OriginatorOptionF
@@ -20,9 +22,8 @@ func mockOriginatorOptionF() *OriginatorOptionF {
 // TestMockOriginatorOptionF validates mockOriginatorOptionF
 func TestMockOriginatorOptionF(t *testing.T) {
 	oof := mockOriginatorOptionF()
-	if err := oof.Validate(); err != nil {
-		t.Error("mockOriginatorOptionF does not validate and will break other tests")
-	}
+
+	require.NoError(t, oof.Validate(), "mockOriginatorOptionF does not validate and will break other tests")
 }
 
 // TestOriginatorOptionFPartyIdentifier validates OriginatorOptionF PartyIdentifier is valid

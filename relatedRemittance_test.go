@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // RelatedRemittance creates a RelatedRemittance
@@ -34,9 +36,8 @@ func mockRelatedRemittance() *RelatedRemittance {
 // TestMockRelatedRemittance validates mockRelatedRemittance
 func TestMockRelatedRemittance(t *testing.T) {
 	rr := mockRelatedRemittance()
-	if err := rr.Validate(); err != nil {
-		t.Error("mockRelatedRemittance does not validate and will break other tests")
-	}
+
+	require.NoError(t, rr.Validate(), "mockRelatedRemittance does not validate and will break other tests")
 }
 
 // TestRelatedRemittanceLocationMethodValid validates RelatedRemittance RemittanceLocationMethod
@@ -314,9 +315,6 @@ func TestParseRelatedRemittanceReaderParseError(t *testing.T) {
 func TestRelatedRemittanceTagError(t *testing.T) {
 	rr := mockRelatedRemittance()
 	rr.tag = "{9999}"
-	if err := rr.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, rr.Validate(), fieldError("tag", ErrValidTagForType, rr.tag).Error())
 }

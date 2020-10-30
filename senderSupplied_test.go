@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockSenderSupplied creates a SenderSupplied
@@ -17,9 +19,8 @@ func mockSenderSupplied() *SenderSupplied {
 // TestMockSenderSupplied validates mockSenderSupplied
 func TestMockSenderSupplied(t *testing.T) {
 	ss := mockSenderSupplied()
-	if err := ss.Validate(); err != nil {
-		t.Error("mockSenderSupplied does not validate and will break other tests")
-	}
+
+	require.NoError(t, ss.Validate(), "mockSenderSupplied does not validate and will break other tests")
 }
 
 // TestSenderSuppliedUserRequestCorrelationAlphaNumeric validates SenderSupplied UserRequestCorrelation is alphanumeric
@@ -119,9 +120,6 @@ func TestParseSenderSuppliedReaderParseError(t *testing.T) {
 func TestSenderSuppliedTagError(t *testing.T) {
 	ss := mockSenderSupplied()
 	ss.tag = "{9999}"
-	if err := ss.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ss.Validate(), fieldError("tag", ErrValidTagForType, ss.tag).Error())
 }

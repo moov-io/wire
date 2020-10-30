@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // SecondaryRemittanceDocument creates a SecondaryRemittanceDocument
@@ -19,9 +21,8 @@ func mockSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 // TestMockSecondaryRemittanceDocument validates mockSecondaryRemittanceDocument
 func TestMockSecondaryRemittanceDocument(t *testing.T) {
 	srd := mockSecondaryRemittanceDocument()
-	if err := srd.Validate(); err != nil {
-		t.Error("mockSecondaryRemittanceDocument does not validate and will break other tests")
-	}
+
+	require.NoError(t, srd.Validate(), "mockSecondaryRemittanceDocument does not validate and will break other tests")
 }
 
 // TestSRDDocumentTypeCodeValid validates SecondaryRemittanceDocument DocumentTypeCode
@@ -146,9 +147,6 @@ func TestParseSecondaryRemittanceDocumentReaderParseError(t *testing.T) {
 func TestSecondaryRemittanceDocumentTagError(t *testing.T) {
 	srd := mockSecondaryRemittanceDocument()
 	srd.tag = "{9999}"
-	if err := srd.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, srd.Validate(), fieldError("tag", ErrValidTagForType, srd.tag).Error())
 }

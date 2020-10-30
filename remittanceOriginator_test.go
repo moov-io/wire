@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // RemittanceOriginator creates a RemittanceOriginator
@@ -44,9 +46,8 @@ func mockRemittanceOriginator() *RemittanceOriginator {
 // TestMockRemittanceOriginator validates mockRemittanceOriginator
 func TestMockRemittanceOriginator(t *testing.T) {
 	ro := mockRemittanceOriginator()
-	if err := ro.Validate(); err != nil {
-		t.Error("mockRemittanceOriginator does not validate and will break other tests")
-	}
+
+	require.NoError(t, ro.Validate(), "mockRemittanceOriginator does not validate and will break other tests")
 }
 
 // TestRemittanceOriginatorIdentificationTypeValid validates RemittanceOriginator IdentificationType
@@ -485,9 +486,6 @@ func TestParseRemittanceOriginatorReaderParseError(t *testing.T) {
 func TestRemittanceOriginatorTagError(t *testing.T) {
 	ro := mockRemittanceOriginator()
 	ro.tag = "{9999}"
-	if err := ro.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ro.Validate(), fieldError("tag", ErrValidTagForType, ro.tag).Error())
 }

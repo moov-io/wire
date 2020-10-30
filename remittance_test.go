@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // Remittance creates a Remittance
@@ -20,9 +22,8 @@ func mockRemittance() *Remittance {
 // TestMockRemittance validates mockRemittance
 func TestMockRemittance(t *testing.T) {
 	ri := mockRemittance()
-	if err := ri.Validate(); err != nil {
-		t.Error("mockRemittance does not validate and will break other tests")
-	}
+
+	require.NoError(t, ri.Validate(), "mockRemittance does not validate and will break other tests")
 }
 
 // TestRemittanceSwiftFieldTagAlphaNumeric validates Remittance SwiftFieldTag is alphanumeric
@@ -144,9 +145,6 @@ func TestParseRemittanceReaderParseError(t *testing.T) {
 func TestRemittanceTagError(t *testing.T) {
 	ri := mockRemittance()
 	ri.tag = "{9999}"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ri.Validate(), fieldError("tag", ErrValidTagForType, ri.tag).Error())
 }

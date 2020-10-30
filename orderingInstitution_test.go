@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 //  OrderingInstitution creates a OrderingInstitution
@@ -21,9 +23,8 @@ func mockOrderingInstitution() *OrderingInstitution {
 // TestMockOrderingInstitution validates mockOrderingInstitution
 func TestMockOrderingInstitution(t *testing.T) {
 	oi := mockOrderingInstitution()
-	if err := oi.Validate(); err != nil {
-		t.Error("mockOrderingInstitution does not validate and will break other tests")
-	}
+
+	require.NoError(t, oi.Validate(), "mockOrderingInstitution does not validate and will break other tests")
 }
 
 // TestOrderingInstitutionSwiftFieldTagAlphaNumeric validates OrderingInstitution SwiftFieldTag is alphanumeric
@@ -145,9 +146,6 @@ func TestParseOrderingInstitutionReaderParseError(t *testing.T) {
 func TestOrderingInstitutionTagError(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.tag = "{9999}"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, oi.Validate(), fieldError("tag", ErrValidTagForType, oi.tag).Error())
 }

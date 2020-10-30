@@ -1,10 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockOutputMessageAccountabilityData creates a mockOutputMessageAccountabilityData
@@ -22,9 +23,8 @@ func mockOutputMessageAccountabilityData() *OutputMessageAccountabilityData {
 // TestMockOutputMessageAccountabilityData validates mockOutputMessageAccountabilityData
 func TestMockOutputMessageAccountabilityData(t *testing.T) {
 	omad := mockOutputMessageAccountabilityData()
-	if err := omad.Validate(); err != nil {
-		t.Error("mockOutputMessageAccountabilityData does not validate and will break other tests")
-	}
+
+	require.NoError(t, omad.Validate(), "mockOutputMessageAccountabilityData does not validate and will break other tests")
 }
 
 // TestParseOutputMessageAccountabilityData parses a known OutputMessageAccountabilityData  record string
@@ -85,9 +85,6 @@ func TestWriteOutputMessageAccountabilityData(t *testing.T) {
 func TestOutputMessageAccountabilityDataTagError(t *testing.T) {
 	omad := mockOutputMessageAccountabilityData()
 	omad.tag = "{9999}"
-	if err := omad.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, omad.Validate(), fieldError("tag", ErrValidTagForType, omad.tag).Error())
 }

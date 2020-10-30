@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockServiceMessage creates a ServiceMessage
@@ -28,9 +29,8 @@ func mockServiceMessage() *ServiceMessage {
 // TestMockServiceMessage validates mockServiceMessage
 func TestMockServiceMessage(t *testing.T) {
 	sm := mockServiceMessage()
-	if err := sm.Validate(); err != nil {
-		t.Error("mockServiceMessage does not validate and will break other tests")
-	}
+
+	require.NoError(t, sm.Validate(), "mockServiceMessage does not validate and will break other tests")
 }
 
 // TestLineOneAlphaNumeric validates ServiceMessage LineOne is alphanumeric
@@ -390,9 +390,6 @@ func TestInvalidRelatedRemittanceForServiceMessage(t *testing.T) {
 func TestServiceMessageTagError(t *testing.T) {
 	sm := mockServiceMessage()
 	sm.tag = "{9999}"
-	if err := sm.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, sm.Validate(), fieldError("tag", ErrValidTagForType, sm.tag).Error())
 }

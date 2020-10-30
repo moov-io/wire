@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // RemittanceBeneficiary creates a RemittanceBeneficiary
@@ -38,9 +40,8 @@ func mockRemittanceBeneficiary() *RemittanceBeneficiary {
 // TestMockRemittanceBeneficiary validates mockRemittanceBeneficiary
 func TestMockRemittanceBeneficiary(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
-	if err := rb.Validate(); err != nil {
-		t.Error("mockRemittanceBeneficiary does not validate and will break other tests")
-	}
+
+	require.NoError(t, rb.Validate(), "mockRemittanceBeneficiary does not validate and will break other tests")
 }
 
 // TestRemittanceBeneficiaryIdentificationTypeValid validates RemittanceBeneficiary IdentificationType
@@ -411,9 +412,6 @@ func TestParseRemittanceBeneficiaryReaderParseError(t *testing.T) {
 func TestRemittanceBeneficiaryTagError(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.tag = "{9999}"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, rb.Validate(), fieldError("tag", ErrValidTagForType, rb.tag).Error())
 }

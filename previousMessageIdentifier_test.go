@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockPreviousMessageIdentifier creates a PreviousMessageIdentifier
@@ -16,9 +18,8 @@ func mockPreviousMessageIdentifier() *PreviousMessageIdentifier {
 // TestMockPreviousMessageIdentifier validates mockPreviousMessageIdentifier
 func TestMockPreviousMessageIdentifier(t *testing.T) {
 	pmi := mockPreviousMessageIdentifier()
-	if err := pmi.Validate(); err != nil {
-		t.Error("mockPreviousMessageIdentifier does not validate and will break other tests")
-	}
+
+	require.NoError(t, pmi.Validate(), "mockPreviousMessageIdentifier does not validate and will break other tests")
 }
 
 // TestPreviousMessageIdentifierAlphaNumeric validates PreviousMessageIdentifier is alphanumeric
@@ -74,9 +75,6 @@ func TestParsePreviousMessageIdentifierReaderParseError(t *testing.T) {
 func TestPreviousMessageIdentifierTagError(t *testing.T) {
 	pmi := mockPreviousMessageIdentifier()
 	pmi.tag = "{9999}"
-	if err := pmi.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, pmi.Validate(), fieldError("tag", ErrValidTagForType, pmi.tag).Error())
 }

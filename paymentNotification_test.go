@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockPaymentNotification creates a PaymentNotification
@@ -22,9 +24,8 @@ func mockPaymentNotification() *PaymentNotification {
 // TestMockPaymentNotification validates mockPaymentNotification
 func TestMockPaymentNotification(t *testing.T) {
 	pn := mockPaymentNotification()
-	if err := pn.Validate(); err != nil {
-		t.Error("mockPaymentNotification does not validate and will break other tests")
-	}
+
+	require.NoError(t, pn.Validate(), "mockPaymentNotification does not validate and will break other tests")
 }
 
 // TestPaymentNotificationIndicatorNumeric validates PaymentNotificationIndicator is numeric
@@ -146,9 +147,6 @@ func TestParsePaymentNotificationReaderParseError(t *testing.T) {
 func TestPaymentNotificationTagError(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.tag = "{9999}"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, pn.Validate(), fieldError("tag", ErrValidTagForType, pn.tag).Error())
 }

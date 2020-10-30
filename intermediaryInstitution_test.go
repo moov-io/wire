@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 //  IntermediaryInstitution creates a IntermediaryInstitution
@@ -21,9 +23,8 @@ func mockIntermediaryInstitution() *IntermediaryInstitution {
 // TestMockIntermediaryInstitution validates mockIntermediaryInstitution
 func TestMockIntermediaryInstitution(t *testing.T) {
 	ii := mockIntermediaryInstitution()
-	if err := ii.Validate(); err != nil {
-		t.Error("mockIntermediaryInstitution does not validate and will break other tests")
-	}
+
+	require.NoError(t, ii.Validate(), "mockIntermediaryInstitution does not validate and will break other tests")
 }
 
 // TestIntermediaryInstitutionSwiftFieldTagAlphaNumeric validates IntermediaryInstitution SwiftFieldTag is alphanumeric
@@ -145,9 +146,6 @@ func TestParseIntermediaryInstitutionReaderParseError(t *testing.T) {
 func TestIntermediaryInstitutionTagError(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.tag = "{9999}"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ii.Validate(), fieldError("tag", ErrValidTagForType, ii.tag).Error())
 }

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockReceiverDepositoryInstitution creates a ReceiverDepositoryInstitution
@@ -17,9 +19,8 @@ func mockReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 // TestMockReceiverDepositoryInstitution validates mockReceiverDepositoryInstitution
 func TestMockReceiverDepositoryInstitution(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
-	if err := rdi.Validate(); err != nil {
-		t.Error("mockReceiverDepositoryInstitution does not validate and will break other tests")
-	}
+
+	require.NoError(t, rdi.Validate(), "mockReceiverDepositoryInstitution does not validate and will break other tests")
 }
 
 // TestReceiverABANumberAlphaNumeric validates ReceiverDepositoryInstitution ReceiverABANumber is alphanumeric
@@ -108,9 +109,6 @@ func TestParseReceiverReaderParseError(t *testing.T) {
 func TestReceiverDepositoryInstitutionTagError(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	rdi.tag = "{9999}"
-	if err := rdi.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, rdi.Validate(), fieldError("tag", ErrValidTagForType, rdi.tag).Error())
 }

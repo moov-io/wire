@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 //  OrderingCustomer creates a OrderingCustomer
@@ -21,9 +23,8 @@ func mockOrderingCustomer() *OrderingCustomer {
 // TestMockOrderingCustomer validates mockOrderingCustomer
 func TestMockOrderingCustomer(t *testing.T) {
 	oc := mockOrderingCustomer()
-	if err := oc.Validate(); err != nil {
-		t.Error("mockOrderingCustomer does not validate and will break other tests")
-	}
+
+	require.NoError(t, oc.Validate(), "mockOrderingCustomer does not validate and will break other tests")
 }
 
 // TestOrderingCustomerSwiftFieldTagAlphaNumeric validates OrderingCustomer SwiftFieldTag is alphanumeric
@@ -145,9 +146,6 @@ func TestParseOrderingCustomerReaderParseError(t *testing.T) {
 func TestOrderingCustomerTagError(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.tag = "{9999}"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, oc.Validate(), fieldError("tag", ErrValidTagForType, oc.tag).Error())
 }

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockInstructingFI creates a InstructingFI
@@ -21,9 +23,8 @@ func mockInstructingFI() *InstructingFI {
 // TestMockInstructingFI validates mockInstructingFI
 func TestMockInstructingFI(t *testing.T) {
 	bfi := mockInstructingFI()
-	if err := bfi.Validate(); err != nil {
-		t.Error("mockInstructingFI does not validate and will break other tests")
-	}
+
+	require.NoError(t, bfi.Validate(), "mockInstructingFI does not validate and will break other tests")
 }
 
 // TestInstructingFIIdentificationCodeValid validates InstructingFI IdentificationCode
@@ -167,9 +168,6 @@ func TestParseInstructingFIReaderParseError(t *testing.T) {
 func TestInstructingFITagError(t *testing.T) {
 	ifi := mockInstructingFI()
 	ifi.tag = "{9999}"
-	if err := ifi.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ifi.Validate(), fieldError("tag", ErrValidTagForType, ifi.tag).Error())
 }

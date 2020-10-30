@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockTypeSubType creates a TypeSubType
@@ -17,9 +19,8 @@ func mockTypeSubType() *TypeSubType {
 // TestTypeSubType validates mockTypeSubType
 func TestMockTypeSubType(t *testing.T) {
 	tst := mockTypeSubType()
-	if err := tst.Validate(); err != nil {
-		t.Error("mockTypeSubType does not validate and will break other tests")
-	}
+
+	require.NoError(t, tst.Validate(), "mockTypeSubType does not validate and will break other tests")
 }
 
 // TestTypeCodeValid validates TypeSubType TypeCode
@@ -108,9 +109,6 @@ func TestParseTypeSubTypeReaderParseError(t *testing.T) {
 func TestTypeSubTypeTagError(t *testing.T) {
 	tst := mockTypeSubType()
 	tst.tag = "{9999}"
-	if err := tst.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, tst.Validate(), fieldError("tag", ErrValidTagForType, tst.tag).Error())
 }

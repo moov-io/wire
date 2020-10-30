@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockInstructedAmount creates a InstructedAmount
@@ -17,9 +19,8 @@ func mockInstructedAmount() *InstructedAmount {
 // TestMockInstructedAmount validates mockInstructedAmount
 func TestMockInstructedAmount(t *testing.T) {
 	ia := mockInstructedAmount()
-	if err := ia.Validate(); err != nil {
-		t.Error("mockInstructedAmount does not validate and will break other tests")
-	}
+
+	require.NoError(t, ia.Validate(), "mockInstructedAmount does not validate and will break other tests")
 }
 
 // TestInstructedAmountAmountRequired validates InstructedAmount Amount is required
@@ -108,9 +109,6 @@ func TestParseInstructedAmountReaderParseError(t *testing.T) {
 func TestInstructedAmountTagError(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.tag = "{9999}"
-	if err := ia.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ia.Validate(), fieldError("tag", ErrValidTagForType, ia.tag).Error())
 }

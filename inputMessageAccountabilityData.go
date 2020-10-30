@@ -70,7 +70,7 @@ func (imad *InputMessageAccountabilityData) Validate() error {
 		return fieldError("tag", ErrValidTagForType, imad.tag)
 	}
 	if err := imad.validateDate(imad.InputCycleDate); err != nil {
-		return err
+		return fieldError("InputCycleDate", err, imad.InputCycleDate)
 	}
 	if err := imad.isAlphanumeric(imad.InputSource); err != nil {
 		return fieldError("InputSource", err, imad.InputSource)

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // RemittanceFreeText creates a RemittanceFreeText
@@ -18,9 +20,8 @@ func mockRemittanceFreeText() *RemittanceFreeText {
 // TestMockRemittanceFreeText validates mockRemittanceFreeText
 func TestMockRemittanceFreeText(t *testing.T) {
 	rft := mockRemittanceFreeText()
-	if err := rft.Validate(); err != nil {
-		t.Error("mockRemittanceFreeText does not validate and will break other tests")
-	}
+
+	require.NoError(t, rft.Validate(), "mockRemittanceFreeText does not validate and will break other tests")
 }
 
 // TestRemittanceFreeTextLineOneAlphaNumeric validates RemittanceFreeText LineOne is alphanumeric
@@ -98,9 +99,6 @@ func TestParseRemittanceFreeTextReaderParseError(t *testing.T) {
 func TestRemittanceFreeTextTagError(t *testing.T) {
 	rft := mockRemittanceFreeText()
 	rft.tag = "{9999}"
-	if err := rft.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, rft.Validate(), fieldError("tag", ErrValidTagForType, rft.tag).Error())
 }

@@ -1,10 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"log"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockReceiptTimeStamp creates a ReceiptTimeStamp
@@ -19,9 +20,8 @@ func mockReceiptTimeStamp() *ReceiptTimeStamp {
 // TestMockReceiptTimeStamp validates mockReceiptTimeStamp
 func TestMockReceiptTimeStamp(t *testing.T) {
 	rts := mockReceiptTimeStamp()
-	if err := rts.Validate(); err != nil {
-		t.Error("mockReceiptTimeStamp does not validate and will break other tests")
-	}
+
+	require.NoError(t, rts.Validate(), "mockReceiptTimeStamp does not validate and will break other tests")
 }
 
 // TestParseReceiptTimeStamp parses a known ReceiptTimeStamp  record string
@@ -73,9 +73,6 @@ func TestWriteReceiptTimeStamp(t *testing.T) {
 func TestReceiptTimeStampTagError(t *testing.T) {
 	rts := mockReceiptTimeStamp()
 	rts.tag = "{9999}"
-	if err := rts.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, rts.Validate(), fieldError("tag", ErrValidTagForType, rts.tag).Error())
 }

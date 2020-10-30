@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // UnstructuredAddenda creates a UnstructuredAddenda
@@ -17,9 +19,8 @@ func mockUnstructuredAddenda() *UnstructuredAddenda {
 // TestMockUnstructuredAddenda validates mockUnstructuredAddenda
 func TestMockUnstructuredAddenda(t *testing.T) {
 	ua := mockUnstructuredAddenda()
-	if err := ua.Validate(); err != nil {
-		t.Error("mockUnstructuredAddenda does not validate and will break other tests")
-	}
+
+	require.NoError(t, ua.Validate(), "mockUnstructuredAddenda does not validate and will break other tests")
 }
 
 // TestUnstructuredAddendaLengthNumeric validates UnstructuredAddenda Length is numeric
@@ -97,9 +98,6 @@ func TestParseUnstructuredAddendaReaderParseError(t *testing.T) {
 func TestUnstructuredAddendaTagError(t *testing.T) {
 	ua := mockUnstructuredAddenda()
 	ua.tag = "{9999}"
-	if err := ua.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ua.Validate(), fieldError("tag", ErrValidTagForType, ua.tag).Error())
 }
