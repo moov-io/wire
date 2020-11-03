@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -27,44 +26,40 @@ func TestMockReceiverDepositoryInstitution(t *testing.T) {
 func TestReceiverABANumberAlphaNumeric(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	rdi.ReceiverABANumber = "®"
-	if err := rdi.Validate(); err != nil {
-		if !base.Match(err, ErrNonNumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rdi.Validate()
+
+	require.EqualError(t, err, fieldError("ReceiverABANumber", ErrNonNumeric, rdi.ReceiverABANumber).Error())
 }
 
 // TestReceiverShortNameAlphaNumeric validates ReceiverDepositoryInstitution ReceiverShortName is alphanumeric
 func TestReceiverShortNameAlphaNumeric(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	rdi.ReceiverShortName = "®"
-	if err := rdi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rdi.Validate()
+
+	require.EqualError(t, err, fieldError("ReceiverShortName", ErrNonAlphanumeric, rdi.ReceiverShortName).Error())
 }
 
 // TestReceiverABANumberRequired validates ReceiverDepositoryInstitution ReceiverABANumber is required
 func TestReceiverABANumberRequired(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	rdi.ReceiverABANumber = ""
-	if err := rdi.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rdi.Validate()
+
+	require.EqualError(t, err, fieldError("ReceiverABANumber", ErrFieldRequired, rdi.ReceiverABANumber).Error())
 }
 
 // TestReceiverShortNameRequired validates ReceiverDepositoryInstitution ReceiverShortName is required
 func TestReceiverShortNameRequired(t *testing.T) {
 	rdi := mockReceiverDepositoryInstitution()
 	rdi.ReceiverShortName = ""
-	if err := rdi.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rdi.Validate()
+
+	require.EqualError(t, err, fieldError("ReceiverShortName", ErrFieldRequired, rdi.ReceiverShortName).Error())
 }
 
 // TestParseReceiverWrongLength parses a wrong Receiver record length
@@ -72,15 +67,10 @@ func TestParseReceiverWrongLength(t *testing.T) {
 	var line = "{3400}00"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rdi := mockReceiverDepositoryInstitution()
-	fwm.SetReceiverDepositoryInstitution(rdi)
+
 	err := r.parseReceiverDepositoryInstitution()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(15, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(33, len(r.line))).Error())
 }
 
 // TestParseReceiverReaderParseError parses a wrong Receiver reader parse error
@@ -88,21 +78,14 @@ func TestParseReceiverReaderParseError(t *testing.T) {
 	var line = "{3400}2313Z0104Citadel           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rdi := mockReceiverDepositoryInstitution()
-	fwm.SetReceiverDepositoryInstitution(rdi)
+
 	err := r.parseReceiverDepositoryInstitution()
-	if err != nil {
-		if !base.Match(err, ErrNonNumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("ReceiverABANumber", ErrNonNumeric, "2313Z0104")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonNumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("ReceiverABANumber", ErrNonNumeric, "2313Z0104")).Error())
 }
 
 // TestReceiverDepositoryInstitutionTagError validates a ReceiverDepositoryInstitution tag

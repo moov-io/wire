@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -32,77 +31,70 @@ func TestMockSenderToReceiver(t *testing.T) {
 func TestSenderToReceiverSwiftFieldTagAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftFieldTag = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, sr.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestSenderToReceiverSwiftLineOneAlphaNumeric validates SenderToReceiver SwiftLineOne is alphanumeric
 func TestSenderToReceiverSwiftLineOneAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftLineOne = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, sr.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestSenderToReceiverSwiftLineTwoAlphaNumeric validates SenderToReceiver SwiftLineTwo is alphanumeric
 func TestSenderToReceiverSwiftLineTwoAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftLineTwo = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, sr.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestSenderToReceiverSwiftLineThreeAlphaNumeric validates SenderToReceiver SwiftLineThree is alphanumeric
 func TestSenderToReceiverSwiftLineThreeAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftLineThree = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, sr.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestSenderToReceiverSwiftLineFourAlphaNumeric validates SenderToReceiver SwiftLineFour is alphanumeric
 func TestSenderToReceiverSwiftLineFourAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftLineFour = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, sr.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestSenderToReceiverSwiftLineFiveAlphaNumeric validates SenderToReceiver SwiftLineFive is alphanumeric
 func TestSenderToReceiverSwiftLineFiveAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftLineFive = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, sr.CoverPayment.SwiftLineFive).Error())
 }
 
 // TestSenderToReceiverSwiftLineSixAlphaNumeric validates SenderToReceiver SwiftLineSix is alphanumeric
 func TestSenderToReceiverSwiftLineSixAlphaNumeric(t *testing.T) {
 	sr := mockSenderToReceiver()
 	sr.CoverPayment.SwiftLineSix = "®"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrNonAlphanumeric, sr.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseSenderToReceiverWrongLength parses a wrong SenderToReceiver record length
@@ -110,15 +102,10 @@ func TestParseSenderToReceiverWrongLength(t *testing.T) {
 	var line = "{7072}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    Swift Line Six                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	sr := mockSenderToReceiver()
-	fwm.SetSenderToReceiver(sr)
+
 	err := r.parseSenderToReceiver()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(221, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(221, len(r.line))).Error())
 }
 
 // TestParseSenderToReceiverReaderParseError parses a wrong SenderToReceiver reader parse error
@@ -126,21 +113,14 @@ func TestParseSenderToReceiverReaderParseError(t *testing.T) {
 	var line = "{7072}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    Swift Line Six                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	sr := mockSenderToReceiver()
-	fwm.SetSenderToReceiver(sr)
+
 	err := r.parseSenderToReceiver()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "®wift Line One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "®wift Line One")).Error())
 }
 
 // TestSenderToReceiverTagError validates a SenderToReceiver tag

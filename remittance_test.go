@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,77 +29,70 @@ func TestMockRemittance(t *testing.T) {
 func TestRemittanceSwiftFieldTagAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftFieldTag = "®"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, ri.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestRemittanceSwiftLineOneAlphaNumeric validates Remittance SwiftLineOne is alphanumeric
 func TestRemittanceSwiftLineOneAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftLineOne = "®"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, ri.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestRemittanceSwiftLineTwoAlphaNumeric validates Remittance SwiftLineTwo is alphanumeric
 func TestRemittanceSwiftLineTwoAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftLineTwo = "®"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, ri.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestRemittanceSwiftLineThreeAlphaNumeric validates Remittance SwiftLineThree is alphanumeric
 func TestRemittanceSwiftLineThreeAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftLineThree = "®"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, ri.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestRemittanceSwiftLineFourAlphaNumeric validates Remittance SwiftLineFour is alphanumeric
 func TestRemittanceSwiftLineFourAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftLineFour = "®"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, ri.CoverPayment.SwiftLineFour).Error())
 }
 
-// TestRemittanceSwiftLineFiveAlphaNumeric validates Remittance SwiftLineFive is alphanumeric
+// TestRemittanceSwiftLineFiveAlphaNumeric validates Remittance SwiftLineFive is an invalid property
 func TestRemittanceSwiftLineFiveAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftLineFive = "Test"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrInvalidProperty, ri.CoverPayment.SwiftLineFive).Error())
 }
 
-// TestRemittanceSwiftLineSixAlphaNumeric validates Remittance SwiftLineSix is alphanumeric
+// TestRemittanceSwiftLineSixAlphaNumeric validates Remittance SwiftLineSix is an invalid property
 func TestRemittanceSwiftLineSixAlphaNumeric(t *testing.T) {
 	ri := mockRemittance()
 	ri.CoverPayment.SwiftLineSix = "Test"
-	if err := ri.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ri.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, ri.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseRemittanceWrongLength parses a wrong Remittance record length
@@ -108,15 +100,10 @@ func TestParseRemittanceWrongLength(t *testing.T) {
 	var line = "{7070}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ri := mockRemittance()
-	fwm.SetRemittance(ri)
+
 	err := r.parseRemittance()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(151, len(r.line))).Error())
 }
 
 // TestParseRemittanceReaderParseError parses a wrong Remittance reader parse error
@@ -124,21 +111,14 @@ func TestParseRemittanceReaderParseError(t *testing.T) {
 	var line = "{7070}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ri := mockRemittance()
-	fwm.SetRemittance(ri)
+
 	err := r.parseRemittance()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "®wift Line One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "®wift Line One")).Error())
 }
 
 // TestRemittanceTagError validates a Remittance tag

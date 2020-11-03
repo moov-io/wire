@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"log"
 	"strings"
 	"testing"
 
@@ -30,28 +29,14 @@ func TestParseMessageDisposition(t *testing.T) {
 	var line = "{1100}30P 2"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	md := mockMessageDisposition()
-	fwm.SetMessageDisposition(md)
-	err := r.parseMessageDisposition()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
-	record := r.currentFEDWireMessage.MessageDisposition
 
-	if record.FormatVersion != "30" {
-		t.Errorf("FormatVersion Expected '30' got: %v", record.FormatVersion)
-	}
-	if record.TestProductionCode != "P" {
-		t.Errorf("TestProductionCode Expected 'P' got: %v", record.TestProductionCode)
-	}
-	if record.MessageDuplicationCode != "" {
-		t.Errorf("MessageDuplicationCode Expected '' got: %v", record.MessageDuplicationCode)
-	}
-	if record.MessageStatusIndicator != "2" {
-		t.Errorf("MessageStatusIndicator Expected '2' got: %v", record.MessageStatusIndicator)
-	}
+	require.NoError(t, r.parseMessageDisposition())
+
+	record := r.currentFEDWireMessage.MessageDisposition
+	require.Equal(t, "30", record.FormatVersion)
+	require.Equal(t, "P", record.TestProductionCode)
+	require.Empty(t, record.MessageDuplicationCode)
+	require.Equal(t, "2", record.MessageStatusIndicator)
 }
 
 // TestWriteMessageDisposition writes a MessageDisposition record string
@@ -59,18 +44,11 @@ func TestWriteMessageDisposition(t *testing.T) {
 	var line = "{1100}30P 2"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	md := mockMessageDisposition()
-	fwm.SetMessageDisposition(md)
-	err := r.parseMessageDisposition()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+
+	require.NoError(t, r.parseMessageDisposition())
+
 	record := r.currentFEDWireMessage.MessageDisposition
-	if record.String() != line {
-		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestMessageDispositionTagError validates a MessageDisposition tag

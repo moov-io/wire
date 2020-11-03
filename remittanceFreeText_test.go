@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,49 +27,41 @@ func TestMockRemittanceFreeText(t *testing.T) {
 func TestRemittanceFreeTextLineOneAlphaNumeric(t *testing.T) {
 	rft := mockRemittanceFreeText()
 	rft.LineOne = "®"
-	if err := rft.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rft.Validate()
+
+	require.EqualError(t, err, fieldError("LineOne", ErrNonAlphanumeric, rft.LineOne).Error())
 }
 
 // TestRemittanceFreeTextLineTwoAlphaNumeric validates RemittanceFreeText LineTwo is alphanumeric
 func TestRemittanceFreeTextLineTwoAlphaNumeric(t *testing.T) {
 	rft := mockRemittanceFreeText()
 	rft.LineTwo = "®"
-	if err := rft.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rft.Validate()
+
+	require.EqualError(t, err, fieldError("LineTwo", ErrNonAlphanumeric, rft.LineTwo).Error())
 }
 
 // TestRemittanceFreeTextLineThreeAlphaNumeric validates RemittanceFreeText LineThree is alphanumeric
 func TestRemittanceFreeTextLineThreeAlphaNumeric(t *testing.T) {
 	rft := mockRemittanceFreeText()
 	rft.LineThree = "®"
-	if err := rft.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rft.Validate()
+
+	require.EqualError(t, err, fieldError("LineThree", ErrNonAlphanumeric, rft.LineThree).Error())
 }
 
 // TestParseRemittanceFreeTextWrongLength parses a wrong RemittanceFreeText record length
 func TestParseRemittanceFreeTextWrongLength(t *testing.T) {
-	var line = "{8750}Re®ittance Free Text Line One                                                                                                               Remittance Free Text Line Two                                                                                                               Remittance Free Text Line Three                                                                                                          "
+	var line = "{8750}Remittance Free Text Line One                                                                                                              Remittance Free Text Line Two                                                                                                               Remittance Free Text Line Three                                                                                                             "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rft := mockRemittanceFreeText()
-	fwm.SetRemittanceFreeText(rft)
+
 	err := r.parseRemittanceFreeText()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(426, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(426, len(r.line))).Error())
 }
 
 // TestParseRemittanceFreeTextReaderParseError parses a wrong RemittanceFreeText reader parse error
@@ -78,21 +69,14 @@ func TestParseRemittanceFreeTextReaderParseError(t *testing.T) {
 	var line = "{8750}Re®ittance Free Text Line One                                                                                                               Remittance Free Text Line Two                                                                                                               Remittance Free Text Line Three                                                                                                             "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rft := mockRemittanceFreeText()
-	fwm.SetRemittanceFreeText(rft)
+
 	err := r.parseRemittanceFreeText()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Re®ittance Free Text Line One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "Re®ittance Free Text Line One")).Error())
 }
 
 // TestRemittanceFreeTextTagError validates a RemittanceFreeText tag

@@ -4,7 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,91 +31,50 @@ func TestMockOriginatorOptionF(t *testing.T) {
 func TestOriginatorOptionFPartyIdentifier(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.PartyIdentifier = "®®sdaasd"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("PartyIdentifier", ErrPartyIdentifier, oof.PartyIdentifier).Error())
 }
 
 // TestOriginatorOptionFPartyIdentifierNull validates OriginatorOptionF PartyIdentifier is not null
 func TestOriginatorOptionFPartyIdentifierNull(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.PartyIdentifier = ""
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("PartyIdentifier", ErrPartyIdentifier, oof.PartyIdentifier).Error())
 }
 
 // TestOriginatorOptionFPartyIdentifierCount validates OriginatorOptionF PartyIdentifier count is > 2
 func TestOriginatorOptionFPartyIdentifierCount(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.PartyIdentifier = "X"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("PartyIdentifier", ErrPartyIdentifier, oof.PartyIdentifier).Error())
 }
 
-// TestOriginatorOptionFPartyIdentifierUIDCount validates OriginatorOptionF PartyIdentifier unique ID has the
-// correct count
-func TestOriginatorOptionFPartyIdentifierUIDCount(t *testing.T) {
-	oof := mockOriginatorOptionF()
-	oof.PartyIdentifier = "B/C"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
+func TestOriginatorOptionF_PartyIdentifierField(t *testing.T) {
+	tests := []struct {
+		desc       string
+		identifier string
+	}{
+		{"invalid empty string in piece 6", "CCPT/ BDF"},
+		{"invalid empty string in piece 2 for an Account", "/ 1"},
+		{"unique ID is valid", "ZZZZFGH/"},
+		{"'/' is not in the correct spot", "CCPTFGH/"},
+		{"unique ID has the correct count", "B/C"},
 	}
-}
 
-// TestOriginatorOptionFPartyIdentifierUIDSlash validates OriginatorOptionF PartyIdentifier unique ID has the
-// returns an error if '/' is not in the correct spot
-func TestOriginatorOptionFPartyIdentifierSlash(t *testing.T) {
-	oof := mockOriginatorOptionF()
-	oof.PartyIdentifier = "CCPTFGH/"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
+	for _, test := range tests {
+		oof := mockOriginatorOptionF()
+		oof.PartyIdentifier = test.identifier
 
-// TestOriginatorOptionFPartyIdentifierUIDInvalid validates OriginatorOptionF PartyIdentifier unique ID is valid
-func TestOriginatorOptionFPartyIdentifierUIDInvalid(t *testing.T) {
-	oof := mockOriginatorOptionF()
-	oof.PartyIdentifier = "ZZZZFGH/"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
-
-// TestOriginatorOptionFPartyIdentifierInvalidAccountSpace validates OriginatorOptionF PartyIdentifier with an invalid
-// empty string in piece 2 for an Account
-func TestOriginatorOptionFPartyInvalidAccountSpace(t *testing.T) {
-	oof := mockOriginatorOptionF()
-	oof.PartyIdentifier = "/ 1"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-}
-
-// TestOriginatorOptionFPartyIdentifierInvalidSpace validates OriginatorOptionF PartyIdentifier with an invalid
-// empty string in piece 6
-func TestOriginatorOptionFPartyInvalidSpace(t *testing.T) {
-	oof := mockOriginatorOptionF()
-	oof.PartyIdentifier = "CCPT/ BDF"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrPartyIdentifier) {
-			t.Errorf("%T: %s", err, err)
-		}
+		assert.EqualErrorf(t, oof.Validate(), fieldError("PartyIdentifier", ErrPartyIdentifier,
+			test.identifier).Error(), "Test PartyIdentifier: %s", test.desc)
 	}
 }
 
@@ -122,77 +82,70 @@ func TestOriginatorOptionFPartyInvalidSpace(t *testing.T) {
 func TestOriginatorOptionFName(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.Name = "®"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFName) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrOptionFName, oof.Name).Error())
 }
 
 // TestOriginatorOptionFNameNull validates OriginatorOptionF Name is not null
 func TestOriginatorOptionFNameNull(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.Name = ""
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFName) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrOptionFName, oof.Name).Error())
 }
 
 // TestOriginatorOptionFLineValid validates OriginatorOptionF Line* is valid
 func TestOriginatorOptionFLineValid(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineOne = "Z/123"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFLine) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("LineOne", ErrOptionFLine, oof.LineOne).Error())
 }
 
 // TestOriginatorOptionFLineSlash validates OriginatorOptionF Line* slash is valid
 func TestOriginatorOptionFLineSlash(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineOne = "11123"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFLine) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("LineOne", ErrOptionFLine, oof.LineOne).Error())
 }
 
 // TestOriginatorOptionFLineOne validates OriginatorOptionF LineOne is valid
 func TestOriginatorOptionFLineOne(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineOne = "®"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFLine) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("LineOne", ErrOptionFLine, oof.LineOne).Error())
 }
 
 // TestOriginatorOptionFLineTwo validates OriginatorOptionF LineTwo is valid
 func TestOriginatorOptionFLineTwo(t *testing.T) {
 	oof := mockOriginatorOptionF()
 	oof.LineTwo = "®"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFLine) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("LineTwo", ErrOptionFLine, oof.LineTwo).Error())
 }
 
 // TestOriginatorOptionFLineThree validates OriginatorOptionF LineThree is valid
 func TestOriginatorOptionFLineThree(t *testing.T) {
 	oof := mockOriginatorOptionF()
-	oof.LineThree = "1/B"
-	if err := oof.Validate(); err != nil {
-		if !base.Match(err, ErrOptionFLine) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+	oof.LineThree = "®"
+
+	err := oof.Validate()
+
+	require.EqualError(t, err, fieldError("LineThree", ErrOptionFLine, oof.LineThree).Error())
 }
 
 // TestParseOriginatorOptionFWrongLength parses a wrong OriginatorOptionF record length
@@ -200,15 +153,10 @@ func TestParseOriginatorOptionFWrongLength(t *testing.T) {
 	var line = "{5010}TXID/123-45-6789                   Name                               LineOne                            LineTwo                            LineThree                        "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	oof := mockOriginatorOptionF()
-	fwm.SetOriginatorOptionF(oof)
+
 	err := r.parseOriginatorOptionF()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
 }
 
 // TestParseOriginatorOptionFReaderParseError parses a wrong OriginatorOptionF reader parse error
@@ -216,19 +164,12 @@ func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
 	var line = "{5010}TXID/123-45-6789                   ®ame                               LineOne                            LineTwo                            LineThree                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	oof := mockOriginatorOptionF()
-	fwm.SetOriginatorOptionF(oof)
+
 	err := r.parseOriginatorOptionF()
-	if err != nil {
-		if !base.Match(err, ErrOptionFName) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrOptionFName, "®ame")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrOptionFName) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrOptionFName, "®ame")).Error())
 }

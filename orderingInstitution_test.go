@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -31,77 +30,70 @@ func TestMockOrderingInstitution(t *testing.T) {
 func TestOrderingInstitutionSwiftFieldTagAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftFieldTag = "®"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, oi.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestOrderingInstitutionSwiftLineOneAlphaNumeric validates OrderingInstitution SwiftLineOne is alphanumeric
 func TestOrderingInstitutionSwiftLineOneAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftLineOne = "®"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, oi.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestOrderingInstitutionSwiftLineTwoAlphaNumeric validates OrderingInstitution SwiftLineTwo is alphanumeric
 func TestOrderingInstitutionSwiftLineTwoAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftLineTwo = "®"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, oi.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestOrderingInstitutionSwiftLineThreeAlphaNumeric validates OrderingInstitution SwiftLineThree is alphanumeric
 func TestOrderingInstitutionSwiftLineThreeAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftLineThree = "®"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, oi.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestOrderingInstitutionSwiftLineFourAlphaNumeric validates OrderingInstitution SwiftLineFour is alphanumeric
 func TestOrderingInstitutionSwiftLineFourAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftLineFour = "®"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, oi.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestOrderingInstitutionSwiftLineFiveAlphaNumeric validates OrderingInstitution SwiftLineFive is alphanumeric
 func TestOrderingInstitutionSwiftLineFiveAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftLineFive = "®"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, oi.CoverPayment.SwiftLineFive).Error())
 }
 
 // TestOrderingInstitutionSwiftLineSixAlphaNumeric validates OrderingInstitution SwiftLineSix is alphanumeric
 func TestOrderingInstitutionSwiftLineSixAlphaNumeric(t *testing.T) {
 	oi := mockOrderingInstitution()
 	oi.CoverPayment.SwiftLineSix = "Test"
-	if err := oi.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oi.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, oi.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseOrderingInstitutionWrongLength parses a wrong OrderingInstitution record length
@@ -109,15 +101,10 @@ func TestParseOrderingInstitutionWrongLength(t *testing.T) {
 	var line = "{7052}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	oi := mockOrderingInstitution()
-	fwm.SetOrderingInstitution(oi)
+
 	err := r.parseOrderingInstitution()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
 }
 
 // TestParseOrderingInstitutionReaderParseError parses a wrong OrderingInstitution reader parse error
@@ -125,21 +112,14 @@ func TestParseOrderingInstitutionReaderParseError(t *testing.T) {
 	var line = "{7052}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	oi := mockOrderingInstitution()
-	fwm.SetOrderingInstitution(oi)
+
 	err := r.parseOrderingInstitution()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
 }
 
 // TestOrderingInstitutionTagError validates a OrderingInstitution tag

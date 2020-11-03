@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // TestRead reads wire Files with different BusinessFunctionCodes
@@ -31,41 +31,37 @@ func testRead(filePathName string) func(t *testing.T) {
 	return func(t *testing.T) {
 		f, err := os.Open(filePathName)
 		if err != nil {
-			t.Errorf("%T: %s", err, err)
+			t.Fatalf("%T: %s", err, err)
 		}
 		defer f.Close()
 		r := NewReader(f)
 
 		fwmFile, err := r.Read()
 		if err != nil {
-			t.Errorf("%T: %s", err, err)
+			t.Fatalf("%T: %s", err, err)
 		}
+
 		// ensure we have a validated file structure
-		if err = fwmFile.Validate(); err != nil {
-			t.Errorf("%T: %s", err, err)
-		}
+		require.NoError(t, fwmFile.Validate())
 	}
 }
 
 func TestReadInvalidTag(t *testing.T) {
 	f, err := os.Open("./test/testdata/fedWireMessage-InvalidTag.txt")
 	if err != nil {
-		t.Errorf("%T: %s", err, err)
+		t.Fatalf("%T: %s", err, err)
 	}
 	defer f.Close()
 	r := NewReader(f)
 
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, NewErrInvalidTag(r.line[:6])) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.Error(t, err)
+	require.Contains(t, err.Error(), NewErrInvalidTag("{1599}").Error())
 }
 
 func TestReadShortLine(t *testing.T) {
 	f, err := NewReader(strings.NewReader("00")).Read()
-	if err == nil {
-		t.Errorf("expected error, file=%v", f)
-	}
+
+	require.Errorf(t, err, "expected an error - file: %v", f)
 }

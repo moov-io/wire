@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/base"
 	"github.com/stretchr/testify/require"
 )
 
@@ -26,11 +25,10 @@ func TestMockPreviousMessageIdentifier(t *testing.T) {
 func TestPreviousMessageIdentifierAlphaNumeric(t *testing.T) {
 	pmi := mockPreviousMessageIdentifier()
 	pmi.PreviousMessageIdentifier = "®"
-	if err := pmi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pmi.Validate()
+
+	require.EqualError(t, err, fieldError("PreviousMessageIdentifier", ErrNonAlphanumeric, pmi.PreviousMessageIdentifier).Error())
 }
 
 // TestParsePreviousMessageIdentifierWrongLength parses a wrong PreviousMessageIdentifier record length
@@ -38,15 +36,10 @@ func TestParsePreviousMessageIdentifierWrongLength(t *testing.T) {
 	var line = "{3500}Previous"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	pmi := mockPreviousMessageIdentifier()
-	fwm.SetPreviousMessageIdentifier(pmi)
+
 	err := r.parsePreviousMessageIdentifier()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(28, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
 }
 
 // TestParsePreviousMessageIdentifierReaderParseError parses a wrong PreviousMessageIdentifier reader parse error
@@ -54,21 +47,14 @@ func TestParsePreviousMessageIdentifierReaderParseError(t *testing.T) {
 	var line = "{3500}Previous®Message Ident"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	pmi := mockPreviousMessageIdentifier()
-	fwm.SetPreviousMessageIdentifier(pmi)
+
 	err := r.parsePreviousMessageIdentifier()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("PreviousMessageIdentifier", ErrNonAlphanumeric, "Previous®Message Iden")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("PreviousMessageIdentifier", ErrNonAlphanumeric, "Previous®Message Iden")).Error())
 }
 
 // TestPreviousMessageIdentifierTagError validates a PreviousMessageIdentifier tag

@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // TestWire__ReadCrashers will attempt to parse files which have previously been reported
@@ -17,7 +19,7 @@ import (
 // by users.
 func TestWire__ReadCrashers(t *testing.T) {
 	root := filepath.Join("test", "testdata", "crashers")
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+	require.NoError(t, filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if (err != nil && err != filepath.SkipDir) || info == nil || info.IsDir() {
 			return nil // Ignore SkipDir and directories
 		}
@@ -34,8 +36,5 @@ func TestWire__ReadCrashers(t *testing.T) {
 		NewReader(fd).Read()
 		t.Logf("read and parsed %s", fd.Name())
 		return nil
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
+	}))
 }

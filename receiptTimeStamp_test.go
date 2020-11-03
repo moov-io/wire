@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"log"
 	"strings"
 	"testing"
 
@@ -29,25 +28,13 @@ func TestParseReceiptTimeStamp(t *testing.T) {
 	var line = "{1110}05021230A123"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rts := mockReceiptTimeStamp()
-	fwm.SetReceiptTimeStamp(rts)
-	err := r.parseReceiptTimeStamp()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
-	record := r.currentFEDWireMessage.ReceiptTimeStamp
 
-	if record.ReceiptDate != "0502" {
-		t.Errorf("ReceiptDate Expected '0502' got: %v", record.ReceiptDate)
-	}
-	if record.ReceiptTime != "1230" {
-		t.Errorf("ReceiptTime Expected '1230' got: %v", record.ReceiptTime)
-	}
-	if record.ReceiptApplicationIdentification != "A123" {
-		t.Errorf("ReceiptApplicationIdentification Expected 'A123' got: %v", record.ReceiptApplicationIdentification)
-	}
+	require.NoError(t, r.parseReceiptTimeStamp())
+
+	record := r.currentFEDWireMessage.ReceiptTimeStamp
+	require.Equal(t, "0502", record.ReceiptDate)
+	require.Equal(t, "1230", record.ReceiptTime)
+	require.Equal(t, "A123", record.ReceiptApplicationIdentification)
 }
 
 // TestWriteReceiptTimeStamp writes a ReceiptTimeStamp record string
@@ -55,18 +42,11 @@ func TestWriteReceiptTimeStamp(t *testing.T) {
 	var line = "{1110}05021230A123"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	rts := mockReceiptTimeStamp()
-	fwm.SetReceiptTimeStamp(rts)
-	err := r.parseReceiptTimeStamp()
-	if err != nil {
-		t.Errorf("%T: %s", err, err)
-		log.Fatal(err)
-	}
+
+	require.NoError(t, r.parseReceiptTimeStamp())
+
 	record := r.currentFEDWireMessage.ReceiptTimeStamp
-	if record.String() != line {
-		t.Errorf("\nStrings do not match %s\n %s", line, record.String())
-	}
+	require.Equal(t, line, record.String())
 }
 
 // TestReceiptTimeStampTagError validates a ReceiptTimeStamp tag
