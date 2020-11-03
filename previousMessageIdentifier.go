@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -40,6 +41,20 @@ func (pmi *PreviousMessageIdentifier) Parse(record string) error {
 	}
 	pmi.tag = record[:6]
 	pmi.PreviousMessageIdentifier = pmi.parseStringField(record[6:28])
+	return nil
+}
+
+func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
+	type Alias PreviousMessageIdentifier
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(pmi),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	pmi.tag = TagPreviousMessageIdentifier
 	return nil
 }
 

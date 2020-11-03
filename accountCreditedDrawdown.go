@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -40,6 +41,20 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
 	}
 	creditDD.tag = record[:6]
 	creditDD.DrawdownCreditAccountNumber = creditDD.parseStringField(record[6:15])
+	return nil
+}
+
+func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {
+	type Alias AccountCreditedDrawdown
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(creditDD),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	creditDD.tag = TagAccountCreditedDrawdown
 	return nil
 }
 

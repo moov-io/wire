@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -49,6 +50,20 @@ func (ua *UnstructuredAddenda) Parse(record string) error {
 		return NewTagWrongLengthErr(10+al, utf8.RuneCountInString(record))
 	}
 	ua.Addenda = ua.parseStringField(record[10 : 10+al])
+	return nil
+}
+
+func (ua *UnstructuredAddenda) UnmarshalJSON(data []byte) error {
+	type Alias UnstructuredAddenda
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ua),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ua.tag = TagUnstructuredAddenda
 	return nil
 }
 

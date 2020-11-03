@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -46,6 +47,20 @@ func (imad *InputMessageAccountabilityData) Parse(record string) error {
 	imad.InputCycleDate = imad.parseStringField(record[6:14])
 	imad.InputSource = imad.parseStringField(record[14:22])
 	imad.InputSequenceNumber = imad.parseStringField(record[22:28])
+	return nil
+}
+
+func (imad *InputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
+	type Alias InputMessageAccountabilityData
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(imad),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	imad.tag = TagInputMessageAccountabilityData
 	return nil
 }
 

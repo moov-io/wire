@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -40,6 +41,20 @@ func (sr *SenderReference) Parse(record string) error {
 	}
 	sr.tag = record[:6]
 	sr.SenderReference = record[6:22]
+	return nil
+}
+
+func (sr *SenderReference) UnmarshalJSON(data []byte) error {
+	type Alias SenderReference
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(sr),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	sr.tag = TagSenderReference
 	return nil
 }
 

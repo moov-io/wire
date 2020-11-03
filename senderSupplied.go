@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -52,6 +53,20 @@ func (ss *SenderSupplied) Parse(record string) error {
 	ss.UserRequestCorrelation = ss.parseStringField(record[8:16])
 	ss.TestProductionCode = ss.parseStringField(record[16:17])
 	ss.MessageDuplicationCode = ss.parseStringField(record[17:18])
+	return nil
+}
+
+func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
+	type Alias SenderSupplied
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ss),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ss.tag = TagSenderSupplied
 	return nil
 }
 

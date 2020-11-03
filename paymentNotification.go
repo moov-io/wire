@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -60,6 +61,20 @@ func (pn *PaymentNotification) Parse(record string) error {
 	pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
 	pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
 	pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
+	return nil
+}
+
+func (pn *PaymentNotification) UnmarshalJSON(data []byte) error {
+	type Alias PaymentNotification
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(pn),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	pn.tag = TagPaymentNotification
 	return nil
 }
 

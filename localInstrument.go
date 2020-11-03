@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -43,6 +44,20 @@ func (li *LocalInstrument) Parse(record string) error {
 	li.tag = record[:6]
 	li.LocalInstrumentCode = li.parseStringField(record[6:10])
 	li.ProprietaryCode = li.parseStringField(record[10:45])
+	return nil
+}
+
+func (li *LocalInstrument) UnmarshalJSON(data []byte) error {
+	type Alias LocalInstrument
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(li),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	li.tag = TagLocalInstrument
 	return nil
 }
 

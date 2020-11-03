@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -44,6 +45,20 @@ func (ia *InstructedAmount) Parse(record string) error {
 	ia.tag = record[:6]
 	ia.CurrencyCode = ia.parseStringField(record[6:9])
 	ia.Amount = ia.parseStringField(record[9:24])
+	return nil
+}
+
+func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
+	type Alias InstructedAmount
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ia),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ia.tag = TagInstructedAmount
 	return nil
 }
 

@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -73,6 +74,20 @@ func (sm *ServiceMessage) Parse(record string) error {
 	sm.LineTen = sm.parseStringField(record[321:356])
 	sm.LineEleven = sm.parseStringField(record[356:391])
 	sm.LineTwelve = sm.parseStringField(record[391:426])
+	return nil
+}
+
+func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
+	type Alias ServiceMessage
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(sm),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	sm.tag = TagServiceMessage
 	return nil
 }
 

@@ -4,7 +4,10 @@
 
 package wire
 
-import "strings"
+import (
+	"encoding/json"
+	"strings"
+)
 
 // ErrorWire is a wire error with the fedwire message
 type ErrorWire struct {
@@ -40,6 +43,20 @@ func (ew *ErrorWire) Parse(record string) {
 	ew.ErrorCategory = ew.parseStringField(record[6:7])
 	ew.ErrorCode = ew.parseStringField(record[7:10])
 	ew.ErrorDescription = ew.parseStringField(record[10:45])
+}
+
+func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
+	type Alias ErrorWire
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(ew),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	ew.tag = TagErrorWire
+	return nil
 }
 
 // String writes ErrorWire

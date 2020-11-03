@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"strings"
 	"unicode/utf8"
 )
@@ -108,6 +109,20 @@ func (oof *OriginatorOptionF) Parse(record string) error {
 	oof.LineOne = oof.parseStringField(record[76:111])
 	oof.LineTwo = oof.parseStringField(record[111:146])
 	oof.LineThree = oof.parseStringField(record[146:181])
+	return nil
+}
+
+func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
+	type Alias OriginatorOptionF
+	aux := struct {
+		*Alias
+	}{
+		(*Alias)(oof),
+	}
+	if err := json.Unmarshal(data, &aux); err != nil {
+		return err
+	}
+	oof.tag = TagOriginatorOptionF
 	return nil
 }
 
