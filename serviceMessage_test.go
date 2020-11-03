@@ -185,6 +185,7 @@ func TestParseServiceMessageReaderParseError(t *testing.T) {
 
 	_, err = r.Read()
 
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrNonAlphanumeric, "®ine One")).Error())
 }
 
 // TestTransactionTypeCodeForServiceMessage test an invalid TransactionTypeCode
