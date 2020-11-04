@@ -6,23 +6,16 @@ package wire
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestValidators__validateOptionFName(t *testing.T) {
 	v := &validator{}
-	if err := v.validateOptionFName("1/SMITH JOHN"); err != nil {
-		t.Error(err)
-	}
-	if err := v.validateOptionFName("1/"); err == nil {
-		t.Error("expected error")
-	}
-	if err := v.validateOptionFName("1"); err == nil {
-		t.Error("expected error")
-	}
-	if err := v.validateOptionFName(""); err == nil {
-		t.Error("expected error")
-	}
-	if err := v.validateOptionFName(" /"); err == nil {
-		t.Error("expected error")
-	}
+
+	require.NoError(t, v.validateOptionFName("1/SMITH JOHN"))
+	require.Error(t, v.validateOptionFName("1/"))
+	require.Error(t, v.validateOptionFName("1"))
+	require.Error(t, v.validateOptionFName(""))
+	require.Error(t, v.validateOptionFName(" /"))
 }

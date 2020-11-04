@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 //  InstitutionAccount creates a InstitutionAccount
@@ -21,86 +22,78 @@ func mockInstitutionAccount() *InstitutionAccount {
 // TestMockInstitutionAccount validates mockInstitutionAccount
 func TestMockInstitutionAccount(t *testing.T) {
 	iAccount := mockInstitutionAccount()
-	if err := iAccount.Validate(); err != nil {
-		t.Error("mockInstitutionAccount does not validate and will break other tests")
-	}
+
+	require.NoError(t, iAccount.Validate(), "mockInstitutionAccount does not validate and will break other tests")
 }
 
 // TestInstitutionAccountSwiftFieldTagAlphaNumeric validates InstitutionAccount SwiftFieldTag is alphanumeric
 func TestInstitutionAccountSwiftFieldTagAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftFieldTag = "®"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, iAccount.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestInstitutionAccountSwiftLineOneAlphaNumeric validates InstitutionAccount SwiftLineOne is alphanumeric
 func TestInstitutionAccountSwiftLineOneAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftLineOne = "®"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, iAccount.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestInstitutionAccountSwiftLineTwoAlphaNumeric validates InstitutionAccount SwiftLineTwo is alphanumeric
 func TestInstitutionAccountSwiftLineTwoAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftLineTwo = "®"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, iAccount.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestInstitutionAccountSwiftLineThreeAlphaNumeric validates InstitutionAccount SwiftLineThree is alphanumeric
 func TestInstitutionAccountSwiftLineThreeAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftLineThree = "®"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, iAccount.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestInstitutionAccountSwiftLineFourAlphaNumeric validates InstitutionAccount SwiftLineFour is alphanumeric
 func TestInstitutionAccountSwiftLineFourAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftLineFour = "®"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, iAccount.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestInstitutionAccountSwiftLineFiveAlphaNumeric validates InstitutionAccount SwiftLineFive is alphanumeric
 func TestInstitutionAccountSwiftLineFiveAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftLineFive = "®"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, iAccount.CoverPayment.SwiftLineFive).Error())
 }
 
-// TestInstitutionAccountSwiftLineSixAlphaNumeric validates InstitutionAccount SwiftLineSix is alphanumeric
+// TestInstitutionAccountSwiftLineSixAlphaNumeric validates InstitutionAccount SwiftLineSix is an invalid property
 func TestInstitutionAccountSwiftLineSixAlphaNumeric(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.CoverPayment.SwiftLineSix = "Test"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := iAccount.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, iAccount.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseInstitutionAccountWrongLength parses a wrong InstitutionAccount record length
@@ -108,15 +101,10 @@ func TestParseInstitutionAccountWrongLength(t *testing.T) {
 	var line = "{7057}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	iAccount := mockInstitutionAccount()
-	fwm.SetInstitutionAccount(iAccount)
+
 	err := r.parseInstitutionAccount()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
 }
 
 // TestParseInstitutionAccountReaderParseError parses a wrong InstitutionAccount reader parse error
@@ -124,30 +112,20 @@ func TestParseInstitutionAccountReaderParseError(t *testing.T) {
 	var line = "{7057}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	iAccount := mockInstitutionAccount()
-	fwm.SetInstitutionAccount(iAccount)
+
 	err := r.parseInstitutionAccount()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
 }
 
 // TestInstitutionAccountTagError validates a InstitutionAccount tag
 func TestInstitutionAccountTagError(t *testing.T) {
 	iAccount := mockInstitutionAccount()
 	iAccount.tag = "{9999}"
-	if err := iAccount.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, iAccount.Validate(), fieldError("tag", ErrValidTagForType, iAccount.tag).Error())
 }

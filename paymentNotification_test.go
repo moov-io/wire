@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockPaymentNotification creates a PaymentNotification
@@ -22,86 +23,78 @@ func mockPaymentNotification() *PaymentNotification {
 // TestMockPaymentNotification validates mockPaymentNotification
 func TestMockPaymentNotification(t *testing.T) {
 	pn := mockPaymentNotification()
-	if err := pn.Validate(); err != nil {
-		t.Error("mockPaymentNotification does not validate and will break other tests")
-	}
+
+	require.NoError(t, pn.Validate(), "mockPaymentNotification does not validate and will break other tests")
 }
 
 // TestPaymentNotificationIndicatorNumeric validates PaymentNotificationIndicator is numeric
 func TestPaymentNotificationIndicatorNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.PaymentNotificationIndicator = "Z"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonNumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("PaymentNotificationIndicator", ErrNonNumeric, pn.PaymentNotificationIndicator).Error())
 }
 
 // TestPaymentNotificationContactNotificationElectronicAddressAlphaNumeric validates PaymentNotification ContactNotificationElectronicAddress is alphanumeric
 func TestContactNotificationElectronicAddressAlphaNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.ContactNotificationElectronicAddress = "®"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("ContactNotificationElectronicAddress", ErrNonAlphanumeric, pn.ContactNotificationElectronicAddress).Error())
 }
 
 // TestPaymentNotificationContactNameAlphaNumeric validates PaymentNotification ContactName is alphanumeric
 func TestContactNameAlphaNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.ContactName = "®"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("ContactName", ErrNonAlphanumeric, pn.ContactName).Error())
 }
 
 // TestPaymentNotificationContactPhoneNumberAlphaNumeric validates PaymentNotification ContactPhoneNumber is alphanumeric
 func TestContactPhoneNumberAlphaNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.ContactPhoneNumber = "®"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("ContactPhoneNumber", ErrNonAlphanumeric, pn.ContactPhoneNumber).Error())
 }
 
 // TestPaymentNotificationContactMobileNumberAlphaNumeric validates PaymentNotification ContactMobileNumber is alphanumeric
 func TestContactMobileNumberAlphaNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.ContactMobileNumber = "®"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("ContactMobileNumber", ErrNonAlphanumeric, pn.ContactMobileNumber).Error())
 }
 
 // TestPaymentNotificationContactFaxNumberAlphaNumeric validates PaymentNotification ContactFaxNumber is alphanumeric
 func TestContactContactFaxNumberNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.ContactFaxNumber = "®"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("FaxNumber", ErrNonAlphanumeric, pn.ContactFaxNumber).Error())
 }
 
 // TestPaymentNotificationEndToEndIdentificationAlphaNumeric validates PaymentNotification EndToEndIdentification is alphanumeric
 func TestContactEndToEndIdentificationNumeric(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.EndToEndIdentification = "®"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := pn.Validate()
+
+	require.EqualError(t, err, fieldError("EndToEndIdentification", ErrNonAlphanumeric, pn.EndToEndIdentification).Error())
 }
 
 // TestParsePaymentNotificationWrongLength parses a wrong PaymentNotification record length
@@ -109,15 +102,10 @@ func TestParsePaymentNotificationWrongLength(t *testing.T) {
 	var line = "{3620}1http://moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Contact Name                                                                                                                                5555551212                         5551231212                         5554561212                         End To End Identification"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	pn := mockPaymentNotification()
-	fwm.SetPaymentNotification(pn)
+
 	err := r.parsePaymentNotification()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(2335, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(2335, len(r.line))).Error())
 }
 
 // TestParsePaymentNotificationReaderParseError parses a wrong PaymentNotification reader parse error
@@ -125,30 +113,20 @@ func TestParsePaymentNotificationReaderParseError(t *testing.T) {
 	var line = "{3620}Zhttp://moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Contact Name                                                                                                                                5555551212                         5551231212                         5554561212                         End To End Identification"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	pn := mockPaymentNotification()
-	fwm.SetPaymentNotification(pn)
+
 	err := r.parsePaymentNotification()
-	if err != nil {
-		if !base.Match(err, ErrNonNumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("PaymentNotificationIndicator", ErrNonNumeric, "Z")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonNumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("PaymentNotificationIndicator", ErrNonNumeric, "Z")).Error())
 }
 
 // TestPaymentNotificationTagError validates a PaymentNotification tag
 func TestPaymentNotificationTagError(t *testing.T) {
 	pn := mockPaymentNotification()
 	pn.tag = "{9999}"
-	if err := pn.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, pn.Validate(), fieldError("tag", ErrValidTagForType, pn.tag).Error())
 }

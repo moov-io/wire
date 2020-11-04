@@ -117,6 +117,9 @@ func (rr *RelatedRemittance) Validate() error {
 	if rr.tag != TagRelatedRemittance {
 		return fieldError("tag", ErrValidTagForType, rr.tag)
 	}
+	if err := rr.fieldInclusion(); err != nil {
+		return err
+	}
 	if err := rr.isAlphanumeric(rr.RemittanceIdentification); err != nil {
 		return fieldError("RemittanceIdentification", err, rr.RemittanceIdentification)
 	}
@@ -176,6 +179,18 @@ func (rr *RelatedRemittance) Validate() error {
 	}
 	if err := rr.isAlphanumeric(rr.RemittanceData.AddressLineSeven); err != nil {
 		return fieldError("AddressLineSeven", err, rr.RemittanceData.AddressLineSeven)
+	}
+	if err := rr.isAlphanumeric(rr.RemittanceData.CountryOfResidence); err != nil {
+		return fieldError("CountryOfResidence", err, rr.RemittanceData.CountryOfResidence)
+	}
+	return nil
+}
+
+// fieldInclusion validate mandatory fields. If fields are
+// invalid the WIRE will return an error.
+func (rr *RelatedRemittance) fieldInclusion() error {
+	if rr.RemittanceData.Name == "" {
+		return fieldError("Name", ErrFieldRequired)
 	}
 	return nil
 }

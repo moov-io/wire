@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockBusinessFunctionCode creates a BusinessFunctionCode
@@ -17,31 +18,28 @@ func mockBusinessFunctionCode() *BusinessFunctionCode {
 // TestMockBusinessFunctionCode validates mockBusinessFunctionCode
 func TestMockBusinessFunctionCode(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
-	if err := bfc.Validate(); err != nil {
-		t.Error("mockBusinessFunctionCode does not validate and will break other tests")
-	}
+
+	require.NoError(t, bfc.Validate(), "mockBusinessFunctionCode does not validate and will break other tests")
 }
 
 // TestBusinessFunctionCodeValid validates BusinessFunctionCode
 func TestBusinessFunctionCodeValid(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = "ZZZ"
-	if err := bfc.Validate(); err != nil {
-		if !base.Match(err, ErrBusinessFunctionCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bfc.Validate()
+
+	require.EqualError(t, err, fieldError("BusinessFunctionCode", ErrBusinessFunctionCode, bfc.BusinessFunctionCode).Error())
 }
 
 // TestBusinessFunctionCodeRequired validates BusinessFunctionCode is required
 func TestBusinessFunctionCodeRequired(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = ""
-	if err := bfc.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bfc.Validate()
+
+	require.EqualError(t, err, fieldError("BusinessFunctionCode", ErrFieldRequired, bfc.BusinessFunctionCode).Error())
 }
 
 // TestParseBusinessFunctionCodeWrongLength parses a wrong BusinessFunctionCode record length
@@ -49,14 +47,10 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 	var line = "{3600}CT"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	fwm.SetBusinessFunctionCode(bfc)
-	if err := r.parseBusinessFunctionCode(); err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(12, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := r.parseBusinessFunctionCode()
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(12, len(r.line))).Error())
 }
 
 // TestParseBusinessFunctionCodeReaderParseError parses a wrong BusinessFunctionCode reader parse error
@@ -64,29 +58,24 @@ func TestParseBusinessFunctionCodeReaderParseError(t *testing.T) {
 	var line = "{3600}CTAXXY"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	fwm.SetBusinessFunctionCode(bfc)
-	if err := r.parseBusinessFunctionCode(); err != nil {
-		if !base.Match(err, ErrBusinessFunctionCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
-	_, err := r.Read()
-	if err != nil {
-		if !base.Has(err, ErrBusinessFunctionCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := r.parseBusinessFunctionCode()
+
+	expected := r.parseError(fieldError("BusinessFunctionCode", ErrBusinessFunctionCode, "CTA")).Error()
+	require.EqualError(t, err, expected)
+
+	_, err = r.Read()
+
+	expected = r.parseError(fieldError("BusinessFunctionCode", ErrBusinessFunctionCode, "CTA")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBusinessFunctionCodeTagError validates a BusinessFunctionCode tag
 func TestBusinessFunctionCodeTagError(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.tag = "{9999}"
-	if err := bfc.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bfc.Validate()
+
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bfc.tag).Error())
 }

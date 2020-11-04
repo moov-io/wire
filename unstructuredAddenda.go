@@ -91,7 +91,7 @@ func (ua *UnstructuredAddenda) Validate() error {
 		return fieldError("tag", ErrValidTagForType, ua.tag)
 	}
 	if err := ua.isNumeric(ua.AddendaLength); err != nil {
-		return fieldError("AddendLength", err, ua.AddendaLength)
+		return fieldError("AddendaLength", err, ua.AddendaLength)
 	}
 	if err := ua.isAlphanumeric(ua.Addenda); err != nil {
 		return fieldError("Addenda", err, ua.Addenda)
@@ -106,7 +106,7 @@ func (ua *UnstructuredAddenda) fieldInclusion() error {
 	// If UnstructuredAddenda is defined, AddendaLength is required, however it could be "0000"), but
 	// I'm not sure of the point
 	if ua.AddendaLength == "" {
-		return fieldError("AddendLength", ErrFieldRequired)
+		return fieldError("AddendaLength", ErrFieldRequired)
 	}
 	return nil
 }

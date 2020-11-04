@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // PrimaryRemittanceDocument creates a PrimaryRemittanceDocument
@@ -19,20 +20,18 @@ func mockPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
 // TestMockPrimaryRemittanceDocument validates mockPrimaryRemittanceDocument
 func TestMockPrimaryRemittanceDocument(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
-	if err := prd.Validate(); err != nil {
-		t.Error("mockPrimaryRemittanceDocument does not validate and will break other tests")
-	}
+
+	require.NoError(t, prd.Validate(), "mockPrimaryRemittanceDocument does not validate and will break other tests")
 }
 
 // TestDocumentTypeCodeValid validates PrimaryRemittanceDocument DocumentTypeCode
 func TestDocumentTypeCodeValid(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = "ZZZZ"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrDocumentTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("DocumentTypeCode", ErrDocumentTypeCode, prd.DocumentTypeCode).Error())
 }
 
 // TestProprietaryDocumentTypeCodeAlphaNumeric validates PrimaryRemittanceDocument ProprietaryDocumentTypeCode is alphanumeric
@@ -40,33 +39,30 @@ func TestProprietaryDocumentTypeCodeAlphaNumeric(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = ProprietaryDocumentType
 	prd.ProprietaryDocumentTypeCode = "®"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("ProprietaryDocumentTypeCode", ErrNonAlphanumeric, prd.ProprietaryDocumentTypeCode).Error())
 }
 
 // TestDocumentIdentificationNumberAlphaNumeric validates PrimaryRemittanceDocument DocumentIdentificationNumber is alphanumeric
 func TestDocumentIdentificationNumberAlphaNumeric(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentIdentificationNumber = "®"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("DocumentIdentificationNumber", ErrNonAlphanumeric, prd.DocumentIdentificationNumber).Error())
 }
 
 // TestIssuerAlphaNumeric validates PrimaryRemittanceDocument Issuer is alphanumeric
 func TestIssuerAlphaNumeric(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.Issuer = "®"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("Issuer", ErrNonAlphanumeric, prd.Issuer).Error())
 }
 
 // TestProprietaryDocumentTypeCodeRequired validates PrimaryRemittanceDocument ProprietaryDocumentTypeCode is required
@@ -74,22 +70,20 @@ func TestProprietaryDocumentTypeCodeRequired(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = ProprietaryDocumentType
 	prd.ProprietaryDocumentTypeCode = ""
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("ProprietaryDocumentTypeCode", ErrFieldRequired).Error())
 }
 
 // TestDocumentIdentificationNumberRequired validates PrimaryRemittanceDocument DocumentIdentificationNumber is required
 func TestDocumentIdentificationNumberRequired(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentIdentificationNumber = ""
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("DocumentIdentificationNumber", ErrFieldRequired).Error())
 }
 
 // TestProprietaryDocumentTypeCodeInvalid validates PrimaryRemittanceDocument ProprietaryDocumentTypeCode is invalid
@@ -97,11 +91,10 @@ func TestProprietaryDocumentTypeCodeInvalid(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = AccountsReceivableOpenItem
 	prd.ProprietaryDocumentTypeCode = "Proprietary"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty, prd.ProprietaryDocumentTypeCode).Error())
 }
 
 // TestParsePrimaryRemittanceDocumentWrongLength parses a wrong PrimaryRemittanceDocument record length
@@ -109,15 +102,10 @@ func TestParsePrimaryRemittanceDocumentWrongLength(t *testing.T) {
 	var line = "{8400}AROI                                   111111                             Issuer                           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	prd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(prd)
+
 	err := r.parsePrimaryRemittanceDocument()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(115, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(115, len(r.line))).Error())
 }
 
 // TestParsePrimaryRemittanceDocumentReaderParseError parses a wrong PrimaryRemittanceDocument reader parse error
@@ -125,30 +113,20 @@ func TestParsePrimaryRemittanceDocumentReaderParseError(t *testing.T) {
 	var line = "{8400}ZZZZ                                   111111                             Issuer                             "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	prd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(prd)
+
 	err := r.parsePrimaryRemittanceDocument()
-	if err != nil {
-		if !base.Match(err, ErrDocumentTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("DocumentTypeCode", ErrDocumentTypeCode, "ZZZZ")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrDocumentTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("DocumentTypeCode", ErrDocumentTypeCode, "ZZZZ")).Error())
 }
 
 // TestPrimaryRemittanceDocumentTagError validates a PrimaryRemittanceDocument tag
 func TestPrimaryRemittanceDocumentTagError(t *testing.T) {
 	prd := mockPrimaryRemittanceDocument()
 	prd.tag = "{9999}"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, prd.Validate(), fieldError("tag", ErrValidTagForType, prd.tag).Error())
 }

@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // SecondaryRemittanceDocument creates a SecondaryRemittanceDocument
@@ -19,20 +20,18 @@ func mockSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 // TestMockSecondaryRemittanceDocument validates mockSecondaryRemittanceDocument
 func TestMockSecondaryRemittanceDocument(t *testing.T) {
 	srd := mockSecondaryRemittanceDocument()
-	if err := srd.Validate(); err != nil {
-		t.Error("mockSecondaryRemittanceDocument does not validate and will break other tests")
-	}
+
+	require.NoError(t, srd.Validate(), "mockSecondaryRemittanceDocument does not validate and will break other tests")
 }
 
 // TestSRDDocumentTypeCodeValid validates SecondaryRemittanceDocument DocumentTypeCode
 func TestSRDDocumentTypeCodeValid(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentTypeCode = "ZZZZ"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrDocumentTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("DocumentTypeCode", ErrDocumentTypeCode, prd.DocumentTypeCode).Error())
 }
 
 // TestSRDProprietaryDocumentTypeCodeAlphaNumeric validates SecondaryRemittanceDocument ProprietaryDocumentTypeCode is alphanumeric
@@ -40,33 +39,30 @@ func TestSRDProprietaryDocumentTypeCodeAlphaNumeric(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentTypeCode = ProprietaryDocumentType
 	prd.ProprietaryDocumentTypeCode = "®"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("ProprietaryDocumentTypeCode", ErrNonAlphanumeric, prd.ProprietaryDocumentTypeCode).Error())
 }
 
 // TestSRDDocumentIdentificationNumberAlphaNumeric validates SecondaryRemittanceDocument DocumentIdentificationNumber is alphanumeric
 func TestSRDDocumentIdentificationNumberAlphaNumeric(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentIdentificationNumber = "®"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("DocumentIdentificationNumber", ErrNonAlphanumeric, prd.DocumentIdentificationNumber).Error())
 }
 
 // TestSRDIssuerAlphaNumeric validates SecondaryRemittanceDocument Issuer is alphanumeric
 func TestSRDIssuerAlphaNumeric(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.Issuer = "®"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("Issuer", ErrNonAlphanumeric, prd.Issuer).Error())
 }
 
 // TestSRDProprietaryDocumentTypeCodeRequired validates SecondaryRemittanceDocument ProprietaryDocumentTypeCode is required
@@ -74,22 +70,20 @@ func TestSRDProprietaryDocumentTypeCodeRequired(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentTypeCode = ProprietaryDocumentType
 	prd.ProprietaryDocumentTypeCode = ""
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("ProprietaryDocumentTypeCode", ErrFieldRequired).Error())
 }
 
 // TestSRDDocumentIdentificationNumberRequired validates SecondaryRemittanceDocument DocumentIdentificationNumber is required
 func TestSRDDocumentIdentificationNumberRequired(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentIdentificationNumber = ""
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("DocumentIdentificationNumber", ErrFieldRequired).Error())
 }
 
 // TestSRDProprietaryDocumentTypeCodeInvalid validates SecondaryRemittanceDocument ProprietaryDocumentTypeCode is invalid
@@ -97,11 +91,10 @@ func TestSRDProprietaryDocumentTypeCodeInvalid(t *testing.T) {
 	prd := mockSecondaryRemittanceDocument()
 	prd.DocumentTypeCode = AccountsReceivableOpenItem
 	prd.ProprietaryDocumentTypeCode = "Proprietary"
-	if err := prd.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := prd.Validate()
+
+	require.EqualError(t, err, fieldError("ProprietaryDocumentTypeCode", ErrInvalidProperty, prd.ProprietaryDocumentTypeCode).Error())
 }
 
 // TestParseSecondaryRemittanceDocumentWrongLength parses a wrong SecondaryRemittanceDocument record length
@@ -109,15 +102,10 @@ func TestParseSecondaryRemittanceDocumentWrongLength(t *testing.T) {
 	var line = "{8700}SOAC                                   222222                             Issuer 2                       "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	srd := mockSecondaryRemittanceDocument()
-	fwm.SetSecondaryRemittanceDocument(srd)
+
 	err := r.parseSecondaryRemittanceDocument()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(115, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(115, len(r.line))).Error())
 }
 
 // TestParseSecondaryRemittanceDocumentReaderParseError parses a wrong SecondaryRemittanceDocument reader parse error
@@ -125,30 +113,20 @@ func TestParseSecondaryRemittanceDocumentReaderParseError(t *testing.T) {
 	var line = "{8700}ZZZZ                                   222222                             Issuer 2                           "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	srd := mockSecondaryRemittanceDocument()
-	fwm.SetSecondaryRemittanceDocument(srd)
+
 	err := r.parseSecondaryRemittanceDocument()
-	if err != nil {
-		if !base.Match(err, ErrDocumentTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("DocumentTypeCode", ErrDocumentTypeCode, "ZZZZ")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrDocumentTypeCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("DocumentTypeCode", ErrDocumentTypeCode, "ZZZZ")).Error())
 }
 
 // TestSecondaryRemittanceDocumentTagError validates a SecondaryRemittanceDocument tag
 func TestSecondaryRemittanceDocumentTagError(t *testing.T) {
 	srd := mockSecondaryRemittanceDocument()
 	srd.tag = "{9999}"
-	if err := srd.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, srd.Validate(), fieldError("tag", ErrValidTagForType, srd.tag).Error())
 }

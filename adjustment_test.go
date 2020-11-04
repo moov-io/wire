@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // MockAdjustment creates a Adjustment
@@ -20,97 +21,88 @@ func mockAdjustment() *Adjustment {
 // TestMockAdjustment validates mockAdjustment
 func TestMockAdjustment(t *testing.T) {
 	adj := mockAdjustment()
-	if err := adj.Validate(); err != nil {
-		t.Error("mockAdjustment does not validate and will break other tests")
-	}
+
+	require.NoError(t, adj.Validate(), "mockAdjustment does not validate and will break other tests")
 }
 
 // TestAdjustmentReasonCodeValid validates Adjustment AdjustmentReasonCode
 func TestAdjustmentReasonCodeValid(t *testing.T) {
 	adj := mockAdjustment()
 	adj.AdjustmentReasonCode = "ZZ"
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrAdjustmentReasonCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("AdjustmentReasonCode", ErrAdjustmentReasonCode, adj.AdjustmentReasonCode).Error())
 }
 
 // TestCreditDebitIndicatorValid validates Adjustment CreditDebitIndicator
 func TestCreditDebitIndicatorValid(t *testing.T) {
 	adj := mockAdjustment()
 	adj.CreditDebitIndicator = "ZZZZ"
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrCreditDebitIndicator) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("CreditDebitIndicator", ErrCreditDebitIndicator, adj.CreditDebitIndicator).Error())
 }
 
 // TestAdjustmentAmountValid validates Adjustment Amount
 func TestAdjustmentAmountValid(t *testing.T) {
 	adj := mockAdjustment()
 	adj.RemittanceAmount.Amount = "X,"
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, adj.RemittanceAmount.Amount).Error())
 }
 
 // TestAdjustmentCurrencyCodeValid validates Adjustment CurrencyCode
 func TestAdjustmentCurrencyCodeValid(t *testing.T) {
 	adj := mockAdjustment()
 	adj.RemittanceAmount.CurrencyCode = "XZP"
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrNonCurrencyCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrNonCurrencyCode, adj.RemittanceAmount.CurrencyCode).Error())
 }
 
 // TestAdjustmentReasonCodeRequired validates Adjustment AdjustmentReasonCode is required
 func TestAdjustmentReasonCodeRequired(t *testing.T) {
 	adj := mockAdjustment()
 	adj.AdjustmentReasonCode = ""
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("AdjustmentReasonCode", ErrFieldRequired).Error())
 }
 
 // TestCreditDebitIndicatorRequired validates Adjustment CreditDebitIndicator is required
 func TestCreditDebitIndicatorRequired(t *testing.T) {
 	adj := mockAdjustment()
 	adj.CreditDebitIndicator = ""
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("CreditDebitIndicator", ErrFieldRequired).Error())
 }
 
 // TestAdjustmentAmountRequired validates Adjustment Amount is required
 func TestAdjustmentAmountRequired(t *testing.T) {
 	adj := mockAdjustment()
 	adj.RemittanceAmount.Amount = ""
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
 }
 
 // TestAdjustmentCurrencyCodeRequired validates Adjustment CurrencyCode is required
 func TestAdjustmentCurrencyCodeRequired(t *testing.T) {
 	adj := mockAdjustment()
 	adj.RemittanceAmount.CurrencyCode = ""
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrFieldRequired).Error())
 }
 
 // TestParseAdjustmentWrongLength parses a wrong Adjustment record length
@@ -118,15 +110,10 @@ func TestParseAdjustmentWrongLength(t *testing.T) {
 	var line = "{8600}01CRDTUSD1234.56Z             Adjustment Additional Information                                                                                                       "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	adj := mockAdjustment()
-	fwm.SetAdjustment(adj)
+
 	err := r.parseAdjustment()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(174, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(174, len(r.line))).Error())
 }
 
 // TestParseAdjustmentReaderParseError parses a wrong Adjustment reader parse error
@@ -134,30 +121,24 @@ func TestParseAdjustmentReaderParseError(t *testing.T) {
 	var line = "{8600}01CRDTUSD1234.56Z             Adjustment Additional Information                                                                                                         "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	adj := mockAdjustment()
-	fwm.SetAdjustment(adj)
+
 	err := r.parseAdjustment()
-	if err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected := r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected = r.parseError(fieldError("Amount", ErrNonAmount, "1234.56Z")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestAdjustmentTagError validates Adjustment tag
 func TestAdjustmentTagError(t *testing.T) {
 	adj := mockAdjustment()
 	adj.tag = "{9999}"
-	if err := adj.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := adj.Validate()
+
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, adj.tag).Error())
 }

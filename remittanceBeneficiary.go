@@ -207,7 +207,7 @@ func (rb *RemittanceBeneficiary) Validate() error {
 		return fieldError("AddressLineSeven", err, rb.RemittanceData.AddressLineSeven)
 	}
 	if err := rb.isAlphanumeric(rb.RemittanceData.CountryOfResidence); err != nil {
-		return fieldError("AddressLineSeven", err, rb.RemittanceData.CountryOfResidence)
+		return fieldError("CountryOfResidence", err, rb.RemittanceData.CountryOfResidence)
 	}
 
 	return nil

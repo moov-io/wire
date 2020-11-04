@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 //  IntermediaryInstitution creates a IntermediaryInstitution
@@ -21,86 +22,78 @@ func mockIntermediaryInstitution() *IntermediaryInstitution {
 // TestMockIntermediaryInstitution validates mockIntermediaryInstitution
 func TestMockIntermediaryInstitution(t *testing.T) {
 	ii := mockIntermediaryInstitution()
-	if err := ii.Validate(); err != nil {
-		t.Error("mockIntermediaryInstitution does not validate and will break other tests")
-	}
+
+	require.NoError(t, ii.Validate(), "mockIntermediaryInstitution does not validate and will break other tests")
 }
 
 // TestIntermediaryInstitutionSwiftFieldTagAlphaNumeric validates IntermediaryInstitution SwiftFieldTag is alphanumeric
 func TestIntermediaryInstitutionSwiftFieldTagAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftFieldTag = "®"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, ii.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestIntermediaryInstitutionSwiftLineOneAlphaNumeric validates IntermediaryInstitution SwiftLineOne is alphanumeric
 func TestIntermediaryInstitutionSwiftLineOneAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftLineOne = "®"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, ii.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestIntermediaryInstitutionSwiftLineTwoAlphaNumeric validates IntermediaryInstitution SwiftLineTwo is alphanumeric
 func TestIntermediaryInstitutionSwiftLineTwoAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftLineTwo = "®"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, ii.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestIntermediaryInstitutionSwiftLineThreeAlphaNumeric validates IntermediaryInstitution SwiftLineThree is alphanumeric
 func TestIntermediaryInstitutionSwiftLineThreeAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftLineThree = "®"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, ii.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestIntermediaryInstitutionSwiftLineFourAlphaNumeric validates IntermediaryInstitution SwiftLineFour is alphanumeric
 func TestIntermediaryInstitutionSwiftLineFourAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftLineFour = "®"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, ii.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestIntermediaryInstitutionSwiftLineFiveAlphaNumeric validates IntermediaryInstitution SwiftLineFive is alphanumeric
 func TestIntermediaryInstitutionSwiftLineFiveAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftLineFive = "®"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, ii.CoverPayment.SwiftLineFive).Error())
 }
 
 // TestIntermediaryInstitutionSwiftLineSixAlphaNumeric validates IntermediaryInstitution SwiftLineSix is alphanumeric
 func TestIntermediaryInstitutionSwiftLineSixAlphaNumeric(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.CoverPayment.SwiftLineSix = "Test"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ii.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, ii.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseIntermediaryInstitutionWrongLength parses a wrong IntermediaryInstitution record length
@@ -108,15 +101,10 @@ func TestParseIntermediaryInstitutionWrongLength(t *testing.T) {
 	var line = "{7056}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ii := mockIntermediaryInstitution()
-	fwm.SetIntermediaryInstitution(ii)
+
 	err := r.parseIntermediaryInstitution()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
 }
 
 // TestParseIntermediaryInstitutionReaderParseError parses a wrong IntermediaryInstitution reader parse error
@@ -124,30 +112,20 @@ func TestParseIntermediaryInstitutionReaderParseError(t *testing.T) {
 	var line = "{7056}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ii := mockIntermediaryInstitution()
-	fwm.SetIntermediaryInstitution(ii)
+
 	err := r.parseIntermediaryInstitution()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
 }
 
 // TestIntermediaryInstitutionTagError validates a IntermediaryInstitution tag
 func TestIntermediaryInstitutionTagError(t *testing.T) {
 	ii := mockIntermediaryInstitution()
 	ii.tag = "{9999}"
-	if err := ii.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ii.Validate(), fieldError("tag", ErrValidTagForType, ii.tag).Error())
 }

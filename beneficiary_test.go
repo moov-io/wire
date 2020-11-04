@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockBeneficiary creates a Beneficiary
@@ -21,97 +22,88 @@ func mockBeneficiary() *Beneficiary {
 // TestMockBeneficiary validates mockBeneficiary
 func TestMockBeneficiary(t *testing.T) {
 	ben := mockBeneficiary()
-	if err := ben.Validate(); err != nil {
-		t.Error("mockBeneficiary does not validate and will break other tests")
-	}
+
+	require.NoError(t, ben.Validate(), "mockBeneficiary does not validate and will break other tests")
 }
 
 // TestBeneficiaryIdentificationCodeValid validates Beneficiary IdentificationCode
 func TestBeneficiaryIdentificationCodeValid(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = "Baseball Card ID"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrIdentificationCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrIdentificationCode, ben.Personal.IdentificationCode).Error())
 }
 
 // TestBeneficiaryIdentifierAlphaNumeric validates Beneficiary Identifier is alphanumeric
 func TestBeneficiaryIdentifierAlphaNumeric(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.Identifier = "®"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("Identifier", ErrNonAlphanumeric, ben.Personal.Identifier).Error())
 }
 
 // TestBeneficiaryNameAlphaNumeric validates Beneficiary Name is alphanumeric
 func TestBeneficiaryNameAlphaNumeric(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.Name = "®"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, ben.Personal.Name).Error())
 }
 
 // TestBeneficiaryAddressLineOneAlphaNumeric validates Beneficiary AddressLineOne is alphanumeric
 func TestBeneficiaryAddressLineOneAlphaNumeric(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.Address.AddressLineOne = "®"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineOne", ErrNonAlphanumeric, ben.Personal.Address.AddressLineOne).Error())
 }
 
 // TestBeneficiaryAddressLineTwoAlphaNumeric validates Beneficiary AddressLineTwo is alphanumeric
 func TestBeneficiaryAddressLineTwoAlphaNumeric(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.Address.AddressLineTwo = "®"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineTwo", ErrNonAlphanumeric, ben.Personal.Address.AddressLineTwo).Error())
 }
 
 // TestBeneficiaryAddressLineThreeAlphaNumeric validates Beneficiary AddressLineThree is alphanumeric
 func TestBeneficiaryAddressLineThreeAlphaNumeric(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.Address.AddressLineThree = "®"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, ben.Personal.Address.AddressLineThree).Error())
 }
 
 // TestBeneficiaryIdentificationCodeRequired validates Beneficiary IdentificationCode is required
 func TestBeneficiaryIdentificationCodeRequired(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = ""
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestBeneficiaryIdentifierRequired validates Beneficiary Identifier is required
 func TestBeneficiaryIdentifierRequired(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.Personal.Identifier = ""
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
 }
 
 // TestParseBeneficiaryWrongLength parses a wrong Beneficiary record length
@@ -119,15 +111,10 @@ func TestParseBeneficiaryWrongLength(t *testing.T) {
 	var line = "{4200}31234                              Name                               Address One                        Address Two                        Address Three                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
+
 	err := r.parseBeneficiary()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryReaderParseError parses a wrong Beneficiary reader parse error
@@ -135,30 +122,24 @@ func TestParseBeneficiaryReaderParseError(t *testing.T) {
 	var line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                      "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
+
 	err := r.parseBeneficiary()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected := r.parseError(fieldError("Name", ErrNonAlphanumeric, "Na®e")).Error()
+	require.EqualError(t, err, expected)
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected = r.parseError(fieldError("Name", ErrNonAlphanumeric, "Na®e")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryTagError validates Beneficiary tag
 func TestBeneficiaryTagError(t *testing.T) {
 	ben := mockBeneficiary()
 	ben.tag = "{9999}"
-	if err := ben.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, ben.tag).Error())
 }

@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // RemittanceBeneficiary creates a RemittanceBeneficiary
@@ -38,31 +39,28 @@ func mockRemittanceBeneficiary() *RemittanceBeneficiary {
 // TestMockRemittanceBeneficiary validates mockRemittanceBeneficiary
 func TestMockRemittanceBeneficiary(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
-	if err := rb.Validate(); err != nil {
-		t.Error("mockRemittanceBeneficiary does not validate and will break other tests")
-	}
+
+	require.NoError(t, rb.Validate(), "mockRemittanceBeneficiary does not validate and will break other tests")
 }
 
 // TestRemittanceBeneficiaryIdentificationTypeValid validates RemittanceBeneficiary IdentificationType
 func TestRemittanceBeneficiaryIdentificationTypeValid(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationType = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrIdentificationType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationType", ErrIdentificationType, rb.IdentificationType).Error())
 }
 
 // TestRemittanceBeneficiaryIdentificationCodeValid validates RemittanceBeneficiary IdentificationCode
 func TestRemittanceBeneficiaryIdentificationCodeValid(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationCode = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrOrganizationIdentificationCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrOrganizationIdentificationCode, rb.IdentificationCode).Error())
 }
 
 // TestRemittanceBeneficiaryIdentificationCodeValid2 validates RemittanceBeneficiary IdentificationCode
@@ -70,121 +68,110 @@ func TestRemittanceBeneficiaryIdentificationCodeValid2(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationType = PrivateID
 	rb.IdentificationCode = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrPrivateIdentificationCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrPrivateIdentificationCode, rb.IdentificationCode).Error())
 }
 
 // TestRemittanceBeneficiaryAddressTypeValid validates RemittanceBeneficiary AddressType
 func TestRemittanceBeneficiaryAddressTypeValid(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressType = "BBRB"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrAddressType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressType", ErrAddressType, rb.RemittanceData.AddressType).Error())
 }
 
 // TestRemittanceBeneficiaryNameAlphaNumeric validates RemittanceBeneficiary Name is alphanumeric
 func TestRemittanceBeneficiaryNameAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.Name = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, rb.RemittanceData.Name).Error())
 }
 
 // TestRemittanceBeneficiaryIdentificationNumberAlphaNumeric validates RemittanceBeneficiary IdentificationNumber is alphanumeric
 func TestRemittanceBeneficiaryIdentificationNumberAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationNumber = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationNumber", ErrNonAlphanumeric, rb.IdentificationNumber).Error())
 }
 
 // TestRemittanceBeneficiaryIdentificationNumberIssuerAlphaNumeric validates RemittanceBeneficiary IdentificationNumberIssuer is alphanumeric
 func TestRemittanceBeneficiaryIdentificationNumberIssuerAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationNumberIssuer = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationNumberIssuer", ErrNonAlphanumeric, rb.IdentificationNumberIssuer).Error())
 }
 
 // TestRemittanceBeneficiaryDepartmentAlphaNumeric validates RemittanceBeneficiary Department is alphanumeric
 func TestRemittanceBeneficiaryDepartmentAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.Department = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("Department", ErrNonAlphanumeric, rb.RemittanceData.Department).Error())
 }
 
 // TestRemittanceBeneficiarySubDepartmentAlphaNumeric validates RemittanceBeneficiary SubDepartment is alphanumeric
 func TestRemittanceBeneficiarySubDepartmentAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.SubDepartment = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("SubDepartment", ErrNonAlphanumeric, rb.RemittanceData.SubDepartment).Error())
 }
 
 // TestRemittanceBeneficiaryStreetNameAlphaNumeric validates RemittanceBeneficiary StreetName is alphanumeric
 func TestRemittanceBeneficiaryStreetNameAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.StreetName = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("StreetName", ErrNonAlphanumeric, rb.RemittanceData.StreetName).Error())
 }
 
 // TestRemittanceBeneficiaryBuildingNumberAlphaNumeric validates RemittanceBeneficiary BuildingNumber is alphanumeric
 func TestRemittanceBeneficiaryBuildingNumberAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.BuildingNumber = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("BuildingNumber", ErrNonAlphanumeric, rb.RemittanceData.BuildingNumber).Error())
 }
 
 // TestRemittanceBeneficiaryPostCodeAlphaNumeric validates RemittanceBeneficiary PostCode is alphanumeric
 func TestRemittanceBeneficiaryPostCodeAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.PostCode = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("PostCode", ErrNonAlphanumeric, rb.RemittanceData.PostCode).Error())
 }
 
 // TestRemittanceBeneficiaryTownNameAlphaNumeric validates RemittanceBeneficiary TownName is alphanumeric
 func TestRemittanceBeneficiaryTownNameAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.TownName = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("TownName", ErrNonAlphanumeric, rb.RemittanceData.TownName).Error())
 }
 
 // TestRemittanceBeneficiaryCountrySubDivisionStateAlphaNumeric validates RemittanceBeneficiary CountrySubDivisionState
@@ -192,121 +179,110 @@ func TestRemittanceBeneficiaryTownNameAlphaNumeric(t *testing.T) {
 func TestRemittanceBeneficiaryCountrySubDivisionStateAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.CountrySubDivisionState = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("CountrySubDivisionState", ErrNonAlphanumeric, rb.RemittanceData.CountrySubDivisionState).Error())
 }
 
 // TestRemittanceBeneficiaryCountryAlphaNumeric validates RemittanceBeneficiary Country is alphanumeric
 func TestRemittanceBeneficiaryCountryAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.Country = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("Country", ErrNonAlphanumeric, rb.RemittanceData.Country).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineOneAlphaNumeric validates RemittanceBeneficiary AddressLineOne is alphanumeric
 func TestRemittanceBeneficiaryAddressLineOneAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineOne = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineOne", ErrNonAlphanumeric, rb.RemittanceData.AddressLineOne).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineTwoAlphaNumeric validates RemittanceBeneficiary AddressLineTwo is alphanumeric
 func TestRemittanceBeneficiaryAddressLineTwoAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineTwo = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineTwo", ErrNonAlphanumeric, rb.RemittanceData.AddressLineTwo).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineThreeAlphaNumeric validates RemittanceBeneficiary AddressLineThree is alphanumeric
 func TestRemittanceBeneficiaryAddressLineThreeAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineThree = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, rb.RemittanceData.AddressLineThree).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineFourAlphaNumeric validates RemittanceBeneficiary AddressLineFour is alphanumeric
 func TestRemittanceBeneficiaryAddressLineFourAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineFour = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineFour", ErrNonAlphanumeric, rb.RemittanceData.AddressLineFour).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineFiveAlphaNumeric validates RemittanceBeneficiary AddressLineFive is alphanumeric
 func TestRemittanceBeneficiaryAddressLineFiveAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineFive = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineFive", ErrNonAlphanumeric, rb.RemittanceData.AddressLineFive).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineSixAlphaNumeric validates RemittanceBeneficiary AddressLineSix is alphanumeric
 func TestRemittanceBeneficiaryAddressLineSixAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineSix = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineSix", ErrNonAlphanumeric, rb.RemittanceData.AddressLineSix).Error())
 }
 
 // TestRemittanceBeneficiaryAddressLineSevenAlphaNumeric validates RemittanceBeneficiary AddressLineSeven is alphanumeric
 func TestRemittanceBeneficiaryAddressLineSevenAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.AddressLineSeven = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineSeven", ErrNonAlphanumeric, rb.RemittanceData.AddressLineSeven).Error())
 }
 
 // TestRemittanceBeneficiaryCountryOfResidenceAlphaNumeric validates RemittanceBeneficiary CountryOfResidence is alphanumeric
 func TestRemittanceBeneficiaryCountryOfResidenceAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.CountryOfResidence = "®"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("CountryOfResidence", ErrNonAlphanumeric, rb.RemittanceData.CountryOfResidence).Error())
 }
 
 // TestRemittanceBeneficiaryNameRequired validates RemittanceBeneficiary Name is required
 func TestRemittanceBeneficiaryNameRequired(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.RemittanceData.Name = ""
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrFieldRequired).Error())
 }
 
 // TestRemittanceBeneficiaryIdentificationNumberInvalid validates RemittanceBeneficiary IdentificationNumber
@@ -314,11 +290,10 @@ func TestRemittanceBeneficiaryIdentificationNumberInvalid(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationCode = PICDateBirthPlace
 	rb.IdentificationNumber = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationNumber", ErrInvalidProperty, rb.IdentificationNumber).Error())
 }
 
 // TestIdentificationNumberIssuerInvalid_IdentificationNumber validates RemittanceBeneficiary IdentificationNumberIssuer
@@ -326,23 +301,21 @@ func TestIdentificationNumberIssuerInvalid_IdentificationNumber(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationNumber = ""
 	rb.IdentificationNumberIssuer = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationNumberIssuer", ErrInvalidProperty, rb.IdentificationNumberIssuer).Error())
 }
 
-// TestIdentificationNumberIssuerInvalid_PICDateBirthPlace validates RemittanceBeneficiary IdentificationNumberIssuer
+// TestIdentificationNumberIssuerInvalid_PICDateBirthPlace validates RemittanceBeneficiary IdentificationNumber
 func TestIdentificationNumberIssuerInvalid_PICDateBirthPlace(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationCode = PICDateBirthPlace
 	rb.IdentificationNumberIssuer = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationNumber", ErrInvalidProperty, rb.IdentificationNumber).Error())
 }
 
 // TestIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI validates RemittanceBeneficiary IdentificationNumberIssuer
@@ -350,11 +323,10 @@ func TestIdentificationNumberIssuerInvalid_OICSWIFTBICORBEI(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationCode = OICSWIFTBICORBEI
 	rb.IdentificationNumberIssuer = "zz"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationNumberIssuer", ErrInvalidProperty, rb.IdentificationNumberIssuer).Error())
 }
 
 // TestRemittanceBeneficiaryDateBirthPlaceInvalid validates RemittanceBeneficiary DateBirthPlace
@@ -362,11 +334,10 @@ func TestRemittanceBeneficiaryDateBirthPlaceInvalid(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.IdentificationCode = PICCustomerNumber
 	rb.RemittanceData.DateBirthPlace = "Pottstown"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := rb.Validate()
+
+	require.EqualError(t, err, fieldError("DateBirthPlace", ErrInvalidProperty, rb.RemittanceData.DateBirthPlace).Error())
 }
 
 // TestParseRemittanceBeneficiaryWrongLength parses a wrong RemittanceBeneficiary record length
@@ -374,15 +345,10 @@ func TestParseRemittanceBeneficiaryWrongLength(t *testing.T) {
 	var line = "{8350}Name                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                  US"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ro := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(ro)
+
 	err := r.parseRemittanceBeneficiary()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(1114, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(1114, len(r.line))).Error())
 }
 
 // TestParseRemittanceBeneficiaryReaderParseError parses a wrong RemittanceBeneficiary reader parse error
@@ -390,30 +356,20 @@ func TestParseRemittanceBeneficiaryReaderParseError(t *testing.T) {
 	var line = "{8350}®ame                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                    US"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ro := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(ro)
+
 	err := r.parseRemittanceBeneficiary()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrNonAlphanumeric, "®ame")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrNonAlphanumeric, "®ame")).Error())
 }
 
 // TestRemittanceBeneficiaryTagError validates a RemittanceBeneficiary tag
 func TestRemittanceBeneficiaryTagError(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
 	rb.tag = "{9999}"
-	if err := rb.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, rb.Validate(), fieldError("tag", ErrValidTagForType, rb.tag).Error())
 }

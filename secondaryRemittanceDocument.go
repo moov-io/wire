@@ -97,7 +97,7 @@ func (srd *SecondaryRemittanceDocument) Validate() error {
 		return fieldError("ProprietaryDocumentTypeCode", err, srd.ProprietaryDocumentTypeCode)
 	}
 	if err := srd.isAlphanumeric(srd.DocumentIdentificationNumber); err != nil {
-		return fieldError("DocumentIdentificationNumber", err, srd.Issuer)
+		return fieldError("DocumentIdentificationNumber", err, srd.DocumentIdentificationNumber)
 	}
 	if err := srd.isAlphanumeric(srd.Issuer); err != nil {
 		return fieldError("Issuer", err, srd.Issuer)

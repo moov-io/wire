@@ -93,7 +93,7 @@ func (rdi *ReceiverDepositoryInstitution) Validate() error {
 // invalid the WIRE will return an error.
 func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 	if rdi.ReceiverABANumber == "" {
-		return fieldError("ReceiveABANumber", ErrFieldRequired, rdi.ReceiverABANumber)
+		return fieldError("ReceiverABANumber", ErrFieldRequired, rdi.ReceiverABANumber)
 	}
 	if rdi.ReceiverShortName == "" {
 		return fieldError("ReceiverShortName", ErrFieldRequired, rdi.ReceiverShortName)

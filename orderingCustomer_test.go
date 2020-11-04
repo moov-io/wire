@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 //  OrderingCustomer creates a OrderingCustomer
@@ -21,86 +22,78 @@ func mockOrderingCustomer() *OrderingCustomer {
 // TestMockOrderingCustomer validates mockOrderingCustomer
 func TestMockOrderingCustomer(t *testing.T) {
 	oc := mockOrderingCustomer()
-	if err := oc.Validate(); err != nil {
-		t.Error("mockOrderingCustomer does not validate and will break other tests")
-	}
+
+	require.NoError(t, oc.Validate(), "mockOrderingCustomer does not validate and will break other tests")
 }
 
 // TestOrderingCustomerSwiftFieldTagAlphaNumeric validates OrderingCustomer SwiftFieldTag is alphanumeric
 func TestOrderingCustomerSwiftFieldTagAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftFieldTag = "®"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, oc.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestOrderingCustomerSwiftLineOneAlphaNumeric validates OrderingCustomer SwiftLineOne is alphanumeric
 func TestOrderingCustomerSwiftLineOneAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftLineOne = "®"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, oc.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestOrderingCustomerSwiftLineTwoAlphaNumeric validates OrderingCustomer SwiftLineTwo is alphanumeric
 func TestOrderingCustomerSwiftLineTwoAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftLineTwo = "®"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, oc.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestOrderingCustomerSwiftLineThreeAlphaNumeric validates OrderingCustomer SwiftLineThree is alphanumeric
 func TestOrderingCustomerSwiftLineThreeAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftLineThree = "®"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, oc.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestOrderingCustomerSwiftLineFourAlphaNumeric validates OrderingCustomer SwiftLineFour is alphanumeric
 func TestOrderingCustomerSwiftLineFourAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftLineFour = "®"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, oc.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestOrderingCustomerSwiftLineFiveAlphaNumeric validates OrderingCustomer SwiftLineFive is alphanumeric
 func TestOrderingCustomerSwiftLineFiveAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftLineFive = "®"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, oc.CoverPayment.SwiftLineFive).Error())
 }
 
 // TestOrderingCustomerSwiftLineSixAlphaNumeric validates OrderingCustomer SwiftLineSix is alphanumeric
 func TestOrderingCustomerSwiftLineSixAlphaNumeric(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.CoverPayment.SwiftLineSix = "Test"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := oc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, oc.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseOrderingCustomerWrongLength parses a wrong OrderingCustomer record length
@@ -108,15 +101,10 @@ func TestParseOrderingCustomerWrongLength(t *testing.T) {
 	var line = "{7050}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	oc := mockOrderingCustomer()
-	fwm.SetOrderingCustomer(oc)
+
 	err := r.parseOrderingCustomer()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
 }
 
 // TestParseOrderingCustomerReaderParseError parses a wrong OrderingCustomer reader parse error
@@ -124,30 +112,20 @@ func TestParseOrderingCustomerReaderParseError(t *testing.T) {
 	var line = "{7050}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	oc := mockOrderingCustomer()
-	fwm.SetOrderingCustomer(oc)
+
 	err := r.parseOrderingCustomer()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error())
 }
 
 // TestOrderingCustomerTagError validates a OrderingCustomer tag
 func TestOrderingCustomerTagError(t *testing.T) {
 	oc := mockOrderingCustomer()
 	oc.tag = "{9999}"
-	if err := oc.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, oc.Validate(), fieldError("tag", ErrValidTagForType, oc.tag).Error())
 }

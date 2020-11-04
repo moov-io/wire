@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockInstructedAmount creates a InstructedAmount
@@ -17,53 +18,48 @@ func mockInstructedAmount() *InstructedAmount {
 // TestMockInstructedAmount validates mockInstructedAmount
 func TestMockInstructedAmount(t *testing.T) {
 	ia := mockInstructedAmount()
-	if err := ia.Validate(); err != nil {
-		t.Error("mockInstructedAmount does not validate and will break other tests")
-	}
+
+	require.NoError(t, ia.Validate(), "mockInstructedAmount does not validate and will break other tests")
 }
 
 // TestInstructedAmountAmountRequired validates InstructedAmount Amount is required
 func TestInstructedAmountRequired(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.Amount = ""
-	if err := ia.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ia.Validate()
+
+	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
 }
 
 // TestInstructedAmountCurrencyCodeRequired validates InstructedAmount CurrencyCode is required
 func TestInstructedAmountCurrencyCodeRequired(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.CurrencyCode = ""
-	if err := ia.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ia.Validate()
+
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrFieldRequired).Error())
 }
 
 // TestInstructedAmountAmountValid validates Amount
 func TestInstructedAmountValid(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.Amount = "X,"
-	if err := ia.Validate(); err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ia.Validate()
+
+	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, ia.Amount).Error())
 }
 
 // TestInstructedAmountCurrencyCodeValid validates Amount
 func TestInstructedAmountCurrencyCodeValid(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.CurrencyCode = "XZP"
-	if err := ia.Validate(); err != nil {
-		if !base.Match(err, ErrNonCurrencyCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := ia.Validate()
+
+	require.EqualError(t, err, fieldError("CurrencyCode", ErrNonCurrencyCode, ia.CurrencyCode).Error())
 }
 
 // TestParseInstructedAmountWrongLength parses a wrong InstructedAmount record length
@@ -71,15 +67,10 @@ func TestParseInstructedAmountWrongLength(t *testing.T) {
 	var line = "{3710}USD4567,89"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
+
 	err := r.parseInstructedAmount()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(24, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(24, len(r.line))).Error())
 }
 
 // TestParseInstructedAmountReaderParseError parses a wrong InstructedAmount reader parse error
@@ -87,30 +78,20 @@ func TestParseInstructedAmountReaderParseError(t *testing.T) {
 	var line = "{3710}USD000000004567Z89"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
+
 	err := r.parseInstructedAmount()
-	if err != nil {
-		if !base.Match(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrNonAmount, "000000004567Z89")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAmount) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrNonAmount, "000000004567Z89")).Error())
 }
 
 // TestInstructedAmountTagError validates a InstructedAmount tag
 func TestInstructedAmountTagError(t *testing.T) {
 	ia := mockInstructedAmount()
 	ia.tag = "{9999}"
-	if err := ia.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, ia.Validate(), fieldError("tag", ErrValidTagForType, ia.tag).Error())
 }

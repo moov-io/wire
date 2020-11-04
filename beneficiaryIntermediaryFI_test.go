@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockBeneficiaryIntermediaryFI creates a BeneficiaryIntermediaryFI
@@ -21,108 +22,98 @@ func mockBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
 // TestMockBeneficiaryIntermediaryFI validates mockBeneficiaryIntermediaryFI
 func TestMockBeneficiaryIntermediaryFI(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
-	if err := bifi.Validate(); err != nil {
-		t.Error("mockBeneficiaryIntermediaryFI does not validate and will break other tests")
-	}
+
+	require.NoError(t, bifi.Validate(), "mockBeneficiaryIntermediaryFI does not validate and will break other tests")
 }
 
 // TestBeneficiaryIntermediaryFIIdentificationCodeValid validates BeneficiaryIntermediaryFI IdentificationCode
 func TestBeneficiaryIntermediaryFIIdentificationCodeValid(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = "Football Card ID"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrIdentificationCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentificationCodeFI validates BeneficiaryIntermediaryFI IdentificationCode is an FI code
 func TestBeneficiaryIntermediaryFIIdentificationCodeFI(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = "1"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrIdentificationCode) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrIdentificationCode, bifi.FinancialInstitution.IdentificationCode).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentifierAlphaNumeric validates BeneficiaryIntermediaryFI Identifier is alphanumeric
 func TestBeneficiaryIntermediaryFIIdentifierAlphaNumeric(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.Identifier = "®"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("Identifier", ErrNonAlphanumeric, bifi.FinancialInstitution.Identifier).Error())
 }
 
 // TestBeneficiaryIntermediaryFINameAlphaNumeric validates BeneficiaryIntermediaryFI Name is alphanumeric
 func TestBeneficiaryIntermediaryFINameAlphaNumeric(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.Name = "®"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, bifi.FinancialInstitution.Name).Error())
 }
 
 // TestBeneficiaryIntermediaryFIAddressLineOneAlphaNumeric validates BeneficiaryIntermediaryFI AddressLineOne is alphanumeric
 func TestBeneficiaryIntermediaryFIAddressLineOneAlphaNumeric(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.Address.AddressLineOne = "®"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineOne", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineOne).Error())
 }
 
 // TestBeneficiaryIntermediaryFIAddressLineTwoAlphaNumeric validates BeneficiaryIntermediaryFI AddressLineTwo is alphanumeric
 func TestBeneficiaryIntermediaryFIAddressLineTwoAlphaNumeric(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.Address.AddressLineTwo = "®"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineTwo", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineTwo).Error())
 }
 
 // TestBeneficiaryIntermediaryFIAddressLineThreeAlphaNumeric validates BeneficiaryIntermediaryFI AddressLineThree is alphanumeric
 func TestBeneficiaryIntermediaryFIAddressLineThreeAlphaNumeric(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.Address.AddressLineThree = "®"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, bifi.FinancialInstitution.Address.AddressLineThree).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentificationCodeRequired validates BeneficiaryIntermediaryFI IdentificationCode is required
 func TestBeneficiaryIntermediaryFIIdentificationCodeRequired(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = ""
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentifierRequired validates BeneficiaryIntermediaryFI Identifier is required
 func TestBeneficiaryIntermediaryFIIdentifierRequired(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.Identifier = ""
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIWrongLength parses a wrong BeneficiaryIntermediaryFI record length
@@ -130,15 +121,10 @@ func TestParseBeneficiaryIntermediaryFIWrongLength(t *testing.T) {
 	var line = "{4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	bifi := mockBeneficiaryIntermediaryFI()
-	fwm.SetBeneficiaryIntermediaryFI(bifi)
+
 	err := r.parseBeneficiaryIntermediaryFI()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIReaderParseError parses a wrong BeneficiaryIntermediaryFI reader parse error
@@ -149,27 +135,24 @@ func TestParseBeneficiaryIntermediaryFIReaderParseError(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bifi := mockBeneficiaryIntermediaryFI()
 	fwm.SetBeneficiaryIntermediaryFI(bifi)
+
 	err := r.parseBeneficiaryIntermediaryFI()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected := r.parseError(fieldError("Name", ErrNonAlphanumeric, "F® Name")).Error()
+	require.EqualError(t, err, expected)
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected = r.parseError(fieldError("Name", ErrNonAlphanumeric, "F® Name")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryIntermediaryFITagError validates a BeneficiaryFI tag
 func TestBeneficiaryIntermediaryFITagError(t *testing.T) {
 	bifi := mockBeneficiaryIntermediaryFI()
 	bifi.tag = "{9999}"
-	if err := bifi.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bifi.Validate()
+
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bifi.tag).Error())
 }

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/moov-io/base"
+	"github.com/stretchr/testify/require"
 )
 
 // mockOriginator creates a Originator
@@ -21,19 +23,19 @@ func mockOriginator() *Originator {
 // TestMockOriginator validates mockOriginator
 func TestMockOriginator(t *testing.T) {
 	o := mockOriginator()
-	if err := o.Validate(); err != nil {
-		t.Error("mockOriginator does not validate and will break other tests")
-	}
+
+	require.NoError(t, o.Validate(), "mockOriginator does not validate and will break other tests")
 }
 
 // TestOriginatorIdentificationCodeValid validates Originator IdentificationCode
 func TestOriginatorIdentificationCodeValid(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = "Baseball Card ID"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrIdentificationCode) {
-			t.Errorf("%T: %s", err, err)
-		}
+
+	err := o.Validate()
+
+	if !base.Match(err, ErrIdentificationCode) {
+		t.Errorf("%T: %s", err, err)
 	}
 }
 
@@ -41,77 +43,70 @@ func TestOriginatorIdentificationCodeValid(t *testing.T) {
 func TestOriginatorIdentifierAlphaNumeric(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.Identifier = "®"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("Identifier", ErrNonAlphanumeric, o.Personal.Identifier).Error())
 }
 
 // TestOriginatorNameAlphaNumeric validates Originator Name is alphanumeric
 func TestOriginatorNameAlphaNumeric(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.Name = "®"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, o.Personal.Name).Error())
 }
 
 // TestOriginatorAddressLineOneAlphaNumeric validates Originator AddressLineOne is alphanumeric
 func TestOriginatorAddressLineOneAlphaNumeric(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.Address.AddressLineOne = "®"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineOne", ErrNonAlphanumeric, o.Personal.Address.AddressLineOne).Error())
 }
 
 // TestOriginatorAddressLineTwoAlphaNumeric validates Originator AddressLineTwo is alphanumeric
 func TestOriginatorAddressLineTwoAlphaNumeric(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.Address.AddressLineTwo = "®"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineTwo", ErrNonAlphanumeric, o.Personal.Address.AddressLineTwo).Error())
 }
 
 // TestOriginatorAddressLineThreeAlphaNumeric validates Originator AddressLineThree is alphanumeric
 func TestOriginatorAddressLineThreeAlphaNumeric(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.Address.AddressLineThree = "®"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, o.Personal.Address.AddressLineThree).Error())
 }
 
 // TestOriginatorIdentificationCodeRequired validates Originator IdentificationCode is required
 func TestOriginatorIdentificationCodeRequired(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.IdentificationCode = ""
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestOriginatorIdentifierRequired validates Originator Identifier is required
 func TestOriginatorIdentifierRequired(t *testing.T) {
 	o := mockOriginator()
 	o.Personal.Identifier = ""
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrFieldRequired) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
 }
 
 // TestParseOriginatorWrongLength parses a wrong Originator record length
@@ -119,15 +114,10 @@ func TestParseOriginatorWrongLength(t *testing.T) {
 	var line = "{5000}11234                              Name                               Address One                        Address Two                        Address Three                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+
 	err := r.parseOriginator()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(181, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
 }
 
 // TestParseOriginatorReaderParseError parses a wrong Originator reader parse error
@@ -135,30 +125,20 @@ func TestParseOriginatorReaderParseError(t *testing.T) {
 	var line = "{5000}11234                              ®ame                               Address One                        Address Two                        Address Three                      "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+
 	err := r.parseOriginator()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrNonAlphanumeric, "®ame")).Error())
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrNonAlphanumeric, "®ame")).Error())
 }
 
 // TestOriginatorTagError validates a Originator tag
 func TestOriginatorTagError(t *testing.T) {
 	o := mockOriginator()
 	o.tag = "{9999}"
-	if err := o.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, o.Validate(), fieldError("tag", ErrValidTagForType, o.tag).Error())
 }

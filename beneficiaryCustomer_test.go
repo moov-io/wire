@@ -1,9 +1,10 @@
 package wire
 
 import (
-	"github.com/moov-io/base"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockBeneficiaryCustomer creates a BeneficiaryCustomer
@@ -21,86 +22,78 @@ func mockBeneficiaryCustomer() *BeneficiaryCustomer {
 // TestMockBeneficiaryCustomer validates mockBeneficiaryCustomer
 func TestMockBeneficiaryCustomer(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
-	if err := bc.Validate(); err != nil {
-		t.Error("mockBeneficiaryCustomer does not validate and will break other tests")
-	}
+
+	require.NoError(t, bc.Validate(), "mockBeneficiaryCustomer does not validate and will break other tests")
 }
 
 // TestBeneficiaryCustomerSwiftFieldTagAlphaNumeric validates BeneficiaryCustomer SwiftFieldTag is alphanumeric
 func TestBeneficiaryCustomerSwiftFieldTagAlphaNumeric(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.CoverPayment.SwiftFieldTag = "®"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftFieldTag", ErrNonAlphanumeric, bc.CoverPayment.SwiftFieldTag).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineOneAlphaNumeric validates BeneficiaryCustomer SwiftLineOne is alphanumeric
 func TestBeneficiaryCustomerSwiftLineOneAlphaNumeric(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.CoverPayment.SwiftLineOne = "®"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineOne", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineOne).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineTwoAlphaNumeric validates BeneficiaryCustomer SwiftLineTwo is alphanumeric
 func TestBeneficiaryCustomerSwiftLineTwoAlphaNumeric(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.CoverPayment.SwiftLineTwo = "®"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineTwo", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineTwo).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineThreeAlphaNumeric validates BeneficiaryCustomer SwiftLineThree is alphanumeric
 func TestBeneficiaryCustomerSwiftLineThreeAlphaNumeric(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.CoverPayment.SwiftLineThree = "®"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineThree", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineThree).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineFourAlphaNumeric validates BeneficiaryCustomer SwiftLineFour is alphanumeric
 func TestBeneficiaryCustomerSwiftLineFourAlphaNumeric(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.CoverPayment.SwiftLineFour = "®"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFour", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineFour).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric validates BeneficiaryCustomer SwiftLineFive is alphanumeric
 func TestBeneficiaryCustomerSwiftLineFiveAlphaNumeric(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.CoverPayment.SwiftLineFive = "®"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineFive", ErrNonAlphanumeric, bc.CoverPayment.SwiftLineFive).Error())
 }
 
 // TestBeneficiaryCustomerSwiftLineSixAlphaNumeric validates BeneficiaryCustomer SwiftLineSix is alphanumeric
 func TestBeneficiaryCustomerSwiftLineSixAlphaNumeric(t *testing.T) {
 	sr := mockBeneficiaryCustomer()
 	sr.CoverPayment.SwiftLineSix = "Test"
-	if err := sr.Validate(); err != nil {
-		if !base.Match(err, ErrInvalidProperty) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := sr.Validate()
+
+	require.EqualError(t, err, fieldError("SwiftLineSix", ErrInvalidProperty, sr.CoverPayment.SwiftLineSix).Error())
 }
 
 // TestParseBeneficiaryCustomerWrongLength parses a wrong BeneficiaryCustomer record length
@@ -108,15 +101,10 @@ func TestParseBeneficiaryCustomerWrongLength(t *testing.T) {
 	var line = "{7059}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	bc := mockBeneficiaryCustomer()
-	fwm.SetBeneficiaryCustomer(bc)
+
 	err := r.parseBeneficiaryCustomer()
-	if err != nil {
-		if !base.Match(err, NewTagWrongLengthErr(186, len(r.line))) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
 }
 
 // TestParseBeneficiaryCustomerReaderParseError parses a wrong BeneficiaryCustomer reader parse error
@@ -124,30 +112,24 @@ func TestParseBeneficiaryCustomerReaderParseError(t *testing.T) {
 	var line = "{7059}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
-	fwm := new(FEDWireMessage)
-	bc := mockBeneficiaryCustomer()
-	fwm.SetBeneficiaryCustomer(bc)
+
 	err := r.parseBeneficiaryCustomer()
-	if err != nil {
-		if !base.Match(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected := r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error()
+	require.EqualError(t, err, expected)
+
 	_, err = r.Read()
-	if err != nil {
-		if !base.Has(err, ErrNonAlphanumeric) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	expected = r.parseError(fieldError("SwiftLineOne", ErrNonAlphanumeric, "Swift ®ine One")).Error()
+	require.EqualError(t, err, expected)
 }
 
 // TestBeneficiaryCustomerTagError validates a BeneficiaryCustomer tag
 func TestBeneficiaryCustomerTagError(t *testing.T) {
 	bc := mockBeneficiaryCustomer()
 	bc.tag = "{9999}"
-	if err := bc.Validate(); err != nil {
-		if !base.Match(err, ErrValidTagForType) {
-			t.Errorf("%T: %s", err, err)
-		}
-	}
+
+	err := bc.Validate()
+
+	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bc.tag).Error())
 }
