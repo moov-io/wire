@@ -80,7 +80,11 @@ func (r *Reader) Read() (File, error) {
 	r.currentFEDWireMessage = FEDWireMessage{}
 
 	if r.errors.Empty() {
-		return r.File, nil
+		err := r.File.Validate()
+		if err == nil {
+			return r.File, nil
+		}
+		r.errors.Add(fmt.Errorf("file validation failed: %v", err))
 	}
 	return r.File, r.errors
 }
