@@ -20,8 +20,8 @@ import (
 
 	"github.com/moov-io/base"
 
-	"github.com/go-kit/kit/log"
 	"github.com/gorilla/mux"
+	"github.com/moov-io/base/log"
 )
 
 func TestFileId(t *testing.T) {

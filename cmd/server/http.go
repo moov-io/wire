@@ -9,9 +9,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics/prometheus"
 	moovhttp "github.com/moov-io/base/http"
+	"github.com/moov-io/base/log"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 )
 
