@@ -134,7 +134,7 @@ func TestParseBeneficiaryIntermediaryFIReaderParseError(t *testing.T) {
 	r.line = line
 	fwm := new(FEDWireMessage)
 	bifi := mockBeneficiaryIntermediaryFI()
-	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	fwm.BeneficiaryIntermediaryFI = bifi
 
 	err := r.parseBeneficiaryIntermediaryFI()
 
