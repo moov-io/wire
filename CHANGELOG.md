@@ -1,8 +1,14 @@
-## v0.6.2 (Unreleased)
+## v0.7.0 (Released 2020-11-23)
 
 BREAKING CHANGE
 
-- Removes the Java-like getters and setters from `FEDWireMessage`
+- fedWireMessage: remove Java-like getters and setters
+
+IMPROVEMENTS
+
+- cmd/webui: display detailed error message when parsing fails
+
+## v0.6.2 (Released 2020-10-28)
 
 BUG FIXES
 
@@ -12,10 +18,6 @@ BUG FIXES
   previous understanding was that this field could be alphanumeric. If you're aware of
   implementations or use-cases for the previous formatting please contact us and/or submit an Issue.
 - all: populate record tag after JSON unmarshal (Issue [#104](https://github.com/moov-io/wire/issues/104))
-
-IMPROVEMENTS
-
-- webui: display detailed error message when parsing fails
 
 ## v0.6.1 (Released 2020-10-19)
 
