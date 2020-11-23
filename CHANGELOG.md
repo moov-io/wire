@@ -13,6 +13,10 @@ BUG FIXES
   implementations or use-cases for the previous formatting please contact us and/or submit an Issue.
 - all: populate record tag after JSON unmarshal (Issue [#104](https://github.com/moov-io/wire/issues/104))
 
+IMPROVEMENTS
+
+- webui: display detailed error message when parsing fails
+
 ## v0.6.1 (Released 2020-10-19)
 
 BUILD

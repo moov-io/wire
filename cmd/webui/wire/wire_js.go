@@ -46,7 +46,7 @@ func jsonWrapper() js.Func {
 
 		parsed, err := parseContents(inputJSON)
 		if err != nil {
-			msg := "unable to parse wire file"
+			msg := fmt.Sprintf("unable to parse wire file - %v", err)
 			fmt.Print(msg)
 			return msg
 		}
