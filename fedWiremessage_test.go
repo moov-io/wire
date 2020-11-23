@@ -7,25 +7,19 @@ import (
 )
 
 func mockCustomerTransferData() FEDWireMessage {
-	fwm := NewFEDWireMessage()
+	fwm := FEDWireMessage{}
 
 	// Mandatory Fields
-	ss := mockSenderSupplied()
-	fwm.SetSenderSupplied(ss)
-	tst := mockTypeSubType()
-	fwm.SetTypeSubType(tst)
-	imad := mockInputMessageAccountabilityData()
-	fwm.SetInputMessageAccountabilityData(imad)
-	amt := mockAmount()
-	fwm.SetAmount(amt)
-	sdi := mockSenderDepositoryInstitution()
-	fwm.SetSenderDepositoryInstitution(sdi)
-	rdi := mockReceiverDepositoryInstitution()
-	fwm.SetReceiverDepositoryInstitution(rdi)
+	fwm.SenderSupplied = mockSenderSupplied()
+	fwm.TypeSubType = mockTypeSubType()
+	fwm.InputMessageAccountabilityData = mockInputMessageAccountabilityData()
+	fwm.Amount = mockAmount()
+	fwm.SenderDepositoryInstitution = mockSenderDepositoryInstitution()
+	fwm.ReceiverDepositoryInstitution = mockReceiverDepositoryInstitution()
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
 	bfc.TransactionTypeCode = "   "
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 	return fwm
 }
 
@@ -35,11 +29,9 @@ func TestFEDWireMessage_invalidAmount(t *testing.T) {
 	// Override to trigger error (can only be zeros is TypeSubType code is 90)
 	fwm.Amount.Amount = "000000000000"
 	// Beneficiary
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
+	fwm.Beneficiary = mockBeneficiary()
 	// Originator
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.Originator = mockOriginator()
 	file.AddFEDWireMessage(fwm)
 	// Create file
 	if err := file.Create(); err != nil {
@@ -69,7 +61,7 @@ func TestFEDWireMessage_invalidLocalInstrument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
+	fwm.LocalInstrument = li
 	fwm.BusinessFunctionCode.BusinessFunctionCode = BankTransfer // local instrument only permitted for CTP
 
 	err := fwm.validateLocalInstrumentCode()
@@ -83,9 +75,8 @@ func TestFEDWireMessage_invalidCharges(t *testing.T) {
 	// Override to trigger error
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
-	c := mockCharges()
-	fwm.SetCharges(c)
+	fwm.LocalInstrument = li
+	fwm.Charges = mockCharges()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
 	err := fwm.validateCharges()
@@ -99,9 +90,8 @@ func TestFEDWireMessage_invalidInstructedAmount(t *testing.T) {
 	// Override to trigger error
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
-	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
+	fwm.LocalInstrument = li
+	fwm.InstructedAmount = mockInstructedAmount()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
 	err := fwm.validateInstructedAmount()
@@ -113,8 +103,7 @@ func TestFEDWireMessage_invalidInstructedAmount(t *testing.T) {
 func TestFEDWireMessage_validateExchangeRate_missingInstructedAmount(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	// Override to trigger error
-	eRate := mockExchangeRate()
-	fwm.SetExchangeRate(eRate)
+	fwm.ExchangeRate = mockExchangeRate()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
 	err := fwm.validateExchangeRate()
@@ -128,11 +117,9 @@ func TestFEDWireMessage_isExchangeRateValid_missingLocalInstrumentCode(t *testin
 	// Override to trigger error
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
-	eRate := mockExchangeRate()
-	fwm.SetExchangeRate(eRate)
-	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
+	fwm.LocalInstrument = li
+	fwm.ExchangeRate = mockExchangeRate()
+	fwm.InstructedAmount = mockInstructedAmount()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
 	err := fwm.validateExchangeRate()
@@ -143,8 +130,7 @@ func TestFEDWireMessage_isExchangeRateValid_missingLocalInstrumentCode(t *testin
 
 func TestFEDWireMessage_validateBeneficiaryIntermediaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	bifi := mockBeneficiaryIntermediaryFI()
-	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	fwm.BeneficiaryIntermediaryFI = mockBeneficiaryIntermediaryFI()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// BeneficiaryFI required field check
@@ -152,8 +138,7 @@ func TestFEDWireMessage_validateBeneficiaryIntermediaryFI(t *testing.T) {
 
 	require.EqualError(t, err, fieldError("BeneficiaryFI", ErrFieldRequired).Error())
 
-	bfi := mockBeneficiaryFI()
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = mockBeneficiaryFI()
 
 	// Beneficiary required field check
 	err = fwm.validateBeneficiaryIntermediaryFI()
@@ -163,8 +148,7 @@ func TestFEDWireMessage_validateBeneficiaryIntermediaryFI(t *testing.T) {
 
 func TestFEDWireMessage_validateBeneficiaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	bfi := mockBeneficiaryFI()
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = mockBeneficiaryFI()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Beneficiary required field check
@@ -175,8 +159,7 @@ func TestFEDWireMessage_validateBeneficiaryFI(t *testing.T) {
 
 func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	ofi := mockOriginatorFI()
-	fwm.SetOriginatorFI(ofi)
+	fwm.OriginatorFI = mockOriginatorFI()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Originator required field check
@@ -185,8 +168,7 @@ func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 	require.EqualError(t, err, fieldError("Originator", ErrFieldRequired).Error())
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.Originator = mockOriginator()
 
 	// OriginatorOptionF required field check
 	err = fwm.validateOriginatorFI()
@@ -196,8 +178,7 @@ func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 
 func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	ifi := mockInstructingFI()
-	fwm.SetInstructingFI(ifi)
+	fwm.InstructingFI = mockInstructingFI()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Originator required field check
@@ -207,8 +188,7 @@ func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 	require.EqualError(t, err, expected)
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.Originator = mockOriginator()
 
 	// OriginatorOptionF required field check
 	err = fwm.validateInstructingFI()
@@ -219,8 +199,7 @@ func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 
 func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	ob := mockOriginatorToBeneficiary()
-	fwm.SetOriginatorToBeneficiary(ob)
+	fwm.OriginatorToBeneficiary = mockOriginatorToBeneficiary()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Beneficiary required field check
@@ -229,8 +208,7 @@ func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 	expected := fieldError("Beneficiary", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
+	fwm.Beneficiary = mockBeneficiary()
 
 	// Originator required Field check
 	err = fwm.validateOriginatorToBeneficiary()
@@ -238,8 +216,7 @@ func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 	expected = fieldError("Originator", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.Originator = mockOriginator()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
 	// OriginatorOptionF required Field check
@@ -249,7 +226,7 @@ func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 	require.EqualError(t, err, expected)
 
 	// check beneficiary still required
-	fwm.SetBeneficiary(nil)
+	fwm.Beneficiary = nil
 
 	err = fwm.validateOriginatorToBeneficiary()
 
@@ -259,8 +236,7 @@ func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 
 func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	fiifi := mockFIIntermediaryFI()
-	fwm.SetFIIntermediaryFI(fiifi)
+	fwm.FIIntermediaryFI = mockFIIntermediaryFI()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// BeneficiaryIntermediaryFI required field check
@@ -269,8 +245,7 @@ func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
 	expected := fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	bifi := mockBeneficiaryIntermediaryFI()
-	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	fwm.BeneficiaryIntermediaryFI = mockBeneficiaryIntermediaryFI()
 
 	// BeneficiaryFI required field check
 	err = fwm.validateFIIntermediaryFI()
@@ -278,8 +253,7 @@ func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
 	expected = fieldError("BeneficiaryFI", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	bfi := mockBeneficiaryFI()
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = mockBeneficiaryFI()
 
 	// Beneficiary required field check
 	err = fwm.validateFIIntermediaryFI()
@@ -290,8 +264,7 @@ func TestFEDWireMessage_validateFIIntermediaryFI(t *testing.T) {
 
 func TestFEDWireMessage_validateFIIntermediaryFIAdvice(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	fiifia := mockFIIntermediaryFIAdvice()
-	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fwm.FIIntermediaryFIAdvice = mockFIIntermediaryFIAdvice()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// BeneficiaryIntermediaryFI required field check
@@ -300,16 +273,14 @@ func TestFEDWireMessage_validateFIIntermediaryFIAdvice(t *testing.T) {
 	expected := fieldError("BeneficiaryIntermediaryFI", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	bifi := mockBeneficiaryIntermediaryFI()
-	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	fwm.BeneficiaryIntermediaryFI = mockBeneficiaryIntermediaryFI()
 	// BeneficiaryFI required field check
 	err = fwm.validateFIIntermediaryFIAdvice()
 
 	expected = fieldError("BeneficiaryFI", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	bfi := mockBeneficiaryFI()
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = mockBeneficiaryFI()
 
 	// Beneficiary required field check
 	err = fwm.validateFIIntermediaryFIAdvice()
@@ -320,8 +291,7 @@ func TestFEDWireMessage_validateFIIntermediaryFIAdvice(t *testing.T) {
 
 func TestFEDWireMessage_validateFIBeneficiaryFI(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	fibfi := mockFIBeneficiaryFI()
-	fwm.SetFIBeneficiaryFI(fibfi)
+	fwm.FIBeneficiaryFI = mockFIBeneficiaryFI()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// BeneficiaryFI required field check
@@ -330,8 +300,7 @@ func TestFEDWireMessage_validateFIBeneficiaryFI(t *testing.T) {
 	expected := fieldError("BeneficiaryFI", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	bfi := mockBeneficiaryFI()
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = mockBeneficiaryFI()
 
 	// Beneficiary required field check
 	err = fwm.validateFIBeneficiaryFI()
@@ -342,8 +311,7 @@ func TestFEDWireMessage_validateFIBeneficiaryFI(t *testing.T) {
 
 func TestFEDWireMessage_validateFIBeneficiaryFIAdvice(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	fibfia := mockFIBeneficiaryFIAdvice()
-	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fwm.FIBeneficiaryFIAdvice = mockFIBeneficiaryFIAdvice()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// BeneficiaryFI required field check
@@ -352,8 +320,7 @@ func TestFEDWireMessage_validateFIBeneficiaryFIAdvice(t *testing.T) {
 	expected := fieldError("BeneficiaryFI", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	bfi := mockBeneficiaryFI()
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = mockBeneficiaryFI()
 
 	// Beneficiary required field check
 	err = fwm.validateFIBeneficiaryFIAdvice()
@@ -364,8 +331,7 @@ func TestFEDWireMessage_validateFIBeneficiaryFIAdvice(t *testing.T) {
 
 func TestFEDWireMessage_validateFIBeneficiary(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	fib := mockFIBeneficiary()
-	fwm.SetFIBeneficiary(fib)
+	fwm.FIBeneficiary = mockFIBeneficiary()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Beneficiary required field check
@@ -377,8 +343,7 @@ func TestFEDWireMessage_validateFIBeneficiary(t *testing.T) {
 
 func TestFEDWireMessage_validateFIBeneficiaryAdvice(t *testing.T) {
 	fwm := mockCustomerTransferData()
-	fiba := mockFIBeneficiaryAdvice()
-	fwm.SetFIBeneficiaryAdvice(fiba)
+	fwm.FIBeneficiaryAdvice = mockFIBeneficiaryAdvice()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransfer
 
 	// Beneficiary required field check
@@ -393,9 +358,8 @@ func TestFEDWireMessage_validateUnstructuredAddenda(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
-	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)
+	fwm.LocalInstrument = li
+	fwm.UnstructuredAddenda = mockUnstructuredAddenda()
 
 	// UnstructuredAddenda Invalid Property
 	err := fwm.validateUnstructuredAddenda()
@@ -410,9 +374,8 @@ func TestFEDWireMessage_validateRelatedRemittance(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
-	fwm.SetLocalInstrument(li)
-	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)
+	fwm.LocalInstrument = li
+	fwm.RelatedRemittance = mockRelatedRemittance()
 
 	// RelatedRemittance Invalid Property
 	err := fwm.validateRelatedRemittance()
@@ -426,9 +389,8 @@ func TestFEDWireMessage_validateRemittanceOriginator(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	ro := mockRemittanceOriginator()
-	fwm.SetRemittanceOriginator(ro)
+	fwm.LocalInstrument = li
+	fwm.RemittanceOriginator = mockRemittanceOriginator()
 
 	// RemittanceOriginator Invalid Property
 	err := fwm.validateRemittanceOriginator()
@@ -442,9 +404,8 @@ func TestFEDWireMessage_validateRemittanceBeneficiary(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	rb := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(rb)
+	fwm.LocalInstrument = li
+	fwm.RemittanceBeneficiary = mockRemittanceBeneficiary()
 
 	// RemittanceBeneficiary Invalid Property
 	err := fwm.validateRemittanceBeneficiary()
@@ -467,9 +428,8 @@ func TestFEDWireMessage_validatePrimaryRemittanceDocument(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	prd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(prd)
+	fwm.LocalInstrument = li
+	fwm.PrimaryRemittanceDocument = mockPrimaryRemittanceDocument()
 
 	// PrimaryRemittanceDocument Invalid Property
 	err := fwm.validatePrimaryRemittanceDocument()
@@ -483,9 +443,8 @@ func TestFEDWireMessage_validateActualAmountPaid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	aap := mockActualAmountPaid()
-	fwm.SetActualAmountPaid(aap)
+	fwm.LocalInstrument = li
+	fwm.ActualAmountPaid = mockActualAmountPaid()
 
 	// ActualAmountPaid only permitted for CTP and RMTS
 	err := fwm.validateActualAmountPaid()
@@ -500,9 +459,8 @@ func TestFEDWireMessage_validateGrossAmountRemittanceDocument(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	gard := mockGrossAmountRemittanceDocument()
-	fwm.SetGrossAmountRemittanceDocument(gard)
+	fwm.LocalInstrument = li
+	fwm.GrossAmountRemittanceDocument = mockGrossAmountRemittanceDocument()
 
 	// GrossAmountRemittanceDocument only permitted for CTP and RMTS
 	err := fwm.validateGrossAmountRemittanceDocument()
@@ -516,9 +474,8 @@ func TestFEDWireMessage_validateAdjustment(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	adj := mockAdjustment()
-	fwm.SetAdjustment(adj)
+	fwm.LocalInstrument = li
+	fwm.Adjustment = mockAdjustment()
 
 	// Adjustment Invalid Property
 	err := fwm.validateAdjustment()
@@ -533,9 +490,8 @@ func TestFEDWireMessage_validateDateRemittanceDocument(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	drd := mockDateRemittanceDocument()
-	fwm.SetDateRemittanceDocument(drd)
+	fwm.LocalInstrument = li
+	fwm.DateRemittanceDocument = mockDateRemittanceDocument()
 
 	// DateRemittanceDocument Invalid Property
 	err := fwm.validateDateRemittanceDocument()
@@ -549,9 +505,8 @@ func TestFEDWireMessage_validateSecondaryRemittanceDocument(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	srd := mockSecondaryRemittanceDocument()
-	fwm.SetSecondaryRemittanceDocument(srd)
+	fwm.LocalInstrument = li
+	fwm.SecondaryRemittanceDocument = mockSecondaryRemittanceDocument()
 
 	// SecondaryRemittanceDocument Invalid Property
 	err := fwm.validateSecondaryRemittanceDocument()
@@ -565,9 +520,8 @@ func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
-	rft := mockRemittanceFreeText()
-	fwm.SetRemittanceFreeText(rft)
+	fwm.LocalInstrument = li
+	fwm.RemittanceFreeText = mockRemittanceFreeText()
 
 	// RemittanceFreeTextValid Invalid Property
 	err := fwm.validateRemittanceFreeText()
@@ -581,11 +535,11 @@ func TestFEDWireMessage_validateBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 	tst := mockTypeSubType()
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = RequestCredit
-	fwm.SetTypeSubType(tst)
+	fwm.TypeSubType = tst
 
 	err := fwm.validateBankTransfer()
 
@@ -600,7 +554,7 @@ func TestFEDWireMessage_invalidTransTypeCodeBankTransfer(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
 	bfc.TransactionTypeCode = "COV"
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -614,9 +568,8 @@ func TestInvalidLocalInstrumentForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	li := mockLocalInstrument()
-	fwm.SetLocalInstrument(li)
+	fwm.BusinessFunctionCode = bfc
+	fwm.LocalInstrument = mockLocalInstrument()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -629,9 +582,8 @@ func TestInvalidPaymentNotificationForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	pn := mockPaymentNotification()
-	fwm.SetPaymentNotification(pn)
+	fwm.BusinessFunctionCode = bfc
+	fwm.PaymentNotification = mockPaymentNotification()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -644,9 +596,8 @@ func TestInvalidChargesForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	c := mockCharges()
-	fwm.SetCharges(c)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Charges = mockCharges()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -659,9 +610,8 @@ func TestInvalidInstructedAmountForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
+	fwm.BusinessFunctionCode = bfc
+	fwm.InstructedAmount = mockInstructedAmount()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -674,9 +624,8 @@ func TestInvalidExchangeRateForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	eRate := mockExchangeRate()
-	fwm.SetExchangeRate(eRate)
+	fwm.BusinessFunctionCode = bfc
+	fwm.ExchangeRate = mockExchangeRate()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -689,10 +638,10 @@ func TestInvalidBeneficiaryIdentificationCodeForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
-	fwm.SetBeneficiary(ben)
+	fwm.Beneficiary = ben
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -706,9 +655,8 @@ func TestInvalidAccountDebitedDrawdownForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	debitDD := mockAccountDebitedDrawdown()
-	fwm.SetAccountDebitedDrawdown(debitDD)
+	fwm.BusinessFunctionCode = bfc
+	fwm.AccountDebitedDrawdown = mockAccountDebitedDrawdown()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -721,10 +669,10 @@ func TestInvalidOriginatorIdentificationCodeForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
-	fwm.SetOriginator(o)
+	fwm.Originator = o
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -738,9 +686,8 @@ func TestInvalidOriginatorOptionFForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	off := mockOriginatorOptionF()
-	fwm.SetOriginatorOptionF(off)
+	fwm.BusinessFunctionCode = bfc
+	fwm.OriginatorOptionF = mockOriginatorOptionF()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -753,9 +700,8 @@ func TestInvalidAccountCreditedDrawdownForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	creditDD := mockAccountCreditedDrawdown()
-	fwm.SetAccountCreditedDrawdown(creditDD)
+	fwm.BusinessFunctionCode = bfc
+	fwm.AccountCreditedDrawdown = mockAccountCreditedDrawdown()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -768,9 +714,8 @@ func TestInvalidFIDrawdownDebitAccountAdviceForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
-	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+	fwm.BusinessFunctionCode = bfc
+	fwm.FIDrawdownDebitAccountAdvice = mockFIDrawdownDebitAccountAdvice()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -783,9 +728,8 @@ func TestInvalidServiceMessageForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.BusinessFunctionCode = bfc
+	fwm.ServiceMessage = mockServiceMessage()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -798,9 +742,8 @@ func TestInvalidUnstructuredAddendaForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)
+	fwm.BusinessFunctionCode = bfc
+	fwm.UnstructuredAddenda = mockUnstructuredAddenda()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -813,9 +756,8 @@ func TestInvalidCurrencyInstructedAmountForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	cia := mockCurrencyInstructedAmount()
-	fwm.SetCurrencyInstructedAmount(cia)
+	fwm.BusinessFunctionCode = bfc
+	fwm.CurrencyInstructedAmount = mockCurrencyInstructedAmount()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -828,9 +770,8 @@ func TestInvalidRelatedRemittanceForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = BankTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)
+	fwm.BusinessFunctionCode = bfc
+	fwm.RelatedRemittance = mockRelatedRemittance()
 
 	err := fwm.checkProhibitedBankTransferTags()
 
@@ -844,7 +785,7 @@ func TestInvalidTransactionTypeCodeForCustomerTransfer(t *testing.T) {
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
 	bfc.TransactionTypeCode = "COV"
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -858,9 +799,8 @@ func TestInvalidLocalInstrumentForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	li := mockLocalInstrument()
-	fwm.SetLocalInstrument(li)
+	fwm.BusinessFunctionCode = bfc
+	fwm.LocalInstrument = mockLocalInstrument()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -873,9 +813,8 @@ func TestInvalidPaymentNotificationForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	pn := mockPaymentNotification()
-	fwm.SetPaymentNotification(pn)
+	fwm.BusinessFunctionCode = bfc
+	fwm.PaymentNotification = mockPaymentNotification()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -888,9 +827,8 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	debitDD := mockAccountDebitedDrawdown()
-	fwm.SetAccountDebitedDrawdown(debitDD)
+	fwm.BusinessFunctionCode = bfc
+	fwm.AccountDebitedDrawdown = mockAccountDebitedDrawdown()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -903,9 +841,8 @@ func TestInvalidOriginatorOptionFForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	off := mockOriginatorOptionF()
-	fwm.SetOriginatorOptionF(off)
+	fwm.BusinessFunctionCode = bfc
+	fwm.OriginatorOptionF = mockOriginatorOptionF()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -918,9 +855,8 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	creditDD := mockAccountCreditedDrawdown()
-	fwm.SetAccountCreditedDrawdown(creditDD)
+	fwm.BusinessFunctionCode = bfc
+	fwm.AccountCreditedDrawdown = mockAccountCreditedDrawdown()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -933,9 +869,8 @@ func TestInvalidFIDrawdownDebitAccountAdviceForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	debitDDAdvice := mockFIDrawdownDebitAccountAdvice()
-	fwm.SetFIDrawdownDebitAccountAdvice(debitDDAdvice)
+	fwm.BusinessFunctionCode = bfc
+	fwm.FIDrawdownDebitAccountAdvice = mockFIDrawdownDebitAccountAdvice()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -948,9 +883,8 @@ func TestInvalidServiceMessageForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.BusinessFunctionCode = bfc
+	fwm.ServiceMessage = mockServiceMessage()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -963,9 +897,8 @@ func TestInvalidUnstructuredAddendaForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)
+	fwm.BusinessFunctionCode = bfc
+	fwm.UnstructuredAddenda = mockUnstructuredAddenda()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -978,9 +911,8 @@ func TestInvalidCurrencyInstructedAmountForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	cia := mockCurrencyInstructedAmount()
-	fwm.SetCurrencyInstructedAmount(cia)
+	fwm.BusinessFunctionCode = bfc
+	fwm.CurrencyInstructedAmount = mockCurrencyInstructedAmount()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -993,9 +925,8 @@ func TestInvalidRelatedRemittanceForCustomerTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransfer
-	fwm.SetBusinessFunctionCode(bfc)
-	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)
+	fwm.BusinessFunctionCode = bfc
+	fwm.RelatedRemittance = mockRelatedRemittance()
 
 	err := fwm.checkProhibitedCustomerTransferTags()
 
@@ -1009,13 +940,10 @@ func TestLocalInstrumentUnstructuredAddendaForCustomerTransferPlus(t *testing.T)
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
-	li := mockLocalInstrument()
-	fwm.SetLocalInstrument(li)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
+	fwm.LocalInstrument = mockLocalInstrument()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1029,14 +957,12 @@ func TestLocalInstrumentRelatedRemittanceForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
-	fwm.SetLocalInstrument(li)
+	fwm.LocalInstrument = li
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1050,14 +976,12 @@ func TestLocalInstrumentBeneficiaryReferenceForCustomerTransferPlus(t *testing.T
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
+	fwm.LocalInstrument = li
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1071,16 +995,13 @@ func TestLocalInstrumentOrderingCustomerForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
-	br := mockBeneficiaryReference()
-	fwm.SetBeneficiaryReference(br)
+	fwm.LocalInstrument = li
+	fwm.BeneficiaryReference = mockBeneficiaryReference()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1094,18 +1015,14 @@ func TestLocalInstrumentBeneficiaryCustomerForCustomerTransferPlus(t *testing.T)
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
-	fwm.SetLocalInstrument(li)
-	br := mockBeneficiaryReference()
-	fwm.SetBeneficiaryReference(br)
-	oc := mockOrderingCustomer()
-	fwm.SetOrderingCustomer(oc)
+	fwm.LocalInstrument = li
+	fwm.BeneficiaryReference = mockBeneficiaryReference()
+	fwm.OrderingCustomer = mockOrderingCustomer()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1119,14 +1036,12 @@ func TestLocalInstrumentProprietaryCodeForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = ProprietaryLocalInstrumentCode
-	fwm.SetLocalInstrument(li)
+	fwm.LocalInstrument = li
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1140,14 +1055,12 @@ func TestLocalInstrumentRemittanceOriginatorForCustomerTransferPlus(t *testing.T
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
-	fwm.SetLocalInstrument(li)
+	fwm.LocalInstrument = li
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1161,16 +1074,13 @@ func TestLocalInstrumentRemittanceBeneficiaryForCustomerTransferPlus(t *testing.
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
-	fwm.SetLocalInstrument(li)
-	ro := mockRemittanceOriginator()
-	fwm.SetRemittanceOriginator(ro)
+	fwm.LocalInstrument = li
+	fwm.RemittanceOriginator = mockRemittanceOriginator()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1184,18 +1094,14 @@ func TestLocalInstrumentPrimaryRemittanceDocumentForCustomerTransferPlus(t *test
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
-	fwm.SetLocalInstrument(li)
-	ro := mockRemittanceOriginator()
-	fwm.SetRemittanceOriginator(ro)
-	rb := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(rb)
+	fwm.LocalInstrument = li
+	fwm.RemittanceOriginator = mockRemittanceOriginator()
+	fwm.RemittanceBeneficiary = mockRemittanceBeneficiary()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1209,20 +1115,15 @@ func TestLocalInstrumentActualAmountPaidForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
-	o := mockOriginator()
-	fwm.SetOriginator(o)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
+	fwm.Originator = mockOriginator()
 	li := mockLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
-	fwm.SetLocalInstrument(li)
-	ro := mockRemittanceOriginator()
-	fwm.SetRemittanceOriginator(ro)
-	rb := mockRemittanceBeneficiary()
-	fwm.SetRemittanceBeneficiary(rb)
-	prd := mockPrimaryRemittanceDocument()
-	fwm.SetPrimaryRemittanceDocument(prd)
+	fwm.LocalInstrument = li
+	fwm.RemittanceOriginator = mockRemittanceOriginator()
+	fwm.RemittanceBeneficiary = mockRemittanceBeneficiary()
+	fwm.PrimaryRemittanceDocument = mockPrimaryRemittanceDocument()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1235,7 +1136,7 @@ func TestBeneficiaryIdentificationCodeForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1248,9 +1149,8 @@ func TestOriginatorIdentificationCodeForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	ben := mockBeneficiary()
-	fwm.SetBeneficiary(ben)
+	fwm.BusinessFunctionCode = bfc
+	fwm.Beneficiary = mockBeneficiary()
 
 	err := fwm.checkMandatoryCustomerTransferPlusTags()
 
@@ -1263,9 +1163,8 @@ func TestInvalidAccountDebitedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	debitDD := mockAccountDebitedDrawdown()
-	fwm.SetAccountDebitedDrawdown(debitDD)
+	fwm.BusinessFunctionCode = bfc
+	fwm.AccountDebitedDrawdown = mockAccountDebitedDrawdown()
 
 	err := fwm.checkProhibitedCustomerTransferPlusTags()
 
@@ -1278,9 +1177,8 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	bfc := mockBusinessFunctionCode()
 	bfc.BusinessFunctionCode = CustomerTransferPlus
-	fwm.SetBusinessFunctionCode(bfc)
-	creditDD := mockAccountCreditedDrawdown()
-	fwm.SetAccountCreditedDrawdown(creditDD)
+	fwm.BusinessFunctionCode = bfc
+	fwm.AccountCreditedDrawdown = mockAccountCreditedDrawdown()
 
 	err := fwm.checkProhibitedCustomerTransferPlusTags()
 

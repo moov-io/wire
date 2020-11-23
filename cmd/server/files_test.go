@@ -320,7 +320,7 @@ func TestFiles__validateFile(t *testing.T) {
 
 func TestFiles__addFEDWireMessageToFile(t *testing.T) {
 	f, err := readFile("fedWireMessage-NoMessage.txt")
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "file validation failed") {
 		t.Fatal(err)
 	}
 	fwm := mockFEDWireMessage()

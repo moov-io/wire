@@ -15,16 +15,16 @@ import (
 func main() {
 
 	file := wire.NewFile()
-	fwm := wire.NewFEDWireMessage()
+	fwm := wire.FEDWireMessage{}
 
 	// Mandatory Fields
 	ss := wire.NewSenderSupplied()
 	ss.UserRequestCorrelation = "User Req"
 	ss.MessageDuplicationCode = wire.MessageDuplicationOriginal
-	fwm.SetSenderSupplied(ss)
+	fwm.SenderSupplied = ss
 
 	tst := wire.NewTypeSubType()
-	fwm.SetTypeSubType(tst)
+	fwm.TypeSubType = tst
 	tst.TypeCode = wire.FundsTransfer
 	tst.SubTypeCode = wire.RequestCredit
 
@@ -32,35 +32,35 @@ func main() {
 	imad.InputCycleDate = time.Now().Format("20060102")
 	imad.InputSource = "Source08"
 	imad.InputSequenceNumber = "000001"
-	fwm.SetInputMessageAccountabilityData(imad)
+	fwm.InputMessageAccountabilityData = imad
 
 	amt := wire.NewAmount()
 	amt.Amount = "000001234567"
-	fwm.SetAmount(amt)
+	fwm.Amount = amt
 
 	sdi := wire.NewSenderDepositoryInstitution()
 	sdi.SenderABANumber = "121042882"
 	sdi.SenderShortName = "Wells Fargo NA"
-	fwm.SetSenderDepositoryInstitution(sdi)
+	fwm.SenderDepositoryInstitution = sdi
 
 	rdi := wire.NewReceiverDepositoryInstitution()
 	rdi.ReceiverABANumber = "231380104"
 	rdi.ReceiverShortName = "Citadel"
-	fwm.SetReceiverDepositoryInstitution(rdi)
+	fwm.ReceiverDepositoryInstitution = rdi
 
 	bfc := wire.NewBusinessFunctionCode()
 	bfc.BusinessFunctionCode = wire.CustomerCorporateDrawdownRequest
 	bfc.TransactionTypeCode = "   "
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 
 	// Other Transfer Information
 	sr := wire.NewSenderReference()
 	sr.SenderReference = "Sender Reference"
-	fwm.SetSenderReference(sr)
+	fwm.SenderReference = sr
 
 	pmi := wire.NewPreviousMessageIdentifier()
 	pmi.PreviousMessageIdentifier = "Previous Message Ident"
-	fwm.SetPreviousMessageIdentifier(pmi)
+	fwm.PreviousMessageIdentifier = pmi
 
 	// Beneficiary
 	bifi := wire.NewBeneficiaryIntermediaryFI()
@@ -70,7 +70,7 @@ func main() {
 	bifi.FinancialInstitution.Address.AddressLineOne = "Address One"
 	bifi.FinancialInstitution.Address.AddressLineTwo = "Address Two"
 	bifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
-	fwm.SetBeneficiaryIntermediaryFI(bifi)
+	fwm.BeneficiaryIntermediaryFI = bifi
 
 	bfi := wire.NewBeneficiaryFI()
 	bfi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
@@ -79,7 +79,7 @@ func main() {
 	bfi.FinancialInstitution.Address.AddressLineOne = "Address One"
 	bfi.FinancialInstitution.Address.AddressLineTwo = "Address Two"
 	bfi.FinancialInstitution.Address.AddressLineThree = "Address Three"
-	fwm.SetBeneficiaryFI(bfi)
+	fwm.BeneficiaryFI = bfi
 
 	ben := wire.NewBeneficiary()
 	ben.Personal.IdentificationCode = wire.DriversLicenseNumber
@@ -88,11 +88,11 @@ func main() {
 	ben.Personal.Address.AddressLineOne = "Address One"
 	ben.Personal.Address.AddressLineTwo = "Address Two"
 	ben.Personal.Address.AddressLineThree = "Address Three"
-	fwm.SetBeneficiary(ben)
+	fwm.Beneficiary = ben
 
 	br := wire.NewBeneficiaryReference()
 	br.BeneficiaryReference = "Reference"
-	fwm.SetBeneficiaryReference(br)
+	fwm.BeneficiaryReference = br
 
 	debitDD := wire.NewAccountDebitedDrawdown()
 	debitDD.IdentificationCode = wire.DemandDepositAccountNumber
@@ -101,7 +101,7 @@ func main() {
 	debitDD.Address.AddressLineOne = "Address One"
 	debitDD.Address.AddressLineTwo = "Address Two"
 	debitDD.Address.AddressLineThree = "Address Three"
-	fwm.SetAccountDebitedDrawdown(debitDD)
+	fwm.AccountDebitedDrawdown = debitDD
 
 	// Originator
 	o := wire.NewOriginator()
@@ -111,7 +111,7 @@ func main() {
 	o.Personal.Address.AddressLineOne = "Address One"
 	o.Personal.Address.AddressLineTwo = "Address Two"
 	o.Personal.Address.AddressLineThree = "Address Three"
-	fwm.SetOriginator(o)
+	fwm.Originator = o
 
 	ofi := wire.NewOriginatorFI()
 	ofi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
@@ -120,7 +120,7 @@ func main() {
 	ofi.FinancialInstitution.Address.AddressLineOne = "Address One"
 	ofi.FinancialInstitution.Address.AddressLineTwo = "Address Two"
 	ofi.FinancialInstitution.Address.AddressLineThree = "Address Three"
-	fwm.SetOriginatorFI(ofi)
+	fwm.OriginatorFI = ofi
 
 	ifi := wire.NewInstructingFI()
 	ifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
@@ -129,18 +129,18 @@ func main() {
 	ifi.FinancialInstitution.Address.AddressLineOne = "Address One"
 	ifi.FinancialInstitution.Address.AddressLineTwo = "Address Two"
 	ifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
-	fwm.SetInstructingFI(ifi)
+	fwm.InstructingFI = ifi
 
 	creditDD := wire.NewAccountCreditedDrawdown()
 	creditDD.DrawdownCreditAccountNumber = "123456789"
-	fwm.SetAccountCreditedDrawdown(creditDD)
+	fwm.AccountCreditedDrawdown = creditDD
 
 	ob := wire.NewOriginatorToBeneficiary()
 	ob.LineOne = "LineOne"
 	ob.LineTwo = "LineTwo"
 	ob.LineThree = "LineThree"
 	ob.LineFour = "LineFour"
-	fwm.SetOriginatorToBeneficiary(ob)
+	fwm.OriginatorToBeneficiary = ob
 
 	// FI to FI
 	firfi := wire.NewFIReceiverFI()
@@ -150,7 +150,7 @@ func main() {
 	firfi.FIToFI.LineOne = "Line Four"
 	firfi.FIToFI.LineOne = "Line Five"
 	firfi.FIToFI.LineOne = "Line Six"
-	fwm.SetFIReceiverFI(firfi)
+	fwm.FIReceiverFI = firfi
 
 	fiifi := wire.NewFIIntermediaryFI()
 	fiifi.FIToFI.LineOne = "Line One"
@@ -159,7 +159,7 @@ func main() {
 	fiifi.FIToFI.LineOne = "Line Four"
 	fiifi.FIToFI.LineOne = "Line Five"
 	fiifi.FIToFI.LineOne = "Line Six"
-	fwm.SetFIIntermediaryFI(fiifi)
+	fwm.FIIntermediaryFI = fiifi
 
 	fiifia := wire.NewFIIntermediaryFIAdvice()
 	fiifia.Advice.AdviceCode = wire.AdviceCodeLetter
@@ -169,7 +169,7 @@ func main() {
 	fiifia.Advice.LineFour = "Line Four"
 	fiifia.Advice.LineFive = "Line Five"
 	fiifia.Advice.LineSix = "Line Six"
-	fwm.SetFIIntermediaryFIAdvice(fiifia)
+	fwm.FIIntermediaryFIAdvice = fiifia
 
 	fibfi := wire.NewFIBeneficiaryFI()
 	fibfi.FIToFI.LineOne = "Line One"
@@ -178,7 +178,7 @@ func main() {
 	fibfi.FIToFI.LineFour = "Line Four"
 	fibfi.FIToFI.LineFive = "Line Five"
 	fibfi.FIToFI.LineSix = "Line Six"
-	fwm.SetFIBeneficiaryFI(fibfi)
+	fwm.FIBeneficiaryFI = fibfi
 
 	fibfia := wire.NewFIBeneficiaryFIAdvice()
 	fibfia.Advice.AdviceCode = wire.AdviceCodeTelex
@@ -188,7 +188,7 @@ func main() {
 	fibfia.Advice.LineFour = "Line Four"
 	fibfia.Advice.LineFive = "Line Five"
 	fibfia.Advice.LineSix = "Line Six"
-	fwm.SetFIBeneficiaryFIAdvice(fibfia)
+	fwm.FIBeneficiaryFIAdvice = fibfia
 
 	fib := wire.NewFIBeneficiary()
 	fib.FIToFI.LineOne = "Line One"
@@ -197,7 +197,7 @@ func main() {
 	fib.FIToFI.LineFour = "Line Four"
 	fib.FIToFI.LineFive = "Line Five"
 	fib.FIToFI.LineSix = "Line Six"
-	fwm.SetFIBeneficiary(fib)
+	fwm.FIBeneficiary = fib
 
 	fiba := wire.NewFIBeneficiaryAdvice()
 	fiba.Advice.AdviceCode = wire.AdviceCodeLetter
@@ -207,12 +207,12 @@ func main() {
 	fiba.Advice.LineFour = "Line Four"
 	fiba.Advice.LineFive = "Line Five"
 	fiba.Advice.LineSix = "Line Six"
-	fwm.SetFIBeneficiaryAdvice(fiba)
+	fwm.FIBeneficiaryAdvice = fiba
 
 	pm := wire.NewFIPaymentMethodToBeneficiary()
 	pm.PaymentMethod = "CHECK"
 	pm.AdditionalInformation = "Additional Information"
-	fwm.SetFIPaymentMethodToBeneficiary(pm)
+	fwm.FIPaymentMethodToBeneficiary = pm
 
 	fifi := wire.NewFIAdditionalFIToFI()
 	fiifi.FIToFI.LineOne = "Line One"
@@ -221,7 +221,7 @@ func main() {
 	fiifi.FIToFI.LineOne = "Line Four"
 	fiifi.FIToFI.LineOne = "Line Five"
 	fiifi.FIToFI.LineOne = "Line Six"
-	fwm.SetFIAdditionalFIToFI(fifi)
+	fwm.FIAdditionalFIToFI = fifi
 
 	file.AddFEDWireMessage(fwm)
 

@@ -1,5 +1,9 @@
 ## v0.6.2 (Unreleased)
 
+BREAKING CHANGE
+
+- Removes the Java-like getters and setters from `FEDWireMessage`
+
 BUG FIXES
 
 - api: update validation of `AccountCreditedDrawdown.DrawdownCreditAccountNumber` (tag `{5400}`)

@@ -2,6 +2,7 @@ package wire
 
 import (
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -64,4 +65,18 @@ func TestReadShortLine(t *testing.T) {
 	f, err := NewReader(strings.NewReader("00")).Read()
 
 	require.Errorf(t, err, "expected an error - file: %v", f)
+}
+
+// hits the case where each individual tag is well-formed, but it's missing tags required for this Business Function Code
+func TestRead_missingTag(t *testing.T) {
+	f, err := os.Open(path.Join("test", "testdata", "fedWireMessage-MissingRequiredTag.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer f.Close()
+	r := NewReader(f)
+
+	_, err = r.Read()
+
+	require.EqualError(t, err, "file validation failed: FIBeneficiaryAdvice <nil> is a required field")
 }

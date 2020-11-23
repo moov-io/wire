@@ -192,10 +192,10 @@ func TestParseServiceMessageReaderParseError(t *testing.T) {
 func TestInvalidTransactionTypeCodeForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	bfc := mockBusinessFunctionCode()
 	bfc.TransactionTypeCode = "COV"
-	fwm.SetBusinessFunctionCode(bfc)
+	fwm.BusinessFunctionCode = bfc
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -206,9 +206,9 @@ func TestInvalidTransactionTypeCodeForServiceMessage(t *testing.T) {
 func TestInvalidLocalInstrumentForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	li := mockLocalInstrument()
-	fwm.SetLocalInstrument(li)
+	fwm.LocalInstrument = li
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -219,9 +219,9 @@ func TestInvalidLocalInstrumentForServiceMessage(t *testing.T) {
 func TestInvalidPaymentNotificationForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	pn := mockPaymentNotification()
-	fwm.SetPaymentNotification(pn)
+	fwm.PaymentNotification = pn
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -232,9 +232,9 @@ func TestInvalidPaymentNotificationForServiceMessage(t *testing.T) {
 func TestInvalidChargesForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	c := mockCharges()
-	fwm.SetCharges(c)
+	fwm.Charges = c
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -245,9 +245,9 @@ func TestInvalidChargesForServiceMessage(t *testing.T) {
 func TestInvalidInstructedAmountForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	ia := mockInstructedAmount()
-	fwm.SetInstructedAmount(ia)
+	fwm.InstructedAmount = ia
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -258,9 +258,9 @@ func TestInvalidInstructedAmountForServiceMessage(t *testing.T) {
 func TestInvalidExchangeRateForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	eRate := mockExchangeRate()
-	fwm.SetExchangeRate(eRate)
+	fwm.ExchangeRate = eRate
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -271,10 +271,10 @@ func TestInvalidExchangeRateForServiceMessage(t *testing.T) {
 func TestInvalidBeneficiaryIdentificationCodeForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	ben := mockBeneficiary()
 	ben.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
-	fwm.SetBeneficiary(ben)
+	fwm.Beneficiary = ben
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -285,10 +285,10 @@ func TestInvalidBeneficiaryIdentificationCodeForServiceMessage(t *testing.T) {
 func TestInvalidOriginatorIdentificationCodeForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	o := mockOriginator()
 	o.Personal.IdentificationCode = SWIFTBICORBEIANDAccountNumber
-	fwm.SetOriginator(o)
+	fwm.Originator = o
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -299,9 +299,9 @@ func TestInvalidOriginatorIdentificationCodeForServiceMessage(t *testing.T) {
 func TestInvalidOriginatorOptionFForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	off := mockOriginatorOptionF()
-	fwm.SetOriginatorOptionF(off)
+	fwm.OriginatorOptionF = off
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -312,9 +312,9 @@ func TestInvalidOriginatorOptionFForServiceMessage(t *testing.T) {
 func TestInvalidUnstructuredAddendaForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	ua := mockUnstructuredAddenda()
-	fwm.SetUnstructuredAddenda(ua)
+	fwm.UnstructuredAddenda = ua
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -325,9 +325,9 @@ func TestInvalidUnstructuredAddendaForServiceMessage(t *testing.T) {
 func TestInvalidCurrencyInstructedAmountForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	cia := mockCurrencyInstructedAmount()
-	fwm.SetCurrencyInstructedAmount(cia)
+	fwm.CurrencyInstructedAmount = cia
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
@@ -338,9 +338,9 @@ func TestInvalidCurrencyInstructedAmountForServiceMessage(t *testing.T) {
 func TestInvalidRelatedRemittanceForServiceMessage(t *testing.T) {
 	fwm := new(FEDWireMessage)
 	sm := mockServiceMessage()
-	fwm.SetServiceMessage(sm)
+	fwm.ServiceMessage = sm
 	rr := mockRelatedRemittance()
-	fwm.SetRelatedRemittance(rr)
+	fwm.RelatedRemittance = rr
 
 	err := fwm.checkProhibitedServiceMessageTags()
 
