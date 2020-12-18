@@ -1,3 +1,9 @@
+## v0.7.1 (Released 2020-12-18)
+
+BUILD
+
+- build: update github.com/moov-io/base to v0.15.2
+- build: update github.com/moov-io/paygate to v0.9.2
 ## v0.7.0 (Released 2020-11-23)
 
 BREAKING CHANGE
