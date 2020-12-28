@@ -522,44 +522,48 @@ func (fwm *FEDWireMessage) checkMandatoryCustomerTransferPlusTags() error {
 		return err
 	}
 
-	switch fwm.LocalInstrument.LocalInstrumentCode {
-	case SequenceBCoverPaymentStructured:
-		if fwm.BeneficiaryReference == nil {
-			return fieldError("BeneficiaryReference", ErrFieldRequired)
-		}
-		if fwm.OrderingCustomer == nil {
-			return fieldError("OrderingCustomer", ErrFieldRequired)
-		}
-		if fwm.BeneficiaryCustomer == nil {
-			return fieldError("BeneficiaryCustomer", ErrFieldRequired)
-		}
-	case ANSIX12format, GeneralXMLformat, ISO20022XMLformat,
-		NarrativeText, STP820format, SWIFTfield70, UNEDIFACTformat:
-		if fwm.UnstructuredAddenda == nil {
-			return fieldError("UnstructuredAddenda", ErrFieldRequired)
-		}
-	case RelatedRemittanceInformation:
-		if fwm.RelatedRemittance == nil {
-			return fieldError("RelatedRemittance", ErrFieldRequired)
-		}
-	case RemittanceInformationStructured:
-		if fwm.RemittanceOriginator == nil {
-			return fieldError("RemittanceOriginator", ErrFieldRequired)
-		}
-		if fwm.RemittanceBeneficiary == nil {
-			return fieldError("RemittanceBeneficiary", ErrFieldRequired)
-		}
-		if fwm.PrimaryRemittanceDocument == nil {
-			return fieldError("PrimaryRemittanceDocument", ErrFieldRequired)
-		}
-		if fwm.ActualAmountPaid == nil {
-			return fieldError("ActualAmountPaid", ErrFieldRequired)
-		}
-	case ProprietaryLocalInstrumentCode:
-		if fwm.LocalInstrument.ProprietaryCode == "" {
-			return fieldError("ProprietaryCode", ErrFieldRequired)
+	// LocalInstrument is optional for Customer Transfer Plus
+	if fwm.LocalInstrument != nil {
+		switch fwm.LocalInstrument.LocalInstrumentCode {
+		case SequenceBCoverPaymentStructured:
+			if fwm.BeneficiaryReference == nil {
+				return fieldError("BeneficiaryReference", ErrFieldRequired)
+			}
+			if fwm.OrderingCustomer == nil {
+				return fieldError("OrderingCustomer", ErrFieldRequired)
+			}
+			if fwm.BeneficiaryCustomer == nil {
+				return fieldError("BeneficiaryCustomer", ErrFieldRequired)
+			}
+		case ANSIX12format, GeneralXMLformat, ISO20022XMLformat,
+			NarrativeText, STP820format, SWIFTfield70, UNEDIFACTformat:
+			if fwm.UnstructuredAddenda == nil {
+				return fieldError("UnstructuredAddenda", ErrFieldRequired)
+			}
+		case RelatedRemittanceInformation:
+			if fwm.RelatedRemittance == nil {
+				return fieldError("RelatedRemittance", ErrFieldRequired)
+			}
+		case RemittanceInformationStructured:
+			if fwm.RemittanceOriginator == nil {
+				return fieldError("RemittanceOriginator", ErrFieldRequired)
+			}
+			if fwm.RemittanceBeneficiary == nil {
+				return fieldError("RemittanceBeneficiary", ErrFieldRequired)
+			}
+			if fwm.PrimaryRemittanceDocument == nil {
+				return fieldError("PrimaryRemittanceDocument", ErrFieldRequired)
+			}
+			if fwm.ActualAmountPaid == nil {
+				return fieldError("ActualAmountPaid", ErrFieldRequired)
+			}
+		case ProprietaryLocalInstrumentCode:
+			if fwm.LocalInstrument.ProprietaryCode == "" {
+				return fieldError("ProprietaryCode", ErrFieldRequired)
+			}
 		}
 	}
+
 	return nil
 }
 
@@ -822,11 +826,15 @@ func (fwm *FEDWireMessage) checkSharedProhibitedTags() error {
 	if fwm.ExchangeRate != nil {
 		return fieldError("ExchangeRate", ErrInvalidProperty, fwm.ExchangeRate)
 	}
-	if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-		return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+	if fwm.Beneficiary != nil {
+		if fwm.Beneficiary.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+			return fieldError("Beneficiary.Personal.IdentificationCode", ErrInvalidProperty, fwm.Beneficiary.Personal.IdentificationCode)
+		}
 	}
-	if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
-		return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+	if fwm.Originator != nil {
+		if fwm.Originator.Personal.IdentificationCode == SWIFTBICORBEIANDAccountNumber {
+			return fieldError("Originator.Personal.IdentificationCode", ErrInvalidProperty, fwm.Originator.Personal.IdentificationCode)
+		}
 	}
 	if fwm.OriginatorOptionF != nil {
 		return fieldError("OriginatorOptionF", ErrInvalidProperty, fwm.OriginatorOptionF)
