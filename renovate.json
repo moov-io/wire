@@ -2,6 +2,5 @@
   "extends": [
     "config:base"
   ],
-  "groupName": "all",
-  "schedule": "on monday"
+  "schedule": ["on monday"]
 }
