@@ -1,3 +1,10 @@
+## v0.7.2 (Unreleased)
+
+BUILD
+
+- build: update github.com/moov-io/base to v0.15.2
+- build: update github.com/prometheus/client_golang to v1.9.0
+
 ## v0.7.1 (Released 2020-12-18)
 
 BUILD
