@@ -17,7 +17,7 @@
 [![Coverage Status](https://codecov.io/gh/moov-io/wire/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/wire)
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/wire)](https://goreportcard.com/report/github.com/moov-io/wire)
 [![Repo Size](https://img.shields.io/github/languages/code-size/moov-io/wire?label=project%20size)](https://github.com/moov-io/wire)
-[![Apache 2 License](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/ach/master/LICENSE)
+[![Apache 2 License](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/wire/master/LICENSE)
 [![Slack Channel](https://slack.moov.io/badge.svg?bg=e01563&fgColor=fffff)](https://slack.moov.io/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/moov/wire)](https://hub.docker.com/r/moov/wire)
 [![GitHub Stars](https://img.shields.io/github/stars/moov-io/wire)](https://github.com/moov-io/wire)
@@ -34,58 +34,98 @@ Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire]
 Moov Wire is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above Wire to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
 
 ## Usage
+The Wire project implements an HTTP server and [Go library](https://pkg.go.dev/github.com/moov-io/wire) for creating and modifying Wire files. We also have some [examples](https://pkg.go.dev/github.com/moov-io/wire/examples) of the reader and writer.
 
 ### Docker
 
-We publish a [public Docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags).
+We publish a [public Docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with ewire tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have Docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags) published as `quay.io/moov/wire`.
 
-Start the Docker image:
+Pull & start the Docker image:
 ```
+docker pull moov/wire:latest
 docker run -p 8088:8088 -p 9098:9098 moov/wire:latest
 ```
 
-List files stored in-memory
+List files stored in-memory:
 ```
 curl localhost:8088/files
 ```
 ```
-{"files":[],"error":null}
+null
 ```
 
-Create a file on the HTTP server
+Create a file on the HTTP server:
 ```
 curl -XPOST --data-binary "@./test/testdata/fedWireMessage-CustomerTransfer.txt" http://localhost:8088/files/create
 ```
 ```
-{"id":"970f45b9d6e4b9b8c44345520605be1eca0a54af","fedWireMessage":{"id":"","senderSupplied":{"formatVersion":"30", .....
+{"id":"<YOUR-UNIQUE-FILE-ID>","fedWireMessage":{"id":"","senderSupplied":{"formatVersion":"30", .....
 ```
 
-### Go library
+Get the file in its original format:
+```
+curl http://localhost:8088/files/<YOUR-UNIQUE-FILE-ID>/contents
+```
+```
+{1500}30User ReqT
+{1510}1000
+{1520}20190410Source08000001
+...
+```
 
-`github.com/moov-io/wire` offers a Go based ACH file reader and writer. To get started checkout a specific example:
+### Google Cloud Run
 
-<details>
-<summary>Supported Business Function Codes</summary>
+To get started in a hosted environment you can deploy this project to the Google Cloud Platform.
 
-| Business Function Code | Name               | Example | Read | Write |
-|----------|----------------------------------|---------|------|-------|
-| DRB      | Bank DrawDown Request            | [Link](examples/bankDrawDownRequest-read/bankDrawDownRequest.txt) | [Link](examples/bankDrawDownRequest-read/main.go) | [Link](examples/bankDrawDownRequest-write/main.go) |
-| BTR      | BankTransfer                     | [Link](examples/bankTransfer-read/bankTransfer.txt) | [Link](examples/bankTransfer-read/main.go) | [Link](examples/bankTransfer-write/main.go) |
-| CKS      | CheckSameDaySettlement           | [Link](examples/checkSameDaySettlement-read/checkSameDaySettlement.txt) | [Link](examples/checkSameDaySettlement-read/main.go) | [Link](examples/checkSameDaySettlement-write/main.go) |
-| DRC      | CustomerCorporateDrawdownRequest | [Link](examples/customerCorporateDrawDownRequest-read/customerCorporateDrawDownRequest.txt) | [Link](examples/customerCorporateDrawDownRequest-read/main.go) | [Link](examples/customerCorporateDrawDownRequest-write/main.go) |
-| CTR      | CustomerTransfer                 | [Link](examples/customerTransfer-read/customerTransfer.txt) | [Link](examples/customerTransfer-read/main.go) | [Link](examples/customerTransfer-write/main.go) |
-| CTP      | CustomerTransferPlus             | [Link](examples/customerTransferPlus-read/customerTransferPlus.txt) | [Link](examples/customerTransferPlus-read/main.go) | [Link](examples/customerTransferPlus-write/main.go) |
-| CTP      | CustomerTransferPlusCOVS         | [Link](examples/customerTransferPlusCOVS-read/customerTransferPlusCOVS.txt) | [Link](examples/customerTransferPlusCOVS-read/main.go) | [Link](examples/customerTransferPlusCOVS-write/main.go) |
-| DEP      | DepositSendersAccount            | [Link](examples/depositSendersAccount-read/depositSendersAccount.txt) | [Link](examples/depositSendersAccount-read/main.go) | [Link](examples/depositSendersAccount-write/main.go) |
-| FFR      | FEDFundsReturned                 | [Link](examples/fedFundsReturned-read/fedFundsReturned.txt) | [Link](examples/fedFundsReturned-read/main.go) | [Link](examples/fedFundsReturned-write/main.go) |
-| FFS      | FEDFundsSold                     | [Link](examples/fedFundsSold-read/fedFundsSold.txt) | [Link](examples/fedFundsSold-read/main.go) | [Link](examples/fedFundsSold-write/main.go) |
-| SVC      | ServiceMessage                   | [Link](examples/serviceMessage-read/serviceMessage.txt) | [Link](examples/serviceMessage-read/main.go) | [Link](examples/serviceMessage-write/main.go) |
-</details>
+From your [Google Cloud dashboard](https://console.cloud.google.com/home/dashboard) create a new project and call it:
+```
+moov-wire-demo
+```
 
+Enable the [Container Registry](https://cloud.google.com/container-registry) API for your project and associate a [billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account) if needed. Then, open the Cloud Shell terminal and run the following Docker commands, substituting your unique project ID:
 
-### From Source
+```
+docker pull moov/wire
+docker tag moov/wire gcr.io/<PROJECT-ID>/wire
+docker push gcr.io/<PROJECT-ID>/wire
+```
 
-This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go 1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/wire/releases/latest) as well. We highly recommend you use a tagged release for production.
+Deploy the container to Cloud Run:
+```
+gcloud run deploy --image gcr.io/<PROJECT-ID>/wire --port 8088
+```
+
+Select your target platform to `1`, service name to `wire`, and region to the one closest to you (enable Google API service if a prompt appears). Upon a successful build you will be given a URL where the API has been deployed:
+
+```
+https://YOUR-WIRE-APP-URL.a.run.app
+```
+
+Now you can list files stored in-memory:
+```
+curl https://YOUR-WIRE-APP-URL.a.run.app/files
+```
+You should get this response:
+```
+null
+```
+
+### Configuration Settings
+
+The following environmental variables can be set to configure behavior in Wire.
+
+| Environmental Variable | Description | Default |
+|-----|-----|-----|
+| `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
+| `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
+| `WIRE_FILE_TTL` | Time to live (TTL) for `*wire.File` objects stored in the in-memory repository. | 0 = No TTL / Never delete files (Example: `240m`) |
+
+### Data Persistence
+By design, Wire  **does not persist** (save) any data about the files or entry details created. The only storage occurs in memory of the process and upon restart Wire will have no files or data saved. Also, no in-memory encryption of the data is performed.
+
+### Go Library
+
+This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go v1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/wire/releases/latest) as well. We highly recommend you use a tagged release for production.
 
 ```
 $ git@github.com:moov-io/wire.git
@@ -96,19 +136,28 @@ $ go get -u github.com/moov-io/wire
 $ go doc github.com/moov-io/wire fedWireMessage
 ```
 
-### Configuration
+The package [`github.com/moov-io/wire`](https://pkg.go.dev/github.com/moov-io/wire) offers a Go-based Wire file reader and writer. To get started, check out a specific example:
 
-| Environmental Variable | Description | Default |
-|-----|-----|-----|
-| `HTTPS_CERT_FILE` | Filepath containing a certificate (or intermediate chain) to be served by the HTTP server. Requires all traffic be over secure HTTP. | Empty |
-| `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
-| `WIRE_FILE_TTL` | Time to live (TTL) for `*wire.File` objects stored in the in-memory repository. | 0 = No TTL / Never delete files (Example: `240m`) |
+<details>
+<summary>Supported Business Function Codes</summary>
 
-Note: By design Wire **does not persist** (save) any data about the files, batches or entry details created. The only storage occurs in memory of the process and upon restart Wire will have no files, batches, or data saved. Also, no in memory encryption of the data is performed.
+| Business Function Code | Name               | Example | Read | Write |
+|----------|----------------------------------|---------|------|-------|
+| DRB      | BankDrawDownRequest            | [Link](examples/bankDrawDownRequest-read/bankDrawDownRequest.txt) | [Link](examples/bankDrawDownRequest-read/main.go) | [Link](examples/bankDrawDownRequest-write/main.go) |
+| BTR      | BankTransfer                     | [Link](examples/bankTransfer-read/bankTransfer.txt) | [Link](examples/bankTransfer-read/main.go) | [Link](examples/bankTransfer-write/main.go) |
+| CKS      | CheckSameDaySettlement           | [Link](examples/checkSameDaySettlement-read/checkSameDaySettlement.txt) | [Link](examples/checkSameDaySettlement-read/main.go) | [Link](examples/checkSameDaySettlement-write/main.go) |
+| DRC      | CustomerCorporateDrawDownRequest | [Link](examples/customerCorporateDrawDownRequest-read/customerCorporateDrawDownRequest.txt) | [Link](examples/customerCorporateDrawDownRequest-read/main.go) | [Link](examples/customerCorporateDrawDownRequest-write/main.go) |
+| CTR      | CustomerTransfer                 | [Link](examples/customerTransfer-read/customerTransfer.txt) | [Link](examples/customerTransfer-read/main.go) | [Link](examples/customerTransfer-write/main.go) |
+| CTP      | CustomerTransferPlus             | [Link](examples/customerTransferPlus-read/customerTransferPlus.txt) | [Link](examples/customerTransferPlus-read/main.go) | [Link](examples/customerTransferPlus-write/main.go) |
+| CTP      | CustomerTransferPlusCOVS         | [Link](examples/customerTransferPlusCOVS-read/customerTransferPlusCOVS.txt) | [Link](examples/customerTransferPlusCOVS-read/main.go) | [Link](examples/customerTransferPlusCOVS-write/main.go) |
+| DEP      | DepositSendersAccount            | [Link](examples/depositSendersAccount-read/depositSendersAccount.txt) | [Link](examples/depositSendersAccount-read/main.go) | [Link](examples/depositSendersAccount-write/main.go) |
+| FFR      | FEDFundsReturned                 | [Link](examples/fedFundsReturned-read/fedFundsReturned.txt) | [Link](examples/fedFundsReturned-read/main.go) | [Link](examples/fedFundsReturned-write/main.go) |
+| FFS      | FEDFundsSold                     | [Link](examples/fedFundsSold-read/fedFundsSold.txt) | [Link](examples/fedFundsSold-read/main.go) | [Link](examples/fedFundsSold-write/main.go) |
+| SVC      | ServiceMessage                   | [Link](examples/serviceMessage-read/serviceMessage.txt) | [Link](examples/serviceMessage-read/main.go) | [Link](examples/serviceMessage-write/main.go) |
+</details>
 
-### Fuzzing
-
-We currently run fuzzing over wire in the form of a [`moov/wirefuzz`](https://hub.docker.com/r/moov/wirefuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
+### In-Browser Wire File Parser
+Using our [in-browser utility](http://oss.moov.io/wire/), you can instantly convert Wire files into JSON. Either paste in Wire file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the future.
 
 ## Documentation
 
@@ -141,6 +190,10 @@ This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and us
 ### Releasing
 
 To make a release of wire simply open a pull request with `CHANGELOG.md` and `version.go` updated with the next version number and details. You'll also need to push the tag (i.e. `git push origin v1.0.0`) to origin in order for CI to make the release.
+
+### Fuzzing
+
+We currently run fuzzing over wire in the form of a [`moov/wirefuzz`](https://hub.docker.com/r/moov/wirefuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
 
 ## License
 
