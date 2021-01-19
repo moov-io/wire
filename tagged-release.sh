@@ -2,9 +2,16 @@
 
 [ $# -eq 0 ] && { echo "Usage: $0 version_tag"; exit 1; }
 
+newVersionTag=$1
+if ! [[ "$newVersionTag" =~ v[0-9]+\.[0-9]+\.[0-9]+ ]]
+then
+  echo "invalid version tag $newVersionTag"
+  exit 1
+fi
+
 # make sure this is a new tag
-if git show-ref --tags | grep -q "$1"; then
-  echo "$1 already exists!"
+if git show-ref --tags | grep -q "$newVersionTag"; then
+  echo "$newVersionTag already exists!"
   exit
 fi
 
@@ -64,12 +71,12 @@ then
 fi
 
 firstLine=$(head -n 1 CHANGELOG.md)
-if ! echo "$firstLine" | grep -q "$1"; then
-  echo "new tag ($1) doesn't match CHANGELOG ($firstLine)"
+if ! echo "$firstLine" | grep -q "$newVersionTag"; then
+  echo "new tag ($newVersionTag) doesn't match CHANGELOG ($firstLine)"
   exit
 fi
 
-expectedHeader=$(printf "## $1 (Released %s)" "$(date +"%Y-%m-%d")")
+expectedHeader=$(printf "## $newVersionTag (Released %s)" "$(date +"%Y-%m-%d")")
 if [ "$firstLine" != "$expectedHeader" ]
 then
   echo "Did you update the CHANGELOG's header? Expected \"$expectedHeader\", found \"$firstLine\""
@@ -77,7 +84,7 @@ then
 fi
 
 git add CHANGELOG.md version.go
-git commit -m "release $1"
-git tag "$1"
+git commit -m "release $newVersionTag"
+git tag "$newVersionTag"
 git push origin master
-git push origin "$1"
+git push origin "$newVersionTag"
