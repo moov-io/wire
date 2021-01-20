@@ -2,8 +2,10 @@
 
 BUILD
 
-- build: update github.com/moov-io/base to v0.15.2
+- build: update github.com/moov-io/base to v0.15.4
 - build: update github.com/prometheus/client_golang to v1.9.0
+- build: update github.com/stretchr/testify to v1.7.0
+- build: update golang.org/x/text to v0.3.5
 
 ## v0.7.1 (Released 2020-12-18)
 
