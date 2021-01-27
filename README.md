@@ -25,7 +25,7 @@
 
 # moov-io/wire
 
-Moov's mission is to give developers an easy way to create and integrate bank processing into their own software products. Our open source projects are each focused on solving a single responsibility in financial services and designed around performance, scalability, and ease-of-use.
+Moov's mission is to give developers an easy way to create and integrate bank processing into their own software products. Our open source projects are each focused on solving a single responsibility in financial services and designed around performance, scalability, and ease of use.
 
 Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available.
 
@@ -202,7 +202,7 @@ We support generating and parsing all Business Function codes.
  ------- | -------
 [Project Documentation](https://moov-io.github.io/wire/) | Our project documentation available online.
 Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
-[GitHub Issue](https://github.com/moov-io) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
+[GitHub Issue](https://github.com/moov-io/wire/issues) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
 [moov-io slack](https://slack.moov.io/) | Join our slack channel to have an interactive discussion about the development of the project.
 
 ## Supported and Tested Platforms
