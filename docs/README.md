@@ -12,7 +12,7 @@ FEDWire (formerly known as the Federal Reserve Wire Network) is a real-time gros
 
 ### How does Fedwire work?
 
-[Source: What are Fedwire Transfers?](https://www.americanexpress.com/us/foreign-exchange/articles/fedwire-transfers/)
+[What are Fedwire Transfers?](https://www.americanexpress.com/us/foreign-exchange/articles/fedwire-transfers/)
 
 ## Running Moov Wire Server
 
