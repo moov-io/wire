@@ -1,5 +1,12 @@
-## The following Tags are mandatory for all transfers:
+---
+layout: page
+title: File Structure
+hide_hero: true
+show_sidebar: false
+menubar: docs-menu
+---
 
+## Mandatory Tags
 
 Name |
 ------------ | 
