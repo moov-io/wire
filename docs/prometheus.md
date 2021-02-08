@@ -8,4 +8,4 @@ menubar: docs-menu
 
 # Metrics
 
-The port `9098` is bound by Wire for our admin service. This HTTP server has endpoints for Prometheus metrics (`GET /metrics`), readiness checks (`GET /ready`) and liveness checks (`GET /live`).
+The port `9098` is bound by Wire for our admin service. This HTTP server has endpoints for Prometheus metrics (`GET /metrics`), readiness checks (`GET /ready`), and liveness checks (`GET /live`).
