@@ -222,6 +222,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.11.1-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.11.1-x86_64-linux)
+      racc (~> 1.4)
     octokit (4.20.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
@@ -264,12 +266,13 @@ GEM
 
 PLATFORMS
   universal-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   bulma-clean-theme
   github-pages
   jekyll-feed (~> 0.12)
-  tzinfo (~> 1.2)
+  tzinfo (~> 2.0)
   tzinfo-data
   wdm (~> 0.1.1)
 
