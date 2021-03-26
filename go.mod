@@ -17,5 +17,5 @@ require (
 	golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4 // indirect
 	golang.org/x/text v0.3.5
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gotest.tools v2.2.0+incompatible
+	gotest.tools/v3 v3.0.3
 )
