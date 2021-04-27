@@ -504,7 +504,7 @@ components:
             receiptDate: "0401"
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
-            previousMessageIdentifier: previousMessageIdentifier
+            previousMessageIdentifier: Identifier
           adjustment:
             amount: "1234.56789"
             additionalInfo: Additional Info
@@ -915,7 +915,7 @@ components:
             receiptDate: "0401"
             receiptApplicationIdentification: RB11
           previousMessageIdentifier:
-            previousMessageIdentifier: previousMessageIdentifier
+            previousMessageIdentifier: Identifier
           adjustment:
             amount: "1234.56789"
             additionalInfo: Additional Info
@@ -1332,7 +1332,7 @@ components:
           receiptDate: "0401"
           receiptApplicationIdentification: RB11
         previousMessageIdentifier:
-          previousMessageIdentifier: previousMessageIdentifier
+          previousMessageIdentifier: Identifier
         adjustment:
           amount: "1234.56789"
           additionalInfo: Additional Info
@@ -1756,6 +1756,7 @@ components:
           - "7"
           - N
           - S
+          example: "0"
           maxLength: 1
           type: string
     ReceiptTimeStamp:
@@ -2753,10 +2754,11 @@ components:
     PreviousMessageIdentifier:
       description: The identifier for a previous message
       example:
-        previousMessageIdentifier: previousMessageIdentifier
+        previousMessageIdentifier: Identifier
       properties:
         previousMessageIdentifier:
           description: PreviousMessageIdentifier
+          example: Identifier
           maxLength: 22
           type: string
     Charges:
@@ -3542,7 +3544,7 @@ components:
       properties:
         error:
           description: An error message describing the problem intended for humans.
-          example: Validation error(s) present.
+          example: Example error, see description
           type: string
       required:
       - error
