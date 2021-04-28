@@ -548,6 +548,7 @@ components:
             - 7
             - N
             - S
+          example: '0'
     ReceiptTimeStamp:
       properties:
         receiptDate:
@@ -744,7 +745,7 @@ components:
           description: |
             InputCycleDate
             CCYYMMDD
-          example: 20191201
+          example: '20191201'
         inputSource:
           type: string
           minLength: 8
@@ -1451,7 +1452,7 @@ components:
           type: string
           maxLength: 22
           description: PreviousMessageIdentifier
-      example: ''
+          example: 'Identifier'
     Charges:
       properties:
         chargeDetails:

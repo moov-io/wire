@@ -1,0 +1,199 @@
+{
+    "id": "ff8cb7f5b604e4078546f2c64a0f7911d7c3c319",
+    "fedWireMessage": {
+      "id": "",
+      "senderSupplied": {
+        "formatVersion": "30",
+        "userRequestCorrelation": "User Req",
+        "testProductionCode": "T",
+        "messageDuplicationCode": ""
+      },
+      "typeSubType": {
+        "typeCode": "16",
+        "subTypeCode": "00"
+      },
+      "inputMessageAccountabilityData": {
+        "inputCycleDate": "20190410",
+        "inputSource": "Source08",
+        "inputSequenceNumber": "000001"
+      },
+      "amount": {
+        "amount": "000001234567"
+      },
+      "senderDepositoryInstitution": {
+        "senderABANumber": "121042882",
+        "senderShortName": "Wells Fargo NA"
+      },
+      "receiverDepositoryInstitution": {
+        "receiverABANumber": "231380104",
+        "receiverShortName": "Citadel"
+      },
+      "businessFunctionCode": {
+        "businessFunctionCode": "FFR",
+        "transactionTypeCode": "   "
+      },
+      "senderReference": {
+        "senderReference": "Sender Reference"
+      },
+      "previousMessageIdentifier": {
+        "PreviousMessageIdentifier": "Previous Message Ident"
+      },
+      "beneficiaryIntermediaryFI": {
+        "financialInstitution": {
+          "identificationCode": "D",
+          "identifier": "123456789",
+          "name": "FI Name",
+          "address": {
+            "addressLineOne": "Address One",
+            "addressLineTwo": "Address Two",
+            "addressLineThree": "Address Three"
+          }
+        }
+      },
+      "beneficiaryFI": {
+        "financialInstitution": {
+          "identificationCode": "D",
+          "identifier": "123456789",
+          "name": "FI Name",
+          "address": {
+            "addressLineOne": "Address One",
+            "addressLineTwo": "Address Two",
+            "addressLineThree": "Address Three"
+          }
+        }
+      },
+      "beneficiary": {
+        "personal": {
+          "identificationCode": "3",
+          "identifier": "1234",
+          "name": "Name",
+          "address": {
+            "addressLineOne": "Address One",
+            "addressLineTwo": "Address Two",
+            "addressLineThree": "Address Three"
+          }
+        }
+      },
+      "beneficiaryReference": {
+        "beneficiaryReference": "Reference"
+      },
+      "originator": {
+        "personal": {
+          "identificationCode": "1",
+          "identifier": "1234",
+          "name": "Name",
+          "address": {
+            "addressLineOne": "Address One",
+            "addressLineThree": "Address Three"
+          }
+        }
+      },
+      "originatorFI": {
+        "financialInstitution": {
+          "identificationCode": "D",
+          "identifier": "123456789",
+          "name": "FI Name",
+          "address": {
+            "addressLineOne": "Address One",
+            "addressLineTwo": "Address Two",
+            "addressLineThree": "Address Three"
+          }
+        }
+      },
+      "instructingFI": {
+        "financialInstitution": {
+          "identificationCode": "D",
+          "identifier": "123456789",
+          "name": "FI Name",
+          "address": {
+            "addressLineOne": "Address One",
+            "addressLineTwo": "Address Two",
+            "addressLineThree": "Address Three"
+          }
+        }
+      },
+      "originatorToBeneficiary": {
+        "lineOne": "LineOne",
+        "lineTwo": "LineTwo",
+        "lineThree": "LineThree",
+        "lineFour": "LineFour"
+      },
+      "fiReceiverFI": {
+        "fiToFI": {
+          "lineOne": "Line Six"
+        }
+      },
+      "fiIntermediaryFI": {
+        "fiToFI": {
+          "lineOne": "Line Six"
+        }
+      },
+      "fiIntermediaryFIAdvice": {
+        "advice": {
+          "adviceCode": "LTR",
+          "lineOne": "Line One",
+          "lineTwo": "Line Two",
+          "lineThree": "Line Three",
+          "lineFour": "Line Four",
+          "lineFive": "Line Five",
+          "lineSix": "Line Six"
+        }
+      },
+      "fiBeneficiaryFI": {
+        "fiToFI": {
+          "lineOne": "Line One",
+          "lineTwo": "Line Two",
+          "lineThree": "Line Three",
+          "lineFour": "Line Four",
+          "lineFive": "Line Five",
+          "lineSix": "Line Six"
+        }
+      },
+      "fiBeneficiaryFIAdvice": {
+        "advice": {
+          "adviceCode": "TLX",
+          "lineOne": "Line One",
+          "lineTwo": "Line Two",
+          "lineThree": "Line Three",
+          "lineFour": "Line Four",
+          "lineFive": "Line Five",
+          "lineSix": "Line Six"
+        }
+      },
+      "fiBeneficiary": {
+        "fiToFI": {
+          "lineOne": "Line One",
+          "lineTwo": "Line Two",
+          "lineThree": "Line Three",
+          "lineFour": "Line Four",
+          "lineFive": "Line Five",
+          "lineSix": "Line Six"
+        }
+      },
+      "fiBeneficiaryAdvice": {
+        "advice": {
+          "adviceCode": "LTR",
+          "lineOne": "Line One",
+          "lineTwo": "Line Two",
+          "lineThree": "Line Three",
+          "lineFour": "Line Four",
+          "lineFive": "Line Five",
+          "lineSix": "Line Six"
+        }
+      },
+      "fiPaymentMethodToBeneficiary": {
+        "paymentMethod": "CHECK",
+        "Additional": "Additional Information"
+      },
+      "fiAdditionalFiToFi": {
+        "additionalFiToFi": {
+          "lineOne": "Line One",
+          "lineTwo": "Line Two",
+          "lineThree": "Line Three",
+          "lineFour": "Line Four",
+          "lineFive": "Line Five",
+          "lineSix": "Line Six"
+        }
+      }
+    }
+  }
