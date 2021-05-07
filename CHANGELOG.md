@@ -1,11 +1,15 @@
-## v0.7.2 (Unreleased)
+## v0.7.2 (Released 2021-05-07)
+
+BUG FIXES
+
+- fedWireMessage: add `nil` check for the optional `LocalInstrument` field to prevent panics
 
 BUILD
 
-- build: update github.com/moov-io/base to v0.15.4
-- build: update github.com/prometheus/client_golang to v1.9.0
+- build: update github.com/moov-io/base to v0.18.3
+- build: update github.com/prometheus/client_golang to v1.10.0
 - build: update github.com/stretchr/testify to v1.7.0
-- build: update golang.org/x/text to v0.3.5
+- build: update golang.org/x/text to v0.3.6
 
 ## v0.7.1 (Released 2020-12-18)
 
