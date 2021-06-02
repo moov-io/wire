@@ -44,7 +44,7 @@ func TestOriginatorOptionFPartyIdentifierNull(t *testing.T) {
 
 	err := oof.Validate()
 
-	require.EqualError(t, err, fieldError("PartyIdentifier", ErrPartyIdentifier, oof.PartyIdentifier).Error())
+	require.EqualError(t, err, fieldError("PartyIdentifier", ErrFieldRequired).Error())
 }
 
 // TestOriginatorOptionFPartyIdentifierCount validates OriginatorOptionF PartyIdentifier count is > 2
@@ -95,7 +95,7 @@ func TestOriginatorOptionFNameNull(t *testing.T) {
 
 	err := oof.Validate()
 
-	require.EqualError(t, err, fieldError("Name", ErrOptionFName, oof.Name).Error())
+	require.EqualError(t, err, fieldError("Name", ErrFieldRequired).Error())
 }
 
 // TestOriginatorOptionFLineValid validates OriginatorOptionF Line* is valid

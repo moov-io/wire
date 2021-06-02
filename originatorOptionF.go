@@ -166,6 +166,12 @@ func (oof *OriginatorOptionF) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (oof *OriginatorOptionF) fieldInclusion() error {
+	if oof.PartyIdentifier == "" {
+		return fieldError("PartyIdentifier", ErrFieldRequired)
+	}
+	if oof.Name == "" {
+		return fieldError("Name", ErrFieldRequired)
+	}
 	return nil
 }
 
