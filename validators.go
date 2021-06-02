@@ -581,3 +581,19 @@ func (v *validator) validateOptionFName(s string) error {
 	}
 	return nil
 }
+
+// validateSendersCharges validates Charges SendersChargesOne, SendersChargesTwo, SendersChargesThree, SendersChargesFour
+// The first three characters must contain an alpha currency code (e.g., USD). The remaining
+// characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
+// marker. $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
+func (v *validator) validateSendersCharges(s string) error {
+	if err := v.isAlphanumeric(s); err != nil {
+		return ErrSendersCharges
+	}
+	if length := utf8.RuneCountInString(s); length >= 3 {
+		if err := v.isCurrencyCode(s[:3]); err != nil {
+			return ErrSendersCharges
+		}
+	}
+	return nil
+}

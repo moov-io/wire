@@ -79,6 +79,8 @@ var (
 
 	// ErrChargeDetails is returned for an invalid charge details for charges
 	ErrChargeDetails = errors.New("is an invalid charge detail")
+	// ErrSendersCharges is returned for an invalid senders charge
+	ErrSendersCharges = errors.New("is an invalid senders charge")
 
 	// Beneficiary {4000}
 

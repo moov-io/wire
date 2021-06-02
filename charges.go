@@ -93,44 +93,33 @@ func (c *Charges) String() string {
 // Validate performs WIRE format rule checks on Charges and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (c *Charges) Validate() error {
-	if err := c.fieldInclusion(); err != nil {
+	/*  if err := c.fieldInclusion(); err != nil {
 		return err
-	}
+	}*/
 	if err := c.isChargeDetails(c.ChargeDetails); err != nil {
 		return fieldError("ChargeDetails", ErrChargeDetails, c.ChargeDetails)
 	}
-	if err := c.isAlphanumeric(c.SendersChargesOne); err != nil {
+	if err := c.validateSendersCharges(c.SendersChargesOne); err != nil {
 		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
 	}
-	/*	if err := c.validateCharges(c.SendersChargesOne); err != nil {
-		return fieldError("SendersChargesOne", err, c.SendersChargesOne)
-	}*/
-	if err := c.isAlphanumeric(c.SendersChargesTwo); err != nil {
+	if err := c.validateSendersCharges(c.SendersChargesTwo); err != nil {
 		return fieldError("SendersChargesTwo", err, c.SendersChargesTwo)
 	}
-	/*	if err := c.validateCharges(c.SendersChargesTwo); err != nil {
-		return fieldError("SendersChargesTwo", err, c.SendersChargesTwo)
-	}*/
-	if err := c.isAlphanumeric(c.SendersChargesThree); err != nil {
+	if err := c.validateSendersCharges(c.SendersChargesThree); err != nil {
 		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
 	}
-	/*	if err := c.validateCharges(c.SendersChargesThree); err != nil {
-		return fieldError("SendersChargesThree", err, c.SendersChargesThree)
-	}*/
-	if err := c.isAlphanumeric(c.SendersChargesFour); err != nil {
+	if err := c.validateSendersCharges(c.SendersChargesFour); err != nil {
 		return fieldError("SendersChargesFour", err, c.SendersChargesFour)
 	}
-	/*	if err := c.validateCharges(c.SendersChargesFour); err != nil {
-		return fieldError("SendersChargesFour", err, c.SendersChargesFour)
-	}*/
 	return nil
 }
 
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (c *Charges) fieldInclusion() error {
-	return nil
-}
+// // fieldInclusion validate mandatory fields. If fields are
+// // invalid the WIRE will return an error.
+// func (c *Charges) fieldInclusion() error {
+// 	return nil
+// }
+
 
 // ChargeDetailsField gets a string of the ChargeDetails field
 func (c *Charges) ChargeDetailsField() string {
