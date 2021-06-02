@@ -587,13 +587,21 @@ func (v *validator) validateOptionFName(s string) error {
 // characters for the amount must begin with at least one numeric character (0-9) and only one decimal comma
 // marker. $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
 func (v *validator) validateSendersCharges(s string) error {
-	if err := v.isAlphanumeric(s); err != nil {
+	if s == "" {
+		return nil
+	}
+	// Can be "" without an error, but if not length has to be at least 4.
+	if length := utf8.RuneCountInString(s); length < 4 {
 		return ErrSendersCharges
 	}
-	if length := utf8.RuneCountInString(s); length >= 3 {
-		if err := v.isCurrencyCode(s[:3]); err != nil {
-			return ErrSendersCharges
-		}
+	if err := v.isCurrencyCode(s[:3]); err != nil { // must begin with a valid 3-digit currency code
+		return ErrSendersCharges
+	}
+	if err := v.isNumeric(s[3:4]); err != nil { // numeric character must immediately follow the currency code
+		return ErrSendersCharges
+	}
+	if err := v.isAlphanumeric(s); err != nil {
+		return ErrSendersCharges
 	}
 	return nil
 }
