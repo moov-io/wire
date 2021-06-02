@@ -350,7 +350,7 @@ func (v *validator) isCurrencyCode(code string) error {
 
 // isCentury validates a 2 digit century 20-29
 func (v *validator) isCentury(s string) error {
-	if s < "20" || s > "29" {
+	if s < "20" || s > "29" || utf8.RuneCountInString(s) != 2 {
 		return ErrValidCentury
 	}
 	return nil
@@ -358,7 +358,7 @@ func (v *validator) isCentury(s string) error {
 
 // isYear validates a 2 digit year 00-99
 func (v *validator) isYear(s string) error {
-	if s < "00" || s > "99" {
+	if s < "00" || s > "99" || utf8.RuneCountInString(s) != 2 {
 		return ErrValidYear
 	}
 	return nil
