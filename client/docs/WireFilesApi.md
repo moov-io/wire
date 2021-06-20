@@ -1,16 +1,16 @@
 # \WireFilesApi
 
-All URIs are relative to *http://localhost:8087*
+All URIs are relative to *http://localhost:8088*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**AddFEDWireMessageToFile**](WireFilesApi.md#AddFEDWireMessageToFile) | **Post** /files/{fileID}/FEDWireMessage | Add FEDWireMessage to File
-[**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create File
+[**AddFEDWireMessageToFile**](WireFilesApi.md#AddFEDWireMessageToFile) | **Post** /files/{fileID}/FEDWireMessage | Add Fedwire message to file
+[**CreateWireFile**](WireFilesApi.md#CreateWireFile) | **Post** /files/create | Create file
 [**DeleteWireFileByID**](WireFilesApi.md#DeleteWireFileByID) | **Delete** /files/{fileID} | Delete file
-[**GetWireFileByID**](WireFilesApi.md#GetWireFileByID) | **Get** /files/{fileID} | Retrieve a file
+[**GetWireFileByID**](WireFilesApi.md#GetWireFileByID) | **Get** /files/{fileID} | Retrieve file
 [**GetWireFileContents**](WireFilesApi.md#GetWireFileContents) | **Get** /files/{fileID}/contents | Get file contents
-[**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | Get files
-[**Ping**](WireFilesApi.md#Ping) | **Get** /ping | Ping Wire
+[**GetWireFiles**](WireFilesApi.md#GetWireFiles) | **Get** /files | List files
+[**Ping**](WireFilesApi.md#Ping) | **Get** /ping | Ping Wire service
 [**ValidateWireFile**](WireFilesApi.md#ValidateWireFile) | **Get** /files/{fileID}/validate | Validate file
 
 
@@ -19,9 +19,9 @@ Method | HTTP request | Description
 
 > AddFEDWireMessageToFile(ctx, fileID, fedWireMessage, optional)
 
-Add FEDWireMessage to File
+Add Fedwire message to file
 
-Add a FEDWireMessage to the specified file
+Add a Fedwire Message to the specified file.
 
 ### Required Parameters
 
@@ -42,8 +42,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -65,9 +65,9 @@ No authorization required
 
 ## CreateWireFile
 
-> WireFile CreateWireFile(ctx, createWireFile, optional)
+> WireFile CreateWireFile(ctx, wireFile, optional)
 
-Create File
+Create file
 
 Create a new File object from either the plaintext or JSON representation.
 
@@ -77,7 +77,7 @@ Create a new File object from either the plaintext or JSON representation.
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**createWireFile** | [**CreateWireFile**](CreateWireFile.md)| Content of the WIRE file (in json or raw text) | 
+**wireFile** | [**WireFile**](WireFile.md)| Content of the Wire file (in json or raw text) | 
  **optional** | ***CreateWireFileOpts** | optional parameters | nil if no parameters
 
 ### Optional Parameters
@@ -88,8 +88,8 @@ Optional parameters are passed through a pointer to a CreateWireFileOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
- **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests. | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **xIdempotencyKey** | **optional.String**| Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests. | 
 
 ### Return type
 
@@ -115,7 +115,7 @@ No authorization required
 
 Delete file
 
-Permanently deletes a File and associated Batches. It cannot be undone.
+Permanently delete a File and associated message. It cannot be undone.
 
 ### Required Parameters
 
@@ -134,7 +134,7 @@ Optional parameters are passed through a pointer to a DeleteWireFileByIDOpts str
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -158,7 +158,7 @@ No authorization required
 
 > WireFile GetWireFileByID(ctx, fileID, optional)
 
-Retrieve a file
+Retrieve file
 
 Get the details of an existing File using the unique File identifier that was returned upon creation.
 
@@ -179,7 +179,7 @@ Optional parameters are passed through a pointer to a GetWireFileByIDOpts struct
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -224,7 +224,7 @@ Optional parameters are passed through a pointer to a GetWireFileContentsOpts st
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -248,7 +248,7 @@ No authorization required
 
 > []WireFile GetWireFiles(ctx, optional)
 
-Get files
+List files
 
 List all Wire files created with the Wire service. These files are not persisted through multiple runs of the service.
 
@@ -267,7 +267,7 @@ Optional parameters are passed through a pointer to a GetWireFilesOpts struct
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
@@ -291,9 +291,9 @@ No authorization required
 
 > Ping(ctx, )
 
-Ping Wire
+Ping Wire service
 
-Check the Wire service is running
+Check if the Wire service is running.
 
 ### Required Parameters
 
@@ -342,7 +342,7 @@ Optional parameters are passed through a pointer to a ValidateWireFileOpts struc
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
- **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the systems logs | 
+ **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
 
 ### Return type
 
