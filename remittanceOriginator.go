@@ -150,7 +150,7 @@ func (ro *RemittanceOriginator) String() string {
 // * Identification Number is not permitted for Identification Code PICDateBirthPlace.
 // * Identification Number Issuer is not permitted for Identification Code OICSWIFTBICORBEI and PICDateBirthPlace.
 // * Date & Place of Birth is only permitted for Identification Code PICDateBirthPlace.
-func (ro *RemittanceOriginator) Validate() error {
+func (ro *RemittanceOriginator) Validate() error { //nolint:gocyclo
 	if err := ro.fieldInclusion(); err != nil {
 		return err
 	}

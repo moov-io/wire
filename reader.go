@@ -89,7 +89,7 @@ func (r *Reader) Read() (File, error) {
 	return r.File, r.errors
 }
 
-func (r *Reader) parseLine() error {
+func (r *Reader) parseLine() error { //nolint:gocyclo
 	if n := utf8.RuneCountInString(r.line); n < 6 {
 		return fmt.Errorf("line %q is too short for tag", r.line)
 	}
