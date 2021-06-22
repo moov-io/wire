@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **ContactPhoneNumber** | **string** | ContactPhoneNumber | [optional] 
 **ContactMobileNumber** | **string** | ContactMobileNumber | [optional] 
 **ContactFaxNumber** | **string** | ContactFaxNumber | [optional] 
-**ContactElectronicAddress** | **string** | ContactElectronicAddress ( i.e., E-mail or URL address) | [optional] 
+**ContactElectronicAddress** | **string** | ContactElectronicAddress (i.e., E-mail or URL address) | [optional] 
 **ContactOther** | **string** | ContactOther | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

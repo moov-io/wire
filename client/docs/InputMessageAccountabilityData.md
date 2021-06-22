@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**InputCycleDate** | **string** | InputCycleDate CCYYMMDD  | 
+**InputCycleDate** | **string** | InputCycleDate (Format CCYYMMDD - C&#x3D;Century, Y&#x3D;Year, M&#x3D;Month, D&#x3D;Day)  | 
 **InputSource** | **string** | InputSource | 
 **InputSequenceNumber** | **string** | InputSequenceNumber | 
 

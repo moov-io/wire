@@ -1,28 +1,28 @@
 openapi: 3.0.2
 info:
-  description: Moov WIRE implements an HTTP API for creating, parsing and validating WIRE files.
+  description: Moov Wire implements an HTTP API for creating, parsing, and validating Fedwire messages.
   version: v1
-  title: WIRE API
+  title: Wire API
   contact:
     url: https://github.com/moov-io/wire
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-  - url: http://localhost:8087
+  - url: http://localhost:8088
     description: Local development
 
 tags:
   - name: 'Wire Files'
     description: |
-      File contains FEDWireMessages of a WIRE File.
+      File contains Fedwire Messages of a Wire File.
 
 paths:
   /ping:
     get:
       tags: ['Wire Files']
-      summary: Ping Wire
-      description: Check the Wire service is running
+      summary: Ping Wire service
+      description: Check if the Wire service is running.
       operationId: ping
       responses:
         '200':
@@ -30,7 +30,7 @@ paths:
   /files:
     get:
       tags: ['Wire Files']
-      summary: Get files
+      summary: List files
       description: List all Wire files created with the Wire service. These files are not persisted through multiple runs of the service.
       operationId: getWireFiles
       security:
@@ -39,7 +39,7 @@ paths:
       parameters:
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
@@ -48,7 +48,7 @@ paths:
           description: A list of File objects
           headers:
             X-Total-Count:
-              description: The total number of WIRE files
+              description: The total number of Wire files
               schema:
                 type: integer
           content:
@@ -58,7 +58,7 @@ paths:
   /files/create:
     post:
       tags: ['Wire Files']
-      summary: Create File
+      summary: Create file
       description: Create a new File object from either the plaintext or JSON representation.
       operationId: createWireFile
       security:
@@ -67,27 +67,27 @@ paths:
       parameters:
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
         - name: X-Idempotency-Key
           in: header
-          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
           example: a4f88150
           required: false
           schema:
             type: string
       requestBody:
-        description: Content of the WIRE file (in json or raw text)
+        description: Content of the Wire file (in json or raw text)
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateWireFile'
+              $ref: '#/components/schemas/WireFile'
           text/plain:
             schema:
-              description: A plaintext FED WIRE file
+              description: A plaintext FED Wire file
               type: string
               example:
       responses:
@@ -112,7 +112,7 @@ paths:
   /files/{fileID}:
     get:
       tags: ['Wire Files']
-      summary: Retrieve a file
+      summary: Retrieve file
       description: Get the details of an existing File using the unique File identifier that was returned upon creation.
       operationId: getWireFileByID
       security:
@@ -121,7 +121,7 @@ paths:
       parameters:
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
@@ -151,13 +151,13 @@ paths:
     #   parameters:
     #     - name: X-Request-ID
     #       in: header
-    #       description: Optional Request ID allows application developer to trace requests through the systems logs
+    #       description: Optional Request ID allows application developer to trace requests through the system's logs
     #       example: rs4f9915
     #       schema:
     #         type: string
     #     - name: X-Idempotency-Key
     #       in: header
-    #       description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+    #       description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
     #       example: a4f88150
     #       required: false
     #       schema:
@@ -174,7 +174,7 @@ paths:
     #     content:
     #       application/json:
     #         schema:
-    #           $ref: '#/components/schemas/CreateWireFile'
+    #           $ref: '#/components/schemas/WireFile'
     #   responses:
     #     '201':
     #       description: A JSON object containing a new File
@@ -197,7 +197,7 @@ paths:
     delete:
       tags: ['Wire Files']
       summary: Delete file
-      description: Permanently deletes a File and associated Batches. It cannot be undone.
+      description: Permanently delete a File and associated message. It cannot be undone.
       operationId: deleteWireFileByID
       security:
         - bearerAuth: []
@@ -212,7 +212,7 @@ paths:
             example: 3f2d23ee214
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
@@ -234,7 +234,7 @@ paths:
       parameters:
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
@@ -252,6 +252,9 @@ paths:
             text/plain:
               schema:
                 $ref: '#/components/schemas/RawWireFile'
+        '404':
+          description: A resource with the specified ID was not found
+        
   /files/{fileID}/validate:
     get:
       tags: ['Wire Files']
@@ -264,7 +267,7 @@ paths:
       parameters:
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
@@ -287,8 +290,8 @@ paths:
   /files/{fileID}/FEDWireMessage:
     post:
       tags: ['Wire Files']
-      summary: Add FEDWireMessage to File
-      description: Add a FEDWireMessage to the specified file
+      summary: Add Fedwire message to file
+      description: Add a Fedwire Message to the specified file.
       operationId: addFEDWireMessageToFile
       security:
         - bearerAuth: []
@@ -296,13 +299,13 @@ paths:
       parameters:
         - name: X-Request-ID
           in: header
-          description: Optional Request ID allows application developer to trace requests through the systems logs
+          description: Optional Request ID allows application developer to trace requests through the system's logs
           example: rs4f9915
           schema:
             type: string
         - name: X-Idempotency-Key
           in: header
-          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy for to not collide with each other in your requests.
+          description: Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
           example: a4f88150
           required: false
           schema:
@@ -322,20 +325,10 @@ paths:
               $ref: '#/components/schemas/FEDWireMessage'
       responses:
         '200':
-          description: FEDWireMessage added to File
+          description: Fedwire Message added to File
 
 components:
   schemas:
-    CreateWireFile:
-      properties:
-        ID:
-          type: string
-          description: File ID
-          example: 3f2d23ee214
-        fedWireMessage:
-          $ref: '#/components/schemas/FEDWireMessage'
-      required:
-        - fedWireMessage
     WireFile:
       properties:
         ID:
@@ -352,13 +345,13 @@ components:
         $ref: '#/components/schemas/WireFile'
     RawWireFile:
       type: string
-      description: Plaintext FedWire file
+      description: Plaintext Fedwire file
       example: "{3100}121042882Wells Fargo NA"
     FEDWireMessage:
       properties:
         ID:
           type: string
-          description: FEDWireMessage ID
+          description: Fedwire Message ID
           example: 3f2d23ee214
         # messageDisposition, receiptTimeStamp, outputMessageAccountabilityData, errorWire is information Appended by the FEDWire Funds Service
         messageDisposition:
@@ -495,9 +488,7 @@ components:
           type: string
           minLength: 2
           maxLength: 2
-          description: |
-            formatVersion identifies the format version
-            30
+          description: formatVersion identifies the Fedwire message format version 30.
           example: '30'
         testProductionCode:
           type: string
@@ -509,12 +500,11 @@ components:
             * `P` - Production
           enum:
             - " "
-            - T
-            - P
+            - "T"
+            - "P"
           example: 'T'
         messageDuplicationCode:
           type: string
-          maxLength: 1
           description: |
             MessageDuplicationCode
 
@@ -523,12 +513,11 @@ components:
             * `P` - Resend
           enum:
             - " "
-            - R
-            - P
-          example: " "
+            - "R"
+            - "P"
+          example: 'R'
         messageStatusIndicator:
           type: string
-          maxLength: 1
           description: |
             MessageStatusIndicator
 
@@ -542,30 +531,26 @@ components:
             * `N` - Successful with Accounting (Value)
             * `S` - Successful without Accounting (Non-Value)
           enum:
-            - 0
-            - 2
-            - 3
-            - 7
-            - N
-            - S
+            - "0"
+            - "2"
+            - "3"
+            - "7"
+            - "N"
+            - "S"
           example: '0'
     ReceiptTimeStamp:
       properties:
         receiptDate:
           type: string
           description: |
-            ReceiptDate
-            MMDD, based on the calendar date
-          minLength: 4
-          maxLength: 4
+            ReceiptDate is based on the calendar date. (Format MMDD - M=Month, D=Day)
+          format: 'MMDD'
           example: '0401'
         receiptTime:
           type: string
-          minLength: 4
-          maxLength: 4
+          format: 'HHmm'
           description: |
-            ReceiptTime
-            HHMM, based on a 24-hour clock, Eastern Time
+            ReceiptTime is based on a 24-hour clock, Eastern Time. (Format HHmm - H=Hour, m=Minute)
           example: '1305'
         receiptApplicationIdentification:
           type: string
@@ -576,9 +561,8 @@ components:
       properties:
         outputCycleDate:
           type: string
-          minLength: 8
-          maxLength: 8
-          description: OutputCycleDate (CCYYMMDD)
+          format: 'CCYYMMDD'
+          description: OutputCycleDate (Format CCYYMMDD - C=Century, Y=Year, M=Month, D=Day)
           example: '20190401'
         outputDestinationID:
           type: string
@@ -593,18 +577,14 @@ components:
         outputDate:
           type: string
           description: |
-            Output Date
-            MMDD, based on the calendar date
-          minLength: 4
-          maxLength: 4
+            Output Date is based on the calendar date. (Format MMDD - M=Month, D=Day)
+          format: "MMDD"
           example: '0401'
         outputTime:
           type: string
-          minLength: 4
-          maxLength: 4
+          format: "HHmm"
           description: |
-            Output Time
-            HHMM, based on a 24-hour clock, Eastern Time
+            Output Time is based on a 24-hour clock, Eastern Time. (Format HHmm - H=Hour, m=Minute)
           example: '1305'
         outputFRBApplicationIdentification:
           type: string
@@ -612,11 +592,9 @@ components:
           description: 'OutputFRBApplicationIdentification'
           example: 'OB11'
     ErrorWire:
-       description: ErrorWire
        properties:
          errorCategory:
            type: string
-           maxLength: 1
            description: |
              ErrorCategory
              * `E` - Data Error
@@ -644,7 +622,6 @@ components:
            description: ErrorDescription
            example: 'Data Error'
     SenderSupplied:
-      description: SenderSupplied
       properties:
         formatVersion:
           type: string
@@ -660,7 +637,6 @@ components:
           example: 'TESTDATA'
         testProductionCode:
           type: string
-          maxLength: 1
           description: |
             Identifies if test or production.
 
@@ -672,7 +648,6 @@ components:
           example: 'T'
         messageDuplicationCode:
           type: string
-          maxLength: 1
           description: |
             MessageDuplicationCode
 
@@ -683,18 +658,16 @@ components:
             - " "
             - R
             - P
-          example: " "
+          example: 'R'
       required:
         - formatVersion
         - userRequestCorrelation
         - testProductionCode
         - messageDuplicationCode
     TypeSubType:
-      description: TypeSubtype is the type and sub type codes
       properties:
         typeCode:
           type: string
-          maxLength: 2
           description: |
             TypeCode:
 
@@ -702,13 +675,12 @@ components:
             * `15` - Foreign Transfer - A funds transfer to or from a foreign central bank or government or international organization with an account at the Federal Reserve Bank of New York.
             * `16` - Settlement Transfer - A funds transfer between Fedwire Funds Service participants.
           enum:
-            - 10
-            - 15
-            - 16
+            - "10"
+            - "15"
+            - "16"
           example: '10'
         subTypeCode:
           type: string
-          maxLength: 2
           description: |
             SubTypeCode:
 
@@ -719,32 +691,29 @@ components:
             * `08` - Reversal of a Prior Day Transfer - A value reversal of a funds transfer received on a prior business day.  May be used in response to a subtype code ‘07’ Request for Reversal of a Prior Day Transfer.
             * `31` - Request for Credit (Drawdown) - A non-value request for the receiver to send a funds transfer to a designated party.
             * `32` - Funds Transfer Honoring a Request for Credit (Drawdown) -  A value funds transfer honoring a subtype 31 request for credit.
-            * `33` -Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
+            * `33` - Refusal to Honor a Request for Credit (Drawdown) - A non-value message indicating refusal to honor a subtype 31 request for credit.
             * `90` - Service Message - A non-value message used to communicate questions and information that is not covered by a specific subtype.
           enum:
-            - 00
-            - 01
-            - 02
-            - 07
-            - 08
-            - 31
-            - 32
-            - 33
-            - 90
+            - "00"
+            - "01"
+            - "02"
+            - "07"
+            - "08"
+            - "31"
+            - "32"
+            - "33"
+            - "90"
           example: '00'
       required:
         - typeCode
         - subTypeCode
     InputMessageAccountabilityData:
-      description: InputMessageAccountabilityData (IMAD)
       properties:
         inputCycleDate:
           type: string
-          minLength: 8
-          maxLength: 8
+          format: 'CCYYMMDD'
           description: |
-            InputCycleDate
-            CCYYMMDD
+            InputCycleDate (Format CCYYMMDD - C=Century, Y=Year, M=Month, D=Day)
           example: '20191201'
         inputSource:
           type: string
@@ -763,17 +732,16 @@ components:
         - inputSource
         - inputSequenceNumber
     WireAmount:
-      description: Amount is an amount up to a penny less than $10 billion
+      description: Maximum amount is a penny less than $10 billion.
       properties:
         amount:
           type: string
           minLength: 12
           maxLength: 12
           description: |
-            Amount
-            12 numeric, right-justified with leading zeros, an implied decimal point and no commas;
-            e.g., $12,345.67 becomes 000001234567
-            Can be all zeros for subtype 90
+            Amount is 12 numeric digits, right-justified with leading zeros.
+            It has an implied decimal point and no commas (e.g., $12,345.67 becomes 000001234567).
+            Can be all zeros for subtype 90.
           example: '000000100000'
       required:
         - amount
@@ -795,7 +763,7 @@ components:
         - senderABANumber
         - senderShortName
     ReceiverDepositoryInstitution:
-      description: ReceiverDepositoryInstitution is the receiver depository institution
+      description: ReceiverDepositoryInstitution is the receiver depository institution.
       properties:
         receiverABANumber:
           type: string
@@ -812,11 +780,9 @@ components:
         - receiverABANumber
         - receiverShortName
     BusinessFunctionCode:
-      description: BusinessFunctionCode is the business function code
       properties:
         businessFunctionCode:
           type: string
-          maxLength: 3
           description: |
             BusinessFunctionCode
             * `BTR` - Bank Transfer (Beneficiary is a bank)
@@ -847,7 +813,7 @@ components:
           type: string
           minLength: 3
           maxLength: 3
-          description: |-
+          description: |
             TransactionTypeCode
             If {3600} is CTR, an optional Transaction Type Code element is permitted;
             however, the Transaction Type Code 'COV' is not permitted.
@@ -855,11 +821,9 @@ components:
       required:
         - businessFunctionCode
     LocalInstrument:
-      description: LocalInstrument is the local instrument
       properties:
         localInstrumentCode:
           type: string
-          maxLength: 4
           description: |
             LocalInstrument
 
@@ -893,27 +857,25 @@ components:
           description: ProprietaryCode
           example: 'WJD786363'
     PaymentNotification:
-      description: PaymentNotification is the payment notification
       properties:
         paymentNotificationIndicator:
           type: string
-          maxLength: 1
           description: |
             Payment Notification Indicator
 
             * `0 - 6` - Reserved for market practice conventions.
             * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
           enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-            - 7
-            - 8
-            - 9
+            - "0"
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "5"
+            - "6"
+            - "7"
+            - "8"
+            - "9"
           example: '1'
         contactNotificationElectronicAddress:
           type: string
@@ -934,7 +896,7 @@ components:
           type: string
           maxLength: 35
           description: ContactMobileNumber
-          example: '555.555.555'
+          example: '555.555.5555'
         faxNumber:
           type: string
           maxLength: 35
@@ -946,7 +908,6 @@ components:
           description: EndToEndIdentification
           example: 'WireTransfer 10001'
     InstructedAmount:
-      description: InstructedAmount is the instructed amount
       properties:
         currencyCode:
           type: string
@@ -960,9 +921,9 @@ components:
             Amount
 
             Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
-            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
+            (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as 0,99).
+          example: "1234,56"
     ExchangeRate:
-      description: ExchangeRate is the exchange rate
       properties:
         exchangeRate:
           type: string
@@ -972,9 +933,9 @@ components:
 
             Must contain at least one numeric character and only one decimal comma marker
             (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
-          example: '1.2345'
+          example: '1,2345'
     FinancialInstitution:
-      description: FinancialInstitution is financial institution demographic information
+      description: FinancialInstitution is financial institution demographic information.
       properties:
         identificationCode:
           type: string
@@ -1000,10 +961,12 @@ components:
           type: string
           maxLength: 34
           description: Identifier
+          example: "123456789"
         name:
           type: string
           maxLength: 35
           description: Name
+          example: "FI Name"
         address :
           $ref: '#/components/schemas/WireAddress'
       required:
@@ -1018,7 +981,7 @@ components:
       required:
         - personal
     Personal:
-      description: Personal is personal demographic information
+      description: Personal is personal demographic information.
       properties:
         identificationCode:
           type: string
@@ -1056,10 +1019,12 @@ components:
           type: string
           maxLength: 34
           description: Identifier
+          example: "123456789"
         name:
           type: string
           maxLength: 35
           description: Name
+          example: "John Doe"
         address :
           $ref: '#/components/schemas/WireAddress'
       required:
@@ -1075,11 +1040,10 @@ components:
           example: 'Test Data'
           description: BeneficiaryReference
     AccountDebitedDrawdown:
-      description: AccountDebitedDrawdown is the account which is debited in a drawdown
+      description: AccountDebitedDrawdown is the account which is debited in a drawdown.
       properties:
         identificationCode:
           type: string
-          maxLength: 1
           description: |
             Identification Code
             * `D` - Debit
@@ -1090,28 +1054,32 @@ components:
           type: string
           maxLength: 34
           description: Identifier
+          example: "123456789"
         name:
           type: string
           maxLength: 35
           description: Name
+          example: "John Doe"
         addressLineOne:
           type: string
           maxLength: 35
           description: AddressLineOne
+          example: "Address One"
         addressLineTwo:
           type: string
           maxLength: 35
           description: AddressLineTwo
+          example: "Address Two"
         addressLineThree:
           type: string
           maxLength: 35
           description: AddressLineThree
+          example: "Address Three"
       required:
         - identificationCode
         - identifier
         - name
     OriginatorOptionF:
-      description: OptionF is originator option F
       properties:
         partyIdentifier:
           type: string
@@ -1136,8 +1104,7 @@ components:
           description: |
             Name
 
-            Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
-            e.g., 1/SMITH JOHN.
+            Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character (e.g., 1/SMITH JOHN).
           example: '1/SMITH JOHN'
         lineOne:
           type: string
@@ -1147,19 +1114,19 @@ components:
 
             Format: Must begin with one of the following Line Codes followed by a slash and
             at least one valid non-space character.
-            1	Name
-            2	Address
-            3	Country and Town
-            4	Date of Birth
-            5	Place of Birth
-            6	Customer Identification Number
-            7	National Identity Number
-            8	Additional Information
+            * 1	- Name
+            * 2	- Address
+            * 3	- Country and Town
+            * 4	- Date of Birth
+            * 5	- Place of Birth
+            * 6	- Customer Identification Number
+            * 7	- National Identity Number
+            * 8	- Additional Information
 
             For example:
-            2/123 MAIN STREET
-            3/US/NEW YORK, NY 10000
-            7/111-22-3456
+            * `2/123 MAIN STREET`
+            * `3/US/NEW YORK, NY 10000`
+            * `7/111-22-3456`
 
           example: '2/123 MAIN STREET'
         lineTwo:
@@ -1170,19 +1137,19 @@ components:
 
             Format: Must begin with one of the following Line Codes followed by a slash and
             at least one valid non-space character.
-            1	Name
-            2	Address
-            3	Country and Town
-            4	Date of Birth
-            5	Place of Birth
-            6	Customer Identification Number
-            7	National Identity Number
-            8	Additional Information
+            * 1	- Name
+            * 2	- Address
+            * 3	- Country and Town
+            * 4	- Date of Birth
+            * 5	- Place of Birth
+            * 6	- Customer Identification Number
+            * 7	- National Identity Number
+            * 8	- Additional Information
 
             For example:
-            2/123 MAIN STREET
-            3/US/NEW YORK, NY 10000
-            7/111-22-3456
+            * `2/123 MAIN STREET`
+            * `3/US/NEW YORK, NY 10000`
+            * `7/111-22-3456`
 
           example: '3/US/NEW YORK, NY 10000'
         lineThree:
@@ -1193,23 +1160,23 @@ components:
 
             Format: Must begin with one of the following Line Codes followed by a slash and
             at least one valid non-space character.
-            1	Name
-            2	Address
-            3	Country and Town
-            4	Date of Birth
-            5	Place of Birth
-            6	Customer Identification Number
-            7	National Identity Number
-            8	Additional Information
+            * 1	- Name
+            * 2	- Address
+            * 3	- Country and Town
+            * 4	- Date of Birth
+            * 5	- Place of Birth
+            * 6	- Customer Identification Number
+            * 7	- National Identity Number
+            * 8	- Additional Information
 
             For example:
-            2/123 MAIN STREET
-            3/US/NEW YORK, NY 10000
-            7/111-22-3456
+            * `2/123 MAIN STREET`
+            * `3/US/NEW YORK, NY 10000`
+            * `7/111-22-3456`
 
           example: '7/111-22-3456'
     AccountCreditedDrawdown:
-      description: AccountCreditedDrawdown is the account which is credited in a drawdown
+      description: AccountCreditedDrawdown is the account which is credited in a drawdown.
       properties:
         drawdownCreditAccountNumber:
           type: string
@@ -1220,7 +1187,6 @@ components:
             9 character ABA
           example: '121042882'
     OriginatorToBeneficiary:
-        description: OriginatorToBeneficiary
         properties:
           lineOne:
             type: string
@@ -1243,7 +1209,6 @@ components:
             description: LineFour
             example: 'Line Four'
     FIToFI:
-      description: FIToFI
       properties:
         lineOne:
           type: string
@@ -1276,14 +1241,13 @@ components:
           description: LineSix
           example: 'Line Six'
     Advice:
-      description: Advice
       properties:
         adviceCode:
           type: string
           description: |
             Advice Code
 
-            * `HLD - Hold
+            * `HLD` - Hold
             * `LTR` - Letter
             * `PHN` - Phone
             * `TLX` - Telex
@@ -1370,7 +1334,6 @@ components:
           description: LineSix
           example: 'Line Six'
     CurrencyInstructedAmount:
-      description: CurrencyInstructedAmount
       properties:
         swiftFieldTag:
           type: string
@@ -1381,9 +1344,8 @@ components:
           type: string
           maxLength: 18
           description: Amount
-          example: 1234,56
+          example: "1234,56"
     CoverPayment:
-      description: CoverPayment
       properties:
         swiftFieldTag:
           type: string
@@ -1428,7 +1390,7 @@ components:
           description: |
             AddendaLength
 
-            Addenda Length must be numeric, padded with leading zeros if less than four characters and must equal length
+            Addenda Length must be numeric, padded with leading zeros if less than four characters, and must equal length
             of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
             Addenda Length must be 0987).
           example: '0987'
@@ -1438,7 +1400,6 @@ components:
           description: Addenda
           example: 'Payment for goods'
     SenderReference:
-      description: SenderReference is sender reference
       properties:
         senderReference:
           type: string
@@ -1446,7 +1407,7 @@ components:
           description: SenderReference
           example: 'Reference'
     PreviousMessageIdentifier:
-      description: The identifier for a previous message
+      description: The identifier for a previous message.
       properties:
         previousMessageIdentifier:
           type: string
@@ -1457,7 +1418,6 @@ components:
       properties:
         chargeDetails:
           type: string
-          maxLength: 1
           description: |
             Charge Details
             * `B` - Beneficiary
@@ -1507,7 +1467,6 @@ components:
             marker.  $1,234.56 should be entered as USD1234,56 and $0.99 should be entered as USD0,99.
           example: 'USD1234,56'
     RelatedRemittance:
-      description: RelatedRemittance
       properties:
         remittanceIdentification:
           type: string
@@ -1516,7 +1475,6 @@ components:
           example: 'Remittance Identification'
         remittanceLocationMethod:
           type: string
-          maxLength: 4
           description: |
             RemittanceLocationMethod
 
@@ -1542,11 +1500,9 @@ components:
         remittanceData:
           $ref: '#/components/schemas/RemittanceData'
     RemittanceOriginator:
-      description: RemittanceOriginator
       properties:
         identificationType:
           type: string
-          maxLength: 2
           description: |
             Identification Type
 
@@ -1631,7 +1587,7 @@ components:
         contactElectronicAddress:
           type: string
           maxLength: 2048
-          description: ContactElectronicAddress ( i.e., E-mail or URL address)
+          description: ContactElectronicAddress (i.e., E-mail or URL address)
           example: 'https://moov.io'
         contactOther:
           type: string
@@ -1642,7 +1598,6 @@ components:
       properties:
         identificationType:
           type: string
-          maxLength: 2
           description: |
             IdentificationType
 
@@ -1708,7 +1663,6 @@ components:
           example: 'Wade Arnold'
         addressType:
           type: string
-          maxLength: 4
           description: |
             AddressType
 
@@ -1813,19 +1767,21 @@ components:
           type: string
           maxLength: 35
           description: AddressLineOne
+          example: "Address One"
         addressLineTwo:
           type: string
           maxLength: 35
           description: AddressLineTwo
+          example: "Address Two"
         addressLineThree:
           type: string
           maxLength: 35
           description: AddressLineThree
+          example: "Address Three"
     PrimaryRemittanceDocument:
       properties:
         documentTypeCode:
           type: string
-          maxLength: 4
           description: |
             Document Type Code
 
@@ -1877,7 +1833,6 @@ components:
           description: Issuer
           example: 'Remittance Issuer'
     RemittanceAmount:
-      description: RemittanceAmount
       properties:
         currencyCode:
           type: string
@@ -1891,15 +1846,15 @@ components:
           description: |
             Amount
             Must contain at least one numeric character and only one decimal period marker (e.g., $1,234.56 should be entered as 1234.56).
-            Can have up to 5 numeric characters following the decimal period marker (e.g., 1234.56789).
+            Can have up to five numeric characters following the decimal period marker (e.g., 1234.56789).
             Amount must be greater than zero (i.e., at least .01).
           example: '1234.56789'
     DateRemittanceDocument:
       properties:
         dateRemittanceDocument:
           type: string
-          maxLength: 8
-          description: DateRemittanceDocument CCYYMMDD
+          format: 'CCYYMMDD'
+          description: DateRemittanceDocument (Format CCYYMMDD - C=Century, Y=Year, M=Month, D=Day)
           example: '20190401'
     RemittanceFreeText:
       properties:
@@ -1919,11 +1874,9 @@ components:
           description: LineThree
           example: 'Line Three Text'
     Adjustment:
-      description: Adjustment
       properties:
         adjustmentReasonCode:
           type: string
-          maxLength: 4
           description: |
             Adjustment Reason Code
 
@@ -1939,21 +1892,20 @@ components:
             * `81` - Credit as Agreed
             * `CM` - Covered by Credit Memo
           enum:
-            - 01
-            - 03
-            - 04
-            - 05
-            - 06
-            - 11
-            - 12
-            - 59
-            - 75
-            - 81
-            - CM
+            - "01"
+            - "03"
+            - "04"
+            - "05"
+            - "06"
+            - "11"
+            - "12"
+            - "59"
+            - "75"
+            - "81"
+            - "CM"
           example: 'CM'
         creditDebitIndicator:
           type: string
-          maxLength: 4
           description: |
             CreditDebitIndicator
 
@@ -1984,11 +1936,9 @@ components:
           description: AdditionalInfo
           example: 'Additional Info'
     SecondaryRemittanceDocument:
-      description: SecondaryRemittanceDocument
       properties:
         documentTypeCode:
           type: string
-          maxLength: 4
           description: |
             Document Type Code
 
