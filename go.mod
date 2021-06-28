@@ -14,6 +14,6 @@ require (
 	golang.org/x/oauth2 v0.0.0-20210622190553-bce0382f6c22
 	golang.org/x/text v0.3.6
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
-	gotest.tools v2.2.0+incompatible
+	gotest.tools v2.3.0+incompatible
 	gotest.tools/v3 v3.0.3 // indirect
 )
