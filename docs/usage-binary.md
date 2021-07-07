@@ -1,12 +1,12 @@
 ---
 layout: page
-title: Binary Distribution
+title: Binary distribution
 hide_hero: true
 show_sidebar: false
 menubar: docs-menu
 ---
 
-# Binary Distribution
+# Binary distribution
 
 Download the [latest Moov Wire server release](https://github.com/moov-io/wire/releases) for your operating system and run it from a terminal.
 
