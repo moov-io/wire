@@ -1,12 +1,12 @@
 ---
 layout: page
-title: File Structure
+title: File structure
 hide_hero: true
 show_sidebar: false
 menubar: docs-menu
 ---
 
-## Mandatory Tags
+## Mandatory tags
 
 Name |
 ------------ | 

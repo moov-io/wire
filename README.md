@@ -21,7 +21,7 @@
 [![Slack Channel](https://slack.moov.io/badge.svg?bg=e01563&fgColor=fffff)](https://slack.moov.io/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/moov/wire)](https://hub.docker.com/r/moov/wire)
 [![GitHub Stars](https://img.shields.io/github/stars/moov-io/wire)](https://github.com/moov-io/wire)
-[![Twitter](https://img.shields.io/twitter/follow/moov_io?style=social)](https://twitter.com/moov_io?lang=en)
+[![Twitter](https://img.shields.io/twitter/follow/moov?style=social)](https://twitter.com/moov?lang=en)
 
 # moov-io/wire
 
@@ -29,7 +29,7 @@ Moov's mission is to give developers an easy way to create and integrate bank pr
 
 Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available.
 
-## Table of Contents
+## Table of contents
 
 - [Project Status](#project-status)
 - [Usage](#usage)
@@ -46,7 +46,7 @@ Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire]
 - [Contributing](#contributing)
 - [Related Projects](#related-projects)
 
-## Project Status
+## Project status
 
 Moov Wire is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above Wire to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
 
@@ -127,7 +127,7 @@ You should get this response:
 null
 ```
 
-### Configuration Settings
+### Configuration settings
 
 The following environmental variables can be set to configure behavior in Wire.
 
@@ -137,11 +137,11 @@ The following environmental variables can be set to configure behavior in Wire.
 | `HTTPS_KEY_FILE`  | Filepath of a private key matching the leaf certificate from `HTTPS_CERT_FILE`. | Empty |
 | `WIRE_FILE_TTL` | Time to live (TTL) for `*wire.File` objects stored in the in-memory repository. | 0 = No TTL / Never delete files (Example: `240m`) |
 
-### Data Persistence
+### Data persistence
 
 By design, Wire  **does not persist** (save) any data about the files or entry details created. The only storage occurs in memory of the process and upon restart Wire will have no files or data saved. Also, no in-memory encryption of the data is performed.
 
-### Go Library
+### Go library
 
 This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) and uses Go v1.14 or higher. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/wire/releases/latest) as well. We highly recommend you use a tagged release for production.
 
@@ -174,10 +174,10 @@ The package [`github.com/moov-io/wire`](https://pkg.go.dev/github.com/moov-io/wi
 | SVC      | ServiceMessage                   | [Link](examples/serviceMessage-read/serviceMessage.txt) | [Link](examples/serviceMessage-read/main.go) | [Link](examples/serviceMessage-write/main.go) |
 </details>
 
-### In-Browser Wire File Parser
+### In-browser Wire file parser
 Using our [in-browser utility](http://oss.moov.io/wire/), you can instantly convert Wire files into JSON. Either paste in Wire file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the future.
 
-## Learn About Wire
+## Learn about Fedwire
 - [Intro to Fedwire](https://www.americanexpress.com/us/foreign-exchange/articles/fedwire-transfers/)
 - [FedWire Message Structure](./docs/fedWireMessage-Structure.md)
 - [Sending or Receiving International Wires via the Fedwire Funds Service](https://www.youtube.com/watch?v=GSd2gZ8-bzQ)
@@ -196,16 +196,16 @@ No, we do not save any data related to files or message details. All processing 
 We support generating and parsing all Business Function codes.
 </details>
 
-## Getting Help
+## Getting help
 
  channel | info
  ------- | -------
 [Project Documentation](https://moov-io.github.io/wire/) | Our project documentation available online.
-Twitter [@moov_io](https://twitter.com/moov_io)	| You can follow Moov.IO's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
+Twitter [@moov](https://twitter.com/moov)	| You can follow Moov.io's Twitter feed to get updates on our project(s). You can also tweet us questions or just share blogs or stories.
 [GitHub Issue](https://github.com/moov-io/wire/issues) | If you are able to reproduce a problem please open a GitHub Issue under the specific project that caused the error.
 [moov-io slack](https://slack.moov.io/) | Join our slack channel to have an interactive discussion about the development of the project.
 
-## Supported and Tested Platforms
+## Supported and tested platforms
 
 - 64-bit Linux (Ubuntu, Debian), macOS, and Windows
 
@@ -229,7 +229,7 @@ We maintain a comprehensive suite of unit tests and recommend table-driven testi
 
 We currently run fuzzing over wire in the form of a [`moov/wirefuzz`](https://hub.docker.com/r/moov/wirefuzz) Docker image. You can [read more](./test/fuzz-reader/README.md) or run the image and report crasher examples to [`security@moov.io`](mailto:security@moov.io). Thanks!
 
-## Related Projects
+## Related projects
 
 As part of Moov's initiative to offer open source fintech infrastructure, we have a large collection of active projects you may find useful:
 
