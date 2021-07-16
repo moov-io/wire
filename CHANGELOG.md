@@ -1,3 +1,15 @@
+## v0.7.3 (Released 2021-07-16)
+
+BUILD
+
+- build(deps): bump addressable from 2.7.0 to 2.8.0 in /docs
+- build(deps): bump nokogiri from 1.11.1 to 1.11.5 in /docs
+- fix(deps): update golang.org/x/oauth2 commit hash to a41e5a7
+- fix(deps): update module github.com/go-kit/kit to v0.11.0
+- fix(deps): update module github.com/moov-io/base to v0.20.1
+- fix(deps): update module gotest.tools to v2.3.0
+- fix: Dockerfile.webui to reduce vulnerabilities
+
 ## v0.7.2 (Released 2021-05-07)
 
 BUG FIXES
