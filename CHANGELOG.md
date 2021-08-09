@@ -1,3 +1,9 @@
+## v0.7.4 (Released 2021-08-09)
+
+BUG FIXES
+
+- api: respond with 404 instead of empty body when `fileId` is not found
+
 ## v0.7.3 (Released 2021-07-16)
 
 BUILD
