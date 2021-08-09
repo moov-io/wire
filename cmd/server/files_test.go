@@ -16,12 +16,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/moov-io/wire"
-
-	"github.com/moov-io/base"
-
 	"github.com/gorilla/mux"
+	"github.com/moov-io/base"
 	"github.com/moov-io/base/log"
+	"github.com/moov-io/wire"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFileId(t *testing.T) {
@@ -218,6 +217,15 @@ func TestFiles__getFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
+
+	// not found
+	repo.file = nil
+	repo.err = nil
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
 }
 
 func TestFiles__deleteFile(t *testing.T) {
@@ -282,6 +290,15 @@ func TestFiles__getFileContents(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
+
+	// not found
+	repo.file = nil
+	repo.err = nil
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
 }
 
 func TestFiles__validateFile(t *testing.T) {
@@ -316,6 +333,15 @@ func TestFiles__validateFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
+
+	// not found
+	repo.file = nil
+	repo.err = nil
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
 }
 
 func TestFiles__addFEDWireMessageToFile(t *testing.T) {
@@ -364,6 +390,22 @@ func TestFiles__addFEDWireMessageToFile(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
 	}
+
+	// not found
+	repo.file = nil
+	repo.err = nil
+
+	buf = bytes.Buffer{}
+	if err := json.NewEncoder(&buf).Encode(fwm); err != nil {
+		t.Fatal(err)
+	}
+
+	w = httptest.NewRecorder()
+	req = httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
 }
 
 /*func TestFiles__removeFEDWireMessageFromFile(t *testing.T) {

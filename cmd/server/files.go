@@ -11,14 +11,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/moov-io/base"
-	"github.com/moov-io/wire"
-
-	moovhttp "github.com/moov-io/base/http"
-
 	"github.com/go-kit/kit/metrics/prometheus"
 	"github.com/gorilla/mux"
+	"github.com/moov-io/base"
+	moovhttp "github.com/moov-io/base/http"
 	"github.com/moov-io/base/log"
+	"github.com/moov-io/wire"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 )
 
@@ -156,6 +154,13 @@ func getFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			moovhttp.Problem(w, err)
 			return
 		}
+
+		if file == nil {
+			logger.Log("file not found")
+			http.NotFound(w, r)
+			return
+		}
+
 		logger.Log("rendering file")
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
@@ -215,7 +220,7 @@ func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFun
 			return
 		}
 		if file == nil {
-			logger.Logf("file not found")
+			logger.Log("file not found")
 			http.NotFound(w, r)
 			return
 		}
@@ -253,11 +258,18 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			return
 		}
 
+		if file == nil {
+			logger.Log("file not found")
+			http.NotFound(w, r)
+			return
+		}
+
 		if err := file.Create(); err != nil { // Create calls Validate
 			err = logger.LogErrorf("file was invalid: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
+
 		logger.Log("validated file")
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
@@ -293,12 +305,20 @@ func addFEDWireMessageToFile(logger log.Logger, repo WireFileRepository) http.Ha
 			moovhttp.Problem(w, err)
 			return
 		}
+
+		if file == nil {
+			logger.Log("file not found")
+			http.NotFound(w, r)
+			return
+		}
+
 		file.FEDWireMessage = file.AddFEDWireMessage(req)
 		if err := repo.saveFile(file); err != nil {
 			err = logger.LogErrorf("error saving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
 		}
+
 		logger.Log("added FEDWireMessage to file")
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
