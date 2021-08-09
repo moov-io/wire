@@ -287,6 +287,8 @@ paths:
                 $ref: '#/components/schemas/WireFile'
         '400':
           description: Validation failed. Check response for errors
+        '404':
+          description: A resource with the specified ID was not found
   /files/{fileID}/FEDWireMessage:
     post:
       tags: ['Wire Files']
@@ -326,6 +328,8 @@ paths:
       responses:
         '200':
           description: Fedwire Message added to File
+        '404':
+          description: A resource with the specified ID was not found
 
 components:
   schemas:

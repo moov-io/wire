@@ -276,6 +276,8 @@ paths:
           description: File validated successfully without errors.
         400:
           description: Validation failed. Check response for errors
+        404:
+          description: A resource with the specified ID was not found
       security:
       - bearerAuth: []
       - cookieAuth: []
@@ -326,6 +328,8 @@ paths:
       responses:
         200:
           description: Fedwire Message added to File
+        404:
+          description: A resource with the specified ID was not found
       security:
       - bearerAuth: []
       - cookieAuth: []
