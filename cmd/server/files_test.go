@@ -21,68 +21,56 @@ import (
 	"github.com/moov-io/base/log"
 	"github.com/moov-io/wire"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestFileId(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/foo", nil)
 
-	if v := getFileId(w, req); v != "" {
-		t.Errorf("unexpected fileId=%s", v)
-	}
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("unexpected HTTP status: %d", w.Code)
-	}
+	assert.Empty(t, getFileId(w, req))
+	assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
 }
 
 func TestFEDWireMessageID(t *testing.T) {
 	w := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/foo", nil)
 
-	if v := getFEDWireMessageID(w, req); v != "" {
-		t.Errorf("unexpected fileId=%s", v)
-	}
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("unexpected HTTP status: %d", w.Code)
-	}
+	assert.Empty(t, getFEDWireMessageID(w, req))
+	assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
 }
 
-func TestFiles__getFiles(t *testing.T) {
-	w := httptest.NewRecorder()
-	req := httptest.NewRequest("GET", "/files", nil)
-
+func TestFiles_getFiles(t *testing.T) {
 	repo := &testWireFileRepository{
 		file: &wire.File{
 			ID: base.ID(),
 		},
 	}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
+	req := httptest.NewRequest("GET", "/files", nil)
 
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d", w.Code)
-	}
-	var files []*wire.File
-	if err := json.NewDecoder(w.Body).Decode(&files); err != nil {
-		t.Fatal(err)
-	}
-	if len(files) != 1 {
-		t.Errorf("unexpected %d ICL files: %#v", len(files), files)
-	}
+	t.Run("retrieves file", func(t *testing.T) {
+		w := httptest.NewRecorder()
 
-	// error case
-	repo.err = errors.New("bad error")
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		var files []*wire.File
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&files))
+		require.Len(t, files, 1)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
 }
 
 func readFile(filename string) (*wire.File, error) {
@@ -94,321 +82,279 @@ func readFile(filename string) (*wire.File, error) {
 	return &f, err
 }
 
-func TestFiles__createFile(t *testing.T) {
+func TestFiles_createFile(t *testing.T) {
 	bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-CustomerTransfer.txt"))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	w := httptest.NewRecorder()
+	require.NoError(t, err)
 	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
-
 	repo := &testWireFileRepository{}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusCreated {
-		t.Errorf("bogus HTTP status: %d", w.Code)
-	}
-	var resp wire.File
-	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Fatal(err)
-	}
-	if resp.ID == "" {
-		t.Errorf("empty response File: %#v", resp)
-	}
-	if resp.FEDWireMessage.FIAdditionalFIToFI == nil {
-		t.Error("FIAdditionalFIToFI shouldn't be nil")
-	}
+	t.Run("creates file", func(t *testing.T) {
+		w := httptest.NewRecorder()
 
-	// error case
-	repo.err = errors.New("bad error")
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusCreated, w.Code, w.Body)
+		var resp wire.File
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+		assert.NotEmpty(t, resp.ID)
+		assert.NotNil(t, resp.FEDWireMessage.FIAdditionalFIToFI)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
 }
 
-func TestFiles__createFileJSON(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-BankTransfer.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	w := httptest.NewRecorder()
-	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
-	req.Header.Set("content-type", "application/json")
-
+func TestFiles_createFileJSON(t *testing.T) {
 	repo := &testWireFileRepository{}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusCreated {
-		t.Errorf("bogus HTTP status: %d", w.Code)
-	}
+	t.Run("creates file from JSON", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-BankTransfer.json"))
+		require.NoError(t, err)
+		req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
+		req.Header.Set("content-type", "application/json")
 
-	var resp wire.File
-	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Fatal(err)
-	}
-	if resp.ID == "" {
-		t.Errorf("empty response File: %#v", resp)
-	}
-	if resp.FEDWireMessage.FIAdditionalFIToFI == nil {
-		t.Error("FIAdditionalFIToFI shouldn't be nil")
-	}
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	// send invalid JSON
-	w = httptest.NewRecorder()
-	req = httptest.NewRequest("POST", "/files/create", strings.NewReader(`{...invalid-json`))
-	req.Header.Set("content-type", "application/json")
+		assert.Equal(t, http.StatusCreated, w.Code, w.Body)
 
-	router.ServeHTTP(w, req)
-	w.Flush()
+		var resp wire.File
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+		assert.NotEmpty(t, resp.ID)
+		assert.NotNil(t, resp.FEDWireMessage.FIAdditionalFIToFI)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d", w.Code)
-	}
+	t.Run("invalid JSON", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		req := httptest.NewRequest("POST", "/files/create", strings.NewReader(`{...invalid-json`))
+		req.Header.Set("content-type", "application/json")
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
 }
 
-func TestFiles__getFile(t *testing.T) {
-	w := httptest.NewRecorder()
+func TestFiles_getFile(t *testing.T) {
 	req := httptest.NewRequest("GET", "/files/foo", nil)
-
 	repo := &testWireFileRepository{
 		file: &wire.File{
 			ID: base.ID(),
 		},
 	}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-	var file wire.File
-	if err := json.NewDecoder(w.Body).Decode(&file); err != nil {
-		t.Fatal(err)
-	}
-	if file.ID == "" {
-		t.Errorf("unexpected ICL file: %#v", file)
-	}
+	t.Run("gets file", func(t *testing.T) {
+		w := httptest.NewRecorder()
 
-	// error case
-	repo.err = errors.New("bad error")
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		var file wire.File
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&file))
+		assert.NotEmpty(t, file.ID)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
 
-	// not found
-	repo.file = nil
-	repo.err = nil
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
+
+	t.Run("file not found", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.file = nil
+		repo.err = nil
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+	})
 }
 
-func TestFiles__deleteFile(t *testing.T) {
-	w := httptest.NewRecorder()
+func TestFiles_deleteFile(t *testing.T) {
 	req := httptest.NewRequest("DELETE", "/files/foo", nil)
-
 	repo := &testWireFileRepository{}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("deletes file", func(t *testing.T) {
+		w := httptest.NewRecorder()
 
-	// error case
-	repo.err = errors.New("bad error")
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
 }
 
-func TestFiles__getFileContents(t *testing.T) {
-	w := httptest.NewRecorder()
+func TestFiles_getFileContents(t *testing.T) {
 	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
-
 	fwm := mockFEDWireMessage()
-
 	repo := &testWireFileRepository{
 		file: &wire.File{
 			ID:             base.ID(),
 			FEDWireMessage: fwm,
 		},
 	}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-	if v := w.Header().Get("Content-Type"); v != "text/plain" {
-		t.Errorf("unexpected Content-Type: %s", v)
-	}
+	t.Run("gets file contents", func(t *testing.T) {
+		w := httptest.NewRecorder()
 
-	// error case
-	repo.err = errors.New("bad error")
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
 
-	// not found
-	repo.file = nil
-	repo.err = nil
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
+
+	t.Run("file not found", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.file = nil
+		repo.err = nil
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+	})
 }
 
-func TestFiles__validateFile(t *testing.T) {
-	w := httptest.NewRecorder()
+func TestFiles_validateFile(t *testing.T) {
 	req := httptest.NewRequest("GET", "/files/foo/validate", nil)
-
 	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 	repo := &testWireFileRepository{file: f}
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-	if !strings.Contains(w.Body.String(), `"{\"error\": null}"`) {
-		t.Errorf("unexpected body: %v", w.Body.String())
-	}
+	t.Run("validates file", func(t *testing.T) {
+		w := httptest.NewRecorder()
 
-	// error case
-	repo.err = errors.New("bad error")
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Contains(t, w.Body.String(), `"{\"error\": null}"`)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
 
-	// not found
-	repo.file = nil
-	repo.err = nil
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
+
+	t.Run("file not found", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.file = nil
+		repo.err = nil
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+	})
 }
 
-func TestFiles__addFEDWireMessageToFile(t *testing.T) {
+func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 	f, err := readFile("fedWireMessage-NoMessage.txt")
-	if err != nil && !strings.Contains(err.Error(), "file validation failed") {
-		t.Fatal(err)
-	}
+	require.Contains(t, err.Error(), "file validation failed")
 	fwm := mockFEDWireMessage()
 	repo := &testWireFileRepository{file: f}
-
-	// encode our FEDWireMessage into JSON
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(fwm); err != nil {
-		t.Fatal(err)
-	}
-
-	w := httptest.NewRecorder()
-	req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
-
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
 
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-	var out wire.File
-	if err := json.NewDecoder(w.Body).Decode(&out); err != nil {
-		t.Fatal(err)
-	}
-	if out.FEDWireMessage.SenderSupplied == nil {
-		t.Errorf("FEDWireMessage: %#v", out.FEDWireMessage)
-	}
+	t.Run("adds message to file", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		var buf bytes.Buffer
+		require.NoError(t, json.NewEncoder(&buf).Encode(fwm))
+		req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
 
-	// error case
-	repo.err = errors.New("bad error")
-	if err := json.NewEncoder(&buf).Encode(fwm); err != nil {
-		t.Fatal(err)
-	}
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		var out wire.File
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&out))
+		assert.NotNil(t, out.FEDWireMessage.SenderSupplied)
+	})
 
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
+	t.Run("repo error", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.err = errors.New("bad error")
+		var buf bytes.Buffer
+		require.NoError(t, json.NewEncoder(&buf).Encode(fwm))
+		req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
 
-	// not found
-	repo.file = nil
-	repo.err = nil
+		router.ServeHTTP(w, req)
+		w.Flush()
 
-	buf = bytes.Buffer{}
-	if err := json.NewEncoder(&buf).Encode(fwm); err != nil {
-		t.Fatal(err)
-	}
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+	})
 
-	w = httptest.NewRecorder()
-	req = httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
-	router.ServeHTTP(w, req)
-	w.Flush()
+	t.Run("file not found", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.file = nil
+		repo.err = nil
+		var buf bytes.Buffer
+		require.NoError(t, json.NewEncoder(&buf).Encode(fwm))
+		req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
 
-	assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+	})
 }
 
-/*func TestFiles__removeFEDWireMessageFromFile(t *testing.T) {
+/*func TestFiles_removeFEDWireMessageFromFile(t *testing.T) {
 	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
 	if err != nil {
 		t.Fatal(err)
