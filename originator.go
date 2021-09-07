@@ -44,6 +44,7 @@ func (o *Originator) Parse(record string) error {
 	o.Personal.Identifier = o.parseStringField(record[7:41])
 	o.Personal.Name = o.parseStringField(record[41:76])
 	o.Personal.Address.AddressLineOne = o.parseStringField(record[76:111])
+	o.Personal.Address.AddressLineTwo = o.parseStringField(record[111:146])
 	o.Personal.Address.AddressLineThree = o.parseStringField(record[146:181])
 	return nil
 }
