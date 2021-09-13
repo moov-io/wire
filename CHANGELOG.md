@@ -1,3 +1,9 @@
+## v0.7.5 (Released 2021-09-13)
+
+BUG FIXES
+
+- originator: parse address line two
+
 ## v0.7.4 (Released 2021-08-09)
 
 BUG FIXES
