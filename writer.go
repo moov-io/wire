@@ -85,27 +85,35 @@ func (w *Writer) writeFEDWireMessage(file *File) error {
 		}
 	}
 
-	// Information Appended by FedWire Funds Service - Commented for now
-	/*	if fwm.MessageDisposition != nil {
+	if err := w.writeFedAppended(fwm); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (w *Writer) writeFedAppended(fwm FEDWireMessage) error {
+	if fwm.MessageDisposition != nil {
 		if _, err := w.w.WriteString(fwm.MessageDisposition.String() + "\n"); err != nil {
 			return err
 		}
-	}*/
-	/*	if fwm.ReceiptTimeStamp != nil {
+	}
+	if fwm.ReceiptTimeStamp != nil {
 		if _, err := w.w.WriteString(fwm.ReceiptTimeStamp.String() + "\n"); err != nil {
 			return err
 		}
-	}*/
-	/*	if fwm.OutputMessageAccountabilityData != nil {
+	}
+	if fwm.OutputMessageAccountabilityData != nil {
 		if _, err := w.w.WriteString(fwm.OutputMessageAccountabilityData.String() + "\n"); err != nil {
 			return err
 		}
-	}*/
-	/*	if fwm.ErrorWire != nil {
+	}
+	if fwm.ErrorWire != nil {
 		if _, err := w.w.WriteString(fwm.ErrorWire.String() + "\n"); err != nil {
 			return err
 		}
-	}*/
+	}
+
 	return nil
 }
 

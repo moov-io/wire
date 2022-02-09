@@ -94,6 +94,22 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		return fmt.Errorf("line %q is too short for tag", r.line)
 	}
 	switch r.line[:6] {
+	case TagMessageDisposition:
+		if err := r.parseMessageDisposition(); err != nil {
+			return err
+		}
+	case TagReceiptTimeStamp:
+		if err := r.parseReceiptTimeStamp(); err != nil {
+			return err
+		}
+	case TagOutputMessageAccountabilityData:
+		if err := r.parseOutputMessageAccountabilityData(); err != nil {
+			return err
+		}
+	case TagErrorWire:
+		if err := r.parseErrorWire(); err != nil {
+			return err
+		}
 	case TagSenderSupplied:
 		if err := r.parseSenderSupplied(); err != nil {
 			return err
@@ -1065,7 +1081,9 @@ func (r *Reader) parseMessageDisposition() error {
 func (r *Reader) parseReceiptTimeStamp() error {
 	r.tagName = "ReceiptTimeStamp"
 	rts := new(ReceiptTimeStamp)
-	rts.Parse(r.line)
+	if err := rts.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := rts.Validate(); err != nil {
 		return r.parseError(err)
 	}
