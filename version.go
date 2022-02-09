@@ -5,4 +5,4 @@
 package wire
 
 // Version is version
-const Version = "v0.7.5"
+const Version = "v0.8.0"

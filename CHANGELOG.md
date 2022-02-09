@@ -1,3 +1,9 @@
+## v0.8.0 (Released 2022-02-09)
+
+IMPROVEMENTS
+
+- fedWireMessage: support fed-appended tags (`{1100}`, `{1110}`, `{1120}`, and `{1130}`) in `Reader` and `Writer` 
+
 ## v0.7.5 (Released 2021-09-13)
 
 BUG FIXES
