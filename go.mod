@@ -9,6 +9,6 @@ require (
 	github.com/moov-io/base v0.28.1
 	github.com/prometheus/client_golang v1.12.1
 	github.com/stretchr/testify v1.7.1
-	golang.org/x/oauth2 v0.0.0-20220309155454-6242fa91716a
+	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	golang.org/x/text v0.3.7
 )
