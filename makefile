@@ -27,7 +27,7 @@ client:
 	@chmod +x ./openapi-generator
 	@rm -rf ./client
 	OPENAPI_GENERATOR_VERSION=4.2.0 ./openapi-generator generate -i openapi.yaml -g go -o ./client
-	rm -f client/go.mod client/go.sum
+	rm -f client/go.mod client/go.sum ./client/.travis.yml
 	go fmt ./...
 	go build github.com/moov-io/wire/client
 	go test ./client
