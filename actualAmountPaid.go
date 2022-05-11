@@ -14,6 +14,8 @@ import (
 type ActualAmountPaid struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// RemittanceAmount is remittance amounts
 	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
@@ -24,9 +26,15 @@ type ActualAmountPaid struct {
 }
 
 // NewActualAmountPaid returns a new ActualAmountPaid
-func NewActualAmountPaid() *ActualAmountPaid {
+func NewActualAmountPaid(args ...bool) *ActualAmountPaid {
+	isVariableLength := false
+	if len(args) > 0 {
+		isVariableLength = args[0]
+	}
+
 	aap := &ActualAmountPaid{
-		tag: TagActualAmountPaid,
+		tag:              TagActualAmountPaid,
+		isVariableLength: isVariableLength,
 	}
 	return aap
 }
@@ -35,14 +43,22 @@ func NewActualAmountPaid() *ActualAmountPaid {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (aap *ActualAmountPaid) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+func (aap *ActualAmountPaid) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) != 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	aap.tag = record[:6]
-	aap.RemittanceAmount.CurrencyCode = aap.parseStringField(record[6:9])
-	aap.RemittanceAmount.Amount = aap.parseStringField(record[9:28])
-	return nil
+
+	length := 6
+	read := 0
+
+	aap.RemittanceAmount.CurrencyCode, read = aap.parseVariableStringField(record[length:], 3)
+	length += read
+
+	aap.RemittanceAmount.Amount, read = aap.parseVariableStringField(record[length:], 19)
+	length += read
+
+	return nil, length
 }
 
 func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
@@ -103,10 +119,10 @@ func (aap *ActualAmountPaid) fieldInclusion() error {
 
 // CurrencyCodeField gets a string of the CurrencyCode field
 func (aap *ActualAmountPaid) CurrencyCodeField() string {
-	return aap.alphaField(aap.RemittanceAmount.CurrencyCode, 3)
+	return aap.alphaVariableField(aap.RemittanceAmount.CurrencyCode, 3, aap.isVariableLength)
 }
 
 // AmountField gets a string of the Amount field
 func (aap *ActualAmountPaid) AmountField() string {
-	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
+	return aap.alphaVariableField(aap.RemittanceAmount.Amount, 19, aap.isVariableLength)
 }

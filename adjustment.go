@@ -14,6 +14,8 @@ import (
 type Adjustment struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Adjustment  * `01` - Pricing Error * `03` - Extension Error * `04` - Item Not Accepted (Damaged) * `05` - Item Not Accepted (Quality) * `06` - Quantity Contested 07   Incorrect Product * `11` - Returns (Damaged) * `12` - Returns (Quality) * `59` - Item Not Received * `75` - Total Order Not Received * `81` - Credit as Agreed * `CM` - Covered by Credit Memo
 	AdjustmentReasonCode string `json:"adjustmentReasonCode,omitempty"`
 	// CreditDebitIndicator  * `CRDT` - Credit * `DBIT` - Debit
@@ -30,9 +32,15 @@ type Adjustment struct {
 }
 
 // NewAdjustment returns a new Adjustment
-func NewAdjustment() *Adjustment {
+func NewAdjustment(args ...bool) *Adjustment {
+	isVariableLength := false
+	if len(args) > 0 {
+		isVariableLength = args[0]
+	}
+
 	adj := &Adjustment{
-		tag: TagAdjustment,
+		tag:              TagAdjustment,
+		isVariableLength: isVariableLength,
 	}
 	return adj
 }
@@ -41,17 +49,31 @@ func NewAdjustment() *Adjustment {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (adj *Adjustment) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 174 {
-		return NewTagWrongLengthErr(174, len(record))
+func (adj *Adjustment) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) != 11 {
+		return NewTagWrongLengthErr(11, len(record)), 0
 	}
 	adj.tag = record[:6]
-	adj.AdjustmentReasonCode = adj.parseStringField(record[6:8])
-	adj.CreditDebitIndicator = adj.parseStringField(record[8:12])
-	adj.RemittanceAmount.CurrencyCode = adj.parseStringField(record[12:15])
-	adj.RemittanceAmount.Amount = adj.parseStringField(record[15:34])
-	adj.AdditionalInfo = adj.parseStringField(record[34:174])
-	return nil
+
+	length := 6
+	read := 0
+
+	adj.AdjustmentReasonCode, read = adj.parseVariableStringField(record[length:], 2)
+	length += read
+
+	adj.CreditDebitIndicator, read = adj.parseVariableStringField(record[length:], 4)
+	length += read
+
+	adj.RemittanceAmount.CurrencyCode, read = adj.parseVariableStringField(record[length:], 3)
+	length += read
+
+	adj.RemittanceAmount.Amount, read = adj.parseVariableStringField(record[length:], 19)
+	length += read
+
+	adj.AdditionalInfo, read = adj.parseVariableStringField(record[length:], 140)
+	length += read
+
+	return nil, length
 }
 
 func (adj *Adjustment) UnmarshalJSON(data []byte) error {
@@ -126,25 +148,25 @@ func (adj *Adjustment) fieldInclusion() error {
 
 // AdjustmentReasonCodeField gets a string of the AdjustmentReasonCode field
 func (adj *Adjustment) AdjustmentReasonCodeField() string {
-	return adj.alphaField(adj.AdjustmentReasonCode, 2)
+	return adj.alphaVariableField(adj.AdjustmentReasonCode, 2, adj.isVariableLength)
 }
 
 // CreditDebitIndicatorField gets a string of the CreditDebitIndicator field
 func (adj *Adjustment) CreditDebitIndicatorField() string {
-	return adj.alphaField(adj.CreditDebitIndicator, 4)
+	return adj.alphaVariableField(adj.CreditDebitIndicator, 4, adj.isVariableLength)
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
 func (adj *Adjustment) CurrencyCodeField() string {
-	return adj.alphaField(adj.RemittanceAmount.CurrencyCode, 3)
+	return adj.alphaVariableField(adj.RemittanceAmount.CurrencyCode, 3, adj.isVariableLength)
 }
 
 // AmountField gets a string of the Amount field
 func (adj *Adjustment) AmountField() string {
-	return adj.alphaField(adj.RemittanceAmount.Amount, 19)
+	return adj.alphaVariableField(adj.RemittanceAmount.Amount, 19, adj.isVariableLength)
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field
 func (adj *Adjustment) AdditionalInfoField() string {
-	return adj.alphaField(adj.AdditionalInfo, 140)
+	return adj.alphaVariableField(adj.AdditionalInfo, 140, adj.isVariableLength)
 }

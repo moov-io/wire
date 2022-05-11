@@ -14,6 +14,8 @@ import (
 type AccountCreditedDrawdown struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// DrawdownCreditAccountNumber  9 character ABA
 	DrawdownCreditAccountNumber string `json:"drawdownCreditAccountNumber,omitempty"`
 
@@ -24,10 +26,17 @@ type AccountCreditedDrawdown struct {
 }
 
 // NewAccountCreditedDrawdown returns a new AccountCreditedDrawdown
-func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
-	creditDD := &AccountCreditedDrawdown{
-		tag: TagAccountCreditedDrawdown,
+func NewAccountCreditedDrawdown(args ...bool) *AccountCreditedDrawdown {
+	isVariableLength := false
+	if len(args) > 0 {
+		isVariableLength = args[0]
 	}
+
+	creditDD := &AccountCreditedDrawdown{
+		tag:              TagAccountCreditedDrawdown,
+		isVariableLength: isVariableLength,
+	}
+
 	return creditDD
 }
 
@@ -35,13 +44,19 @@ func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 15 {
-		return NewTagWrongLengthErr(15, len(record))
+func (creditDD *AccountCreditedDrawdown) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagWrongLengthErr(7, len(record)), 0
 	}
+
 	creditDD.tag = record[:6]
-	creditDD.DrawdownCreditAccountNumber = creditDD.parseStringField(record[6:15])
-	return nil
+	length := 6
+	read := 0
+
+	creditDD.DrawdownCreditAccountNumber, read = creditDD.parseVariableStringField(record[length:], 9)
+	length += read
+
+	return nil, length
 }
 
 func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {
@@ -93,5 +108,5 @@ func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
 
 // DrawdownCreditAccountNumberField gets a string of the DrawdownCreditAccountNumber field
 func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField() string {
-	return creditDD.alphaField(creditDD.DrawdownCreditAccountNumber, 9)
+	return creditDD.alphaVariableField(creditDD.DrawdownCreditAccountNumber, 9, creditDD.isVariableLength)
 }

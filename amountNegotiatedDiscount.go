@@ -14,6 +14,8 @@ import (
 type AmountNegotiatedDiscount struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// RemittanceAmount is remittance amounts
 	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
@@ -24,9 +26,15 @@ type AmountNegotiatedDiscount struct {
 }
 
 // NewAmountNegotiatedDiscount returns a new AmountNegotiatedDiscount
-func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
+func NewAmountNegotiatedDiscount(args ...bool) *AmountNegotiatedDiscount {
+	isVariableLength := false
+	if len(args) > 0 {
+		isVariableLength = args[0]
+	}
+
 	nd := &AmountNegotiatedDiscount{
-		tag: TagAmountNegotiatedDiscount,
+		tag:              TagAmountNegotiatedDiscount,
+		isVariableLength: isVariableLength,
 	}
 	return nd
 }
@@ -35,14 +43,22 @@ func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (nd *AmountNegotiatedDiscount) Parse(record string) error {
+func (nd *AmountNegotiatedDiscount) Parse(record string) (error, int) {
 	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+		return NewTagWrongLengthErr(28, len(record)), 0
 	}
 	nd.tag = record[:6]
-	nd.RemittanceAmount.CurrencyCode = nd.parseStringField(record[6:9])
-	nd.RemittanceAmount.Amount = nd.parseStringField(record[9:28])
-	return nil
+
+	length := 6
+	read := 0
+
+	nd.RemittanceAmount.CurrencyCode, read = nd.parseVariableStringField(record[length:], 3)
+	length += read
+
+	nd.RemittanceAmount.Amount, read = nd.parseVariableStringField(record[length:], 19)
+	length += read
+
+	return nil, length
 }
 
 func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {
@@ -101,10 +117,10 @@ func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
 
 // CurrencyCodeField gets a string of the CurrencyCode field
 func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
-	return nd.alphaField(nd.RemittanceAmount.CurrencyCode, 3)
+	return nd.alphaVariableField(nd.RemittanceAmount.CurrencyCode, 3, nd.isVariableLength)
 }
 
 // AmountField gets a string of the Amount field
 func (nd *AmountNegotiatedDiscount) AmountField() string {
-	return nd.alphaField(nd.RemittanceAmount.Amount, 19)
+	return nd.alphaVariableField(nd.RemittanceAmount.Amount, 19, nd.isVariableLength)
 }

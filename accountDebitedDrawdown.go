@@ -14,6 +14,8 @@ import (
 type AccountDebitedDrawdown struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Identification Code * `D` - Debit
 	IdentificationCode string `json:"identificationCode"`
 	// Identifier
@@ -29,9 +31,15 @@ type AccountDebitedDrawdown struct {
 }
 
 // NewAccountDebitedDrawdown returns a new AccountDebitedDrawdown
-func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
+func NewAccountDebitedDrawdown(args ...bool) *AccountDebitedDrawdown {
+	isVariableLength := false
+	if len(args) > 0 {
+		isVariableLength = args[0]
+	}
+
 	debitDD := &AccountDebitedDrawdown{
-		tag: TagAccountDebitedDrawdown,
+		tag:              TagAccountDebitedDrawdown,
+		isVariableLength: isVariableLength,
 	}
 	return debitDD
 }
@@ -40,18 +48,33 @@ func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (debitDD *AccountDebitedDrawdown) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (debitDD *AccountDebitedDrawdown) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) != 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
+
 	debitDD.tag = record[:6]
 	debitDD.IdentificationCode = debitDD.parseStringField(record[6:7])
-	debitDD.Identifier = debitDD.parseStringField(record[7:41])
-	debitDD.Name = debitDD.parseStringField(record[41:76])
-	debitDD.Address.AddressLineOne = debitDD.parseStringField(record[76:111])
-	debitDD.Address.AddressLineTwo = debitDD.parseStringField(record[111:146])
-	debitDD.Address.AddressLineThree = debitDD.parseStringField(record[146:181])
-	return nil
+
+	length := 7
+	read := 0
+
+	debitDD.Identifier, read = debitDD.parseVariableStringField(record[length:], 34)
+	length += read
+
+	debitDD.Name, read = debitDD.parseVariableStringField(record[length:], 35)
+	length += read
+
+	debitDD.Address.AddressLineOne, read = debitDD.parseVariableStringField(record[length:], 35)
+	length += read
+
+	debitDD.Address.AddressLineTwo, read = debitDD.parseVariableStringField(record[length:], 35)
+	length += read
+
+	debitDD.Address.AddressLineThree, read = debitDD.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (debitDD *AccountDebitedDrawdown) UnmarshalJSON(data []byte) error {
@@ -141,25 +164,25 @@ func (debitDD *AccountDebitedDrawdown) IdentificationCodeField() string {
 
 // IdentifierField gets a string of the Identifier field
 func (debitDD *AccountDebitedDrawdown) IdentifierField() string {
-	return debitDD.alphaField(debitDD.Identifier, 34)
+	return debitDD.alphaVariableField(debitDD.Identifier, 34, debitDD.isVariableLength)
 }
 
 // NameField gets a string of the Name field
 func (debitDD *AccountDebitedDrawdown) NameField() string {
-	return debitDD.alphaField(debitDD.Name, 35)
+	return debitDD.alphaVariableField(debitDD.Name, 35, debitDD.isVariableLength)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
 func (debitDD *AccountDebitedDrawdown) AddressLineOneField() string {
-	return debitDD.alphaField(debitDD.Address.AddressLineOne, 35)
+	return debitDD.alphaVariableField(debitDD.Address.AddressLineOne, 35, debitDD.isVariableLength)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
 func (debitDD *AccountDebitedDrawdown) AddressLineTwoField() string {
-	return debitDD.alphaField(debitDD.Address.AddressLineTwo, 35)
+	return debitDD.alphaVariableField(debitDD.Address.AddressLineTwo, 35, debitDD.isVariableLength)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
 func (debitDD *AccountDebitedDrawdown) AddressLineThreeField() string {
-	return debitDD.alphaField(debitDD.Address.AddressLineThree, 35)
+	return debitDD.alphaVariableField(debitDD.Address.AddressLineThree, 35, debitDD.isVariableLength)
 }

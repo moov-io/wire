@@ -22,6 +22,22 @@ func (c *converters) parseStringField(r string) (s string) {
 	return s
 }
 
+func (c *converters) parseVariableStringField(r string, maxLen int) (s string, index int) {
+	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > 0 {
+		index = delimiterIndex
+	}
+	if delimiterIndex := strings.Index(r, "{"); delimiterIndex > 0 && delimiterIndex < index {
+		index = delimiterIndex
+	}
+
+	if index == 0 || index > maxLen{
+		index = maxLen
+	}
+
+	s = strings.TrimSpace(r[:index])
+	return s, index
+}
+
 // alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.
 func (c *converters) alphaField(s string, max uint) string {
 	ln := uint(len(s))
@@ -29,6 +45,22 @@ func (c *converters) alphaField(s string, max uint) string {
 		return s[:max]
 	}
 	s += strings.Repeat(" ", int(max-ln))
+	return s
+}
+
+// alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.
+func (c *converters) alphaVariableField(s string, max uint, isVariable bool) string {
+	ln := uint(len(s))
+	if ln > max {
+		return s[:max]
+	}
+	
+	if isVariable {
+		s += "*"
+	} else {
+		s += strings.Repeat(" ", int(max-ln))
+	}
+
 	return s
 }
 

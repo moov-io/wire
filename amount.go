@@ -14,6 +14,8 @@ import (
 type Amount struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Amount 12 numeric, right-justified with leading zeros, an implied decimal point and no commas; e.g., $12,345.67 becomes 000001234567 Can be all zeros for subtype 90
 	Amount string `json:"amount"`
 
@@ -24,9 +26,15 @@ type Amount struct {
 }
 
 // NewAmount returns a new Amount
-func NewAmount() *Amount {
+func NewAmount(args ...bool) *Amount {
+	isVariableLength := false
+	if len(args) > 0 {
+		isVariableLength = args[0]
+	}
+
 	a := &Amount{
-		tag: TagAmount,
+		tag:              TagAmount,
+		isVariableLength: isVariableLength,
 	}
 	return a
 }
@@ -35,13 +43,19 @@ func NewAmount() *Amount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (a *Amount) Parse(record string) error {
+func (a *Amount) Parse(record string) (error, int) {
 	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, len(record))
+		return NewTagWrongLengthErr(18, len(record)), 0
 	}
 	a.tag = record[:6]
-	a.Amount = a.parseStringField(record[6:18])
-	return nil
+
+	length := 6
+	read := 0
+
+	a.Amount, read = a.parseVariableStringField(record[length:], 12)
+	length += read
+
+	return nil, length
 }
 
 func (a *Amount) UnmarshalJSON(data []byte) error {
@@ -93,5 +107,5 @@ func (a *Amount) fieldInclusion() error {
 
 // AmountField gets a string of entry addenda batch count zero padded
 func (a *Amount) AmountField() string {
-	return a.numericStringField(a.Amount, 12)
+	return a.alphaVariableField(a.Amount, 12, a.isVariableLength)
 }
