@@ -46,28 +46,7 @@ func (fifi *FIAdditionalFIToFI) Parse(record string) (error, int) {
 	}
 	fifi.tag = record[:6]
 
-	length := 6
-	read := 0
-
-	fifi.AdditionalFIToFI.LineOne, read = fifi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	fifi.AdditionalFIToFI.LineTwo, read = fifi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	fifi.AdditionalFIToFI.LineThree, read = fifi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	fifi.AdditionalFIToFI.LineFour, read = fifi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	fifi.AdditionalFIToFI.LineFive, read = fifi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	fifi.AdditionalFIToFI.LineSix, read = fifi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	return nil, length
+	return nil, 6 + fifi.AdditionalFIToFI.Parse(record[6:])
 }
 
 func (fifi *FIAdditionalFIToFI) UnmarshalJSON(data []byte) error {
@@ -88,13 +67,10 @@ func (fifi *FIAdditionalFIToFI) UnmarshalJSON(data []byte) error {
 func (fifi *FIAdditionalFIToFI) String() string {
 	var buf strings.Builder
 	buf.Grow(216)
+
 	buf.WriteString(fifi.tag)
-	buf.WriteString(fifi.LineOneField())
-	buf.WriteString(fifi.LineTwoField())
-	buf.WriteString(fifi.LineThreeField())
-	buf.WriteString(fifi.LineFourField())
-	buf.WriteString(fifi.LineFiveField())
-	buf.WriteString(fifi.LineSixField())
+	buf.WriteString(fifi.AdditionalFIToFI.String(fifi.isVariableLength))
+
 	return buf.String()
 }
 
@@ -123,34 +99,4 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 		return fieldError("LineSix", err, fifi.AdditionalFIToFI.LineSix)
 	}
 	return nil
-}
-
-// LineOneField gets a string of the LineOne field
-func (fifi *FIAdditionalFIToFI) LineOneField() string {
-	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineOne, 35, fifi.isVariableLength)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (fifi *FIAdditionalFIToFI) LineTwoField() string {
-	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineTwo, 35, fifi.isVariableLength)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (fifi *FIAdditionalFIToFI) LineThreeField() string {
-	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineThree, 35, fifi.isVariableLength)
-}
-
-// LineFourField gets a string of the LineFour field
-func (fifi *FIAdditionalFIToFI) LineFourField() string {
-	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineFour, 35, fifi.isVariableLength)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (fifi *FIAdditionalFIToFI) LineFiveField() string {
-	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineFive, 35, fifi.isVariableLength)
-}
-
-// LineSixField gets a string of the LineSix field
-func (fifi *FIAdditionalFIToFI) LineSixField() string {
-	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineSix, 35, fifi.isVariableLength)
 }

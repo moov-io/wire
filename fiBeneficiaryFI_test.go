@@ -9,7 +9,7 @@ import (
 
 // mockFIBeneficiaryFI creates a FIBeneficiaryFI
 func mockFIBeneficiaryFI() *FIBeneficiaryFI {
-	fibfi := NewFIBeneficiaryFI()
+	fibfi := NewFIBeneficiaryFI(false)
 	fibfi.FIToFI.LineOne = "Line One"
 	fibfi.FIToFI.LineTwo = "Line Two"
 	fibfi.FIToFI.LineThree = "Line Three"

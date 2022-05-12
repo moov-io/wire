@@ -46,28 +46,7 @@ func (fib *FIBeneficiary) Parse(record string) (error, int) {
 	}
 	fib.tag = record[:6]
 
-	length := 6
-	read := 0
-
-	fib.FIToFI.LineOne, read = fib.parseVariableStringField(record[length:], 30)
-	length += read
-
-	fib.FIToFI.LineTwo, read = fib.parseVariableStringField(record[length:], 33)
-	length += read
-
-	fib.FIToFI.LineThree, read = fib.parseVariableStringField(record[length:], 33)
-	length += read
-
-	fib.FIToFI.LineFour, read = fib.parseVariableStringField(record[length:], 33)
-	length += read
-
-	fib.FIToFI.LineFive, read = fib.parseVariableStringField(record[length:], 33)
-	length += read
-
-	fib.FIToFI.LineSix, read = fib.parseVariableStringField(record[length:], 33)
-	length += read
-
-	return nil, length
+	return nil, 6 + fib.FIToFI.Parse(record[6:])
 }
 
 func (fib *FIBeneficiary) UnmarshalJSON(data []byte) error {
@@ -88,13 +67,10 @@ func (fib *FIBeneficiary) UnmarshalJSON(data []byte) error {
 func (fib *FIBeneficiary) String() string {
 	var buf strings.Builder
 	buf.Grow(201)
+
 	buf.WriteString(fib.tag)
-	buf.WriteString(fib.LineOneField())
-	buf.WriteString(fib.LineTwoField())
-	buf.WriteString(fib.LineThreeField())
-	buf.WriteString(fib.LineFourField())
-	buf.WriteString(fib.LineFiveField())
-	buf.WriteString(fib.LineSixField())
+	buf.WriteString(fib.FIToFI.String(fib.isVariableLength))
+
 	return buf.String()
 }
 
@@ -123,34 +99,4 @@ func (fib *FIBeneficiary) Validate() error {
 		return fieldError("LineSix", err, fib.FIToFI.LineSix)
 	}
 	return nil
-}
-
-// LineOneField gets a string of the LineOne field
-func (fib *FIBeneficiary) LineOneField() string {
-	return fib.alphaVariableField(fib.FIToFI.LineOne, 30, fib.isVariableLength)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (fib *FIBeneficiary) LineTwoField() string {
-	return fib.alphaVariableField(fib.FIToFI.LineTwo, 33, fib.isVariableLength)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (fib *FIBeneficiary) LineThreeField() string {
-	return fib.alphaVariableField(fib.FIToFI.LineThree, 33, fib.isVariableLength)
-}
-
-// LineFourField gets a string of the LineFour field
-func (fib *FIBeneficiary) LineFourField() string {
-	return fib.alphaVariableField(fib.FIToFI.LineFour, 33, fib.isVariableLength)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (fib *FIBeneficiary) LineFiveField() string {
-	return fib.alphaVariableField(fib.FIToFI.LineFive, 33, fib.isVariableLength)
-}
-
-// LineSixField gets a string of the LineSix field
-func (fib *FIBeneficiary) LineSixField() string {
-	return fib.alphaVariableField(fib.FIToFI.LineSix, 33, fib.isVariableLength)
 }

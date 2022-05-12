@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIBeneficiaryAdvice{}
+
 // FIBeneficiaryAdvice is the financial institution beneficiary advice
 type FIBeneficiaryAdvice struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Advice
 	Advice Advice `json:"advice,omitempty"`
 
@@ -24,9 +28,10 @@ type FIBeneficiaryAdvice struct {
 }
 
 // NewFIBeneficiaryAdvice returns a new FIBeneficiaryAdvice
-func NewFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
+func NewFIBeneficiaryAdvice(isVariable bool) *FIBeneficiaryAdvice {
 	fiba := &FIBeneficiaryAdvice{
-		tag: TagFIBeneficiaryAdvice,
+		tag:              TagFIBeneficiaryAdvice,
+		isVariableLength: isVariable,
 	}
 	return fiba
 }
@@ -35,19 +40,13 @@ func NewFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fiba *FIBeneficiaryAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+func (fiba *FIBeneficiaryAdvice) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagWrongLengthErr(13, len(record)), 0
 	}
 	fiba.tag = record[:6]
-	fiba.Advice.AdviceCode = fiba.parseStringField(record[6:9])
-	fiba.Advice.LineOne = fiba.parseStringField(record[9:35])
-	fiba.Advice.LineTwo = fiba.parseStringField(record[35:68])
-	fiba.Advice.LineThree = fiba.parseStringField(record[68:101])
-	fiba.Advice.LineFour = fiba.parseStringField(record[101:134])
-	fiba.Advice.LineFive = fiba.parseStringField(record[134:167])
-	fiba.Advice.LineSix = fiba.parseStringField(record[167:200])
-	return nil
+
+	return nil, 6 + fiba.Advice.Parse(record[6:])
 }
 
 func (fiba *FIBeneficiaryAdvice) UnmarshalJSON(data []byte) error {
@@ -68,14 +67,10 @@ func (fiba *FIBeneficiaryAdvice) UnmarshalJSON(data []byte) error {
 func (fiba *FIBeneficiaryAdvice) String() string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fiba.tag)
-	buf.WriteString(fiba.AdviceCodeField())
-	buf.WriteString(fiba.LineOneField())
-	buf.WriteString(fiba.LineTwoField())
-	buf.WriteString(fiba.LineThreeField())
-	buf.WriteString(fiba.LineFourField())
-	buf.WriteString(fiba.LineFiveField())
-	buf.WriteString(fiba.LineSixField())
+	buf.WriteString(fiba.Advice.String(fiba.isVariableLength))
+
 	return buf.String()
 }
 
@@ -107,39 +102,4 @@ func (fiba *FIBeneficiaryAdvice) Validate() error {
 		return fieldError("LineSix", err, fiba.Advice.LineSix)
 	}
 	return nil
-}
-
-// AdviceCodeField gets a string of the AdviceCode field
-func (fiba *FIBeneficiaryAdvice) AdviceCodeField() string {
-	return fiba.alphaField(fiba.Advice.AdviceCode, 3)
-}
-
-// LineOneField gets a string of the LineOne field
-func (fiba *FIBeneficiaryAdvice) LineOneField() string {
-	return fiba.alphaField(fiba.Advice.LineOne, 26)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (fiba *FIBeneficiaryAdvice) LineTwoField() string {
-	return fiba.alphaField(fiba.Advice.LineTwo, 33)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (fiba *FIBeneficiaryAdvice) LineThreeField() string {
-	return fiba.alphaField(fiba.Advice.LineThree, 33)
-}
-
-// LineFourField gets a string of the LineFour field
-func (fiba *FIBeneficiaryAdvice) LineFourField() string {
-	return fiba.alphaField(fiba.Advice.LineFour, 33)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (fiba *FIBeneficiaryAdvice) LineFiveField() string {
-	return fiba.alphaField(fiba.Advice.LineFive, 33)
-}
-
-// LineSixField gets a string of the LineSix field
-func (fiba *FIBeneficiaryAdvice) LineSixField() string {
-	return fiba.alphaField(fiba.Advice.LineSix, 33)
 }

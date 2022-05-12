@@ -30,8 +30,12 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (s string, i
 		index = delimiterIndex
 	}
 
-	if index == 0 || index > maxLen{
+	if index == 0 || index > maxLen {
 		index = maxLen
+	}
+
+	if index < len(r) {
+		index = len(r)
 	}
 
 	s = strings.TrimSpace(r[:index])
@@ -54,7 +58,7 @@ func (c *converters) alphaVariableField(s string, max uint, isVariable bool) str
 	if ln > max {
 		return s[:max]
 	}
-	
+
 	if isVariable {
 		s += "*"
 	} else {

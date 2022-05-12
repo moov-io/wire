@@ -45,27 +45,8 @@ func (bfi *BeneficiaryFI) Parse(record string) (error, int) {
 		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	bfi.tag = record[:6]
-	bfi.FinancialInstitution.IdentificationCode = bfi.parseStringField(record[6:7])
 
-	length := 7
-	read := 0
-
-	bfi.FinancialInstitution.Identifier, read = bfi.parseVariableStringField(record[length:], 34)
-	length += read
-
-	bfi.FinancialInstitution.Name, read = bfi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bfi.FinancialInstitution.Address.AddressLineOne, read = bfi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bfi.FinancialInstitution.Address.AddressLineTwo, read = bfi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bfi.FinancialInstitution.Address.AddressLineThree, read = bfi.parseVariableStringField(record[length:], 35)
-	length += read
-
-	return nil, length
+	return nil, 6 + bfi.FinancialInstitution.Parse(record[6:])
 }
 
 func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {
@@ -86,13 +67,10 @@ func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {
 func (bfi *BeneficiaryFI) String() string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(bfi.tag)
-	buf.WriteString(bfi.IdentificationCodeField())
-	buf.WriteString(bfi.IdentifierField())
-	buf.WriteString(bfi.NameField())
-	buf.WriteString(bfi.AddressLineOneField())
-	buf.WriteString(bfi.AddressLineTwoField())
-	buf.WriteString(bfi.AddressLineThreeField())
+	buf.WriteString(bfi.FinancialInstitution.String(bfi.isVariableLength))
+
 	return buf.String()
 }
 
@@ -147,34 +125,4 @@ func (bfi *BeneficiaryFI) fieldInclusion() error {
 		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
-}
-
-// IdentificationCodeField gets a string of the IdentificationCode field
-func (bfi *BeneficiaryFI) IdentificationCodeField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.IdentificationCode, 1)
-}
-
-// IdentifierField gets a string of the Identifier field
-func (bfi *BeneficiaryFI) IdentifierField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Identifier, 34)
-}
-
-// NameField gets a string of the Name field
-func (bfi *BeneficiaryFI) NameField() string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Name, 35, bfi.isVariableLength)
-}
-
-// AddressLineOneField gets a string of AddressLineOne field
-func (bfi *BeneficiaryFI) AddressLineOneField() string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineOne, 35, bfi.isVariableLength)
-}
-
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (bfi *BeneficiaryFI) AddressLineTwoField() string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineTwo, 35, bfi.isVariableLength)
-}
-
-// AddressLineThreeField gets a string of AddressLineThree field
-func (bfi *BeneficiaryFI) AddressLineThreeField() string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineThree, 35, bfi.isVariableLength)
 }
