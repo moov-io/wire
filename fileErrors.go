@@ -24,7 +24,7 @@ type TagWrongLengthErr struct {
 // NewTagWrongLengthErr creates a new error of the TagWrongLengthErr type
 func NewTagWrongLengthErr(tagLength, length int) TagWrongLengthErr {
 	return TagWrongLengthErr{
-		Message:   fmt.Sprintf("must be %d characters and found %d", tagLength, length),
+		Message:   fmt.Sprintf("must be minimum %d characters and found %d", tagLength, length),
 		TagLength: tagLength,
 		Length:    length,
 	}
