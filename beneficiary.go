@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &Beneficiary{}
+
 // Beneficiary is the beneficiary of the wire
 type Beneficiary struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Personal
 	Personal Personal `json:"personal,omitempty"`
 
@@ -24,9 +28,10 @@ type Beneficiary struct {
 }
 
 // NewBeneficiary returns a new Beneficiary
-func NewBeneficiary() *Beneficiary {
+func NewBeneficiary(isVariable bool) *Beneficiary {
 	ben := &Beneficiary{
-		tag: TagBeneficiary,
+		tag:              TagBeneficiary,
+		isVariableLength: isVariable,
 	}
 	return ben
 }
@@ -35,18 +40,32 @@ func NewBeneficiary() *Beneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ben *Beneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (ben *Beneficiary) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	ben.tag = record[:6]
 	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
-	ben.Personal.Identifier = ben.parseStringField(record[7:41])
-	ben.Personal.Name = ben.parseStringField(record[41:76])
-	ben.Personal.Address.AddressLineOne = ben.parseStringField(record[76:111])
-	ben.Personal.Address.AddressLineTwo = ben.parseStringField(record[111:146])
-	ben.Personal.Address.AddressLineThree = ben.parseStringField(record[146:181])
-	return nil
+
+	length := 7
+	read := 0
+
+	ben.Personal.Identifier, read = ben.parseVariableStringField(record[length:], 34)
+	length += read
+
+	ben.Personal.Name, read = ben.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ben.Personal.Address.AddressLineOne, read = ben.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ben.Personal.Address.AddressLineTwo, read = ben.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ben.Personal.Address.AddressLineThree, read = ben.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
@@ -128,25 +147,25 @@ func (ben *Beneficiary) IdentificationCodeField() string {
 
 // IdentifierField gets a string of the Identifier field
 func (ben *Beneficiary) IdentifierField() string {
-	return ben.alphaField(ben.Personal.Identifier, 34)
+	return ben.alphaVariableField(ben.Personal.Identifier, 34, ben.isVariableLength)
 }
 
 // NameField gets a string of the Name field
 func (ben *Beneficiary) NameField() string {
-	return ben.alphaField(ben.Personal.Name, 35)
+	return ben.alphaVariableField(ben.Personal.Name, 35, ben.isVariableLength)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
 func (ben *Beneficiary) AddressLineOneField() string {
-	return ben.alphaField(ben.Personal.Address.AddressLineOne, 35)
+	return ben.alphaVariableField(ben.Personal.Address.AddressLineOne, 35, ben.isVariableLength)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
 func (ben *Beneficiary) AddressLineTwoField() string {
-	return ben.alphaField(ben.Personal.Address.AddressLineTwo, 35)
+	return ben.alphaVariableField(ben.Personal.Address.AddressLineTwo, 35, ben.isVariableLength)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
 func (ben *Beneficiary) AddressLineThreeField() string {
-	return ben.alphaField(ben.Personal.Address.AddressLineThree, 35)
+	return ben.alphaVariableField(ben.Personal.Address.AddressLineThree, 35, ben.isVariableLength)
 }

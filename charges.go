@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &Charges{}
+
 // Charges is the Charges of the wire
 type Charges struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// ChargeDetails * `B` - Beneficiary * `S` - Shared
 	ChargeDetails string `json:"chargeDetails,omitempty"`
 	// SendersChargesOne  The first three characters must contain an alpha currency code (e.g., USD).  The remaining
@@ -40,9 +44,10 @@ type Charges struct {
 }
 
 // NewCharges returns a new Charges
-func NewCharges() *Charges {
+func NewCharges(isVariable bool) *Charges {
 	c := &Charges{
-		tag: TagCharges,
+		tag:              TagCharges,
+		isVariableLength: isVariable,
 	}
 	return c
 }
@@ -51,16 +56,29 @@ func NewCharges() *Charges {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (c *Charges) Parse(record string) {
-	if utf8.RuneCountInString(record) < 67 {
-		return // line too short
+func (c *Charges) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 11 {
+		return NewTagWrongLengthErr(11, len(record)), 0
 	}
 	c.tag = record[:6]
 	c.ChargeDetails = c.parseStringField(record[6:7])
-	c.SendersChargesOne = c.parseStringField(record[7:22])
-	c.SendersChargesTwo = c.parseStringField(record[22:37])
-	c.SendersChargesThree = c.parseStringField(record[37:52])
-	c.SendersChargesFour = c.parseStringField(record[52:67])
+
+	length := 7
+	read := 0
+
+	c.SendersChargesOne, read = c.parseVariableStringField(record[length:], 15)
+	length += read
+
+	c.SendersChargesTwo, read = c.parseVariableStringField(record[length:], 15)
+	length += read
+
+	c.SendersChargesThree, read = c.parseVariableStringField(record[length:], 15)
+	length += read
+
+	c.SendersChargesFour, read = c.parseVariableStringField(record[length:], 15)
+	length += read
+
+	return nil, length
 }
 
 func (c *Charges) UnmarshalJSON(data []byte) error {
@@ -139,20 +157,20 @@ func (c *Charges) ChargeDetailsField() string {
 
 // SendersChargesOneField gets a string of the SendersChargesOne field
 func (c *Charges) SendersChargesOneField() string {
-	return c.alphaField(c.SendersChargesOne, 15)
+	return c.alphaVariableField(c.SendersChargesOne, 15, c.isVariableLength)
 }
 
 // SendersChargesTwoField gets a string of the SendersChargesTwo field
 func (c *Charges) SendersChargesTwoField() string {
-	return c.alphaField(c.SendersChargesTwo, 15)
+	return c.alphaVariableField(c.SendersChargesTwo, 15, c.isVariableLength)
 }
 
 // SendersChargesThreeField gets a string of the SendersChargesThree field
 func (c *Charges) SendersChargesThreeField() string {
-	return c.alphaField(c.SendersChargesThree, 15)
+	return c.alphaVariableField(c.SendersChargesThree, 15, c.isVariableLength)
 }
 
 // SendersChargesFourField gets a string of the SendersChargesFour field
 func (c *Charges) SendersChargesFourField() string {
-	return c.alphaField(c.SendersChargesFour, 15)
+	return c.alphaVariableField(c.SendersChargesFour, 15, c.isVariableLength)
 }

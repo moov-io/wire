@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &BeneficiaryIntermediaryFI{}
+
 // BeneficiaryIntermediaryFI {4000}
 type BeneficiaryIntermediaryFI struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Financial Institution
 	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
@@ -24,9 +28,10 @@ type BeneficiaryIntermediaryFI struct {
 }
 
 // NewBeneficiaryIntermediaryFI returns a new BeneficiaryIntermediaryFI
-func NewBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
+func NewBeneficiaryIntermediaryFI(isVariable bool) *BeneficiaryIntermediaryFI {
 	bifi := &BeneficiaryIntermediaryFI{
-		tag: TagBeneficiaryIntermediaryFI,
+		tag:              TagBeneficiaryIntermediaryFI,
+		isVariableLength: isVariable,
 	}
 	return bifi
 }
@@ -35,18 +40,32 @@ func NewBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bifi *BeneficiaryIntermediaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (bifi *BeneficiaryIntermediaryFI) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	bifi.tag = record[:6]
 	bifi.FinancialInstitution.IdentificationCode = bifi.parseStringField(record[6:7])
-	bifi.FinancialInstitution.Identifier = bifi.parseStringField(record[7:41])
-	bifi.FinancialInstitution.Name = bifi.parseStringField(record[41:76])
-	bifi.FinancialInstitution.Address.AddressLineOne = bifi.parseStringField(record[76:111])
-	bifi.FinancialInstitution.Address.AddressLineTwo = bifi.parseStringField(record[111:146])
-	bifi.FinancialInstitution.Address.AddressLineThree = bifi.parseStringField(record[146:181])
-	return nil
+
+	length := 7
+	read := 0
+
+	bifi.FinancialInstitution.Identifier, read = bifi.parseVariableStringField(record[length:], 34)
+	length += read
+
+	bifi.FinancialInstitution.Name, read = bifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	bifi.FinancialInstitution.Address.AddressLineOne, read = bifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	bifi.FinancialInstitution.Address.AddressLineTwo, read = bifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	bifi.FinancialInstitution.Address.AddressLineThree, read = bifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (bifi *BeneficiaryIntermediaryFI) UnmarshalJSON(data []byte) error {
@@ -134,25 +153,25 @@ func (bifi *BeneficiaryIntermediaryFI) IdentificationCodeField() string {
 
 // IdentifierField gets a string of the Identifier field
 func (bifi *BeneficiaryIntermediaryFI) IdentifierField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Identifier, 34)
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Identifier, 34, bifi.isVariableLength)
 }
 
 // NameField gets a string of the Name field
 func (bifi *BeneficiaryIntermediaryFI) NameField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Name, 35)
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Name, 35, bifi.isVariableLength)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
 func (bifi *BeneficiaryIntermediaryFI) AddressLineOneField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Address.AddressLineOne, 35)
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Address.AddressLineOne, 35, bifi.isVariableLength)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
 func (bifi *BeneficiaryIntermediaryFI) AddressLineTwoField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Address.AddressLineTwo, 35)
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Address.AddressLineTwo, 35, bifi.isVariableLength)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
 func (bifi *BeneficiaryIntermediaryFI) AddressLineThreeField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Address.AddressLineThree, 35)
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Address.AddressLineThree, 35, bifi.isVariableLength)
 }

@@ -9,7 +9,7 @@ import (
 
 // mockBusinessFunctionCode creates a BusinessFunctionCode
 func mockBusinessFunctionCode() *BusinessFunctionCode {
-	bfc := NewBusinessFunctionCode()
+	bfc := NewBusinessFunctionCode(false)
 	bfc.BusinessFunctionCode = CustomerTransfer
 	bfc.TransactionTypeCode = "   "
 	return bfc

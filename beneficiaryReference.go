@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &BeneficiaryReference{}
+
 // BeneficiaryReference is a reference for the beneficiary
 type BeneficiaryReference struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// BeneficiaryReference
 	BeneficiaryReference string `json:"beneficiaryReference,omitempty"`
 
@@ -24,9 +28,10 @@ type BeneficiaryReference struct {
 }
 
 // NewBeneficiaryReference returns a new BeneficiaryReference
-func NewBeneficiaryReference() *BeneficiaryReference {
+func NewBeneficiaryReference(isVariable bool) *BeneficiaryReference {
 	br := &BeneficiaryReference{
-		tag: TagBeneficiaryReference,
+		tag:              TagBeneficiaryReference,
+		isVariableLength: isVariable,
 	}
 	return br
 }
@@ -35,13 +40,19 @@ func NewBeneficiaryReference() *BeneficiaryReference {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (br *BeneficiaryReference) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 22 {
-		return NewTagWrongLengthErr(22, len(record))
+func (br *BeneficiaryReference) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagWrongLengthErr(7, len(record)), 0
 	}
 	br.tag = record[:6]
-	br.BeneficiaryReference = br.parseStringField(record[6:22])
-	return nil
+
+	length := 6
+	read := 0
+
+	br.BeneficiaryReference, read = br.parseVariableStringField(record[length:], 16)
+	length += read
+
+	return nil, length
 }
 
 func (br *BeneficiaryReference) UnmarshalJSON(data []byte) error {
@@ -81,5 +92,5 @@ func (br *BeneficiaryReference) Validate() error {
 
 // BeneficiaryReferenceField gets a string of the BeneficiaryReference field
 func (br *BeneficiaryReference) BeneficiaryReferenceField() string {
-	return br.alphaField(br.BeneficiaryReference, 16)
+	return br.alphaVariableField(br.BeneficiaryReference, 16, br.isVariableLength)
 }

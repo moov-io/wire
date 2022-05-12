@@ -9,7 +9,7 @@ import (
 
 //  CurrencyInstructedAmount creates a CurrencyInstructedAmount
 func mockCurrencyInstructedAmount() *CurrencyInstructedAmount {
-	cia := NewCurrencyInstructedAmount()
+	cia := NewCurrencyInstructedAmount(false)
 	cia.SwiftFieldTag = "Swift Field Tag"
 	cia.Amount = "1500,49"
 	return cia

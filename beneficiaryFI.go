@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &BeneficiaryFI{}
+
 // BeneficiaryFI is the financial institution of the beneficiary
 type BeneficiaryFI struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Financial Institution
 	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
@@ -24,9 +28,10 @@ type BeneficiaryFI struct {
 }
 
 // NewBeneficiaryFI returns a new BeneficiaryFI
-func NewBeneficiaryFI() *BeneficiaryFI {
+func NewBeneficiaryFI(isVariable bool) *BeneficiaryFI {
 	bfi := &BeneficiaryFI{
-		tag: TagBeneficiaryFI,
+		tag:              TagBeneficiaryFI,
+		isVariableLength: isVariable,
 	}
 	return bfi
 }
@@ -35,18 +40,32 @@ func NewBeneficiaryFI() *BeneficiaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfi *BeneficiaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (bfi *BeneficiaryFI) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	bfi.tag = record[:6]
 	bfi.FinancialInstitution.IdentificationCode = bfi.parseStringField(record[6:7])
-	bfi.FinancialInstitution.Identifier = bfi.parseStringField(record[7:41])
-	bfi.FinancialInstitution.Name = bfi.parseStringField(record[41:76])
-	bfi.FinancialInstitution.Address.AddressLineOne = bfi.parseStringField(record[76:111])
-	bfi.FinancialInstitution.Address.AddressLineTwo = bfi.parseStringField(record[111:146])
-	bfi.FinancialInstitution.Address.AddressLineThree = bfi.parseStringField(record[146:181])
-	return nil
+
+	length := 7
+	read := 0
+
+	bfi.FinancialInstitution.Identifier, read = bfi.parseVariableStringField(record[length:], 34)
+	length += read
+
+	bfi.FinancialInstitution.Name, read = bfi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	bfi.FinancialInstitution.Address.AddressLineOne, read = bfi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	bfi.FinancialInstitution.Address.AddressLineTwo, read = bfi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	bfi.FinancialInstitution.Address.AddressLineThree, read = bfi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {
@@ -142,20 +161,20 @@ func (bfi *BeneficiaryFI) IdentifierField() string {
 
 // NameField gets a string of the Name field
 func (bfi *BeneficiaryFI) NameField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Name, 35)
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Name, 35, bfi.isVariableLength)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
 func (bfi *BeneficiaryFI) AddressLineOneField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineOne, 35)
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineOne, 35, bfi.isVariableLength)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
 func (bfi *BeneficiaryFI) AddressLineTwoField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineTwo, 35)
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineTwo, 35, bfi.isVariableLength)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
 func (bfi *BeneficiaryFI) AddressLineThreeField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineThree, 35)
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineThree, 35, bfi.isVariableLength)
 }

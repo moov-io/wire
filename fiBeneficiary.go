@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIBeneficiary{}
+
 // FIBeneficiary is the financial institution beneficiary
 type FIBeneficiary struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Financial Institution
 	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
@@ -24,9 +28,10 @@ type FIBeneficiary struct {
 }
 
 // NewFIBeneficiary returns a new FIBeneficiary
-func NewFIBeneficiary() *FIBeneficiary {
+func NewFIBeneficiary(isVariable bool) *FIBeneficiary {
 	fib := &FIBeneficiary{
-		tag: TagFIBeneficiary,
+		tag:              TagFIBeneficiary,
+		isVariableLength: isVariable,
 	}
 	return fib
 }
@@ -35,18 +40,34 @@ func NewFIBeneficiary() *FIBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fib *FIBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 201 {
-		return NewTagWrongLengthErr(201, len(record))
+func (fib *FIBeneficiary) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	fib.tag = record[:6]
-	fib.FIToFI.LineOne = fib.parseStringField(record[6:36])
-	fib.FIToFI.LineTwo = fib.parseStringField(record[36:69])
-	fib.FIToFI.LineThree = fib.parseStringField(record[69:102])
-	fib.FIToFI.LineFour = fib.parseStringField(record[102:135])
-	fib.FIToFI.LineFive = fib.parseStringField(record[135:168])
-	fib.FIToFI.LineSix = fib.parseStringField(record[168:201])
-	return nil
+
+	length := 6
+	read := 0
+
+	fib.FIToFI.LineOne, read = fib.parseVariableStringField(record[length:], 30)
+	length += read
+
+	fib.FIToFI.LineTwo, read = fib.parseVariableStringField(record[length:], 33)
+	length += read
+
+	fib.FIToFI.LineThree, read = fib.parseVariableStringField(record[length:], 33)
+	length += read
+
+	fib.FIToFI.LineFour, read = fib.parseVariableStringField(record[length:], 33)
+	length += read
+
+	fib.FIToFI.LineFive, read = fib.parseVariableStringField(record[length:], 33)
+	length += read
+
+	fib.FIToFI.LineSix, read = fib.parseVariableStringField(record[length:], 33)
+	length += read
+
+	return nil, length
 }
 
 func (fib *FIBeneficiary) UnmarshalJSON(data []byte) error {
@@ -106,30 +127,30 @@ func (fib *FIBeneficiary) Validate() error {
 
 // LineOneField gets a string of the LineOne field
 func (fib *FIBeneficiary) LineOneField() string {
-	return fib.alphaField(fib.FIToFI.LineOne, 30)
+	return fib.alphaVariableField(fib.FIToFI.LineOne, 30, fib.isVariableLength)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (fib *FIBeneficiary) LineTwoField() string {
-	return fib.alphaField(fib.FIToFI.LineTwo, 33)
+	return fib.alphaVariableField(fib.FIToFI.LineTwo, 33, fib.isVariableLength)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (fib *FIBeneficiary) LineThreeField() string {
-	return fib.alphaField(fib.FIToFI.LineThree, 33)
+	return fib.alphaVariableField(fib.FIToFI.LineThree, 33, fib.isVariableLength)
 }
 
 // LineFourField gets a string of the LineFour field
 func (fib *FIBeneficiary) LineFourField() string {
-	return fib.alphaField(fib.FIToFI.LineFour, 33)
+	return fib.alphaVariableField(fib.FIToFI.LineFour, 33, fib.isVariableLength)
 }
 
 // LineFiveField gets a string of the LineFive field
 func (fib *FIBeneficiary) LineFiveField() string {
-	return fib.alphaField(fib.FIToFI.LineFive, 33)
+	return fib.alphaVariableField(fib.FIToFI.LineFive, 33, fib.isVariableLength)
 }
 
 // LineSixField gets a string of the LineSix field
 func (fib *FIBeneficiary) LineSixField() string {
-	return fib.alphaField(fib.FIToFI.LineSix, 33)
+	return fib.alphaVariableField(fib.FIToFI.LineSix, 33, fib.isVariableLength)
 }

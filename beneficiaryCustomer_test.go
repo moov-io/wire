@@ -9,7 +9,7 @@ import (
 
 // mockBeneficiaryCustomer creates a BeneficiaryCustomer
 func mockBeneficiaryCustomer() *BeneficiaryCustomer {
-	bc := NewBeneficiaryCustomer()
+	bc := NewBeneficiaryCustomer(false)
 	bc.CoverPayment.SwiftFieldTag = "Swift Field Tag"
 	bc.CoverPayment.SwiftLineOne = "Swift Line One"
 	bc.CoverPayment.SwiftLineTwo = "Swift Line Two"

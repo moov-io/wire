@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &CurrencyInstructedAmount{}
+
 // CurrencyInstructedAmount is the currency instructed amount
 type CurrencyInstructedAmount struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// SwiftFieldTag
 	SwiftFieldTag string `json:"swiftFieldTag"`
 	// Amount is the instructed amount
@@ -27,9 +31,10 @@ type CurrencyInstructedAmount struct {
 }
 
 // NewCurrencyInstructedAmount returns a new CurrencyInstructedAmount
-func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
+func NewCurrencyInstructedAmount(isVariable bool) *CurrencyInstructedAmount {
 	cia := &CurrencyInstructedAmount{
-		tag: TagCurrencyInstructedAmount,
+		tag:              TagCurrencyInstructedAmount,
+		isVariableLength: isVariable,
 	}
 	return cia
 }
@@ -38,14 +43,22 @@ func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (cia *CurrencyInstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 29 {
-		return NewTagWrongLengthErr(29, len(record))
+func (cia *CurrencyInstructedAmount) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	cia.tag = record[:6]
-	cia.SwiftFieldTag = cia.parseStringField(record[6:11])
-	cia.Amount = cia.parseStringField(record[11:29])
-	return nil
+
+	length := 6
+	read := 0
+
+	cia.SwiftFieldTag, read = cia.parseVariableStringField(record[length:], 5)
+	length += read
+
+	cia.Amount, read = cia.parseVariableStringField(record[length:], 18)
+	length += read
+
+	return nil, length
 }
 
 func (cia *CurrencyInstructedAmount) UnmarshalJSON(data []byte) error {
@@ -89,12 +102,12 @@ func (cia *CurrencyInstructedAmount) Validate() error {
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
 func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
-	return cia.alphaField(cia.SwiftFieldTag, 5)
+	return cia.alphaVariableField(cia.SwiftFieldTag, 5, cia.isVariableLength)
 }
 
 // ToDo: The spec isn't clear if this is padded with zeros or not, so for now it is
 
 // AmountField gets a string of the AmountTag field
 func (cia *CurrencyInstructedAmount) AmountField() string {
-	return cia.numericStringField(cia.Amount, 18)
+	return cia.alphaVariableField(cia.Amount, 18, cia.isVariableLength)
 }

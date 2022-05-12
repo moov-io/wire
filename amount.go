@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &Amount{}
+
 // Amount (up to a penny less than $10 billion) {2000}
 type Amount struct {
 	// tag
@@ -26,15 +28,10 @@ type Amount struct {
 }
 
 // NewAmount returns a new Amount
-func NewAmount(args ...bool) *Amount {
-	isVariableLength := false
-	if len(args) > 0 {
-		isVariableLength = args[0]
-	}
-
+func NewAmount(isVariable bool) *Amount {
 	a := &Amount{
 		tag:              TagAmount,
-		isVariableLength: isVariableLength,
+		isVariableLength: isVariable,
 	}
 	return a
 }
@@ -44,7 +41,7 @@ func NewAmount(args ...bool) *Amount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (a *Amount) Parse(record string) (error, int) {
-	if utf8.RuneCountInString(record) != 18 {
+	if utf8.RuneCountInString(record) < 7 {
 		return NewTagWrongLengthErr(18, len(record)), 0
 	}
 	a.tag = record[:6]

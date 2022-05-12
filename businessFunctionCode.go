@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &BusinessFunctionCode{}
+
 // BusinessFunctionCode {3600}
 type BusinessFunctionCode struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// BusinessFunctionCode BTR: Bank Transfer (Beneficiary is a bank) DRC: Customer or Corporate Drawdown Request CKS: Check Same Day Settlement DRW: Drawdown Payment CTP: Customer Transfer Plus FFR: Fed Funds Returned CTR: Customer Transfer (Beneficiary is a not a bank) FFS: Fed Funds Sold DEP: Deposit to Sender’s Account SVC: Service Message DRB: Bank-to-Bank Drawdown Request
 	BusinessFunctionCode string `json:"businessFunctionCode"`
 	// TransactionTypeCode If {3600} is CTR, an optional Transaction Type Code element is permitted; however, the Transaction Type Code 'COV' is not permitted.
@@ -26,9 +30,10 @@ type BusinessFunctionCode struct {
 }
 
 // NewBusinessFunctionCode returns a new BusinessFunctionCode
-func NewBusinessFunctionCode() *BusinessFunctionCode {
+func NewBusinessFunctionCode(isVariable bool) *BusinessFunctionCode {
 	bfc := &BusinessFunctionCode{
-		tag: TagBusinessFunctionCode,
+		tag:              TagBusinessFunctionCode,
+		isVariableLength: isVariable,
 	}
 	return bfc
 }
@@ -37,14 +42,22 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfc *BusinessFunctionCode) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 12 {
-		return NewTagWrongLengthErr(12, len(record))
+func (bfc *BusinessFunctionCode) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	bfc.tag = record[:6]
-	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
-	bfc.TransactionTypeCode = record[9:12]
-	return nil
+
+	length := 6
+	read := 0
+
+	bfc.BusinessFunctionCode, read = bfc.parseVariableStringField(record[length:], 3)
+	length += read
+
+	bfc.TransactionTypeCode, read = bfc.parseVariableStringField(record[length:], 3)
+	length += read
+
+	return nil, length
 }
 
 func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {
@@ -102,10 +115,10 @@ func (bfc *BusinessFunctionCode) fieldInclusion() error {
 
 // BusinessFunctionCodeField gets a string of the BusinessFunctionCode field
 func (bfc *BusinessFunctionCode) BusinessFunctionCodeField() string {
-	return bfc.alphaField(bfc.BusinessFunctionCode, 3)
+	return bfc.alphaVariableField(bfc.BusinessFunctionCode, 3, bfc.isVariableLength)
 }
 
 // TransactionTypeCodeField gets a string of the TransactionTypeCode field
 func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
-	return bfc.alphaField(bfc.TransactionTypeCode, 3)
+	return bfc.alphaVariableField(bfc.TransactionTypeCode, 3, bfc.isVariableLength)
 }

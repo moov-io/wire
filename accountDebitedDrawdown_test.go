@@ -9,7 +9,7 @@ import (
 
 // mockAccountDebitedDrawdown creates a AccountDebitedDrawdown
 func mockAccountDebitedDrawdown() *AccountDebitedDrawdown {
-	debitDD := NewAccountDebitedDrawdown()
+	debitDD := NewAccountDebitedDrawdown(false)
 	debitDD.IdentificationCode = DemandDepositAccountNumber
 	debitDD.Identifier = "123456789"
 	debitDD.Name = "debitDD Name"

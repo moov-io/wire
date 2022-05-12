@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &ActualAmountPaid{}
+
 // ActualAmountPaid is the actual amount paid
 type ActualAmountPaid struct {
 	// tag
@@ -26,15 +28,10 @@ type ActualAmountPaid struct {
 }
 
 // NewActualAmountPaid returns a new ActualAmountPaid
-func NewActualAmountPaid(args ...bool) *ActualAmountPaid {
-	isVariableLength := false
-	if len(args) > 0 {
-		isVariableLength = args[0]
-	}
-
+func NewActualAmountPaid(isVariable bool) *ActualAmountPaid {
 	aap := &ActualAmountPaid{
 		tag:              TagActualAmountPaid,
-		isVariableLength: isVariableLength,
+		isVariableLength: isVariable,
 	}
 	return aap
 }
@@ -44,7 +41,7 @@ func NewActualAmountPaid(args ...bool) *ActualAmountPaid {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (aap *ActualAmountPaid) Parse(record string) (error, int) {
-	if utf8.RuneCountInString(record) != 8 {
+	if utf8.RuneCountInString(record) < 8 {
 		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	aap.tag = record[:6]

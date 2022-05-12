@@ -7,12 +7,17 @@ package wire
 import (
 	"encoding/json"
 	"strings"
+	"unicode/utf8"
 )
+
+var _ segment = &ErrorWire{}
 
 // ErrorWire is a wire error with the fedwire message
 type ErrorWire struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	//  * `E` - Data Error * `F` - Insufficient Balance * `H` - Accountability Error * `I` - In Process or Intercepted * `W` - Cutoff Hour Error * `X` - Duplicate IMAD
 	ErrorCategory string `json:"errorCategory,omitempty"`
 	// ErrorCode
@@ -27,9 +32,10 @@ type ErrorWire struct {
 }
 
 // NewErrorWire returns a new ErrorWire
-func NewErrorWire() *ErrorWire {
+func NewErrorWire(isVariable bool) *ErrorWire {
 	ew := &ErrorWire{
-		tag: TagErrorWire,
+		tag:              TagErrorWire,
+		isVariableLength: isVariable,
 	}
 	return ew
 }
@@ -38,11 +44,24 @@ func NewErrorWire() *ErrorWire {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ew *ErrorWire) Parse(record string) {
+func (ew *ErrorWire) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagWrongLengthErr(9, len(record)), 0
+	}
+
 	ew.tag = record[:6]
 	ew.ErrorCategory = ew.parseStringField(record[6:7])
-	ew.ErrorCode = ew.parseStringField(record[7:10])
-	ew.ErrorDescription = ew.parseStringField(record[10:45])
+
+	length := 7
+	read := 0
+
+	ew.ErrorCode, read = ew.parseVariableStringField(record[length:], 3)
+	length += read
+
+	ew.ErrorDescription, read = ew.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
@@ -84,10 +103,10 @@ func (ew *ErrorWire) ErrorCategoryField() string {
 
 // ErrorCodeField gets a string of the ErrorCode field
 func (ew *ErrorWire) ErrorCodeField() string {
-	return ew.alphaField(ew.ErrorCode, 3)
+	return ew.alphaVariableField(ew.ErrorCode, 3, ew.isVariableLength)
 }
 
 // ErrorDescriptionField gets a string of the ErrorDescription field
 func (ew *ErrorWire) ErrorDescriptionField() string {
-	return ew.alphaField(ew.ErrorDescription, 35)
+	return ew.alphaVariableField(ew.ErrorDescription, 35, ew.isVariableLength)
 }

@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &AmountNegotiatedDiscount{}
+
 // AmountNegotiatedDiscount is the amount negotiated discount
 type AmountNegotiatedDiscount struct {
 	// tag
@@ -26,15 +28,10 @@ type AmountNegotiatedDiscount struct {
 }
 
 // NewAmountNegotiatedDiscount returns a new AmountNegotiatedDiscount
-func NewAmountNegotiatedDiscount(args ...bool) *AmountNegotiatedDiscount {
-	isVariableLength := false
-	if len(args) > 0 {
-		isVariableLength = args[0]
-	}
-
+func NewAmountNegotiatedDiscount(isVariable bool) *AmountNegotiatedDiscount {
 	nd := &AmountNegotiatedDiscount{
 		tag:              TagAmountNegotiatedDiscount,
-		isVariableLength: isVariableLength,
+		isVariableLength: isVariable,
 	}
 	return nd
 }
@@ -44,8 +41,8 @@ func NewAmountNegotiatedDiscount(args ...bool) *AmountNegotiatedDiscount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (nd *AmountNegotiatedDiscount) Parse(record string) (error, int) {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record)), 0
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	nd.tag = record[:6]
 

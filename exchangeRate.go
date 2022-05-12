@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &ExchangeRate{}
+
 // ExchangeRate is the ExchangeRate of the wire
 type ExchangeRate struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// ExchangeRate is the exchange rate
 	// Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
 	ExchangeRate string `json:"exchangeRate,omitempty"`
@@ -25,9 +29,10 @@ type ExchangeRate struct {
 }
 
 // NewExchangeRate returns a new ExchangeRate
-func NewExchangeRate() *ExchangeRate {
+func NewExchangeRate(isVariable bool) *ExchangeRate {
 	eRate := &ExchangeRate{
-		tag: TagExchangeRate,
+		tag:              TagExchangeRate,
+		isVariableLength: isVariable,
 	}
 	return eRate
 }
@@ -36,13 +41,19 @@ func NewExchangeRate() *ExchangeRate {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (eRate *ExchangeRate) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, len(record))
+func (eRate *ExchangeRate) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagWrongLengthErr(7, len(record)), 0
 	}
 	eRate.tag = record[:6]
-	eRate.ExchangeRate = eRate.parseStringField(record[6:18])
-	return nil
+
+	length := 6
+	read := 0
+
+	eRate.ExchangeRate, read = eRate.parseVariableStringField(record[length:], 12)
+	length += read
+
+	return nil, length
 }
 
 func (eRate *ExchangeRate) UnmarshalJSON(data []byte) error {
@@ -82,5 +93,5 @@ func (eRate *ExchangeRate) Validate() error {
 
 // ExchangeRateField gets a string of the ExchangeRate field
 func (eRate *ExchangeRate) ExchangeRateField() string {
-	return eRate.alphaField(eRate.ExchangeRate, 12)
+	return eRate.alphaVariableField(eRate.ExchangeRate, 12, eRate.isVariableLength)
 }

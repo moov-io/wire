@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &AccountCreditedDrawdown{}
+
 // AccountCreditedDrawdown is the account which is credited in a drawdown
 type AccountCreditedDrawdown struct {
 	// tag
@@ -26,15 +28,10 @@ type AccountCreditedDrawdown struct {
 }
 
 // NewAccountCreditedDrawdown returns a new AccountCreditedDrawdown
-func NewAccountCreditedDrawdown(args ...bool) *AccountCreditedDrawdown {
-	isVariableLength := false
-	if len(args) > 0 {
-		isVariableLength = args[0]
-	}
-
+func NewAccountCreditedDrawdown(isVariable bool) *AccountCreditedDrawdown {
 	creditDD := &AccountCreditedDrawdown{
 		tag:              TagAccountCreditedDrawdown,
-		isVariableLength: isVariableLength,
+		isVariableLength: isVariable,
 	}
 
 	return creditDD

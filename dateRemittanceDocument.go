@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &DateRemittanceDocument{}
+
 // DateRemittanceDocument is the date of remittance document
 type DateRemittanceDocument struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// DateRemittanceDocument CCYYMMDD
 	DateRemittanceDocument string `json:"dateRemittanceDocument,omitempty"`
 
@@ -24,9 +28,10 @@ type DateRemittanceDocument struct {
 }
 
 // NewDateRemittanceDocument returns a new DateRemittanceDocument
-func NewDateRemittanceDocument() *DateRemittanceDocument {
+func NewDateRemittanceDocument(isVariable bool) *DateRemittanceDocument {
 	drd := &DateRemittanceDocument{
-		tag: TagDateRemittanceDocument,
+		tag:              TagDateRemittanceDocument,
+		isVariableLength: isVariable,
 	}
 	return drd
 }
@@ -35,13 +40,19 @@ func NewDateRemittanceDocument() *DateRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (drd *DateRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 14 {
-		return NewTagWrongLengthErr(14, len(record))
+func (drd *DateRemittanceDocument) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagWrongLengthErr(7, len(record)), 0
 	}
 	drd.tag = record[:6]
-	drd.DateRemittanceDocument = drd.parseStringField(record[6:14])
-	return nil
+
+	length := 6
+	read := 0
+
+	drd.DateRemittanceDocument, read = drd.parseVariableStringField(record[length:], 8)
+	length += read
+
+	return nil, length
 }
 
 func (drd *DateRemittanceDocument) UnmarshalJSON(data []byte) error {
@@ -93,5 +104,5 @@ func (drd *DateRemittanceDocument) fieldInclusion() error {
 
 // DateRemittanceDocumentField gets a string of the DateRemittanceDocument field
 func (drd *DateRemittanceDocument) DateRemittanceDocumentField() string {
-	return drd.alphaField(drd.DateRemittanceDocument, 8)
+	return drd.alphaVariableField(drd.DateRemittanceDocument, 8, drd.isVariableLength)
 }

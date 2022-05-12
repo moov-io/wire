@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &Adjustment{}
+
 // Adjustment is adjustment
 type Adjustment struct {
 	// tag
@@ -32,15 +34,10 @@ type Adjustment struct {
 }
 
 // NewAdjustment returns a new Adjustment
-func NewAdjustment(args ...bool) *Adjustment {
-	isVariableLength := false
-	if len(args) > 0 {
-		isVariableLength = args[0]
-	}
-
+func NewAdjustment(isVariable bool) *Adjustment {
 	adj := &Adjustment{
 		tag:              TagAdjustment,
-		isVariableLength: isVariableLength,
+		isVariableLength: isVariable,
 	}
 	return adj
 }
@@ -50,7 +47,7 @@ func NewAdjustment(args ...bool) *Adjustment {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (adj *Adjustment) Parse(record string) (error, int) {
-	if utf8.RuneCountInString(record) != 11 {
+	if utf8.RuneCountInString(record) < 11 {
 		return NewTagWrongLengthErr(11, len(record)), 0
 	}
 	adj.tag = record[:6]

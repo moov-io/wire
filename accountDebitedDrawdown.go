@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &AccountDebitedDrawdown{}
+
 // AccountDebitedDrawdown is the account which is debited in a drawdown
 type AccountDebitedDrawdown struct {
 	// tag
@@ -31,15 +33,10 @@ type AccountDebitedDrawdown struct {
 }
 
 // NewAccountDebitedDrawdown returns a new AccountDebitedDrawdown
-func NewAccountDebitedDrawdown(args ...bool) *AccountDebitedDrawdown {
-	isVariableLength := false
-	if len(args) > 0 {
-		isVariableLength = args[0]
-	}
-
+func NewAccountDebitedDrawdown(isVariable bool) *AccountDebitedDrawdown {
 	debitDD := &AccountDebitedDrawdown{
 		tag:              TagAccountDebitedDrawdown,
-		isVariableLength: isVariableLength,
+		isVariableLength: isVariable,
 	}
 	return debitDD
 }
@@ -49,7 +46,7 @@ func NewAccountDebitedDrawdown(args ...bool) *AccountDebitedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (debitDD *AccountDebitedDrawdown) Parse(record string) (error, int) {
-	if utf8.RuneCountInString(record) != 12 {
+	if utf8.RuneCountInString(record) < 12 {
 		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 

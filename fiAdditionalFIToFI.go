@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIAdditionalFIToFI{}
+
 // FIAdditionalFIToFI is the financial institution beneficiary financial institution
 type FIAdditionalFIToFI struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// AdditionalFiToFi is additional financial institution to financial institution information
 	AdditionalFIToFI AdditionalFIToFI `json:"additionalFiToFi,omitempty"`
 
@@ -24,9 +28,10 @@ type FIAdditionalFIToFI struct {
 }
 
 // NewFIAdditionalFIToFI returns a new FIAdditionalFIToFI
-func NewFIAdditionalFIToFI() *FIAdditionalFIToFI {
+func NewFIAdditionalFIToFI(isVariable bool) *FIAdditionalFIToFI {
 	fifi := &FIAdditionalFIToFI{
-		tag: TagFIAdditionalFIToFI,
+		tag:              TagFIAdditionalFIToFI,
+		isVariableLength: isVariable,
 	}
 	return fifi
 }
@@ -35,18 +40,34 @@ func NewFIAdditionalFIToFI() *FIAdditionalFIToFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fifi *FIAdditionalFIToFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 216 {
-		return NewTagWrongLengthErr(216, len(record))
+func (fifi *FIAdditionalFIToFI) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	fifi.tag = record[:6]
-	fifi.AdditionalFIToFI.LineOne = fifi.parseStringField(record[6:41])
-	fifi.AdditionalFIToFI.LineTwo = fifi.parseStringField(record[41:76])
-	fifi.AdditionalFIToFI.LineThree = fifi.parseStringField(record[76:111])
-	fifi.AdditionalFIToFI.LineFour = fifi.parseStringField(record[111:146])
-	fifi.AdditionalFIToFI.LineFive = fifi.parseStringField(record[146:181])
-	fifi.AdditionalFIToFI.LineSix = fifi.parseStringField(record[181:216])
-	return nil
+
+	length := 6
+	read := 0
+
+	fifi.AdditionalFIToFI.LineOne, read = fifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	fifi.AdditionalFIToFI.LineTwo, read = fifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	fifi.AdditionalFIToFI.LineThree, read = fifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	fifi.AdditionalFIToFI.LineFour, read = fifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	fifi.AdditionalFIToFI.LineFive, read = fifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	fifi.AdditionalFIToFI.LineSix, read = fifi.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (fifi *FIAdditionalFIToFI) UnmarshalJSON(data []byte) error {
@@ -106,30 +127,30 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 
 // LineOneField gets a string of the LineOne field
 func (fifi *FIAdditionalFIToFI) LineOneField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineOne, 35)
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineOne, 35, fifi.isVariableLength)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (fifi *FIAdditionalFIToFI) LineTwoField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineTwo, 35)
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineTwo, 35, fifi.isVariableLength)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (fifi *FIAdditionalFIToFI) LineThreeField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineThree, 35)
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineThree, 35, fifi.isVariableLength)
 }
 
 // LineFourField gets a string of the LineFour field
 func (fifi *FIAdditionalFIToFI) LineFourField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineFour, 35)
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineFour, 35, fifi.isVariableLength)
 }
 
 // LineFiveField gets a string of the LineFive field
 func (fifi *FIAdditionalFIToFI) LineFiveField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineFive, 35)
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineFive, 35, fifi.isVariableLength)
 }
 
 // LineSixField gets a string of the LineSix field
 func (fifi *FIAdditionalFIToFI) LineSixField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineSix, 35)
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineSix, 35, fifi.isVariableLength)
 }

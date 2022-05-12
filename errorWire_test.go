@@ -10,7 +10,7 @@ import (
 
 // mockErrorWire creates a ErrorWire
 func mockErrorWire() *ErrorWire {
-	ew := NewErrorWire()
+	ew := NewErrorWire(false)
 	ew.ErrorCategory = "E"
 	ew.ErrorCode = "XYZ"
 	ew.ErrorDescription = "Data Error"
