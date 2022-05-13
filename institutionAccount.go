@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &InstitutionAccount{}
+
 // InstitutionAccount is the institution account
 type InstitutionAccount struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -24,9 +28,10 @@ type InstitutionAccount struct {
 }
 
 // NewInstitutionAccount returns a new InstitutionAccount
-func NewInstitutionAccount() *InstitutionAccount {
+func NewInstitutionAccount(isVariable bool) *InstitutionAccount {
 	iAccount := &InstitutionAccount{
-		tag: TagInstitutionAccount,
+		tag:              TagInstitutionAccount,
+		isVariableLength: isVariable,
 	}
 	return iAccount
 }
@@ -35,18 +40,13 @@ func NewInstitutionAccount() *InstitutionAccount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (iAccount *InstitutionAccount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+func (iAccount *InstitutionAccount) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	iAccount.tag = record[:6]
-	iAccount.CoverPayment.SwiftFieldTag = iAccount.parseStringField(record[6:11])
-	iAccount.CoverPayment.SwiftLineOne = iAccount.parseStringField(record[11:46])
-	iAccount.CoverPayment.SwiftLineTwo = iAccount.parseStringField(record[46:81])
-	iAccount.CoverPayment.SwiftLineThree = iAccount.parseStringField(record[81:116])
-	iAccount.CoverPayment.SwiftLineFour = iAccount.parseStringField(record[116:151])
-	iAccount.CoverPayment.SwiftLineFive = iAccount.parseStringField(record[151:186])
-	return nil
+
+	return nil, 6 + iAccount.CoverPayment.Parse(record[6:])
 }
 
 func (iAccount *InstitutionAccount) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (iAccount *InstitutionAccount) UnmarshalJSON(data []byte) error {
 func (iAccount *InstitutionAccount) String() string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(iAccount.tag)
-	buf.WriteString(iAccount.SwiftFieldTagField())
-	buf.WriteString(iAccount.SwiftLineOneField())
-	buf.WriteString(iAccount.SwiftLineTwoField())
-	buf.WriteString(iAccount.SwiftLineThreeField())
-	buf.WriteString(iAccount.SwiftLineFourField())
-	buf.WriteString(iAccount.SwiftLineFiveField())
+	buf.WriteString(iAccount.CoverPayment.String(iAccount.isVariableLength))
+
 	return buf.String()
 }
 
@@ -114,34 +111,4 @@ func (iAccount *InstitutionAccount) fieldInclusion() error {
 		return fieldError("SwiftLineSix", ErrInvalidProperty, iAccount.CoverPayment.SwiftLineSix)
 	}
 	return nil
-}
-
-// SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (iAccount *InstitutionAccount) SwiftFieldTagField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftFieldTag, 5)
-}
-
-// SwiftLineOneField gets a string of the SwiftLineOne field
-func (iAccount *InstitutionAccount) SwiftLineOneField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineOne, 35)
-}
-
-// SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (iAccount *InstitutionAccount) SwiftLineTwoField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineTwo, 35)
-}
-
-// SwiftLineThreeField gets a string of the SwiftLineThree field
-func (iAccount *InstitutionAccount) SwiftLineThreeField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineThree, 35)
-}
-
-// SwiftLineFourField gets a string of the SwiftLineFour field
-func (iAccount *InstitutionAccount) SwiftLineFourField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFour, 35)
-}
-
-// SwiftLineFiveField gets a string of the SwiftLineFive field
-func (iAccount *InstitutionAccount) SwiftLineFiveField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFive, 35)
 }

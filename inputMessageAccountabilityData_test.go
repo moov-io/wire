@@ -10,7 +10,7 @@ import (
 
 // mockInputMessageAccountabilityData creates a mockInputMessageAccountabilityData
 func mockInputMessageAccountabilityData() *InputMessageAccountabilityData {
-	imad := NewInputMessageAccountabilityData()
+	imad := NewInputMessageAccountabilityData(false)
 	imad.InputCycleDate = time.Now().Format("20060102")
 	imad.InputSource = "Source08"
 	imad.InputSequenceNumber = "000001"

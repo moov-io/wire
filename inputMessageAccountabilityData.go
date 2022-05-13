@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &InputMessageAccountabilityData{}
+
 // InputMessageAccountabilityData (IMAD) {1520}
 type InputMessageAccountabilityData struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// InputCycleDate CCYYMMDD
 	InputCycleDate string `json:"inputCycleDate"`
 	// InputSource
@@ -28,9 +32,10 @@ type InputMessageAccountabilityData struct {
 }
 
 // NewInputMessageAccountabilityData returns a new InputMessageAccountabilityData
-func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
+func NewInputMessageAccountabilityData(isVariable bool) *InputMessageAccountabilityData {
 	imad := &InputMessageAccountabilityData{
-		tag: TagInputMessageAccountabilityData,
+		tag:              TagInputMessageAccountabilityData,
+		isVariableLength: isVariable,
 	}
 	return imad
 }
@@ -39,15 +44,26 @@ func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (imad *InputMessageAccountabilityData) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+func (imad *InputMessageAccountabilityData) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagWrongLengthErr(9, len(record)), 0
 	}
+
 	imad.tag = record[:6]
-	imad.InputCycleDate = imad.parseStringField(record[6:14])
-	imad.InputSource = imad.parseStringField(record[14:22])
-	imad.InputSequenceNumber = imad.parseStringField(record[22:28])
-	return nil
+
+	length := 6
+	read := 0
+
+	imad.InputCycleDate, read = imad.parseVariableStringField(record[length:], 8)
+	length += read
+
+	imad.InputSource, read = imad.parseVariableStringField(record[length:], 8)
+	length += read
+
+	imad.InputSequenceNumber, read = imad.parseVariableStringField(record[length:], 6)
+	length += read
+
+	return nil, length
 }
 
 func (imad *InputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
@@ -67,11 +83,13 @@ func (imad *InputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
 // String writes InputMessageAccountabilityData
 func (imad *InputMessageAccountabilityData) String() string {
 	var buf strings.Builder
-	buf.Grow(22)
+	buf.Grow(28)
+
 	buf.WriteString(imad.tag)
 	buf.WriteString(imad.InputCycleDateField())
 	buf.WriteString(imad.InputSourceField())
 	buf.WriteString(imad.InputSequenceNumberField())
+
 	return buf.String()
 }
 
@@ -113,15 +131,15 @@ func (imad *InputMessageAccountabilityData) fieldInclusion() error {
 
 // InputCycleDateField gets a string of the InputCycleDate field
 func (imad *InputMessageAccountabilityData) InputCycleDateField() string {
-	return imad.alphaField(imad.InputCycleDate, 8)
+	return imad.alphaVariableField(imad.InputCycleDate, 8, imad.isVariableLength)
 }
 
 // InputSourceField gets a string of the InputSource field
 func (imad *InputMessageAccountabilityData) InputSourceField() string {
-	return imad.alphaField(imad.InputSource, 8)
+	return imad.alphaVariableField(imad.InputSource, 8, imad.isVariableLength)
 }
 
 // InputSequenceNumberField gets a string of the InputSequenceNumber field
 func (imad *InputMessageAccountabilityData) InputSequenceNumberField() string {
-	return imad.alphaField(imad.InputSequenceNumber, 6)
+	return imad.alphaVariableField(imad.InputSequenceNumber, 6, imad.isVariableLength)
 }

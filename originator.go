@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &Originator{}
+
 // Originator is the originator of the wire
 type Originator struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Personal
 	Personal Personal `json:"personal,omitempty"`
 
@@ -24,9 +28,10 @@ type Originator struct {
 }
 
 // NewOriginator returns a new Originator
-func NewOriginator() *Originator {
+func NewOriginator(isVariable bool) *Originator {
 	o := &Originator{
-		tag: TagOriginator,
+		tag:              TagOriginator,
+		isVariableLength: isVariable,
 	}
 	return o
 }
@@ -35,18 +40,13 @@ func NewOriginator() *Originator {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (o *Originator) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (o *Originator) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	o.tag = record[:6]
-	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
-	o.Personal.Identifier = o.parseStringField(record[7:41])
-	o.Personal.Name = o.parseStringField(record[41:76])
-	o.Personal.Address.AddressLineOne = o.parseStringField(record[76:111])
-	o.Personal.Address.AddressLineTwo = o.parseStringField(record[111:146])
-	o.Personal.Address.AddressLineThree = o.parseStringField(record[146:181])
-	return nil
+
+	return nil, 6 + o.Personal.Parse(record[6:])
 }
 
 func (o *Originator) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (o *Originator) UnmarshalJSON(data []byte) error {
 func (o *Originator) String() string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(o.tag)
-	buf.WriteString(o.IdentificationCodeField())
-	buf.WriteString(o.IdentifierField())
-	buf.WriteString(o.NameField())
-	buf.WriteString(o.AddressLineOneField())
-	buf.WriteString(o.AddressLineTwoField())
-	buf.WriteString(o.AddressLineThreeField())
+	buf.WriteString(o.Personal.String(o.isVariableLength))
+
 	return buf.String()
 }
 
@@ -118,34 +115,4 @@ func (o *Originator) fieldInclusion() error {
 		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
-}
-
-// IdentificationCodeField gets a string of the IdentificationCode field
-func (o *Originator) IdentificationCodeField() string {
-	return o.alphaField(o.Personal.IdentificationCode, 1)
-}
-
-// IdentifierField gets a string of the Identifier field
-func (o *Originator) IdentifierField() string {
-	return o.alphaField(o.Personal.Identifier, 34)
-}
-
-// NameField gets a string of the Name field
-func (o *Originator) NameField() string {
-	return o.alphaField(o.Personal.Name, 35)
-}
-
-// AddressLineOneField gets a string of AddressLineOne field
-func (o *Originator) AddressLineOneField() string {
-	return o.alphaField(o.Personal.Address.AddressLineOne, 35)
-}
-
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (o *Originator) AddressLineTwoField() string {
-	return o.alphaField(o.Personal.Address.AddressLineTwo, 35)
-}
-
-// AddressLineThreeField gets a string of AddressLineThree field
-func (o *Originator) AddressLineThreeField() string {
-	return o.alphaField(o.Personal.Address.AddressLineThree, 35)
 }

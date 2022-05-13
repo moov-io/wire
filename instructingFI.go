@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &InstructingFI{}
+
 // InstructingFI is the instructing financial institution
 type InstructingFI struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Financial Institution
 	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
@@ -24,9 +28,10 @@ type InstructingFI struct {
 }
 
 // NewInstructingFI returns a new InstructingFI
-func NewInstructingFI() *InstructingFI {
+func NewInstructingFI(isVariable bool) *InstructingFI {
 	ifi := &InstructingFI{
-		tag: TagInstructingFI,
+		tag:              TagInstructingFI,
+		isVariableLength: isVariable,
 	}
 	return ifi
 }
@@ -35,18 +40,13 @@ func NewInstructingFI() *InstructingFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ifi *InstructingFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (ifi *InstructingFI) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	ifi.tag = record[:6]
-	ifi.FinancialInstitution.IdentificationCode = ifi.parseStringField(record[6:7])
-	ifi.FinancialInstitution.Identifier = ifi.parseStringField(record[7:41])
-	ifi.FinancialInstitution.Name = ifi.parseStringField(record[41:76])
-	ifi.FinancialInstitution.Address.AddressLineOne = ifi.parseStringField(record[76:111])
-	ifi.FinancialInstitution.Address.AddressLineTwo = ifi.parseStringField(record[111:146])
-	ifi.FinancialInstitution.Address.AddressLineThree = ifi.parseStringField(record[146:181])
-	return nil
+
+	return nil, 6 + ifi.FinancialInstitution.Parse(record[6:])
 }
 
 func (ifi *InstructingFI) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (ifi *InstructingFI) UnmarshalJSON(data []byte) error {
 func (ifi *InstructingFI) String() string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(ifi.tag)
-	buf.WriteString(ifi.IdentificationCodeField())
-	buf.WriteString(ifi.IdentifierField())
-	buf.WriteString(ifi.NameField())
-	buf.WriteString(ifi.AddressLineOneField())
-	buf.WriteString(ifi.AddressLineTwoField())
-	buf.WriteString(ifi.AddressLineThreeField())
+	buf.WriteString(ifi.FinancialInstitution.String(ifi.isVariableLength))
+
 	return buf.String()
 }
 
@@ -125,34 +122,4 @@ func (ifi *InstructingFI) fieldInclusion() error {
 		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
-}
-
-// IdentificationCodeField gets a string of the IdentificationCode field
-func (ifi *InstructingFI) IdentificationCodeField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.IdentificationCode, 1)
-}
-
-// IdentifierField gets a string of the Identifier field
-func (ifi *InstructingFI) IdentifierField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Identifier, 34)
-}
-
-// NameField gets a string of the Name field
-func (ifi *InstructingFI) NameField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Name, 35)
-}
-
-// AddressLineOneField gets a string of AddressLineOne field
-func (ifi *InstructingFI) AddressLineOneField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineOne, 35)
-}
-
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (ifi *InstructingFI) AddressLineTwoField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineTwo, 35)
-}
-
-// AddressLineThreeField gets a string of AddressLineThree field
-func (ifi *InstructingFI) AddressLineThreeField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35)
 }

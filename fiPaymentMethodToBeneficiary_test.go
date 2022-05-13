@@ -9,7 +9,7 @@ import (
 
 // mockFIPaymentMethodToBeneficiary creates a FIPaymentMethodToBeneficiary
 func mockFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
-	pm := NewFIPaymentMethodToBeneficiary()
+	pm := NewFIPaymentMethodToBeneficiary(false)
 	pm.PaymentMethod = "CHECK"
 	pm.AdditionalInformation = "Additional Information"
 	return pm

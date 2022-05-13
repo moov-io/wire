@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIReceiverFI{}
+
 // FIReceiverFI is the financial institution receiver financial institution
 type FIReceiverFI struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// FIToFI is financial institution to financial institution
 	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
@@ -24,9 +28,10 @@ type FIReceiverFI struct {
 }
 
 // NewFIReceiverFI returns a new FIReceiverFI
-func NewFIReceiverFI() *FIReceiverFI {
+func NewFIReceiverFI(isVariable bool) *FIReceiverFI {
 	firfi := &FIReceiverFI{
-		tag: TagFIReceiverFI,
+		tag:              TagFIReceiverFI,
+		isVariableLength: isVariable,
 	}
 	return firfi
 }
@@ -35,18 +40,13 @@ func NewFIReceiverFI() *FIReceiverFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (firfi *FIReceiverFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 201 {
-		return NewTagWrongLengthErr(201, len(record))
+func (firfi *FIReceiverFI) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	firfi.tag = record[:6]
-	firfi.FIToFI.LineOne = firfi.parseStringField(record[6:36])
-	firfi.FIToFI.LineTwo = firfi.parseStringField(record[36:69])
-	firfi.FIToFI.LineThree = firfi.parseStringField(record[69:102])
-	firfi.FIToFI.LineFour = firfi.parseStringField(record[102:135])
-	firfi.FIToFI.LineFive = firfi.parseStringField(record[135:168])
-	firfi.FIToFI.LineSix = firfi.parseStringField(record[174:201])
-	return nil
+
+	return nil, 6 + firfi.FIToFI.Parse(record[6:])
 }
 
 func (firfi *FIReceiverFI) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (firfi *FIReceiverFI) UnmarshalJSON(data []byte) error {
 func (firfi *FIReceiverFI) String() string {
 	var buf strings.Builder
 	buf.Grow(201)
+
 	buf.WriteString(firfi.tag)
-	buf.WriteString(firfi.LineOneField())
-	buf.WriteString(firfi.LineTwoField())
-	buf.WriteString(firfi.LineThreeField())
-	buf.WriteString(firfi.LineFourField())
-	buf.WriteString(firfi.LineFiveField())
-	buf.WriteString(firfi.LineSixField())
+	buf.WriteString(firfi.FIToFI.String(firfi.isVariableLength))
+
 	return buf.String()
 }
 
@@ -102,34 +99,4 @@ func (firfi *FIReceiverFI) Validate() error {
 		return fieldError("LineSix", err, firfi.FIToFI.LineSix)
 	}
 	return nil
-}
-
-// LineOneField gets a string of the LineOne field
-func (firfi *FIReceiverFI) LineOneField() string {
-	return firfi.alphaField(firfi.FIToFI.LineOne, 30)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (firfi *FIReceiverFI) LineTwoField() string {
-	return firfi.alphaField(firfi.FIToFI.LineTwo, 33)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (firfi *FIReceiverFI) LineThreeField() string {
-	return firfi.alphaField(firfi.FIToFI.LineThree, 33)
-}
-
-// LineFourField gets a string of the LineFour field
-func (firfi *FIReceiverFI) LineFourField() string {
-	return firfi.alphaField(firfi.FIToFI.LineFour, 33)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (firfi *FIReceiverFI) LineFiveField() string {
-	return firfi.alphaField(firfi.FIToFI.LineFive, 33)
-}
-
-// LineSixField gets a string of the LineSix field
-func (firfi *FIReceiverFI) LineSixField() string {
-	return firfi.alphaField(firfi.FIToFI.LineSix, 33)
 }

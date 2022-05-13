@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &GrossAmountRemittanceDocument{}
+
 // GrossAmountRemittanceDocument is the gross amount remittance document
 type GrossAmountRemittanceDocument struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// RemittanceAmount is remittance amounts
 	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
@@ -24,9 +28,10 @@ type GrossAmountRemittanceDocument struct {
 }
 
 // NewGrossAmountRemittanceDocument returns a new GrossAmountRemittanceDocument
-func NewGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
+func NewGrossAmountRemittanceDocument(isVariable bool) *GrossAmountRemittanceDocument {
 	gard := &GrossAmountRemittanceDocument{
-		tag: TagGrossAmountRemittanceDocument,
+		tag:              TagGrossAmountRemittanceDocument,
+		isVariableLength: isVariable,
 	}
 	return gard
 }
@@ -35,14 +40,13 @@ func NewGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+func (gard *GrossAmountRemittanceDocument) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	gard.tag = record[:6]
-	gard.RemittanceAmount.CurrencyCode = gard.parseStringField(record[6:9])
-	gard.RemittanceAmount.Amount = gard.parseStringField(record[9:28])
-	return nil
+
+	return nil, 6 + gard.RemittanceAmount.Parse(record[6:])
 }
 
 func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
@@ -63,9 +67,10 @@ func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
 func (gard *GrossAmountRemittanceDocument) String() string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(gard.tag)
-	buf.WriteString(gard.CurrencyCodeField())
-	buf.WriteString(gard.AmountField())
+	buf.WriteString(gard.RemittanceAmount.String(gard.isVariableLength))
+
 	return buf.String()
 }
 
@@ -97,14 +102,4 @@ func (gard *GrossAmountRemittanceDocument) fieldInclusion() error {
 		return fieldError("CurrencyCode", ErrFieldRequired)
 	}
 	return nil
-}
-
-// CurrencyCodeField gets a string of the CurrencyCode field
-func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
-	return gard.alphaField(gard.RemittanceAmount.CurrencyCode, 3)
-}
-
-// AmountField gets a string of the Amount field
-func (gard *GrossAmountRemittanceDocument) AmountField() string {
-	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
 }

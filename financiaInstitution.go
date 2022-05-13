@@ -35,14 +35,7 @@ func (f *FinancialInstitution) Parse(record string) int {
 	f.Name, read = f.parseVariableStringField(record[length:], 35)
 	length += read
 
-	f.Address.AddressLineOne, read = f.parseVariableStringField(record[length:], 35)
-	length += read
-
-	f.Address.AddressLineTwo, read = f.parseVariableStringField(record[length:], 35)
-	length += read
-
-	f.Address.AddressLineThree, read = f.parseVariableStringField(record[length:], 35)
-	length += read
+	length += f.Address.Parse(record[length:])
 
 	return length
 }
@@ -55,9 +48,7 @@ func (f *FinancialInstitution) String(isVariable bool) string {
 	buf.WriteString(f.IdentificationCodeField())
 	buf.WriteString(f.IdentifierField(isVariable))
 	buf.WriteString(f.NameField(isVariable))
-	buf.WriteString(f.AddressLineOneField(isVariable))
-	buf.WriteString(f.AddressLineTwoField(isVariable))
-	buf.WriteString(f.AddressLineThreeField(isVariable))
+	buf.WriteString(f.Address.String(isVariable))
 
 	return buf.String()
 }
@@ -75,19 +66,4 @@ func (f *FinancialInstitution) IdentifierField(isVariable bool) string {
 // NameField gets a string of the Name field
 func (f *FinancialInstitution) NameField(isVariable bool) string {
 	return f.alphaVariableField(f.Name, 35, isVariable)
-}
-
-// AddressLineOneField gets a string of AddressLineOne field
-func (f *FinancialInstitution) AddressLineOneField(isVariable bool) string {
-	return f.alphaVariableField(f.Address.AddressLineOne, 35, isVariable)
-}
-
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (f *FinancialInstitution) AddressLineTwoField(isVariable bool) string {
-	return f.alphaVariableField(f.Address.AddressLineTwo, 35, isVariable)
-}
-
-// AddressLineThreeField gets a string of AddressLineThree field
-func (f *FinancialInstitution) AddressLineThreeField(isVariable bool) string {
-	return f.alphaVariableField(f.Address.AddressLineThree, 35, isVariable)
 }

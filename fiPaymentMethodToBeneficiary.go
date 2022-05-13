@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIPaymentMethodToBeneficiary{}
+
 // FIPaymentMethodToBeneficiary is the financial institution payment method to beneficiary
 type FIPaymentMethodToBeneficiary struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// PaymentMethod is payment method
 	PaymentMethod string `json:"paymentMethod,omitempty"`
 	// Additional is additional information
@@ -26,10 +30,11 @@ type FIPaymentMethodToBeneficiary struct {
 }
 
 // NewFIPaymentMethodToBeneficiary returns a new FIPaymentMethodToBeneficiary
-func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
+func NewFIPaymentMethodToBeneficiary(isVariable bool) *FIPaymentMethodToBeneficiary {
 	pm := &FIPaymentMethodToBeneficiary{
-		tag:           TagFIPaymentMethodToBeneficiary,
-		PaymentMethod: "CHECK",
+		tag:              TagFIPaymentMethodToBeneficiary,
+		PaymentMethod:    "CHECK",
+		isVariableLength: isVariable,
 	}
 	return pm
 }
@@ -38,14 +43,22 @@ func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pm *FIPaymentMethodToBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 41 {
-		return NewTagWrongLengthErr(41, len(record))
+func (pm *FIPaymentMethodToBeneficiary) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	pm.tag = record[:6]
-	pm.PaymentMethod = pm.parseStringField(record[6:11])
-	pm.AdditionalInformation = pm.parseStringField(record[11:41])
-	return nil
+
+	length := 6
+	read := 0
+
+	pm.PaymentMethod, read = pm.parseVariableStringField(record[length:], 5)
+	length += read
+
+	pm.AdditionalInformation, read = pm.parseVariableStringField(record[length:], 30)
+	length += read
+
+	return nil, length
 }
 
 func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {
@@ -66,9 +79,11 @@ func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {
 func (pm *FIPaymentMethodToBeneficiary) String() string {
 	var buf strings.Builder
 	buf.Grow(41)
+
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())
 	buf.WriteString(pm.AdditionalInformationField())
+
 	return buf.String()
 }
 
@@ -98,10 +113,10 @@ func (pm *FIPaymentMethodToBeneficiary) fieldInclusion() error {
 
 // PaymentMethodField gets a string of the PaymentMethod field
 func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField() string {
-	return pm.alphaField(pm.PaymentMethod, 5)
+	return pm.alphaVariableField(pm.PaymentMethod, 5, pm.isVariableLength)
 }
 
 // AdditionalInformationField gets a string of the AdditionalInformation field
 func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField() string {
-	return pm.alphaField(pm.AdditionalInformation, 30)
+	return pm.alphaVariableField(pm.AdditionalInformation, 30, pm.isVariableLength)
 }

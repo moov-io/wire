@@ -9,7 +9,7 @@ import (
 
 // mockFIReceiverFI creates a FIReceiverFI
 func mockFIReceiverFI() *FIReceiverFI {
-	firfi := NewFIReceiverFI()
+	firfi := NewFIReceiverFI(false)
 	firfi.FIToFI.LineOne = "Line One"
 	firfi.FIToFI.LineOne = "Line Two"
 	firfi.FIToFI.LineOne = "Line Three"

@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &OrderingInstitution{}
+
 // OrderingInstitution is the ordering institution
 type OrderingInstitution struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -24,9 +28,10 @@ type OrderingInstitution struct {
 }
 
 // NewOrderingInstitution returns a new OrderingInstitution
-func NewOrderingInstitution() *OrderingInstitution {
+func NewOrderingInstitution(isVariable bool) *OrderingInstitution {
 	oi := &OrderingInstitution{
-		tag: TagOrderingInstitution,
+		tag:              TagOrderingInstitution,
+		isVariableLength: isVariable,
 	}
 	return oi
 }
@@ -35,18 +40,13 @@ func NewOrderingInstitution() *OrderingInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oi *OrderingInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+func (oi *OrderingInstitution) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	oi.tag = record[:6]
-	oi.CoverPayment.SwiftFieldTag = oi.parseStringField(record[6:11])
-	oi.CoverPayment.SwiftLineOne = oi.parseStringField(record[11:46])
-	oi.CoverPayment.SwiftLineTwo = oi.parseStringField(record[46:81])
-	oi.CoverPayment.SwiftLineThree = oi.parseStringField(record[81:116])
-	oi.CoverPayment.SwiftLineFour = oi.parseStringField(record[116:151])
-	oi.CoverPayment.SwiftLineFive = oi.parseStringField(record[151:186])
-	return nil
+
+	return nil, 6 + oi.CoverPayment.Parse(record[6:])
 }
 
 func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
 func (oi *OrderingInstitution) String() string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(oi.tag)
-	buf.WriteString(oi.SwiftFieldTagField())
-	buf.WriteString(oi.SwiftLineOneField())
-	buf.WriteString(oi.SwiftLineTwoField())
-	buf.WriteString(oi.SwiftLineThreeField())
-	buf.WriteString(oi.SwiftLineFourField())
-	buf.WriteString(oi.SwiftLineFiveField())
+	buf.WriteString(oi.CoverPayment.String(oi.isVariableLength))
+
 	return buf.String()
 }
 
@@ -114,34 +111,4 @@ func (oi *OrderingInstitution) fieldInclusion() error {
 		return fieldError("SwiftLineSix", ErrInvalidProperty, oi.CoverPayment.SwiftLineSix)
 	}
 	return nil
-}
-
-// SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (oi *OrderingInstitution) SwiftFieldTagField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftFieldTag, 5)
-}
-
-// SwiftLineOneField gets a string of the SwiftLineOne field
-func (oi *OrderingInstitution) SwiftLineOneField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineOne, 35)
-}
-
-// SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (oi *OrderingInstitution) SwiftLineTwoField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineTwo, 35)
-}
-
-// SwiftLineThreeField gets a string of the SwiftLineThree field
-func (oi *OrderingInstitution) SwiftLineThreeField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineThree, 35)
-}
-
-// SwiftLineFourField gets a string of the SwiftLineFour field
-func (oi *OrderingInstitution) SwiftLineFourField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineFour, 35)
-}
-
-// SwiftLineFiveField gets a string of the SwiftLineFive field
-func (oi *OrderingInstitution) SwiftLineFiveField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineFive, 35)
 }

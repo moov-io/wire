@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &InstructedAmount{}
+
 // InstructedAmount is the InstructedAmount of the wire
 type InstructedAmount struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// CurrencyCode
 	CurrencyCode string `json:"currencyCode,omitempty"`
 	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
@@ -27,9 +31,10 @@ type InstructedAmount struct {
 }
 
 // NewInstructedAmount returns a new InstructedAmount
-func NewInstructedAmount() *InstructedAmount {
+func NewInstructedAmount(isVariable bool) *InstructedAmount {
 	ia := &InstructedAmount{
-		tag: TagInstructedAmount,
+		tag:              TagInstructedAmount,
+		isVariableLength: isVariable,
 	}
 	return ia
 }
@@ -38,14 +43,22 @@ func NewInstructedAmount() *InstructedAmount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ia *InstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 24 {
-		return NewTagWrongLengthErr(24, len(record))
+func (ia *InstructedAmount) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
 	ia.tag = record[:6]
-	ia.CurrencyCode = ia.parseStringField(record[6:9])
-	ia.Amount = ia.parseStringField(record[9:24])
-	return nil
+
+	length := 6
+	read := 0
+
+	ia.CurrencyCode, read = ia.parseVariableStringField(record[length:], 3)
+	length += read
+
+	ia.Amount, read = ia.parseVariableStringField(record[length:], 15)
+	length += read
+
+	return nil, length
 }
 
 func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
@@ -66,9 +79,11 @@ func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
 func (ia *InstructedAmount) String() string {
 	var buf strings.Builder
 	buf.Grow(24)
+
 	buf.WriteString(ia.tag)
 	buf.WriteString(ia.CurrencyCodeField())
 	buf.WriteString(ia.AmountField())
+
 	return buf.String()
 }
 
@@ -105,10 +120,10 @@ func (ia *InstructedAmount) fieldInclusion() error {
 
 // CurrencyCodeField gets a string of the CurrencyCode field
 func (ia *InstructedAmount) CurrencyCodeField() string {
-	return ia.alphaField(ia.CurrencyCode, 3)
+	return ia.alphaVariableField(ia.CurrencyCode, 3, ia.isVariableLength)
 }
 
 // AmountField gets a string of the Amount field
 func (ia *InstructedAmount) AmountField() string {
-	return ia.alphaField(ia.Amount, 15)
+	return ia.alphaVariableField(ia.Amount, 15, ia.isVariableLength)
 }

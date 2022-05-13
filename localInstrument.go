@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &LocalInstrument{}
+
 // LocalInstrument is the LocalInstrument of the wire
 type LocalInstrument struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// LocalInstrumentCode is local instrument code
 	LocalInstrumentCode string `json:"LocalInstrument,omitempty"`
 	// ProprietaryCode is proprietary code
@@ -26,9 +30,10 @@ type LocalInstrument struct {
 }
 
 // NewLocalInstrument returns a new LocalInstrument
-func NewLocalInstrument() *LocalInstrument {
+func NewLocalInstrument(isVariable bool) *LocalInstrument {
 	li := &LocalInstrument{
-		tag: TagLocalInstrument,
+		tag:              TagLocalInstrument,
+		isVariableLength: isVariable,
 	}
 	return li
 }
@@ -37,14 +42,23 @@ func NewLocalInstrument() *LocalInstrument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (li *LocalInstrument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 45 {
-		return NewTagWrongLengthErr(45, len(record))
+func (li *LocalInstrument) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagWrongLengthErr(8, len(record)), 0
 	}
+
 	li.tag = record[:6]
-	li.LocalInstrumentCode = li.parseStringField(record[6:10])
-	li.ProprietaryCode = li.parseStringField(record[10:45])
-	return nil
+
+	length := 6
+	read := 0
+
+	li.LocalInstrumentCode, read = li.parseVariableStringField(record[length:], 4)
+	length += read
+
+	li.ProprietaryCode, read = li.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return nil, length
 }
 
 func (li *LocalInstrument) UnmarshalJSON(data []byte) error {
@@ -65,9 +79,11 @@ func (li *LocalInstrument) UnmarshalJSON(data []byte) error {
 func (li *LocalInstrument) String() string {
 	var buf strings.Builder
 	buf.Grow(45)
+
 	buf.WriteString(li.tag)
 	buf.WriteString(li.LocalInstrumentCodeField())
 	buf.WriteString(li.ProprietaryCodeField())
+
 	return buf.String()
 }
 
@@ -101,10 +117,10 @@ func (li *LocalInstrument) fieldInclusion() error {
 
 // LocalInstrumentCodeField gets a string of LocalInstrumentCode field
 func (li *LocalInstrument) LocalInstrumentCodeField() string {
-	return li.alphaField(li.LocalInstrumentCode, 4)
+	return li.alphaVariableField(li.LocalInstrumentCode, 4, li.isVariableLength)
 }
 
 // ProprietaryCodeField gets a string of ProprietaryCode field
 func (li *LocalInstrument) ProprietaryCodeField() string {
-	return li.alphaField(li.ProprietaryCode, 35)
+	return li.alphaVariableField(li.ProprietaryCode, 35, li.isVariableLength)
 }

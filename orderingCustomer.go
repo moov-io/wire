@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &OrderingCustomer{}
+
 // OrderingCustomer is the ordering customer
 type OrderingCustomer struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -24,9 +28,10 @@ type OrderingCustomer struct {
 }
 
 // NewOrderingCustomer returns a new OrderingCustomer
-func NewOrderingCustomer() *OrderingCustomer {
+func NewOrderingCustomer(isVariable bool) *OrderingCustomer {
 	oc := &OrderingCustomer{
-		tag: TagOrderingCustomer,
+		tag:              TagOrderingCustomer,
+		isVariableLength: isVariable,
 	}
 	return oc
 }
@@ -35,18 +40,13 @@ func NewOrderingCustomer() *OrderingCustomer {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oc *OrderingCustomer) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+func (oc *OrderingCustomer) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	oc.tag = record[:6]
-	oc.CoverPayment.SwiftFieldTag = oc.parseStringField(record[6:11])
-	oc.CoverPayment.SwiftLineOne = oc.parseStringField(record[11:46])
-	oc.CoverPayment.SwiftLineTwo = oc.parseStringField(record[46:81])
-	oc.CoverPayment.SwiftLineThree = oc.parseStringField(record[81:116])
-	oc.CoverPayment.SwiftLineFour = oc.parseStringField(record[116:151])
-	oc.CoverPayment.SwiftLineFive = oc.parseStringField(record[151:186])
-	return nil
+
+	return nil, 6 + oc.CoverPayment.Parse(record[6:])
 }
 
 func (oc *OrderingCustomer) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (oc *OrderingCustomer) UnmarshalJSON(data []byte) error {
 func (oc *OrderingCustomer) String() string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(oc.tag)
-	buf.WriteString(oc.SwiftFieldTagField())
-	buf.WriteString(oc.SwiftLineOneField())
-	buf.WriteString(oc.SwiftLineTwoField())
-	buf.WriteString(oc.SwiftLineThreeField())
-	buf.WriteString(oc.SwiftLineFourField())
-	buf.WriteString(oc.SwiftLineFiveField())
+	buf.WriteString(oc.CoverPayment.String(oc.isVariableLength))
+
 	return buf.String()
 }
 
@@ -114,34 +111,4 @@ func (oc *OrderingCustomer) fieldInclusion() error {
 		return fieldError("SwiftLineSix", ErrInvalidProperty, oc.CoverPayment.SwiftLineSix)
 	}
 	return nil
-}
-
-// SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (oc *OrderingCustomer) SwiftFieldTagField() string {
-	return oc.alphaField(oc.CoverPayment.SwiftFieldTag, 5)
-}
-
-// SwiftLineOneField gets a string of the SwiftLineOne field
-func (oc *OrderingCustomer) SwiftLineOneField() string {
-	return oc.alphaField(oc.CoverPayment.SwiftLineOne, 35)
-}
-
-// SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (oc *OrderingCustomer) SwiftLineTwoField() string {
-	return oc.alphaField(oc.CoverPayment.SwiftLineTwo, 35)
-}
-
-// SwiftLineThreeField gets a string of the SwiftLineThree field
-func (oc *OrderingCustomer) SwiftLineThreeField() string {
-	return oc.alphaField(oc.CoverPayment.SwiftLineThree, 35)
-}
-
-// SwiftLineFourField gets a string of the SwiftLineFour field
-func (oc *OrderingCustomer) SwiftLineFourField() string {
-	return oc.alphaField(oc.CoverPayment.SwiftLineFour, 35)
-}
-
-// SwiftLineFiveField gets a string of the SwiftLineFive field
-func (oc *OrderingCustomer) SwiftLineFiveField() string {
-	return oc.alphaField(oc.CoverPayment.SwiftLineFive, 35)
 }

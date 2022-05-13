@@ -9,7 +9,7 @@ import (
 
 //  OrderingCustomer creates a OrderingCustomer
 func mockOrderingCustomer() *OrderingCustomer {
-	oc := NewOrderingCustomer()
+	oc := NewOrderingCustomer(false)
 	oc.CoverPayment.SwiftFieldTag = "Swift Field Tag"
 	oc.CoverPayment.SwiftLineOne = "Swift Line One"
 	oc.CoverPayment.SwiftLineTwo = "Swift Line Two"
