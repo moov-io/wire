@@ -9,7 +9,7 @@ import (
 
 // mockFIIntermediaryFIAdvice creates a FIIntermediaryFIAdvice
 func mockFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
-	fiifia := NewFIIntermediaryFIAdvice()
+	fiifia := NewFIIntermediaryFIAdvice(false)
 	fiifia.Advice.AdviceCode = AdviceCodeLetter
 	fiifia.Advice.LineOne = "Line One"
 	fiifia.Advice.LineTwo = "Line Two"

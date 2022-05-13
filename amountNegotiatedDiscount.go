@@ -46,16 +46,7 @@ func (nd *AmountNegotiatedDiscount) Parse(record string) (error, int) {
 	}
 	nd.tag = record[:6]
 
-	length := 6
-	read := 0
-
-	nd.RemittanceAmount.CurrencyCode, read = nd.parseVariableStringField(record[length:], 3)
-	length += read
-
-	nd.RemittanceAmount.Amount, read = nd.parseVariableStringField(record[length:], 19)
-	length += read
-
-	return nil, length
+	return nil, 6 + nd.RemittanceAmount.Parse(record[6:])
 }
 
 func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {
@@ -77,8 +68,7 @@ func (nd *AmountNegotiatedDiscount) String() string {
 	var buf strings.Builder
 	buf.Grow(28)
 	buf.WriteString(nd.tag)
-	buf.WriteString(nd.CurrencyCodeField())
-	buf.WriteString(nd.AmountField())
+	buf.WriteString(nd.RemittanceAmount.String(nd.isVariableLength))
 	return buf.String()
 }
 
@@ -110,14 +100,4 @@ func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
 		return fieldError("CurrencyCode", ErrFieldRequired)
 	}
 	return nil
-}
-
-// CurrencyCodeField gets a string of the CurrencyCode field
-func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
-	return nd.alphaVariableField(nd.RemittanceAmount.CurrencyCode, 3, nd.isVariableLength)
-}
-
-// AmountField gets a string of the Amount field
-func (nd *AmountNegotiatedDiscount) AmountField() string {
-	return nd.alphaVariableField(nd.RemittanceAmount.Amount, 19, nd.isVariableLength)
 }

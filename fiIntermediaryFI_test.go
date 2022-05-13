@@ -9,7 +9,7 @@ import (
 
 // mockFIIntermediaryFI creates a FIIntermediaryFI
 func mockFIIntermediaryFI() *FIIntermediaryFI {
-	fiifi := NewFIIntermediaryFI()
+	fiifi := NewFIIntermediaryFI(false)
 	fiifi.FIToFI.LineOne = "Line One"
 	fiifi.FIToFI.LineOne = "Line Two"
 	fiifi.FIToFI.LineOne = "Line Three"

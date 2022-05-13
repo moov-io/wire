@@ -46,16 +46,7 @@ func (aap *ActualAmountPaid) Parse(record string) (error, int) {
 	}
 	aap.tag = record[:6]
 
-	length := 6
-	read := 0
-
-	aap.RemittanceAmount.CurrencyCode, read = aap.parseVariableStringField(record[length:], 3)
-	length += read
-
-	aap.RemittanceAmount.Amount, read = aap.parseVariableStringField(record[length:], 19)
-	length += read
-
-	return nil, length
+	return nil, 6 + aap.RemittanceAmount.Parse(record[6:])
 }
 
 func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
@@ -76,9 +67,10 @@ func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
 func (aap *ActualAmountPaid) String() string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(aap.tag)
-	buf.WriteString(aap.CurrencyCodeField())
-	buf.WriteString(aap.AmountField())
+	buf.WriteString(aap.RemittanceAmount.String(aap.isVariableLength))
+
 	return buf.String()
 }
 
@@ -112,14 +104,4 @@ func (aap *ActualAmountPaid) fieldInclusion() error {
 
 	}
 	return nil
-}
-
-// CurrencyCodeField gets a string of the CurrencyCode field
-func (aap *ActualAmountPaid) CurrencyCodeField() string {
-	return aap.alphaVariableField(aap.RemittanceAmount.CurrencyCode, 3, aap.isVariableLength)
-}
-
-// AmountField gets a string of the Amount field
-func (aap *ActualAmountPaid) AmountField() string {
-	return aap.alphaVariableField(aap.RemittanceAmount.Amount, 19, aap.isVariableLength)
 }

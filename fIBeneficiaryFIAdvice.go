@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIBeneficiaryFIAdvice{}
+
 // FIBeneficiaryFIAdvice is the financial institution beneficiary financial institution
 type FIBeneficiaryFIAdvice struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Advice
 	Advice Advice `json:"advice,omitempty"`
 
@@ -24,9 +28,10 @@ type FIBeneficiaryFIAdvice struct {
 }
 
 // NewFIBeneficiaryFIAdvice returns a new FIBeneficiaryFIAdvice
-func NewFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
+func NewFIBeneficiaryFIAdvice(isVariable bool) *FIBeneficiaryFIAdvice {
 	fibfia := &FIBeneficiaryFIAdvice{
-		tag: TagFIBeneficiaryFIAdvice,
+		tag:              TagFIBeneficiaryFIAdvice,
+		isVariableLength: isVariable,
 	}
 	return fibfia
 }
@@ -35,19 +40,13 @@ func NewFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagWrongLengthErr(13, len(record)), 0
 	}
 	fibfia.tag = record[:6]
-	fibfia.Advice.AdviceCode = fibfia.parseStringField(record[6:9])
-	fibfia.Advice.LineOne = fibfia.parseStringField(record[9:35])
-	fibfia.Advice.LineTwo = fibfia.parseStringField(record[35:68])
-	fibfia.Advice.LineThree = fibfia.parseStringField(record[68:101])
-	fibfia.Advice.LineFour = fibfia.parseStringField(record[101:134])
-	fibfia.Advice.LineFive = fibfia.parseStringField(record[134:167])
-	fibfia.Advice.LineSix = fibfia.parseStringField(record[167:200])
-	return nil
+
+	return nil, 6 + fibfia.Advice.Parse(record[6:])
 }
 
 func (fibfia *FIBeneficiaryFIAdvice) UnmarshalJSON(data []byte) error {
@@ -68,14 +67,10 @@ func (fibfia *FIBeneficiaryFIAdvice) UnmarshalJSON(data []byte) error {
 func (fibfia *FIBeneficiaryFIAdvice) String() string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fibfia.tag)
-	buf.WriteString(fibfia.AdviceCodeField())
-	buf.WriteString(fibfia.LineOneField())
-	buf.WriteString(fibfia.LineTwoField())
-	buf.WriteString(fibfia.LineThreeField())
-	buf.WriteString(fibfia.LineFourField())
-	buf.WriteString(fibfia.LineFiveField())
-	buf.WriteString(fibfia.LineSixField())
+	buf.WriteString(fibfia.Advice.String(fibfia.isVariableLength))
+
 	return buf.String()
 }
 
@@ -107,39 +102,4 @@ func (fibfia *FIBeneficiaryFIAdvice) Validate() error {
 		return fieldError("LineSix", err, fibfia.Advice.LineSix)
 	}
 	return nil
-}
-
-// AdviceCodeField gets a string of the AdviceCode field
-func (fibfia *FIBeneficiaryFIAdvice) AdviceCodeField() string {
-	return fibfia.alphaField(fibfia.Advice.AdviceCode, 3)
-}
-
-// LineOneField gets a string of the LineOne field
-func (fibfia *FIBeneficiaryFIAdvice) LineOneField() string {
-	return fibfia.alphaField(fibfia.Advice.LineOne, 26)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (fibfia *FIBeneficiaryFIAdvice) LineTwoField() string {
-	return fibfia.alphaField(fibfia.Advice.LineTwo, 33)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (fibfia *FIBeneficiaryFIAdvice) LineThreeField() string {
-	return fibfia.alphaField(fibfia.Advice.LineThree, 33)
-}
-
-// LineFourField gets a string of the LineFour field
-func (fibfia *FIBeneficiaryFIAdvice) LineFourField() string {
-	return fibfia.alphaField(fibfia.Advice.LineFour, 33)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (fibfia *FIBeneficiaryFIAdvice) LineFiveField() string {
-	return fibfia.alphaField(fibfia.Advice.LineFive, 33)
-}
-
-// LineSixField gets a string of the LineSix field
-func (fibfia *FIBeneficiaryFIAdvice) LineSixField() string {
-	return fibfia.alphaField(fibfia.Advice.LineSix, 33)
 }

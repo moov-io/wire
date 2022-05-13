@@ -45,27 +45,8 @@ func (ben *Beneficiary) Parse(record string) (error, int) {
 		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	ben.tag = record[:6]
-	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
 
-	length := 7
-	read := 0
-
-	ben.Personal.Identifier, read = ben.parseVariableStringField(record[length:], 34)
-	length += read
-
-	ben.Personal.Name, read = ben.parseVariableStringField(record[length:], 35)
-	length += read
-
-	ben.Personal.Address.AddressLineOne, read = ben.parseVariableStringField(record[length:], 35)
-	length += read
-
-	ben.Personal.Address.AddressLineTwo, read = ben.parseVariableStringField(record[length:], 35)
-	length += read
-
-	ben.Personal.Address.AddressLineThree, read = ben.parseVariableStringField(record[length:], 35)
-	length += read
-
-	return nil, length
+	return nil, 6 + ben.Personal.Parse(record[6:])
 }
 
 func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
@@ -86,13 +67,10 @@ func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
 func (ben *Beneficiary) String() string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(ben.tag)
-	buf.WriteString(ben.IdentificationCodeField())
-	buf.WriteString(ben.IdentifierField())
-	buf.WriteString(ben.NameField())
-	buf.WriteString(ben.AddressLineOneField())
-	buf.WriteString(ben.AddressLineTwoField())
-	buf.WriteString(ben.AddressLineThreeField())
+	buf.WriteString(ben.Personal.String(ben.isVariableLength))
+
 	return buf.String()
 }
 
@@ -138,34 +116,4 @@ func (ben *Beneficiary) fieldInclusion() error {
 		return fieldError("IdentificationCode", ErrFieldRequired)
 	}
 	return nil
-}
-
-// IdentificationCodeField gets a string of the IdentificationCode field
-func (ben *Beneficiary) IdentificationCodeField() string {
-	return ben.alphaField(ben.Personal.IdentificationCode, 1)
-}
-
-// IdentifierField gets a string of the Identifier field
-func (ben *Beneficiary) IdentifierField() string {
-	return ben.alphaVariableField(ben.Personal.Identifier, 34, ben.isVariableLength)
-}
-
-// NameField gets a string of the Name field
-func (ben *Beneficiary) NameField() string {
-	return ben.alphaVariableField(ben.Personal.Name, 35, ben.isVariableLength)
-}
-
-// AddressLineOneField gets a string of AddressLineOne field
-func (ben *Beneficiary) AddressLineOneField() string {
-	return ben.alphaVariableField(ben.Personal.Address.AddressLineOne, 35, ben.isVariableLength)
-}
-
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (ben *Beneficiary) AddressLineTwoField() string {
-	return ben.alphaVariableField(ben.Personal.Address.AddressLineTwo, 35, ben.isVariableLength)
-}
-
-// AddressLineThreeField gets a string of AddressLineThree field
-func (ben *Beneficiary) AddressLineThreeField() string {
-	return ben.alphaVariableField(ben.Personal.Address.AddressLineThree, 35, ben.isVariableLength)
 }

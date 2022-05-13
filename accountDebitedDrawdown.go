@@ -23,7 +23,8 @@ type AccountDebitedDrawdown struct {
 	// Identifier
 	Identifier string `json:"identifier"`
 	// Name
-	Name    string  `json:"name"`
+	Name string `json:"name"`
+	// Address
 	Address Address `json:"address,omitempty"`
 
 	// validator is composed for data validation
@@ -62,14 +63,7 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) (error, int) {
 	debitDD.Name, read = debitDD.parseVariableStringField(record[length:], 35)
 	length += read
 
-	debitDD.Address.AddressLineOne, read = debitDD.parseVariableStringField(record[length:], 35)
-	length += read
-
-	debitDD.Address.AddressLineTwo, read = debitDD.parseVariableStringField(record[length:], 35)
-	length += read
-
-	debitDD.Address.AddressLineThree, read = debitDD.parseVariableStringField(record[length:], 35)
-	length += read
+	length += debitDD.Address.Parse(record[length:])
 
 	return nil, length
 }
@@ -93,12 +87,12 @@ func (debitDD *AccountDebitedDrawdown) String() string {
 	var buf strings.Builder
 	buf.Grow(181)
 	buf.WriteString(debitDD.tag)
+
 	buf.WriteString(debitDD.IdentificationCodeField())
 	buf.WriteString(debitDD.IdentifierField())
 	buf.WriteString(debitDD.NameField())
-	buf.WriteString(debitDD.AddressLineOneField())
-	buf.WriteString(debitDD.AddressLineTwoField())
-	buf.WriteString(debitDD.AddressLineThreeField())
+	buf.WriteString(debitDD.Address.String(debitDD.isVariableLength))
+
 	return buf.String()
 }
 
@@ -167,19 +161,4 @@ func (debitDD *AccountDebitedDrawdown) IdentifierField() string {
 // NameField gets a string of the Name field
 func (debitDD *AccountDebitedDrawdown) NameField() string {
 	return debitDD.alphaVariableField(debitDD.Name, 35, debitDD.isVariableLength)
-}
-
-// AddressLineOneField gets a string of AddressLineOne field
-func (debitDD *AccountDebitedDrawdown) AddressLineOneField() string {
-	return debitDD.alphaVariableField(debitDD.Address.AddressLineOne, 35, debitDD.isVariableLength)
-}
-
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (debitDD *AccountDebitedDrawdown) AddressLineTwoField() string {
-	return debitDD.alphaVariableField(debitDD.Address.AddressLineTwo, 35, debitDD.isVariableLength)
-}
-
-// AddressLineThreeField gets a string of AddressLineThree field
-func (debitDD *AccountDebitedDrawdown) AddressLineThreeField() string {
-	return debitDD.alphaVariableField(debitDD.Address.AddressLineThree, 35, debitDD.isVariableLength)
 }

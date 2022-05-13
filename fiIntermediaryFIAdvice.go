@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIIntermediaryFI{}
+
 // FIIntermediaryFIAdvice is the financial institution intermediary financial institution
 type FIIntermediaryFIAdvice struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Advice
 	Advice Advice `json:"advice,omitempty"`
 
@@ -24,9 +28,10 @@ type FIIntermediaryFIAdvice struct {
 }
 
 // NewFIIntermediaryFIAdvice returns a new FIIntermediaryFIAdvice
-func NewFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
+func NewFIIntermediaryFIAdvice(isVariable bool) *FIIntermediaryFIAdvice {
 	fiifia := &FIIntermediaryFIAdvice{
-		tag: TagFIIntermediaryFIAdvice,
+		tag:              TagFIIntermediaryFIAdvice,
+		isVariableLength: isVariable,
 	}
 	return fiifia
 }
@@ -35,19 +40,13 @@ func NewFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fiifia *FIIntermediaryFIAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+func (fiifia *FIIntermediaryFIAdvice) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagWrongLengthErr(13, len(record)), 0
 	}
 	fiifia.tag = record[:6]
-	fiifia.Advice.AdviceCode = fiifia.parseStringField(record[6:9])
-	fiifia.Advice.LineOne = fiifia.parseStringField(record[9:35])
-	fiifia.Advice.LineTwo = fiifia.parseStringField(record[35:68])
-	fiifia.Advice.LineThree = fiifia.parseStringField(record[68:101])
-	fiifia.Advice.LineFour = fiifia.parseStringField(record[101:134])
-	fiifia.Advice.LineFive = fiifia.parseStringField(record[134:167])
-	fiifia.Advice.LineSix = fiifia.parseStringField(record[167:200])
-	return nil
+
+	return nil, 6 + fiifia.Advice.Parse(record[6:])
 }
 
 func (fiifia *FIIntermediaryFIAdvice) UnmarshalJSON(data []byte) error {
@@ -68,14 +67,10 @@ func (fiifia *FIIntermediaryFIAdvice) UnmarshalJSON(data []byte) error {
 func (fiifia *FIIntermediaryFIAdvice) String() string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fiifia.tag)
-	buf.WriteString(fiifia.AdviceCodeField())
-	buf.WriteString(fiifia.LineOneField())
-	buf.WriteString(fiifia.LineTwoField())
-	buf.WriteString(fiifia.LineThreeField())
-	buf.WriteString(fiifia.LineFourField())
-	buf.WriteString(fiifia.LineFiveField())
-	buf.WriteString(fiifia.LineSixField())
+	buf.WriteString(fiifia.Advice.String(fiifia.isVariableLength))
+
 	return buf.String()
 }
 
@@ -107,39 +102,4 @@ func (fiifia *FIIntermediaryFIAdvice) Validate() error {
 		return fieldError("LineSix", err, fiifia.Advice.LineSix)
 	}
 	return nil
-}
-
-// AdviceCodeField gets a string of the AdviceCode field
-func (fiifia *FIIntermediaryFIAdvice) AdviceCodeField() string {
-	return fiifia.alphaField(fiifia.Advice.AdviceCode, 3)
-}
-
-// LineOneField gets a string of the LineOne field
-func (fiifia *FIIntermediaryFIAdvice) LineOneField() string {
-	return fiifia.alphaField(fiifia.Advice.LineOne, 26)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (fiifia *FIIntermediaryFIAdvice) LineTwoField() string {
-	return fiifia.alphaField(fiifia.Advice.LineTwo, 33)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (fiifia *FIIntermediaryFIAdvice) LineThreeField() string {
-	return fiifia.alphaField(fiifia.Advice.LineThree, 33)
-}
-
-// LineFourField gets a string of the LineFour field
-func (fiifia *FIIntermediaryFIAdvice) LineFourField() string {
-	return fiifia.alphaField(fiifia.Advice.LineFour, 33)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (fiifia *FIIntermediaryFIAdvice) LineFiveField() string {
-	return fiifia.alphaField(fiifia.Advice.LineFive, 33)
-}
-
-// LineSixField gets a string of the LineSix field
-func (fiifia *FIIntermediaryFIAdvice) LineSixField() string {
-	return fiifia.alphaField(fiifia.Advice.LineSix, 33)
 }

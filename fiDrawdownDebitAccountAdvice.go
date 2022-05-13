@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIDrawdownDebitAccountAdvice{}
+
 // FIDrawdownDebitAccountAdvice is the financial institution drawdown debit account advice
 type FIDrawdownDebitAccountAdvice struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Advice
 	Advice Advice `json:"advice,omitempty"`
 
@@ -24,9 +28,10 @@ type FIDrawdownDebitAccountAdvice struct {
 }
 
 // NewFIDrawdownDebitAccountAdvice returns a new FIDrawdownDebitAccountAdvice
-func NewFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
+func NewFIDrawdownDebitAccountAdvice(isVariable bool) *FIDrawdownDebitAccountAdvice {
 	debitDDAdvice := &FIDrawdownDebitAccountAdvice{
-		tag: TagFIDrawdownDebitAccountAdvice,
+		tag:              TagFIDrawdownDebitAccountAdvice,
+		isVariableLength: isVariable,
 	}
 	return debitDDAdvice
 }
@@ -35,19 +40,13 @@ func NewFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagWrongLengthErr(13, len(record)), 0
 	}
 	debitDDAdvice.tag = record[:6]
-	debitDDAdvice.Advice.AdviceCode = debitDDAdvice.parseStringField(record[6:9])
-	debitDDAdvice.Advice.LineOne = debitDDAdvice.parseStringField(record[9:35])
-	debitDDAdvice.Advice.LineTwo = debitDDAdvice.parseStringField(record[35:68])
-	debitDDAdvice.Advice.LineThree = debitDDAdvice.parseStringField(record[68:101])
-	debitDDAdvice.Advice.LineFour = debitDDAdvice.parseStringField(record[101:134])
-	debitDDAdvice.Advice.LineFive = debitDDAdvice.parseStringField(record[134:167])
-	debitDDAdvice.Advice.LineSix = debitDDAdvice.parseStringField(record[167:200])
-	return nil
+
+	return nil, 6 + debitDDAdvice.Advice.Parse(record[6:])
 }
 
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) error {
@@ -68,14 +67,10 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) er
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(debitDDAdvice.tag)
-	buf.WriteString(debitDDAdvice.AdviceCodeField())
-	buf.WriteString(debitDDAdvice.LineOneField())
-	buf.WriteString(debitDDAdvice.LineTwoField())
-	buf.WriteString(debitDDAdvice.LineThreeField())
-	buf.WriteString(debitDDAdvice.LineFourField())
-	buf.WriteString(debitDDAdvice.LineFiveField())
-	buf.WriteString(debitDDAdvice.LineSixField())
+	buf.WriteString(debitDDAdvice.Advice.String(debitDDAdvice.isVariableLength))
+
 	return buf.String()
 }
 
@@ -107,39 +102,4 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Validate() error {
 		return fieldError("LineSix", err, debitDDAdvice.Advice.LineSix)
 	}
 	return nil
-}
-
-// AdviceCodeField gets a string of the AdviceCode field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) AdviceCodeField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.AdviceCode, 3)
-}
-
-// LineOneField gets a string of the LineOne field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineOneField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineOne, 26)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineTwoField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineTwo, 33)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineThreeField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineThree, 33)
-}
-
-// LineFourField gets a string of the LineFour field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFourField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineFour, 33)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFiveField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineFive, 33)
-}
-
-// LineSixField gets a string of the LineSix field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineSixField() string {
-	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineSix, 33)
 }

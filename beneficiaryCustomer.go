@@ -46,28 +46,7 @@ func (bc *BeneficiaryCustomer) Parse(record string) (error, int) {
 	}
 	bc.tag = record[:6]
 
-	length := 6
-	read := 0
-
-	bc.CoverPayment.SwiftFieldTag, read = bc.parseVariableStringField(record[length:], 5)
-	length += read
-
-	bc.CoverPayment.SwiftLineOne, read = bc.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bc.CoverPayment.SwiftLineTwo, read = bc.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bc.CoverPayment.SwiftLineThree, read = bc.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bc.CoverPayment.SwiftLineFour, read = bc.parseVariableStringField(record[length:], 35)
-	length += read
-
-	bc.CoverPayment.SwiftLineFive, read = bc.parseVariableStringField(record[length:], 35)
-	length += read
-
-	return nil, length
+	return nil, 6 + bc.CoverPayment.Parse(record[6:])
 }
 
 func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {
@@ -88,13 +67,10 @@ func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {
 func (bc *BeneficiaryCustomer) String() string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(bc.tag)
-	buf.WriteString(bc.SwiftFieldTagField())
-	buf.WriteString(bc.SwiftLineOneField())
-	buf.WriteString(bc.SwiftLineTwoField())
-	buf.WriteString(bc.SwiftLineThreeField())
-	buf.WriteString(bc.SwiftLineFourField())
-	buf.WriteString(bc.SwiftLineFiveField())
+	buf.WriteString(bc.CoverPayment.String(bc.isVariableLength))
+
 	return buf.String()
 }
 
@@ -135,34 +111,4 @@ func (bc *BeneficiaryCustomer) fieldInclusion() error {
 		return fieldError("SwiftLineSix", ErrInvalidProperty, bc.CoverPayment.SwiftLineSix)
 	}
 	return nil
-}
-
-// SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (bc *BeneficiaryCustomer) SwiftFieldTagField() string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftFieldTag, 5, bc.isVariableLength)
-}
-
-// SwiftLineOneField gets a string of the SwiftLineOne field
-func (bc *BeneficiaryCustomer) SwiftLineOneField() string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineOne, 35, bc.isVariableLength)
-}
-
-// SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (bc *BeneficiaryCustomer) SwiftLineTwoField() string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineTwo, 35, bc.isVariableLength)
-}
-
-// SwiftLineThreeField gets a string of the SwiftLineThree field
-func (bc *BeneficiaryCustomer) SwiftLineThreeField() string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineThree, 35, bc.isVariableLength)
-}
-
-// SwiftLineFourField gets a string of the SwiftLineFour field
-func (bc *BeneficiaryCustomer) SwiftLineFourField() string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineFour, 35, bc.isVariableLength)
-}
-
-// SwiftLineFiveField gets a string of the SwiftLineFive field
-func (bc *BeneficiaryCustomer) SwiftLineFiveField() string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineFive, 35, bc.isVariableLength)
 }

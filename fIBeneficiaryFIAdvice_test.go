@@ -9,7 +9,7 @@ import (
 
 // mockFIBeneficiaryFIAdvice creates a FIBeneficiaryFIAdvice
 func mockFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
-	fibfia := NewFIBeneficiaryFIAdvice()
+	fibfia := NewFIBeneficiaryFIAdvice(false)
 	fibfia.Advice.AdviceCode = AdviceCodeTelex
 	fibfia.Advice.LineOne = "Line One"
 	fibfia.Advice.LineTwo = "Line Two"

@@ -61,8 +61,7 @@ func (adj *Adjustment) Parse(record string) (error, int) {
 	adj.CreditDebitIndicator, read = adj.parseVariableStringField(record[length:], 4)
 	length += read
 
-	adj.RemittanceAmount.CurrencyCode, read = adj.parseVariableStringField(record[length:], 3)
-	length += read
+	length += adj.RemittanceAmount.Parse(record[length:])
 
 	adj.RemittanceAmount.Amount, read = adj.parseVariableStringField(record[length:], 19)
 	length += read
@@ -94,8 +93,7 @@ func (adj *Adjustment) String() string {
 	buf.WriteString(adj.tag)
 	buf.WriteString(adj.AdjustmentReasonCodeField())
 	buf.WriteString(adj.CreditDebitIndicatorField())
-	buf.WriteString(adj.CurrencyCodeField())
-	buf.WriteString(adj.AmountField())
+	buf.WriteString(adj.RemittanceAmount.String(adj.isVariableLength))
 	buf.WriteString(adj.AdditionalInfoField())
 	return buf.String()
 }
@@ -151,16 +149,6 @@ func (adj *Adjustment) AdjustmentReasonCodeField() string {
 // CreditDebitIndicatorField gets a string of the CreditDebitIndicator field
 func (adj *Adjustment) CreditDebitIndicatorField() string {
 	return adj.alphaVariableField(adj.CreditDebitIndicator, 4, adj.isVariableLength)
-}
-
-// CurrencyCodeField gets a string of the CurrencyCode field
-func (adj *Adjustment) CurrencyCodeField() string {
-	return adj.alphaVariableField(adj.RemittanceAmount.CurrencyCode, 3, adj.isVariableLength)
-}
-
-// AmountField gets a string of the Amount field
-func (adj *Adjustment) AmountField() string {
-	return adj.alphaVariableField(adj.RemittanceAmount.Amount, 19, adj.isVariableLength)
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field

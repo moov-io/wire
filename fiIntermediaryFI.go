@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &FIIntermediaryFI{}
+
 // FIIntermediaryFI is the financial institution intermediary financial institution
 type FIIntermediaryFI struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// Financial Institution
 	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
@@ -24,9 +28,10 @@ type FIIntermediaryFI struct {
 }
 
 // NewFIIntermediaryFI returns a new FIIntermediaryFI
-func NewFIIntermediaryFI() *FIIntermediaryFI {
+func NewFIIntermediaryFI(isVariable bool) *FIIntermediaryFI {
 	fiifi := &FIIntermediaryFI{
-		tag: TagFIIntermediaryFI,
+		tag:              TagFIIntermediaryFI,
+		isVariableLength: isVariable,
 	}
 	return fiifi
 }
@@ -35,18 +40,13 @@ func NewFIIntermediaryFI() *FIIntermediaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fiifi *FIIntermediaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 201 {
-		return NewTagWrongLengthErr(201, len(record))
+func (fiifi *FIIntermediaryFI) Parse(record string) (error, int) {
+	if utf8.RuneCountInString(record) < 12 {
+		return NewTagWrongLengthErr(12, len(record)), 0
 	}
 	fiifi.tag = record[:6]
-	fiifi.FIToFI.LineOne = fiifi.parseStringField(record[6:36])
-	fiifi.FIToFI.LineTwo = fiifi.parseStringField(record[36:69])
-	fiifi.FIToFI.LineThree = fiifi.parseStringField(record[69:102])
-	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[102:135])
-	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[135:168])
-	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[168:201])
-	return nil
+
+	return nil, 6 + fiifi.FIToFI.Parse(record[6:])
 }
 
 func (fiifi *FIIntermediaryFI) UnmarshalJSON(data []byte) error {
@@ -67,13 +67,10 @@ func (fiifi *FIIntermediaryFI) UnmarshalJSON(data []byte) error {
 func (fiifi *FIIntermediaryFI) String() string {
 	var buf strings.Builder
 	buf.Grow(201)
+
 	buf.WriteString(fiifi.tag)
-	buf.WriteString(fiifi.LineOneField())
-	buf.WriteString(fiifi.LineTwoField())
-	buf.WriteString(fiifi.LineThreeField())
-	buf.WriteString(fiifi.LineFourField())
-	buf.WriteString(fiifi.LineFiveField())
-	buf.WriteString(fiifi.LineSixField())
+	buf.WriteString(fiifi.FIToFI.String(fiifi.isVariableLength))
+
 	return buf.String()
 }
 
@@ -102,34 +99,4 @@ func (fiifi *FIIntermediaryFI) Validate() error {
 		return fieldError("LineSix", err, fiifi.FIToFI.LineSix)
 	}
 	return nil
-}
-
-// LineOneField gets a string of the LineOne field
-func (fiifi *FIIntermediaryFI) LineOneField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineOne, 30)
-}
-
-// LineTwoField gets a string of the LineTwo field
-func (fiifi *FIIntermediaryFI) LineTwoField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineTwo, 33)
-}
-
-// LineThreeField gets a string of the LineThree field
-func (fiifi *FIIntermediaryFI) LineThreeField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineThree, 33)
-}
-
-// LineFourField gets a string of the LineFour field
-func (fiifi *FIIntermediaryFI) LineFourField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineFour, 33)
-}
-
-// LineFiveField gets a string of the LineFive field
-func (fiifi *FIIntermediaryFI) LineFiveField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineFive, 33)
-}
-
-// LineSixField gets a string of the LineSix field
-func (fiifi *FIIntermediaryFI) LineSixField() string {
-	return fiifi.alphaField(fiifi.FIToFI.LineSix, 33)
 }
