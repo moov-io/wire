@@ -10,7 +10,7 @@ import (
 
 // mockSenderSupplied creates a SenderSupplied
 func mockSenderSupplied() *SenderSupplied {
-	ss := NewSenderSupplied()
+	ss := NewSenderSupplied(false)
 	ss.UserRequestCorrelation = "User Req"
 	ss.MessageDuplicationCode = MessageDuplicationOriginal
 	return ss

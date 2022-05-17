@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &OriginatorOptionF{}
+
 // OriginatorOptionF is originator option F information
 type OriginatorOptionF struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// PartyIdentifier must be one of the following two formats:
 	// 1. /Account Number (slash followed by at least one
 	// valid non-space character:  e.g., /123456)
@@ -88,9 +92,10 @@ type OriginatorOptionF struct {
 }
 
 // NewOriginatorOptionF returns a new OriginatorOptionF
-func NewOriginatorOptionF() *OriginatorOptionF {
+func NewOriginatorOptionF(isVariable bool) *OriginatorOptionF {
 	oof := &OriginatorOptionF{
-		tag: TagOriginatorOptionF,
+		tag:              TagOriginatorOptionF,
+		isVariableLength: isVariable,
 	}
 	return oof
 }
@@ -99,17 +104,32 @@ func NewOriginatorOptionF() *OriginatorOptionF {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oof *OriginatorOptionF) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+func (oof *OriginatorOptionF) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 11 {
+		return 0, NewTagWrongLengthErr(11, len(record))
 	}
+
 	oof.tag = oof.parseStringField(record[:6])
-	oof.PartyIdentifier = oof.parseStringField(record[6:41])
-	oof.Name = oof.parseStringField(record[41:76])
-	oof.LineOne = oof.parseStringField(record[76:111])
-	oof.LineTwo = oof.parseStringField(record[111:146])
-	oof.LineThree = oof.parseStringField(record[146:181])
-	return nil
+
+	length := 6
+	read := 0
+
+	oof.PartyIdentifier, read = oof.parseVariableStringField(record[length:], 35)
+	length += read
+
+	oof.Name, read = oof.parseVariableStringField(record[length:], 35)
+	length += read
+
+	oof.LineOne, read = oof.parseVariableStringField(record[length:], 35)
+	length += read
+
+	oof.LineTwo, read = oof.parseVariableStringField(record[length:], 35)
+	length += read
+
+	oof.LineThree, read = oof.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return length, nil
 }
 
 func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
@@ -130,12 +150,14 @@ func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
 func (oof *OriginatorOptionF) String() string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(oof.tag)
 	buf.WriteString(oof.PartyIdentifierField())
 	buf.WriteString(oof.NameField())
 	buf.WriteString(oof.LineOneField())
 	buf.WriteString(oof.LineTwoField())
 	buf.WriteString(oof.LineThreeField())
+
 	return buf.String()
 }
 
@@ -171,25 +193,25 @@ func (oof *OriginatorOptionF) fieldInclusion() error {
 
 // PartyIdentifierField gets a string of the PartyIdentifier field
 func (oof *OriginatorOptionF) PartyIdentifierField() string {
-	return oof.alphaField(oof.PartyIdentifier, 35)
+	return oof.alphaVariableField(oof.PartyIdentifier, 35, oof.isVariableLength)
 }
 
 // NameField gets a string of the Name field
 func (oof *OriginatorOptionF) NameField() string {
-	return oof.alphaField(oof.Name, 35)
+	return oof.alphaVariableField(oof.Name, 35, oof.isVariableLength)
 }
 
 // LineOneField gets a string of the LineOne field
 func (oof *OriginatorOptionF) LineOneField() string {
-	return oof.alphaField(oof.LineOne, 35)
+	return oof.alphaVariableField(oof.LineOne, 35, oof.isVariableLength)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (oof *OriginatorOptionF) LineTwoField() string {
-	return oof.alphaField(oof.LineTwo, 35)
+	return oof.alphaVariableField(oof.LineTwo, 35, oof.isVariableLength)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (oof *OriginatorOptionF) LineThreeField() string {
-	return oof.alphaField(oof.LineThree, 35)
+	return oof.alphaVariableField(oof.LineThree, 35, oof.isVariableLength)
 }

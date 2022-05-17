@@ -41,9 +41,9 @@ func NewExchangeRate(isVariable bool) *ExchangeRate {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (eRate *ExchangeRate) Parse(record string) (error, int) {
+func (eRate *ExchangeRate) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
-		return NewTagWrongLengthErr(7, len(record)), 0
+		return 0, NewTagWrongLengthErr(7, len(record))
 	}
 	eRate.tag = record[:6]
 
@@ -53,7 +53,7 @@ func (eRate *ExchangeRate) Parse(record string) (error, int) {
 	eRate.ExchangeRate, read = eRate.parseVariableStringField(record[length:], 12)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (eRate *ExchangeRate) UnmarshalJSON(data []byte) error {

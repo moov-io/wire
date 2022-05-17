@@ -40,13 +40,13 @@ func NewBeneficiaryCustomer(isVariable bool) *BeneficiaryCustomer {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bc *BeneficiaryCustomer) Parse(record string) (error, int) {
+func (bc *BeneficiaryCustomer) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
-		return NewTagWrongLengthErr(12, len(record)), 0
+		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 	bc.tag = record[:6]
 
-	return nil, 6 + bc.CoverPayment.Parse(record[6:])
+	return 6 + bc.CoverPayment.Parse(record[6:]), nil
 }
 
 func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {

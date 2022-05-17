@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &ReceiptTimeStamp{}
+
 // ReceiptTimeStamp is the receipt time stamp of the wire
 type ReceiptTimeStamp struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// ReceiptDate is the receipt date
 	ReceiptDate string `json:"receiptDate,omitempty"`
 	// ReceiptTime is the receipt time
@@ -28,9 +32,10 @@ type ReceiptTimeStamp struct {
 }
 
 // NewReceiptTimeStamp returns a new ReceiptTimeStamp
-func NewReceiptTimeStamp() *ReceiptTimeStamp {
+func NewReceiptTimeStamp(isVariable bool) *ReceiptTimeStamp {
 	rts := &ReceiptTimeStamp{
-		tag: TagReceiptTimeStamp,
+		tag:              TagReceiptTimeStamp,
+		isVariableLength: isVariable,
 	}
 	return rts
 }
@@ -39,16 +44,26 @@ func NewReceiptTimeStamp() *ReceiptTimeStamp {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rts *ReceiptTimeStamp) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
+func (rts *ReceiptTimeStamp) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 9 {
+		return 0, NewTagWrongLengthErr(9, utf8.RuneCountInString(record))
 	}
 
 	rts.tag = record[:6]
-	rts.ReceiptDate = rts.parseStringField(record[6:10])
-	rts.ReceiptTime = rts.parseStringField(record[10:14])
-	rts.ReceiptApplicationIdentification = rts.parseStringField(record[14:18])
-	return nil
+
+	length := 6
+	read := 0
+
+	rts.ReceiptDate, read = rts.parseVariableStringField(record[length:], 4)
+	length += read
+
+	rts.ReceiptTime, read = rts.parseVariableStringField(record[length:], 4)
+	length += read
+
+	rts.ReceiptApplicationIdentification, read = rts.parseVariableStringField(record[length:], 4)
+	length += read
+
+	return length, nil
 }
 
 func (rts *ReceiptTimeStamp) UnmarshalJSON(data []byte) error {
@@ -69,10 +84,12 @@ func (rts *ReceiptTimeStamp) UnmarshalJSON(data []byte) error {
 func (rts *ReceiptTimeStamp) String() string {
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(rts.tag)
 	buf.WriteString(rts.ReceiptDateField())
 	buf.WriteString(rts.ReceiptTimeField())
 	buf.WriteString(rts.ReceiptApplicationIdentificationField())
+
 	return buf.String()
 }
 
@@ -88,15 +105,15 @@ func (rts *ReceiptTimeStamp) Validate() error {
 
 // ReceiptDateField gets a string of the ReceiptDate field
 func (rts *ReceiptTimeStamp) ReceiptDateField() string {
-	return rts.alphaField(rts.ReceiptDate, 4)
+	return rts.alphaVariableField(rts.ReceiptDate, 4, rts.isVariableLength)
 }
 
 // ReceiptTimeField gets a string of the ReceiptTime field
 func (rts *ReceiptTimeStamp) ReceiptTimeField() string {
-	return rts.alphaField(rts.ReceiptTime, 4)
+	return rts.alphaVariableField(rts.ReceiptTime, 4, rts.isVariableLength)
 }
 
 // ReceiptApplicationIdentificationField gets a string of the ReceiptApplicationIdentification field
 func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField() string {
-	return rts.alphaField(rts.ReceiptApplicationIdentification, 4)
+	return rts.alphaVariableField(rts.ReceiptApplicationIdentification, 4, rts.isVariableLength)
 }

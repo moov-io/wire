@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &ReceiverDepositoryInstitution{}
+
 // ReceiverDepositoryInstitution {3400}
 type ReceiverDepositoryInstitution struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// ReceiverABANumber
 	ReceiverABANumber string `json:"receiverABANumber"`
 	// ReceiverShortName
@@ -26,9 +30,10 @@ type ReceiverDepositoryInstitution struct {
 }
 
 // NewReceiverDepositoryInstitution returns a new ReceiverDepositoryInstitution
-func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
+func NewReceiverDepositoryInstitution(isVariable bool) *ReceiverDepositoryInstitution {
 	rdi := &ReceiverDepositoryInstitution{
-		tag: TagReceiverDepositoryInstitution,
+		tag:              TagReceiverDepositoryInstitution,
+		isVariableLength: isVariable,
 	}
 	return rdi
 }
@@ -37,14 +42,23 @@ func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
+func (rdi *ReceiverDepositoryInstitution) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 8 {
+		return 0, NewTagWrongLengthErr(8, utf8.RuneCountInString(record))
 	}
+
 	rdi.tag = record[:6]
-	rdi.ReceiverABANumber = rdi.parseStringField(record[6:15])
-	rdi.ReceiverShortName = rdi.parseStringField(record[15:33])
-	return nil
+
+	length := 6
+	read := 0
+
+	rdi.ReceiverABANumber, read = rdi.parseVariableStringField(record[length:], 9)
+	length += read
+
+	rdi.ReceiverShortName, read = rdi.parseVariableStringField(record[length:], 18)
+	length += read
+
+	return length, nil
 }
 
 func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
@@ -65,9 +79,11 @@ func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
 func (rdi *ReceiverDepositoryInstitution) String() string {
 	var buf strings.Builder
 	buf.Grow(33)
+
 	buf.WriteString(rdi.tag)
 	buf.WriteString(rdi.ReceiverABANumberField())
 	buf.WriteString(rdi.ReceiverShortNameField())
+
 	return buf.String()
 }
 
@@ -103,10 +119,10 @@ func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 
 // ReceiverABANumberField gets a string of the ReceiverABANumber field
 func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField() string {
-	return rdi.alphaField(rdi.ReceiverABANumber, 9)
+	return rdi.alphaVariableField(rdi.ReceiverABANumber, 9, rdi.isVariableLength)
 }
 
 // ReceiverShortNameField gets a string of the ReceiverShortName field
 func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField() string {
-	return rdi.alphaField(rdi.ReceiverShortName, 18)
+	return rdi.alphaVariableField(rdi.ReceiverShortName, 18, rdi.isVariableLength)
 }

@@ -44,9 +44,9 @@ func NewErrorWire(isVariable bool) *ErrorWire {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ew *ErrorWire) Parse(record string) (error, int) {
+func (ew *ErrorWire) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 9 {
-		return NewTagWrongLengthErr(9, len(record)), 0
+		return 0, NewTagWrongLengthErr(9, len(record))
 	}
 
 	ew.tag = record[:6]
@@ -61,7 +61,7 @@ func (ew *ErrorWire) Parse(record string) (error, int) {
 	ew.ErrorDescription, read = ew.parseVariableStringField(record[length:], 35)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (ew *ErrorWire) UnmarshalJSON(data []byte) error {

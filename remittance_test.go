@@ -9,7 +9,7 @@ import (
 
 // Remittance creates a Remittance
 func mockRemittance() *Remittance {
-	ri := NewRemittance()
+	ri := NewRemittance(false)
 	ri.CoverPayment.SwiftFieldTag = "Swift Field Tag"
 	ri.CoverPayment.SwiftLineOne = "Swift Line One"
 	ri.CoverPayment.SwiftLineTwo = "Swift Line Two"

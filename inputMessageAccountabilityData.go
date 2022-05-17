@@ -44,9 +44,9 @@ func NewInputMessageAccountabilityData(isVariable bool) *InputMessageAccountabil
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (imad *InputMessageAccountabilityData) Parse(record string) (error, int) {
+func (imad *InputMessageAccountabilityData) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 9 {
-		return NewTagWrongLengthErr(9, len(record)), 0
+		return 0, NewTagWrongLengthErr(9, len(record))
 	}
 
 	imad.tag = record[:6]
@@ -63,7 +63,7 @@ func (imad *InputMessageAccountabilityData) Parse(record string) (error, int) {
 	imad.InputSequenceNumber, read = imad.parseVariableStringField(record[length:], 6)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (imad *InputMessageAccountabilityData) UnmarshalJSON(data []byte) error {

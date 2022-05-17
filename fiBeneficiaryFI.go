@@ -40,13 +40,13 @@ func NewFIBeneficiaryFI(isVariable bool) *FIBeneficiaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (fibfi *FIBeneficiaryFI) Parse(record string) (error, int) {
+func (fibfi *FIBeneficiaryFI) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
-		return NewTagWrongLengthErr(12, len(record)), 0
+		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 	fibfi.tag = record[:6]
 
-	return nil, 6 + fibfi.FIToFI.Parse(record[6:])
+	return 6 + fibfi.FIToFI.Parse(record[6:]), nil
 }
 
 func (fibfi *FIBeneficiaryFI) UnmarshalJSON(data []byte) error {

@@ -9,7 +9,7 @@ import (
 
 // RelatedRemittance creates a RelatedRemittance
 func mockRelatedRemittance() *RelatedRemittance {
-	rr := NewRelatedRemittance()
+	rr := NewRelatedRemittance(false)
 	rr.RemittanceIdentification = "Remittance Identification"
 	rr.RemittanceLocationMethod = RLMElectronicDataExchange
 	rr.RemittanceLocationElectronicAddress = "http://moov.io"

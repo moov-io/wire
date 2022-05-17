@@ -43,9 +43,9 @@ func NewInstructedAmount(isVariable bool) *InstructedAmount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ia *InstructedAmount) Parse(record string) (error, int) {
+func (ia *InstructedAmount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	ia.tag = record[:6]
 
@@ -58,7 +58,7 @@ func (ia *InstructedAmount) Parse(record string) (error, int) {
 	ia.Amount, read = ia.parseVariableStringField(record[length:], 15)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {

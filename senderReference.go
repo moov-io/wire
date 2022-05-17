@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &SenderReference{}
+
 // SenderReference is the SenderReference of the wire
 type SenderReference struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// SenderReference
 	SenderReference string `json:"senderReference,omitempty"`
 
@@ -24,9 +28,10 @@ type SenderReference struct {
 }
 
 // NewSenderReference returns a new SenderReference
-func NewSenderReference() *SenderReference {
+func NewSenderReference(isVariable bool) *SenderReference {
 	sr := &SenderReference{
-		tag: TagSenderReference,
+		tag:              TagSenderReference,
+		isVariableLength: isVariable,
 	}
 	return sr
 }
@@ -35,13 +40,20 @@ func NewSenderReference() *SenderReference {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sr *SenderReference) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 22 {
-		return NewTagWrongLengthErr(22, utf8.RuneCountInString(record))
+func (sr *SenderReference) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 9 {
+		return 0, NewTagWrongLengthErr(9, utf8.RuneCountInString(record))
 	}
+
 	sr.tag = record[:6]
-	sr.SenderReference = record[6:22]
-	return nil
+
+	length := 6
+	read := 0
+
+	sr.SenderReference, read = sr.parseVariableStringField(record[length:], 16)
+	length += read
+
+	return length, nil
 }
 
 func (sr *SenderReference) UnmarshalJSON(data []byte) error {
@@ -81,5 +93,5 @@ func (sr *SenderReference) Validate() error {
 
 // SenderReferenceField gets a string of SenderReference field
 func (sr *SenderReference) SenderReferenceField() string {
-	return sr.alphaField(sr.SenderReference, 16)
+	return sr.alphaVariableField(sr.SenderReference, 16, sr.isVariableLength)
 }

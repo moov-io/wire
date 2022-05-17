@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &SenderSupplied{}
+
 // SenderSupplied {1500}
 type SenderSupplied struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// FormatVersion 30
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation
@@ -30,12 +34,13 @@ type SenderSupplied struct {
 }
 
 // NewSenderSupplied returns a new SenderSupplied
-func NewSenderSupplied() *SenderSupplied {
+func NewSenderSupplied(isVariable bool) *SenderSupplied {
 	ss := &SenderSupplied{
 		tag:                    TagSenderSupplied,
 		FormatVersion:          FormatVersion,
 		TestProductionCode:     EnvironmentProduction,
 		MessageDuplicationCode: MessageDuplicationOriginal,
+		isVariableLength:       isVariable,
 	}
 	return ss
 }
@@ -44,16 +49,29 @@ func NewSenderSupplied() *SenderSupplied {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ss *SenderSupplied) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
+func (ss *SenderSupplied) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 10 {
+		return 0, NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
 	}
+
 	ss.tag = record[0:6]
-	ss.FormatVersion = ss.parseStringField(record[6:8])
-	ss.UserRequestCorrelation = ss.parseStringField(record[8:16])
-	ss.TestProductionCode = ss.parseStringField(record[16:17])
-	ss.MessageDuplicationCode = ss.parseStringField(record[17:18])
-	return nil
+
+	length := 6
+	read := 0
+
+	ss.FormatVersion, read = ss.parseVariableStringField(record[length:], 2)
+	length += read
+
+	ss.UserRequestCorrelation, read = ss.parseVariableStringField(record[length:], 8)
+	length += read
+
+	ss.TestProductionCode, read = ss.parseVariableStringField(record[length:], 1)
+	length += read
+
+	ss.MessageDuplicationCode, read = ss.parseVariableStringField(record[length:], 1)
+	length += read
+
+	return length, nil
 }
 
 func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
@@ -74,11 +92,13 @@ func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
 func (ss *SenderSupplied) String() string {
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(ss.tag)
 	buf.WriteString(ss.FormatVersionField())
 	buf.WriteString(ss.UserRequestCorrelationField())
 	buf.WriteString(ss.TestProductionCodeField())
 	buf.WriteString(ss.MessageDuplicationCodeField())
+
 	return buf.String()
 }
 
@@ -117,20 +137,20 @@ func (ss *SenderSupplied) fieldInclusion() error {
 
 // FormatVersionField gets a string of the FormatVersion field
 func (ss *SenderSupplied) FormatVersionField() string {
-	return ss.alphaField(ss.FormatVersion, 2)
+	return ss.alphaVariableField(ss.FormatVersion, 2, ss.isVariableLength)
 }
 
 // UserRequestCorrelationField gets a string of the UserRequestCorrelation field
 func (ss *SenderSupplied) UserRequestCorrelationField() string {
-	return ss.alphaField(ss.UserRequestCorrelation, 8)
+	return ss.alphaVariableField(ss.UserRequestCorrelation, 8, ss.isVariableLength)
 }
 
 // TestProductionCodeField gets a string of the TestProductionCoden field
 func (ss *SenderSupplied) TestProductionCodeField() string {
-	return ss.alphaField(ss.TestProductionCode, 1)
+	return ss.alphaVariableField(ss.TestProductionCode, 1, ss.isVariableLength)
 }
 
 // MessageDuplicationCodeField gets a string of the MessageDuplicationCode field
 func (ss *SenderSupplied) MessageDuplicationCodeField() string {
-	return ss.alphaField(ss.MessageDuplicationCode, 1)
+	return ss.alphaVariableField(ss.MessageDuplicationCode, 1, ss.isVariableLength)
 }

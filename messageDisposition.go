@@ -49,9 +49,9 @@ func NewMessageDisposition(isVariable bool) *MessageDisposition {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (md *MessageDisposition) Parse(record string) (error, int) {
+func (md *MessageDisposition) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 10 {
-		return NewTagWrongLengthErr(10, len(record)), 0
+		return 0, NewTagWrongLengthErr(10, len(record))
 	}
 
 	md.tag = record[:6]
@@ -71,7 +71,7 @@ func (md *MessageDisposition) Parse(record string) (error, int) {
 	md.MessageStatusIndicator, read = md.parseVariableStringField(record[length:], 1)
 	length += read
 
-	return nil, length + 3
+	return length, nil
 }
 
 func (md *MessageDisposition) UnmarshalJSON(data []byte) error {

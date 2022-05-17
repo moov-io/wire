@@ -43,9 +43,9 @@ func NewFIPaymentMethodToBeneficiary(isVariable bool) *FIPaymentMethodToBenefici
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pm *FIPaymentMethodToBeneficiary) Parse(record string) (error, int) {
+func (pm *FIPaymentMethodToBeneficiary) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	pm.tag = record[:6]
 
@@ -58,7 +58,7 @@ func (pm *FIPaymentMethodToBeneficiary) Parse(record string) (error, int) {
 	pm.AdditionalInformation, read = pm.parseVariableStringField(record[length:], 30)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {

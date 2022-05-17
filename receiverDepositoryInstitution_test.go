@@ -9,7 +9,7 @@ import (
 
 // mockReceiverDepositoryInstitution creates a ReceiverDepositoryInstitution
 func mockReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
-	rdi := NewReceiverDepositoryInstitution()
+	rdi := NewReceiverDepositoryInstitution(false)
 	rdi.ReceiverABANumber = "231380104"
 	rdi.ReceiverShortName = "Citadel"
 	return rdi

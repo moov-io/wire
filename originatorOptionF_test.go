@@ -11,7 +11,7 @@ import (
 
 // mockOriginatorOptionF creates a OriginatorOptionF
 func mockOriginatorOptionF() *OriginatorOptionF {
-	oof := NewOriginatorOptionF()
+	oof := NewOriginatorOptionF(false)
 	oof.PartyIdentifier = "TXID/123-45-6789"
 	oof.Name = "1/Name"
 	oof.LineOne = "1/1234"

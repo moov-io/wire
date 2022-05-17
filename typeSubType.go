@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &TypeSubType{}
+
 // TypeSubType {1510}
 type TypeSubType struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// TypeCode
 	TypeCode string `json:"typeCode"`
 	// SubTypeCode
@@ -26,9 +30,10 @@ type TypeSubType struct {
 }
 
 // NewTypeSubType returns a new TypeSubType
-func NewTypeSubType() *TypeSubType {
+func NewTypeSubType(isVariable bool) *TypeSubType {
 	tst := &TypeSubType{
-		tag: TagTypeSubType,
+		tag:              TagTypeSubType,
+		isVariableLength: isVariable,
 	}
 	return tst
 }
@@ -37,14 +42,23 @@ func NewTypeSubType() *TypeSubType {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (tst *TypeSubType) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 10 {
-		return NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
+func (tst *TypeSubType) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 8 {
+		return 0, NewTagWrongLengthErr(8, utf8.RuneCountInString(record))
 	}
+
 	tst.tag = tst.parseStringField(record[:6])
-	tst.TypeCode = tst.parseStringField(record[6:8])
-	tst.SubTypeCode = tst.parseStringField(record[8:10])
-	return nil
+
+	length := 6
+	read := 0
+
+	tst.TypeCode, read = tst.parseVariableStringField(record[length:], 2)
+	length += read
+
+	tst.SubTypeCode, read = tst.parseVariableStringField(record[length:], 2)
+	length += read
+
+	return length, nil
 }
 
 func (tst *TypeSubType) UnmarshalJSON(data []byte) error {
@@ -65,9 +79,11 @@ func (tst *TypeSubType) UnmarshalJSON(data []byte) error {
 func (tst *TypeSubType) String() string {
 	var buf strings.Builder
 	buf.Grow(10)
+
 	buf.WriteString(tst.tag)
 	buf.WriteString(tst.TypeCodeField())
 	buf.WriteString(tst.SubTypeCodeField())
+
 	return buf.String()
 }
 
@@ -103,10 +119,10 @@ func (tst *TypeSubType) fieldInclusion() error {
 
 // TypeCodeField gets a string of the TypeCode field
 func (tst *TypeSubType) TypeCodeField() string {
-	return tst.alphaField(tst.TypeCode, 2)
+	return tst.alphaVariableField(tst.TypeCode, 2, tst.isVariableLength)
 }
 
 // SubTypeCodeField gets a string of the SubTypeCode field
 func (tst *TypeSubType) SubTypeCodeField() string {
-	return tst.alphaField(tst.SubTypeCode, 2)
+	return tst.alphaVariableField(tst.SubTypeCode, 2, tst.isVariableLength)
 }

@@ -56,9 +56,9 @@ func NewCharges(isVariable bool) *Charges {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (c *Charges) Parse(record string) (error, int) {
+func (c *Charges) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 11 {
-		return NewTagWrongLengthErr(11, len(record)), 0
+		return 0, NewTagWrongLengthErr(11, len(record))
 	}
 	c.tag = record[:6]
 	c.ChargeDetails = c.parseStringField(record[6:7])
@@ -78,7 +78,7 @@ func (c *Charges) Parse(record string) (error, int) {
 	c.SendersChargesFour, read = c.parseVariableStringField(record[length:], 15)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (c *Charges) UnmarshalJSON(data []byte) error {

@@ -42,9 +42,9 @@ func NewBusinessFunctionCode(isVariable bool) *BusinessFunctionCode {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfc *BusinessFunctionCode) Parse(record string) (error, int) {
+func (bfc *BusinessFunctionCode) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	bfc.tag = record[:6]
 
@@ -57,7 +57,7 @@ func (bfc *BusinessFunctionCode) Parse(record string) (error, int) {
 	bfc.TransactionTypeCode, read = bfc.parseVariableStringField(record[length:], 3)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {

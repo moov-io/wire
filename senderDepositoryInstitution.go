@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &SenderDepositoryInstitution{}
+
 // SenderDepositoryInstitution {3100}
 type SenderDepositoryInstitution struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// SenderABANumber
 	SenderABANumber string `json:"senderABANumber"`
 	// SenderShortName
@@ -26,9 +30,10 @@ type SenderDepositoryInstitution struct {
 }
 
 // NewSenderDepositoryInstitution returns a new SenderDepositoryInstitution
-func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
+func NewSenderDepositoryInstitution(isVariable bool) *SenderDepositoryInstitution {
 	sdi := &SenderDepositoryInstitution{
-		tag: TagSenderDepositoryInstitution,
+		tag:              TagSenderDepositoryInstitution,
+		isVariableLength: isVariable,
 	}
 	return sdi
 }
@@ -37,15 +42,23 @@ func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sdi *SenderDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
+func (sdi *SenderDepositoryInstitution) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 8 {
+		return 0, NewTagWrongLengthErr(8, utf8.RuneCountInString(record))
 	}
 
 	sdi.tag = record[:6]
-	sdi.SenderABANumber = sdi.parseStringField(record[6:15])
-	sdi.SenderShortName = sdi.parseStringField(record[15:33])
-	return nil
+
+	length := 6
+	read := 0
+
+	sdi.SenderABANumber, read = sdi.parseVariableStringField(record[length:], 9)
+	length += read
+
+	sdi.SenderShortName, read = sdi.parseVariableStringField(record[length:], 18)
+	length += read
+
+	return length, nil
 }
 
 func (sdi *SenderDepositoryInstitution) UnmarshalJSON(data []byte) error {
@@ -104,10 +117,10 @@ func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
 
 // SenderABANumberField gets a string of the SenderABANumber field
 func (sdi *SenderDepositoryInstitution) SenderABANumberField() string {
-	return sdi.alphaField(sdi.SenderABANumber, 9)
+	return sdi.alphaVariableField(sdi.SenderABANumber, 9, sdi.isVariableLength)
 }
 
 // SenderShortNameField gets a string of the SenderShortName field
 func (sdi *SenderDepositoryInstitution) SenderShortNameField() string {
-	return sdi.alphaField(sdi.SenderShortName, 18)
+	return sdi.alphaVariableField(sdi.SenderShortName, 18, sdi.isVariableLength)
 }

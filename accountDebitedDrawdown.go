@@ -46,9 +46,9 @@ func NewAccountDebitedDrawdown(isVariable bool) *AccountDebitedDrawdown {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (debitDD *AccountDebitedDrawdown) Parse(record string) (error, int) {
+func (debitDD *AccountDebitedDrawdown) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
-		return NewTagWrongLengthErr(12, len(record)), 0
+		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 
 	debitDD.tag = record[:6]
@@ -65,7 +65,7 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) (error, int) {
 
 	length += debitDD.Address.Parse(record[length:])
 
-	return nil, length
+	return length, nil
 }
 
 func (debitDD *AccountDebitedDrawdown) UnmarshalJSON(data []byte) error {

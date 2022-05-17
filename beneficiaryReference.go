@@ -40,9 +40,9 @@ func NewBeneficiaryReference(isVariable bool) *BeneficiaryReference {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (br *BeneficiaryReference) Parse(record string) (error, int) {
+func (br *BeneficiaryReference) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
-		return NewTagWrongLengthErr(7, len(record)), 0
+		return 0, NewTagWrongLengthErr(7, len(record))
 	}
 	br.tag = record[:6]
 
@@ -52,7 +52,7 @@ func (br *BeneficiaryReference) Parse(record string) (error, int) {
 	br.BeneficiaryReference, read = br.parseVariableStringField(record[length:], 16)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (br *BeneficiaryReference) UnmarshalJSON(data []byte) error {

@@ -9,7 +9,7 @@ import (
 
 // SenderToReceiver creates a SenderToReceiver
 func mockSenderToReceiver() *SenderToReceiver {
-	sr := NewSenderToReceiver()
+	sr := NewSenderToReceiver(false)
 	sr.CoverPayment.SwiftFieldTag = "Swift Field Tag"
 	sr.CoverPayment.SwiftLineOne = "Swift Line One"
 	sr.CoverPayment.SwiftLineTwo = "Swift Line Two"

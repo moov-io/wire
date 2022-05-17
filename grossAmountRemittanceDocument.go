@@ -40,13 +40,13 @@ func NewGrossAmountRemittanceDocument(isVariable bool) *GrossAmountRemittanceDoc
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (gard *GrossAmountRemittanceDocument) Parse(record string) (error, int) {
+func (gard *GrossAmountRemittanceDocument) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	gard.tag = record[:6]
 
-	return nil, 6 + gard.RemittanceAmount.Parse(record[6:])
+	return 6 + gard.RemittanceAmount.Parse(record[6:]), nil
 }
 
 func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {

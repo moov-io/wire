@@ -40,13 +40,13 @@ func NewBeneficiaryFI(isVariable bool) *BeneficiaryFI {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (bfi *BeneficiaryFI) Parse(record string) (error, int) {
+func (bfi *BeneficiaryFI) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
-		return NewTagWrongLengthErr(12, len(record)), 0
+		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 	bfi.tag = record[:6]
 
-	return nil, 6 + bfi.FinancialInstitution.Parse(record[6:])
+	return 6 + bfi.FinancialInstitution.Parse(record[6:]), nil
 }
 
 func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {

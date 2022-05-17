@@ -9,7 +9,7 @@ import (
 
 // mockOutputMessageAccountabilityData creates a mockOutputMessageAccountabilityData
 func mockOutputMessageAccountabilityData() *OutputMessageAccountabilityData {
-	omad := NewOutputMessageAccountabilityData()
+	omad := NewOutputMessageAccountabilityData(false)
 	omad.OutputCycleDate = "20190502"
 	omad.OutputDestinationID = "Source08"
 	omad.OutputSequenceNumber = "000001"

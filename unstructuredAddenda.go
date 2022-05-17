@@ -10,6 +10,8 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &UnstructuredAddenda{}
+
 // UnstructuredAddenda is the unstructured addenda information
 type UnstructuredAddenda struct {
 	// tag
@@ -37,20 +39,21 @@ func NewUnstructuredAddenda() *UnstructuredAddenda {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ua *UnstructuredAddenda) Parse(record string) error {
+func (ua *UnstructuredAddenda) Parse(record string) (int, error) {
 	// First check ua.tag and ua.AddendaLength
 	if utf8.RuneCountInString(record) < 10 {
-		return NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
+		return 0, NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
 	}
 	ua.tag = record[:6]
 	ua.AddendaLength = record[6:10]
 	al := ua.parseNumField(ua.AddendaLength)
 	// check RuneCount for entire record
 	if utf8.RuneCountInString(record) != 10+al {
-		return NewTagWrongLengthErr(10+al, utf8.RuneCountInString(record))
+		return 0, NewTagWrongLengthErr(10+al, utf8.RuneCountInString(record))
 	}
 	ua.Addenda = ua.parseStringField(record[10 : 10+al])
-	return nil
+
+	return 10 + al, nil
 }
 
 func (ua *UnstructuredAddenda) UnmarshalJSON(data []byte) error {

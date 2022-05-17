@@ -40,9 +40,9 @@ func NewDateRemittanceDocument(isVariable bool) *DateRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (drd *DateRemittanceDocument) Parse(record string) (error, int) {
+func (drd *DateRemittanceDocument) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
-		return NewTagWrongLengthErr(7, len(record)), 0
+		return 0, NewTagWrongLengthErr(7, len(record))
 	}
 	drd.tag = record[:6]
 
@@ -52,7 +52,7 @@ func (drd *DateRemittanceDocument) Parse(record string) (error, int) {
 	drd.DateRemittanceDocument, read = drd.parseVariableStringField(record[length:], 8)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (drd *DateRemittanceDocument) UnmarshalJSON(data []byte) error {

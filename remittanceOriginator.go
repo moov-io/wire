@@ -10,14 +10,20 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &RemittanceOriginator{}
+
 // RemittanceOriginator is remittance originator
 type RemittanceOriginator struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// IdentificationType is identification type
 	IdentificationType string `json:"identificationType,omitempty"`
 	// IdentificationCode  Organization Identification Codes  * `BANK` - Bank Party Identification * `CUST` - Customer Number * `DUNS` - Data Universal Number System (Dun & Bradstreet) * `EMPL` - Employer Identification Number * `GS1G` - Global Location Number * `PROP` - Proprietary Identification Number * `SWBB` - SWIFT BIC or BEI * `TXID` - Tax Identification Number  Private Identification Codes  * `ARNU` - Alien Registration Number * `CCPT` - Passport Number * `CUST` - Customer Number * `DPOB` - Date & Place of Birth * `DRLC` - Driver’s License Number * `EMPL` - Employee Identification Number * `NIDN` - National Identity Number * `PROP` - Proprietary Identification Number * `SOSE` - Social Security Number * `TXID` - Tax Identification Number
 	IdentificationCode string `json:"identificationCode,omitempty"`
+	// Name
+	Name string `json:"name,omitempty"`
 	// IdentificationNumber
 	IdentificationNumber string `json:"identificationNumber,omitempty"`
 	// IdentificationNumberIssuer
@@ -44,9 +50,10 @@ type RemittanceOriginator struct {
 }
 
 // NewRemittanceOriginator returns a new RemittanceOriginator
-func NewRemittanceOriginator() *RemittanceOriginator {
+func NewRemittanceOriginator(isVariable bool) *RemittanceOriginator {
 	ro := &RemittanceOriginator{
-		tag: TagRemittanceOriginator,
+		tag:              TagRemittanceOriginator,
+		isVariableLength: isVariable,
 	}
 	return ro
 }
@@ -55,41 +62,53 @@ func NewRemittanceOriginator() *RemittanceOriginator {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ro *RemittanceOriginator) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 3442 {
-		return NewTagWrongLengthErr(3442, utf8.RuneCountInString(record))
+func (ro *RemittanceOriginator) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 29 {
+		return 0, NewTagWrongLengthErr(29, utf8.RuneCountInString(record))
 	}
+
 	ro.tag = record[:6]
-	ro.IdentificationType = ro.parseStringField(record[6:8])
-	ro.IdentificationCode = ro.parseStringField(record[8:12])
-	ro.RemittanceData.Name = ro.parseStringField(record[12:152])
-	ro.IdentificationNumber = ro.parseStringField(record[152:187])
-	ro.IdentificationNumberIssuer = ro.parseStringField(record[187:222])
-	ro.RemittanceData.DateBirthPlace = ro.parseStringField(record[222:304])
-	ro.RemittanceData.AddressType = ro.parseStringField(record[304:308])
-	ro.RemittanceData.Department = ro.parseStringField(record[308:378])
-	ro.RemittanceData.SubDepartment = ro.parseStringField(record[378:448])
-	ro.RemittanceData.StreetName = ro.parseStringField(record[448:518])
-	ro.RemittanceData.BuildingNumber = ro.parseStringField(record[518:534])
-	ro.RemittanceData.PostCode = ro.parseStringField(record[534:550])
-	ro.RemittanceData.TownName = ro.parseStringField(record[550:585])
-	ro.RemittanceData.CountrySubDivisionState = ro.parseStringField(record[585:620])
-	ro.RemittanceData.Country = ro.parseStringField(record[620:622])
-	ro.RemittanceData.AddressLineOne = ro.parseStringField(record[622:692])
-	ro.RemittanceData.AddressLineTwo = ro.parseStringField(record[692:762])
-	ro.RemittanceData.AddressLineThree = ro.parseStringField(record[762:832])
-	ro.RemittanceData.AddressLineFour = ro.parseStringField(record[832:902])
-	ro.RemittanceData.AddressLineFive = ro.parseStringField(record[902:972])
-	ro.RemittanceData.AddressLineSix = ro.parseStringField(record[972:1042])
-	ro.RemittanceData.AddressLineSeven = ro.parseStringField(record[1042:1112])
-	ro.RemittanceData.CountryOfResidence = ro.parseStringField(record[1112:1114])
-	ro.ContactName = ro.parseStringField(record[1114:1254])
-	ro.ContactPhoneNumber = ro.parseStringField(record[1254:1289])
-	ro.ContactMobileNumber = ro.parseStringField(record[1289:1324])
-	ro.ContactFaxNumber = ro.parseStringField(record[1324:1359])
-	ro.ContactElectronicAddress = ro.parseStringField(record[1359:3407])
-	ro.ContactOther = ro.parseStringField(record[3407:3442])
-	return nil
+
+	length := 6
+	read := 0
+
+	ro.IdentificationType, read = ro.parseVariableStringField(record[length:], 2)
+	length += read
+
+	ro.IdentificationCode, read = ro.parseVariableStringField(record[length:], 4)
+	length += read
+
+	ro.Name, read = ro.parseVariableStringField(record[length:], 140)
+	length += read
+
+	ro.IdentificationNumber, read = ro.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ro.IdentificationNumberIssuer, read = ro.parseVariableStringField(record[length:], 35)
+	length += read
+
+	read = ro.RemittanceData.ParseForRemittanceBeneficiary(record[length:])
+	length += read
+
+	ro.ContactName, read = ro.parseVariableStringField(record[length:], 140)
+	length += read
+
+	ro.ContactPhoneNumber, read = ro.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ro.ContactMobileNumber, read = ro.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ro.ContactFaxNumber, read = ro.parseVariableStringField(record[length:], 35)
+	length += read
+
+	ro.ContactElectronicAddress, read = ro.parseVariableStringField(record[length:], 2048)
+	length += read
+
+	ro.ContactOther, read = ro.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return length, nil
 }
 
 func (ro *RemittanceOriginator) UnmarshalJSON(data []byte) error {
@@ -110,36 +129,21 @@ func (ro *RemittanceOriginator) UnmarshalJSON(data []byte) error {
 func (ro *RemittanceOriginator) String() string {
 	var buf strings.Builder
 	buf.Grow(3442)
+
 	buf.WriteString(ro.tag)
 	buf.WriteString(ro.IdentificationTypeField())
 	buf.WriteString(ro.IdentificationCodeField())
 	buf.WriteString(ro.NameField())
 	buf.WriteString(ro.IdentificationNumberField())
 	buf.WriteString(ro.IdentificationNumberIssuerField())
-	buf.WriteString(ro.DateBirthPlaceField())
-	buf.WriteString(ro.AddressTypeField())
-	buf.WriteString(ro.DepartmentField())
-	buf.WriteString(ro.SubDepartmentField())
-	buf.WriteString(ro.StreetNameField())
-	buf.WriteString(ro.BuildingNumberField())
-	buf.WriteString(ro.PostCodeField())
-	buf.WriteString(ro.TownNameField())
-	buf.WriteString(ro.CountrySubDivisionStateField())
-	buf.WriteString(ro.CountryField())
-	buf.WriteString(ro.AddressLineOneField())
-	buf.WriteString(ro.AddressLineTwoField())
-	buf.WriteString(ro.AddressLineThreeField())
-	buf.WriteString(ro.AddressLineFourField())
-	buf.WriteString(ro.AddressLineFiveField())
-	buf.WriteString(ro.AddressLineSixField())
-	buf.WriteString(ro.AddressLineSevenField())
-	buf.WriteString(ro.CountryOfResidenceField())
+	buf.WriteString(ro.RemittanceData.StringForRemittanceBeneficiary(ro.isVariableLength))
 	buf.WriteString(ro.ContactNameField())
 	buf.WriteString(ro.ContactPhoneNumberField())
 	buf.WriteString(ro.ContactMobileNumberField())
 	buf.WriteString(ro.ContactFaxNumberField())
 	buf.WriteString(ro.ContactElectronicAddressField())
 	buf.WriteString(ro.ContactOtherField())
+
 	return buf.String()
 }
 
@@ -283,145 +287,55 @@ func (ro *RemittanceOriginator) fieldInclusion() error {
 
 // IdentificationTypeField gets a string of the IdentificationType field
 func (ro *RemittanceOriginator) IdentificationTypeField() string {
-	return ro.alphaField(ro.IdentificationType, 2)
+	return ro.alphaVariableField(ro.IdentificationType, 2, ro.isVariableLength)
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
 func (ro *RemittanceOriginator) IdentificationCodeField() string {
-	return ro.alphaField(ro.IdentificationCode, 4)
+	return ro.alphaVariableField(ro.IdentificationCode, 4, ro.isVariableLength)
 }
 
 // NameField gets a string of the Name field
 func (ro *RemittanceOriginator) NameField() string {
-	return ro.alphaField(ro.RemittanceData.Name, 140)
+	return ro.alphaVariableField(ro.Name, 140, ro.isVariableLength)
 }
 
 // IdentificationNumberField gets a string of the IdentificationNumber field
 func (ro *RemittanceOriginator) IdentificationNumberField() string {
-	return ro.alphaField(ro.IdentificationNumber, 35)
+	return ro.alphaVariableField(ro.IdentificationNumber, 35, ro.isVariableLength)
 }
 
 // IdentificationNumberIssuerField gets a string of the IdentificationNumberIssuer field
 func (ro *RemittanceOriginator) IdentificationNumberIssuerField() string {
-	return ro.alphaField(ro.IdentificationNumberIssuer, 35)
-}
-
-// DateBirthPlaceField gets a string of the DateBirthPlace field
-func (ro *RemittanceOriginator) DateBirthPlaceField() string {
-	return ro.alphaField(ro.RemittanceData.DateBirthPlace, 82)
-}
-
-// AddressTypeField gets a string of the AddressType field
-func (ro *RemittanceOriginator) AddressTypeField() string {
-	return ro.alphaField(ro.RemittanceData.AddressType, 4)
-}
-
-// DepartmentField gets a string of the Department field
-func (ro *RemittanceOriginator) DepartmentField() string {
-	return ro.alphaField(ro.RemittanceData.Department, 70)
-}
-
-// SubDepartmentField gets a string of the SubDepartment field
-func (ro *RemittanceOriginator) SubDepartmentField() string {
-	return ro.alphaField(ro.RemittanceData.SubDepartment, 70)
-}
-
-// StreetNameField gets a string of the StreetName field
-func (ro *RemittanceOriginator) StreetNameField() string {
-	return ro.alphaField(ro.RemittanceData.StreetName, 70)
-}
-
-// BuildingNumberField gets a string of the BuildingNumber field
-func (ro *RemittanceOriginator) BuildingNumberField() string {
-	return ro.alphaField(ro.RemittanceData.BuildingNumber, 16)
-}
-
-// PostCodeField gets a string of the PostCode field
-func (ro *RemittanceOriginator) PostCodeField() string {
-	return ro.alphaField(ro.RemittanceData.PostCode, 16)
-}
-
-// TownNameField gets a string of the TownName field
-func (ro *RemittanceOriginator) TownNameField() string {
-	return ro.alphaField(ro.RemittanceData.TownName, 35)
-}
-
-// CountrySubDivisionStateField gets a string of the CountrySubDivisionState field
-func (ro *RemittanceOriginator) CountrySubDivisionStateField() string {
-	return ro.alphaField(ro.RemittanceData.CountrySubDivisionState, 35)
-}
-
-// CountryField gets a string of the Country field
-func (ro *RemittanceOriginator) CountryField() string {
-	return ro.alphaField(ro.RemittanceData.Country, 2)
-}
-
-// AddressLineOneField gets a string of the AddressLineOne field
-func (ro *RemittanceOriginator) AddressLineOneField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineOne, 70)
-}
-
-// AddressLineTwoField gets a string of the AddressLineTwo field
-func (ro *RemittanceOriginator) AddressLineTwoField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineTwo, 70)
-}
-
-// AddressLineThreeField gets a string of the AddressLineThree field
-func (ro *RemittanceOriginator) AddressLineThreeField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineThree, 70)
-}
-
-// AddressLineFourField gets a string of the AddressLineFour field
-func (ro *RemittanceOriginator) AddressLineFourField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineFour, 70)
-}
-
-// AddressLineFiveField gets a string of the AddressLineFive field
-func (ro *RemittanceOriginator) AddressLineFiveField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineFive, 70)
-}
-
-// AddressLineSixField gets a string of the AddressLineSix field
-func (ro *RemittanceOriginator) AddressLineSixField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineSix, 70)
-}
-
-// AddressLineSevenField gets a string of the AddressLineSeven field
-func (ro *RemittanceOriginator) AddressLineSevenField() string {
-	return ro.alphaField(ro.RemittanceData.AddressLineSeven, 70)
-}
-
-// CountryOfResidenceField gets a string of the CountryOfResidence field
-func (ro *RemittanceOriginator) CountryOfResidenceField() string {
-	return ro.alphaField(ro.RemittanceData.CountryOfResidence, 2)
+	return ro.alphaVariableField(ro.IdentificationNumberIssuer, 35, ro.isVariableLength)
 }
 
 // ContactNameField gets a string of the ContactName field
 func (ro *RemittanceOriginator) ContactNameField() string {
-	return ro.alphaField(ro.ContactName, 140)
+	return ro.alphaVariableField(ro.ContactName, 140, ro.isVariableLength)
 }
 
 // ContactPhoneNumberField gets a string of the ContactPhoneNumber field
 func (ro *RemittanceOriginator) ContactPhoneNumberField() string {
-	return ro.alphaField(ro.ContactPhoneNumber, 35)
+	return ro.alphaVariableField(ro.ContactPhoneNumber, 35, ro.isVariableLength)
 }
 
 // ContactMobileNumberField gets a string of the ContactMobileNumber field
 func (ro *RemittanceOriginator) ContactMobileNumberField() string {
-	return ro.alphaField(ro.ContactMobileNumber, 35)
+	return ro.alphaVariableField(ro.ContactMobileNumber, 35, ro.isVariableLength)
 }
 
 // ContactFaxNumberField gets a string of the ContactFaxNumber field
 func (ro *RemittanceOriginator) ContactFaxNumberField() string {
-	return ro.alphaField(ro.ContactFaxNumber, 35)
+	return ro.alphaVariableField(ro.ContactFaxNumber, 35, ro.isVariableLength)
 }
 
 // ContactElectronicAddressField gets a string of the ContactElectronicAddress field
 func (ro *RemittanceOriginator) ContactElectronicAddressField() string {
-	return ro.alphaField(ro.ContactElectronicAddress, 2048)
+	return ro.alphaVariableField(ro.ContactElectronicAddress, 2048, ro.isVariableLength)
 }
 
 // ContactOtherField gets a string of the ContactOther field
 func (ro *RemittanceOriginator) ContactOtherField() string {
-	return ro.alphaField(ro.ContactOther, 35)
+	return ro.alphaVariableField(ro.ContactOther, 35, ro.isVariableLength)
 }

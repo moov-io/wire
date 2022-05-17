@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &PreviousMessageIdentifier{}
+
 // PreviousMessageIdentifier is the PreviousMessageIdentifier of the wire
 type PreviousMessageIdentifier struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// PreviousMessageIdentifier
 	PreviousMessageIdentifier string `json:"PreviousMessageIdentifier,omitempty"`
 
@@ -24,9 +28,10 @@ type PreviousMessageIdentifier struct {
 }
 
 // NewPreviousMessageIdentifier returns a new PreviousMessageIdentifier
-func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
+func NewPreviousMessageIdentifier(isVariable bool) *PreviousMessageIdentifier {
 	pmi := &PreviousMessageIdentifier{
-		tag: TagPreviousMessageIdentifier,
+		tag:              TagPreviousMessageIdentifier,
+		isVariableLength: isVariable,
 	}
 	return pmi
 }
@@ -35,13 +40,20 @@ func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pmi *PreviousMessageIdentifier) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+func (pmi *PreviousMessageIdentifier) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 7 {
+		return 0, NewTagWrongLengthErr(7, len(record))
 	}
+
 	pmi.tag = record[:6]
-	pmi.PreviousMessageIdentifier = pmi.parseStringField(record[6:28])
-	return nil
+
+	length := 6
+	read := 0
+
+	pmi.PreviousMessageIdentifier, read = pmi.parseVariableStringField(record[length:], 22)
+	length += read
+
+	return length, nil
 }
 
 func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
@@ -62,8 +74,10 @@ func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
 func (pmi *PreviousMessageIdentifier) String() string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(pmi.tag)
 	buf.WriteString(pmi.PreviousMessageIdentifierField())
+
 	return buf.String()
 }
 
@@ -81,5 +95,5 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 
 // PreviousMessageIdentifierField gets a string of PreviousMessageIdentifier field
 func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField() string {
-	return pmi.alphaField(pmi.PreviousMessageIdentifier, 22)
+	return pmi.alphaVariableField(pmi.PreviousMessageIdentifier, 22, pmi.isVariableLength)
 }

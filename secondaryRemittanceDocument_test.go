@@ -9,7 +9,7 @@ import (
 
 // SecondaryRemittanceDocument creates a SecondaryRemittanceDocument
 func mockSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
-	srd := NewSecondaryRemittanceDocument()
+	srd := NewSecondaryRemittanceDocument(false)
 	srd.DocumentTypeCode = StatementAccount
 	srd.ProprietaryDocumentTypeCode = ""
 	srd.DocumentIdentificationNumber = "222222"

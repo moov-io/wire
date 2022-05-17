@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &PaymentNotification{}
+
 // PaymentNotification is the PaymentNotification of the wire
 type PaymentNotification struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// PaymentNotificationIndicator
 	// * `0 - 6` - Reserved for market practice conventions.
 	// * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
@@ -38,9 +42,10 @@ type PaymentNotification struct {
 }
 
 // NewPaymentNotification returns a new PaymentNotification
-func NewPaymentNotification() *PaymentNotification {
+func NewPaymentNotification(isVariable bool) *PaymentNotification {
 	pn := &PaymentNotification{
-		tag: TagPaymentNotification,
+		tag:              TagPaymentNotification,
+		isVariableLength: isVariable,
 	}
 	return pn
 }
@@ -49,19 +54,36 @@ func NewPaymentNotification() *PaymentNotification {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (pn *PaymentNotification) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 2335 {
-		return NewTagWrongLengthErr(2335, len(record))
+func (pn *PaymentNotification) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 13 {
+		return 0, NewTagWrongLengthErr(13, len(record))
 	}
+
 	pn.tag = record[:6]
 	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
-	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[7:2055])
-	pn.ContactName = pn.parseStringField(record[2055:2195])
-	pn.ContactPhoneNumber = pn.parseStringField(record[2195:2230])
-	pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
-	pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
-	pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
-	return nil
+
+	length := 7
+	read := 0
+
+	pn.ContactNotificationElectronicAddress, read = pn.parseVariableStringField(record[length:], 2048)
+	length += read
+
+	pn.ContactName, read = pn.parseVariableStringField(record[length:], 140)
+	length += read
+
+	pn.ContactPhoneNumber, read = pn.parseVariableStringField(record[length:], 35)
+	length += read
+
+	pn.ContactMobileNumber, read = pn.parseVariableStringField(record[length:], 35)
+	length += read
+
+	pn.ContactFaxNumber, read = pn.parseVariableStringField(record[length:], 35)
+	length += read
+
+	pn.EndToEndIdentification, read = pn.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return length, nil
 }
 
 func (pn *PaymentNotification) UnmarshalJSON(data []byte) error {
@@ -82,6 +104,7 @@ func (pn *PaymentNotification) UnmarshalJSON(data []byte) error {
 func (pn *PaymentNotification) String() string {
 	var buf strings.Builder
 	buf.Grow(2335)
+
 	buf.WriteString(pn.tag)
 	buf.WriteString(pn.PaymentNotificationIndicatorField())
 	buf.WriteString(pn.ContactNotificationElectronicAddressField())
@@ -90,6 +113,7 @@ func (pn *PaymentNotification) String() string {
 	buf.WriteString(pn.ContactMobileNumberField())
 	buf.WriteString(pn.ContactFaxNumberField())
 	buf.WriteString(pn.EndToEndIdentificationField())
+
 	return buf.String()
 }
 
@@ -130,30 +154,30 @@ func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
 
 // ContactNotificationElectronicAddressField gets a string of ContactNotificationElectronicAddress field
 func (pn *PaymentNotification) ContactNotificationElectronicAddressField() string {
-	return pn.alphaField(pn.ContactNotificationElectronicAddress, 2048)
+	return pn.alphaVariableField(pn.ContactNotificationElectronicAddress, 2048, pn.isVariableLength)
 }
 
 // ContactNameField gets a string of ContactName field
 func (pn *PaymentNotification) ContactNameField() string {
-	return pn.alphaField(pn.ContactName, 140)
+	return pn.alphaVariableField(pn.ContactName, 140, pn.isVariableLength)
 }
 
 // ContactPhoneNumberField gets a string of ContactPhoneNumberField field
 func (pn *PaymentNotification) ContactPhoneNumberField() string {
-	return pn.alphaField(pn.ContactPhoneNumber, 35)
+	return pn.alphaVariableField(pn.ContactPhoneNumber, 35, pn.isVariableLength)
 }
 
 // ContactMobileNumberField gets a string of ContactMobileNumber field
 func (pn *PaymentNotification) ContactMobileNumberField() string {
-	return pn.alphaField(pn.ContactMobileNumber, 35)
+	return pn.alphaVariableField(pn.ContactMobileNumber, 35, pn.isVariableLength)
 }
 
 // ContactFaxNumberField gets a string of FaxNumber field
 func (pn *PaymentNotification) ContactFaxNumberField() string {
-	return pn.alphaField(pn.ContactFaxNumber, 35)
+	return pn.alphaVariableField(pn.ContactFaxNumber, 35, pn.isVariableLength)
 }
 
 // EndToEndIdentificationField gets a string of EndToEndIdentification field
 func (pn *PaymentNotification) EndToEndIdentificationField() string {
-	return pn.alphaField(pn.EndToEndIdentification, 35)
+	return pn.alphaVariableField(pn.EndToEndIdentification, 35, pn.isVariableLength)
 }

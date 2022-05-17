@@ -43,9 +43,9 @@ func NewCurrencyInstructedAmount(isVariable bool) *CurrencyInstructedAmount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (cia *CurrencyInstructedAmount) Parse(record string) (error, int) {
+func (cia *CurrencyInstructedAmount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	cia.tag = record[:6]
 
@@ -58,7 +58,7 @@ func (cia *CurrencyInstructedAmount) Parse(record string) (error, int) {
 	cia.Amount, read = cia.parseVariableStringField(record[length:], 18)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (cia *CurrencyInstructedAmount) UnmarshalJSON(data []byte) error {

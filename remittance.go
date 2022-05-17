@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &Remittance{}
+
 // Remittance is the remittance information
 type Remittance struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -24,9 +28,10 @@ type Remittance struct {
 }
 
 // NewRemittance returns a new Remittance
-func NewRemittance() *Remittance {
+func NewRemittance(isVariable bool) *Remittance {
 	ri := &Remittance{
-		tag: TagRemittance,
+		tag:              TagRemittance,
+		isVariableLength: isVariable,
 	}
 	return ri
 }
@@ -35,17 +40,14 @@ func NewRemittance() *Remittance {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ri *Remittance) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 151 {
-		return NewTagWrongLengthErr(151, utf8.RuneCountInString(record))
+func (ri *Remittance) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 11 {
+		return 0, NewTagWrongLengthErr(11, utf8.RuneCountInString(record))
 	}
+
 	ri.tag = record[:6]
-	ri.CoverPayment.SwiftFieldTag = ri.parseStringField(record[6:11])
-	ri.CoverPayment.SwiftLineOne = ri.parseStringField(record[11:46])
-	ri.CoverPayment.SwiftLineTwo = ri.parseStringField(record[46:81])
-	ri.CoverPayment.SwiftLineThree = ri.parseStringField(record[81:116])
-	ri.CoverPayment.SwiftLineFour = ri.parseStringField(record[116:151])
-	return nil
+
+	return 6 + ri.CoverPayment.Parse(record[6:]), nil
 }
 
 func (ri *Remittance) UnmarshalJSON(data []byte) error {
@@ -66,12 +68,10 @@ func (ri *Remittance) UnmarshalJSON(data []byte) error {
 func (ri *Remittance) String() string {
 	var buf strings.Builder
 	buf.Grow(151)
+
 	buf.WriteString(ri.tag)
-	buf.WriteString(ri.SwiftFieldTagField())
-	buf.WriteString(ri.SwiftLineOneField())
-	buf.WriteString(ri.SwiftLineTwoField())
-	buf.WriteString(ri.SwiftLineThreeField())
-	buf.WriteString(ri.SwiftLineFourField())
+	buf.WriteString(ri.CoverPayment.String(ri.isVariableLength))
+
 	return buf.String()
 }
 
@@ -112,29 +112,4 @@ func (ri *Remittance) fieldInclusion() error {
 		return fieldError("SwiftLineSix", ErrInvalidProperty, ri.CoverPayment.SwiftLineSix)
 	}
 	return nil
-}
-
-// SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (ri *Remittance) SwiftFieldTagField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftFieldTag, 5)
-}
-
-// SwiftLineOneField gets a string of the SwiftLineOne field
-func (ri *Remittance) SwiftLineOneField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineOne, 35)
-}
-
-// SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (ri *Remittance) SwiftLineTwoField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineTwo, 35)
-}
-
-// SwiftLineThreeField gets a string of the SwiftLineThree field
-func (ri *Remittance) SwiftLineThreeField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineThree, 35)
-}
-
-// SwiftLineFourField gets a string of the SwiftLineFour field
-func (ri *Remittance) SwiftLineFourField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineFour, 35)
 }

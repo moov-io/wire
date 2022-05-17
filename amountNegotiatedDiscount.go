@@ -40,13 +40,13 @@ func NewAmountNegotiatedDiscount(isVariable bool) *AmountNegotiatedDiscount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (nd *AmountNegotiatedDiscount) Parse(record string) (error, int) {
+func (nd *AmountNegotiatedDiscount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	nd.tag = record[:6]
 
-	return nil, 6 + nd.RemittanceAmount.Parse(record[6:])
+	return 6 + nd.RemittanceAmount.Parse(record[6:]), nil
 }
 
 func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {

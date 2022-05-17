@@ -9,7 +9,7 @@ import (
 
 // RemittanceBeneficiary creates a RemittanceBeneficiary
 func mockRemittanceBeneficiary() *RemittanceBeneficiary {
-	rb := NewRemittanceBeneficiary()
+	rb := NewRemittanceBeneficiary(false)
 	rb.RemittanceData.Name = "Name"
 	rb.IdentificationType = OrganizationID
 	rb.IdentificationCode = OICCustomerNumber

@@ -9,7 +9,7 @@ import (
 
 // mockSenderReference creates a SenderReference
 func mockSenderReference() *SenderReference {
-	sr := NewSenderReference()
+	sr := NewSenderReference(false)
 	sr.SenderReference = "Sender Reference"
 	return sr
 }

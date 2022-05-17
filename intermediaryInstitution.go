@@ -40,13 +40,13 @@ func NewIntermediaryInstitution(isVariable bool) *IntermediaryInstitution {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ii *IntermediaryInstitution) Parse(record string) (error, int) {
+func (ii *IntermediaryInstitution) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
-		return NewTagWrongLengthErr(12, len(record)), 0
+		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 	ii.tag = record[:6]
 
-	return nil, 6 + ii.CoverPayment.Parse(record[6:])
+	return 6 + ii.CoverPayment.Parse(record[6:]), nil
 }
 
 func (ii *IntermediaryInstitution) UnmarshalJSON(data []byte) error {

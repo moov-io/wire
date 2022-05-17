@@ -46,9 +46,9 @@ func NewAdjustment(isVariable bool) *Adjustment {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (adj *Adjustment) Parse(record string) (error, int) {
+func (adj *Adjustment) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 11 {
-		return NewTagWrongLengthErr(11, len(record)), 0
+		return 0, NewTagWrongLengthErr(11, len(record))
 	}
 	adj.tag = record[:6]
 
@@ -69,7 +69,7 @@ func (adj *Adjustment) Parse(record string) (error, int) {
 	adj.AdditionalInfo, read = adj.parseVariableStringField(record[length:], 140)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (adj *Adjustment) UnmarshalJSON(data []byte) error {

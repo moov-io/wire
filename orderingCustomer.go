@@ -40,13 +40,13 @@ func NewOrderingCustomer(isVariable bool) *OrderingCustomer {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (oc *OrderingCustomer) Parse(record string) (error, int) {
+func (oc *OrderingCustomer) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
-		return NewTagWrongLengthErr(12, len(record)), 0
+		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 	oc.tag = record[:6]
 
-	return nil, 6 + oc.CoverPayment.Parse(record[6:])
+	return 6 + oc.CoverPayment.Parse(record[6:]), nil
 }
 
 func (oc *OrderingCustomer) UnmarshalJSON(data []byte) error {

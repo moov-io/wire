@@ -41,9 +41,9 @@ func NewAccountCreditedDrawdown(isVariable bool) *AccountCreditedDrawdown {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (creditDD *AccountCreditedDrawdown) Parse(record string) (error, int) {
+func (creditDD *AccountCreditedDrawdown) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
-		return NewTagWrongLengthErr(7, len(record)), 0
+		return 0, NewTagWrongLengthErr(7, len(record))
 	}
 
 	creditDD.tag = record[:6]
@@ -53,7 +53,7 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) (error, int) {
 	creditDD.DrawdownCreditAccountNumber, read = creditDD.parseVariableStringField(record[length:], 9)
 	length += read
 
-	return nil, length
+	return length, nil
 }
 
 func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {

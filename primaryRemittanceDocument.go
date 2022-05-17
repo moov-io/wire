@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &PrimaryRemittanceDocument{}
+
 // PrimaryRemittanceDocument is primary remittance document
 type PrimaryRemittanceDocument struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// DocumentTypeCode  * `AROI` - Accounts Receivable Open Item * `BOLD` - Bill of Lading Shipping Notice * `CINV` - Commercial Invoice * `CMCN` - Commercial Contract * `CNFA` - Credit Note Related to Financial Adjustment * `CREN` - Credit Note * `DEBN` - Debit Note * `DISP` - Dispatch Advice * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice * `MSIN` - Metered Service Invoice * `PROP` - Proprietary Document Type * `PUOR` - Purchase Order * `SBIN` - Self Billed Invoice * `SOAC` - Statement of Account * `TSUT` - Trade Services Utility Transaction VCHR Voucher
 	DocumentTypeCode string `json:"documentTypeCode,omitempty"`
 	// ProprietaryDocumentTypeCode
@@ -30,9 +34,10 @@ type PrimaryRemittanceDocument struct {
 }
 
 // NewPrimaryRemittanceDocument returns a new PrimaryRemittanceDocument
-func NewPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
+func NewPrimaryRemittanceDocument(isVariable bool) *PrimaryRemittanceDocument {
 	prd := &PrimaryRemittanceDocument{
-		tag: TagPrimaryRemittanceDocument,
+		tag:              TagPrimaryRemittanceDocument,
+		isVariableLength: isVariable,
 	}
 	return prd
 }
@@ -41,16 +46,29 @@ func NewPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (prd *PrimaryRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 115 {
-		return NewTagWrongLengthErr(115, len(record))
+func (prd *PrimaryRemittanceDocument) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 10 {
+		return 0, NewTagWrongLengthErr(10, len(record))
 	}
+
 	prd.tag = record[:6]
-	prd.DocumentTypeCode = record[6:10]
-	prd.ProprietaryDocumentTypeCode = record[10:45]
-	prd.DocumentIdentificationNumber = record[45:80]
-	prd.Issuer = record[80:115]
-	return nil
+
+	length := 6
+	read := 0
+
+	prd.DocumentTypeCode, read = prd.parseVariableStringField(record[length:], 4)
+	length += read
+
+	prd.ProprietaryDocumentTypeCode, read = prd.parseVariableStringField(record[length:], 35)
+	length += read
+
+	prd.DocumentIdentificationNumber, read = prd.parseVariableStringField(record[length:], 35)
+	length += read
+
+	prd.Issuer, read = prd.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return length, nil
 }
 
 func (prd *PrimaryRemittanceDocument) UnmarshalJSON(data []byte) error {
@@ -71,11 +89,13 @@ func (prd *PrimaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 func (prd *PrimaryRemittanceDocument) String() string {
 	var buf strings.Builder
 	buf.Grow(115)
+
 	buf.WriteString(prd.tag)
 	buf.WriteString(prd.DocumentTypeCodeField())
 	buf.WriteString(prd.ProprietaryDocumentTypeCodeField())
 	buf.WriteString(prd.DocumentIdentificationNumberField())
 	buf.WriteString(prd.IssuerField())
+
 	return buf.String()
 }
 
@@ -126,20 +146,20 @@ func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
 
 // DocumentTypeCodeField gets a string of the DocumentTypeCode field
 func (prd *PrimaryRemittanceDocument) DocumentTypeCodeField() string {
-	return prd.alphaField(prd.DocumentTypeCode, 4)
+	return prd.alphaVariableField(prd.DocumentTypeCode, 4, prd.isVariableLength)
 }
 
 // ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
 func (prd *PrimaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
-	return prd.alphaField(prd.ProprietaryDocumentTypeCode, 35)
+	return prd.alphaVariableField(prd.ProprietaryDocumentTypeCode, 35, prd.isVariableLength)
 }
 
 // DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
 func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField() string {
-	return prd.alphaField(prd.DocumentIdentificationNumber, 35)
+	return prd.alphaVariableField(prd.DocumentIdentificationNumber, 35, prd.isVariableLength)
 }
 
 // IssuerField gets a string of the Issuer field
 func (prd *PrimaryRemittanceDocument) IssuerField() string {
-	return prd.alphaField(prd.Issuer, 35)
+	return prd.alphaVariableField(prd.Issuer, 35, prd.isVariableLength)
 }

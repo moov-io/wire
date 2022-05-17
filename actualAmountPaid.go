@@ -40,13 +40,13 @@ func NewActualAmountPaid(isVariable bool) *ActualAmountPaid {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (aap *ActualAmountPaid) Parse(record string) (error, int) {
+func (aap *ActualAmountPaid) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 	aap.tag = record[:6]
 
-	return nil, 6 + aap.RemittanceAmount.Parse(record[6:])
+	return 6 + aap.RemittanceAmount.Parse(record[6:]), nil
 }
 
 func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {

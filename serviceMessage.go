@@ -10,10 +10,14 @@ import (
 	"unicode/utf8"
 )
 
+var _ segment = &ServiceMessage{}
+
 // ServiceMessage is the ServiceMessage of the wire
 type ServiceMessage struct {
 	// tag
 	tag string
+	// is variable length
+	isVariableLength bool
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo
@@ -46,9 +50,10 @@ type ServiceMessage struct {
 }
 
 // NewServiceMessage returns a new ServiceMessage
-func NewServiceMessage() *ServiceMessage {
+func NewServiceMessage(isVariable bool) *ServiceMessage {
 	sm := &ServiceMessage{
-		tag: TagServiceMessage,
+		tag:              TagServiceMessage,
+		isVariableLength: isVariable,
 	}
 	return sm
 }
@@ -57,24 +62,53 @@ func NewServiceMessage() *ServiceMessage {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (sm *ServiceMessage) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 426 {
-		return NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
+func (sm *ServiceMessage) Parse(record string) (int, error) {
+	if utf8.RuneCountInString(record) < 18 {
+		return 0, NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
 	}
+
 	sm.tag = record[:6]
-	sm.LineOne = sm.parseStringField(record[6:41])
-	sm.LineTwo = sm.parseStringField(record[41:76])
-	sm.LineThree = sm.parseStringField(record[76:111])
-	sm.LineFour = sm.parseStringField(record[111:146])
-	sm.LineFive = sm.parseStringField(record[146:181])
-	sm.LineSix = sm.parseStringField(record[181:216])
-	sm.LineSeven = sm.parseStringField(record[216:251])
-	sm.LineEight = sm.parseStringField(record[251:286])
-	sm.LineNine = sm.parseStringField(record[286:321])
-	sm.LineTen = sm.parseStringField(record[321:356])
-	sm.LineEleven = sm.parseStringField(record[356:391])
-	sm.LineTwelve = sm.parseStringField(record[391:426])
-	return nil
+
+	length := 6
+	read := 0
+
+	sm.LineOne, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineTwo, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineThree, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineFour, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineFive, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineSix, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineSeven, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineEight, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineNine, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineTen, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineEleven, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	sm.LineTwelve, read = sm.parseVariableStringField(record[length:], 35)
+	length += read
+
+	return length, nil
 }
 
 func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
@@ -95,6 +129,7 @@ func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
 func (sm *ServiceMessage) String() string {
 	var buf strings.Builder
 	buf.Grow(426)
+
 	buf.WriteString(sm.tag)
 	buf.WriteString(sm.LineOneField())
 	buf.WriteString(sm.LineTwoField())
@@ -108,6 +143,7 @@ func (sm *ServiceMessage) String() string {
 	buf.WriteString(sm.LineTenField())
 	buf.WriteString(sm.LineElevenField())
 	buf.WriteString(sm.LineTwelveField())
+
 	return buf.String()
 }
 
@@ -172,60 +208,60 @@ func (sm *ServiceMessage) fieldInclusion() error {
 
 // LineOneField gets a string of the LineOne field
 func (sm *ServiceMessage) LineOneField() string {
-	return sm.alphaField(sm.LineOne, 35)
+	return sm.alphaVariableField(sm.LineOne, 35, sm.isVariableLength)
 }
 
 // LineTwoField gets a string of the LineTwo field
 func (sm *ServiceMessage) LineTwoField() string {
-	return sm.alphaField(sm.LineTwo, 35)
+	return sm.alphaVariableField(sm.LineTwo, 35, sm.isVariableLength)
 }
 
 // LineThreeField gets a string of the LineThree field
 func (sm *ServiceMessage) LineThreeField() string {
-	return sm.alphaField(sm.LineThree, 35)
+	return sm.alphaVariableField(sm.LineThree, 35, sm.isVariableLength)
 }
 
 // LineFourField gets a string of the LineFour field
 func (sm *ServiceMessage) LineFourField() string {
-	return sm.alphaField(sm.LineFour, 35)
+	return sm.alphaVariableField(sm.LineFour, 35, sm.isVariableLength)
 }
 
 // LineFiveField gets a string of the LineFive field
 func (sm *ServiceMessage) LineFiveField() string {
-	return sm.alphaField(sm.LineFive, 35)
+	return sm.alphaVariableField(sm.LineFive, 35, sm.isVariableLength)
 }
 
 // LineSixField gets a string of the LineSix field
 func (sm *ServiceMessage) LineSixField() string {
-	return sm.alphaField(sm.LineSix, 35)
+	return sm.alphaVariableField(sm.LineSix, 35, sm.isVariableLength)
 }
 
 // LineSevenField gets a string of the LineSeven field
 func (sm *ServiceMessage) LineSevenField() string {
-	return sm.alphaField(sm.LineSeven, 35)
+	return sm.alphaVariableField(sm.LineSeven, 35, sm.isVariableLength)
 }
 
 // LineEightField gets a string of the LineEight field
 func (sm *ServiceMessage) LineEightField() string {
-	return sm.alphaField(sm.LineEight, 35)
+	return sm.alphaVariableField(sm.LineEight, 35, sm.isVariableLength)
 }
 
 // LineNineField gets a string of the LineNine field
 func (sm *ServiceMessage) LineNineField() string {
-	return sm.alphaField(sm.LineNine, 35)
+	return sm.alphaVariableField(sm.LineNine, 35, sm.isVariableLength)
 }
 
 // LineTenField gets a string of the LineTen field
 func (sm *ServiceMessage) LineTenField() string {
-	return sm.alphaField(sm.LineTen, 35)
+	return sm.alphaVariableField(sm.LineTen, 35, sm.isVariableLength)
 }
 
 // LineElevenField gets a string of the LineEleven field
 func (sm *ServiceMessage) LineElevenField() string {
-	return sm.alphaField(sm.LineEleven, 35)
+	return sm.alphaVariableField(sm.LineEleven, 35, sm.isVariableLength)
 }
 
 // LineTwelveField gets a string of the LineTwelve field
 func (sm *ServiceMessage) LineTwelveField() string {
-	return sm.alphaField(sm.LineTwelve, 35)
+	return sm.alphaVariableField(sm.LineTwelve, 35, sm.isVariableLength)
 }
