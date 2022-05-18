@@ -69,7 +69,7 @@ func (c *Charges) Parse(record string) (int, error) {
 	}
 	length += read
 
-	c.ChargeDetails = c.parseStringField(record[length:length+1])
+	c.ChargeDetails = c.parseStringField(record[length : length+1])
 	length += 1
 
 	if c.SendersChargesOne, read, err = c.parseVariableStringField(record[length:], 15); err != nil {

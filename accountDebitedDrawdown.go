@@ -59,7 +59,7 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) (int, error) {
 	}
 	length += read
 
-	debitDD.IdentificationCode = debitDD.parseStringField(record[length:length+1])
+	debitDD.IdentificationCode = debitDD.parseStringField(record[length : length+1])
 	length += 1
 
 	if debitDD.Identifier, read, err = debitDD.parseVariableStringField(record[length:], 34); err != nil {
