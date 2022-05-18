@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // Personal is personal demographic information
 type Personal struct {
@@ -22,20 +24,29 @@ type Personal struct {
 }
 
 // Parse takes the input string and parses the Personal values
-func (p *Personal) Parse(record string) int {
+func (p *Personal) Parse(record string) (length int, err error) {
 
-	length := 0
-	read := 0
+	var read int
 
-	p.Identifier, read = p.parseVariableStringField(record[length:], 34)
+	p.IdentificationCode = p.parseStringField(record[length : length+1])
+	length += 1
+
+	if p.Identifier, read, err = p.parseVariableStringField(record[length:], 34); err != nil {
+		return 0, fieldError("Identifier", err)
+	}
 	length += read
 
-	p.Name, read = p.parseVariableStringField(record[length:], 35)
+	if p.Name, read, err = p.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("Name", err)
+	}
 	length += read
 
-	length += p.Address.Parse(record[length:])
+	if read, err = p.Address.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
 
-	return length
+	return
 }
 
 // String writes Personal

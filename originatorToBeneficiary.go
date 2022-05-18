@@ -51,21 +51,32 @@ func (ob *OriginatorToBeneficiary) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(10, len(record))
 	}
 
-	ob.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	ob.LineOne, read = ob.parseVariableStringField(record[length:], 35)
+	if ob.tag, read, err = ob.parseTag(record); err != nil {
+		return 0, fieldError("OriginatorToBeneficiary.Tag", err)
+	}
 	length += read
 
-	ob.LineTwo, read = ob.parseVariableStringField(record[length:], 35)
+	if ob.LineOne, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineOne", err)
+	}
 	length += read
 
-	ob.LineThree, read = ob.parseVariableStringField(record[length:], 35)
+	if ob.LineTwo, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineTwo", err)
+	}
 	length += read
 
-	ob.LineFour, read = ob.parseVariableStringField(record[length:], 35)
+	if ob.LineThree, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineThree", err)
+	}
+	length += read
+
+	if ob.LineFour, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineFour", err)
+	}
 	length += read
 
 	return length, nil

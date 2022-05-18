@@ -44,9 +44,21 @@ func (gard *GrossAmountRemittanceDocument) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	gard.tag = record[:6]
 
-	return 6 + gard.RemittanceAmount.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if gard.tag, read, err = gard.parseTag(record); err != nil {
+		return 0, fieldError("GrossAmountRemittanceDocument.Tag", err)
+	}
+	length += read
+
+	if read, err = gard.RemittanceAmount.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {

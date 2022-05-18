@@ -9,7 +9,7 @@ import (
 
 // mockTypeSubType creates a TypeSubType
 func mockTypeSubType() *TypeSubType {
-	tst := NewTypeSubType()
+	tst := NewTypeSubType(false)
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = BasicFundsTransfer
 	return tst
@@ -70,7 +70,7 @@ func TestParseTypeSubTypeWrongLength(t *testing.T) {
 
 	err := r.parseTypeSubType()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(10, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(8, len(r.line))).Error())
 }
 
 // TestParseTypeSubTypeReaderParseError parses a wrong TypeSubType reader parse error

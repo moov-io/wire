@@ -128,13 +128,13 @@ func TestIdentificationCodeBogus(t *testing.T) {
 
 // TestParseAccountDebitedDrawdownWrongLength parses a wrong AccountDebitedDrawdown record length
 func TestParseAccountDebitedDrawdownWrongLength(t *testing.T) {
-	var line = "{4400}D123456789                         debitDD Name                       Address One                        Address Two                        Address Three                    "
+	var line = "{4400}D123"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseAccountDebitedDrawdown()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(12, len(r.line))).Error())
 }
 
 // TestParseAccountDebitedDrawdownReaderParseError parses a wrong AccountDebitedDrawdown reader parse error

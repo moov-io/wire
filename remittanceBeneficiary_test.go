@@ -10,7 +10,7 @@ import (
 // RemittanceBeneficiary creates a RemittanceBeneficiary
 func mockRemittanceBeneficiary() *RemittanceBeneficiary {
 	rb := NewRemittanceBeneficiary(false)
-	rb.RemittanceData.Name = "Name"
+	rb.Name = "Name"
 	rb.IdentificationType = OrganizationID
 	rb.IdentificationCode = OICCustomerNumber
 	rb.IdentificationNumber = "111111"
@@ -87,11 +87,11 @@ func TestRemittanceBeneficiaryAddressTypeValid(t *testing.T) {
 // TestRemittanceBeneficiaryNameAlphaNumeric validates RemittanceBeneficiary Name is alphanumeric
 func TestRemittanceBeneficiaryNameAlphaNumeric(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
-	rb.RemittanceData.Name = "®"
+	rb.Name = "®"
 
 	err := rb.Validate()
 
-	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, rb.RemittanceData.Name).Error())
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, rb.Name).Error())
 }
 
 // TestRemittanceBeneficiaryIdentificationNumberAlphaNumeric validates RemittanceBeneficiary IdentificationNumber is alphanumeric
@@ -278,7 +278,7 @@ func TestRemittanceBeneficiaryCountryOfResidenceAlphaNumeric(t *testing.T) {
 // TestRemittanceBeneficiaryNameRequired validates RemittanceBeneficiary Name is required
 func TestRemittanceBeneficiaryNameRequired(t *testing.T) {
 	rb := mockRemittanceBeneficiary()
-	rb.RemittanceData.Name = ""
+	rb.Name = ""
 
 	err := rb.Validate()
 
@@ -348,7 +348,7 @@ func TestParseRemittanceBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceBeneficiary()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(1114, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("CountryOfResidence", ErrValidLengthSize)).Error())
 }
 
 // TestParseRemittanceBeneficiaryReaderParseError parses a wrong RemittanceBeneficiary reader parse error

@@ -45,12 +45,19 @@ func (eRate *ExchangeRate) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
 		return 0, NewTagWrongLengthErr(7, len(record))
 	}
-	eRate.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	eRate.ExchangeRate, read = eRate.parseVariableStringField(record[length:], 12)
+	if eRate.tag, read, err = eRate.parseTag(record); err != nil {
+		return 0, fieldError("ExchangeRate.Tag", err)
+	}
+	length += read
+
+
+	if eRate.ExchangeRate, read, err = eRate.parseVariableStringField(record[length:], 12); err != nil {
+		return 0, fieldError("ExchangeRate", err)
+	}
 	length += read
 
 	return length, nil

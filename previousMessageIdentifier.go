@@ -45,12 +45,17 @@ func (pmi *PreviousMessageIdentifier) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(7, len(record))
 	}
 
-	pmi.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
+	if pmi.tag, read, err = pmi.parseTag(record); err != nil {
+		return 0, fieldError("PreviousMessageIdentifier.Tag", err)
+	}
+	length += read
 
-	pmi.PreviousMessageIdentifier, read = pmi.parseVariableStringField(record[length:], 22)
+	if pmi.PreviousMessageIdentifier, read, err = pmi.parseVariableStringField(record[length:], 22); err != nil {
+		return 0, fieldError("PreviousMessageIdentifier", err)
+	}
 	length += read
 
 	return length, nil

@@ -44,9 +44,21 @@ func (ben *Beneficiary) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	ben.tag = record[:6]
 
-	return 6 + ben.Personal.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if ben.tag, read, err = ben.parseTag(record); err != nil {
+		return 0, fieldError("Beneficiary.Tag", err)
+	}
+	length += read
+
+	if read, err = ben.Personal.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (ben *Beneficiary) UnmarshalJSON(data []byte) error {

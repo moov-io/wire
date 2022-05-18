@@ -105,7 +105,7 @@ func TestParseSenderToReceiverWrongLength(t *testing.T) {
 
 	err := r.parseSenderToReceiver()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(221, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseSenderToReceiverReaderParseError parses a wrong SenderToReceiver reader parse error

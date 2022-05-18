@@ -29,33 +29,46 @@ type Advice struct {
 }
 
 // Parse takes the input string and parses the Advice values
-func (a *Advice) Parse(record string) int {
+func (a *Advice) Parse(record string) (length int, err error) {
 
-	length := 0
-	read := 0
+	var read int
 
-	a.AdviceCode, read = a.parseVariableStringField(record[length:], 3)
+	if a.AdviceCode, read, err = a.parseVariableStringField(record[length:], 3); err != nil {
+		return 0, fieldError("AdviceCode", err)
+	}
 	length += read
 
-	a.LineOne, read = a.parseVariableStringField(record[length:], 26)
+	if a.LineOne, read, err = a.parseVariableStringField(record[length:], 26); err != nil {
+		return 0, fieldError("LineOne", err)
+	}
 	length += read
 
-	a.LineTwo, read = a.parseVariableStringField(record[length:], 33)
+	if a.LineTwo, read, err = a.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineTwo", err)
+	}
 	length += read
 
-	a.LineThree, read = a.parseVariableStringField(record[length:], 33)
+	if a.LineThree, read, err = a.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineThree", err)
+	}
 	length += read
 
-	a.LineFour, read = a.parseVariableStringField(record[length:], 33)
+	if a.LineFour, read, err = a.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineFour", err)
+	}
 	length += read
 
-	a.LineFive, read = a.parseVariableStringField(record[length:], 33)
+	if a.LineFive, read, err = a.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineFive", err)
+	}
 	length += read
 
-	a.LineSix, read = a.parseVariableStringField(record[length:], 33)
+	if a.LineSix, read, err = a.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineSix", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // String writes Advice

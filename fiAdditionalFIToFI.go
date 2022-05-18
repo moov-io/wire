@@ -44,9 +44,21 @@ func (fifi *FIAdditionalFIToFI) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	fifi.tag = record[:6]
 
-	return 6 + fifi.AdditionalFIToFI.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if fifi.tag, read, err = fifi.parseTag(record); err != nil {
+		return 0, fieldError("FIAdditionalFIToFI.Tag", err)
+	}
+	length += read
+
+	if read, err = fifi.AdditionalFIToFI.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (fifi *FIAdditionalFIToFI) UnmarshalJSON(data []byte) error {

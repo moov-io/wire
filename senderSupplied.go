@@ -54,21 +54,32 @@ func (ss *SenderSupplied) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(10, utf8.RuneCountInString(record))
 	}
 
-	ss.tag = record[0:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	ss.FormatVersion, read = ss.parseVariableStringField(record[length:], 2)
+	if ss.tag, read, err = ss.parseTag(record); err != nil {
+		return 0, fieldError("SenderSupplied.Tag", err)
+	}
 	length += read
 
-	ss.UserRequestCorrelation, read = ss.parseVariableStringField(record[length:], 8)
+	if ss.FormatVersion, read, err = ss.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("FormatVersion", err)
+	}
 	length += read
 
-	ss.TestProductionCode, read = ss.parseVariableStringField(record[length:], 1)
+	if ss.UserRequestCorrelation, read, err = ss.parseVariableStringField(record[length:], 8); err != nil {
+		return 0, fieldError("UserRequestCorrelation", err)
+	}
 	length += read
 
-	ss.MessageDuplicationCode, read = ss.parseVariableStringField(record[length:], 1)
+	if ss.TestProductionCode, read, err = ss.parseVariableStringField(record[length:], 1); err != nil {
+		return 0, fieldError("TestProductionCode", err)
+	}
+	length += read
+
+	if ss.MessageDuplicationCode, read, err = ss.parseVariableStringField(record[length:], 1); err != nil {
+		return 0, fieldError("MessageDuplicationCode", err)
+	}
 	length += read
 
 	return length, nil

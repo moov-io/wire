@@ -44,9 +44,21 @@ func (firfi *FIReceiverFI) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	firfi.tag = record[:6]
 
-	return 6 + firfi.FIToFI.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if firfi.tag, read, err = firfi.parseTag(record); err != nil {
+		return 0, fieldError("FIReceiverFI.Tag", err)
+	}
+	length += read
+
+	if read, err = firfi.FIToFI.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (firfi *FIReceiverFI) UnmarshalJSON(data []byte) error {

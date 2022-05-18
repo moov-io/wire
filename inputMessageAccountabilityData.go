@@ -49,18 +49,27 @@ func (imad *InputMessageAccountabilityData) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(9, len(record))
 	}
 
-	imad.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	imad.InputCycleDate, read = imad.parseVariableStringField(record[length:], 8)
+	if imad.tag, read, err = imad.parseTag(record); err != nil {
+		return 0, fieldError("InputMessageAccountabilityData.Tag", err)
+	}
 	length += read
 
-	imad.InputSource, read = imad.parseVariableStringField(record[length:], 8)
+	if imad.InputCycleDate, read, err = imad.parseVariableStringField(record[length:], 8); err != nil {
+		return 0, fieldError("InputCycleDate", err)
+	}
 	length += read
 
-	imad.InputSequenceNumber, read = imad.parseVariableStringField(record[length:], 6)
+	if imad.InputSource, read, err = imad.parseVariableStringField(record[length:], 8); err != nil {
+		return 0, fieldError("InputSource", err)
+	}
+	length += read
+
+	if imad.InputSequenceNumber, read, err = imad.parseVariableStringField(record[length:], 6); err != nil {
+		return 0, fieldError("InputSequenceNumber", err)
+	}
 	length += read
 
 	return length, nil

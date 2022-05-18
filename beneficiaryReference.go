@@ -44,12 +44,18 @@ func (br *BeneficiaryReference) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
 		return 0, NewTagWrongLengthErr(7, len(record))
 	}
-	br.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	br.BeneficiaryReference, read = br.parseVariableStringField(record[length:], 16)
+	if br.tag, read, err = br.parseTag(record); err != nil {
+		return 0, fieldError("BeneficiaryReference.Tag", err)
+	}
+	length += read
+
+	if br.BeneficiaryReference, read, err = br.parseVariableStringField(record[length:], 16); err != nil {
+		return 0, fieldError("BeneficiaryReference", err)
+	}
 	length += read
 
 	return length, nil

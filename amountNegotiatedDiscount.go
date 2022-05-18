@@ -44,9 +44,21 @@ func (nd *AmountNegotiatedDiscount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	nd.tag = record[:6]
 
-	return 6 + nd.RemittanceAmount.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if nd.tag, read, err = nd.parseTag(record); err != nil {
+		return 0, fieldError("AmountNegotiatedDiscount.Tag", err)
+	}
+	length += read
+
+	if read, err = nd.RemittanceAmount.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {

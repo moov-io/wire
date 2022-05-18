@@ -20,18 +20,21 @@ type RemittanceAmount struct {
 }
 
 // Parse takes the input string and parses the RemittanceAmount values
-func (r *RemittanceAmount) Parse(record string) int {
+func (r *RemittanceAmount) Parse(record string) (length int, err error) {
 
-	length := 0
-	read := 0
+	var read int
 
-	r.CurrencyCode, read = r.parseVariableStringField(record[length:], 3)
+	if r.CurrencyCode, read, err = r.parseVariableStringField(record[length:], 3); err != nil {
+		return 0, fieldError("CurrencyCode", err)
+	}
 	length += read
 
-	r.Amount, read = r.parseVariableStringField(record[length:], 19)
+	if r.Amount, read, err = r.parseVariableStringField(record[length:], 19); err != nil {
+		return 0, fieldError("Amount", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // String writes RemittanceAmount

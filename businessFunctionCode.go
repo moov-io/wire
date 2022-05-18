@@ -46,15 +46,23 @@ func (bfc *BusinessFunctionCode) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	bfc.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	bfc.BusinessFunctionCode, read = bfc.parseVariableStringField(record[length:], 3)
+	if bfc.tag, read, err = bfc.parseTag(record); err != nil {
+		return 0, fieldError("BusinessFunctionCode.Tag", err)
+	}
 	length += read
 
-	bfc.TransactionTypeCode, read = bfc.parseVariableStringField(record[length:], 3)
+	if bfc.BusinessFunctionCode, read, err = bfc.parseVariableStringField(record[length:], 3); err != nil {
+		return 0, fieldError("BusinessFunctionCode", err)
+	}
+	length += read
+
+	if bfc.TransactionTypeCode, read, err = bfc.parseVariableStringField(record[length:], 3); err != nil {
+		return 0, fieldError("TransactionTypeCode", err)
+	}
 	length += read
 
 	return length, nil
@@ -78,9 +86,11 @@ func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {
 func (bfc *BusinessFunctionCode) String() string {
 	var buf strings.Builder
 	buf.Grow(12)
+
 	buf.WriteString(bfc.tag)
 	buf.WriteString(bfc.BusinessFunctionCodeField())
 	buf.WriteString(bfc.TransactionTypeCodeField())
+
 	return buf.String()
 }
 

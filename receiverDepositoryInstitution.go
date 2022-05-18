@@ -47,15 +47,22 @@ func (rdi *ReceiverDepositoryInstitution) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(8, utf8.RuneCountInString(record))
 	}
 
-	rdi.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	rdi.ReceiverABANumber, read = rdi.parseVariableStringField(record[length:], 9)
+	if rdi.tag, read, err = rdi.parseTag(record); err != nil {
+		return 0, fieldError("ReceiverDepositoryInstitution.Tag", err)
+	}
 	length += read
 
-	rdi.ReceiverShortName, read = rdi.parseVariableStringField(record[length:], 18)
+	if rdi.ReceiverABANumber, read, err = rdi.parseVariableStringField(record[length:], 9); err != nil {
+		return 0, fieldError("ReceiverABANumber", err)
+	}
+	length += read
+
+	if rdi.ReceiverShortName, read, err = rdi.parseVariableStringField(record[length:], 18); err != nil {
+		return 0, fieldError("ReceiverShortName", err)
+	}
 	length += read
 
 	return length, nil

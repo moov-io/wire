@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // AdditionalFIToFI is additional financial institution to financial institution information
 type AdditionalFIToFI struct {
@@ -26,30 +28,41 @@ type AdditionalFIToFI struct {
 }
 
 // Parse takes the input string and parses the AdditionalFIToFI values
-func (a *AdditionalFIToFI) Parse(record string) int {
+func (a *AdditionalFIToFI) Parse(record string) (length int, err error) {
 
-	length := 0
 	read := 0
 
-	a.LineOne, read = a.parseVariableStringField(record[length:], 35)
+	if a.LineOne, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineOne", err)
+	}
 	length += read
 
-	a.LineTwo, read = a.parseVariableStringField(record[length:], 35)
+	if a.LineTwo, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineTwo", err)
+	}
 	length += read
 
-	a.LineThree, read = a.parseVariableStringField(record[length:], 35)
+	if a.LineThree, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineThree", err)
+	}
 	length += read
 
-	a.LineFour, read = a.parseVariableStringField(record[length:], 35)
+	if a.LineFour, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineFour", err)
+	}
 	length += read
 
-	a.LineFive, read = a.parseVariableStringField(record[length:], 35)
+	if a.LineFive, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineFive", err)
+	}
 	length += read
 
-	a.LineSix, read = a.parseVariableStringField(record[length:], 35)
+	if a.LineSix, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineSix", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // String writes AdditionalFIToFI

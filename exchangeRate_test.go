@@ -39,12 +39,12 @@ func TestParseExchangeRateWrongLength(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	expected := r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
+	expected := r.parseError(fieldError("ExchangeRate", ErrValidLengthSize)).Error()
 	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	expected = r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
+	expected = r.parseError(fieldError("ExchangeRate", ErrValidLengthSize)).Error()
 	require.EqualError(t, err, expected)
 }
 

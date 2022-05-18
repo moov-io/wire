@@ -44,9 +44,21 @@ func (o *Originator) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	o.tag = record[:6]
 
-	return 6 + o.Personal.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if o.tag, read, err = o.parseTag(record); err != nil {
+		return 0, fieldError("Originator.Tag", err)
+	}
+	length += read
+
+	if read, err = o.Personal.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (o *Originator) UnmarshalJSON(data []byte) error {

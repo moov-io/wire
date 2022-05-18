@@ -44,9 +44,21 @@ func (bc *BeneficiaryCustomer) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	bc.tag = record[:6]
 
-	return 6 + bc.CoverPayment.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if bc.tag, read, err = bc.parseTag(record); err != nil {
+		return 0, fieldError("BeneficiaryCustomer.Tag", err)
+	}
+	length += read
+
+	if read, err = bc.CoverPayment.ParseFive(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {
@@ -69,7 +81,7 @@ func (bc *BeneficiaryCustomer) String() string {
 	buf.Grow(186)
 
 	buf.WriteString(bc.tag)
-	buf.WriteString(bc.CoverPayment.String(bc.isVariableLength))
+	buf.WriteString(bc.CoverPayment.StringFive(bc.isVariableLength))
 
 	return buf.String()
 }

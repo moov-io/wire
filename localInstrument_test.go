@@ -61,7 +61,7 @@ func TestParseLocalInstrumentWrongLength(t *testing.T) {
 
 	err := r.parseLocalInstrument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(45, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ProprietaryCode", ErrValidLengthSize)).Error())
 }
 
 // TestParseLocalInstrumentReaderParseError parses a wrong LocalInstrumente reader parse error

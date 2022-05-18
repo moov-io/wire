@@ -44,9 +44,21 @@ func (str *SenderToReceiver) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 13 {
 		return 0, NewTagWrongLengthErr(13, utf8.RuneCountInString(record))
 	}
-	str.tag = record[:6]
 
-	return 6 + str.CoverPayment.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if str.tag, read, err = str.parseTag(record); err != nil {
+		return 0, fieldError("SenderToReceiver.Tag", err)
+	}
+	length += read
+
+	if read, err = str.CoverPayment.ParseSix(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (str *SenderToReceiver) UnmarshalJSON(data []byte) error {
@@ -69,7 +81,7 @@ func (str *SenderToReceiver) String() string {
 	buf.Grow(221)
 
 	buf.WriteString(str.tag)
-	buf.WriteString(str.CoverPayment.String(str.isVariableLength))
+	buf.WriteString(str.CoverPayment.StringSix(str.isVariableLength))
 
 	return buf.String()
 }

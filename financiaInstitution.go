@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // FinancialInstitution is demographic information for a financial institution
 type FinancialInstitution struct {
@@ -22,22 +24,28 @@ type FinancialInstitution struct {
 }
 
 // Parse takes the input string and parses the FinancialInstitution values
-func (f *FinancialInstitution) Parse(record string) int {
+func (f *FinancialInstitution) Parse(record string) (length int, err error) {
 
-	length := 1
-	read := 0
+	var read int
 
 	f.IdentificationCode = f.parseStringField(record[0:1])
 
-	f.Identifier, read = f.parseVariableStringField(record[length:], 34)
+	if f.Identifier, read, err = f.parseVariableStringField(record[length:], 34); err != nil {
+		return 0, fieldError("Identifier", err)
+	}
 	length += read
 
-	f.Name, read = f.parseVariableStringField(record[length:], 35)
+	if f.Name, read, err = f.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("Name", err)
+	}
 	length += read
 
-	length += f.Address.Parse(record[length:])
+	if read, err = f.Address.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
 
-	return length
+	return
 }
 
 // String writes FinancialInstitution

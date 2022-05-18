@@ -105,7 +105,7 @@ func TestParseFIDrawdownDebitAccountAdviceWrongLength(t *testing.T) {
 
 	err := r.parseFIDrawdownDebitAccountAdvice()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(200, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIDrawdownDebitAccountAdviceReaderParseError parses a wrong FIDrawdownDebitAccountAdvice reader parse error

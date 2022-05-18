@@ -47,15 +47,23 @@ func (ia *InstructedAmount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	ia.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	ia.CurrencyCode, read = ia.parseVariableStringField(record[length:], 3)
+	if ia.tag, read, err = ia.parseTag(record); err != nil {
+		return 0, fieldError("InstructedAmount.Tag", err)
+	}
 	length += read
 
-	ia.Amount, read = ia.parseVariableStringField(record[length:], 15)
+	if ia.CurrencyCode, read, err = ia.parseVariableStringField(record[length:], 3); err != nil {
+		return 0, fieldError("CurrencyCode", err)
+	}
+	length += read
+
+	if ia.Amount, read, err = ia.parseVariableStringField(record[length:], 15); err != nil {
+		return 0, fieldError("Amount", err)
+	}
 	length += read
 
 	return length, nil

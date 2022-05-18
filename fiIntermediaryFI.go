@@ -44,9 +44,21 @@ func (fiifi *FIIntermediaryFI) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	fiifi.tag = record[:6]
 
-	return 6 + fiifi.FIToFI.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if fiifi.tag, read, err = fiifi.parseTag(record); err != nil {
+		return 0, fieldError("FIIntermediaryFI.Tag", err)
+	}
+	length += read
+
+	if read, err = fiifi.FIToFI.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (fiifi *FIIntermediaryFI) UnmarshalJSON(data []byte) error {

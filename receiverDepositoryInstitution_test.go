@@ -70,7 +70,7 @@ func TestParseReceiverWrongLength(t *testing.T) {
 
 	err := r.parseReceiverDepositoryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(33, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ReceiverABANumber", ErrValidLengthSize)).Error())
 }
 
 // TestParseReceiverReaderParseError parses a wrong Receiver reader parse error

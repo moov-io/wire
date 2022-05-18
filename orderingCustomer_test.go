@@ -104,7 +104,7 @@ func TestParseOrderingCustomerWrongLength(t *testing.T) {
 
 	err := r.parseOrderingCustomer()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
 }
 
 // TestParseOrderingCustomerReaderParseError parses a wrong OrderingCustomer reader parse error

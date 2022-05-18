@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // CoverPayment is cover payment data
 type CoverPayment struct {
@@ -28,34 +30,135 @@ type CoverPayment struct {
 }
 
 // Parse takes the input string and parses the CoverPayment values
-func (c *CoverPayment) Parse(record string) int {
+func (c *CoverPayment) ParseFour(record string) (length int, err error) {
 
-	length := 0
-	read := 0
+	var read int
 
-	c.SwiftFieldTag, read = c.parseVariableStringField(record[length:], 5)
+	if c.SwiftFieldTag, read, err = c.parseVariableStringField(record[length:], 5); err != nil {
+		return 0, fieldError("SwiftFieldTag", err)
+	}
 	length += read
 
-	c.SwiftLineOne, read = c.parseVariableStringField(record[length:], 35)
+	if c.SwiftLineOne, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineOne", err)
+	}
 	length += read
 
-	c.SwiftLineTwo, read = c.parseVariableStringField(record[length:], 35)
+	if c.SwiftLineTwo, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineTwo", err)
+	}
 	length += read
 
-	c.SwiftLineThree, read = c.parseVariableStringField(record[length:], 35)
+	if c.SwiftLineThree, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineThree", err)
+	}
 	length += read
 
-	c.SwiftLineFour, read = c.parseVariableStringField(record[length:], 35)
+	if c.SwiftLineFour, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineFour", err)
+	}
 	length += read
 
-	c.SwiftLineFive, read = c.parseVariableStringField(record[length:], 35)
+	return
+}
+
+// Parse takes the input string and parses the CoverPayment values
+func (c *CoverPayment) ParseFive(record string) (length int, err error) {
+
+	var read int
+
+	if c.SwiftFieldTag, read, err = c.parseVariableStringField(record[length:], 5); err != nil {
+		return 0, fieldError("SwiftFieldTag", err)
+	}
 	length += read
 
-	return length
+	if c.SwiftLineOne, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineOne", err)
+	}
+	length += read
+
+	if c.SwiftLineTwo, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineTwo", err)
+	}
+	length += read
+
+	if c.SwiftLineThree, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineThree", err)
+	}
+	length += read
+
+	if c.SwiftLineFour, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineFour", err)
+	}
+	length += read
+
+	if c.SwiftLineFive, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineFive", err)
+	}
+	length += read
+
+	return
+}
+
+// Parse takes the input string and parses the CoverPayment values
+func (c *CoverPayment) ParseSix(record string) (length int, err error) {
+
+	var read int
+
+	if c.SwiftFieldTag, read, err = c.parseVariableStringField(record[length:], 5); err != nil {
+		return 0, fieldError("SwiftFieldTag", err)
+	}
+	length += read
+
+	if c.SwiftLineOne, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineOne", err)
+	}
+	length += read
+
+	if c.SwiftLineTwo, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineTwo", err)
+	}
+	length += read
+
+	if c.SwiftLineThree, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineThree", err)
+	}
+	length += read
+
+	if c.SwiftLineFour, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineFour", err)
+	}
+	length += read
+
+	if c.SwiftLineFive, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineFive", err)
+	}
+	length += read
+
+	if c.SwiftLineSix, read, err = c.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("SwiftLineSix", err)
+	}
+	length += read
+
+	return
 }
 
 // String writes BeneficiaryCustomer
-func (c *CoverPayment) String(isVariable bool) string {
+func (c *CoverPayment) StringFour(isVariable bool) string {
+	var buf strings.Builder
+	buf.Grow(180)
+
+	buf.WriteString(c.SwiftFieldTagField(isVariable))
+	buf.WriteString(c.SwiftLineOneField(isVariable))
+	buf.WriteString(c.SwiftLineTwoField(isVariable))
+	buf.WriteString(c.SwiftLineThreeField(isVariable))
+	buf.WriteString(c.SwiftLineFourField(isVariable))
+
+	return buf.String()
+}
+
+// String writes BeneficiaryCustomer
+func (c *CoverPayment) StringFive(isVariable bool) string {
 	var buf strings.Builder
 	buf.Grow(180)
 
@@ -65,6 +168,22 @@ func (c *CoverPayment) String(isVariable bool) string {
 	buf.WriteString(c.SwiftLineThreeField(isVariable))
 	buf.WriteString(c.SwiftLineFourField(isVariable))
 	buf.WriteString(c.SwiftLineFiveField(isVariable))
+
+	return buf.String()
+}
+
+// String writes BeneficiaryCustomer
+func (c *CoverPayment) StringSix(isVariable bool) string {
+	var buf strings.Builder
+	buf.Grow(180)
+
+	buf.WriteString(c.SwiftFieldTagField(isVariable))
+	buf.WriteString(c.SwiftLineOneField(isVariable))
+	buf.WriteString(c.SwiftLineTwoField(isVariable))
+	buf.WriteString(c.SwiftLineThreeField(isVariable))
+	buf.WriteString(c.SwiftLineFourField(isVariable))
+	buf.WriteString(c.SwiftLineFiveField(isVariable))
+	buf.WriteString(c.SwiftLineSixField(isVariable))
 
 	return buf.String()
 }
@@ -97,4 +216,9 @@ func (c *CoverPayment) SwiftLineFourField(isVariable bool) string {
 // SwiftLineFiveField gets a string of the SwiftLineFive field
 func (c *CoverPayment) SwiftLineFiveField(isVariable bool) string {
 	return c.alphaVariableField(c.SwiftLineFive, 35, isVariable)
+}
+
+// SwiftLineFiveField gets a string of the SwiftLineFive field
+func (c *CoverPayment) SwiftLineSixField(isVariable bool) string {
+	return c.alphaVariableField(c.SwiftLineSix, 35, isVariable)
 }

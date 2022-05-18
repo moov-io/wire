@@ -93,7 +93,7 @@ func TestParseFIAdditionalFIToFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIAdditionalFIToFI()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(216, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIAdditionalFIToFIReaderParseError parses a wrong FIAdditionalFIToFI reader parse error

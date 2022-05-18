@@ -50,23 +50,33 @@ func (adj *Adjustment) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 11 {
 		return 0, NewTagWrongLengthErr(11, len(record))
 	}
-	adj.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	adj.AdjustmentReasonCode, read = adj.parseVariableStringField(record[length:], 2)
+	if adj.tag, read, err = adj.parseTag(record); err != nil {
+		return 0, fieldError("Adjustment.Tag", err)
+	}
 	length += read
 
-	adj.CreditDebitIndicator, read = adj.parseVariableStringField(record[length:], 4)
+	if adj.AdjustmentReasonCode, read, err = adj.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("AdjustmentReasonCode", err)
+	}
 	length += read
 
-	length += adj.RemittanceAmount.Parse(record[length:])
-
-	adj.RemittanceAmount.Amount, read = adj.parseVariableStringField(record[length:], 19)
+	if adj.CreditDebitIndicator, read, err = adj.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("CreditDebitIndicator", err)
+	}
 	length += read
 
-	adj.AdditionalInfo, read = adj.parseVariableStringField(record[length:], 140)
+	if read, err = adj.RemittanceAmount.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	if adj.AdditionalInfo, read, err = adj.parseVariableStringField(record[length:], 140); err != nil {
+		return 0, fieldError("AdditionalInfo", err)
+	}
 	length += read
 
 	return length, nil

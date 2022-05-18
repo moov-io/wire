@@ -54,21 +54,32 @@ func (md *MessageDisposition) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(10, len(record))
 	}
 
-	md.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	md.FormatVersion, read = md.parseVariableStringField(record[length:], 2)
+	if md.tag, read, err = md.parseTag(record); err != nil {
+		return 0, fieldError("MessageDisposition.Tag", err)
+	}
 	length += read
 
-	md.TestProductionCode, read = md.parseVariableStringField(record[length:], 1)
+	if md.FormatVersion, read, err = md.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("FormatVersion", err)
+	}
 	length += read
 
-	md.MessageDuplicationCode, read = md.parseVariableStringField(record[length:], 1)
+	if md.TestProductionCode, read, err = md.parseVariableStringField(record[length:], 1); err != nil {
+		return 0, fieldError("TestProductionCode", err)
+	}
 	length += read
 
-	md.MessageStatusIndicator, read = md.parseVariableStringField(record[length:], 1)
+	if md.MessageDuplicationCode, read, err = md.parseVariableStringField(record[length:], 1); err != nil {
+		return 0, fieldError("MessageDuplicationCode", err)
+	}
+	length += read
+
+	if md.MessageStatusIndicator, read, err = md.parseVariableStringField(record[length:], 1); err != nil {
+		return 0, fieldError("MessageStatusIndicator", err)
+	}
 	length += read
 
 	return length, nil

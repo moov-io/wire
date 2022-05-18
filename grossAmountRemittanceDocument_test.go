@@ -62,7 +62,7 @@ func TestParseGrossAmountRemittanceWrongLength(t *testing.T) {
 
 	err := r.parseGrossAmountRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseGrossAmountRemittanceReaderParseError parses a wrong GrossAmountRemittance reader parse error

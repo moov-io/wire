@@ -41,16 +41,21 @@ func NewSenderReference(isVariable bool) *SenderReference {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sr *SenderReference) Parse(record string) (int, error) {
-	if utf8.RuneCountInString(record) < 9 {
-		return 0, NewTagWrongLengthErr(9, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return 0, NewTagWrongLengthErr(7, utf8.RuneCountInString(record))
 	}
 
-	sr.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
+	if sr.tag, read, err = sr.parseTag(record); err != nil {
+		return 0, fieldError("SenderReference.Tag", err)
+	}
+	length += read
 
-	sr.SenderReference, read = sr.parseVariableStringField(record[length:], 16)
+	if sr.SenderReference, read, err = sr.parseVariableStringField(record[length:], 16); err != nil {
+		return 0, fieldError("SenderReference", err)
+	}
 	length += read
 
 	return length, nil

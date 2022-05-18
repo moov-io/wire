@@ -50,12 +50,12 @@ func TestParseCurrencyInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseCurrencyInstructedAmount()
 
-	expected := r.parseError(NewTagWrongLengthErr(29, len(r.line))).Error()
+	expected := r.parseError(fieldError("Amount", ErrValidLengthSize)).Error()
 	require.EqualError(t, err, expected)
 
 	_, err = r.Read()
 
-	expected = r.parseError(NewTagWrongLengthErr(29, len(r.line))).Error()
+	expected = r.parseError(fieldError("Amount", ErrValidLengthSize)).Error()
 	require.EqualError(t, err, expected)
 }
 

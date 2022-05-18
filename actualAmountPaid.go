@@ -44,9 +44,21 @@ func (aap *ActualAmountPaid) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	aap.tag = record[:6]
 
-	return 6 + aap.RemittanceAmount.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if aap.tag, read, err = aap.parseTag(record); err != nil {
+		return 0, fieldError("ActualAmountPaid.Tag", err)
+	}
+	length += read
+
+	if read, err = aap.RemittanceAmount.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {

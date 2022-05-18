@@ -87,7 +87,7 @@ func TestParseSenderSuppliedWrongLength(t *testing.T) {
 
 	err := r.parseSenderSupplied()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(10, len(r.line))).Error())
 }
 
 // TestParseSenderSuppliedReaderParseError parses a wrong SenderSupplied reader parse error

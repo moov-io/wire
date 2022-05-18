@@ -75,7 +75,7 @@ func TestParseInputMessageAccountabilityDataWrongLength(t *testing.T) {
 
 	err := r.parseInputMessageAccountabilityData()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(9, len(r.line))).Error())
 }
 
 // TestParseInputMessageAccountabilityDataReaderParseError parses a wrong InputMessageAccountabilityData reader parse error

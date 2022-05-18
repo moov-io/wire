@@ -67,45 +67,72 @@ func (ro *RemittanceOriginator) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(29, utf8.RuneCountInString(record))
 	}
 
-	ro.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	ro.IdentificationType, read = ro.parseVariableStringField(record[length:], 2)
+	if ro.tag, read, err = ro.parseTag(record); err != nil {
+		return 0, fieldError("RemittanceOriginator.Tag", err)
+	}
 	length += read
 
-	ro.IdentificationCode, read = ro.parseVariableStringField(record[length:], 4)
+	if ro.IdentificationType, read, err = ro.parseVariableStringField(record[length:], 2); err != nil {
+		fieldError("IdentificationType", err)
+	}
 	length += read
 
-	ro.Name, read = ro.parseVariableStringField(record[length:], 140)
+	if ro.IdentificationCode, read, err = ro.parseVariableStringField(record[length:], 4); err != nil {
+		fieldError("IdentificationCode", err)
+	}
 	length += read
 
-	ro.IdentificationNumber, read = ro.parseVariableStringField(record[length:], 35)
+	if ro.Name, read, err = ro.parseVariableStringField(record[length:], 140); err != nil {
+		fieldError("Name", err)
+	}
 	length += read
 
-	ro.IdentificationNumberIssuer, read = ro.parseVariableStringField(record[length:], 35)
+	if ro.IdentificationNumber, read, err = ro.parseVariableStringField(record[length:], 35); err != nil {
+		fieldError("IdentificationNumber", err)
+	}
 	length += read
 
-	read = ro.RemittanceData.ParseForRemittanceBeneficiary(record[length:])
+	if ro.IdentificationNumberIssuer, read, err = ro.parseVariableStringField(record[length:], 35); err != nil {
+		fieldError("IdentificationNumberIssuer", err)
+	}
 	length += read
 
-	ro.ContactName, read = ro.parseVariableStringField(record[length:], 140)
+	if read, err = ro.RemittanceData.ParseForRemittanceBeneficiary(record[length:]); err != nil {
+		return 0, err
+	}
 	length += read
 
-	ro.ContactPhoneNumber, read = ro.parseVariableStringField(record[length:], 35)
+	if ro.ContactName, read, err = ro.parseVariableStringField(record[length:], 140); err != nil {
+		fieldError("ContactName", err)
+	}
 	length += read
 
-	ro.ContactMobileNumber, read = ro.parseVariableStringField(record[length:], 35)
+	if ro.ContactPhoneNumber, read, err = ro.parseVariableStringField(record[length:], 35); err != nil {
+		fieldError("ContactPhoneNumber", err)
+	}
 	length += read
 
-	ro.ContactFaxNumber, read = ro.parseVariableStringField(record[length:], 35)
+	if ro.ContactMobileNumber, read, err = ro.parseVariableStringField(record[length:], 35); err != nil {
+		fieldError("ContactMobileNumber", err)
+	}
 	length += read
 
-	ro.ContactElectronicAddress, read = ro.parseVariableStringField(record[length:], 2048)
+	if ro.ContactFaxNumber, read, err = ro.parseVariableStringField(record[length:], 35); err != nil {
+		fieldError("ContactFaxNumber", err)
+	}
 	length += read
 
-	ro.ContactOther, read = ro.parseVariableStringField(record[length:], 35)
+	if ro.ContactElectronicAddress, read, err = ro.parseVariableStringField(record[length:], 2048); err != nil {
+		fieldError("ContactElectronicAddress", err)
+	}
+	length += read
+
+	if ro.ContactOther, read, err = ro.parseVariableStringField(record[length:], 35); err != nil {
+		fieldError("ContactOther", err)
+	}
 	length += read
 
 	return length, nil
@@ -183,8 +210,8 @@ func (ro *RemittanceOriginator) Validate() error { //nolint:gocyclo
 	if err := ro.isAlphanumeric(ro.IdentificationNumberIssuer); err != nil {
 		return fieldError("IdentificationNumberIssuer", err, ro.IdentificationNumberIssuer)
 	}
-	if err := ro.isAlphanumeric(ro.RemittanceData.Name); err != nil {
-		return fieldError("Name", err, ro.RemittanceData.Name)
+	if err := ro.isAlphanumeric(ro.Name); err != nil {
+		return fieldError("Name", err, ro.Name)
 	}
 	if err := ro.isAddressType(ro.RemittanceData.AddressType); err != nil {
 		return fieldError("AddressType", err, ro.RemittanceData.AddressType)
@@ -262,7 +289,7 @@ func (ro *RemittanceOriginator) Validate() error { //nolint:gocyclo
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ro *RemittanceOriginator) fieldInclusion() error {
-	if ro.RemittanceData.Name == "" {
+	if ro.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
 	if ro.IdentificationCode == PICDateBirthPlace {

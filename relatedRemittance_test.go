@@ -259,7 +259,7 @@ func TestParseRelatedRemittanceWrongLength(t *testing.T) {
 
 	err := r.parseRelatedRemittance()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(3041, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineSeven", ErrValidLengthSize)).Error())
 }
 
 // TestParseRelatedRemittanceReaderParseError parses a wrong RelatedRemittance reader parse error

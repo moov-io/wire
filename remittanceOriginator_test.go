@@ -15,7 +15,7 @@ func mockRemittanceOriginator() *RemittanceOriginator {
 	ro.IdentificationNumber = "111111"
 	ro.IdentificationNumberIssuer = "Bank"
 	//ro.RemittanceData.DateBirthPlace = "12072008 AnyTown"
-	ro.RemittanceData.Name = "Name"
+	ro.Name = "Name"
 	ro.RemittanceData.AddressType = CompletePostalAddress
 	ro.RemittanceData.Department = "Department"
 	ro.RemittanceData.SubDepartment = "Sub-Department"
@@ -93,11 +93,11 @@ func TestRemittanceOriginatorAddressTypeValid(t *testing.T) {
 // TestRemittanceOriginatorNameAlphaNumeric validates RemittanceOriginator Name is alphanumeric
 func TestRemittanceOriginatorNameAlphaNumeric(t *testing.T) {
 	ro := mockRemittanceOriginator()
-	ro.RemittanceData.Name = "®"
+	ro.Name = "®"
 
 	err := ro.Validate()
 
-	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, ro.RemittanceData.Name).Error())
+	require.EqualError(t, err, fieldError("Name", ErrNonAlphanumeric, ro.Name).Error())
 }
 
 // TestRemittanceOriginatorIdentificationNumberAlphaNumeric validates RemittanceOriginator IdentificationNumber is alphanumeric
@@ -346,7 +346,7 @@ func TestRemittanceOriginatorContactOtherAlphaNumeric(t *testing.T) {
 // TestRemittanceOriginatorNameRequired validates RemittanceOriginator Name is required
 func TestRemittanceOriginatorNameRequired(t *testing.T) {
 	ro := mockRemittanceOriginator()
-	ro.RemittanceData.Name = ""
+	ro.Name = ""
 
 	err := ro.Validate()
 
@@ -416,7 +416,7 @@ func TestParseRemittanceOriginatorWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceOriginator()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(3442, len(r.line))).Error())
+	require.NoError(t, err)
 }
 
 // TestParseRemittanceOriginatorReaderParseError parses a wrong RemittanceOriginator reader parse error

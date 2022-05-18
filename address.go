@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // Address is 3 lines of address information
 type Address struct {
@@ -20,21 +22,26 @@ type Address struct {
 }
 
 // Parse takes the input string and parses the Address values
-func (a *Address) Parse(record string) int {
+func (a *Address) Parse(record string) (length int, err error) {
 
-	length := 0
-	read := 0
+	var read int
 
-	a.AddressLineOne, read = a.parseVariableStringField(record[length:], 35)
+	if a.AddressLineOne, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("AddressLineOne", err)
+	}
 	length += read
 
-	a.AddressLineTwo, read = a.parseVariableStringField(record[length:], 35)
+	if a.AddressLineTwo, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("AddressLineTwo", err)
+	}
 	length += read
 
-	a.AddressLineThree, read = a.parseVariableStringField(record[length:], 35)
+	if a.AddressLineThree, read, err = a.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("AddressLineThree", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // String writes BeneficiaryCustomer

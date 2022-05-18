@@ -40,7 +40,7 @@ func TestParseDateRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parseDateRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(14, len(r.line))).Error())
+	require.Nil(t, err)
 }
 
 // TestParseDateRemittanceDocumentReaderParseError parses a wrong DateRemittanceDocument reader parse error

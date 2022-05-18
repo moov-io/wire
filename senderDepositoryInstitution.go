@@ -47,15 +47,22 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(8, utf8.RuneCountInString(record))
 	}
 
-	sdi.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	sdi.SenderABANumber, read = sdi.parseVariableStringField(record[length:], 9)
+	if sdi.tag, read, err = sdi.parseTag(record); err != nil {
+		return 0, fieldError("SenderDepositoryInstitution.Tag", err)
+	}
 	length += read
 
-	sdi.SenderShortName, read = sdi.parseVariableStringField(record[length:], 18)
+	if sdi.SenderABANumber, read, err = sdi.parseVariableStringField(record[length:], 9); err != nil {
+		return 0, fieldError("SenderABANumber", err)
+	}
+	length += read
+
+	if sdi.SenderShortName, read, err = sdi.parseVariableStringField(record[length:], 18); err != nil {
+		return 0, fieldError("SenderShortName", err)
+	}
 	length += read
 
 	return length, nil

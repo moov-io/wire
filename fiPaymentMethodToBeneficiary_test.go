@@ -24,7 +24,7 @@ func TestMockFIPaymentMethodToBeneficiary(t *testing.T) {
 
 // TestPaymentMethodValid validates FIPaymentMethodToBeneficiary PaymentMethod
 func TestPaymentMethodValid(t *testing.T) {
-	pm := NewFIPaymentMethodToBeneficiary()
+	pm := NewFIPaymentMethodToBeneficiary(false)
 	pm.PaymentMethod = ""
 
 	err := pm.Validate()
@@ -34,7 +34,7 @@ func TestPaymentMethodValid(t *testing.T) {
 
 // TestAdditionalInformationAlphaNumeric validates FIPaymentMethodToBeneficiary AdditionalInformation is alphanumeric
 func TestAdditionalInformationAlphaNumeric(t *testing.T) {
-	pm := NewFIPaymentMethodToBeneficiary()
+	pm := NewFIPaymentMethodToBeneficiary(false)
 	pm.AdditionalInformation = "®"
 
 	err := pm.Validate()
@@ -49,7 +49,7 @@ func TestParseFIPaymentMethodToBeneficiaryWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIPaymentMethodToBeneficiary()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(41, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AdditionalInformation", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIPaymentMethodToBeneficiaryReaderParseError parses a wrong FIPaymentMethodToBeneficiary reader parse error

@@ -70,7 +70,7 @@ func TestParseAmountNegotiatedDiscountWrongLength(t *testing.T) {
 
 	err := r.parseAmountNegotiatedDiscount()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseAmountNegotiatedDiscountReaderParseError parses a wrong AmountNegotiatedDiscount reader parse error

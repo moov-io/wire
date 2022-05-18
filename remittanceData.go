@@ -54,125 +54,193 @@ type RemittanceData struct {
 }
 
 // Parse takes the input string and parses the RemittanceData values
-func (r *RemittanceData) ParseForRelatedRemittance(record string) int {
+func (r *RemittanceData) ParseForRelatedRemittance(record string) (length int, err error) {
 
-	length := 6
-	read := 0
+	var read int
 
-	r.Name, read = r.parseVariableStringField(record[length:], 140)
+	if r.Name, read, err = r.parseVariableStringField(record[length:], 140); err != nil {
+		return 0, fieldError("Name", err)
+	}
 	length += read
 
-	r.AddressType, read = r.parseVariableStringField(record[length:], 4)
+	if r.AddressType, read, err = r.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("AddressType", err)
+	}
 	length += read
 
-	r.Department, read = r.parseVariableStringField(record[length:], 70)
+	if r.Department, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("Department", err)
+	}
 	length += read
 
-	r.SubDepartment, read = r.parseVariableStringField(record[length:], 70)
+	if r.SubDepartment, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("SubDepartment", err)
+	}
 	length += read
 
-	r.StreetName, read = r.parseVariableStringField(record[length:], 70)
+	if r.StreetName, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("StreetName", err)
+	}
 	length += read
 
-	r.BuildingNumber, read = r.parseVariableStringField(record[length:], 16)
+	if r.BuildingNumber, read, err = r.parseVariableStringField(record[length:], 16); err != nil {
+		return 0, fieldError("BuildingNumber", err)
+	}
 	length += read
 
-	r.PostCode, read = r.parseVariableStringField(record[length:], 16)
+	if r.PostCode, read, err = r.parseVariableStringField(record[length:], 16); err != nil {
+		return 0, fieldError("PostCode", err)
+	}
 	length += read
 
-	r.TownName, read = r.parseVariableStringField(record[length:], 35)
+	if r.TownName, read, err = r.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("TownName", err)
+	}
 	length += read
 
-	r.CountrySubDivisionState, read = r.parseVariableStringField(record[length:], 35)
+	if r.CountrySubDivisionState, read, err = r.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("CountrySubDivisionState", err)
+	}
 	length += read
 
-	r.Country, read = r.parseVariableStringField(record[length:], 2)
+	if r.Country, read, err = r.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("Country", err)
+	}
 	length += read
 
-	r.AddressLineOne, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineOne, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineOne", err)
+	}
 	length += read
 
-	r.AddressLineTwo, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineTwo, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineTwo", err)
+	}
 	length += read
 
-	r.AddressLineThree, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineThree, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineThree", err)
+	}
 	length += read
 
-	r.AddressLineFour, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineFour, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineFour", err)
+	}
 	length += read
 
-	r.AddressLineFive, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineFive, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineFive", err)
+	}
 	length += read
 
-	r.AddressLineSix, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineSix, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineSix", err)
+	}
 	length += read
 
-	r.AddressLineSeven, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineSeven, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineSeven", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // Parse takes the input string and parses the RemittanceData values
-func (r *RemittanceData) ParseForRemittanceBeneficiary(record string) int {
-	length := 6
-	read := 0
+func (r *RemittanceData) ParseForRemittanceBeneficiary(record string) (length int, err error) {
+	var read int
 
-	r.DateBirthPlace, read = r.parseVariableStringField(record[length:], 82)
+	if r.DateBirthPlace, read, err = r.parseVariableStringField(record[length:], 82); err != nil {
+		return 0, fieldError("DateBirthPlace", err)
+	}
 	length += read
 
-	r.AddressType, read = r.parseVariableStringField(record[length:], 4)
+	if r.AddressType, read, err = r.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("AddressType", err)
+	}
 	length += read
 
-	r.Department, read = r.parseVariableStringField(record[length:], 70)
+	if r.Department, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("Department", err)
+	}
 	length += read
 
-	r.SubDepartment, read = r.parseVariableStringField(record[length:], 70)
+	if r.SubDepartment, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("SubDepartment", err)
+	}
 	length += read
 
-	r.StreetName, read = r.parseVariableStringField(record[length:], 70)
+	if r.StreetName, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("StreetName", err)
+	}
 	length += read
 
-	r.BuildingNumber, read = r.parseVariableStringField(record[length:], 16)
+	if r.BuildingNumber, read, err = r.parseVariableStringField(record[length:], 16); err != nil {
+		return 0, fieldError("BuildingNumber", err)
+	}
 	length += read
 
-	r.PostCode, read = r.parseVariableStringField(record[length:], 16)
+	if r.PostCode, read, err = r.parseVariableStringField(record[length:], 16); err != nil {
+		return 0, fieldError("PostCode", err)
+	}
 	length += read
 
-	r.TownName, read = r.parseVariableStringField(record[length:], 35)
+	if r.TownName, read, err = r.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("TownName", err)
+	}
 	length += read
 
-	r.CountrySubDivisionState, read = r.parseVariableStringField(record[length:], 35)
+	if r.CountrySubDivisionState, read, err = r.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("CountrySubDivisionState", err)
+	}
 	length += read
 
-	r.Country, read = r.parseVariableStringField(record[length:], 2)
+	if r.Country, read, err = r.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("Country", err)
+	}
 	length += read
 
-	r.AddressLineOne, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineOne, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineOne", err)
+	}
 	length += read
 
-	r.AddressLineTwo, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineTwo, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineTwo", err)
+	}
 	length += read
 
-	r.AddressLineThree, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineThree, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineThree", err)
+	}
 	length += read
 
-	r.AddressLineFour, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineFour, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineFour", err)
+	}
 	length += read
 
-	r.AddressLineFive, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineFive, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineFive", err)
+	}
 	length += read
 
-	r.AddressLineSix, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineSix, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineSix", err)
+	}
 	length += read
 
-	r.AddressLineSeven, read = r.parseVariableStringField(record[length:], 70)
+	if r.AddressLineSeven, read, err = r.parseVariableStringField(record[length:], 70); err != nil {
+		return 0, fieldError("AddressLineSeven", err)
+	}
 	length += read
 
-	r.CountryOfResidence, read = r.parseVariableStringField(record[length:], 2)
+	if r.CountryOfResidence, read, err = r.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("CountryOfResidence", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // String writes RelatedRemittance

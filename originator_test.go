@@ -117,7 +117,7 @@ func TestParseOriginatorWrongLength(t *testing.T) {
 
 	err := r.parseOriginator()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
 }
 
 // TestParseOriginatorReaderParseError parses a wrong Originator reader parse error

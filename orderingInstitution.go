@@ -44,9 +44,21 @@ func (oi *OrderingInstitution) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	oi.tag = record[:6]
 
-	return 6 + oi.CoverPayment.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if oi.tag, read, err = oi.parseTag(record); err != nil {
+		return 0, fieldError("OrderingInstitution.Tag", err)
+	}
+	length += read
+
+	if read, err = oi.CoverPayment.ParseFive(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
@@ -69,7 +81,7 @@ func (oi *OrderingInstitution) String() string {
 	buf.Grow(186)
 
 	buf.WriteString(oi.tag)
-	buf.WriteString(oi.CoverPayment.String(oi.isVariableLength))
+	buf.WriteString(oi.CoverPayment.StringFive(oi.isVariableLength))
 
 	return buf.String()
 }

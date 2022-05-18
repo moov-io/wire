@@ -40,19 +40,25 @@ func NewAmount(isVariable bool) *Amount {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (a *Amount) Parse(record string) (error, int) {
+func (a *Amount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
-		return NewTagWrongLengthErr(18, len(record)), 0
+		return 0, NewTagWrongLengthErr(7, len(record))
 	}
-	a.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	a.Amount, read = a.parseVariableStringField(record[length:], 12)
+	if a.tag, read, err = a.parseTag(record); err != nil {
+		return 0, fieldError("Amount.Tag", err)
+	}
 	length += read
 
-	return nil, length
+	if a.Amount, read, err = a.parseVariableStringField(record[length:], 12); err != nil {
+		return 0, fieldError("Amount", err)
+	}
+	length += read
+
+	return length, nil
 }
 
 func (a *Amount) UnmarshalJSON(data []byte) error {

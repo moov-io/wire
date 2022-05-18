@@ -51,19 +51,31 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
 
-	debitDD.tag = record[:6]
-	debitDD.IdentificationCode = debitDD.parseStringField(record[6:7])
+	var err error
+	var length, read int
 
-	length := 7
-	read := 0
-
-	debitDD.Identifier, read = debitDD.parseVariableStringField(record[length:], 34)
+	if debitDD.tag, read, err = debitDD.parseTag(record); err != nil {
+		return 0, fieldError("AccountDebitedDrawdown.Tag", err)
+	}
 	length += read
 
-	debitDD.Name, read = debitDD.parseVariableStringField(record[length:], 35)
+	debitDD.IdentificationCode = debitDD.parseStringField(record[length:length+1])
+	length += 1
+
+	if debitDD.Identifier, read, err = debitDD.parseVariableStringField(record[length:], 34); err != nil {
+		return 0, fieldError("Identifier", err)
+	}
 	length += read
 
-	length += debitDD.Address.Parse(record[length:])
+	if debitDD.Name, read, err = debitDD.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("Name", err)
+	}
+	length += read
+
+	if read, err = debitDD.Address.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
 
 	return length, nil
 }

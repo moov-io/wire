@@ -45,22 +45,31 @@ func NewRemittanceFreeText(isVariable bool) *RemittanceFreeText {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rft *RemittanceFreeText) Parse(record string) (int, error) {
-	if utf8.RuneCountInString(record) != 426 {
-		return 0, NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return 0, NewTagWrongLengthErr(9, utf8.RuneCountInString(record))
 	}
 
-	rft.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	rft.LineOne, read = rft.parseVariableStringField(record[length:], 140)
+	if rft.tag, read, err = rft.parseTag(record); err != nil {
+		return 0, fieldError("RemittanceFreeText.Tag", err)
+	}
 	length += read
 
-	rft.LineTwo, read = rft.parseVariableStringField(record[length:], 140)
+	if rft.LineOne, read, err = rft.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineOne", err)
+	}
 	length += read
 
-	rft.LineThree, read = rft.parseVariableStringField(record[length:], 140)
+	if rft.LineTwo, read, err = rft.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineTwo", err)
+	}
+	length += read
+
+	if rft.LineThree, read, err = rft.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineThree", err)
+	}
 	length += read
 
 	return length, nil

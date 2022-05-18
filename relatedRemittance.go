@@ -50,21 +50,36 @@ func (rr *RelatedRemittance) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 26 {
 		return 0, NewTagWrongLengthErr(26, utf8.RuneCountInString(record))
 	}
-	rr.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	rr.RemittanceIdentification, read = rr.parseVariableStringField(record[length:], 35)
+	if rr.tag, read, err = rr.parseTag(record); err != nil {
+		return 0, fieldError("RelatedRemittance.Tag", err)
+	}
 	length += read
 
-	rr.RemittanceLocationMethod, read = rr.parseVariableStringField(record[length:], 4)
+	if rr.RemittanceIdentification, read, err = rr.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("RemittanceIdentification", err)
+	}
 	length += read
 
-	rr.RemittanceLocationElectronicAddress, read = rr.parseVariableStringField(record[length:], 2048)
+	if rr.RemittanceLocationMethod, read, err = rr.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("RemittanceLocationMethod", err)
+	}
 	length += read
 
-	return length + rr.RemittanceData.ParseForRelatedRemittance(record[length:]), nil
+	if rr.RemittanceLocationElectronicAddress, read, err = rr.parseVariableStringField(record[length:], 2048); err != nil {
+		return 0, fieldError("RemittanceLocationElectronicAddress", err)
+	}
+	length += read
+
+	if read, err = rr.RemittanceData.ParseForRelatedRemittance(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (rr *RelatedRemittance) UnmarshalJSON(data []byte) error {

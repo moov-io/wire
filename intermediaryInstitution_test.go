@@ -104,7 +104,7 @@ func TestParseIntermediaryInstitutionWrongLength(t *testing.T) {
 
 	err := r.parseIntermediaryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
 }
 
 // TestParseIntermediaryInstitutionReaderParseError parses a wrong IntermediaryInstitution reader parse error

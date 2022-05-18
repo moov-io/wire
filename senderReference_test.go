@@ -39,7 +39,7 @@ func TestParseSenderReferenceWrongLength(t *testing.T) {
 
 	err := r.parseSenderReference()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(22, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SenderReference", ErrValidLengthSize)).Error())
 }
 
 // TestParseSenderReferenceReaderParseError parses a wrong SenderReference reader parse error

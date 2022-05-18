@@ -41,13 +41,13 @@ func TestDrawdownCreditAccountNumberRequired(t *testing.T) {
 
 // TestParseAccountCreditedDrawdownWrongLength parses a wrong AccountCreditedDrawdown record length
 func TestParseAccountCreditedDrawdownWrongLength(t *testing.T) {
-	var line = "{5400}12345678"
+	var line = "{5400}"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseAccountCreditedDrawdown()
 
-	expected := r.parseError(NewTagWrongLengthErr(15, len(r.line))).Error()
+	expected := r.parseError(NewTagWrongLengthErr(7, len(r.line))).Error()
 	require.EqualError(t, err, expected)
 }
 

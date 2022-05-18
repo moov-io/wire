@@ -44,9 +44,21 @@ func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 13 {
 		return 0, NewTagWrongLengthErr(13, len(record))
 	}
-	fibfia.tag = record[:6]
 
-	return 6 + fibfia.Advice.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if fibfia.tag, read, err = fibfia.parseTag(record); err != nil {
+		return 0, fieldError("FIBeneficiaryFIAdvice.Tag", err)
+	}
+	length += read
+
+	if read, err = fibfia.Advice.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (fibfia *FIBeneficiaryFIAdvice) UnmarshalJSON(data []byte) error {

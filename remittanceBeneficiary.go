@@ -55,27 +55,45 @@ func (rb *RemittanceBeneficiary) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(29, utf8.RuneCountInString(record))
 	}
 
-	rb.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	rb.Name, read = rb.parseVariableStringField(record[length:], 140)
+	if rb.tag, read, err = rb.parseTag(record); err != nil {
+		return 0, fieldError("RemittanceBeneficiary.Tag", err)
+	}
 	length += read
 
-	rb.IdentificationType, read = rb.parseVariableStringField(record[length:], 2)
+	if rb.Name, read, err = rb.parseVariableStringField(record[length:], 140); err != nil {
+		return 0, fieldError("Name", err)
+	}
 	length += read
 
-	rb.IdentificationCode, read = rb.parseVariableStringField(record[length:], 4)
+	if rb.IdentificationType, read, err = rb.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("IdentificationType", err)
+	}
 	length += read
 
-	rb.IdentificationNumber, read = rb.parseVariableStringField(record[length:], 35)
+	if rb.IdentificationCode, read, err = rb.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("IdentificationCode", err)
+	}
 	length += read
 
-	rb.IdentificationNumberIssuer, read = rb.parseVariableStringField(record[length:], 35)
+	if rb.IdentificationNumber, read, err = rb.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("IdentificationNumber", err)
+	}
 	length += read
 
-	return length + rb.RemittanceData.ParseForRemittanceBeneficiary(record[length:]), nil
+	if rb.IdentificationNumberIssuer, read, err = rb.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("IdentificationNumberIssuer", err)
+	}
+	length += read
+
+	if read, err = rb.RemittanceData.ParseForRemittanceBeneficiary(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (rb *RemittanceBeneficiary) UnmarshalJSON(data []byte) error {
@@ -125,8 +143,8 @@ func (rb *RemittanceBeneficiary) Validate() error {
 	if rb.tag != TagRemittanceBeneficiary {
 		return fieldError("tag", ErrValidTagForType, rb.tag)
 	}
-	if err := rb.isAlphanumeric(rb.RemittanceData.Name); err != nil {
-		return fieldError("Name", err, rb.RemittanceData.Name)
+	if err := rb.isAlphanumeric(rb.Name); err != nil {
+		return fieldError("Name", err, rb.Name)
 	}
 	if err := rb.isIdentificationType(rb.IdentificationType); err != nil {
 		return fieldError("IdentificationType", err, rb.IdentificationType)
@@ -205,7 +223,7 @@ func (rb *RemittanceBeneficiary) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (rb *RemittanceBeneficiary) fieldInclusion() error {
-	if rb.RemittanceData.Name == "" {
+	if rb.Name == "" {
 		return fieldError("Name", ErrFieldRequired)
 	}
 

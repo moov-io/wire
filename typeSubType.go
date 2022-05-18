@@ -47,15 +47,22 @@ func (tst *TypeSubType) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(8, utf8.RuneCountInString(record))
 	}
 
-	tst.tag = tst.parseStringField(record[:6])
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	tst.TypeCode, read = tst.parseVariableStringField(record[length:], 2)
+	if tst.tag, read, err = tst.parseTag(record); err != nil {
+		return 0, fieldError("TypeSubType.Tag", err)
+	}
 	length += read
 
-	tst.SubTypeCode, read = tst.parseVariableStringField(record[length:], 2)
+	if tst.TypeCode, read, err = tst.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("TypeCode", err)
+	}
+	length += read
+
+	if tst.SubTypeCode, read, err = tst.parseVariableStringField(record[length:], 2); err != nil {
+		return 0, fieldError("SubTypeCode", err)
+	}
 	length += read
 
 	return length, nil

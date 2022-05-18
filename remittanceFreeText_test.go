@@ -61,7 +61,7 @@ func TestParseRemittanceFreeTextWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceFreeText()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(426, len(r.line))).Error())
+	require.Nil(t, err)
 }
 
 // TestParseRemittanceFreeTextReaderParseError parses a wrong RemittanceFreeText reader parse error

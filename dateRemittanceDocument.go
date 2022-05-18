@@ -44,12 +44,18 @@ func (drd *DateRemittanceDocument) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 7 {
 		return 0, NewTagWrongLengthErr(7, len(record))
 	}
-	drd.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	drd.DateRemittanceDocument, read = drd.parseVariableStringField(record[length:], 8)
+	if drd.tag, read, err = drd.parseTag(record); err != nil {
+		return 0, fieldError("DateRemittanceDocument.Tag", err)
+	}
+	length += read
+
+	if drd.DateRemittanceDocument, read, err = drd.parseVariableStringField(record[length:], 8); err != nil {
+		fieldError("DateRemittanceDocument", err)
+	}
 	length += read
 
 	return length, nil

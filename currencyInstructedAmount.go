@@ -47,15 +47,23 @@ func (cia *CurrencyInstructedAmount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	cia.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	cia.SwiftFieldTag, read = cia.parseVariableStringField(record[length:], 5)
+	if cia.tag, read, err = cia.parseTag(record); err != nil {
+		return 0, fieldError("CurrencyInstructedAmount.Tag", err)
+	}
 	length += read
 
-	cia.Amount, read = cia.parseVariableStringField(record[length:], 18)
+	if cia.SwiftFieldTag, read, err = cia.parseVariableStringField(record[length:], 5); err != nil {
+		return 0, fieldError("SwiftFieldTag", err)
+	}
+	length += read
+
+	if cia.Amount, read, err = cia.parseVariableStringField(record[length:], 18); err != nil {
+		return 0, fieldError("Amount", err)
+	}
 	length += read
 
 	return length, nil

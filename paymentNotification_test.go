@@ -105,7 +105,7 @@ func TestParsePaymentNotificationWrongLength(t *testing.T) {
 
 	err := r.parsePaymentNotification()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(2335, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("EndToEndIdentification", ErrValidLengthSize)).Error())
 }
 
 // TestParsePaymentNotificationReaderParseError parses a wrong PaymentNotification reader parse error

@@ -44,9 +44,21 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) (int, er
 	if utf8.RuneCountInString(record) < 13 {
 		return 0, NewTagWrongLengthErr(13, len(record))
 	}
-	debitDDAdvice.tag = record[:6]
 
-	return 6 + debitDDAdvice.Advice.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if debitDDAdvice.tag, read, err = debitDDAdvice.parseTag(record); err != nil {
+		return 0, fieldError("FIDrawdownDebitAccountAdvice.Tag", err)
+	}
+	length += read
+
+	if read, err = debitDDAdvice.Advice.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) error {

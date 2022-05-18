@@ -109,24 +109,37 @@ func (oof *OriginatorOptionF) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(11, len(record))
 	}
 
-	oof.tag = oof.parseStringField(record[:6])
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	oof.PartyIdentifier, read = oof.parseVariableStringField(record[length:], 35)
+	if oof.tag, read, err = oof.parseTag(record); err != nil {
+		return 0, fieldError("OriginatorOptionF.Tag", err)
+	}
 	length += read
 
-	oof.Name, read = oof.parseVariableStringField(record[length:], 35)
+	if oof.PartyIdentifier, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("PartyIdentifier", err)
+	}
 	length += read
 
-	oof.LineOne, read = oof.parseVariableStringField(record[length:], 35)
+	if oof.Name, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("Name", err)
+	}
 	length += read
 
-	oof.LineTwo, read = oof.parseVariableStringField(record[length:], 35)
+	if oof.LineOne, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineOne", err)
+	}
 	length += read
 
-	oof.LineThree, read = oof.parseVariableStringField(record[length:], 35)
+	if oof.LineTwo, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineTwo", err)
+	}
+	length += read
+
+	if oof.LineThree, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("LineThree", err)
+	}
 	length += read
 
 	return length, nil

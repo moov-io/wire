@@ -42,23 +42,30 @@ func NewLocalInstrument(isVariable bool) *LocalInstrument {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (li *LocalInstrument) Parse(record string) (error, int) {
+func (li *LocalInstrument) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
-		return NewTagWrongLengthErr(8, len(record)), 0
+		return 0, NewTagWrongLengthErr(8, len(record))
 	}
 
-	li.tag = record[:6]
+	var err error
+	var length, read int
 
-	length := 6
-	read := 0
-
-	li.LocalInstrumentCode, read = li.parseVariableStringField(record[length:], 4)
+	if li.tag, read, err = li.parseTag(record); err != nil {
+		return 0, fieldError("LocalInstrument.Tag", err)
+	}
 	length += read
 
-	li.ProprietaryCode, read = li.parseVariableStringField(record[length:], 35)
+	if li.LocalInstrumentCode, read, err = li.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("LocalInstrumentCode", err)
+	}
 	length += read
 
-	return nil, length
+	if li.ProprietaryCode, read, err = li.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("ProprietaryCode", err)
+	}
+	length += read
+
+	return length, nil
 }
 
 func (li *LocalInstrument) UnmarshalJSON(data []byte) error {

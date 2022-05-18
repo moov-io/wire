@@ -45,9 +45,20 @@ func (ri *Remittance) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(11, utf8.RuneCountInString(record))
 	}
 
-	ri.tag = record[:6]
+	var err error
+	var length, read int
 
-	return 6 + ri.CoverPayment.Parse(record[6:]), nil
+	if ri.tag, read, err = ri.parseTag(record); err != nil {
+		return 0, fieldError("Remittance.Tag", err)
+	}
+	length += read
+
+	if read, err = ri.CoverPayment.ParseFour(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (ri *Remittance) UnmarshalJSON(data []byte) error {
@@ -70,7 +81,7 @@ func (ri *Remittance) String() string {
 	buf.Grow(151)
 
 	buf.WriteString(ri.tag)
-	buf.WriteString(ri.CoverPayment.String(ri.isVariableLength))
+	buf.WriteString(ri.CoverPayment.StringFour(ri.isVariableLength))
 
 	return buf.String()
 }

@@ -44,9 +44,21 @@ func (bfi *BeneficiaryFI) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	bfi.tag = record[:6]
 
-	return 6 + bfi.FinancialInstitution.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if bfi.tag, read, err = bfi.parseTag(record); err != nil {
+		return 0, fieldError("BeneficiaryFI.Tag", err)
+	}
+	length += read
+
+	if read, err = bfi.FinancialInstitution.Parse(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {

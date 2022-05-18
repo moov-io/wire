@@ -47,15 +47,23 @@ func (pm *FIPaymentMethodToBeneficiary) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 8 {
 		return 0, NewTagWrongLengthErr(8, len(record))
 	}
-	pm.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	pm.PaymentMethod, read = pm.parseVariableStringField(record[length:], 5)
+	if pm.tag, read, err = pm.parseTag(record); err != nil {
+		return 0, fieldError("FIPaymentMethodToBeneficiary.Tag", err)
+	}
 	length += read
 
-	pm.AdditionalInformation, read = pm.parseVariableStringField(record[length:], 30)
+	if pm.PaymentMethod, read, err = pm.parseVariableStringField(record[length:], 5); err != nil {
+		return 0, fieldError("PaymentMethod", err)
+	}
+	length += read
+
+	if pm.AdditionalInformation, read, err = pm.parseVariableStringField(record[length:], 30); err != nil {
+		return 0, fieldError("AdditionalInformation", err)
+	}
 	length += read
 
 	return length, nil

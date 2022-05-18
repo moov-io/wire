@@ -59,28 +59,45 @@ func (pn *PaymentNotification) Parse(record string) (int, error) {
 		return 0, NewTagWrongLengthErr(13, len(record))
 	}
 
-	pn.tag = record[:6]
-	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
+	var err error
+	var length, read int
 
-	length := 7
-	read := 0
-
-	pn.ContactNotificationElectronicAddress, read = pn.parseVariableStringField(record[length:], 2048)
+	if pn.tag, read, err = pn.parseTag(record); err != nil {
+		return 0, fieldError("PaymentNotification.Tag", err)
+	}
 	length += read
 
-	pn.ContactName, read = pn.parseVariableStringField(record[length:], 140)
+	pn.PaymentNotificationIndicator = pn.parseStringField(record[length : length+1])
+	length += 1
+
+	if pn.ContactNotificationElectronicAddress, read, err = pn.parseVariableStringField(record[length:], 2048); err != nil {
+		return 0, fieldError("ContactNotificationElectronicAddress", err)
+	}
 	length += read
 
-	pn.ContactPhoneNumber, read = pn.parseVariableStringField(record[length:], 35)
+	if pn.ContactName, read, err = pn.parseVariableStringField(record[length:], 140); err != nil {
+		return 0, fieldError("ContactName", err)
+	}
 	length += read
 
-	pn.ContactMobileNumber, read = pn.parseVariableStringField(record[length:], 35)
+	if pn.ContactPhoneNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("ContactPhoneNumber", err)
+	}
 	length += read
 
-	pn.ContactFaxNumber, read = pn.parseVariableStringField(record[length:], 35)
+	if pn.ContactMobileNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("ContactMobileNumber", err)
+	}
 	length += read
 
-	pn.EndToEndIdentification, read = pn.parseVariableStringField(record[length:], 35)
+	if pn.ContactFaxNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("ContactFaxNumber", err)
+	}
+	length += read
+
+	if pn.EndToEndIdentification, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("EndToEndIdentification", err)
+	}
 	length += read
 
 	return length, nil

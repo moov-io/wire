@@ -103,7 +103,7 @@ func TestParseRemittanceWrongLength(t *testing.T) {
 
 	err := r.parseRemittance()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(151, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFour", ErrValidLengthSize)).Error())
 }
 
 // TestParseRemittanceReaderParseError parses a wrong Remittance reader parse error

@@ -79,5 +79,5 @@ func TestRead_missingTag(t *testing.T) {
 
 	_, err = r.Read()
 
-	require.EqualError(t, err, "file validation failed: FIBeneficiaryAdvice <nil> is a required field")
+	require.EqualError(t, err, "file validation failed: FIBeneficiaryAdvice is a required field")
 }

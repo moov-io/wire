@@ -104,7 +104,7 @@ func TestParseFIIntermediaryFIAdviceWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIIntermediaryFIAdvice()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(200, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIIntermediaryFIAdviceReaderParseError parses a wrong FIIntermediaryFIAdvice reader parse error

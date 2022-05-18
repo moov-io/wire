@@ -50,7 +50,7 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 
 	err := r.parseBusinessFunctionCode()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(12, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("BusinessFunctionCode", ErrValidLengthSize)).Error())
 }
 
 // TestParseBusinessFunctionCodeReaderParseError parses a wrong BusinessFunctionCode reader parse error

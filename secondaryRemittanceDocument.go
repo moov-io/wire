@@ -53,19 +53,32 @@ func (srd *SecondaryRemittanceDocument) Parse(record string) (int, error) {
 
 	srd.tag = record[:6]
 
-	length := 6
-	read := 0
+	var err error
+	var length, read int
 
-	srd.DocumentTypeCode, read = srd.parseVariableStringField(record[length:], 4)
+	if srd.tag, read, err = srd.parseTag(record); err != nil {
+		return 0, fieldError("SecondaryRemittanceDocument.Tag", err)
+	}
 	length += read
 
-	srd.ProprietaryDocumentTypeCode, read = srd.parseVariableStringField(record[length:], 35)
+	if srd.DocumentTypeCode, read, err = srd.parseVariableStringField(record[length:], 4); err != nil {
+		return 0, fieldError("DocumentTypeCode", err)
+	}
 	length += read
 
-	srd.DocumentIdentificationNumber, read = srd.parseVariableStringField(record[length:], 35)
+	if srd.ProprietaryDocumentTypeCode, read, err = srd.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("ProprietaryDocumentTypeCode", err)
+	}
 	length += read
 
-	srd.Issuer, read = srd.parseVariableStringField(record[length:], 35)
+	if srd.DocumentIdentificationNumber, read, err = srd.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("DocumentIdentificationNumber", err)
+	}
+	length += read
+
+	if srd.Issuer, read, err = srd.parseVariableStringField(record[length:], 35); err != nil {
+		return 0, fieldError("Issuer", err)
+	}
 	length += read
 
 	return length, nil

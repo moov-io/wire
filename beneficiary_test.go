@@ -114,7 +114,7 @@ func TestParseBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiary()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
 }
 
 // TestParseBeneficiaryReaderParseError parses a wrong Beneficiary reader parse error

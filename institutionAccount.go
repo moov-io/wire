@@ -44,9 +44,21 @@ func (iAccount *InstitutionAccount) Parse(record string) (int, error) {
 	if utf8.RuneCountInString(record) < 12 {
 		return 0, NewTagWrongLengthErr(12, len(record))
 	}
-	iAccount.tag = record[:6]
 
-	return 6 + iAccount.CoverPayment.Parse(record[6:]), nil
+	var err error
+	var length, read int
+
+	if iAccount.tag, read, err = iAccount.parseTag(record); err != nil {
+		return 0, fieldError("InstitutionAccount.Tag", err)
+	}
+	length += read
+
+	if read, err = iAccount.CoverPayment.ParseFive(record[length:]); err != nil {
+		return 0, err
+	}
+	length += read
+
+	return length, nil
 }
 
 func (iAccount *InstitutionAccount) UnmarshalJSON(data []byte) error {
@@ -69,7 +81,7 @@ func (iAccount *InstitutionAccount) String() string {
 	buf.Grow(186)
 
 	buf.WriteString(iAccount.tag)
-	buf.WriteString(iAccount.CoverPayment.String(iAccount.isVariableLength))
+	buf.WriteString(iAccount.CoverPayment.StringFive(iAccount.isVariableLength))
 
 	return buf.String()
 }

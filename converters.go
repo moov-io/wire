@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -22,24 +23,49 @@ func (c *converters) parseStringField(r string) (s string) {
 	return s
 }
 
-func (c *converters) parseVariableStringField(r string, maxLen int) (s string, index int) {
+func (c *converters) parseTag(r string) (s string, index int, err error) {
+
+	if len(r) < 6 {
+		err = ErrValidTagForType
+		return
+	}
+
+	expectTag := r[:6]
+
+	tagRegexString := `^{([0-9]{4})}$`
+	reg := regexp.MustCompile(tagRegexString)
+	if !reg.MatchString(expectTag) {
+		err = ErrValidTagForType
+		return
+	}
+
+	s = expectTag
+	index = 6
+
+	return
+}
+
+func (c *converters) parseVariableStringField(r string, maxLen int) (s string, read int, err error) {
+
 	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > 0 {
-		index = delimiterIndex
-	}
-	if delimiterIndex := strings.Index(r, "{"); delimiterIndex > 0 && delimiterIndex < index {
-		index = delimiterIndex
+		read = delimiterIndex
 	}
 
-	if index == 0 || index > maxLen {
-		index = maxLen
+	if delimiterIndex := strings.Index(r, "{"); delimiterIndex > 0 && delimiterIndex < read {
+		read = delimiterIndex
 	}
 
-	if index < len(r) {
-		index = len(r)
+	if read == 0 || read > maxLen {
+		read = maxLen
 	}
 
-	s = strings.TrimSpace(r[:index])
-	return s, index
+	if read > len(r) {
+		err = ErrValidLengthSize
+		return
+	}
+
+	s = strings.TrimSpace(r[:read])
+	return
 }
 
 // alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.

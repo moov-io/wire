@@ -177,6 +177,8 @@ func (v *validator) isTransactionTypeCode(code string) error {
 	case
 		"   ", "COV":
 		return nil
+	case "": // for variable length
+		return nil
 	}
 	return ErrTransactionTypeCode
 }

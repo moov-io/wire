@@ -4,7 +4,9 @@
 
 package wire
 
-import "strings"
+import (
+	"strings"
+)
 
 // FIToFI is financial institution to financial institution
 type FIToFI struct {
@@ -29,30 +31,41 @@ type FIToFI struct {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (f *FIToFI) Parse(record string) int {
+func (f *FIToFI) Parse(record string) (length int, err error) {
 
-	length := 0
-	read := 0
+	var read int
 
-	f.LineOne, read = f.parseVariableStringField(record[length:], 30)
+	if f.LineOne, read, err = f.parseVariableStringField(record[length:], 30); err != nil {
+		return 0, fieldError("LineOne", err)
+	}
 	length += read
 
-	f.LineTwo, read = f.parseVariableStringField(record[length:], 33)
+	if f.LineTwo, read, err = f.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineTwo", err)
+	}
 	length += read
 
-	f.LineThree, read = f.parseVariableStringField(record[length:], 33)
+	if f.LineThree, read, err = f.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineThree", err)
+	}
 	length += read
 
-	f.LineFour, read = f.parseVariableStringField(record[length:], 33)
+	if f.LineFour, read, err = f.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineFour", err)
+	}
 	length += read
 
-	f.LineFive, read = f.parseVariableStringField(record[length:], 33)
+	if f.LineFive, read, err = f.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineFive", err)
+	}
 	length += read
 
-	f.LineSix, read = f.parseVariableStringField(record[length:], 33)
+	if f.LineSix, read, err = f.parseVariableStringField(record[length:], 33); err != nil {
+		return 0, fieldError("LineSix", err)
+	}
 	length += read
 
-	return length
+	return
 }
 
 // String writes FIToFI

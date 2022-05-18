@@ -113,7 +113,7 @@ func TestParseAdjustmentWrongLength(t *testing.T) {
 
 	err := r.parseAdjustment()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(174, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AdditionalInfo", ErrValidLengthSize)).Error())
 }
 
 // TestParseAdjustmentReaderParseError parses a wrong Adjustment reader parse error
