@@ -9,7 +9,7 @@ import (
 
 // mockFIAdditionalFIToFI creates a FIAdditionalFIToFI
 func mockFIAdditionalFIToFI() *FIAdditionalFIToFI {
-	fifi := NewFIAdditionalFIToFI(false)
+	fifi := NewFIAdditionalFIToFI()
 	fifi.AdditionalFIToFI.LineOne = "Line One"
 	fifi.AdditionalFIToFI.LineTwo = "Line Two"
 	fifi.AdditionalFIToFI.LineThree = "Line Three"

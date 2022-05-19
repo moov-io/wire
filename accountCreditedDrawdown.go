@@ -16,8 +16,6 @@ var _ segment = &AccountCreditedDrawdown{}
 type AccountCreditedDrawdown struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// DrawdownCreditAccountNumber  9 character ABA
 	DrawdownCreditAccountNumber string `json:"drawdownCreditAccountNumber,omitempty"`
 
@@ -28,10 +26,9 @@ type AccountCreditedDrawdown struct {
 }
 
 // NewAccountCreditedDrawdown returns a new AccountCreditedDrawdown
-func NewAccountCreditedDrawdown(isVariable bool) *AccountCreditedDrawdown {
+func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
 	creditDD := &AccountCreditedDrawdown{
-		tag:              TagAccountCreditedDrawdown,
-		isVariableLength: isVariable,
+		tag: TagAccountCreditedDrawdown,
 	}
 
 	return creditDD
@@ -77,11 +74,19 @@ func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {
 }
 
 // String writes AccountCreditedDrawdown
-func (creditDD *AccountCreditedDrawdown) String() string {
+func (creditDD *AccountCreditedDrawdown) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(15)
+
 	buf.WriteString(creditDD.tag)
-	buf.WriteString(creditDD.DrawdownCreditAccountNumberField())
+	buf.WriteString(creditDD.DrawdownCreditAccountNumberField(isCompressed))
+
 	return buf.String()
 }
 
@@ -110,6 +115,6 @@ func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
 }
 
 // DrawdownCreditAccountNumberField gets a string of the DrawdownCreditAccountNumber field
-func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField() string {
-	return creditDD.alphaVariableField(creditDD.DrawdownCreditAccountNumber, 9, creditDD.isVariableLength)
+func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField(isCompressed bool) string {
+	return creditDD.alphaVariableField(creditDD.DrawdownCreditAccountNumber, 9, isCompressed)
 }

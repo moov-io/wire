@@ -9,7 +9,7 @@ import (
 
 //  InstitutionAccount creates a InstitutionAccount
 func mockInstitutionAccount() *InstitutionAccount {
-	iAccount := NewInstitutionAccount(false)
+	iAccount := NewInstitutionAccount()
 	iAccount.CoverPayment.SwiftFieldTag = "Swift Field Tag"
 	iAccount.CoverPayment.SwiftLineOne = "Swift Line One"
 	iAccount.CoverPayment.SwiftLineTwo = "Swift Line Two"

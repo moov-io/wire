@@ -16,8 +16,6 @@ var _ segment = &SenderDepositoryInstitution{}
 type SenderDepositoryInstitution struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// SenderABANumber
 	SenderABANumber string `json:"senderABANumber"`
 	// SenderShortName
@@ -30,10 +28,9 @@ type SenderDepositoryInstitution struct {
 }
 
 // NewSenderDepositoryInstitution returns a new SenderDepositoryInstitution
-func NewSenderDepositoryInstitution(isVariable bool) *SenderDepositoryInstitution {
+func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 	sdi := &SenderDepositoryInstitution{
-		tag:              TagSenderDepositoryInstitution,
-		isVariableLength: isVariable,
+		tag: TagSenderDepositoryInstitution,
 	}
 	return sdi
 }
@@ -83,12 +80,20 @@ func (sdi *SenderDepositoryInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderDepositoryInstitution
-func (sdi *SenderDepositoryInstitution) String() string {
+func (sdi *SenderDepositoryInstitution) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(39)
+
 	buf.WriteString(sdi.tag)
-	buf.WriteString(sdi.SenderABANumberField())
-	buf.WriteString(sdi.SenderShortNameField())
+	buf.WriteString(sdi.SenderABANumberField(isCompressed))
+	buf.WriteString(sdi.SenderShortNameField(isCompressed))
+
 	return buf.String()
 }
 
@@ -123,11 +128,11 @@ func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
 }
 
 // SenderABANumberField gets a string of the SenderABANumber field
-func (sdi *SenderDepositoryInstitution) SenderABANumberField() string {
-	return sdi.alphaVariableField(sdi.SenderABANumber, 9, sdi.isVariableLength)
+func (sdi *SenderDepositoryInstitution) SenderABANumberField(isCompressed bool) string {
+	return sdi.alphaVariableField(sdi.SenderABANumber, 9, isCompressed)
 }
 
 // SenderShortNameField gets a string of the SenderShortName field
-func (sdi *SenderDepositoryInstitution) SenderShortNameField() string {
-	return sdi.alphaVariableField(sdi.SenderShortName, 18, sdi.isVariableLength)
+func (sdi *SenderDepositoryInstitution) SenderShortNameField(isCompressed bool) string {
+	return sdi.alphaVariableField(sdi.SenderShortName, 18, isCompressed)
 }

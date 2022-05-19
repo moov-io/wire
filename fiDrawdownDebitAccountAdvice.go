@@ -16,8 +16,6 @@ var _ segment = &FIDrawdownDebitAccountAdvice{}
 type FIDrawdownDebitAccountAdvice struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Advice
 	Advice Advice `json:"advice,omitempty"`
 
@@ -28,10 +26,9 @@ type FIDrawdownDebitAccountAdvice struct {
 }
 
 // NewFIDrawdownDebitAccountAdvice returns a new FIDrawdownDebitAccountAdvice
-func NewFIDrawdownDebitAccountAdvice(isVariable bool) *FIDrawdownDebitAccountAdvice {
+func NewFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
 	debitDDAdvice := &FIDrawdownDebitAccountAdvice{
-		tag:              TagFIDrawdownDebitAccountAdvice,
-		isVariableLength: isVariable,
+		tag: TagFIDrawdownDebitAccountAdvice,
 	}
 	return debitDDAdvice
 }
@@ -76,12 +73,18 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) er
 }
 
 // String writes FIDrawdownDebitAccountAdvice
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(200)
 
 	buf.WriteString(debitDDAdvice.tag)
-	buf.WriteString(debitDDAdvice.Advice.String(debitDDAdvice.isVariableLength))
+	buf.WriteString(debitDDAdvice.Advice.String(isCompressed))
 
 	return buf.String()
 }

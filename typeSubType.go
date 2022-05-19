@@ -16,8 +16,6 @@ var _ segment = &TypeSubType{}
 type TypeSubType struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// TypeCode
 	TypeCode string `json:"typeCode"`
 	// SubTypeCode
@@ -30,10 +28,9 @@ type TypeSubType struct {
 }
 
 // NewTypeSubType returns a new TypeSubType
-func NewTypeSubType(isVariable bool) *TypeSubType {
+func NewTypeSubType() *TypeSubType {
 	tst := &TypeSubType{
-		tag:              TagTypeSubType,
-		isVariableLength: isVariable,
+		tag: TagTypeSubType,
 	}
 	return tst
 }
@@ -83,13 +80,19 @@ func (tst *TypeSubType) UnmarshalJSON(data []byte) error {
 }
 
 // String writes TypeSubType
-func (tst *TypeSubType) String() string {
+func (tst *TypeSubType) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(10)
 
 	buf.WriteString(tst.tag)
-	buf.WriteString(tst.TypeCodeField())
-	buf.WriteString(tst.SubTypeCodeField())
+	buf.WriteString(tst.TypeCodeField(isCompressed))
+	buf.WriteString(tst.SubTypeCodeField(isCompressed))
 
 	return buf.String()
 }
@@ -125,11 +128,11 @@ func (tst *TypeSubType) fieldInclusion() error {
 }
 
 // TypeCodeField gets a string of the TypeCode field
-func (tst *TypeSubType) TypeCodeField() string {
-	return tst.alphaVariableField(tst.TypeCode, 2, tst.isVariableLength)
+func (tst *TypeSubType) TypeCodeField(isCompressed bool) string {
+	return tst.alphaVariableField(tst.TypeCode, 2, isCompressed)
 }
 
 // SubTypeCodeField gets a string of the SubTypeCode field
-func (tst *TypeSubType) SubTypeCodeField() string {
-	return tst.alphaVariableField(tst.SubTypeCode, 2, tst.isVariableLength)
+func (tst *TypeSubType) SubTypeCodeField(isCompressed bool) string {
+	return tst.alphaVariableField(tst.SubTypeCode, 2, isCompressed)
 }

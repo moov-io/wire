@@ -16,8 +16,6 @@ var _ segment = &RemittanceBeneficiary{}
 type RemittanceBeneficiary struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Name
 	Name string `json:"name,omitempty"`
 	// IdentificationType is identification type
@@ -38,10 +36,9 @@ type RemittanceBeneficiary struct {
 }
 
 // NewRemittanceBeneficiary returns a new RemittanceBeneficiary
-func NewRemittanceBeneficiary(isVariable bool) *RemittanceBeneficiary {
+func NewRemittanceBeneficiary() *RemittanceBeneficiary {
 	rb := &RemittanceBeneficiary{
-		tag:              TagRemittanceBeneficiary,
-		isVariableLength: isVariable,
+		tag: TagRemittanceBeneficiary,
 	}
 	return rb
 }
@@ -111,17 +108,23 @@ func (rb *RemittanceBeneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes RemittanceBeneficiary
-func (rb *RemittanceBeneficiary) String() string {
+func (rb *RemittanceBeneficiary) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(1114)
 
 	buf.WriteString(rb.tag)
-	buf.WriteString(rb.NameField())
-	buf.WriteString(rb.IdentificationTypeField())
-	buf.WriteString(rb.IdentificationCodeField())
-	buf.WriteString(rb.IdentificationNumberField())
-	buf.WriteString(rb.IdentificationNumberIssuerField())
-	buf.WriteString(rb.RemittanceData.StringForRemittanceBeneficiary(rb.isVariableLength))
+	buf.WriteString(rb.NameField(isCompressed))
+	buf.WriteString(rb.IdentificationTypeField(isCompressed))
+	buf.WriteString(rb.IdentificationCodeField(isCompressed))
+	buf.WriteString(rb.IdentificationNumberField(isCompressed))
+	buf.WriteString(rb.IdentificationNumberIssuerField(isCompressed))
+	buf.WriteString(rb.RemittanceData.StringForRemittanceBeneficiary(isCompressed))
 
 	return buf.String()
 }
@@ -248,26 +251,26 @@ func (rb *RemittanceBeneficiary) fieldInclusion() error {
 }
 
 // NameField gets a string of the Name field
-func (rb *RemittanceBeneficiary) NameField() string {
-	return rb.alphaField(rb.Name, 140)
+func (rb *RemittanceBeneficiary) NameField(isCompressed bool) string {
+	return rb.alphaVariableField(rb.Name, 140, isCompressed)
 }
 
 // IdentificationTypeField gets a string of the IdentificationType field
-func (rb *RemittanceBeneficiary) IdentificationTypeField() string {
-	return rb.alphaField(rb.IdentificationType, 2)
+func (rb *RemittanceBeneficiary) IdentificationTypeField(isCompressed bool) string {
+	return rb.alphaVariableField(rb.IdentificationType, 2, isCompressed)
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
-func (rb *RemittanceBeneficiary) IdentificationCodeField() string {
-	return rb.alphaField(rb.IdentificationCode, 4)
+func (rb *RemittanceBeneficiary) IdentificationCodeField(isCompressed bool) string {
+	return rb.alphaVariableField(rb.IdentificationCode, 4, isCompressed)
 }
 
 // IdentificationNumberField gets a string of the IdentificationNumber field
-func (rb *RemittanceBeneficiary) IdentificationNumberField() string {
-	return rb.alphaField(rb.IdentificationNumber, 35)
+func (rb *RemittanceBeneficiary) IdentificationNumberField(isCompressed bool) string {
+	return rb.alphaVariableField(rb.IdentificationNumber, 35, isCompressed)
 }
 
 // IdentificationNumberIssuerField gets a string of the IdentificationNumberIssuer field
-func (rb *RemittanceBeneficiary) IdentificationNumberIssuerField() string {
-	return rb.alphaField(rb.IdentificationNumberIssuer, 35)
+func (rb *RemittanceBeneficiary) IdentificationNumberIssuerField(isCompressed bool) string {
+	return rb.alphaVariableField(rb.IdentificationNumberIssuer, 35, isCompressed)
 }

@@ -9,7 +9,7 @@ import (
 
 // mockTypeSubType creates a TypeSubType
 func mockTypeSubType() *TypeSubType {
-	tst := NewTypeSubType(false)
+	tst := NewTypeSubType()
 	tst.TypeCode = FundsTransfer
 	tst.SubTypeCode = BasicFundsTransfer
 	return tst

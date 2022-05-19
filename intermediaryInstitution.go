@@ -16,8 +16,6 @@ var _ segment = &IntermediaryInstitution{}
 type IntermediaryInstitution struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type IntermediaryInstitution struct {
 }
 
 // NewIntermediaryInstitution returns a new IntermediaryInstitution
-func NewIntermediaryInstitution(isVariable bool) *IntermediaryInstitution {
+func NewIntermediaryInstitution() *IntermediaryInstitution {
 	ii := &IntermediaryInstitution{
-		tag:              TagIntermediaryInstitution,
-		isVariableLength: isVariable,
+		tag: TagIntermediaryInstitution,
 	}
 	return ii
 }
@@ -76,12 +73,18 @@ func (ii *IntermediaryInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes IntermediaryInstitution
-func (ii *IntermediaryInstitution) String() string {
+func (ii *IntermediaryInstitution) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(ii.tag)
-	buf.WriteString(ii.CoverPayment.StringFive(ii.isVariableLength))
+	buf.WriteString(ii.CoverPayment.StringFive(isCompressed))
 
 	return buf.String()
 }

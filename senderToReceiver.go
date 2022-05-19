@@ -16,8 +16,6 @@ var _ segment = &SenderToReceiver{}
 type SenderToReceiver struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type SenderToReceiver struct {
 }
 
 // NewSenderToReceiver returns a new SenderToReceiver
-func NewSenderToReceiver(isVariable bool) *SenderToReceiver {
+func NewSenderToReceiver() *SenderToReceiver {
 	str := &SenderToReceiver{
-		tag:              TagSenderToReceiver,
-		isVariableLength: isVariable,
+		tag: TagSenderToReceiver,
 	}
 	return str
 }
@@ -76,12 +73,18 @@ func (str *SenderToReceiver) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderToReceiver
-func (str *SenderToReceiver) String() string {
+func (str *SenderToReceiver) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(221)
 
 	buf.WriteString(str.tag)
-	buf.WriteString(str.CoverPayment.StringSix(str.isVariableLength))
+	buf.WriteString(str.CoverPayment.StringSix(isCompressed))
 
 	return buf.String()
 }

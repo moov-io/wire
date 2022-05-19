@@ -16,8 +16,6 @@ var _ segment = &MessageDisposition{}
 type MessageDisposition struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// FormatVersion 30
 	FormatVersion string `json:"formatVersion,omitempty"`
 	// TestTestProductionCode identifies if test or production
@@ -34,13 +32,12 @@ type MessageDisposition struct {
 }
 
 // NewMessageDisposition returns a new MessageDisposition
-func NewMessageDisposition(isVariable bool) *MessageDisposition {
+func NewMessageDisposition() *MessageDisposition {
 	md := &MessageDisposition{
 		tag:                    TagMessageDisposition,
 		FormatVersion:          FormatVersion,
 		TestProductionCode:     EnvironmentProduction,
 		MessageDuplicationCode: MessageDuplicationOriginal,
-		isVariableLength:       isVariable,
 	}
 	return md
 }
@@ -100,15 +97,21 @@ func (md *MessageDisposition) UnmarshalJSON(data []byte) error {
 }
 
 // String writes MessageDisposition
-func (md *MessageDisposition) String() string {
+func (md *MessageDisposition) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(11)
 
 	buf.WriteString(md.tag)
-	buf.WriteString(md.MessageDispositionFormatVersionField())
-	buf.WriteString(md.MessageDispositionTestProductionCodeField())
-	buf.WriteString(md.MessageDispositionMessageDuplicationCodeField())
-	buf.WriteString(md.MessageDispositionMessageStatusIndicatorField())
+	buf.WriteString(md.MessageDispositionFormatVersionField(isCompressed))
+	buf.WriteString(md.MessageDispositionTestProductionCodeField(isCompressed))
+	buf.WriteString(md.MessageDispositionMessageDuplicationCodeField(isCompressed))
+	buf.WriteString(md.MessageDispositionMessageStatusIndicatorField(isCompressed))
 
 	return buf.String()
 }
@@ -124,21 +127,21 @@ func (md *MessageDisposition) Validate() error {
 }
 
 // MessageDispositionFormatVersionField gets a string of the FormatVersion field
-func (md *MessageDisposition) MessageDispositionFormatVersionField() string {
-	return md.alphaVariableField(md.FormatVersion, 2, md.isVariableLength)
+func (md *MessageDisposition) MessageDispositionFormatVersionField(isCompressed bool) string {
+	return md.alphaVariableField(md.FormatVersion, 2, isCompressed)
 }
 
 // MessageDispositionTestProductionCodeField gets a string of the TestProductionCoden field
-func (md *MessageDisposition) MessageDispositionTestProductionCodeField() string {
-	return md.alphaVariableField(md.TestProductionCode, 1, md.isVariableLength)
+func (md *MessageDisposition) MessageDispositionTestProductionCodeField(isCompressed bool) string {
+	return md.alphaVariableField(md.TestProductionCode, 1, isCompressed)
 }
 
 // MessageDispositionMessageDuplicationCodeField gets a string of the MessageDuplicationCode field
-func (md *MessageDisposition) MessageDispositionMessageDuplicationCodeField() string {
-	return md.alphaVariableField(md.MessageDuplicationCode, 1, md.isVariableLength)
+func (md *MessageDisposition) MessageDispositionMessageDuplicationCodeField(isCompressed bool) string {
+	return md.alphaVariableField(md.MessageDuplicationCode, 1, isCompressed)
 }
 
 // MessageDispositionMessageStatusIndicatorField gets a string of the MessageDuplicationCode field
-func (md *MessageDisposition) MessageDispositionMessageStatusIndicatorField() string {
-	return md.alphaVariableField(md.MessageStatusIndicator, 1, md.isVariableLength)
+func (md *MessageDisposition) MessageDispositionMessageStatusIndicatorField(isCompressed bool) string {
+	return md.alphaVariableField(md.MessageStatusIndicator, 1, isCompressed)
 }

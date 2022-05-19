@@ -16,8 +16,6 @@ var _ segment = &Adjustment{}
 type Adjustment struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Adjustment  * `01` - Pricing Error * `03` - Extension Error * `04` - Item Not Accepted (Damaged) * `05` - Item Not Accepted (Quality) * `06` - Quantity Contested 07   Incorrect Product * `11` - Returns (Damaged) * `12` - Returns (Quality) * `59` - Item Not Received * `75` - Total Order Not Received * `81` - Credit as Agreed * `CM` - Covered by Credit Memo
 	AdjustmentReasonCode string `json:"adjustmentReasonCode,omitempty"`
 	// CreditDebitIndicator  * `CRDT` - Credit * `DBIT` - Debit
@@ -34,10 +32,9 @@ type Adjustment struct {
 }
 
 // NewAdjustment returns a new Adjustment
-func NewAdjustment(isVariable bool) *Adjustment {
+func NewAdjustment() *Adjustment {
 	adj := &Adjustment{
-		tag:              TagAdjustment,
-		isVariableLength: isVariable,
+		tag: TagAdjustment,
 	}
 	return adj
 }
@@ -97,14 +94,22 @@ func (adj *Adjustment) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Adjustment
-func (adj *Adjustment) String() string {
+func (adj *Adjustment) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(168)
+
 	buf.WriteString(adj.tag)
-	buf.WriteString(adj.AdjustmentReasonCodeField())
-	buf.WriteString(adj.CreditDebitIndicatorField())
-	buf.WriteString(adj.RemittanceAmount.String(adj.isVariableLength))
-	buf.WriteString(adj.AdditionalInfoField())
+	buf.WriteString(adj.AdjustmentReasonCodeField(isCompressed))
+	buf.WriteString(adj.CreditDebitIndicatorField(isCompressed))
+	buf.WriteString(adj.RemittanceAmount.String(isCompressed))
+	buf.WriteString(adj.AdditionalInfoField(isCompressed))
+
 	return buf.String()
 }
 
@@ -152,16 +157,16 @@ func (adj *Adjustment) fieldInclusion() error {
 }
 
 // AdjustmentReasonCodeField gets a string of the AdjustmentReasonCode field
-func (adj *Adjustment) AdjustmentReasonCodeField() string {
-	return adj.alphaVariableField(adj.AdjustmentReasonCode, 2, adj.isVariableLength)
+func (adj *Adjustment) AdjustmentReasonCodeField(isCompressed bool) string {
+	return adj.alphaVariableField(adj.AdjustmentReasonCode, 2, isCompressed)
 }
 
 // CreditDebitIndicatorField gets a string of the CreditDebitIndicator field
-func (adj *Adjustment) CreditDebitIndicatorField() string {
-	return adj.alphaVariableField(adj.CreditDebitIndicator, 4, adj.isVariableLength)
+func (adj *Adjustment) CreditDebitIndicatorField(isCompressed bool) string {
+	return adj.alphaVariableField(adj.CreditDebitIndicator, 4, isCompressed)
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field
-func (adj *Adjustment) AdditionalInfoField() string {
-	return adj.alphaVariableField(adj.AdditionalInfo, 140, adj.isVariableLength)
+func (adj *Adjustment) AdditionalInfoField(isCompressed bool) string {
+	return adj.alphaVariableField(adj.AdditionalInfo, 140, isCompressed)
 }

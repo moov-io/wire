@@ -16,8 +16,6 @@ var _ segment = &BeneficiaryReference{}
 type BeneficiaryReference struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// BeneficiaryReference
 	BeneficiaryReference string `json:"beneficiaryReference,omitempty"`
 
@@ -28,10 +26,9 @@ type BeneficiaryReference struct {
 }
 
 // NewBeneficiaryReference returns a new BeneficiaryReference
-func NewBeneficiaryReference(isVariable bool) *BeneficiaryReference {
+func NewBeneficiaryReference() *BeneficiaryReference {
 	br := &BeneficiaryReference{
-		tag:              TagBeneficiaryReference,
-		isVariableLength: isVariable,
+		tag: TagBeneficiaryReference,
 	}
 	return br
 }
@@ -76,11 +73,19 @@ func (br *BeneficiaryReference) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BeneficiaryReference
-func (br *BeneficiaryReference) String() string {
+func (br *BeneficiaryReference) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(22)
+
 	buf.WriteString(br.tag)
-	buf.WriteString(br.BeneficiaryReferenceField())
+	buf.WriteString(br.BeneficiaryReferenceField(isCompressed))
+
 	return buf.String()
 }
 
@@ -97,6 +102,6 @@ func (br *BeneficiaryReference) Validate() error {
 }
 
 // BeneficiaryReferenceField gets a string of the BeneficiaryReference field
-func (br *BeneficiaryReference) BeneficiaryReferenceField() string {
-	return br.alphaVariableField(br.BeneficiaryReference, 16, br.isVariableLength)
+func (br *BeneficiaryReference) BeneficiaryReferenceField(isCompressed bool) string {
+	return br.alphaVariableField(br.BeneficiaryReference, 16, isCompressed)
 }

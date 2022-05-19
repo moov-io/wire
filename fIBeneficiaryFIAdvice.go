@@ -16,8 +16,6 @@ var _ segment = &FIBeneficiaryFIAdvice{}
 type FIBeneficiaryFIAdvice struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Advice
 	Advice Advice `json:"advice,omitempty"`
 
@@ -28,10 +26,9 @@ type FIBeneficiaryFIAdvice struct {
 }
 
 // NewFIBeneficiaryFIAdvice returns a new FIBeneficiaryFIAdvice
-func NewFIBeneficiaryFIAdvice(isVariable bool) *FIBeneficiaryFIAdvice {
+func NewFIBeneficiaryFIAdvice() *FIBeneficiaryFIAdvice {
 	fibfia := &FIBeneficiaryFIAdvice{
-		tag:              TagFIBeneficiaryFIAdvice,
-		isVariableLength: isVariable,
+		tag: TagFIBeneficiaryFIAdvice,
 	}
 	return fibfia
 }
@@ -76,12 +73,18 @@ func (fibfia *FIBeneficiaryFIAdvice) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIBeneficiaryFIAdvice
-func (fibfia *FIBeneficiaryFIAdvice) String() string {
+func (fibfia *FIBeneficiaryFIAdvice) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(200)
 
 	buf.WriteString(fibfia.tag)
-	buf.WriteString(fibfia.Advice.String(fibfia.isVariableLength))
+	buf.WriteString(fibfia.Advice.String(isCompressed))
 
 	return buf.String()
 }

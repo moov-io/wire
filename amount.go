@@ -16,8 +16,6 @@ var _ segment = &Amount{}
 type Amount struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Amount 12 numeric, right-justified with leading zeros, an implied decimal point and no commas; e.g., $12,345.67 becomes 000001234567 Can be all zeros for subtype 90
 	Amount string `json:"amount"`
 
@@ -28,10 +26,9 @@ type Amount struct {
 }
 
 // NewAmount returns a new Amount
-func NewAmount(isVariable bool) *Amount {
+func NewAmount() *Amount {
 	a := &Amount{
-		tag:              TagAmount,
-		isVariableLength: isVariable,
+		tag: TagAmount,
 	}
 	return a
 }
@@ -76,11 +73,19 @@ func (a *Amount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Amount
-func (a *Amount) String() string {
+func (a *Amount) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(a.tag)
-	buf.WriteString(a.AmountField())
+	buf.WriteString(a.AmountField(isCompressed))
+
 	return buf.String()
 }
 
@@ -109,6 +114,6 @@ func (a *Amount) fieldInclusion() error {
 }
 
 // AmountField gets a string of entry addenda batch count zero padded
-func (a *Amount) AmountField() string {
-	return a.alphaVariableField(a.Amount, 12, a.isVariableLength)
+func (a *Amount) AmountField(isCompressed bool) string {
+	return a.alphaVariableField(a.Amount, 12, isCompressed)
 }

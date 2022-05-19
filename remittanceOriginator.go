@@ -16,8 +16,6 @@ var _ segment = &RemittanceOriginator{}
 type RemittanceOriginator struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// IdentificationType is identification type
 	IdentificationType string `json:"identificationType,omitempty"`
 	// IdentificationCode  Organization Identification Codes  * `BANK` - Bank Party Identification * `CUST` - Customer Number * `DUNS` - Data Universal Number System (Dun & Bradstreet) * `EMPL` - Employer Identification Number * `GS1G` - Global Location Number * `PROP` - Proprietary Identification Number * `SWBB` - SWIFT BIC or BEI * `TXID` - Tax Identification Number  Private Identification Codes  * `ARNU` - Alien Registration Number * `CCPT` - Passport Number * `CUST` - Customer Number * `DPOB` - Date & Place of Birth * `DRLC` - Driver’s License Number * `EMPL` - Employee Identification Number * `NIDN` - National Identity Number * `PROP` - Proprietary Identification Number * `SOSE` - Social Security Number * `TXID` - Tax Identification Number
@@ -50,10 +48,9 @@ type RemittanceOriginator struct {
 }
 
 // NewRemittanceOriginator returns a new RemittanceOriginator
-func NewRemittanceOriginator(isVariable bool) *RemittanceOriginator {
+func NewRemittanceOriginator() *RemittanceOriginator {
 	ro := &RemittanceOriginator{
-		tag:              TagRemittanceOriginator,
-		isVariableLength: isVariable,
+		tag: TagRemittanceOriginator,
 	}
 	return ro
 }
@@ -153,23 +150,29 @@ func (ro *RemittanceOriginator) UnmarshalJSON(data []byte) error {
 }
 
 // String writes RemittanceOriginator
-func (ro *RemittanceOriginator) String() string {
+func (ro *RemittanceOriginator) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(3442)
 
 	buf.WriteString(ro.tag)
-	buf.WriteString(ro.IdentificationTypeField())
-	buf.WriteString(ro.IdentificationCodeField())
-	buf.WriteString(ro.NameField())
-	buf.WriteString(ro.IdentificationNumberField())
-	buf.WriteString(ro.IdentificationNumberIssuerField())
-	buf.WriteString(ro.RemittanceData.StringForRemittanceBeneficiary(ro.isVariableLength))
-	buf.WriteString(ro.ContactNameField())
-	buf.WriteString(ro.ContactPhoneNumberField())
-	buf.WriteString(ro.ContactMobileNumberField())
-	buf.WriteString(ro.ContactFaxNumberField())
-	buf.WriteString(ro.ContactElectronicAddressField())
-	buf.WriteString(ro.ContactOtherField())
+	buf.WriteString(ro.IdentificationTypeField(isCompressed))
+	buf.WriteString(ro.IdentificationCodeField(isCompressed))
+	buf.WriteString(ro.NameField(isCompressed))
+	buf.WriteString(ro.IdentificationNumberField(isCompressed))
+	buf.WriteString(ro.IdentificationNumberIssuerField(isCompressed))
+	buf.WriteString(ro.RemittanceData.StringForRemittanceBeneficiary(isCompressed))
+	buf.WriteString(ro.ContactNameField(isCompressed))
+	buf.WriteString(ro.ContactPhoneNumberField(isCompressed))
+	buf.WriteString(ro.ContactMobileNumberField(isCompressed))
+	buf.WriteString(ro.ContactFaxNumberField(isCompressed))
+	buf.WriteString(ro.ContactElectronicAddressField(isCompressed))
+	buf.WriteString(ro.ContactOtherField(isCompressed))
 
 	return buf.String()
 }
@@ -313,56 +316,56 @@ func (ro *RemittanceOriginator) fieldInclusion() error {
 }
 
 // IdentificationTypeField gets a string of the IdentificationType field
-func (ro *RemittanceOriginator) IdentificationTypeField() string {
-	return ro.alphaVariableField(ro.IdentificationType, 2, ro.isVariableLength)
+func (ro *RemittanceOriginator) IdentificationTypeField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.IdentificationType, 2, isCompressed)
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
-func (ro *RemittanceOriginator) IdentificationCodeField() string {
-	return ro.alphaVariableField(ro.IdentificationCode, 4, ro.isVariableLength)
+func (ro *RemittanceOriginator) IdentificationCodeField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.IdentificationCode, 4, isCompressed)
 }
 
 // NameField gets a string of the Name field
-func (ro *RemittanceOriginator) NameField() string {
-	return ro.alphaVariableField(ro.Name, 140, ro.isVariableLength)
+func (ro *RemittanceOriginator) NameField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.Name, 140, isCompressed)
 }
 
 // IdentificationNumberField gets a string of the IdentificationNumber field
-func (ro *RemittanceOriginator) IdentificationNumberField() string {
-	return ro.alphaVariableField(ro.IdentificationNumber, 35, ro.isVariableLength)
+func (ro *RemittanceOriginator) IdentificationNumberField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.IdentificationNumber, 35, isCompressed)
 }
 
 // IdentificationNumberIssuerField gets a string of the IdentificationNumberIssuer field
-func (ro *RemittanceOriginator) IdentificationNumberIssuerField() string {
-	return ro.alphaVariableField(ro.IdentificationNumberIssuer, 35, ro.isVariableLength)
+func (ro *RemittanceOriginator) IdentificationNumberIssuerField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.IdentificationNumberIssuer, 35, isCompressed)
 }
 
 // ContactNameField gets a string of the ContactName field
-func (ro *RemittanceOriginator) ContactNameField() string {
-	return ro.alphaVariableField(ro.ContactName, 140, ro.isVariableLength)
+func (ro *RemittanceOriginator) ContactNameField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.ContactName, 140, isCompressed)
 }
 
 // ContactPhoneNumberField gets a string of the ContactPhoneNumber field
-func (ro *RemittanceOriginator) ContactPhoneNumberField() string {
-	return ro.alphaVariableField(ro.ContactPhoneNumber, 35, ro.isVariableLength)
+func (ro *RemittanceOriginator) ContactPhoneNumberField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.ContactPhoneNumber, 35, isCompressed)
 }
 
 // ContactMobileNumberField gets a string of the ContactMobileNumber field
-func (ro *RemittanceOriginator) ContactMobileNumberField() string {
-	return ro.alphaVariableField(ro.ContactMobileNumber, 35, ro.isVariableLength)
+func (ro *RemittanceOriginator) ContactMobileNumberField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.ContactMobileNumber, 35, isCompressed)
 }
 
 // ContactFaxNumberField gets a string of the ContactFaxNumber field
-func (ro *RemittanceOriginator) ContactFaxNumberField() string {
-	return ro.alphaVariableField(ro.ContactFaxNumber, 35, ro.isVariableLength)
+func (ro *RemittanceOriginator) ContactFaxNumberField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.ContactFaxNumber, 35, isCompressed)
 }
 
 // ContactElectronicAddressField gets a string of the ContactElectronicAddress field
-func (ro *RemittanceOriginator) ContactElectronicAddressField() string {
-	return ro.alphaVariableField(ro.ContactElectronicAddress, 2048, ro.isVariableLength)
+func (ro *RemittanceOriginator) ContactElectronicAddressField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.ContactElectronicAddress, 2048, isCompressed)
 }
 
 // ContactOtherField gets a string of the ContactOther field
-func (ro *RemittanceOriginator) ContactOtherField() string {
-	return ro.alphaVariableField(ro.ContactOther, 35, ro.isVariableLength)
+func (ro *RemittanceOriginator) ContactOtherField(isCompressed bool) string {
+	return ro.alphaVariableField(ro.ContactOther, 35, isCompressed)
 }

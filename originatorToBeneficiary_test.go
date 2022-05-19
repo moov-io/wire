@@ -9,7 +9,7 @@ import (
 
 // mockOriginatorToBeneficiary creates a OriginatorToBeneficiary
 func mockOriginatorToBeneficiary() *OriginatorToBeneficiary {
-	ob := NewOriginatorToBeneficiary(false)
+	ob := NewOriginatorToBeneficiary()
 	ob.LineOne = "LineOne"
 	ob.LineTwo = "LineTwo"
 	ob.LineThree = "LineThree"

@@ -9,7 +9,7 @@ import (
 
 // mockServiceMessage creates a ServiceMessage
 func mockServiceMessage() *ServiceMessage {
-	sm := NewServiceMessage(false)
+	sm := NewServiceMessage()
 	sm.LineOne = "Line One"
 	sm.LineTwo = "Line Two"
 	sm.LineThree = "Line Three"

@@ -16,8 +16,6 @@ var _ segment = &SenderSupplied{}
 type SenderSupplied struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// FormatVersion 30
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation
@@ -34,13 +32,12 @@ type SenderSupplied struct {
 }
 
 // NewSenderSupplied returns a new SenderSupplied
-func NewSenderSupplied(isVariable bool) *SenderSupplied {
+func NewSenderSupplied() *SenderSupplied {
 	ss := &SenderSupplied{
 		tag:                    TagSenderSupplied,
 		FormatVersion:          FormatVersion,
 		TestProductionCode:     EnvironmentProduction,
 		MessageDuplicationCode: MessageDuplicationOriginal,
-		isVariableLength:       isVariable,
 	}
 	return ss
 }
@@ -100,15 +97,21 @@ func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderSupplied
-func (ss *SenderSupplied) String() string {
+func (ss *SenderSupplied) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(18)
 
 	buf.WriteString(ss.tag)
-	buf.WriteString(ss.FormatVersionField())
-	buf.WriteString(ss.UserRequestCorrelationField())
-	buf.WriteString(ss.TestProductionCodeField())
-	buf.WriteString(ss.MessageDuplicationCodeField())
+	buf.WriteString(ss.FormatVersionField(isCompressed))
+	buf.WriteString(ss.UserRequestCorrelationField(isCompressed))
+	buf.WriteString(ss.TestProductionCodeField(isCompressed))
+	buf.WriteString(ss.MessageDuplicationCodeField(isCompressed))
 
 	return buf.String()
 }
@@ -147,21 +150,21 @@ func (ss *SenderSupplied) fieldInclusion() error {
 }
 
 // FormatVersionField gets a string of the FormatVersion field
-func (ss *SenderSupplied) FormatVersionField() string {
-	return ss.alphaVariableField(ss.FormatVersion, 2, ss.isVariableLength)
+func (ss *SenderSupplied) FormatVersionField(isCompressed bool) string {
+	return ss.alphaVariableField(ss.FormatVersion, 2, isCompressed)
 }
 
 // UserRequestCorrelationField gets a string of the UserRequestCorrelation field
-func (ss *SenderSupplied) UserRequestCorrelationField() string {
-	return ss.alphaVariableField(ss.UserRequestCorrelation, 8, ss.isVariableLength)
+func (ss *SenderSupplied) UserRequestCorrelationField(isCompressed bool) string {
+	return ss.alphaVariableField(ss.UserRequestCorrelation, 8, isCompressed)
 }
 
 // TestProductionCodeField gets a string of the TestProductionCoden field
-func (ss *SenderSupplied) TestProductionCodeField() string {
-	return ss.alphaVariableField(ss.TestProductionCode, 1, ss.isVariableLength)
+func (ss *SenderSupplied) TestProductionCodeField(isCompressed bool) string {
+	return ss.alphaVariableField(ss.TestProductionCode, 1, isCompressed)
 }
 
 // MessageDuplicationCodeField gets a string of the MessageDuplicationCode field
-func (ss *SenderSupplied) MessageDuplicationCodeField() string {
-	return ss.alphaVariableField(ss.MessageDuplicationCode, 1, ss.isVariableLength)
+func (ss *SenderSupplied) MessageDuplicationCodeField(isCompressed bool) string {
+	return ss.alphaVariableField(ss.MessageDuplicationCode, 1, isCompressed)
 }

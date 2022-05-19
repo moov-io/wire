@@ -10,7 +10,7 @@ import (
 
 // mockOriginator creates a Originator
 func mockOriginator() *Originator {
-	o := NewOriginator(false)
+	o := NewOriginator()
 	o.Personal.IdentificationCode = PassportNumber
 	o.Personal.Identifier = "1234"
 	o.Personal.Name = "Name"

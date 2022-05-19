@@ -16,8 +16,6 @@ var _ segment = &ReceiverDepositoryInstitution{}
 type ReceiverDepositoryInstitution struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// ReceiverABANumber
 	ReceiverABANumber string `json:"receiverABANumber"`
 	// ReceiverShortName
@@ -30,10 +28,9 @@ type ReceiverDepositoryInstitution struct {
 }
 
 // NewReceiverDepositoryInstitution returns a new ReceiverDepositoryInstitution
-func NewReceiverDepositoryInstitution(isVariable bool) *ReceiverDepositoryInstitution {
+func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 	rdi := &ReceiverDepositoryInstitution{
-		tag:              TagReceiverDepositoryInstitution,
-		isVariableLength: isVariable,
+		tag: TagReceiverDepositoryInstitution,
 	}
 	return rdi
 }
@@ -83,13 +80,19 @@ func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ReceiverDepositoryInstitution
-func (rdi *ReceiverDepositoryInstitution) String() string {
+func (rdi *ReceiverDepositoryInstitution) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(33)
 
 	buf.WriteString(rdi.tag)
-	buf.WriteString(rdi.ReceiverABANumberField())
-	buf.WriteString(rdi.ReceiverShortNameField())
+	buf.WriteString(rdi.ReceiverABANumberField(isCompressed))
+	buf.WriteString(rdi.ReceiverShortNameField(isCompressed))
 
 	return buf.String()
 }
@@ -125,11 +128,11 @@ func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 }
 
 // ReceiverABANumberField gets a string of the ReceiverABANumber field
-func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField() string {
-	return rdi.alphaVariableField(rdi.ReceiverABANumber, 9, rdi.isVariableLength)
+func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField(isCompressed bool) string {
+	return rdi.alphaVariableField(rdi.ReceiverABANumber, 9, isCompressed)
 }
 
 // ReceiverShortNameField gets a string of the ReceiverShortName field
-func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField() string {
-	return rdi.alphaVariableField(rdi.ReceiverShortName, 18, rdi.isVariableLength)
+func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField(isCompressed bool) string {
+	return rdi.alphaVariableField(rdi.ReceiverShortName, 18, isCompressed)
 }

@@ -16,8 +16,6 @@ var _ segment = &OriginatorToBeneficiary{}
 type OriginatorToBeneficiary struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo
@@ -34,10 +32,9 @@ type OriginatorToBeneficiary struct {
 }
 
 // NewOriginatorToBeneficiary returns a new OriginatorToBeneficiary
-func NewOriginatorToBeneficiary(isVariable bool) *OriginatorToBeneficiary {
+func NewOriginatorToBeneficiary() *OriginatorToBeneficiary {
 	ob := &OriginatorToBeneficiary{
-		tag:              TagOriginatorToBeneficiary,
-		isVariableLength: isVariable,
+		tag: TagOriginatorToBeneficiary,
 	}
 	return ob
 }
@@ -97,15 +94,21 @@ func (ob *OriginatorToBeneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OriginatorToBeneficiary
-func (ob *OriginatorToBeneficiary) String() string {
+func (ob *OriginatorToBeneficiary) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(146)
 
 	buf.WriteString(ob.tag)
-	buf.WriteString(ob.LineOneField())
-	buf.WriteString(ob.LineTwoField())
-	buf.WriteString(ob.LineThreeField())
-	buf.WriteString(ob.LineFourField())
+	buf.WriteString(ob.LineOneField(isCompressed))
+	buf.WriteString(ob.LineTwoField(isCompressed))
+	buf.WriteString(ob.LineThreeField(isCompressed))
+	buf.WriteString(ob.LineFourField(isCompressed))
 
 	return buf.String()
 }
@@ -133,21 +136,21 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (ob *OriginatorToBeneficiary) LineOneField() string {
-	return ob.alphaVariableField(ob.LineOne, 35, ob.isVariableLength)
+func (ob *OriginatorToBeneficiary) LineOneField(isCompressed bool) string {
+	return ob.alphaVariableField(ob.LineOne, 35, isCompressed)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (ob *OriginatorToBeneficiary) LineTwoField() string {
-	return ob.alphaVariableField(ob.LineTwo, 35, ob.isVariableLength)
+func (ob *OriginatorToBeneficiary) LineTwoField(isCompressed bool) string {
+	return ob.alphaVariableField(ob.LineTwo, 35, isCompressed)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (ob *OriginatorToBeneficiary) LineThreeField() string {
-	return ob.alphaVariableField(ob.LineThree, 35, ob.isVariableLength)
+func (ob *OriginatorToBeneficiary) LineThreeField(isCompressed bool) string {
+	return ob.alphaVariableField(ob.LineThree, 35, isCompressed)
 }
 
 // LineFourField gets a string of the LineFour field
-func (ob *OriginatorToBeneficiary) LineFourField() string {
-	return ob.alphaVariableField(ob.LineFour, 35, ob.isVariableLength)
+func (ob *OriginatorToBeneficiary) LineFourField(isCompressed bool) string {
+	return ob.alphaVariableField(ob.LineFour, 35, isCompressed)
 }

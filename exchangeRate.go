@@ -16,8 +16,6 @@ var _ segment = &ExchangeRate{}
 type ExchangeRate struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// ExchangeRate is the exchange rate
 	// Must contain at least one numeric character and only one decimal comma marker (e.g., an exchange rate of 1.2345 should be entered as 1,2345).
 	ExchangeRate string `json:"exchangeRate,omitempty"`
@@ -29,10 +27,9 @@ type ExchangeRate struct {
 }
 
 // NewExchangeRate returns a new ExchangeRate
-func NewExchangeRate(isVariable bool) *ExchangeRate {
+func NewExchangeRate() *ExchangeRate {
 	eRate := &ExchangeRate{
-		tag:              TagExchangeRate,
-		isVariableLength: isVariable,
+		tag: TagExchangeRate,
 	}
 	return eRate
 }
@@ -77,11 +74,19 @@ func (eRate *ExchangeRate) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ExchangeRate
-func (eRate *ExchangeRate) String() string {
+func (eRate *ExchangeRate) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(eRate.tag)
-	buf.WriteString(eRate.ExchangeRateField())
+	buf.WriteString(eRate.ExchangeRateField(isCompressed))
+
 	return buf.String()
 }
 
@@ -98,6 +103,6 @@ func (eRate *ExchangeRate) Validate() error {
 }
 
 // ExchangeRateField gets a string of the ExchangeRate field
-func (eRate *ExchangeRate) ExchangeRateField() string {
-	return eRate.alphaVariableField(eRate.ExchangeRate, 12, eRate.isVariableLength)
+func (eRate *ExchangeRate) ExchangeRateField(isCompressed bool) string {
+	return eRate.alphaVariableField(eRate.ExchangeRate, 12, isCompressed)
 }

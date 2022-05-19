@@ -16,8 +16,6 @@ var _ segment = &GrossAmountRemittanceDocument{}
 type GrossAmountRemittanceDocument struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// RemittanceAmount is remittance amounts
 	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
@@ -28,10 +26,9 @@ type GrossAmountRemittanceDocument struct {
 }
 
 // NewGrossAmountRemittanceDocument returns a new GrossAmountRemittanceDocument
-func NewGrossAmountRemittanceDocument(isVariable bool) *GrossAmountRemittanceDocument {
+func NewGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
 	gard := &GrossAmountRemittanceDocument{
-		tag:              TagGrossAmountRemittanceDocument,
-		isVariableLength: isVariable,
+		tag: TagGrossAmountRemittanceDocument,
 	}
 	return gard
 }
@@ -76,12 +73,18 @@ func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes GrossAmountRemittanceDocument
-func (gard *GrossAmountRemittanceDocument) String() string {
+func (gard *GrossAmountRemittanceDocument) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(gard.tag)
-	buf.WriteString(gard.RemittanceAmount.String(gard.isVariableLength))
+	buf.WriteString(gard.RemittanceAmount.String(isCompressed))
 
 	return buf.String()
 }

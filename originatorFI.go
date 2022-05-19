@@ -16,8 +16,6 @@ var _ segment = &OriginatorFI{}
 type OriginatorFI struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Financial Institution
 	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
@@ -28,10 +26,9 @@ type OriginatorFI struct {
 }
 
 // NewOriginatorFI returns a new OriginatorFI
-func NewOriginatorFI(isVariable bool) *OriginatorFI {
+func NewOriginatorFI() *OriginatorFI {
 	ofi := &OriginatorFI{
-		tag:              TagOriginatorFI,
-		isVariableLength: isVariable,
+		tag: TagOriginatorFI,
 	}
 	return ofi
 }
@@ -76,12 +73,18 @@ func (ofi *OriginatorFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OriginatorFI
-func (ofi *OriginatorFI) String() string {
+func (ofi *OriginatorFI) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(ofi.tag)
-	buf.WriteString(ofi.FinancialInstitution.String(ofi.isVariableLength))
+	buf.WriteString(ofi.FinancialInstitution.String(isCompressed))
 
 	return buf.String()
 }

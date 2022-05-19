@@ -16,8 +16,6 @@ var _ segment = &BeneficiaryCustomer{}
 type BeneficiaryCustomer struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type BeneficiaryCustomer struct {
 }
 
 // NewBeneficiaryCustomer returns a new BeneficiaryCustomer
-func NewBeneficiaryCustomer(isVariable bool) *BeneficiaryCustomer {
+func NewBeneficiaryCustomer() *BeneficiaryCustomer {
 	bc := &BeneficiaryCustomer{
-		tag:              TagBeneficiaryCustomer,
-		isVariableLength: isVariable,
+		tag: TagBeneficiaryCustomer,
 	}
 	return bc
 }
@@ -76,12 +73,18 @@ func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BeneficiaryCustomer
-func (bc *BeneficiaryCustomer) String() string {
+func (bc *BeneficiaryCustomer) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(bc.tag)
-	buf.WriteString(bc.CoverPayment.StringFive(bc.isVariableLength))
+	buf.WriteString(bc.CoverPayment.StringFive(isCompressed))
 
 	return buf.String()
 }

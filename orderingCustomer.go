@@ -16,8 +16,6 @@ var _ segment = &OrderingCustomer{}
 type OrderingCustomer struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type OrderingCustomer struct {
 }
 
 // NewOrderingCustomer returns a new OrderingCustomer
-func NewOrderingCustomer(isVariable bool) *OrderingCustomer {
+func NewOrderingCustomer() *OrderingCustomer {
 	oc := &OrderingCustomer{
-		tag:              TagOrderingCustomer,
-		isVariableLength: isVariable,
+		tag: TagOrderingCustomer,
 	}
 	return oc
 }
@@ -76,12 +73,18 @@ func (oc *OrderingCustomer) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OrderingCustomer
-func (oc *OrderingCustomer) String() string {
+func (oc *OrderingCustomer) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(oc.tag)
-	buf.WriteString(oc.CoverPayment.StringFive(oc.isVariableLength))
+	buf.WriteString(oc.CoverPayment.StringFive(isCompressed))
 
 	return buf.String()
 }

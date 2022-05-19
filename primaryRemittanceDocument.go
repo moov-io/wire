@@ -16,8 +16,6 @@ var _ segment = &PrimaryRemittanceDocument{}
 type PrimaryRemittanceDocument struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// DocumentTypeCode  * `AROI` - Accounts Receivable Open Item * `BOLD` - Bill of Lading Shipping Notice * `CINV` - Commercial Invoice * `CMCN` - Commercial Contract * `CNFA` - Credit Note Related to Financial Adjustment * `CREN` - Credit Note * `DEBN` - Debit Note * `DISP` - Dispatch Advice * `DNFA` - Debit Note Related to Financial Adjustment HIRI Hire Invoice * `MSIN` - Metered Service Invoice * `PROP` - Proprietary Document Type * `PUOR` - Purchase Order * `SBIN` - Self Billed Invoice * `SOAC` - Statement of Account * `TSUT` - Trade Services Utility Transaction VCHR Voucher
 	DocumentTypeCode string `json:"documentTypeCode,omitempty"`
 	// ProprietaryDocumentTypeCode
@@ -34,10 +32,9 @@ type PrimaryRemittanceDocument struct {
 }
 
 // NewPrimaryRemittanceDocument returns a new PrimaryRemittanceDocument
-func NewPrimaryRemittanceDocument(isVariable bool) *PrimaryRemittanceDocument {
+func NewPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
 	prd := &PrimaryRemittanceDocument{
-		tag:              TagPrimaryRemittanceDocument,
-		isVariableLength: isVariable,
+		tag: TagPrimaryRemittanceDocument,
 	}
 	return prd
 }
@@ -97,15 +94,21 @@ func (prd *PrimaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes PrimaryRemittanceDocument
-func (prd *PrimaryRemittanceDocument) String() string {
+func (prd *PrimaryRemittanceDocument) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(115)
 
 	buf.WriteString(prd.tag)
-	buf.WriteString(prd.DocumentTypeCodeField())
-	buf.WriteString(prd.ProprietaryDocumentTypeCodeField())
-	buf.WriteString(prd.DocumentIdentificationNumberField())
-	buf.WriteString(prd.IssuerField())
+	buf.WriteString(prd.DocumentTypeCodeField(isCompressed))
+	buf.WriteString(prd.ProprietaryDocumentTypeCodeField(isCompressed))
+	buf.WriteString(prd.DocumentIdentificationNumberField(isCompressed))
+	buf.WriteString(prd.IssuerField(isCompressed))
 
 	return buf.String()
 }
@@ -156,21 +159,21 @@ func (prd *PrimaryRemittanceDocument) fieldInclusion() error {
 }
 
 // DocumentTypeCodeField gets a string of the DocumentTypeCode field
-func (prd *PrimaryRemittanceDocument) DocumentTypeCodeField() string {
-	return prd.alphaVariableField(prd.DocumentTypeCode, 4, prd.isVariableLength)
+func (prd *PrimaryRemittanceDocument) DocumentTypeCodeField(isCompressed bool) string {
+	return prd.alphaVariableField(prd.DocumentTypeCode, 4, isCompressed)
 }
 
 // ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
-func (prd *PrimaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
-	return prd.alphaVariableField(prd.ProprietaryDocumentTypeCode, 35, prd.isVariableLength)
+func (prd *PrimaryRemittanceDocument) ProprietaryDocumentTypeCodeField(isCompressed bool) string {
+	return prd.alphaVariableField(prd.ProprietaryDocumentTypeCode, 35, isCompressed)
 }
 
 // DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
-func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField() string {
-	return prd.alphaVariableField(prd.DocumentIdentificationNumber, 35, prd.isVariableLength)
+func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField(isCompressed bool) string {
+	return prd.alphaVariableField(prd.DocumentIdentificationNumber, 35, isCompressed)
 }
 
 // IssuerField gets a string of the Issuer field
-func (prd *PrimaryRemittanceDocument) IssuerField() string {
-	return prd.alphaVariableField(prd.Issuer, 35, prd.isVariableLength)
+func (prd *PrimaryRemittanceDocument) IssuerField(isCompressed bool) string {
+	return prd.alphaVariableField(prd.Issuer, 35, isCompressed)
 }

@@ -16,8 +16,6 @@ var _ segment = &PreviousMessageIdentifier{}
 type PreviousMessageIdentifier struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// PreviousMessageIdentifier
 	PreviousMessageIdentifier string `json:"PreviousMessageIdentifier,omitempty"`
 
@@ -28,10 +26,9 @@ type PreviousMessageIdentifier struct {
 }
 
 // NewPreviousMessageIdentifier returns a new PreviousMessageIdentifier
-func NewPreviousMessageIdentifier(isVariable bool) *PreviousMessageIdentifier {
+func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
 	pmi := &PreviousMessageIdentifier{
-		tag:              TagPreviousMessageIdentifier,
-		isVariableLength: isVariable,
+		tag: TagPreviousMessageIdentifier,
 	}
 	return pmi
 }
@@ -76,12 +73,18 @@ func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
 }
 
 // String writes PreviousMessageIdentifier
-func (pmi *PreviousMessageIdentifier) String() string {
+func (pmi *PreviousMessageIdentifier) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(pmi.tag)
-	buf.WriteString(pmi.PreviousMessageIdentifierField())
+	buf.WriteString(pmi.PreviousMessageIdentifierField(isCompressed))
 
 	return buf.String()
 }
@@ -99,6 +102,6 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 }
 
 // PreviousMessageIdentifierField gets a string of PreviousMessageIdentifier field
-func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField() string {
-	return pmi.alphaVariableField(pmi.PreviousMessageIdentifier, 22, pmi.isVariableLength)
+func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField(isCompressed bool) string {
+	return pmi.alphaVariableField(pmi.PreviousMessageIdentifier, 22, isCompressed)
 }

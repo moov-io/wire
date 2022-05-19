@@ -9,7 +9,7 @@ import (
 
 // mockPreviousMessageIdentifier creates a PreviousMessageIdentifier
 func mockPreviousMessageIdentifier() *PreviousMessageIdentifier {
-	pmi := NewPreviousMessageIdentifier(false)
+	pmi := NewPreviousMessageIdentifier()
 	pmi.PreviousMessageIdentifier = "Previous Message Ident"
 	return pmi
 }

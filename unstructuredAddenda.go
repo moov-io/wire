@@ -10,8 +10,6 @@ import (
 	"unicode/utf8"
 )
 
-var _ segment = &UnstructuredAddenda{}
-
 // UnstructuredAddenda is the unstructured addenda information
 type UnstructuredAddenda struct {
 	// tag

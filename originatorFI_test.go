@@ -9,7 +9,7 @@ import (
 
 // mockOriginatorFI creates a OriginatorFI
 func mockOriginatorFI() *OriginatorFI {
-	ofi := NewOriginatorFI(false)
+	ofi := NewOriginatorFI()
 	ofi.FinancialInstitution.IdentificationCode = DemandDepositAccountNumber
 	ofi.FinancialInstitution.Identifier = "123456789"
 	ofi.FinancialInstitution.Name = "FI Name"

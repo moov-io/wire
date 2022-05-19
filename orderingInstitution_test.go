@@ -9,7 +9,7 @@ import (
 
 //  OrderingInstitution creates a OrderingInstitution
 func mockOrderingInstitution() *OrderingInstitution {
-	oi := NewOrderingInstitution(false)
+	oi := NewOrderingInstitution()
 	oi.CoverPayment.SwiftFieldTag = "Swift Field Tag"
 	oi.CoverPayment.SwiftLineOne = "Swift Line One"
 	oi.CoverPayment.SwiftLineTwo = "Swift Line Two"

@@ -16,8 +16,6 @@ var _ segment = &DateRemittanceDocument{}
 type DateRemittanceDocument struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// DateRemittanceDocument CCYYMMDD
 	DateRemittanceDocument string `json:"dateRemittanceDocument,omitempty"`
 
@@ -28,10 +26,9 @@ type DateRemittanceDocument struct {
 }
 
 // NewDateRemittanceDocument returns a new DateRemittanceDocument
-func NewDateRemittanceDocument(isVariable bool) *DateRemittanceDocument {
+func NewDateRemittanceDocument() *DateRemittanceDocument {
 	drd := &DateRemittanceDocument{
-		tag:              TagDateRemittanceDocument,
-		isVariableLength: isVariable,
+		tag: TagDateRemittanceDocument,
 	}
 	return drd
 }
@@ -76,11 +73,19 @@ func (drd *DateRemittanceDocument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes DateRemittanceDocument
-func (drd *DateRemittanceDocument) String() string {
+func (drd *DateRemittanceDocument) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(14)
+
 	buf.WriteString(drd.tag)
-	buf.WriteString(drd.DateRemittanceDocumentField())
+	buf.WriteString(drd.DateRemittanceDocumentField(isCompressed))
+
 	return buf.String()
 }
 
@@ -109,6 +114,6 @@ func (drd *DateRemittanceDocument) fieldInclusion() error {
 }
 
 // DateRemittanceDocumentField gets a string of the DateRemittanceDocument field
-func (drd *DateRemittanceDocument) DateRemittanceDocumentField() string {
-	return drd.alphaVariableField(drd.DateRemittanceDocument, 8, drd.isVariableLength)
+func (drd *DateRemittanceDocument) DateRemittanceDocumentField(isCompressed bool) string {
+	return drd.alphaVariableField(drd.DateRemittanceDocument, 8, isCompressed)
 }

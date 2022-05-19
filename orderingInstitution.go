@@ -16,8 +16,6 @@ var _ segment = &OrderingInstitution{}
 type OrderingInstitution struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type OrderingInstitution struct {
 }
 
 // NewOrderingInstitution returns a new OrderingInstitution
-func NewOrderingInstitution(isVariable bool) *OrderingInstitution {
+func NewOrderingInstitution() *OrderingInstitution {
 	oi := &OrderingInstitution{
-		tag:              TagOrderingInstitution,
-		isVariableLength: isVariable,
+		tag: TagOrderingInstitution,
 	}
 	return oi
 }
@@ -76,12 +73,18 @@ func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OrderingInstitution
-func (oi *OrderingInstitution) String() string {
+func (oi *OrderingInstitution) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(oi.tag)
-	buf.WriteString(oi.CoverPayment.StringFive(oi.isVariableLength))
+	buf.WriteString(oi.CoverPayment.StringFive(isCompressed))
 
 	return buf.String()
 }

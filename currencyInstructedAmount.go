@@ -16,8 +16,6 @@ var _ segment = &CurrencyInstructedAmount{}
 type CurrencyInstructedAmount struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// SwiftFieldTag
 	SwiftFieldTag string `json:"swiftFieldTag"`
 	// Amount is the instructed amount
@@ -31,10 +29,9 @@ type CurrencyInstructedAmount struct {
 }
 
 // NewCurrencyInstructedAmount returns a new CurrencyInstructedAmount
-func NewCurrencyInstructedAmount(isVariable bool) *CurrencyInstructedAmount {
+func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
 	cia := &CurrencyInstructedAmount{
-		tag:              TagCurrencyInstructedAmount,
-		isVariableLength: isVariable,
+		tag: TagCurrencyInstructedAmount,
 	}
 	return cia
 }
@@ -84,12 +81,20 @@ func (cia *CurrencyInstructedAmount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes CurrencyInstructedAmount
-func (cia *CurrencyInstructedAmount) String() string {
+func (cia *CurrencyInstructedAmount) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(29)
+
 	buf.WriteString(cia.tag)
-	buf.WriteString(cia.SwiftFieldTagField())
-	buf.WriteString(cia.AmountField())
+	buf.WriteString(cia.SwiftFieldTagField(isCompressed))
+	buf.WriteString(cia.AmountField(isCompressed))
+
 	return buf.String()
 }
 
@@ -109,13 +114,13 @@ func (cia *CurrencyInstructedAmount) Validate() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
-	return cia.alphaVariableField(cia.SwiftFieldTag, 5, cia.isVariableLength)
+func (cia *CurrencyInstructedAmount) SwiftFieldTagField(isCompressed bool) string {
+	return cia.alphaVariableField(cia.SwiftFieldTag, 5, isCompressed)
 }
 
 // ToDo: The spec isn't clear if this is padded with zeros or not, so for now it is
 
 // AmountField gets a string of the AmountTag field
-func (cia *CurrencyInstructedAmount) AmountField() string {
-	return cia.alphaVariableField(cia.Amount, 18, cia.isVariableLength)
+func (cia *CurrencyInstructedAmount) AmountField(isCompressed bool) string {
+	return cia.alphaVariableField(cia.Amount, 18, isCompressed)
 }

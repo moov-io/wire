@@ -9,7 +9,7 @@ import (
 
 // PrimaryRemittanceDocument creates a PrimaryRemittanceDocument
 func mockPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
-	prd := NewPrimaryRemittanceDocument(false)
+	prd := NewPrimaryRemittanceDocument()
 	prd.DocumentTypeCode = AccountsReceivableOpenItem
 	prd.ProprietaryDocumentTypeCode = ""
 	prd.DocumentIdentificationNumber = "111111"

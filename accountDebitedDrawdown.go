@@ -16,8 +16,6 @@ var _ segment = &AccountDebitedDrawdown{}
 type AccountDebitedDrawdown struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Identification Code * `D` - Debit
 	IdentificationCode string `json:"identificationCode"`
 	// Identifier
@@ -34,10 +32,9 @@ type AccountDebitedDrawdown struct {
 }
 
 // NewAccountDebitedDrawdown returns a new AccountDebitedDrawdown
-func NewAccountDebitedDrawdown(isVariable bool) *AccountDebitedDrawdown {
+func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
 	debitDD := &AccountDebitedDrawdown{
-		tag:              TagAccountDebitedDrawdown,
-		isVariableLength: isVariable,
+		tag: TagAccountDebitedDrawdown,
 	}
 	return debitDD
 }
@@ -95,15 +92,21 @@ func (debitDD *AccountDebitedDrawdown) UnmarshalJSON(data []byte) error {
 }
 
 // String writes AccountDebitedDrawdown
-func (debitDD *AccountDebitedDrawdown) String() string {
+func (debitDD *AccountDebitedDrawdown) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(181)
 	buf.WriteString(debitDD.tag)
 
 	buf.WriteString(debitDD.IdentificationCodeField())
-	buf.WriteString(debitDD.IdentifierField())
-	buf.WriteString(debitDD.NameField())
-	buf.WriteString(debitDD.Address.String(debitDD.isVariableLength))
+	buf.WriteString(debitDD.IdentifierField(isCompressed))
+	buf.WriteString(debitDD.NameField(isCompressed))
+	buf.WriteString(debitDD.Address.String(isCompressed))
 
 	return buf.String()
 }
@@ -166,11 +169,11 @@ func (debitDD *AccountDebitedDrawdown) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (debitDD *AccountDebitedDrawdown) IdentifierField() string {
-	return debitDD.alphaVariableField(debitDD.Identifier, 34, debitDD.isVariableLength)
+func (debitDD *AccountDebitedDrawdown) IdentifierField(isCompressed bool) string {
+	return debitDD.alphaVariableField(debitDD.Identifier, 34, isCompressed)
 }
 
 // NameField gets a string of the Name field
-func (debitDD *AccountDebitedDrawdown) NameField() string {
-	return debitDD.alphaVariableField(debitDD.Name, 35, debitDD.isVariableLength)
+func (debitDD *AccountDebitedDrawdown) NameField(isCompressed bool) string {
+	return debitDD.alphaVariableField(debitDD.Name, 35, isCompressed)
 }

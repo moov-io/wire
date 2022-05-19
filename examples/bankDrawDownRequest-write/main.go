@@ -14,58 +14,56 @@ import (
 
 func main() {
 
-	isVariableLength := false
-
 	file := wire.NewFile()
 	fwm := wire.FEDWireMessage{}
 
 	// Mandatory Fields
-	ss := wire.NewSenderSupplied(isVariableLength)
+	ss := wire.NewSenderSupplied()
 	ss.UserRequestCorrelation = "User Req"
 	ss.MessageDuplicationCode = wire.MessageDuplicationOriginal
 	fwm.SenderSupplied = ss
 
-	tst := wire.NewTypeSubType(isVariableLength)
+	tst := wire.NewTypeSubType()
 	tst.TypeCode = wire.SettlementTransfer
 	tst.SubTypeCode = wire.RequestCredit
 	fwm.TypeSubType = tst
 
-	imad := wire.NewInputMessageAccountabilityData(isVariableLength)
+	imad := wire.NewInputMessageAccountabilityData()
 	imad.InputCycleDate = time.Now().Format("20060102")
 	imad.InputSource = "Source08"
 	imad.InputSequenceNumber = "000001"
 	fwm.InputMessageAccountabilityData = imad
 
-	amt := wire.NewAmount(isVariableLength)
+	amt := wire.NewAmount()
 	amt.Amount = "000001234567"
 	fwm.Amount = amt
 
-	sdi := wire.NewSenderDepositoryInstitution(isVariableLength)
+	sdi := wire.NewSenderDepositoryInstitution()
 	sdi.SenderABANumber = "121042882"
 	sdi.SenderShortName = "Wells Fargo NA"
 	fwm.SenderDepositoryInstitution = sdi
 
-	rdi := wire.NewReceiverDepositoryInstitution(isVariableLength)
+	rdi := wire.NewReceiverDepositoryInstitution()
 	rdi.ReceiverABANumber = "231380104"
 	rdi.ReceiverShortName = "Citadel"
 	fwm.ReceiverDepositoryInstitution = rdi
 
-	bfc := wire.NewBusinessFunctionCode(isVariableLength)
+	bfc := wire.NewBusinessFunctionCode()
 	bfc.BusinessFunctionCode = wire.BankDrawDownRequest
 	bfc.TransactionTypeCode = "   "
 	fwm.BusinessFunctionCode = bfc
 
 	// Other Transfer Information
-	sr := wire.NewSenderReference(isVariableLength)
+	sr := wire.NewSenderReference()
 	sr.SenderReference = "Sender Reference"
 	fwm.SenderReference = sr
 
-	pmi := wire.NewPreviousMessageIdentifier(isVariableLength)
+	pmi := wire.NewPreviousMessageIdentifier()
 	pmi.PreviousMessageIdentifier = "Previous Message Ident"
 	fwm.PreviousMessageIdentifier = pmi
 
 	// Beneficiary
-	bifi := wire.NewBeneficiaryIntermediaryFI(isVariableLength)
+	bifi := wire.NewBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	bifi.FinancialInstitution.Identifier = "123456789"
 	bifi.FinancialInstitution.Name = "FI Name"
@@ -74,7 +72,7 @@ func main() {
 	bifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.BeneficiaryIntermediaryFI = bifi
 
-	bfi := wire.NewBeneficiaryFI(isVariableLength)
+	bfi := wire.NewBeneficiaryFI()
 	bfi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	bfi.FinancialInstitution.Identifier = "123456789"
 	bfi.FinancialInstitution.Name = "FI Name"
@@ -83,7 +81,7 @@ func main() {
 	bfi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.BeneficiaryFI = bfi
 
-	ben := wire.NewBeneficiary(isVariableLength)
+	ben := wire.NewBeneficiary()
 	ben.Personal.IdentificationCode = wire.DriversLicenseNumber
 	ben.Personal.Identifier = "1234"
 	ben.Personal.Name = "Name"
@@ -92,11 +90,11 @@ func main() {
 	ben.Personal.Address.AddressLineThree = "Address Three"
 	fwm.Beneficiary = ben
 
-	br := wire.NewBeneficiaryReference(isVariableLength)
+	br := wire.NewBeneficiaryReference()
 	br.BeneficiaryReference = "Reference"
 	fwm.BeneficiaryReference = br
 
-	debitDD := wire.NewAccountDebitedDrawdown(isVariableLength)
+	debitDD := wire.NewAccountDebitedDrawdown()
 	debitDD.IdentificationCode = wire.DemandDepositAccountNumber
 	debitDD.Identifier = "123456789"
 	debitDD.Name = "debitDD Name"
@@ -106,7 +104,7 @@ func main() {
 	fwm.AccountDebitedDrawdown = debitDD
 
 	// Originator
-	o := wire.NewOriginator(isVariableLength)
+	o := wire.NewOriginator()
 	o.Personal.IdentificationCode = wire.PassportNumber
 	o.Personal.Identifier = "1234"
 	o.Personal.Name = "Name"
@@ -115,7 +113,7 @@ func main() {
 	o.Personal.Address.AddressLineThree = "Address Three"
 	fwm.Originator = o
 
-	ofi := wire.NewOriginatorFI(isVariableLength)
+	ofi := wire.NewOriginatorFI()
 	ofi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	ofi.FinancialInstitution.Identifier = "123456789"
 	ofi.FinancialInstitution.Name = "FI Name"
@@ -124,7 +122,7 @@ func main() {
 	ofi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.OriginatorFI = ofi
 
-	ifi := wire.NewInstructingFI(isVariableLength)
+	ifi := wire.NewInstructingFI()
 	ifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
 	ifi.FinancialInstitution.Identifier = "123456789"
 	ifi.FinancialInstitution.Name = "FI Name"
@@ -133,11 +131,11 @@ func main() {
 	ifi.FinancialInstitution.Address.AddressLineThree = "Address Three"
 	fwm.InstructingFI = ifi
 
-	creditDD := wire.NewAccountCreditedDrawdown(isVariableLength)
+	creditDD := wire.NewAccountCreditedDrawdown()
 	creditDD.DrawdownCreditAccountNumber = "123456789"
 	fwm.AccountCreditedDrawdown = creditDD
 
-	ob := wire.NewOriginatorToBeneficiary(isVariableLength)
+	ob := wire.NewOriginatorToBeneficiary()
 	ob.LineOne = "LineOne"
 	ob.LineTwo = "LineTwo"
 	ob.LineThree = "LineThree"
@@ -145,7 +143,7 @@ func main() {
 	fwm.OriginatorToBeneficiary = ob
 
 	// FI to FI
-	firfi := wire.NewFIReceiverFI(isVariableLength)
+	firfi := wire.NewFIReceiverFI()
 	firfi.FIToFI.LineOne = "Line One"
 	firfi.FIToFI.LineOne = "Line Two"
 	firfi.FIToFI.LineOne = "Line Three"
@@ -154,7 +152,7 @@ func main() {
 	firfi.FIToFI.LineOne = "Line Six"
 	fwm.FIReceiverFI = firfi
 
-	fiifi := wire.NewFIIntermediaryFI(isVariableLength)
+	fiifi := wire.NewFIIntermediaryFI()
 	fiifi.FIToFI.LineOne = "Line One"
 	fiifi.FIToFI.LineOne = "Line Two"
 	fiifi.FIToFI.LineOne = "Line Three"
@@ -163,7 +161,7 @@ func main() {
 	fiifi.FIToFI.LineOne = "Line Six"
 	fwm.FIIntermediaryFI = fiifi
 
-	fiifia := wire.NewFIIntermediaryFIAdvice(isVariableLength)
+	fiifia := wire.NewFIIntermediaryFIAdvice()
 	fiifia.Advice.AdviceCode = wire.AdviceCodeLetter
 	fiifia.Advice.LineOne = "Line One"
 	fiifia.Advice.LineTwo = "Line Two"
@@ -173,7 +171,7 @@ func main() {
 	fiifia.Advice.LineSix = "Line Six"
 	fwm.FIIntermediaryFIAdvice = fiifia
 
-	fibfi := wire.NewFIBeneficiaryFI(isVariableLength)
+	fibfi := wire.NewFIBeneficiaryFI()
 	fibfi.FIToFI.LineOne = "Line One"
 	fibfi.FIToFI.LineTwo = "Line Two"
 	fibfi.FIToFI.LineThree = "Line Three"
@@ -182,7 +180,7 @@ func main() {
 	fibfi.FIToFI.LineSix = "Line Six"
 	fwm.FIBeneficiaryFI = fibfi
 
-	fibfia := wire.NewFIBeneficiaryFIAdvice(isVariableLength)
+	fibfia := wire.NewFIBeneficiaryFIAdvice()
 	fibfia.Advice.AdviceCode = wire.AdviceCodeTelex
 	fibfia.Advice.LineOne = "Line One"
 	fibfia.Advice.LineTwo = "Line Two"
@@ -192,7 +190,7 @@ func main() {
 	fibfia.Advice.LineSix = "Line Six"
 	fwm.FIBeneficiaryFIAdvice = fibfia
 
-	fib := wire.NewFIBeneficiary(isVariableLength)
+	fib := wire.NewFIBeneficiary()
 	fib.FIToFI.LineOne = "Line One"
 	fib.FIToFI.LineTwo = "Line Two"
 	fib.FIToFI.LineThree = "Line Three"
@@ -201,7 +199,7 @@ func main() {
 	fib.FIToFI.LineSix = "Line Six"
 	fwm.FIBeneficiary = fib
 
-	fiba := wire.NewFIBeneficiaryAdvice(isVariableLength)
+	fiba := wire.NewFIBeneficiaryAdvice()
 	fiba.Advice.AdviceCode = wire.AdviceCodeLetter
 	fiba.Advice.LineOne = "Line One"
 	fiba.Advice.LineTwo = "Line Two"
@@ -211,12 +209,12 @@ func main() {
 	fiba.Advice.LineSix = "Line Six"
 	fwm.FIBeneficiaryAdvice = fiba
 
-	pm := wire.NewFIPaymentMethodToBeneficiary(isVariableLength)
+	pm := wire.NewFIPaymentMethodToBeneficiary()
 	pm.PaymentMethod = "CHECK"
 	pm.AdditionalInformation = "Additional Information"
 	fwm.FIPaymentMethodToBeneficiary = pm
 
-	fifi := wire.NewFIAdditionalFIToFI(isVariableLength)
+	fifi := wire.NewFIAdditionalFIToFI()
 	fiifi.FIToFI.LineOne = "Line One"
 	fiifi.FIToFI.LineOne = "Line Two"
 	fiifi.FIToFI.LineOne = "Line Three"

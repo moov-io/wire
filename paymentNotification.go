@@ -16,8 +16,6 @@ var _ segment = &PaymentNotification{}
 type PaymentNotification struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// PaymentNotificationIndicator
 	// * `0 - 6` - Reserved for market practice conventions.
 	// * `7 - 9` - Reserved for bilateral agreements between Fedwire senders and receivers.
@@ -42,10 +40,9 @@ type PaymentNotification struct {
 }
 
 // NewPaymentNotification returns a new PaymentNotification
-func NewPaymentNotification(isVariable bool) *PaymentNotification {
+func NewPaymentNotification() *PaymentNotification {
 	pn := &PaymentNotification{
-		tag:              TagPaymentNotification,
-		isVariableLength: isVariable,
+		tag: TagPaymentNotification,
 	}
 	return pn
 }
@@ -118,18 +115,24 @@ func (pn *PaymentNotification) UnmarshalJSON(data []byte) error {
 }
 
 // String writes PaymentNotification
-func (pn *PaymentNotification) String() string {
+func (pn *PaymentNotification) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(2335)
 
 	buf.WriteString(pn.tag)
 	buf.WriteString(pn.PaymentNotificationIndicatorField())
-	buf.WriteString(pn.ContactNotificationElectronicAddressField())
-	buf.WriteString(pn.ContactNameField())
-	buf.WriteString(pn.ContactPhoneNumberField())
-	buf.WriteString(pn.ContactMobileNumberField())
-	buf.WriteString(pn.ContactFaxNumberField())
-	buf.WriteString(pn.EndToEndIdentificationField())
+	buf.WriteString(pn.ContactNotificationElectronicAddressField(isCompressed))
+	buf.WriteString(pn.ContactNameField(isCompressed))
+	buf.WriteString(pn.ContactPhoneNumberField(isCompressed))
+	buf.WriteString(pn.ContactMobileNumberField(isCompressed))
+	buf.WriteString(pn.ContactFaxNumberField(isCompressed))
+	buf.WriteString(pn.EndToEndIdentificationField(isCompressed))
 
 	return buf.String()
 }
@@ -170,31 +173,31 @@ func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
 }
 
 // ContactNotificationElectronicAddressField gets a string of ContactNotificationElectronicAddress field
-func (pn *PaymentNotification) ContactNotificationElectronicAddressField() string {
-	return pn.alphaVariableField(pn.ContactNotificationElectronicAddress, 2048, pn.isVariableLength)
+func (pn *PaymentNotification) ContactNotificationElectronicAddressField(isCompressed bool) string {
+	return pn.alphaVariableField(pn.ContactNotificationElectronicAddress, 2048, isCompressed)
 }
 
 // ContactNameField gets a string of ContactName field
-func (pn *PaymentNotification) ContactNameField() string {
-	return pn.alphaVariableField(pn.ContactName, 140, pn.isVariableLength)
+func (pn *PaymentNotification) ContactNameField(isCompressed bool) string {
+	return pn.alphaVariableField(pn.ContactName, 140, isCompressed)
 }
 
 // ContactPhoneNumberField gets a string of ContactPhoneNumberField field
-func (pn *PaymentNotification) ContactPhoneNumberField() string {
-	return pn.alphaVariableField(pn.ContactPhoneNumber, 35, pn.isVariableLength)
+func (pn *PaymentNotification) ContactPhoneNumberField(isCompressed bool) string {
+	return pn.alphaVariableField(pn.ContactPhoneNumber, 35, isCompressed)
 }
 
 // ContactMobileNumberField gets a string of ContactMobileNumber field
-func (pn *PaymentNotification) ContactMobileNumberField() string {
-	return pn.alphaVariableField(pn.ContactMobileNumber, 35, pn.isVariableLength)
+func (pn *PaymentNotification) ContactMobileNumberField(isCompressed bool) string {
+	return pn.alphaVariableField(pn.ContactMobileNumber, 35, isCompressed)
 }
 
 // ContactFaxNumberField gets a string of FaxNumber field
-func (pn *PaymentNotification) ContactFaxNumberField() string {
-	return pn.alphaVariableField(pn.ContactFaxNumber, 35, pn.isVariableLength)
+func (pn *PaymentNotification) ContactFaxNumberField(isCompressed bool) string {
+	return pn.alphaVariableField(pn.ContactFaxNumber, 35, isCompressed)
 }
 
 // EndToEndIdentificationField gets a string of EndToEndIdentification field
-func (pn *PaymentNotification) EndToEndIdentificationField() string {
-	return pn.alphaVariableField(pn.EndToEndIdentification, 35, pn.isVariableLength)
+func (pn *PaymentNotification) EndToEndIdentificationField(isCompressed bool) string {
+	return pn.alphaVariableField(pn.EndToEndIdentification, 35, isCompressed)
 }

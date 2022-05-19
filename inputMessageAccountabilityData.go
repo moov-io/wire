@@ -16,8 +16,6 @@ var _ segment = &InputMessageAccountabilityData{}
 type InputMessageAccountabilityData struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// InputCycleDate CCYYMMDD
 	InputCycleDate string `json:"inputCycleDate"`
 	// InputSource
@@ -32,10 +30,9 @@ type InputMessageAccountabilityData struct {
 }
 
 // NewInputMessageAccountabilityData returns a new InputMessageAccountabilityData
-func NewInputMessageAccountabilityData(isVariable bool) *InputMessageAccountabilityData {
+func NewInputMessageAccountabilityData() *InputMessageAccountabilityData {
 	imad := &InputMessageAccountabilityData{
-		tag:              TagInputMessageAccountabilityData,
-		isVariableLength: isVariable,
+		tag: TagInputMessageAccountabilityData,
 	}
 	return imad
 }
@@ -90,14 +87,20 @@ func (imad *InputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
 }
 
 // String writes InputMessageAccountabilityData
-func (imad *InputMessageAccountabilityData) String() string {
+func (imad *InputMessageAccountabilityData) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(imad.tag)
-	buf.WriteString(imad.InputCycleDateField())
-	buf.WriteString(imad.InputSourceField())
-	buf.WriteString(imad.InputSequenceNumberField())
+	buf.WriteString(imad.InputCycleDateField(isCompressed))
+	buf.WriteString(imad.InputSourceField(isCompressed))
+	buf.WriteString(imad.InputSequenceNumberField(isCompressed))
 
 	return buf.String()
 }
@@ -139,16 +142,16 @@ func (imad *InputMessageAccountabilityData) fieldInclusion() error {
 }
 
 // InputCycleDateField gets a string of the InputCycleDate field
-func (imad *InputMessageAccountabilityData) InputCycleDateField() string {
-	return imad.alphaVariableField(imad.InputCycleDate, 8, imad.isVariableLength)
+func (imad *InputMessageAccountabilityData) InputCycleDateField(isCompressed bool) string {
+	return imad.alphaVariableField(imad.InputCycleDate, 8, isCompressed)
 }
 
 // InputSourceField gets a string of the InputSource field
-func (imad *InputMessageAccountabilityData) InputSourceField() string {
-	return imad.alphaVariableField(imad.InputSource, 8, imad.isVariableLength)
+func (imad *InputMessageAccountabilityData) InputSourceField(isCompressed bool) string {
+	return imad.alphaVariableField(imad.InputSource, 8, isCompressed)
 }
 
 // InputSequenceNumberField gets a string of the InputSequenceNumber field
-func (imad *InputMessageAccountabilityData) InputSequenceNumberField() string {
-	return imad.alphaVariableField(imad.InputSequenceNumber, 6, imad.isVariableLength)
+func (imad *InputMessageAccountabilityData) InputSequenceNumberField(isCompressed bool) string {
+	return imad.alphaVariableField(imad.InputSequenceNumber, 6, isCompressed)
 }

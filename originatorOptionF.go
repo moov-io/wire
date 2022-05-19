@@ -16,8 +16,6 @@ var _ segment = &OriginatorOptionF{}
 type OriginatorOptionF struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// PartyIdentifier must be one of the following two formats:
 	// 1. /Account Number (slash followed by at least one
 	// valid non-space character:  e.g., /123456)
@@ -92,10 +90,9 @@ type OriginatorOptionF struct {
 }
 
 // NewOriginatorOptionF returns a new OriginatorOptionF
-func NewOriginatorOptionF(isVariable bool) *OriginatorOptionF {
+func NewOriginatorOptionF() *OriginatorOptionF {
 	oof := &OriginatorOptionF{
-		tag:              TagOriginatorOptionF,
-		isVariableLength: isVariable,
+		tag: TagOriginatorOptionF,
 	}
 	return oof
 }
@@ -160,16 +157,22 @@ func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OriginatorOptionF
-func (oof *OriginatorOptionF) String() string {
+func (oof *OriginatorOptionF) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(oof.tag)
-	buf.WriteString(oof.PartyIdentifierField())
-	buf.WriteString(oof.NameField())
-	buf.WriteString(oof.LineOneField())
-	buf.WriteString(oof.LineTwoField())
-	buf.WriteString(oof.LineThreeField())
+	buf.WriteString(oof.PartyIdentifierField(isCompressed))
+	buf.WriteString(oof.NameField(isCompressed))
+	buf.WriteString(oof.LineOneField(isCompressed))
+	buf.WriteString(oof.LineTwoField(isCompressed))
+	buf.WriteString(oof.LineThreeField(isCompressed))
 
 	return buf.String()
 }
@@ -205,26 +208,26 @@ func (oof *OriginatorOptionF) fieldInclusion() error {
 }
 
 // PartyIdentifierField gets a string of the PartyIdentifier field
-func (oof *OriginatorOptionF) PartyIdentifierField() string {
-	return oof.alphaVariableField(oof.PartyIdentifier, 35, oof.isVariableLength)
+func (oof *OriginatorOptionF) PartyIdentifierField(isCompressed bool) string {
+	return oof.alphaVariableField(oof.PartyIdentifier, 35, isCompressed)
 }
 
 // NameField gets a string of the Name field
-func (oof *OriginatorOptionF) NameField() string {
-	return oof.alphaVariableField(oof.Name, 35, oof.isVariableLength)
+func (oof *OriginatorOptionF) NameField(isCompressed bool) string {
+	return oof.alphaVariableField(oof.Name, 35, isCompressed)
 }
 
 // LineOneField gets a string of the LineOne field
-func (oof *OriginatorOptionF) LineOneField() string {
-	return oof.alphaVariableField(oof.LineOne, 35, oof.isVariableLength)
+func (oof *OriginatorOptionF) LineOneField(isCompressed bool) string {
+	return oof.alphaVariableField(oof.LineOne, 35, isCompressed)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (oof *OriginatorOptionF) LineTwoField() string {
-	return oof.alphaVariableField(oof.LineTwo, 35, oof.isVariableLength)
+func (oof *OriginatorOptionF) LineTwoField(isCompressed bool) string {
+	return oof.alphaVariableField(oof.LineTwo, 35, isCompressed)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (oof *OriginatorOptionF) LineThreeField() string {
-	return oof.alphaVariableField(oof.LineThree, 35, oof.isVariableLength)
+func (oof *OriginatorOptionF) LineThreeField(isCompressed bool) string {
+	return oof.alphaVariableField(oof.LineThree, 35, isCompressed)
 }

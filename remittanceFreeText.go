@@ -16,8 +16,6 @@ var _ segment = &RemittanceFreeText{}
 type RemittanceFreeText struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo
@@ -32,10 +30,9 @@ type RemittanceFreeText struct {
 }
 
 // NewRemittanceFreeText returns a new RemittanceFreeText
-func NewRemittanceFreeText(isVariable bool) *RemittanceFreeText {
+func NewRemittanceFreeText() *RemittanceFreeText {
 	rft := &RemittanceFreeText{
-		tag:              TagRemittanceFreeText,
-		isVariableLength: isVariable,
+		tag: TagRemittanceFreeText,
 	}
 	return rft
 }
@@ -90,14 +87,20 @@ func (rft *RemittanceFreeText) UnmarshalJSON(data []byte) error {
 }
 
 // String writes RemittanceFreeText
-func (rft *RemittanceFreeText) String() string {
+func (rft *RemittanceFreeText) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 
 	buf.Grow(426)
 	buf.WriteString(rft.tag)
-	buf.WriteString(rft.LineOneField())
-	buf.WriteString(rft.LineTwoField())
-	buf.WriteString(rft.LineThreeField())
+	buf.WriteString(rft.LineOneField(isCompressed))
+	buf.WriteString(rft.LineTwoField(isCompressed))
+	buf.WriteString(rft.LineThreeField(isCompressed))
 
 	return buf.String()
 }
@@ -121,16 +124,16 @@ func (rft *RemittanceFreeText) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (rft *RemittanceFreeText) LineOneField() string {
-	return rft.alphaVariableField(rft.LineOne, 35, rft.isVariableLength)
+func (rft *RemittanceFreeText) LineOneField(isCompressed bool) string {
+	return rft.alphaVariableField(rft.LineOne, 35, isCompressed)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (rft *RemittanceFreeText) LineTwoField() string {
-	return rft.alphaVariableField(rft.LineTwo, 35, rft.isVariableLength)
+func (rft *RemittanceFreeText) LineTwoField(isCompressed bool) string {
+	return rft.alphaVariableField(rft.LineTwo, 35, isCompressed)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (rft *RemittanceFreeText) LineThreeField() string {
-	return rft.alphaVariableField(rft.LineThree, 35, rft.isVariableLength)
+func (rft *RemittanceFreeText) LineThreeField(isCompressed bool) string {
+	return rft.alphaVariableField(rft.LineThree, 35, isCompressed)
 }

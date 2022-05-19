@@ -9,7 +9,7 @@ import (
 
 // mockAccountCreditedDrawdown creates a AccountCreditedDrawdown
 func mockAccountCreditedDrawdown() *AccountCreditedDrawdown {
-	creditDD := NewAccountCreditedDrawdown(false)
+	creditDD := NewAccountCreditedDrawdown()
 	creditDD.DrawdownCreditAccountNumber = "123456789"
 	return creditDD
 }

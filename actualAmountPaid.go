@@ -16,8 +16,6 @@ var _ segment = &ActualAmountPaid{}
 type ActualAmountPaid struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// RemittanceAmount is remittance amounts
 	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
@@ -28,10 +26,9 @@ type ActualAmountPaid struct {
 }
 
 // NewActualAmountPaid returns a new ActualAmountPaid
-func NewActualAmountPaid(isVariable bool) *ActualAmountPaid {
+func NewActualAmountPaid() *ActualAmountPaid {
 	aap := &ActualAmountPaid{
-		tag:              TagActualAmountPaid,
-		isVariableLength: isVariable,
+		tag: TagActualAmountPaid,
 	}
 	return aap
 }
@@ -76,12 +73,18 @@ func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ActualAmountPaid
-func (aap *ActualAmountPaid) String() string {
+func (aap *ActualAmountPaid) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(aap.tag)
-	buf.WriteString(aap.RemittanceAmount.String(aap.isVariableLength))
+	buf.WriteString(aap.RemittanceAmount.String(isCompressed))
 
 	return buf.String()
 }

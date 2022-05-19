@@ -356,7 +356,7 @@ func TestFEDWireMessage_validateFIBeneficiaryAdvice(t *testing.T) {
 func TestFEDWireMessage_validateUnstructuredAddenda(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = SequenceBCoverPaymentStructured
 	fwm.LocalInstrument = li
 	fwm.UnstructuredAddenda = mockUnstructuredAddenda()
@@ -372,7 +372,7 @@ func TestFEDWireMessage_validateUnstructuredAddenda(t *testing.T) {
 func TestFEDWireMessage_validateRelatedRemittance(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RemittanceInformationStructured
 	fwm.LocalInstrument = li
 	fwm.RelatedRemittance = mockRelatedRemittance()
@@ -387,7 +387,7 @@ func TestFEDWireMessage_validateRelatedRemittance(t *testing.T) {
 func TestFEDWireMessage_validateRemittanceOriginator(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.RemittanceOriginator = mockRemittanceOriginator()
@@ -402,7 +402,7 @@ func TestFEDWireMessage_validateRemittanceOriginator(t *testing.T) {
 func TestFEDWireMessage_validateRemittanceBeneficiary(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.RemittanceBeneficiary = mockRemittanceBeneficiary()
@@ -426,7 +426,7 @@ func TestFEDWireMessage_validateRemittanceBeneficiary(t *testing.T) {
 func TestFEDWireMessage_validatePrimaryRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.PrimaryRemittanceDocument = mockPrimaryRemittanceDocument()
@@ -441,7 +441,7 @@ func TestFEDWireMessage_validatePrimaryRemittanceDocument(t *testing.T) {
 func TestFEDWireMessage_validateActualAmountPaid(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.ActualAmountPaid = mockActualAmountPaid()
@@ -457,7 +457,7 @@ func TestFEDWireMessage_validateActualAmountPaid(t *testing.T) {
 func TestFEDWireMessage_validateGrossAmountRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.GrossAmountRemittanceDocument = mockGrossAmountRemittanceDocument()
@@ -472,7 +472,7 @@ func TestFEDWireMessage_validateGrossAmountRemittanceDocument(t *testing.T) {
 func TestFEDWireMessage_validateAdjustment(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.Adjustment = mockAdjustment()
@@ -488,7 +488,7 @@ func TestFEDWireMessage_validateAdjustment(t *testing.T) {
 func TestFEDWireMessage_validateDateRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.DateRemittanceDocument = mockDateRemittanceDocument()
@@ -503,7 +503,7 @@ func TestFEDWireMessage_validateDateRemittanceDocument(t *testing.T) {
 func TestFEDWireMessage_validateSecondaryRemittanceDocument(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.SecondaryRemittanceDocument = mockSecondaryRemittanceDocument()
@@ -518,7 +518,7 @@ func TestFEDWireMessage_validateSecondaryRemittanceDocument(t *testing.T) {
 func TestFEDWireMessage_isRemittanceFreeTextValid(t *testing.T) {
 	fwm := mockCustomerTransferData()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	li := NewLocalInstrument(false)
+	li := NewLocalInstrument()
 	li.LocalInstrumentCode = RelatedRemittanceInformation
 	fwm.LocalInstrument = li
 	fwm.RemittanceFreeText = mockRemittanceFreeText()

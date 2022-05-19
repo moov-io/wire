@@ -16,8 +16,6 @@ var _ segment = &RelatedRemittance{}
 type RelatedRemittance struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// RemittanceIdentification is remittance identification
 	RemittanceIdentification string `json:"remittanceIdentification,omitempty"`
 	// RemittanceLocationMethod is  remittance location method
@@ -34,10 +32,9 @@ type RelatedRemittance struct {
 }
 
 // NewRelatedRemittance returns a new RelatedRemittance
-func NewRelatedRemittance(isVariable bool) *RelatedRemittance {
+func NewRelatedRemittance() *RelatedRemittance {
 	rr := &RelatedRemittance{
-		tag:              TagRelatedRemittance,
-		isVariableLength: isVariable,
+		tag: TagRelatedRemittance,
 	}
 	return rr
 }
@@ -97,15 +94,21 @@ func (rr *RelatedRemittance) UnmarshalJSON(data []byte) error {
 }
 
 // String writes RelatedRemittance
-func (rr *RelatedRemittance) String() string {
+func (rr *RelatedRemittance) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(3041)
 
 	buf.WriteString(rr.tag)
-	buf.WriteString(rr.RemittanceIdentificationField())
-	buf.WriteString(rr.RemittanceLocationMethodField())
-	buf.WriteString(rr.RemittanceLocationElectronicAddressField())
-	buf.WriteString(rr.RemittanceData.StringForRelatedRemittance(rr.isVariableLength))
+	buf.WriteString(rr.RemittanceIdentificationField(isCompressed))
+	buf.WriteString(rr.RemittanceLocationMethodField(isCompressed))
+	buf.WriteString(rr.RemittanceLocationElectronicAddressField(isCompressed))
+	buf.WriteString(rr.RemittanceData.StringForRelatedRemittance(isCompressed))
 
 	return buf.String()
 }
@@ -195,16 +198,16 @@ func (rr *RelatedRemittance) fieldInclusion() error {
 }
 
 // RemittanceIdentificationField gets a string of the RemittanceIdentification field
-func (rr *RelatedRemittance) RemittanceIdentificationField() string {
-	return rr.alphaVariableField(rr.RemittanceIdentification, 35, rr.isVariableLength)
+func (rr *RelatedRemittance) RemittanceIdentificationField(isCompressed bool) string {
+	return rr.alphaVariableField(rr.RemittanceIdentification, 35, isCompressed)
 }
 
 // RemittanceLocationMethodField gets a string of the RemittanceLocationMethod field
-func (rr *RelatedRemittance) RemittanceLocationMethodField() string {
-	return rr.alphaVariableField(rr.RemittanceLocationMethod, 4, rr.isVariableLength)
+func (rr *RelatedRemittance) RemittanceLocationMethodField(isCompressed bool) string {
+	return rr.alphaVariableField(rr.RemittanceLocationMethod, 4, isCompressed)
 }
 
 // RemittanceLocationElectronicAddressField gets a string of the RemittanceLocationElectronicAddress field
-func (rr *RelatedRemittance) RemittanceLocationElectronicAddressField() string {
-	return rr.alphaVariableField(rr.RemittanceLocationElectronicAddress, 2048, rr.isVariableLength)
+func (rr *RelatedRemittance) RemittanceLocationElectronicAddressField(isCompressed bool) string {
+	return rr.alphaVariableField(rr.RemittanceLocationElectronicAddress, 2048, isCompressed)
 }

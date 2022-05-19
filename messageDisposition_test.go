@@ -9,7 +9,7 @@ import (
 
 // mockMessageDisposition creates a MessageDisposition
 func mockMessageDisposition() *MessageDisposition {
-	md := NewMessageDisposition(false)
+	md := NewMessageDisposition()
 	md.FormatVersion = FormatVersion
 	md.TestProductionCode = EnvironmentProduction
 	md.MessageDuplicationCode = MessageDuplicationOriginal

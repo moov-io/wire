@@ -16,8 +16,6 @@ var _ segment = &InstructedAmount{}
 type InstructedAmount struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CurrencyCode
 	CurrencyCode string `json:"currencyCode,omitempty"`
 	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
@@ -31,10 +29,9 @@ type InstructedAmount struct {
 }
 
 // NewInstructedAmount returns a new InstructedAmount
-func NewInstructedAmount(isVariable bool) *InstructedAmount {
+func NewInstructedAmount() *InstructedAmount {
 	ia := &InstructedAmount{
-		tag:              TagInstructedAmount,
-		isVariableLength: isVariable,
+		tag: TagInstructedAmount,
 	}
 	return ia
 }
@@ -84,13 +81,19 @@ func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes InstructedAmount
-func (ia *InstructedAmount) String() string {
+func (ia *InstructedAmount) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(24)
 
 	buf.WriteString(ia.tag)
-	buf.WriteString(ia.CurrencyCodeField())
-	buf.WriteString(ia.AmountField())
+	buf.WriteString(ia.CurrencyCodeField(isCompressed))
+	buf.WriteString(ia.AmountField(isCompressed))
 
 	return buf.String()
 }
@@ -127,11 +130,11 @@ func (ia *InstructedAmount) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (ia *InstructedAmount) CurrencyCodeField() string {
-	return ia.alphaVariableField(ia.CurrencyCode, 3, ia.isVariableLength)
+func (ia *InstructedAmount) CurrencyCodeField(isCompressed bool) string {
+	return ia.alphaVariableField(ia.CurrencyCode, 3, isCompressed)
 }
 
 // AmountField gets a string of the Amount field
-func (ia *InstructedAmount) AmountField() string {
-	return ia.alphaVariableField(ia.Amount, 15, ia.isVariableLength)
+func (ia *InstructedAmount) AmountField(isCompressed bool) string {
+	return ia.alphaVariableField(ia.Amount, 15, isCompressed)
 }

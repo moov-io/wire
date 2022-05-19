@@ -16,8 +16,6 @@ var _ segment = &Remittance{}
 type Remittance struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type Remittance struct {
 }
 
 // NewRemittance returns a new Remittance
-func NewRemittance(isVariable bool) *Remittance {
+func NewRemittance() *Remittance {
 	ri := &Remittance{
-		tag:              TagRemittance,
-		isVariableLength: isVariable,
+		tag: TagRemittance,
 	}
 	return ri
 }
@@ -76,12 +73,18 @@ func (ri *Remittance) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Remittance
-func (ri *Remittance) String() string {
+func (ri *Remittance) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(151)
 
 	buf.WriteString(ri.tag)
-	buf.WriteString(ri.CoverPayment.StringFour(ri.isVariableLength))
+	buf.WriteString(ri.CoverPayment.StringFour(isCompressed))
 
 	return buf.String()
 }

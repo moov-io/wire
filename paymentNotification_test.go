@@ -9,7 +9,7 @@ import (
 
 // mockPaymentNotification creates a PaymentNotification
 func mockPaymentNotification() *PaymentNotification {
-	pn := NewPaymentNotification(false)
+	pn := NewPaymentNotification()
 	pn.PaymentNotificationIndicator = "1"
 	pn.ContactNotificationElectronicAddress = "http://moov.io"
 	pn.ContactName = "Contact Name"

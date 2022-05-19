@@ -16,8 +16,6 @@ var _ segment = &ReceiptTimeStamp{}
 type ReceiptTimeStamp struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// ReceiptDate is the receipt date
 	ReceiptDate string `json:"receiptDate,omitempty"`
 	// ReceiptTime is the receipt time
@@ -32,10 +30,9 @@ type ReceiptTimeStamp struct {
 }
 
 // NewReceiptTimeStamp returns a new ReceiptTimeStamp
-func NewReceiptTimeStamp(isVariable bool) *ReceiptTimeStamp {
+func NewReceiptTimeStamp() *ReceiptTimeStamp {
 	rts := &ReceiptTimeStamp{
-		tag:              TagReceiptTimeStamp,
-		isVariableLength: isVariable,
+		tag: TagReceiptTimeStamp,
 	}
 	return rts
 }
@@ -90,14 +87,20 @@ func (rts *ReceiptTimeStamp) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ReceiptTimeStamp
-func (rts *ReceiptTimeStamp) String() string {
+func (rts *ReceiptTimeStamp) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(18)
 
 	buf.WriteString(rts.tag)
-	buf.WriteString(rts.ReceiptDateField())
-	buf.WriteString(rts.ReceiptTimeField())
-	buf.WriteString(rts.ReceiptApplicationIdentificationField())
+	buf.WriteString(rts.ReceiptDateField(isCompressed))
+	buf.WriteString(rts.ReceiptTimeField(isCompressed))
+	buf.WriteString(rts.ReceiptApplicationIdentificationField(isCompressed))
 
 	return buf.String()
 }
@@ -113,16 +116,16 @@ func (rts *ReceiptTimeStamp) Validate() error {
 }
 
 // ReceiptDateField gets a string of the ReceiptDate field
-func (rts *ReceiptTimeStamp) ReceiptDateField() string {
-	return rts.alphaVariableField(rts.ReceiptDate, 4, rts.isVariableLength)
+func (rts *ReceiptTimeStamp) ReceiptDateField(isCompressed bool) string {
+	return rts.alphaVariableField(rts.ReceiptDate, 4, isCompressed)
 }
 
 // ReceiptTimeField gets a string of the ReceiptTime field
-func (rts *ReceiptTimeStamp) ReceiptTimeField() string {
-	return rts.alphaVariableField(rts.ReceiptTime, 4, rts.isVariableLength)
+func (rts *ReceiptTimeStamp) ReceiptTimeField(isCompressed bool) string {
+	return rts.alphaVariableField(rts.ReceiptTime, 4, isCompressed)
 }
 
 // ReceiptApplicationIdentificationField gets a string of the ReceiptApplicationIdentification field
-func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField() string {
-	return rts.alphaVariableField(rts.ReceiptApplicationIdentification, 4, rts.isVariableLength)
+func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField(isCompressed bool) string {
+	return rts.alphaVariableField(rts.ReceiptApplicationIdentification, 4, isCompressed)
 }

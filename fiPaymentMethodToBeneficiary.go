@@ -16,8 +16,6 @@ var _ segment = &FIPaymentMethodToBeneficiary{}
 type FIPaymentMethodToBeneficiary struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// PaymentMethod is payment method
 	PaymentMethod string `json:"paymentMethod,omitempty"`
 	// Additional is additional information
@@ -30,11 +28,10 @@ type FIPaymentMethodToBeneficiary struct {
 }
 
 // NewFIPaymentMethodToBeneficiary returns a new FIPaymentMethodToBeneficiary
-func NewFIPaymentMethodToBeneficiary(isVariable bool) *FIPaymentMethodToBeneficiary {
+func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 	pm := &FIPaymentMethodToBeneficiary{
-		tag:              TagFIPaymentMethodToBeneficiary,
-		PaymentMethod:    "CHECK",
-		isVariableLength: isVariable,
+		tag:           TagFIPaymentMethodToBeneficiary,
+		PaymentMethod: "CHECK",
 	}
 	return pm
 }
@@ -84,13 +81,19 @@ func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIPaymentMethodToBeneficiary
-func (pm *FIPaymentMethodToBeneficiary) String() string {
+func (pm *FIPaymentMethodToBeneficiary) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(41)
 
 	buf.WriteString(pm.tag)
-	buf.WriteString(pm.PaymentMethodField())
-	buf.WriteString(pm.AdditionalInformationField())
+	buf.WriteString(pm.PaymentMethodField(isCompressed))
+	buf.WriteString(pm.AdditionalInformationField(isCompressed))
 
 	return buf.String()
 }
@@ -120,11 +123,11 @@ func (pm *FIPaymentMethodToBeneficiary) fieldInclusion() error {
 }
 
 // PaymentMethodField gets a string of the PaymentMethod field
-func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField() string {
-	return pm.alphaVariableField(pm.PaymentMethod, 5, pm.isVariableLength)
+func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField(isCompressed bool) string {
+	return pm.alphaVariableField(pm.PaymentMethod, 5, isCompressed)
 }
 
 // AdditionalInformationField gets a string of the AdditionalInformation field
-func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField() string {
-	return pm.alphaVariableField(pm.AdditionalInformation, 30, pm.isVariableLength)
+func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField(isCompressed bool) string {
+	return pm.alphaVariableField(pm.AdditionalInformation, 30, isCompressed)
 }

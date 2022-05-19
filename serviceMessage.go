@@ -16,8 +16,6 @@ var _ segment = &ServiceMessage{}
 type ServiceMessage struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// LineOne
 	LineOne string `json:"lineOne,omitempty"`
 	// LineTwo
@@ -50,10 +48,9 @@ type ServiceMessage struct {
 }
 
 // NewServiceMessage returns a new ServiceMessage
-func NewServiceMessage(isVariable bool) *ServiceMessage {
+func NewServiceMessage() *ServiceMessage {
 	sm := &ServiceMessage{
-		tag:              TagServiceMessage,
-		isVariableLength: isVariable,
+		tag: TagServiceMessage,
 	}
 	return sm
 }
@@ -153,23 +150,29 @@ func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ServiceMessage
-func (sm *ServiceMessage) String() string {
+func (sm *ServiceMessage) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(426)
 
 	buf.WriteString(sm.tag)
-	buf.WriteString(sm.LineOneField())
-	buf.WriteString(sm.LineTwoField())
-	buf.WriteString(sm.LineThreeField())
-	buf.WriteString(sm.LineFourField())
-	buf.WriteString(sm.LineFiveField())
-	buf.WriteString(sm.LineSixField())
-	buf.WriteString(sm.LineSevenField())
-	buf.WriteString(sm.LineEightField())
-	buf.WriteString(sm.LineNineField())
-	buf.WriteString(sm.LineTenField())
-	buf.WriteString(sm.LineElevenField())
-	buf.WriteString(sm.LineTwelveField())
+	buf.WriteString(sm.LineOneField(isCompressed))
+	buf.WriteString(sm.LineTwoField(isCompressed))
+	buf.WriteString(sm.LineThreeField(isCompressed))
+	buf.WriteString(sm.LineFourField(isCompressed))
+	buf.WriteString(sm.LineFiveField(isCompressed))
+	buf.WriteString(sm.LineSixField(isCompressed))
+	buf.WriteString(sm.LineSevenField(isCompressed))
+	buf.WriteString(sm.LineEightField(isCompressed))
+	buf.WriteString(sm.LineNineField(isCompressed))
+	buf.WriteString(sm.LineTenField(isCompressed))
+	buf.WriteString(sm.LineElevenField(isCompressed))
+	buf.WriteString(sm.LineTwelveField(isCompressed))
 
 	return buf.String()
 }
@@ -234,61 +237,61 @@ func (sm *ServiceMessage) fieldInclusion() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (sm *ServiceMessage) LineOneField() string {
-	return sm.alphaVariableField(sm.LineOne, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineOneField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineOne, 35, isCompressed)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (sm *ServiceMessage) LineTwoField() string {
-	return sm.alphaVariableField(sm.LineTwo, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineTwoField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineTwo, 35, isCompressed)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (sm *ServiceMessage) LineThreeField() string {
-	return sm.alphaVariableField(sm.LineThree, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineThreeField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineThree, 35, isCompressed)
 }
 
 // LineFourField gets a string of the LineFour field
-func (sm *ServiceMessage) LineFourField() string {
-	return sm.alphaVariableField(sm.LineFour, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineFourField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineFour, 35, isCompressed)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (sm *ServiceMessage) LineFiveField() string {
-	return sm.alphaVariableField(sm.LineFive, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineFiveField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineFive, 35, isCompressed)
 }
 
 // LineSixField gets a string of the LineSix field
-func (sm *ServiceMessage) LineSixField() string {
-	return sm.alphaVariableField(sm.LineSix, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineSixField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineSix, 35, isCompressed)
 }
 
 // LineSevenField gets a string of the LineSeven field
-func (sm *ServiceMessage) LineSevenField() string {
-	return sm.alphaVariableField(sm.LineSeven, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineSevenField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineSeven, 35, isCompressed)
 }
 
 // LineEightField gets a string of the LineEight field
-func (sm *ServiceMessage) LineEightField() string {
-	return sm.alphaVariableField(sm.LineEight, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineEightField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineEight, 35, isCompressed)
 }
 
 // LineNineField gets a string of the LineNine field
-func (sm *ServiceMessage) LineNineField() string {
-	return sm.alphaVariableField(sm.LineNine, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineNineField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineNine, 35, isCompressed)
 }
 
 // LineTenField gets a string of the LineTen field
-func (sm *ServiceMessage) LineTenField() string {
-	return sm.alphaVariableField(sm.LineTen, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineTenField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineTen, 35, isCompressed)
 }
 
 // LineElevenField gets a string of the LineEleven field
-func (sm *ServiceMessage) LineElevenField() string {
-	return sm.alphaVariableField(sm.LineEleven, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineElevenField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineEleven, 35, isCompressed)
 }
 
 // LineTwelveField gets a string of the LineTwelve field
-func (sm *ServiceMessage) LineTwelveField() string {
-	return sm.alphaVariableField(sm.LineTwelve, 35, sm.isVariableLength)
+func (sm *ServiceMessage) LineTwelveField(isCompressed bool) string {
+	return sm.alphaVariableField(sm.LineTwelve, 35, isCompressed)
 }

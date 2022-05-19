@@ -9,7 +9,7 @@ import (
 
 // mockBeneficiaryFI creates a BeneficiaryFI
 func mockBeneficiaryFI() *BeneficiaryFI {
-	bfi := NewBeneficiaryFI(false)
+	bfi := NewBeneficiaryFI()
 	bfi.FinancialInstitution.IdentificationCode = DemandDepositAccountNumber
 	bfi.FinancialInstitution.Identifier = "123456789"
 	bfi.FinancialInstitution.Name = "FI Name"

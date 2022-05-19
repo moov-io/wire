@@ -1461,6 +1461,6 @@ func (fwm *FEDWireMessage) isRemittanceValid() error {
 
 type segment interface {
 	Parse(record string) (int, error)
-	String() string
+	String(options ...bool) string
 	Validate() error
 }

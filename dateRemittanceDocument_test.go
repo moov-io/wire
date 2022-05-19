@@ -10,7 +10,7 @@ import (
 
 // DateRemittanceDocument creates a DateRemittanceDocument
 func mockDateRemittanceDocument() *DateRemittanceDocument {
-	drd := NewDateRemittanceDocument(false)
+	drd := NewDateRemittanceDocument()
 	drd.DateRemittanceDocument = time.Now().Format("20060102")
 	return drd
 }

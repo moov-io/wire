@@ -9,7 +9,7 @@ import (
 
 // mockFIPaymentMethodToBeneficiary creates a FIPaymentMethodToBeneficiary
 func mockFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
-	pm := NewFIPaymentMethodToBeneficiary(false)
+	pm := NewFIPaymentMethodToBeneficiary()
 	pm.PaymentMethod = "CHECK"
 	pm.AdditionalInformation = "Additional Information"
 	return pm
@@ -24,7 +24,7 @@ func TestMockFIPaymentMethodToBeneficiary(t *testing.T) {
 
 // TestPaymentMethodValid validates FIPaymentMethodToBeneficiary PaymentMethod
 func TestPaymentMethodValid(t *testing.T) {
-	pm := NewFIPaymentMethodToBeneficiary(false)
+	pm := NewFIPaymentMethodToBeneficiary()
 	pm.PaymentMethod = ""
 
 	err := pm.Validate()
@@ -34,7 +34,7 @@ func TestPaymentMethodValid(t *testing.T) {
 
 // TestAdditionalInformationAlphaNumeric validates FIPaymentMethodToBeneficiary AdditionalInformation is alphanumeric
 func TestAdditionalInformationAlphaNumeric(t *testing.T) {
-	pm := NewFIPaymentMethodToBeneficiary(false)
+	pm := NewFIPaymentMethodToBeneficiary()
 	pm.AdditionalInformation = "®"
 
 	err := pm.Validate()

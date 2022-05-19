@@ -16,8 +16,6 @@ var _ segment = &SecondaryRemittanceDocument{}
 type SecondaryRemittanceDocument struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// DocumentTypeCode  * `AROI` - Accounts Receivable Open Item * `DISP` - Dispatch Advice * `FXDR` - Foreign Exchange Deal Reference * `PROP` - Proprietary Document Type PUOR Purchase Order * `RADM` - Remittance Advice Message * `RPIN` - Related Payment Instruction * `SCOR1` - Structured Communication Reference VCHR Voucher
 	DocumentTypeCode string `json:"documentTypeCode,omitempty"`
 	// proprietaryDocumentTypeCode
@@ -34,10 +32,9 @@ type SecondaryRemittanceDocument struct {
 }
 
 // NewSecondaryRemittanceDocument returns a new SecondaryRemittanceDocument
-func NewSecondaryRemittanceDocument(isVariable bool) *SecondaryRemittanceDocument {
+func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 	srd := &SecondaryRemittanceDocument{
-		tag:              TagSecondaryRemittanceDocument,
-		isVariableLength: isVariable,
+		tag: TagSecondaryRemittanceDocument,
 	}
 	return srd
 }
@@ -99,15 +96,21 @@ func (srd *SecondaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SecondaryRemittanceDocument
-func (srd *SecondaryRemittanceDocument) String() string {
+func (srd *SecondaryRemittanceDocument) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(115)
 
 	buf.WriteString(srd.tag)
-	buf.WriteString(srd.DocumentTypeCodeField())
-	buf.WriteString(srd.ProprietaryDocumentTypeCodeField())
-	buf.WriteString(srd.DocumentIdentificationNumberField())
-	buf.WriteString(srd.IssuerField())
+	buf.WriteString(srd.DocumentTypeCodeField(isCompressed))
+	buf.WriteString(srd.ProprietaryDocumentTypeCodeField(isCompressed))
+	buf.WriteString(srd.DocumentIdentificationNumberField(isCompressed))
+	buf.WriteString(srd.IssuerField(isCompressed))
 
 	return buf.String()
 }
@@ -158,21 +161,21 @@ func (srd *SecondaryRemittanceDocument) fieldInclusion() error {
 }
 
 // DocumentTypeCodeField gets a string of the DocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField() string {
-	return srd.alphaVariableField(srd.DocumentTypeCode, 4, srd.isVariableLength)
+func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField(isCompressed bool) string {
+	return srd.alphaVariableField(srd.DocumentTypeCode, 4, isCompressed)
 }
 
 // ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
-	return srd.alphaVariableField(srd.ProprietaryDocumentTypeCode, 35, srd.isVariableLength)
+func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField(isCompressed bool) string {
+	return srd.alphaVariableField(srd.ProprietaryDocumentTypeCode, 35, isCompressed)
 }
 
 // DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
-func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField() string {
-	return srd.alphaVariableField(srd.DocumentIdentificationNumber, 35, srd.isVariableLength)
+func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField(isCompressed bool) string {
+	return srd.alphaVariableField(srd.DocumentIdentificationNumber, 35, isCompressed)
 }
 
 // IssuerField gets a string of the Issuer field
-func (srd *SecondaryRemittanceDocument) IssuerField() string {
-	return srd.alphaVariableField(srd.Issuer, 35, srd.isVariableLength)
+func (srd *SecondaryRemittanceDocument) IssuerField(isCompressed bool) string {
+	return srd.alphaVariableField(srd.Issuer, 35, isCompressed)
 }

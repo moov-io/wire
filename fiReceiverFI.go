@@ -16,8 +16,6 @@ var _ segment = &FIReceiverFI{}
 type FIReceiverFI struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// FIToFI is financial institution to financial institution
 	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
@@ -28,10 +26,9 @@ type FIReceiverFI struct {
 }
 
 // NewFIReceiverFI returns a new FIReceiverFI
-func NewFIReceiverFI(isVariable bool) *FIReceiverFI {
+func NewFIReceiverFI() *FIReceiverFI {
 	firfi := &FIReceiverFI{
-		tag:              TagFIReceiverFI,
-		isVariableLength: isVariable,
+		tag: TagFIReceiverFI,
 	}
 	return firfi
 }
@@ -76,12 +73,18 @@ func (firfi *FIReceiverFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIReceiverFI
-func (firfi *FIReceiverFI) String() string {
+func (firfi *FIReceiverFI) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(201)
 
 	buf.WriteString(firfi.tag)
-	buf.WriteString(firfi.FIToFI.String(firfi.isVariableLength))
+	buf.WriteString(firfi.FIToFI.String(isCompressed))
 
 	return buf.String()
 }

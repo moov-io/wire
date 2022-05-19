@@ -16,8 +16,6 @@ var _ segment = &OutputMessageAccountabilityData{}
 type OutputMessageAccountabilityData struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// OutputCycleDate (CCYYMMDD)
 	OutputCycleDate string `json:"outputCycleDate,omitempty"`
 	// OutputDestinationID
@@ -38,10 +36,9 @@ type OutputMessageAccountabilityData struct {
 }
 
 // NewOutputMessageAccountabilityData returns a new OutputMessageAccountabilityData
-func NewOutputMessageAccountabilityData(isVariable bool) *OutputMessageAccountabilityData {
+func NewOutputMessageAccountabilityData() *OutputMessageAccountabilityData {
 	omad := &OutputMessageAccountabilityData{
-		tag:              TagOutputMessageAccountabilityData,
-		isVariableLength: isVariable,
+		tag: TagOutputMessageAccountabilityData,
 	}
 	return omad
 }
@@ -111,17 +108,23 @@ func (omad *OutputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OutputMessageAccountabilityData
-func (omad *OutputMessageAccountabilityData) String() string {
+func (omad *OutputMessageAccountabilityData) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(40)
 
 	buf.WriteString(omad.tag)
-	buf.WriteString(omad.OutputCycleDateField())
-	buf.WriteString(omad.OutputDestinationIDField())
-	buf.WriteString(omad.OutputSequenceNumberField())
-	buf.WriteString(omad.OutputDateField())
-	buf.WriteString(omad.OutputTimeField())
-	buf.WriteString(omad.OutputFRBApplicationIdentificationField())
+	buf.WriteString(omad.OutputCycleDateField(isCompressed))
+	buf.WriteString(omad.OutputDestinationIDField(isCompressed))
+	buf.WriteString(omad.OutputSequenceNumberField(isCompressed))
+	buf.WriteString(omad.OutputDateField(isCompressed))
+	buf.WriteString(omad.OutputTimeField(isCompressed))
+	buf.WriteString(omad.OutputFRBApplicationIdentificationField(isCompressed))
 
 	return buf.String()
 }
@@ -137,32 +140,32 @@ func (omad *OutputMessageAccountabilityData) Validate() error {
 }
 
 // OutputCycleDateField gets a string of the OutputCycleDate field
-func (omad *OutputMessageAccountabilityData) OutputCycleDateField() string {
-	return omad.alphaVariableField(omad.OutputCycleDate, 8, omad.isVariableLength)
+func (omad *OutputMessageAccountabilityData) OutputCycleDateField(isCompressed bool) string {
+	return omad.alphaVariableField(omad.OutputCycleDate, 8, isCompressed)
 }
 
 // OutputDestinationIDField gets a string of the OutputDestinationID field
-func (omad *OutputMessageAccountabilityData) OutputDestinationIDField() string {
+func (omad *OutputMessageAccountabilityData) OutputDestinationIDField(isCompressed bool) string {
 	return omad.alphaField(omad.OutputDestinationID, 8)
-	return omad.alphaVariableField(omad.OutputDestinationID, 8, omad.isVariableLength)
+	return omad.alphaVariableField(omad.OutputDestinationID, 8, isCompressed)
 }
 
 // OutputSequenceNumberField gets a string of the OutputSequenceNumber field
-func (omad *OutputMessageAccountabilityData) OutputSequenceNumberField() string {
-	return omad.alphaVariableField(omad.OutputSequenceNumber, 6, omad.isVariableLength)
+func (omad *OutputMessageAccountabilityData) OutputSequenceNumberField(isCompressed bool) string {
+	return omad.alphaVariableField(omad.OutputSequenceNumber, 6, isCompressed)
 }
 
 // OutputDateField gets a string of the OutputDate field
-func (omad *OutputMessageAccountabilityData) OutputDateField() string {
-	return omad.alphaVariableField(omad.OutputDate, 4, omad.isVariableLength)
+func (omad *OutputMessageAccountabilityData) OutputDateField(isCompressed bool) string {
+	return omad.alphaVariableField(omad.OutputDate, 4, isCompressed)
 }
 
 // OutputTimeField gets a string of the OutputTime field
-func (omad *OutputMessageAccountabilityData) OutputTimeField() string {
-	return omad.alphaVariableField(omad.OutputTime, 4, omad.isVariableLength)
+func (omad *OutputMessageAccountabilityData) OutputTimeField(isCompressed bool) string {
+	return omad.alphaVariableField(omad.OutputTime, 4, isCompressed)
 }
 
 // OutputFRBApplicationIdentificationField gets a string of the OutputFRBApplicationIdentification field
-func (omad *OutputMessageAccountabilityData) OutputFRBApplicationIdentificationField() string {
-	return omad.alphaVariableField(omad.OutputFRBApplicationIdentification, 4, omad.isVariableLength)
+func (omad *OutputMessageAccountabilityData) OutputFRBApplicationIdentificationField(isCompressed bool) string {
+	return omad.alphaVariableField(omad.OutputFRBApplicationIdentification, 4, isCompressed)
 }

@@ -16,8 +16,6 @@ var _ segment = &FIBeneficiaryFI{}
 type FIBeneficiaryFI struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Financial Institution
 	FIToFI FIToFI `json:"fiToFI,omitempty"`
 
@@ -28,10 +26,9 @@ type FIBeneficiaryFI struct {
 }
 
 // NewFIBeneficiaryFI returns a new FIBeneficiaryFI
-func NewFIBeneficiaryFI(isVariable bool) *FIBeneficiaryFI {
+func NewFIBeneficiaryFI() *FIBeneficiaryFI {
 	fibfi := &FIBeneficiaryFI{
-		tag:              TagFIBeneficiaryFI,
-		isVariableLength: isVariable,
+		tag: TagFIBeneficiaryFI,
 	}
 	return fibfi
 }
@@ -76,12 +73,18 @@ func (fibfi *FIBeneficiaryFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIBeneficiaryFI
-func (fibfi *FIBeneficiaryFI) String() string {
+func (fibfi *FIBeneficiaryFI) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(201)
 
 	buf.WriteString(fibfi.tag)
-	buf.WriteString(fibfi.FIToFI.String(fibfi.isVariableLength))
+	buf.WriteString(fibfi.FIToFI.String(isCompressed))
 
 	return buf.String()
 }

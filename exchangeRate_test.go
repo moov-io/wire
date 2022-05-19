@@ -9,7 +9,7 @@ import (
 
 // mockExchangeRate creates a ExchangeRate
 func mockExchangeRate() *ExchangeRate {
-	eRate := NewExchangeRate(false)
+	eRate := NewExchangeRate()
 	eRate.ExchangeRate = "1,2345"
 	return eRate
 }

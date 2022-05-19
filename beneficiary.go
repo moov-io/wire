@@ -16,8 +16,6 @@ var _ segment = &Beneficiary{}
 type Beneficiary struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Personal
 	Personal Personal `json:"personal,omitempty"`
 
@@ -28,10 +26,9 @@ type Beneficiary struct {
 }
 
 // NewBeneficiary returns a new Beneficiary
-func NewBeneficiary(isVariable bool) *Beneficiary {
+func NewBeneficiary() *Beneficiary {
 	ben := &Beneficiary{
-		tag:              TagBeneficiary,
-		isVariableLength: isVariable,
+		tag: TagBeneficiary,
 	}
 	return ben
 }
@@ -76,12 +73,18 @@ func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Beneficiary
-func (ben *Beneficiary) String() string {
+func (ben *Beneficiary) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(ben.tag)
-	buf.WriteString(ben.Personal.String(ben.isVariableLength))
+	buf.WriteString(ben.Personal.String(isCompressed))
 
 	return buf.String()
 }

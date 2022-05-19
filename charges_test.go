@@ -8,7 +8,7 @@ import (
 
 // mockCharges creates a Charges
 func mockCharges() *Charges {
-	c := NewCharges(false)
+	c := NewCharges()
 	c.ChargeDetails = "B"
 	c.SendersChargesOne = "USD0,99"
 	c.SendersChargesTwo = "USD2,99"

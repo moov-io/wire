@@ -9,7 +9,7 @@ import (
 
 // mockBeneficiaryReference creates a BeneficiaryReference
 func mockBeneficiaryReference() *BeneficiaryReference {
-	br := NewBeneficiaryReference(false)
+	br := NewBeneficiaryReference()
 	br.BeneficiaryReference = "Reference"
 	return br
 }

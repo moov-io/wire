@@ -16,8 +16,6 @@ var _ segment = &Originator{}
 type Originator struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// Personal
 	Personal Personal `json:"personal,omitempty"`
 
@@ -28,10 +26,9 @@ type Originator struct {
 }
 
 // NewOriginator returns a new Originator
-func NewOriginator(isVariable bool) *Originator {
+func NewOriginator() *Originator {
 	o := &Originator{
-		tag:              TagOriginator,
-		isVariableLength: isVariable,
+		tag: TagOriginator,
 	}
 	return o
 }
@@ -76,12 +73,18 @@ func (o *Originator) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Originator
-func (o *Originator) String() string {
+func (o *Originator) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(o.tag)
-	buf.WriteString(o.Personal.String(o.isVariableLength))
+	buf.WriteString(o.Personal.String(isCompressed))
 
 	return buf.String()
 }

@@ -16,8 +16,6 @@ var _ segment = &AmountNegotiatedDiscount{}
 type AmountNegotiatedDiscount struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// RemittanceAmount is remittance amounts
 	RemittanceAmount RemittanceAmount `json:"remittanceAmount,omitempty"`
 
@@ -28,10 +26,9 @@ type AmountNegotiatedDiscount struct {
 }
 
 // NewAmountNegotiatedDiscount returns a new AmountNegotiatedDiscount
-func NewAmountNegotiatedDiscount(isVariable bool) *AmountNegotiatedDiscount {
+func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
 	nd := &AmountNegotiatedDiscount{
-		tag:              TagAmountNegotiatedDiscount,
-		isVariableLength: isVariable,
+		tag: TagAmountNegotiatedDiscount,
 	}
 	return nd
 }
@@ -76,11 +73,19 @@ func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes AmountNegotiatedDiscount
-func (nd *AmountNegotiatedDiscount) String() string {
+func (nd *AmountNegotiatedDiscount) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(nd.tag)
-	buf.WriteString(nd.RemittanceAmount.String(nd.isVariableLength))
+	buf.WriteString(nd.RemittanceAmount.String(isCompressed))
+
 	return buf.String()
 }
 

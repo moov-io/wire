@@ -9,7 +9,7 @@ import (
 
 // mockInstructedAmount creates a InstructedAmount
 func mockInstructedAmount() *InstructedAmount {
-	ia := NewInstructedAmount(false)
+	ia := NewInstructedAmount()
 	ia.CurrencyCode = "USD"
 	ia.Amount = "4567,89"
 	return ia

@@ -16,8 +16,6 @@ var _ segment = &ErrorWire{}
 type ErrorWire struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	//  * `E` - Data Error * `F` - Insufficient Balance * `H` - Accountability Error * `I` - In Process or Intercepted * `W` - Cutoff Hour Error * `X` - Duplicate IMAD
 	ErrorCategory string `json:"errorCategory,omitempty"`
 	// ErrorCode
@@ -32,10 +30,9 @@ type ErrorWire struct {
 }
 
 // NewErrorWire returns a new ErrorWire
-func NewErrorWire(isVariable bool) *ErrorWire {
+func NewErrorWire() *ErrorWire {
 	ew := &ErrorWire{
-		tag:              TagErrorWire,
-		isVariableLength: isVariable,
+		tag: TagErrorWire,
 	}
 	return ew
 }
@@ -88,13 +85,21 @@ func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ErrorWire
-func (ew *ErrorWire) String() string {
+func (ew *ErrorWire) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(45)
+
 	buf.WriteString(ew.tag)
 	buf.WriteString(ew.ErrorCategoryField())
-	buf.WriteString(ew.ErrorCodeField())
-	buf.WriteString(ew.ErrorDescriptionField())
+	buf.WriteString(ew.ErrorCodeField(isCompressed))
+	buf.WriteString(ew.ErrorDescriptionField(isCompressed))
+
 	return buf.String()
 }
 
@@ -111,11 +116,11 @@ func (ew *ErrorWire) ErrorCategoryField() string {
 }
 
 // ErrorCodeField gets a string of the ErrorCode field
-func (ew *ErrorWire) ErrorCodeField() string {
-	return ew.alphaVariableField(ew.ErrorCode, 3, ew.isVariableLength)
+func (ew *ErrorWire) ErrorCodeField(isCompressed bool) string {
+	return ew.alphaVariableField(ew.ErrorCode, 3, isCompressed)
 }
 
 // ErrorDescriptionField gets a string of the ErrorDescription field
-func (ew *ErrorWire) ErrorDescriptionField() string {
-	return ew.alphaVariableField(ew.ErrorDescription, 35, ew.isVariableLength)
+func (ew *ErrorWire) ErrorDescriptionField(isCompressed bool) string {
+	return ew.alphaVariableField(ew.ErrorDescription, 35, isCompressed)
 }

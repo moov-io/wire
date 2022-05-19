@@ -16,8 +16,6 @@ var _ segment = &InstitutionAccount{}
 type InstitutionAccount struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// CoverPayment is CoverPayment
 	CoverPayment CoverPayment `json:"coverPayment,omitempty"`
 
@@ -28,10 +26,9 @@ type InstitutionAccount struct {
 }
 
 // NewInstitutionAccount returns a new InstitutionAccount
-func NewInstitutionAccount(isVariable bool) *InstitutionAccount {
+func NewInstitutionAccount() *InstitutionAccount {
 	iAccount := &InstitutionAccount{
-		tag:              TagInstitutionAccount,
-		isVariableLength: isVariable,
+		tag: TagInstitutionAccount,
 	}
 	return iAccount
 }
@@ -76,12 +73,18 @@ func (iAccount *InstitutionAccount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes InstitutionAccount
-func (iAccount *InstitutionAccount) String() string {
+func (iAccount *InstitutionAccount) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(iAccount.tag)
-	buf.WriteString(iAccount.CoverPayment.StringFive(iAccount.isVariableLength))
+	buf.WriteString(iAccount.CoverPayment.StringFive(isCompressed))
 
 	return buf.String()
 }

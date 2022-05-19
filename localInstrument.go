@@ -16,8 +16,6 @@ var _ segment = &LocalInstrument{}
 type LocalInstrument struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// LocalInstrumentCode is local instrument code
 	LocalInstrumentCode string `json:"LocalInstrument,omitempty"`
 	// ProprietaryCode is proprietary code
@@ -30,10 +28,9 @@ type LocalInstrument struct {
 }
 
 // NewLocalInstrument returns a new LocalInstrument
-func NewLocalInstrument(isVariable bool) *LocalInstrument {
+func NewLocalInstrument() *LocalInstrument {
 	li := &LocalInstrument{
-		tag:              TagLocalInstrument,
-		isVariableLength: isVariable,
+		tag: TagLocalInstrument,
 	}
 	return li
 }
@@ -83,13 +80,19 @@ func (li *LocalInstrument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes LocalInstrument
-func (li *LocalInstrument) String() string {
+func (li *LocalInstrument) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(45)
 
 	buf.WriteString(li.tag)
-	buf.WriteString(li.LocalInstrumentCodeField())
-	buf.WriteString(li.ProprietaryCodeField())
+	buf.WriteString(li.LocalInstrumentCodeField(isCompressed))
+	buf.WriteString(li.ProprietaryCodeField(isCompressed))
 
 	return buf.String()
 }
@@ -123,11 +126,11 @@ func (li *LocalInstrument) fieldInclusion() error {
 }
 
 // LocalInstrumentCodeField gets a string of LocalInstrumentCode field
-func (li *LocalInstrument) LocalInstrumentCodeField() string {
-	return li.alphaVariableField(li.LocalInstrumentCode, 4, li.isVariableLength)
+func (li *LocalInstrument) LocalInstrumentCodeField(isCompressed bool) string {
+	return li.alphaVariableField(li.LocalInstrumentCode, 4, isCompressed)
 }
 
 // ProprietaryCodeField gets a string of ProprietaryCode field
-func (li *LocalInstrument) ProprietaryCodeField() string {
-	return li.alphaVariableField(li.ProprietaryCode, 35, li.isVariableLength)
+func (li *LocalInstrument) ProprietaryCodeField(isCompressed bool) string {
+	return li.alphaVariableField(li.ProprietaryCode, 35, isCompressed)
 }

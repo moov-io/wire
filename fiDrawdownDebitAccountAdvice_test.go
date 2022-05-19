@@ -9,7 +9,7 @@ import (
 
 // mockFIDrawdownDebitAccountAdvice creates a FIDrawdownDebitAccountAdvice
 func mockFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
-	debitDDAdvice := NewFIDrawdownDebitAccountAdvice(false)
+	debitDDAdvice := NewFIDrawdownDebitAccountAdvice()
 	debitDDAdvice.Advice.AdviceCode = AdviceCodeLetter
 	debitDDAdvice.Advice.LineOne = "Line One"
 	debitDDAdvice.Advice.LineTwo = "Line Two"

@@ -9,7 +9,7 @@ import (
 
 // mockBeneficiary creates a Beneficiary
 func mockBeneficiary() *Beneficiary {
-	ben := NewBeneficiary(false)
+	ben := NewBeneficiary()
 	ben.Personal.IdentificationCode = DriversLicenseNumber
 	ben.Personal.Identifier = "1234"
 	ben.Personal.Name = "Name"

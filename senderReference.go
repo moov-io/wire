@@ -16,8 +16,6 @@ var _ segment = &SenderReference{}
 type SenderReference struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// SenderReference
 	SenderReference string `json:"senderReference,omitempty"`
 
@@ -28,10 +26,9 @@ type SenderReference struct {
 }
 
 // NewSenderReference returns a new SenderReference
-func NewSenderReference(isVariable bool) *SenderReference {
+func NewSenderReference() *SenderReference {
 	sr := &SenderReference{
-		tag:              TagSenderReference,
-		isVariableLength: isVariable,
+		tag: TagSenderReference,
 	}
 	return sr
 }
@@ -76,11 +73,19 @@ func (sr *SenderReference) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderReference
-func (sr *SenderReference) String() string {
+func (sr *SenderReference) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(22)
+
 	buf.WriteString(sr.tag)
-	buf.WriteString(sr.SenderReferenceField())
+	buf.WriteString(sr.SenderReferenceField(isCompressed))
+
 	return buf.String()
 }
 
@@ -97,6 +102,6 @@ func (sr *SenderReference) Validate() error {
 }
 
 // SenderReferenceField gets a string of SenderReference field
-func (sr *SenderReference) SenderReferenceField() string {
-	return sr.alphaVariableField(sr.SenderReference, 16, sr.isVariableLength)
+func (sr *SenderReference) SenderReferenceField(isCompressed bool) string {
+	return sr.alphaVariableField(sr.SenderReference, 16, isCompressed)
 }

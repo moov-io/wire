@@ -9,7 +9,7 @@ import (
 
 // mockReceiptTimeStamp creates a ReceiptTimeStamp
 func mockReceiptTimeStamp() *ReceiptTimeStamp {
-	rts := NewReceiptTimeStamp(false)
+	rts := NewReceiptTimeStamp()
 	rts.ReceiptDate = "0502"
 	rts.ReceiptTime = "1230"
 	rts.ReceiptApplicationIdentification = "A123"

@@ -9,7 +9,7 @@ import (
 
 // RemittanceOriginator creates a RemittanceOriginator
 func mockRemittanceOriginator() *RemittanceOriginator {
-	ro := NewRemittanceOriginator(false)
+	ro := NewRemittanceOriginator()
 	ro.IdentificationType = OrganizationID
 	ro.IdentificationCode = OICCustomerNumber
 	ro.IdentificationNumber = "111111"

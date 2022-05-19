@@ -16,8 +16,6 @@ var _ segment = &Charges{}
 type Charges struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// ChargeDetails * `B` - Beneficiary * `S` - Shared
 	ChargeDetails string `json:"chargeDetails,omitempty"`
 	// SendersChargesOne  The first three characters must contain an alpha currency code (e.g., USD).  The remaining
@@ -44,10 +42,9 @@ type Charges struct {
 }
 
 // NewCharges returns a new Charges
-func NewCharges(isVariable bool) *Charges {
+func NewCharges() *Charges {
 	c := &Charges{
-		tag:              TagCharges,
-		isVariableLength: isVariable,
+		tag: TagCharges,
 	}
 	return c
 }
@@ -110,15 +107,23 @@ func (c *Charges) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Charges
-func (c *Charges) String() string {
+func (c *Charges) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(67)
+
 	buf.WriteString(c.tag)
 	buf.WriteString(c.ChargeDetailsField())
-	buf.WriteString(c.SendersChargesOneField())
-	buf.WriteString(c.SendersChargesTwoField())
-	buf.WriteString(c.SendersChargesThreeField())
-	buf.WriteString(c.SendersChargesFourField())
+	buf.WriteString(c.SendersChargesOneField(isCompressed))
+	buf.WriteString(c.SendersChargesTwoField(isCompressed))
+	buf.WriteString(c.SendersChargesThreeField(isCompressed))
+	buf.WriteString(c.SendersChargesFourField(isCompressed))
+
 	return buf.String()
 }
 
@@ -170,21 +175,21 @@ func (c *Charges) ChargeDetailsField() string {
 }
 
 // SendersChargesOneField gets a string of the SendersChargesOne field
-func (c *Charges) SendersChargesOneField() string {
-	return c.alphaVariableField(c.SendersChargesOne, 15, c.isVariableLength)
+func (c *Charges) SendersChargesOneField(isCompressed bool) string {
+	return c.alphaVariableField(c.SendersChargesOne, 15, isCompressed)
 }
 
 // SendersChargesTwoField gets a string of the SendersChargesTwo field
-func (c *Charges) SendersChargesTwoField() string {
-	return c.alphaVariableField(c.SendersChargesTwo, 15, c.isVariableLength)
+func (c *Charges) SendersChargesTwoField(isCompressed bool) string {
+	return c.alphaVariableField(c.SendersChargesTwo, 15, isCompressed)
 }
 
 // SendersChargesThreeField gets a string of the SendersChargesThree field
-func (c *Charges) SendersChargesThreeField() string {
-	return c.alphaVariableField(c.SendersChargesThree, 15, c.isVariableLength)
+func (c *Charges) SendersChargesThreeField(isCompressed bool) string {
+	return c.alphaVariableField(c.SendersChargesThree, 15, isCompressed)
 }
 
 // SendersChargesFourField gets a string of the SendersChargesFour field
-func (c *Charges) SendersChargesFourField() string {
-	return c.alphaVariableField(c.SendersChargesFour, 15, c.isVariableLength)
+func (c *Charges) SendersChargesFourField(isCompressed bool) string {
+	return c.alphaVariableField(c.SendersChargesFour, 15, isCompressed)
 }

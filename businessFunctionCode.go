@@ -16,8 +16,6 @@ var _ segment = &BusinessFunctionCode{}
 type BusinessFunctionCode struct {
 	// tag
 	tag string
-	// is variable length
-	isVariableLength bool
 	// BusinessFunctionCode BTR: Bank Transfer (Beneficiary is a bank) DRC: Customer or Corporate Drawdown Request CKS: Check Same Day Settlement DRW: Drawdown Payment CTP: Customer Transfer Plus FFR: Fed Funds Returned CTR: Customer Transfer (Beneficiary is a not a bank) FFS: Fed Funds Sold DEP: Deposit to Sender’s Account SVC: Service Message DRB: Bank-to-Bank Drawdown Request
 	BusinessFunctionCode string `json:"businessFunctionCode"`
 	// TransactionTypeCode If {3600} is CTR, an optional Transaction Type Code element is permitted; however, the Transaction Type Code 'COV' is not permitted.
@@ -30,10 +28,9 @@ type BusinessFunctionCode struct {
 }
 
 // NewBusinessFunctionCode returns a new BusinessFunctionCode
-func NewBusinessFunctionCode(isVariable bool) *BusinessFunctionCode {
+func NewBusinessFunctionCode() *BusinessFunctionCode {
 	bfc := &BusinessFunctionCode{
-		tag:              TagBusinessFunctionCode,
-		isVariableLength: isVariable,
+		tag: TagBusinessFunctionCode,
 	}
 	return bfc
 }
@@ -83,13 +80,19 @@ func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BusinessFunctionCode
-func (bfc *BusinessFunctionCode) String() string {
+func (bfc *BusinessFunctionCode) String(options ...bool) string {
+
+	isCompressed := false
+	if len(options) > 0 {
+		isCompressed = options[0]
+	}
+
 	var buf strings.Builder
 	buf.Grow(12)
 
 	buf.WriteString(bfc.tag)
-	buf.WriteString(bfc.BusinessFunctionCodeField())
-	buf.WriteString(bfc.TransactionTypeCodeField())
+	buf.WriteString(bfc.BusinessFunctionCodeField(isCompressed))
+	buf.WriteString(bfc.TransactionTypeCodeField(isCompressed))
 
 	return buf.String()
 }
@@ -124,11 +127,11 @@ func (bfc *BusinessFunctionCode) fieldInclusion() error {
 }
 
 // BusinessFunctionCodeField gets a string of the BusinessFunctionCode field
-func (bfc *BusinessFunctionCode) BusinessFunctionCodeField() string {
-	return bfc.alphaVariableField(bfc.BusinessFunctionCode, 3, bfc.isVariableLength)
+func (bfc *BusinessFunctionCode) BusinessFunctionCodeField(isCompressed bool) string {
+	return bfc.alphaVariableField(bfc.BusinessFunctionCode, 3, isCompressed)
 }
 
 // TransactionTypeCodeField gets a string of the TransactionTypeCode field
-func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
-	return bfc.alphaVariableField(bfc.TransactionTypeCode, 3, bfc.isVariableLength)
+func (bfc *BusinessFunctionCode) TransactionTypeCodeField(isCompressed bool) string {
+	return bfc.alphaVariableField(bfc.TransactionTypeCode, 3, isCompressed)
 }

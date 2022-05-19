@@ -9,7 +9,7 @@ import (
 
 // MockAdjustment creates a Adjustment
 func mockAdjustment() *Adjustment {
-	adj := NewAdjustment(false)
+	adj := NewAdjustment()
 	adj.AdjustmentReasonCode = PricingError
 	adj.CreditDebitIndicator = CreditIndicator
 	adj.RemittanceAmount.CurrencyCode = "USD"
