@@ -276,6 +276,8 @@ func TestFEDWireMessageWriteBankTransfer(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCustomerTransfer writes a FEDWireMessage to a file with BusinessFunctionCode = CTR
@@ -356,6 +358,8 @@ func TestFEDWireMessageWriteCustomerTransfer(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCustomerTransferPlus writes a FEDWireMessage to a file with BusinessFunctionCode = CTP
@@ -446,6 +450,8 @@ func TestFEDWireMessageWriteCustomerTransferPlus(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCheckSameDaySettlement writes a FEDWireMessage to a file with BusinessFunctionCode = CKS
@@ -522,6 +528,8 @@ func TestFEDWireMessageWriteCheckSameDaySettlement(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteDepositSendersAccount writes a FEDWireMessage to a file with BusinessFunctionCode = DEP
@@ -598,6 +606,8 @@ func TestFEDWireMessageWriteDepositSendersAccount(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteFEDFundsReturned writes a FEDWireMessage to a file with BusinessFunctionCode = FFR
@@ -674,6 +684,8 @@ func TestFEDWireMessageWriteFEDFundsReturned(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteFEDFundsSold writes a FEDWireMessage to a file with BusinessFunctionCode = FFS
@@ -750,6 +762,8 @@ func TestFEDWireMessageWriteFEDFundsSold(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteDrawdownRequest writes a FEDWireMessage to a file with BusinessFunctionCode = DRW
@@ -826,6 +840,8 @@ func TestFEDWireMessageWriteDrawdownRequest(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteBankDrawdownRequest writes a FEDWireMessage to a file with BusinessFunctionCode = DRB
@@ -906,6 +922,8 @@ func TestFEDWireMessageWriteBankDrawdownRequest(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCustomerCorporateDrawdownRequest writes a FEDWireMessage to a file with BusinessFunctionCode = DRC
@@ -988,6 +1006,8 @@ func TestFEDWireMessageWriteCustomerCorporateDrawdownRequest(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteServiceMessage writes a FEDWireMessage to a file with BusinessFunctionCode = SVC
@@ -1003,10 +1023,15 @@ func TestFEDWireMessageWriteServiceMessage(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // writeFile writes a FEDWireMessage File and ensures the File can be read
-func writeFile(file *File) error {
+// options
+//  first option : hasVariableLength
+//  second option : hasNotNewLine
+func writeFile(file *File, options ...bool) error {
 	if err := file.Create(); err != nil {
 		return err
 	}
@@ -1015,7 +1040,7 @@ func writeFile(file *File) error {
 	}
 	b := &bytes.Buffer{}
 	f := NewWriter(b)
-	if err := f.Write(file); err != nil {
+	if err := f.Write(file, options...); err != nil {
 		return err
 	}
 
@@ -1223,6 +1248,8 @@ func TestFEDWireMessageWriteCustomerTransferPlusCOVS(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCustomerTransferPlusRelatedRemittance writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and
@@ -1241,6 +1268,8 @@ func TestFEDWireMessageWriteCustomerTransferPlusRelatedRemittance(t *testing.T) 
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCustomerTransferPlusRemittanceInformationStructured writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and
@@ -1280,6 +1309,8 @@ func TestFEDWireMessageWriteCustomerTransferPlusRemittanceInformationStructured(
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+	require.NoError(t, writeFile(file, true))
+	require.NoError(t, writeFile(file, true, true))
 }
 
 // TestFEDWireMessageWriteCustomerTransferPlusUnstructuredAddenda writes a FEDWireMessage to a file with BusinessFunctionCode = CTP and

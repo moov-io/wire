@@ -47,16 +47,19 @@ func (c *converters) parseTag(r string) (s string, index int, err error) {
 
 func (c *converters) parseVariableStringField(r string, maxLen int) (s string, read int, err error) {
 
-	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > 0 {
+	read = maxLen
+
+	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > -1 {
+		read = delimiterIndex
+	} else if delimiterIndex := strings.Index(r, "{"); delimiterIndex > -1 {
 		read = delimiterIndex
 	}
 
-	if delimiterIndex := strings.Index(r, "{"); delimiterIndex > 0 && delimiterIndex < read {
-		read = delimiterIndex
-	}
-
-	if read == 0 || read > maxLen {
+	hasDelimiter := false
+	if read > maxLen {
 		read = maxLen
+	} else if read < maxLen {
+		hasDelimiter = true
 	}
 
 	if read > len(r) {
@@ -64,7 +67,14 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (s string, r
 		return
 	}
 
-	s = strings.TrimSpace(r[:read])
+	if s = strings.TrimSpace(r[:read]); s == "*" {
+		s = ""
+	}
+
+	if hasDelimiter {
+		read++
+	}
+
 	return
 }
 
@@ -86,7 +96,9 @@ func (c *converters) alphaVariableField(s string, max uint, isVariable bool) str
 	}
 
 	if isVariable {
-		s += "*"
+		if max-ln > 0 {
+			s += "*"
+		}
 	} else {
 		s += strings.Repeat(" ", int(max-ln))
 	}
