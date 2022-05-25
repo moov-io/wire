@@ -57,9 +57,8 @@ func (bfc *BusinessFunctionCode) Parse(record string) (int, error) {
 	}
 	length += read
 
-	if bfc.TransactionTypeCode, read, err = bfc.parseVariableStringField(record[length:], 3); err != nil {
-		return 0, fieldError("TransactionTypeCode", err)
-	}
+	// optional field
+	bfc.TransactionTypeCode, read, _ = bfc.parseVariableStringField(record[length:], 3)
 	length += read
 
 	return length, nil

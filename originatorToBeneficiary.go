@@ -56,23 +56,25 @@ func (ob *OriginatorToBeneficiary) Parse(record string) (int, error) {
 	}
 	length += read
 
+	// Up to 4 lines of 35 characters each
+
 	if ob.LineOne, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
-		return 0, fieldError("LineOne", err)
+		return length, nil
 	}
 	length += read
 
 	if ob.LineTwo, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
-		return 0, fieldError("LineTwo", err)
+		return length, nil
 	}
 	length += read
 
 	if ob.LineThree, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
-		return 0, fieldError("LineThree", err)
+		return length, nil
 	}
 	length += read
 
 	if ob.LineFour, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
-		return 0, fieldError("LineFour", err)
+		return length, nil
 	}
 	length += read
 

@@ -64,17 +64,6 @@ func TestOriginatorToBeneficiaryLineFourAlphaNumeric(t *testing.T) {
 	require.EqualError(t, err, fieldError("LineFour", ErrNonAlphanumeric, ob.LineFour).Error())
 }
 
-// TestParseOriginatorToBeneficiaryWrongLength parses a wrong OriginatorToBeneficiary record length
-func TestParseOriginatorToBeneficiaryWrongLength(t *testing.T) {
-	var line = "{6000}LineOne                            LineTwo                            LineThree                          LineFour                         "
-	r := NewReader(strings.NewReader(line))
-	r.line = line
-
-	err := r.parseOriginatorToBeneficiary()
-
-	require.EqualError(t, err, r.parseError(fieldError("LineFour", ErrValidLengthSize)).Error())
-}
-
 // TestParseOriginatorToBeneficiaryReaderParseError parses a wrong OriginatorToBeneficiary reader parse error
 func TestParseOriginatorToBeneficiaryReaderParseError(t *testing.T) {
 	var line = "{6000}LineOne                            ®ineTwo                            LineThree                          LineFour                           "

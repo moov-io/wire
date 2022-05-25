@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/go-kit/kit/metrics/prometheus"
@@ -43,6 +44,28 @@ func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
 	r.Methods("GET").Path("/files/{fileId}/contents").HandlerFunc(getFileContents(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/validate").HandlerFunc(validateFile(logger, repo))
 	r.Methods("POST").Path("/files/{fileId}/FEDWireMessage").HandlerFunc(addFEDWireMessageToFile(logger, repo))
+}
+
+type WriteOption struct {
+	HasVariableLength bool
+	HasNotNewLine     bool
+}
+
+func getWriteOption(r *http.Request) WriteOption {
+
+	var option WriteOption
+
+	value := r.URL.Query().Get("hasVariableLength")
+	if value != "" {
+		option.HasVariableLength, _ = strconv.ParseBool(value)
+	}
+
+	value = r.URL.Query().Get("hasNotNewLine")
+	if value != "" {
+		option.HasNotNewLine, _ = strconv.ParseBool(value)
+	}
+
+	return option
 }
 
 func getFileId(w http.ResponseWriter, r *http.Request) string {
@@ -227,7 +250,9 @@ func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFun
 		logger.Log("rendering file contents")
 
 		w.Header().Set("Content-Type", "text/plain")
-		if err := wire.NewWriter(w).Write(file); err != nil {
+
+		option := getWriteOption(r)
+		if err := wire.NewWriter(w).Write(file, option.HasVariableLength, option.HasNotNewLine); err != nil {
 			err = logger.LogErrorf("problem rendering file contents: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return

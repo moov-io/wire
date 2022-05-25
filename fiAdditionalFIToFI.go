@@ -38,8 +38,8 @@ func NewFIAdditionalFIToFI() *FIAdditionalFIToFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fifi *FIAdditionalFIToFI) Parse(record string) (int, error) {
-	if utf8.RuneCountInString(record) < 12 {
-		return 0, NewTagWrongLengthErr(12, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return 0, NewTagWrongLengthErr(6, len(record))
 	}
 
 	var err error
@@ -51,7 +51,7 @@ func (fifi *FIAdditionalFIToFI) Parse(record string) (int, error) {
 	length += read
 
 	if read, err = fifi.AdditionalFIToFI.Parse(record[length:]); err != nil {
-		return 0, err
+		return length, nil
 	}
 	length += read
 

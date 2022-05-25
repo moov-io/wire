@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -220,47 +221,72 @@ func TestFiles_deleteFile(t *testing.T) {
 }
 
 func TestFiles_getFileContents(t *testing.T) {
-	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
-	fwm := mockFEDWireMessage()
-	repo := &testWireFileRepository{
-		file: &wire.File{
-			ID:             base.ID(),
-			FEDWireMessage: fwm,
+	options := []url.Values{
+		{
+			"hasVariableLength": nil,
+			"hasNotNewLine":     nil,
+		},
+		{
+			"hasVariableLength": []string{"false"},
+			"hasNotNewLine":     []string{"false"},
+		},
+		{
+			"hasVariableLength": []string{"true"},
+			"hasNotNewLine":     []string{"false"},
+		},
+		{
+			"hasVariableLength": []string{"false"},
+			"hasNotNewLine":     []string{"true"},
+		},
+		{
+			"hasVariableLength": []string{"true"},
+			"hasNotNewLine":     []string{"true"},
 		},
 	}
-	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
 
-	t.Run("gets file contents", func(t *testing.T) {
-		w := httptest.NewRecorder()
+	for _, option := range options {
+		req := httptest.NewRequest("GET", "/files/foo/contents?"+option.Encode(), nil)
+		fwm := mockFEDWireMessage()
+		repo := &testWireFileRepository{
+			file: &wire.File{
+				ID:             base.ID(),
+				FEDWireMessage: fwm,
+			},
+		}
+		router := mux.NewRouter()
+		addFileRoutes(log.NewNopLogger(), router, repo)
 
-		router.ServeHTTP(w, req)
-		w.Flush()
+		t.Run("gets file contents", func(t *testing.T) {
+			w := httptest.NewRecorder()
 
-		assert.Equal(t, http.StatusOK, w.Code, w.Body)
-		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
-	})
+			router.ServeHTTP(w, req)
+			w.Flush()
 
-	t.Run("repo error", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.err = errors.New("bad error")
+			assert.Equal(t, http.StatusOK, w.Code, w.Body)
+			assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
+		})
 
-		router.ServeHTTP(w, req)
-		w.Flush()
+		t.Run("repo error", func(t *testing.T) {
+			w := httptest.NewRecorder()
+			repo.err = errors.New("bad error")
 
-		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
-	})
+			router.ServeHTTP(w, req)
+			w.Flush()
 
-	t.Run("file not found", func(t *testing.T) {
-		w := httptest.NewRecorder()
-		repo.file = nil
-		repo.err = nil
+			assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		})
 
-		router.ServeHTTP(w, req)
-		w.Flush()
+		t.Run("file not found", func(t *testing.T) {
+			w := httptest.NewRecorder()
+			repo.file = nil
+			repo.err = nil
 
-		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
-	})
+			router.ServeHTTP(w, req)
+			w.Flush()
+
+			assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
+		})
+	}
 }
 
 func TestFiles_validateFile(t *testing.T) {

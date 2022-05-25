@@ -47,6 +47,11 @@ func (c *converters) parseTag(r string) (s string, index int, err error) {
 
 func (c *converters) parseVariableStringField(r string, maxLen int) (s string, read int, err error) {
 
+	// Omit field?
+	// if len(r) == 0 {
+	// 	return
+	// }
+
 	read = maxLen
 
 	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > -1 {

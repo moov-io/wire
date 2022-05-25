@@ -227,6 +227,24 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
+      - description: Has Variable Length
+        explode: true
+        in: query
+        name: hasVariableLength
+        required: false
+        schema:
+          example: true
+          type: string
+        style: form
+      - description: Has Not NewLine
+        explode: true
+        in: query
+        name: hasNotNewLine
+        required: false
+        schema:
+          example: true
+          type: string
+        style: form
       responses:
         200:
           content:

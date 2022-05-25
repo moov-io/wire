@@ -86,16 +86,6 @@ func TestFIAdditionalFIToFILineSixAlphaNumeric(t *testing.T) {
 	require.EqualError(t, err, fieldError("LineSix", ErrNonAlphanumeric, fifi.AdditionalFIToFI.LineSix).Error())
 }
 
-// TestParseFIAdditionalFIToFIWrongLength parses a wrong FIAdditionalFIToFI record length
-func TestParseFIAdditionalFIToFIWrongLength(t *testing.T) {
-	var line = "{6500}Line One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                         "
-	r := NewReader(strings.NewReader(line))
-	r.line = line
-
-	err := r.parseFIAdditionalFIToFI()
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
-}
-
 // TestParseFIAdditionalFIToFIReaderParseError parses a wrong FIAdditionalFIToFI reader parse error
 func TestParseFIAdditionalFIToFIReaderParseError(t *testing.T) {
 	var line = "{6500}®ine One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           "
