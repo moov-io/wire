@@ -30,6 +30,22 @@ func NewTagWrongLengthErr(tagLength, length int) TagWrongLengthErr {
 	}
 }
 
+// NewTagMinLengthErr creates a new error of the TagWrongLengthErr type
+func NewTagMinLengthErr(tagLength, length int) TagWrongLengthErr {
+	return TagWrongLengthErr{
+		Message:   fmt.Sprintf("must be minimum %d characters and found %d", tagLength, length),
+		TagLength: tagLength,
+		Length:    length,
+	}
+}
+
+// NewTagMaxLengthErr creates a new error of the TagWrongLengthErr type
+func NewTagMaxLengthErr() TagWrongLengthErr {
+	return TagWrongLengthErr{
+		Message:   fmt.Sprintf("contains invalid information in a segment"),
+	}
+}
+
 func (e TagWrongLengthErr) Error() string {
 	return e.Message
 }

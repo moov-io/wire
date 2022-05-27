@@ -36,11 +36,25 @@ func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 15 {
-		return NewTagWrongLengthErr(15, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	creditDD.tag = record[:6]
-	creditDD.DrawdownCreditAccountNumber = creditDD.parseStringField(record[6:15])
+
+	var err error
+	length := 6
+	read := 0
+
+	if creditDD.DrawdownCreditAccountNumber, read, err = creditDD.parseVariableStringField(record[length:], 9); err != nil {
+		return fieldError("DrawdownCreditAccountNumber", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,11 +73,11 @@ func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {
 }
 
 // String writes AccountCreditedDrawdown
-func (creditDD *AccountCreditedDrawdown) String() string {
+func (creditDD *AccountCreditedDrawdown) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(15)
 	buf.WriteString(creditDD.tag)
-	buf.WriteString(creditDD.DrawdownCreditAccountNumberField())
+	buf.WriteString(creditDD.DrawdownCreditAccountNumberField(options...))
 	return buf.String()
 }
 
@@ -92,6 +106,6 @@ func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
 }
 
 // DrawdownCreditAccountNumberField gets a string of the DrawdownCreditAccountNumber field
-func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField() string {
-	return creditDD.alphaField(creditDD.DrawdownCreditAccountNumber, 9)
+func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField(options ...bool) string {
+	return creditDD.alphaVariableField(creditDD.DrawdownCreditAccountNumber, 9, creditDD.parseFirstOption(options))
 }

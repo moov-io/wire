@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -40,4 +41,74 @@ func (c *converters) numericStringField(s string, max uint) string {
 	}
 	s = strings.Repeat("0", int(max-ln)) + s
 	return s
+}
+
+// alphaVariableField Alphanumeric and Alphabetic fields are left-justified and space filled.
+func (c *converters) alphaVariableField(s string, max uint, isVariable bool) string {
+	ln := uint(len(s))
+	if ln > max {
+		return s[:max]
+	}
+
+	if isVariable {
+		if max-ln > 0 {
+			s += "*"
+		}
+	} else {
+		s += strings.Repeat(" ", int(max-ln))
+	}
+
+	return s
+}
+
+func (c *converters) parseVariableStringField(r string, maxLen int) (s string, read int, err error) {
+
+	// Omit field?
+	if len(r) == 0 {
+		fmt.Println("parseVariableStringField return")
+		return
+	}
+
+	read = maxLen
+
+	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > -1 {
+		read = delimiterIndex
+	} else if delimiterIndex := strings.Index(r, "{"); delimiterIndex > -1 {
+		read = delimiterIndex
+	}
+
+	hasDelimiter := false
+	if read > maxLen {
+		read = maxLen
+	} else if read < maxLen {
+		hasDelimiter = true
+	}
+
+	if read > len(r) {
+		read = 0
+		err = ErrValidLengthSize
+		return
+	}
+
+	if s = strings.TrimSpace(r[:read]); s == "*" {
+		s = ""
+	}
+
+	if hasDelimiter {
+		read++
+	}
+
+	return
+}
+
+// get first option from options
+func (c *converters) parseFirstOption(options []bool) bool {
+
+	firstOption := false
+
+	if len(options) > 0 {
+		firstOption = options[0]
+	}
+
+	return firstOption
 }

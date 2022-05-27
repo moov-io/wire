@@ -122,6 +122,9 @@ var (
 
 	// ErrOptionFName is returned for an invalid name for OriginatorOptionF
 	ErrOptionFName = errors.New("is an invalid name for originator optionF")
+
+	// ErrValidLengthSize is returned for an field with invalid length
+	ErrValidLengthSize = errors.New("is an invalid length size")
 )
 
 // FieldError is returned for errors at a field level in a tag
@@ -133,9 +136,12 @@ type FieldError struct {
 }
 
 // Error message is constructed
-
 func (e *FieldError) Error() string {
-	return fmt.Sprintf("%s %v %s", e.FieldName, e.Value, e.Err)
+	if e.Value != nil {
+		return fmt.Sprintf("%s %v %s", e.FieldName, e.Value, e.Err)
+	} else {
+		return fmt.Sprintf("%s %s", e.FieldName, e.Err)
+	}
 }
 
 // Unwrap implements the base.UnwrappableError interface for FieldError

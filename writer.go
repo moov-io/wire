@@ -28,13 +28,13 @@ func NewWriter(w io.Writer) *Writer {
 }
 
 // Writer writes a single FEDWireMessage record to w
-func (w *Writer) Write(file *File) error {
+func (w *Writer) Write(file *File, options ...bool) error {
 	if err := file.Validate(); err != nil {
 		return err
 	}
 	w.lineNum = 0
 	// Iterate over all records in the file
-	if err := w.writeFEDWireMessage(file); err != nil {
+	if err := w.writeFEDWireMessage(file, options...); err != nil {
 		return err
 	}
 	w.lineNum++
@@ -49,7 +49,7 @@ func (w *Writer) Flush() error {
 	return w.w.Flush()
 }
 
-func (w *Writer) writeFEDWireMessage(file *File) error {
+func (w *Writer) writeFEDWireMessage(file *File, options ...bool) error {
 	fwm := file.FEDWireMessage
 	if err := w.writeMandatory(fwm); err != nil {
 		return err
@@ -57,10 +57,10 @@ func (w *Writer) writeFEDWireMessage(file *File) error {
 	if err := w.writeOtherTransferInfo(fwm); err != nil {
 		return err
 	}
-	if err := w.writeBeneficiary(fwm); err != nil {
+	if err := w.writeBeneficiary(fwm, options...); err != nil {
 		return err
 	}
-	if err := w.writeOriginator(fwm); err != nil {
+	if err := w.writeOriginator(fwm, options...); err != nil {
 		return err
 	}
 	if err := w.writeFinancialInstitution(fwm); err != nil {
@@ -210,7 +210,7 @@ func (w *Writer) writeOtherTransferInfo(fwm FEDWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeBeneficiary(fwm FEDWireMessage) error {
+func (w *Writer) writeBeneficiary(fwm FEDWireMessage, options ...bool) error {
 	if fwm.BeneficiaryIntermediaryFI != nil {
 		if _, err := w.w.WriteString(fwm.BeneficiaryIntermediaryFI.String() + "\n"); err != nil {
 			return err
@@ -239,7 +239,7 @@ func (w *Writer) writeBeneficiary(fwm FEDWireMessage) error {
 	}
 	if fwm.AccountDebitedDrawdown != nil {
 		if fwm.AccountDebitedDrawdown != nil {
-			if _, err := w.w.WriteString(fwm.AccountDebitedDrawdown.String() + "\n"); err != nil {
+			if _, err := w.w.WriteString(fwm.AccountDebitedDrawdown.String(options...) + "\n"); err != nil {
 				return err
 			}
 		}
@@ -247,7 +247,7 @@ func (w *Writer) writeBeneficiary(fwm FEDWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeOriginator(fwm FEDWireMessage) error {
+func (w *Writer) writeOriginator(fwm FEDWireMessage, options ...bool) error {
 	if fwm.Originator != nil {
 		if _, err := w.w.WriteString(fwm.Originator.String() + "\n"); err != nil {
 			return err
@@ -269,7 +269,7 @@ func (w *Writer) writeOriginator(fwm FEDWireMessage) error {
 		}
 	}
 	if fwm.AccountCreditedDrawdown != nil {
-		if _, err := w.w.WriteString(fwm.AccountCreditedDrawdown.String() + "\n"); err != nil {
+		if _, err := w.w.WriteString(fwm.AccountCreditedDrawdown.String(options...) + "\n"); err != nil {
 			return err
 		}
 	}

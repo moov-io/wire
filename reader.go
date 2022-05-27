@@ -8,6 +8,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"regexp"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/moov-io/base"
@@ -49,9 +51,13 @@ func (r *Reader) parseError(err error) error {
 
 // NewReader returns a new ACH Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
-	return &Reader{
+	reader := &Reader{
 		scanner: bufio.NewScanner(r),
 	}
+
+	reader.scanner.Split(scanLinesWithSegmentFormat)
+
+	return reader
 }
 
 // addCurrentFEDWireMessage creates the current FEDWireMessage for the file being read. A successful
@@ -64,13 +70,24 @@ func NewReader(r io.Reader) *Reader {
 // on the first character of each line. It also enforces FED Wire formatting rules and returns
 // the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
+
+	stripNewLines := func(input string) string {
+		// windows
+		input = strings.ReplaceAll(input, "\r\n", "")
+
+		// mac, linux
+		input = strings.ReplaceAll(input, "\n", "")
+
+		return input
+	}
+
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		r.lineNum++
 		// ToDo: File length Check?
-		r.line = line
+		r.line = stripNewLines(line)
 		if err := r.parseLine(); err != nil {
 			r.errors.Add(err)
 		}
@@ -1111,4 +1128,40 @@ func (r *Reader) parseErrorWire() error {
 	}
 	r.currentFEDWireMessage.ErrorWire = ew
 	return nil
+}
+
+var (
+	tagRegex = regexp.MustCompile(`{([0-9]{4})}`)
+)
+
+//scanLinesWithSegmentFormat allows Reader to read each segment
+func scanLinesWithSegmentFormat(data []byte, atEOF bool) (advance int, token []byte, err error) {
+
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+
+	indexes := tagRegex.FindAllIndex(data, -1)
+	if len(indexes) == 0 {
+		return len(data), data, nil
+	}
+
+	if len(indexes) < 2 && !atEOF {
+		// need more data
+		return 0, nil, nil
+	}
+
+	firstIndex := indexes[0]
+	if firstIndex[0] > 0 {
+		return firstIndex[0], data[:firstIndex[0]], nil
+	}
+
+	if len(indexes) == 1 {
+		return len(data), data, nil
+	}
+
+	secondIndex := indexes[1]
+	length := secondIndex[0]
+
+	return length, data[:length], nil
 }
