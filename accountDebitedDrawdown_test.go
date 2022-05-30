@@ -211,5 +211,5 @@ func TestStringAccountDebitedDrawdownOptions(t *testing.T) {
 	require.Equal(t, str, "{4400}D2                                 3                                                                                                                                           ")
 
 	str = r.currentFEDWireMessage.AccountDebitedDrawdown.String(true)
-	require.Equal(t, str, "{4400}D2*3****")
+	require.Equal(t, str, "{4400}D2*3*")
 }
