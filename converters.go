@@ -112,3 +112,18 @@ func (c *converters) parseFirstOption(options []bool) bool {
 
 	return firstOption
 }
+
+// strip delimiters
+func (c *converters) stripDelimiters(data string) string {
+	index := len(data)
+	for i := len(data) - 1; i > 5; i-- {
+		inspect1 := string(data[i])
+		inspect2 := string(data[i-1])
+		if inspect1 != "*" || inspect2 != "*" {
+			index = i + 1
+			break
+		}
+	}
+
+	return data[:index]
+}

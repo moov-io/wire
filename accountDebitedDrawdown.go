@@ -102,6 +102,7 @@ func (debitDD *AccountDebitedDrawdown) UnmarshalJSON(data []byte) error {
 func (debitDD *AccountDebitedDrawdown) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(debitDD.tag)
 	buf.WriteString(debitDD.IdentificationCodeField())
 	buf.WriteString(debitDD.IdentifierField(options...))
@@ -109,7 +110,12 @@ func (debitDD *AccountDebitedDrawdown) String(options ...bool) string {
 	buf.WriteString(debitDD.AddressLineOneField(options...))
 	buf.WriteString(debitDD.AddressLineTwoField(options...))
 	buf.WriteString(debitDD.AddressLineThreeField(options...))
-	return buf.String()
+
+	if debitDD.parseFirstOption(options) {
+		return debitDD.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on AccountDebitedDrawdown and returns an error if not Validated
@@ -181,24 +187,15 @@ func (debitDD *AccountDebitedDrawdown) NameField(options ...bool) string {
 
 // AddressLineOneField gets a string of AddressLineOne field
 func (debitDD *AccountDebitedDrawdown) AddressLineOneField(options ...bool) string {
-	if debitDD.Address.AddressLineOne == "" && debitDD.parseFirstOption(options){
-		return ""
-	}
 	return debitDD.alphaVariableField(debitDD.Address.AddressLineOne, 35, debitDD.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
 func (debitDD *AccountDebitedDrawdown) AddressLineTwoField(options ...bool) string {
-	if debitDD.Address.AddressLineTwo == "" && debitDD.parseFirstOption(options){
-		return ""
-	}
 	return debitDD.alphaVariableField(debitDD.Address.AddressLineTwo, 35, debitDD.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
 func (debitDD *AccountDebitedDrawdown) AddressLineThreeField(options ...bool) string {
-	if debitDD.Address.AddressLineThree == "" && debitDD.parseFirstOption(options){
-		return ""
-	}
 	return debitDD.alphaVariableField(debitDD.Address.AddressLineThree, 35, debitDD.parseFirstOption(options))
 }
