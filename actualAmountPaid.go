@@ -36,12 +36,30 @@ func NewActualAmountPaid() *ActualAmountPaid {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (aap *ActualAmountPaid) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	aap.tag = record[:6]
-	aap.RemittanceAmount.CurrencyCode = aap.parseStringField(record[6:9])
-	aap.RemittanceAmount.Amount = aap.parseStringField(record[9:28])
+
+	var err error
+	length := 6
+	read := 0
+
+	if aap.RemittanceAmount.CurrencyCode, read, err = aap.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	length += read
+
+	if aap.RemittanceAmount.Amount, read, err = aap.parseVariableStringField(record[length:], 19); err != nil {
+		return fieldError("Amount", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -60,12 +78,14 @@ func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ActualAmountPaid
-func (aap *ActualAmountPaid) String() string {
+func (aap *ActualAmountPaid) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(aap.tag)
-	buf.WriteString(aap.CurrencyCodeField())
-	buf.WriteString(aap.AmountField())
+	buf.WriteString(aap.CurrencyCodeField(options...))
+	buf.WriteString(aap.AmountField(options...))
+
 	return buf.String()
 }
 
@@ -102,11 +122,11 @@ func (aap *ActualAmountPaid) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (aap *ActualAmountPaid) CurrencyCodeField() string {
-	return aap.alphaField(aap.RemittanceAmount.CurrencyCode, 3)
+func (aap *ActualAmountPaid) CurrencyCodeField(options ...bool) string {
+	return aap.alphaVariableField(aap.RemittanceAmount.CurrencyCode, 3, aap.parseFirstOption(options))
 }
 
 // AmountField gets a string of the Amount field
-func (aap *ActualAmountPaid) AmountField() string {
-	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
+func (aap *ActualAmountPaid) AmountField(options ...bool) string {
+	return aap.alphaVariableField(aap.RemittanceAmount.Amount, 19, aap.parseFirstOption(options))
 }

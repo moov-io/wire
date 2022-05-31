@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -70,7 +71,7 @@ func TestParseActualAmountPaidWrongLength(t *testing.T) {
 
 	err := r.parseActualAmountPaid()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseActualAmountPaidReaderParseError parses a wrong ActualAmountPaid reader parse error
@@ -98,4 +99,61 @@ func TestActualAmountPaidTagError(t *testing.T) {
 	err := aap.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, aap.tag).Error())
+}
+
+// TestStringActualAmountPaidVariableLength parses using variable length
+func TestStringActualAmountPaidVariableLength(t *testing.T) {
+	var line = "{8450}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseActualAmountPaid()
+	expected := r.parseError(NewTagMinLengthErr(8, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{8450}USD1234.56            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseActualAmountPaid()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8450}***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseActualAmountPaid()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8450}**"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseActualAmountPaid()
+	expected = r.parseError(fieldError("Amount", ErrFieldRequired)).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{8450}USD1234.56*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseActualAmountPaid()
+	require.Equal(t, err, nil)
+}
+
+// TestStringActualAmountPaidOptions validates string() with options
+func TestStringActualAmountPaidOptions(t *testing.T) {
+	var line = "{8450}USD1234.56*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseActualAmountPaid()
+	fmt.Println(err)
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.ActualAmountPaid.String()
+	require.Equal(t, str, "{8450}USD1234.56            ")
+
+	str = r.currentFEDWireMessage.ActualAmountPaid.String(true)
+	require.Equal(t, str, "{8450}USD1234.56*")
 }
