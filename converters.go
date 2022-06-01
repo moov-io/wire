@@ -60,40 +60,52 @@ func (c *converters) alphaVariableField(s string, max uint, isVariable bool) str
 	return s
 }
 
-func (c *converters) parseVariableStringField(r string, maxLen int) (s string, read int, err error) {
+func (c *converters) parseVariableStringField(r string, maxLen int) (got string, size int, err error) {
+
+	min := func(x, y int) int {
+		if x > y {
+			return y
+		}
+		return x
+	}
 
 	// Omit field?
 	if len(r) == 0 {
 		return
 	}
 
-	read = maxLen
+	endIndex := maxLen
+	delimiterIndex := maxLen
 
-	if delimiterIndex := strings.Index(r, "*"); delimiterIndex > -1 {
-		read = delimiterIndex
-	} else if delimiterIndex := strings.Index(r, "{"); delimiterIndex > -1 {
-		read = delimiterIndex
+	if index := strings.Index(r, "*"); index > -1 {
+		delimiterIndex = index
+	}
+	if index := strings.Index(r, "{"); index > -1 {
+		endIndex = index
 	}
 
 	hasDelimiter := false
-	if read > maxLen {
-		read = maxLen
-	} else if read < maxLen {
-		hasDelimiter = true
+	size = min(endIndex, delimiterIndex)
+	if size > maxLen {
+		size = maxLen
+	} else if size < maxLen {
+		if delimiterIndex == size {
+			hasDelimiter = true
+		}
 	}
 
-	if read > len(r) {
-		read = 0
+	if size > len(r) {
+		size = 0
 		err = ErrValidLengthSize
 		return
 	}
 
-	if s = strings.TrimSpace(r[:read]); s == "*" {
-		s = ""
+	if got = strings.TrimSpace(r[:size]); got == "*" {
+		got = ""
 	}
 
 	if hasDelimiter {
-		read++
+		size++
 	}
 
 	return
@@ -113,14 +125,19 @@ func (c *converters) parseFirstOption(options []bool) bool {
 
 // strip delimiters
 func (c *converters) stripDelimiters(data string) string {
+
 	index := len(data)
+
 	for i := len(data) - 1; i > 5; i-- {
-		inspect1 := string(data[i])
-		inspect2 := string(data[i-1])
-		if inspect1 != "*" || inspect2 != "*" {
+
+		inspectLetter1 := string(data[i])
+		inspectLetter2 := string(data[i-1])
+
+		if inspectLetter1 != "*" || inspectLetter2 != "*" || i == 6 {
 			index = i + 1
 			break
 		}
+
 	}
 
 	return data[:index]

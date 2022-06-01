@@ -38,12 +38,26 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bfc *BusinessFunctionCode) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 12 {
-		return NewTagWrongLengthErr(12, len(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
+
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
-	bfc.TransactionTypeCode = record[9:12]
+
+	var err error
+	length := 9
+	read := 0
+
+	if bfc.TransactionTypeCode, read, err = bfc.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("BeneficiaryReference", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,12 +76,14 @@ func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BusinessFunctionCode
-func (bfc *BusinessFunctionCode) String() string {
+func (bfc *BusinessFunctionCode) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(12)
+
 	buf.WriteString(bfc.tag)
 	buf.WriteString(bfc.BusinessFunctionCodeField())
-	buf.WriteString(bfc.TransactionTypeCodeField())
+	buf.WriteString(bfc.TransactionTypeCodeField(options...))
+
 	return buf.String()
 }
 
@@ -106,6 +122,6 @@ func (bfc *BusinessFunctionCode) BusinessFunctionCodeField() string {
 }
 
 // TransactionTypeCodeField gets a string of the TransactionTypeCode field
-func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
-	return bfc.alphaField(bfc.TransactionTypeCode, 3)
+func (bfc *BusinessFunctionCode) TransactionTypeCodeField(options ...bool) string {
+	return bfc.alphaVariableField(bfc.TransactionTypeCode, 3, bfc.parseFirstOption(options))
 }

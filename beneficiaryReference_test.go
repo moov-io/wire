@@ -115,4 +115,3 @@ func TestStringBeneficiaryReferenceOptions(t *testing.T) {
 	str = r.currentFEDWireMessage.BeneficiaryReference.String(true)
 	require.Equal(t, str, "{4320}Reference*")
 }
-
