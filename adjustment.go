@@ -42,15 +42,45 @@ func NewAdjustment() *Adjustment {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (adj *Adjustment) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 174 {
-		return NewTagWrongLengthErr(174, len(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
+
 	adj.tag = record[:6]
-	adj.AdjustmentReasonCode = adj.parseStringField(record[6:8])
-	adj.CreditDebitIndicator = adj.parseStringField(record[8:12])
-	adj.RemittanceAmount.CurrencyCode = adj.parseStringField(record[12:15])
-	adj.RemittanceAmount.Amount = adj.parseStringField(record[15:34])
-	adj.AdditionalInfo = adj.parseStringField(record[34:174])
+
+	var err error
+	length := 6
+	read := 0
+
+	if adj.AdjustmentReasonCode, read, err = adj.parseVariableStringField(record[length:], 2); err != nil {
+		return fieldError("AdjustmentReasonCode", err)
+	}
+	length += read
+
+	if adj.CreditDebitIndicator, read, err = adj.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("CreditDebitIndicator", err)
+	}
+	length += read
+
+	if adj.RemittanceAmount.CurrencyCode, read, err = adj.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	length += read
+
+	if adj.RemittanceAmount.Amount, read, err = adj.parseVariableStringField(record[length:], 19); err != nil {
+		return fieldError("Amount", err)
+	}
+	length += read
+
+	if adj.AdditionalInfo, read, err = adj.parseVariableStringField(record[length:], 140); err != nil {
+		return fieldError("AdditionalInfo", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -69,16 +99,22 @@ func (adj *Adjustment) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Adjustment
-func (adj *Adjustment) String() string {
+func (adj *Adjustment) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(168)
+
 	buf.WriteString(adj.tag)
-	buf.WriteString(adj.AdjustmentReasonCodeField())
-	buf.WriteString(adj.CreditDebitIndicatorField())
-	buf.WriteString(adj.CurrencyCodeField())
-	buf.WriteString(adj.AmountField())
-	buf.WriteString(adj.AdditionalInfoField())
-	return buf.String()
+	buf.WriteString(adj.AdjustmentReasonCodeField(options...))
+	buf.WriteString(adj.CreditDebitIndicatorField(options...))
+	buf.WriteString(adj.CurrencyCodeField(options...))
+	buf.WriteString(adj.AmountField(options...))
+	buf.WriteString(adj.AdditionalInfoField(options...))
+
+	if adj.parseFirstOption(options) {
+		return adj.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Adjustment and returns an error if not Validated
@@ -125,26 +161,26 @@ func (adj *Adjustment) fieldInclusion() error {
 }
 
 // AdjustmentReasonCodeField gets a string of the AdjustmentReasonCode field
-func (adj *Adjustment) AdjustmentReasonCodeField() string {
-	return adj.alphaField(adj.AdjustmentReasonCode, 2)
+func (adj *Adjustment) AdjustmentReasonCodeField(options ...bool) string {
+	return adj.alphaVariableField(adj.AdjustmentReasonCode, 2, adj.parseFirstOption(options))
 }
 
 // CreditDebitIndicatorField gets a string of the CreditDebitIndicator field
-func (adj *Adjustment) CreditDebitIndicatorField() string {
-	return adj.alphaField(adj.CreditDebitIndicator, 4)
+func (adj *Adjustment) CreditDebitIndicatorField(options ...bool) string {
+	return adj.alphaVariableField(adj.CreditDebitIndicator, 4, adj.parseFirstOption(options))
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (adj *Adjustment) CurrencyCodeField() string {
-	return adj.alphaField(adj.RemittanceAmount.CurrencyCode, 3)
+func (adj *Adjustment) CurrencyCodeField(options ...bool) string {
+	return adj.alphaVariableField(adj.RemittanceAmount.CurrencyCode, 3, adj.parseFirstOption(options))
 }
 
 // AmountField gets a string of the Amount field
-func (adj *Adjustment) AmountField() string {
-	return adj.alphaField(adj.RemittanceAmount.Amount, 19)
+func (adj *Adjustment) AmountField(options ...bool) string {
+	return adj.alphaVariableField(adj.RemittanceAmount.Amount, 19, adj.parseFirstOption(options))
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field
-func (adj *Adjustment) AdditionalInfoField() string {
-	return adj.alphaField(adj.AdditionalInfo, 140)
+func (adj *Adjustment) AdditionalInfoField(options ...bool) string {
+	return adj.alphaVariableField(adj.AdditionalInfo, 140, adj.parseFirstOption(options))
 }

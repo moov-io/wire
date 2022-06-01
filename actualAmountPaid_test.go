@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -148,7 +147,6 @@ func TestStringActualAmountPaidOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseActualAmountPaid()
-	fmt.Println(err)
 	require.Equal(t, err, nil)
 
 	str := r.currentFEDWireMessage.ActualAmountPaid.String()

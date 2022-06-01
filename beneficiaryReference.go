@@ -36,11 +36,25 @@ func NewBeneficiaryReference() *BeneficiaryReference {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (br *BeneficiaryReference) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 22 {
-		return NewTagWrongLengthErr(22, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	br.tag = record[:6]
-	br.BeneficiaryReference = br.parseStringField(record[6:22])
+
+	var err error
+	length := 6
+	read := 0
+
+	if br.BeneficiaryReference, read, err = br.parseVariableStringField(record[length:], 16); err != nil {
+		return fieldError("BeneficiaryReference", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,11 +73,13 @@ func (br *BeneficiaryReference) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BeneficiaryReference
-func (br *BeneficiaryReference) String() string {
+func (br *BeneficiaryReference) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(22)
+
 	buf.WriteString(br.tag)
-	buf.WriteString(br.BeneficiaryReferenceField())
+	buf.WriteString(br.BeneficiaryReferenceField(options...))
+
 	return buf.String()
 }
 
@@ -80,6 +96,6 @@ func (br *BeneficiaryReference) Validate() error {
 }
 
 // BeneficiaryReferenceField gets a string of the BeneficiaryReference field
-func (br *BeneficiaryReference) BeneficiaryReferenceField() string {
-	return br.alphaField(br.BeneficiaryReference, 16)
+func (br *BeneficiaryReference) BeneficiaryReferenceField(options ...bool) string {
+	return br.alphaVariableField(br.BeneficiaryReference, 16, br.parseFirstOption(options))
 }

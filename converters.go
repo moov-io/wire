@@ -5,7 +5,6 @@
 package wire
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -65,7 +64,6 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (s string, r
 
 	// Omit field?
 	if len(r) == 0 {
-		fmt.Println("parseVariableStringField return")
 		return
 	}
 

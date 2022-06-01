@@ -70,7 +70,7 @@ func TestParseAmountNegotiatedDiscountWrongLength(t *testing.T) {
 
 	err := r.parseAmountNegotiatedDiscount()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseAmountNegotiatedDiscountReaderParseError parses a wrong AmountNegotiatedDiscount reader parse error
@@ -98,4 +98,52 @@ func TestAmountNegotiatedDiscountTagError(t *testing.T) {
 	err := nd.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, nd.tag).Error())
+}
+
+// TestStringAmountNegotiatedDiscountVariableLength parses using variable length
+func TestStringAmountNegotiatedDiscountVariableLength(t *testing.T) {
+	var line = "{8600}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseAmountNegotiatedDiscount()
+	expected := r.parseError(NewTagMinLengthErr(8, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{8550}USD1234.56          NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAmountNegotiatedDiscount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8550}USD1234.56**"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAmountNegotiatedDiscount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8550}USD1234.56*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAmountNegotiatedDiscount()
+	require.Equal(t, err, nil)
+}
+
+// TestStringAmountNegotiatedDiscountOptions validates string() with options
+func TestStringAmountNegotiatedDiscountOptions(t *testing.T) {
+	var line = "{8550}USD1234.56*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseAmountNegotiatedDiscount()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.AmountNegotiatedDiscount.String()
+	require.Equal(t, str, "{8550}USD1234.56            ")
+
+	str = r.currentFEDWireMessage.AmountNegotiatedDiscount.String(true)
+	require.Equal(t, str, "{8550}USD1234.56*")
 }

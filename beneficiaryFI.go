@@ -36,16 +36,46 @@ func NewBeneficiaryFI() *BeneficiaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bfi *BeneficiaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	bfi.tag = record[:6]
 	bfi.FinancialInstitution.IdentificationCode = bfi.parseStringField(record[6:7])
-	bfi.FinancialInstitution.Identifier = bfi.parseStringField(record[7:41])
-	bfi.FinancialInstitution.Name = bfi.parseStringField(record[41:76])
-	bfi.FinancialInstitution.Address.AddressLineOne = bfi.parseStringField(record[76:111])
-	bfi.FinancialInstitution.Address.AddressLineTwo = bfi.parseStringField(record[111:146])
-	bfi.FinancialInstitution.Address.AddressLineThree = bfi.parseStringField(record[146:181])
+
+	var err error
+	length := 7
+	read := 0
+
+	if bfi.FinancialInstitution.Identifier, read, err = bfi.parseVariableStringField(record[length:], 34); err != nil {
+		return fieldError("Identifier", err)
+	}
+	length += read
+
+	if bfi.FinancialInstitution.Name, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if bfi.FinancialInstitution.Address.AddressLineOne, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if bfi.FinancialInstitution.Address.AddressLineTwo, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if bfi.FinancialInstitution.Address.AddressLineThree, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +94,23 @@ func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BeneficiaryFI
-func (bfi *BeneficiaryFI) String() string {
+func (bfi *BeneficiaryFI) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(bfi.tag)
 	buf.WriteString(bfi.IdentificationCodeField())
-	buf.WriteString(bfi.IdentifierField())
-	buf.WriteString(bfi.NameField())
-	buf.WriteString(bfi.AddressLineOneField())
-	buf.WriteString(bfi.AddressLineTwoField())
-	buf.WriteString(bfi.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(bfi.IdentifierField(options...))
+	buf.WriteString(bfi.NameField(options...))
+	buf.WriteString(bfi.AddressLineOneField(options...))
+	buf.WriteString(bfi.AddressLineTwoField(options...))
+	buf.WriteString(bfi.AddressLineThreeField(options...))
+
+	if bfi.parseFirstOption(options) {
+		return bfi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on BeneficiaryFI and returns an error if not Validated
@@ -136,26 +172,26 @@ func (bfi *BeneficiaryFI) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (bfi *BeneficiaryFI) IdentifierField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Identifier, 34)
+func (bfi *BeneficiaryFI) IdentifierField(options ...bool) string {
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Identifier, 34, bfi.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (bfi *BeneficiaryFI) NameField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Name, 35)
+func (bfi *BeneficiaryFI) NameField(options ...bool) string {
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Name, 35, bfi.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (bfi *BeneficiaryFI) AddressLineOneField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineOne, 35)
+func (bfi *BeneficiaryFI) AddressLineOneField(options ...bool) string {
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineOne, 35, bfi.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (bfi *BeneficiaryFI) AddressLineTwoField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineTwo, 35)
+func (bfi *BeneficiaryFI) AddressLineTwoField(options ...bool) string {
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineTwo, 35, bfi.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (bfi *BeneficiaryFI) AddressLineThreeField() string {
-	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineThree, 35)
+func (bfi *BeneficiaryFI) AddressLineThreeField(options ...bool) string {
+	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineThree, 35, bfi.parseFirstOption(options))
 }

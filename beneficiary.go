@@ -36,16 +36,46 @@ func NewBeneficiary() *Beneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ben *Beneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	ben.tag = record[:6]
 	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
-	ben.Personal.Identifier = ben.parseStringField(record[7:41])
-	ben.Personal.Name = ben.parseStringField(record[41:76])
-	ben.Personal.Address.AddressLineOne = ben.parseStringField(record[76:111])
-	ben.Personal.Address.AddressLineTwo = ben.parseStringField(record[111:146])
-	ben.Personal.Address.AddressLineThree = ben.parseStringField(record[146:181])
+
+	var err error
+	length := 7
+	read := 0
+
+	if ben.Personal.Identifier, read, err = ben.parseVariableStringField(record[length:], 34); err != nil {
+		return fieldError("Identifier", err)
+	}
+	length += read
+
+	if ben.Personal.Name, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if ben.Personal.Address.AddressLineOne, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if ben.Personal.Address.AddressLineTwo, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if ben.Personal.Address.AddressLineThree, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +94,23 @@ func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Beneficiary
-func (ben *Beneficiary) String() string {
+func (ben *Beneficiary) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(ben.tag)
 	buf.WriteString(ben.IdentificationCodeField())
-	buf.WriteString(ben.IdentifierField())
-	buf.WriteString(ben.NameField())
-	buf.WriteString(ben.AddressLineOneField())
-	buf.WriteString(ben.AddressLineTwoField())
-	buf.WriteString(ben.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(ben.IdentifierField(options...))
+	buf.WriteString(ben.NameField(options...))
+	buf.WriteString(ben.AddressLineOneField(options...))
+	buf.WriteString(ben.AddressLineTwoField(options...))
+	buf.WriteString(ben.AddressLineThreeField(options...))
+
+	if ben.parseFirstOption(options) {
+		return ben.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Beneficiary and returns an error if not Validated
@@ -127,26 +163,26 @@ func (ben *Beneficiary) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (ben *Beneficiary) IdentifierField() string {
-	return ben.alphaField(ben.Personal.Identifier, 34)
+func (ben *Beneficiary) IdentifierField(options ...bool) string {
+	return ben.alphaVariableField(ben.Personal.Identifier, 34, ben.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (ben *Beneficiary) NameField() string {
-	return ben.alphaField(ben.Personal.Name, 35)
+func (ben *Beneficiary) NameField(options ...bool) string {
+	return ben.alphaVariableField(ben.Personal.Name, 35, ben.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (ben *Beneficiary) AddressLineOneField() string {
-	return ben.alphaField(ben.Personal.Address.AddressLineOne, 35)
+func (ben *Beneficiary) AddressLineOneField(options ...bool) string {
+	return ben.alphaVariableField(ben.Personal.Address.AddressLineOne, 35, ben.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (ben *Beneficiary) AddressLineTwoField() string {
-	return ben.alphaField(ben.Personal.Address.AddressLineTwo, 35)
+func (ben *Beneficiary) AddressLineTwoField(options ...bool) string {
+	return ben.alphaVariableField(ben.Personal.Address.AddressLineTwo, 35, ben.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (ben *Beneficiary) AddressLineThreeField() string {
-	return ben.alphaField(ben.Personal.Address.AddressLineThree, 35)
+func (ben *Beneficiary) AddressLineThreeField(options ...bool) string {
+	return ben.alphaVariableField(ben.Personal.Address.AddressLineThree, 35, ben.parseFirstOption(options))
 }

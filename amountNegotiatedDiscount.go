@@ -36,12 +36,30 @@ func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (nd *AmountNegotiatedDiscount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	nd.tag = record[:6]
-	nd.RemittanceAmount.CurrencyCode = nd.parseStringField(record[6:9])
-	nd.RemittanceAmount.Amount = nd.parseStringField(record[9:28])
+
+	var err error
+	length := 6
+	read := 0
+
+	if nd.RemittanceAmount.CurrencyCode, read, err = nd.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	length += read
+
+	if nd.RemittanceAmount.Amount, read, err = nd.parseVariableStringField(record[length:], 19); err != nil {
+		return fieldError("Amount", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -60,12 +78,14 @@ func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes AmountNegotiatedDiscount
-func (nd *AmountNegotiatedDiscount) String() string {
+func (nd *AmountNegotiatedDiscount) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(nd.tag)
-	buf.WriteString(nd.CurrencyCodeField())
-	buf.WriteString(nd.AmountField())
+	buf.WriteString(nd.CurrencyCodeField(options...))
+	buf.WriteString(nd.AmountField(options...))
+
 	return buf.String()
 }
 
@@ -100,11 +120,11 @@ func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
-	return nd.alphaField(nd.RemittanceAmount.CurrencyCode, 3)
+func (nd *AmountNegotiatedDiscount) CurrencyCodeField(options ...bool) string {
+	return nd.alphaVariableField(nd.RemittanceAmount.CurrencyCode, 3, nd.parseFirstOption(options))
 }
 
 // AmountField gets a string of the Amount field
-func (nd *AmountNegotiatedDiscount) AmountField() string {
-	return nd.alphaField(nd.RemittanceAmount.Amount, 19)
+func (nd *AmountNegotiatedDiscount) AmountField(options ...bool) string {
+	return nd.alphaVariableField(nd.RemittanceAmount.Amount, 19, nd.parseFirstOption(options))
 }

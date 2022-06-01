@@ -36,16 +36,46 @@ func NewBeneficiaryIntermediaryFI() *BeneficiaryIntermediaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bifi *BeneficiaryIntermediaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	bifi.tag = record[:6]
 	bifi.FinancialInstitution.IdentificationCode = bifi.parseStringField(record[6:7])
-	bifi.FinancialInstitution.Identifier = bifi.parseStringField(record[7:41])
-	bifi.FinancialInstitution.Name = bifi.parseStringField(record[41:76])
-	bifi.FinancialInstitution.Address.AddressLineOne = bifi.parseStringField(record[76:111])
-	bifi.FinancialInstitution.Address.AddressLineTwo = bifi.parseStringField(record[111:146])
-	bifi.FinancialInstitution.Address.AddressLineThree = bifi.parseStringField(record[146:181])
+
+	var err error
+	length := 7
+	read := 0
+
+	if bifi.FinancialInstitution.Identifier, read, err = bifi.parseVariableStringField(record[length:], 34); err != nil {
+		return fieldError("Identifier", err)
+	}
+	length += read
+
+	if bifi.FinancialInstitution.Name, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if bifi.FinancialInstitution.Address.AddressLineOne, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if bifi.FinancialInstitution.Address.AddressLineTwo, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if bifi.FinancialInstitution.Address.AddressLineThree, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +94,23 @@ func (bifi *BeneficiaryIntermediaryFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes BeneficiaryIntermediaryFI
-func (bifi *BeneficiaryIntermediaryFI) String() string {
+func (bifi *BeneficiaryIntermediaryFI) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(bifi.tag)
 	buf.WriteString(bifi.IdentificationCodeField())
-	buf.WriteString(bifi.IdentifierField())
-	buf.WriteString(bifi.NameField())
-	buf.WriteString(bifi.AddressLineOneField())
-	buf.WriteString(bifi.AddressLineTwoField())
-	buf.WriteString(bifi.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(bifi.IdentifierField(options...))
+	buf.WriteString(bifi.NameField(options...))
+	buf.WriteString(bifi.AddressLineOneField(options...))
+	buf.WriteString(bifi.AddressLineTwoField(options...))
+	buf.WriteString(bifi.AddressLineThreeField(options...))
+
+	if bifi.parseFirstOption(options) {
+		return bifi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on BeneficiaryIntermediaryFI and returns an error if not Validated
@@ -133,26 +169,26 @@ func (bifi *BeneficiaryIntermediaryFI) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (bifi *BeneficiaryIntermediaryFI) IdentifierField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Identifier, 34)
+func (bifi *BeneficiaryIntermediaryFI) IdentifierField(options ...bool) string {
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Identifier, 34, bifi.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (bifi *BeneficiaryIntermediaryFI) NameField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Name, 35)
+func (bifi *BeneficiaryIntermediaryFI) NameField(options ...bool) string {
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Name, 35, bifi.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (bifi *BeneficiaryIntermediaryFI) AddressLineOneField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Address.AddressLineOne, 35)
+func (bifi *BeneficiaryIntermediaryFI) AddressLineOneField(options ...bool) string {
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Address.AddressLineOne, 35, bifi.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (bifi *BeneficiaryIntermediaryFI) AddressLineTwoField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Address.AddressLineTwo, 35)
+func (bifi *BeneficiaryIntermediaryFI) AddressLineTwoField(options ...bool) string {
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Address.AddressLineTwo, 35, bifi.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (bifi *BeneficiaryIntermediaryFI) AddressLineThreeField() string {
-	return bifi.alphaField(bifi.FinancialInstitution.Address.AddressLineThree, 35)
+func (bifi *BeneficiaryIntermediaryFI) AddressLineThreeField(options ...bool) string {
+	return bifi.alphaVariableField(bifi.FinancialInstitution.Address.AddressLineThree, 35, bifi.parseFirstOption(options))
 }

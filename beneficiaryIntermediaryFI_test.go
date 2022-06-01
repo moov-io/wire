@@ -124,12 +124,12 @@ func TestParseBeneficiaryIntermediaryFIWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryIntermediaryFI()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIReaderParseError parses a wrong BeneficiaryIntermediaryFI reader parse error
 func TestParseBeneficiaryIntermediaryFIReaderParseError(t *testing.T) {
-	var line = "{4000}D123456789                         F® Name                            Address One                        Address Two                        Address Three                      "
+	var line = "{4000}D123456789                         F® Name                            Address One                        Address Two                        Address Three                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	fwm := new(FEDWireMessage)
@@ -155,4 +155,52 @@ func TestBeneficiaryIntermediaryFITagError(t *testing.T) {
 	err := bifi.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bifi.tag).Error())
+}
+
+// TestStringBeneficiaryIntermediaryFIVariableLength parses using variable length
+func TestStringBeneficiaryIntermediaryFIVariableLength(t *testing.T) {
+	var line = "{4000}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryIntermediaryFI()
+	expected := r.parseError(NewTagMinLengthErr(7, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryIntermediaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4000}D123456789******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryIntermediaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4000}D123456789****"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryIntermediaryFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringBeneficiaryIntermediaryFIOptions validates string() with options
+func TestStringBeneficiaryIntermediaryFIOptions(t *testing.T) {
+	var line = "{4000}D123456789*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryIntermediaryFI()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.BeneficiaryIntermediaryFI.String()
+	require.Equal(t, str, "{4000}D123456789                                                                                                                                                                     ")
+
+	str = r.currentFEDWireMessage.BeneficiaryIntermediaryFI.String(true)
+	require.Equal(t, str, "{4000}D123456789*")
 }

@@ -113,7 +113,7 @@ func TestParseAdjustmentWrongLength(t *testing.T) {
 
 	err := r.parseAdjustment()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(174, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AdditionalInfo", ErrValidLengthSize)).Error())
 }
 
 // TestParseAdjustmentReaderParseError parses a wrong Adjustment reader parse error
@@ -141,4 +141,52 @@ func TestAdjustmentTagError(t *testing.T) {
 	err := adj.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, adj.tag).Error())
+}
+
+// TestStringAdjustmentVariableLength parses using variable length
+func TestStringAdjustmentVariableLength(t *testing.T) {
+	var line = "{8600}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseAdjustment()
+	expected := r.parseError(NewTagMinLengthErr(10, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{8600}01CRDTUSD1234.56                                                                                                                                                        NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAdjustment()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8600}01CRDTUSD1234.56***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAdjustment()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8600}01CRDTUSD1234.56*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAdjustment()
+	require.Equal(t, err, nil)
+}
+
+// TestStringAdjustmentOptions validates string() with options
+func TestStringAdjustmentOptions(t *testing.T) {
+	var line = "{8600}01CRDTUSD1234.56            *"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseAdjustment()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.Adjustment.String()
+	require.Equal(t, str, "{8600}01CRDTUSD1234.56                                                                                                                                                        ")
+
+	str = r.currentFEDWireMessage.Adjustment.String(true)
+	require.Equal(t, str, "{8600}01CRDTUSD1234.56*")
 }
