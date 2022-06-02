@@ -39,12 +39,26 @@ func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pm *FIPaymentMethodToBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 41 {
-		return NewTagWrongLengthErr(41, len(record))
+	if utf8.RuneCountInString(record) < 11 {
+		return NewTagMinLengthErr(11, len(record))
 	}
+
 	pm.tag = record[:6]
 	pm.PaymentMethod = pm.parseStringField(record[6:11])
-	pm.AdditionalInformation = pm.parseStringField(record[11:41])
+
+	var err error
+	length := 11
+	read := 0
+
+	if pm.AdditionalInformation, read, err = pm.parseVariableStringField(record[length:], 30); err != nil {
+		return fieldError("AdditionalInformation", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,12 +77,14 @@ func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIPaymentMethodToBeneficiary
-func (pm *FIPaymentMethodToBeneficiary) String() string {
+func (pm *FIPaymentMethodToBeneficiary) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(41)
+
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())
-	buf.WriteString(pm.AdditionalInformationField())
+	buf.WriteString(pm.AdditionalInformationField(options...))
+
 	return buf.String()
 }
 
@@ -102,6 +118,6 @@ func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField() string {
 }
 
 // AdditionalInformationField gets a string of the AdditionalInformation field
-func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField() string {
-	return pm.alphaField(pm.AdditionalInformation, 30)
+func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField(options ...bool) string {
+	return pm.alphaVariableField(pm.AdditionalInformation, 30, pm.parseFirstOption(options))
 }

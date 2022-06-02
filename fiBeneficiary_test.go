@@ -93,12 +93,12 @@ func TestParseFIBeneficiaryWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIBeneficiary()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(201, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIBeneficiaryReaderParseError parses a wrong FIBeneficiary reader parse error
 func TestParseFIBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{6400}Line Si®                                                                                                                                                                                           "
+	var line = "{6400}Line Si®                                                                                                                                                                                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -121,4 +121,51 @@ func TestFIBeneficiaryTagError(t *testing.T) {
 	err := fib.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fib.tag).Error())
+}
+
+// TestStringFIBeneficiaryVariableLength parses using variable length
+func TestStringFIBeneficiaryVariableLength(t *testing.T) {
+	var line = "{6400}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIBeneficiary()
+	require.Nil(t, err)
+
+	line = "{6400}                                                                                                                                                                                                                  NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6400}*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6400}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIBeneficiary()
+	require.Equal(t, err, nil)
+}
+
+// TestStringFIBeneficiaryOptions validates string() with options
+func TestStringFIBeneficiaryOptions(t *testing.T) {
+	var line = "{6400}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIBeneficiary()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.FIBeneficiary.String()
+	require.Equal(t, str, "{6400}                                                                                                                                                                                                   ")
+
+	str = r.currentFEDWireMessage.FIBeneficiary.String(true)
+	require.Equal(t, str, "{6400}*")
 }

@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -40,4 +41,52 @@ func TestChargesCrash(t *testing.T) {
 
 	require.Empty(t, c.tag)
 	require.Empty(t, c.ChargeDetails)
+}
+
+// TestStringChargesVariableLength parses using variable length
+func TestStringChargesVariableLength(t *testing.T) {
+	var line = "{3700}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseCharges()
+	expected := r.parseError(NewTagMinLengthErr(7, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{3700}B                                                            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseCharges()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3700}B*****"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseCharges()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3700}B*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseCharges()
+	require.Equal(t, err, nil)
+}
+
+// TestStringChargesOptions validates string() with options
+func TestStringChargesOptions(t *testing.T) {
+	var line = "{3700}B*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseCharges()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.Charges.String()
+	require.Equal(t, str, "{3700}B                                                            ")
+
+	str = r.currentFEDWireMessage.Charges.String(true)
+	require.Equal(t, str, "{3700}B*")
 }

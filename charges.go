@@ -51,16 +51,43 @@ func NewCharges() *Charges {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (c *Charges) Parse(record string) {
-	if utf8.RuneCountInString(record) < 67 {
-		return // line too short
+func (c *Charges) Parse(record string) error {
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	c.tag = record[:6]
 	c.ChargeDetails = c.parseStringField(record[6:7])
-	c.SendersChargesOne = c.parseStringField(record[7:22])
-	c.SendersChargesTwo = c.parseStringField(record[22:37])
-	c.SendersChargesThree = c.parseStringField(record[37:52])
-	c.SendersChargesFour = c.parseStringField(record[52:67])
+
+	var err error
+	length := 7
+	read := 0
+
+	if c.SendersChargesOne, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+		return fieldError("SendersChargesOne", err)
+	}
+	length += read
+
+	if c.SendersChargesTwo, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+		return fieldError("SendersChargesTwo", err)
+	}
+	length += read
+
+	if c.SendersChargesThree, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+		return fieldError("SendersChargesThree", err)
+	}
+	length += read
+
+	if c.SendersChargesFour, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+		return fieldError("SendersChargesFour", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
+	return nil
 }
 
 func (c *Charges) UnmarshalJSON(data []byte) error {
@@ -78,16 +105,22 @@ func (c *Charges) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Charges
-func (c *Charges) String() string {
+func (c *Charges) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(67)
+
 	buf.WriteString(c.tag)
 	buf.WriteString(c.ChargeDetailsField())
-	buf.WriteString(c.SendersChargesOneField())
-	buf.WriteString(c.SendersChargesTwoField())
-	buf.WriteString(c.SendersChargesThreeField())
-	buf.WriteString(c.SendersChargesFourField())
-	return buf.String()
+	buf.WriteString(c.SendersChargesOneField(options...))
+	buf.WriteString(c.SendersChargesTwoField(options...))
+	buf.WriteString(c.SendersChargesThreeField(options...))
+	buf.WriteString(c.SendersChargesFourField(options...))
+
+	if c.parseFirstOption(options) {
+		return c.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Charges and returns an error if not Validated
@@ -138,21 +171,21 @@ func (c *Charges) ChargeDetailsField() string {
 }
 
 // SendersChargesOneField gets a string of the SendersChargesOne field
-func (c *Charges) SendersChargesOneField() string {
-	return c.alphaField(c.SendersChargesOne, 15)
+func (c *Charges) SendersChargesOneField(options ...bool) string {
+	return c.alphaVariableField(c.SendersChargesOne, 15, c.parseFirstOption(options))
 }
 
 // SendersChargesTwoField gets a string of the SendersChargesTwo field
-func (c *Charges) SendersChargesTwoField() string {
-	return c.alphaField(c.SendersChargesTwo, 15)
+func (c *Charges) SendersChargesTwoField(options ...bool) string {
+	return c.alphaVariableField(c.SendersChargesTwo, 15, c.parseFirstOption(options))
 }
 
 // SendersChargesThreeField gets a string of the SendersChargesThree field
-func (c *Charges) SendersChargesThreeField() string {
-	return c.alphaField(c.SendersChargesThree, 15)
+func (c *Charges) SendersChargesThreeField(options ...bool) string {
+	return c.alphaVariableField(c.SendersChargesThree, 15, c.parseFirstOption(options))
 }
 
 // SendersChargesFourField gets a string of the SendersChargesFour field
-func (c *Charges) SendersChargesFourField() string {
-	return c.alphaField(c.SendersChargesFour, 15)
+func (c *Charges) SendersChargesFourField(options ...bool) string {
+	return c.alphaVariableField(c.SendersChargesFour, 15, c.parseFirstOption(options))
 }

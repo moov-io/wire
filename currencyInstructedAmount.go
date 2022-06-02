@@ -39,12 +39,30 @@ func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (cia *CurrencyInstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 29 {
-		return NewTagWrongLengthErr(29, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	cia.tag = record[:6]
-	cia.SwiftFieldTag = cia.parseStringField(record[6:11])
-	cia.Amount = cia.parseStringField(record[11:29])
+
+	var err error
+	length := 6
+	read := 0
+
+	if cia.SwiftFieldTag, read, err = cia.parseVariableStringField(record[length:], 5); err != nil {
+		return fieldError("SendersChargesOne", err)
+	}
+	length += read
+
+	if cia.Amount, read, err = cia.parseVariableStringField(record[length:], 18); err != nil {
+		return fieldError("SendersChargesOne", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,13 +81,19 @@ func (cia *CurrencyInstructedAmount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes CurrencyInstructedAmount
-func (cia *CurrencyInstructedAmount) String() string {
+func (cia *CurrencyInstructedAmount) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(29)
+
 	buf.WriteString(cia.tag)
-	buf.WriteString(cia.SwiftFieldTagField())
-	buf.WriteString(cia.AmountField())
-	return buf.String()
+	buf.WriteString(cia.SwiftFieldTagField(options...))
+	buf.WriteString(cia.AmountField(options...))
+
+	if cia.parseFirstOption(options) {
+		return cia.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on CurrencyInstructedAmount and returns an error if not Validated
@@ -88,13 +112,13 @@ func (cia *CurrencyInstructedAmount) Validate() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
-	return cia.alphaField(cia.SwiftFieldTag, 5)
+func (cia *CurrencyInstructedAmount) SwiftFieldTagField(options ...bool) string {
+	return cia.alphaVariableField(cia.SwiftFieldTag, 5, cia.parseFirstOption(options))
 }
 
 // ToDo: The spec isn't clear if this is padded with zeros or not, so for now it is
 
 // AmountField gets a string of the AmountTag field
-func (cia *CurrencyInstructedAmount) AmountField() string {
-	return cia.numericStringField(cia.Amount, 18)
+func (cia *CurrencyInstructedAmount) AmountField(options ...bool) string {
+	return cia.alphaVariableField(cia.Amount, 18, cia.parseFirstOption(options))
 }

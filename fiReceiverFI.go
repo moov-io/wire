@@ -36,16 +36,50 @@ func NewFIReceiverFI() *FIReceiverFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (firfi *FIReceiverFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 201 {
-		return NewTagWrongLengthErr(201, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	firfi.tag = record[:6]
-	firfi.FIToFI.LineOne = firfi.parseStringField(record[6:36])
-	firfi.FIToFI.LineTwo = firfi.parseStringField(record[36:69])
-	firfi.FIToFI.LineThree = firfi.parseStringField(record[69:102])
-	firfi.FIToFI.LineFour = firfi.parseStringField(record[102:135])
-	firfi.FIToFI.LineFive = firfi.parseStringField(record[135:168])
-	firfi.FIToFI.LineSix = firfi.parseStringField(record[174:201])
+
+	var err error
+	length := 6
+	read := 0
+
+	if firfi.FIToFI.LineOne, read, err = firfi.parseVariableStringField(record[length:], 30); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if firfi.FIToFI.LineTwo, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if firfi.FIToFI.LineThree, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if firfi.FIToFI.LineFour, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineFour", err)
+	}
+	length += read
+
+	if firfi.FIToFI.LineFive, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineFive", err)
+	}
+	length += read
+
+	if firfi.FIToFI.LineSix, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineSix", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +98,23 @@ func (firfi *FIReceiverFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIReceiverFI
-func (firfi *FIReceiverFI) String() string {
+func (firfi *FIReceiverFI) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(201)
+
 	buf.WriteString(firfi.tag)
-	buf.WriteString(firfi.LineOneField())
-	buf.WriteString(firfi.LineTwoField())
-	buf.WriteString(firfi.LineThreeField())
-	buf.WriteString(firfi.LineFourField())
-	buf.WriteString(firfi.LineFiveField())
-	buf.WriteString(firfi.LineSixField())
-	return buf.String()
+	buf.WriteString(firfi.LineOneField(options...))
+	buf.WriteString(firfi.LineTwoField(options...))
+	buf.WriteString(firfi.LineThreeField(options...))
+	buf.WriteString(firfi.LineFourField(options...))
+	buf.WriteString(firfi.LineFiveField(options...))
+	buf.WriteString(firfi.LineSixField(options...))
+
+	if firfi.parseFirstOption(options) {
+		return firfi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIReceiverFI and returns an error if not Validated
@@ -105,31 +145,31 @@ func (firfi *FIReceiverFI) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (firfi *FIReceiverFI) LineOneField() string {
-	return firfi.alphaField(firfi.FIToFI.LineOne, 30)
+func (firfi *FIReceiverFI) LineOneField(options ...bool) string {
+	return firfi.alphaVariableField(firfi.FIToFI.LineOne, 30, firfi.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (firfi *FIReceiverFI) LineTwoField() string {
-	return firfi.alphaField(firfi.FIToFI.LineTwo, 33)
+func (firfi *FIReceiverFI) LineTwoField(options ...bool) string {
+	return firfi.alphaVariableField(firfi.FIToFI.LineTwo, 33, firfi.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (firfi *FIReceiverFI) LineThreeField() string {
-	return firfi.alphaField(firfi.FIToFI.LineThree, 33)
+func (firfi *FIReceiverFI) LineThreeField(options ...bool) string {
+	return firfi.alphaVariableField(firfi.FIToFI.LineThree, 33, firfi.parseFirstOption(options))
 }
 
 // LineFourField gets a string of the LineFour field
-func (firfi *FIReceiverFI) LineFourField() string {
-	return firfi.alphaField(firfi.FIToFI.LineFour, 33)
+func (firfi *FIReceiverFI) LineFourField(options ...bool) string {
+	return firfi.alphaVariableField(firfi.FIToFI.LineFour, 33, firfi.parseFirstOption(options))
 }
 
 // LineFiveField gets a string of the LineFive field
-func (firfi *FIReceiverFI) LineFiveField() string {
-	return firfi.alphaField(firfi.FIToFI.LineFive, 33)
+func (firfi *FIReceiverFI) LineFiveField(options ...bool) string {
+	return firfi.alphaVariableField(firfi.FIToFI.LineFive, 33, firfi.parseFirstOption(options))
 }
 
 // LineSixField gets a string of the LineSix field
-func (firfi *FIReceiverFI) LineSixField() string {
-	return firfi.alphaField(firfi.FIToFI.LineSix, 33)
+func (firfi *FIReceiverFI) LineSixField(options ...bool) string {
+	return firfi.alphaVariableField(firfi.FIToFI.LineSix, 33, firfi.parseFirstOption(options))
 }

@@ -7,6 +7,7 @@ package wire
 import (
 	"encoding/json"
 	"strings"
+	"unicode/utf8"
 )
 
 // ErrorWire is a wire error with the fedwire message
@@ -38,11 +39,37 @@ func NewErrorWire() *ErrorWire {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ew *ErrorWire) Parse(record string) {
+func (ew *ErrorWire) Parse(record string) error {
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
+	}
+
 	ew.tag = record[:6]
-	ew.ErrorCategory = ew.parseStringField(record[6:7])
-	ew.ErrorCode = ew.parseStringField(record[7:10])
-	ew.ErrorDescription = ew.parseStringField(record[10:45])
+
+	var err error
+	length := 6
+	read := 0
+
+	if ew.ErrorCategory, read, err = ew.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("ErrorCategory", err)
+	}
+	length += read
+
+	if ew.ErrorCode, read, err = ew.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("ErrorCode", err)
+	}
+	length += read
+
+	if ew.ErrorDescription, read, err = ew.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("ErrorDescription", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
+	return nil
 }
 
 func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
@@ -60,14 +87,20 @@ func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ErrorWire
-func (ew *ErrorWire) String() string {
+func (ew *ErrorWire) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(45)
 	buf.WriteString(ew.tag)
-	buf.WriteString(ew.ErrorCategoryField())
-	buf.WriteString(ew.ErrorCodeField())
-	buf.WriteString(ew.ErrorDescriptionField())
-	return buf.String()
+
+	buf.WriteString(ew.ErrorCategoryField(options...))
+	buf.WriteString(ew.ErrorCodeField(options...))
+	buf.WriteString(ew.ErrorDescriptionField(options...))
+
+	if ew.parseFirstOption(options) {
+		return ew.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on ErrorWire and returns an error if not Validated
@@ -78,16 +111,16 @@ func (ew *ErrorWire) Validate() error {
 }
 
 // ErrorCategoryField gets a string of the ErrorCategory field
-func (ew *ErrorWire) ErrorCategoryField() string {
-	return ew.alphaField(ew.ErrorCategory, 1)
+func (ew *ErrorWire) ErrorCategoryField(options ...bool) string {
+	return ew.alphaVariableField(ew.ErrorCategory, 1, ew.parseFirstOption(options))
 }
 
 // ErrorCodeField gets a string of the ErrorCode field
-func (ew *ErrorWire) ErrorCodeField() string {
-	return ew.alphaField(ew.ErrorCode, 3)
+func (ew *ErrorWire) ErrorCodeField(options ...bool) string {
+	return ew.alphaVariableField(ew.ErrorCode, 3, ew.parseFirstOption(options))
 }
 
 // ErrorDescriptionField gets a string of the ErrorDescription field
-func (ew *ErrorWire) ErrorDescriptionField() string {
-	return ew.alphaField(ew.ErrorDescription, 35)
+func (ew *ErrorWire) ErrorDescriptionField(options ...bool) string {
+	return ew.alphaVariableField(ew.ErrorDescription, 35, ew.parseFirstOption(options))
 }

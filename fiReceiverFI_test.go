@@ -93,12 +93,12 @@ func TestParseFIReceiverFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIReceiverFI()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(201, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIReceiverFIReaderParseError parses a wrong FIReceiverFI reader parse error
 func TestParseFIReceiverFIReaderParseError(t *testing.T) {
-	var line = "{6100}Line Si®                                                                                                                                                                                           "
+	var line = "{6100}Line Si®                                                                                                                                                                                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -121,4 +121,51 @@ func TestFIReceiverFITagError(t *testing.T) {
 	err := firfi.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, firfi.tag).Error())
+}
+
+// TestStringFIReceiverFIVariableLength parses using variable length
+func TestStringFIReceiverFIVariableLength(t *testing.T) {
+	var line = "{6100}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIReceiverFI()
+	require.Nil(t, err)
+
+	line = "{6100}                                                                                                                                                                                                                  NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIReceiverFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6100}*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIReceiverFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6100}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIReceiverFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringFIReceiverFIOptions validates string() with options
+func TestStringFIReceiverFIOptions(t *testing.T) {
+	var line = "{6100}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIReceiverFI()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.FIReceiverFI.String()
+	require.Equal(t, str, "{6100}                                                                                                                                                                                                   ")
+
+	str = r.currentFEDWireMessage.FIReceiverFI.String(true)
+	require.Equal(t, str, "{6100}*")
 }

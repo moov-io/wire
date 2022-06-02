@@ -39,13 +39,11 @@ func TestParseExchangeRateWrongLength(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	expected := r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
-	require.EqualError(t, err, expected)
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLengthSize)).Error())
 
 	_, err = r.Read()
 
-	expected = r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
-	require.EqualError(t, err, expected)
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLengthSize)).Error())
 }
 
 // TestParseExchangeRateReaderParseError parses a wrong ExchangeRate reader parse error
@@ -71,4 +69,51 @@ func TestExchangeRateTagError(t *testing.T) {
 	err := eRate.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, eRate.tag).Error())
+}
+
+// TestStringErrorExchangeRateVariableLength parses using variable length
+func TestStringErrorExchangeRateVariableLength(t *testing.T) {
+	var line = "{3720}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseExchangeRate()
+	require.Nil(t, err)
+
+	line = "{3720}123         NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseExchangeRate()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3720}123**"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseExchangeRate()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3720}123*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseExchangeRate()
+	require.Equal(t, err, nil)
+}
+
+// TestStringExchangeRateOptions validates string() with options
+func TestStringExchangeRateOptions(t *testing.T) {
+	var line = "{3720}123*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseExchangeRate()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.ExchangeRate.String()
+	require.Equal(t, str, "{3720}123         ")
+
+	str = r.currentFEDWireMessage.ExchangeRate.String(true)
+	require.Equal(t, str, "{3720}123*")
 }

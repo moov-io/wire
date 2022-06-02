@@ -36,16 +36,50 @@ func NewFIAdditionalFIToFI() *FIAdditionalFIToFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fifi *FIAdditionalFIToFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 216 {
-		return NewTagWrongLengthErr(216, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	fifi.tag = record[:6]
-	fifi.AdditionalFIToFI.LineOne = fifi.parseStringField(record[6:41])
-	fifi.AdditionalFIToFI.LineTwo = fifi.parseStringField(record[41:76])
-	fifi.AdditionalFIToFI.LineThree = fifi.parseStringField(record[76:111])
-	fifi.AdditionalFIToFI.LineFour = fifi.parseStringField(record[111:146])
-	fifi.AdditionalFIToFI.LineFive = fifi.parseStringField(record[146:181])
-	fifi.AdditionalFIToFI.LineSix = fifi.parseStringField(record[181:216])
+
+	var err error
+	length := 6
+	read := 0
+
+	if fifi.AdditionalFIToFI.LineOne, read, err = fifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if fifi.AdditionalFIToFI.LineTwo, read, err = fifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if fifi.AdditionalFIToFI.LineThree, read, err = fifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if fifi.AdditionalFIToFI.LineFour, read, err = fifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineFour", err)
+	}
+	length += read
+
+	if fifi.AdditionalFIToFI.LineFive, read, err = fifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineFive", err)
+	}
+	length += read
+
+	if fifi.AdditionalFIToFI.LineSix, read, err = fifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineSix", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +98,23 @@ func (fifi *FIAdditionalFIToFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIAdditionalFIToFI
-func (fifi *FIAdditionalFIToFI) String() string {
+func (fifi *FIAdditionalFIToFI) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(216)
+
 	buf.WriteString(fifi.tag)
-	buf.WriteString(fifi.LineOneField())
-	buf.WriteString(fifi.LineTwoField())
-	buf.WriteString(fifi.LineThreeField())
-	buf.WriteString(fifi.LineFourField())
-	buf.WriteString(fifi.LineFiveField())
-	buf.WriteString(fifi.LineSixField())
-	return buf.String()
+	buf.WriteString(fifi.LineOneField(options...))
+	buf.WriteString(fifi.LineTwoField(options...))
+	buf.WriteString(fifi.LineThreeField(options...))
+	buf.WriteString(fifi.LineFourField(options...))
+	buf.WriteString(fifi.LineFiveField(options...))
+	buf.WriteString(fifi.LineSixField(options...))
+
+	if fifi.parseFirstOption(options) {
+		return fifi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIAdditionalFIToFI and returns an error if not Validated
@@ -105,31 +145,31 @@ func (fifi *FIAdditionalFIToFI) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (fifi *FIAdditionalFIToFI) LineOneField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineOne, 35)
+func (fifi *FIAdditionalFIToFI) LineOneField(options ...bool) string {
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineOne, 35, fifi.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (fifi *FIAdditionalFIToFI) LineTwoField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineTwo, 35)
+func (fifi *FIAdditionalFIToFI) LineTwoField(options ...bool) string {
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineTwo, 35, fifi.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (fifi *FIAdditionalFIToFI) LineThreeField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineThree, 35)
+func (fifi *FIAdditionalFIToFI) LineThreeField(options ...bool) string {
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineThree, 35, fifi.parseFirstOption(options))
 }
 
 // LineFourField gets a string of the LineFour field
-func (fifi *FIAdditionalFIToFI) LineFourField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineFour, 35)
+func (fifi *FIAdditionalFIToFI) LineFourField(options ...bool) string {
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineFour, 35, fifi.parseFirstOption(options))
 }
 
 // LineFiveField gets a string of the LineFive field
-func (fifi *FIAdditionalFIToFI) LineFiveField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineFive, 35)
+func (fifi *FIAdditionalFIToFI) LineFiveField(options ...bool) string {
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineFive, 35, fifi.parseFirstOption(options))
 }
 
 // LineSixField gets a string of the LineSix field
-func (fifi *FIAdditionalFIToFI) LineSixField() string {
-	return fifi.alphaField(fifi.AdditionalFIToFI.LineSix, 35)
+func (fifi *FIAdditionalFIToFI) LineSixField(options ...bool) string {
+	return fifi.alphaVariableField(fifi.AdditionalFIToFI.LineSix, 35, fifi.parseFirstOption(options))
 }

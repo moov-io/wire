@@ -504,7 +504,9 @@ func (r *Reader) parsePaymentNotification() error {
 func (r *Reader) parseCharges() error {
 	r.tagName = "Charges"
 	c := new(Charges)
-	c.Parse(r.line)
+	if err := c.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := c.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -1122,7 +1124,9 @@ func (r *Reader) parseOutputMessageAccountabilityData() error {
 func (r *Reader) parseErrorWire() error {
 	r.tagName = "ErrorWire"
 	ew := new(ErrorWire)
-	ew.Parse(r.line)
+	if err := ew.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ew.Validate(); err != nil {
 		return r.parseError(err)
 	}

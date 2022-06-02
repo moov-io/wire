@@ -93,12 +93,12 @@ func TestParseFIIntermediaryFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIIntermediaryFI()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(201, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
 }
 
 // TestParseFIIntermediaryFIReaderParseError parses a wrong FIIntermediaryFI reader parse error
 func TestParseFIIntermediaryFIReaderParseError(t *testing.T) {
-	var line = "{6200}Line ®ix                                                                                                                                                                                           "
+	var line = "{6200}Line ®ix                                                                                                                                                                                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -121,4 +121,51 @@ func TestFIIntermediaryFITagError(t *testing.T) {
 	err := fiifi.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fiifi.tag).Error())
+}
+
+// TestStringFIIntermediaryFIVariableLength parses using variable length
+func TestStringFIIntermediaryFIVariableLength(t *testing.T) {
+	var line = "{6200}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIIntermediaryFI()
+	require.Nil(t, err)
+
+	line = "{6200}                                                                                                                                                                                                                  NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIIntermediaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6200}*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIIntermediaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6200}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIIntermediaryFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringFIIntermediaryFIOptions validates string() with options
+func TestStringFIIntermediaryFIOptions(t *testing.T) {
+	var line = "{6200}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIIntermediaryFI()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.FIIntermediaryFI.String()
+	require.Equal(t, str, "{6200}                                                                                                                                                                                                   ")
+
+	str = r.currentFEDWireMessage.FIIntermediaryFI.String(true)
+	require.Equal(t, str, "{6200}*")
 }

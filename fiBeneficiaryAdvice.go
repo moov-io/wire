@@ -36,17 +36,51 @@ func NewFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fiba *FIBeneficiaryAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	fiba.tag = record[:6]
 	fiba.Advice.AdviceCode = fiba.parseStringField(record[6:9])
-	fiba.Advice.LineOne = fiba.parseStringField(record[9:35])
-	fiba.Advice.LineTwo = fiba.parseStringField(record[35:68])
-	fiba.Advice.LineThree = fiba.parseStringField(record[68:101])
-	fiba.Advice.LineFour = fiba.parseStringField(record[101:134])
-	fiba.Advice.LineFive = fiba.parseStringField(record[134:167])
-	fiba.Advice.LineSix = fiba.parseStringField(record[167:200])
+
+	var err error
+	length := 9
+	read := 0
+
+	if fiba.Advice.LineOne, read, err = fiba.parseVariableStringField(record[length:], 26); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if fiba.Advice.LineTwo, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if fiba.Advice.LineThree, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if fiba.Advice.LineFour, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineFour", err)
+	}
+	length += read
+
+	if fiba.Advice.LineFive, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineFive", err)
+	}
+	length += read
+
+	if fiba.Advice.LineSix, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineSix", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -65,18 +99,24 @@ func (fiba *FIBeneficiaryAdvice) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIBeneficiaryAdvice
-func (fiba *FIBeneficiaryAdvice) String() string {
+func (fiba *FIBeneficiaryAdvice) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fiba.tag)
 	buf.WriteString(fiba.AdviceCodeField())
-	buf.WriteString(fiba.LineOneField())
-	buf.WriteString(fiba.LineTwoField())
-	buf.WriteString(fiba.LineThreeField())
-	buf.WriteString(fiba.LineFourField())
-	buf.WriteString(fiba.LineFiveField())
-	buf.WriteString(fiba.LineSixField())
-	return buf.String()
+	buf.WriteString(fiba.LineOneField(options...))
+	buf.WriteString(fiba.LineTwoField(options...))
+	buf.WriteString(fiba.LineThreeField(options...))
+	buf.WriteString(fiba.LineFourField(options...))
+	buf.WriteString(fiba.LineFiveField(options...))
+	buf.WriteString(fiba.LineSixField(options...))
+
+	if fiba.parseFirstOption(options) {
+		return fiba.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIBeneficiaryAdvice and returns an error if not Validated
@@ -115,31 +155,31 @@ func (fiba *FIBeneficiaryAdvice) AdviceCodeField() string {
 }
 
 // LineOneField gets a string of the LineOne field
-func (fiba *FIBeneficiaryAdvice) LineOneField() string {
-	return fiba.alphaField(fiba.Advice.LineOne, 26)
+func (fiba *FIBeneficiaryAdvice) LineOneField(options ...bool) string {
+	return fiba.alphaVariableField(fiba.Advice.LineOne, 26, fiba.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (fiba *FIBeneficiaryAdvice) LineTwoField() string {
-	return fiba.alphaField(fiba.Advice.LineTwo, 33)
+func (fiba *FIBeneficiaryAdvice) LineTwoField(options ...bool) string {
+	return fiba.alphaVariableField(fiba.Advice.LineTwo, 33, fiba.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (fiba *FIBeneficiaryAdvice) LineThreeField() string {
-	return fiba.alphaField(fiba.Advice.LineThree, 33)
+func (fiba *FIBeneficiaryAdvice) LineThreeField(options ...bool) string {
+	return fiba.alphaVariableField(fiba.Advice.LineThree, 33, fiba.parseFirstOption(options))
 }
 
 // LineFourField gets a string of the LineFour field
-func (fiba *FIBeneficiaryAdvice) LineFourField() string {
-	return fiba.alphaField(fiba.Advice.LineFour, 33)
+func (fiba *FIBeneficiaryAdvice) LineFourField(options ...bool) string {
+	return fiba.alphaVariableField(fiba.Advice.LineFour, 33, fiba.parseFirstOption(options))
 }
 
 // LineFiveField gets a string of the LineFive field
-func (fiba *FIBeneficiaryAdvice) LineFiveField() string {
-	return fiba.alphaField(fiba.Advice.LineFive, 33)
+func (fiba *FIBeneficiaryAdvice) LineFiveField(options ...bool) string {
+	return fiba.alphaVariableField(fiba.Advice.LineFive, 33, fiba.parseFirstOption(options))
 }
 
 // LineSixField gets a string of the LineSix field
-func (fiba *FIBeneficiaryAdvice) LineSixField() string {
-	return fiba.alphaField(fiba.Advice.LineSix, 33)
+func (fiba *FIBeneficiaryAdvice) LineSixField(options ...bool) string {
+	return fiba.alphaVariableField(fiba.Advice.LineSix, 33, fiba.parseFirstOption(options))
 }

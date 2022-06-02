@@ -36,17 +36,51 @@ func NewFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fiifia *FIIntermediaryFIAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	fiifia.tag = record[:6]
 	fiifia.Advice.AdviceCode = fiifia.parseStringField(record[6:9])
-	fiifia.Advice.LineOne = fiifia.parseStringField(record[9:35])
-	fiifia.Advice.LineTwo = fiifia.parseStringField(record[35:68])
-	fiifia.Advice.LineThree = fiifia.parseStringField(record[68:101])
-	fiifia.Advice.LineFour = fiifia.parseStringField(record[101:134])
-	fiifia.Advice.LineFive = fiifia.parseStringField(record[134:167])
-	fiifia.Advice.LineSix = fiifia.parseStringField(record[167:200])
+
+	var err error
+	length := 9
+	read := 0
+
+	if fiifia.Advice.LineOne, read, err = fiifia.parseVariableStringField(record[length:], 26); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if fiifia.Advice.LineTwo, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if fiifia.Advice.LineThree, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if fiifia.Advice.LineFour, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineFour", err)
+	}
+	length += read
+
+	if fiifia.Advice.LineFive, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineFive", err)
+	}
+	length += read
+
+	if fiifia.Advice.LineSix, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+		return fieldError("LineSix", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -65,18 +99,24 @@ func (fiifia *FIIntermediaryFIAdvice) UnmarshalJSON(data []byte) error {
 }
 
 // String writes FIIntermediaryFIAdvice
-func (fiifia *FIIntermediaryFIAdvice) String() string {
+func (fiifia *FIIntermediaryFIAdvice) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fiifia.tag)
 	buf.WriteString(fiifia.AdviceCodeField())
-	buf.WriteString(fiifia.LineOneField())
-	buf.WriteString(fiifia.LineTwoField())
-	buf.WriteString(fiifia.LineThreeField())
-	buf.WriteString(fiifia.LineFourField())
-	buf.WriteString(fiifia.LineFiveField())
-	buf.WriteString(fiifia.LineSixField())
-	return buf.String()
+	buf.WriteString(fiifia.LineOneField(options...))
+	buf.WriteString(fiifia.LineTwoField(options...))
+	buf.WriteString(fiifia.LineThreeField(options...))
+	buf.WriteString(fiifia.LineFourField(options...))
+	buf.WriteString(fiifia.LineFiveField(options...))
+	buf.WriteString(fiifia.LineSixField(options...))
+
+	if fiifia.parseFirstOption(options) {
+		return fiifia.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIIntermediaryFIAdvice and returns an error if not Validated
@@ -115,31 +155,31 @@ func (fiifia *FIIntermediaryFIAdvice) AdviceCodeField() string {
 }
 
 // LineOneField gets a string of the LineOne field
-func (fiifia *FIIntermediaryFIAdvice) LineOneField() string {
-	return fiifia.alphaField(fiifia.Advice.LineOne, 26)
+func (fiifia *FIIntermediaryFIAdvice) LineOneField(options ...bool) string {
+	return fiifia.alphaVariableField(fiifia.Advice.LineOne, 26, fiifia.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (fiifia *FIIntermediaryFIAdvice) LineTwoField() string {
-	return fiifia.alphaField(fiifia.Advice.LineTwo, 33)
+func (fiifia *FIIntermediaryFIAdvice) LineTwoField(options ...bool) string {
+	return fiifia.alphaVariableField(fiifia.Advice.LineTwo, 33, fiifia.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (fiifia *FIIntermediaryFIAdvice) LineThreeField() string {
-	return fiifia.alphaField(fiifia.Advice.LineThree, 33)
+func (fiifia *FIIntermediaryFIAdvice) LineThreeField(options ...bool) string {
+	return fiifia.alphaVariableField(fiifia.Advice.LineThree, 33, fiifia.parseFirstOption(options))
 }
 
 // LineFourField gets a string of the LineFour field
-func (fiifia *FIIntermediaryFIAdvice) LineFourField() string {
-	return fiifia.alphaField(fiifia.Advice.LineFour, 33)
+func (fiifia *FIIntermediaryFIAdvice) LineFourField(options ...bool) string {
+	return fiifia.alphaVariableField(fiifia.Advice.LineFour, 33, fiifia.parseFirstOption(options))
 }
 
 // LineFiveField gets a string of the LineFive field
-func (fiifia *FIIntermediaryFIAdvice) LineFiveField() string {
-	return fiifia.alphaField(fiifia.Advice.LineFive, 33)
+func (fiifia *FIIntermediaryFIAdvice) LineFiveField(options ...bool) string {
+	return fiifia.alphaVariableField(fiifia.Advice.LineFive, 33, fiifia.parseFirstOption(options))
 }
 
 // LineSixField gets a string of the LineSix field
-func (fiifia *FIIntermediaryFIAdvice) LineSixField() string {
-	return fiifia.alphaField(fiifia.Advice.LineSix, 33)
+func (fiifia *FIIntermediaryFIAdvice) LineSixField(options ...bool) string {
+	return fiifia.alphaVariableField(fiifia.Advice.LineSix, 33, fiifia.parseFirstOption(options))
 }
