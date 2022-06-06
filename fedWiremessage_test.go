@@ -1185,3 +1185,12 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 	expected := fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown).Error()
 	require.EqualError(t, err, expected)
 }
+
+func TestFEDWireMessage_missingIMAD_isFedLineAdvantageCustomer(t *testing.T) {
+	fwm := mockCustomerTransferData()
+	fwm.InputMessageAccountabilityData = nil
+	// InputMessageAccountabilityData is optional if the sender is a FedLine Advantage customer
+	fwm.validateOpts.AllowMissingIMAD = true
+	err := fwm.validateIMAD()
+	require.NoError(t, err)
+}

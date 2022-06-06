@@ -137,7 +137,7 @@ func (w *Writer) writeMandatory(fwm FEDWireMessage) error {
 		if _, err := w.w.WriteString(fwm.InputMessageAccountabilityData.String() + "\n"); err != nil {
 			return err
 		}
-	} else {
+	} else if fwm.validateOpts.AllowMissingIMAD == false { // IMAD is optional for FedLine Advantage customers
 		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
 	if fwm.Amount != nil {

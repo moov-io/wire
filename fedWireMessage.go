@@ -131,6 +131,13 @@ type FEDWireMessage struct {
 	RemittanceFreeText *RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	// ServiceMessage
 	ServiceMessage *ServiceMessage `json:"serviceMessage,omitempty"`
+
+	validateOpts *ValidateOpts
+}
+
+type ValidateOpts struct {
+	// AllowMissingIMAD allows a file to be created or read without the InputMessageAccountabilityData tag
+	AllowMissingIMAD bool `json:"allowMissingIMAD"`
 }
 
 // verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
@@ -239,9 +246,9 @@ func (fwm *FEDWireMessage) validateTypeSubType() error {
 }
 
 // validateIMAD validates TagInputMessageAccountabilityData within a FEDWireMessage
-// Mandatory for all requests
+// Mandatory for all requests unless sender is a FedLine Advantage customer
 func (fwm *FEDWireMessage) validateIMAD() error {
-	if fwm.InputMessageAccountabilityData == nil {
+	if fwm.InputMessageAccountabilityData == nil && fwm.validateOpts.AllowMissingIMAD == false {
 		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
 	return nil
