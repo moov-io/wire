@@ -36,12 +36,30 @@ func NewGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	gard.tag = record[:6]
-	gard.RemittanceAmount.CurrencyCode = gard.parseStringField(record[6:9])
-	gard.RemittanceAmount.Amount = gard.parseStringField(record[9:28])
+
+	var err error
+	length := 6
+	read := 0
+
+	if gard.RemittanceAmount.CurrencyCode, read, err = gard.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	length += read
+
+	if gard.RemittanceAmount.Amount, read, err = gard.parseVariableStringField(record[length:], 19); err != nil {
+		return fieldError("Amount", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -60,13 +78,19 @@ func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes GrossAmountRemittanceDocument
-func (gard *GrossAmountRemittanceDocument) String() string {
+func (gard *GrossAmountRemittanceDocument) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(gard.tag)
-	buf.WriteString(gard.CurrencyCodeField())
-	buf.WriteString(gard.AmountField())
-	return buf.String()
+	buf.WriteString(gard.CurrencyCodeField(options...))
+	buf.WriteString(gard.AmountField(options...))
+
+	if gard.parseFirstOption(options) {
+		return gard.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on GrossAmountRemittanceDocument and returns an error if not Validated
@@ -100,11 +124,11 @@ func (gard *GrossAmountRemittanceDocument) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
-	return gard.alphaField(gard.RemittanceAmount.CurrencyCode, 3)
+func (gard *GrossAmountRemittanceDocument) CurrencyCodeField(options ...bool) string {
+	return gard.alphaVariableField(gard.RemittanceAmount.CurrencyCode, 3, gard.parseFirstOption(options))
 }
 
 // AmountField gets a string of the Amount field
-func (gard *GrossAmountRemittanceDocument) AmountField() string {
-	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
+func (gard *GrossAmountRemittanceDocument) AmountField(options ...bool) string {
+	return gard.alphaVariableField(gard.RemittanceAmount.Amount, 19, gard.parseFirstOption(options))
 }

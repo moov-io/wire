@@ -103,13 +103,12 @@ func TestParseOrderingInstitutionWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOrderingInstitution()
-
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
 }
 
 // TestParseOrderingInstitutionReaderParseError parses a wrong OrderingInstitution reader parse error
 func TestParseOrderingInstitutionReaderParseError(t *testing.T) {
-	var line = "{7052}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	var line = "{7052}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -128,4 +127,51 @@ func TestOrderingInstitutionTagError(t *testing.T) {
 	oi.tag = "{9999}"
 
 	require.EqualError(t, oi.Validate(), fieldError("tag", ErrValidTagForType, oi.tag).Error())
+}
+
+// TestStringOrderingInstitutionVariableLength parses using variable length
+func TestStringOrderingInstitutionVariableLength(t *testing.T) {
+	var line = "{7052}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOrderingInstitution()
+	require.Nil(t, err)
+
+	line = "{7052}                                                                                                                                                                                    NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOrderingInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7052}*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOrderingInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7052}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOrderingInstitution()
+	require.Equal(t, err, nil)
+}
+
+// TestStringOrderingInstitutionOptions validates string() with options
+func TestStringOrderingInstitutionOptions(t *testing.T) {
+	var line = "{7052}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOrderingInstitution()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.OrderingInstitution.String()
+	require.Equal(t, str, "{7052}                                                                                                                                                                                    ")
+
+	str = r.currentFEDWireMessage.OrderingInstitution.String(true)
+	require.Equal(t, str, "{7052}*")
 }

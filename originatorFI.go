@@ -36,16 +36,50 @@ func NewOriginatorFI() *OriginatorFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ofi *OriginatorFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	ofi.tag = record[:6]
-	ofi.FinancialInstitution.IdentificationCode = ofi.parseStringField(record[6:7])
-	ofi.FinancialInstitution.Identifier = ofi.parseStringField(record[7:41])
-	ofi.FinancialInstitution.Name = ofi.parseStringField(record[41:76])
-	ofi.FinancialInstitution.Address.AddressLineOne = ofi.parseStringField(record[76:111])
-	ofi.FinancialInstitution.Address.AddressLineTwo = ofi.parseStringField(record[111:146])
-	ofi.FinancialInstitution.Address.AddressLineThree = ofi.parseStringField(record[146:181])
+
+	var err error
+	length := 6
+	read := 0
+
+	if ofi.FinancialInstitution.IdentificationCode, read, err = ofi.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("IdentificationCode", err)
+	}
+	length += read
+
+	if ofi.FinancialInstitution.Identifier, read, err = ofi.parseVariableStringField(record[length:], 34); err != nil {
+		return fieldError("Identifier", err)
+	}
+	length += read
+
+	if ofi.FinancialInstitution.Name, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if ofi.FinancialInstitution.Address.AddressLineOne, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if ofi.FinancialInstitution.Address.AddressLineTwo, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if ofi.FinancialInstitution.Address.AddressLineThree, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +98,23 @@ func (ofi *OriginatorFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OriginatorFI
-func (ofi *OriginatorFI) String() string {
+func (ofi *OriginatorFI) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
 	buf.WriteString(ofi.tag)
-	buf.WriteString(ofi.IdentificationCodeField())
-	buf.WriteString(ofi.IdentifierField())
-	buf.WriteString(ofi.NameField())
-	buf.WriteString(ofi.AddressLineOneField())
-	buf.WriteString(ofi.AddressLineTwoField())
-	buf.WriteString(ofi.AddressLineThreeField())
-	return buf.String()
+
+	buf.WriteString(ofi.IdentificationCodeField(options...))
+	buf.WriteString(ofi.IdentifierField(options...))
+	buf.WriteString(ofi.NameField(options...))
+	buf.WriteString(ofi.AddressLineOneField(options...))
+	buf.WriteString(ofi.AddressLineTwoField(options...))
+	buf.WriteString(ofi.AddressLineThreeField(options...))
+
+	if ofi.parseFirstOption(options) {
+		return ofi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OriginatorFI and returns an error if not Validated
@@ -128,31 +168,31 @@ func (ofi *OriginatorFI) fieldInclusion() error {
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
-func (ofi *OriginatorFI) IdentificationCodeField() string {
-	return ofi.alphaField(ofi.FinancialInstitution.IdentificationCode, 1)
+func (ofi *OriginatorFI) IdentificationCodeField(options ...bool) string {
+	return ofi.alphaVariableField(ofi.FinancialInstitution.IdentificationCode, 1, ofi.parseFirstOption(options))
 }
 
 // IdentifierField gets a string of the Identifier field
-func (ofi *OriginatorFI) IdentifierField() string {
-	return ofi.alphaField(ofi.FinancialInstitution.Identifier, 34)
+func (ofi *OriginatorFI) IdentifierField(options ...bool) string {
+	return ofi.alphaVariableField(ofi.FinancialInstitution.Identifier, 34, ofi.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (ofi *OriginatorFI) NameField() string {
-	return ofi.alphaField(ofi.FinancialInstitution.Name, 35)
+func (ofi *OriginatorFI) NameField(options ...bool) string {
+	return ofi.alphaVariableField(ofi.FinancialInstitution.Name, 35, ofi.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (ofi *OriginatorFI) AddressLineOneField() string {
-	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineOne, 35)
+func (ofi *OriginatorFI) AddressLineOneField(options ...bool) string {
+	return ofi.alphaVariableField(ofi.FinancialInstitution.Address.AddressLineOne, 35, ofi.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (ofi *OriginatorFI) AddressLineTwoField() string {
-	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineTwo, 35)
+func (ofi *OriginatorFI) AddressLineTwoField(options ...bool) string {
+	return ofi.alphaVariableField(ofi.FinancialInstitution.Address.AddressLineTwo, 35, ofi.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (ofi *OriginatorFI) AddressLineThreeField() string {
-	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineThree, 35)
+func (ofi *OriginatorFI) AddressLineThreeField(options ...bool) string {
+	return ofi.alphaVariableField(ofi.FinancialInstitution.Address.AddressLineThree, 35, ofi.parseFirstOption(options))
 }

@@ -42,7 +42,7 @@ func NewTagMinLengthErr(tagLength, length int) TagWrongLengthErr {
 // NewTagMaxLengthErr creates a new error of the TagWrongLengthErr type
 func NewTagMaxLengthErr() TagWrongLengthErr {
 	return TagWrongLengthErr{
-		Message:   fmt.Sprintf("contains invalid information in a segment"),
+		Message: fmt.Sprintf("contains invalid information in a segment"),
 	}
 }
 

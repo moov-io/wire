@@ -58,3 +58,50 @@ func TestMessageDispositionTagError(t *testing.T) {
 
 	require.EqualError(t, md.Validate(), fieldError("tag", ErrValidTagForType, md.tag).Error())
 }
+
+// TestStringMessageDispositionVariableLength parses using variable length
+func TestStringMessageDispositionVariableLength(t *testing.T) {
+	var line = "{1100}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseMessageDisposition()
+	require.Nil(t, err)
+
+	line = "{1100}     NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseMessageDisposition()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1100}*****"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseMessageDisposition()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1100}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseMessageDisposition()
+	require.Equal(t, err, nil)
+}
+
+// TestStringMessageDispositionOptions validates string() with options
+func TestStringMessageDispositionOptions(t *testing.T) {
+	var line = "{1100}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseMessageDisposition()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.MessageDisposition.String()
+	require.Equal(t, str, "{1100}     ")
+
+	str = r.currentFEDWireMessage.MessageDisposition.String(true)
+	require.Equal(t, str, "{1100}*")
+}

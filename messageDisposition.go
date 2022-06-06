@@ -7,6 +7,7 @@ package wire
 import (
 	"encoding/json"
 	"strings"
+	"unicode/utf8"
 )
 
 // MessageDisposition is the message disposition of the wire
@@ -43,12 +44,42 @@ func NewMessageDisposition() *MessageDisposition {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (md *MessageDisposition) Parse(record string) {
+func (md *MessageDisposition) Parse(record string) error {
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
+	}
+
 	md.tag = record[:6]
-	md.FormatVersion = md.parseStringField(record[6:8])
-	md.TestProductionCode = md.parseStringField(record[8:9])
-	md.MessageDuplicationCode = md.parseStringField(record[9:10])
-	md.MessageStatusIndicator = md.parseStringField(record[10:11])
+
+	var err error
+	length := 6
+	read := 0
+
+	if md.FormatVersion, read, err = md.parseVariableStringField(record[length:], 2); err != nil {
+		return fieldError("FormatVersion", err)
+	}
+	length += read
+
+	if md.TestProductionCode, read, err = md.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("TestProductionCode", err)
+	}
+	length += read
+
+	if md.MessageDuplicationCode, read, err = md.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("MessageDuplicationCode", err)
+	}
+	length += read
+
+	if md.MessageStatusIndicator, read, err = md.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("MessageStatusIndicator", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
+	return nil
 }
 
 func (md *MessageDisposition) UnmarshalJSON(data []byte) error {
@@ -66,15 +97,21 @@ func (md *MessageDisposition) UnmarshalJSON(data []byte) error {
 }
 
 // String writes MessageDisposition
-func (md *MessageDisposition) String() string {
+func (md *MessageDisposition) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(11)
+
 	buf.WriteString(md.tag)
-	buf.WriteString(md.MessageDispositionFormatVersionField())
-	buf.WriteString(md.MessageDispositionTestProductionCodeField())
-	buf.WriteString(md.MessageDispositionMessageDuplicationCodeField())
-	buf.WriteString(md.MessageDispositionMessageStatusIndicatorField())
-	return buf.String()
+	buf.WriteString(md.MessageDispositionFormatVersionField(options...))
+	buf.WriteString(md.MessageDispositionTestProductionCodeField(options...))
+	buf.WriteString(md.MessageDispositionMessageDuplicationCodeField(options...))
+	buf.WriteString(md.MessageDispositionMessageStatusIndicatorField(options...))
+
+	if md.parseFirstOption(options) {
+		return md.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on MessageDisposition and returns an error if not Validated
@@ -88,21 +125,21 @@ func (md *MessageDisposition) Validate() error {
 }
 
 // MessageDispositionFormatVersionField gets a string of the FormatVersion field
-func (md *MessageDisposition) MessageDispositionFormatVersionField() string {
-	return md.alphaField(md.FormatVersion, 2)
+func (md *MessageDisposition) MessageDispositionFormatVersionField(options ...bool) string {
+	return md.alphaVariableField(md.FormatVersion, 2, md.parseFirstOption(options))
 }
 
 // MessageDispositionTestProductionCodeField gets a string of the TestProductionCoden field
-func (md *MessageDisposition) MessageDispositionTestProductionCodeField() string {
-	return md.alphaField(md.TestProductionCode, 1)
+func (md *MessageDisposition) MessageDispositionTestProductionCodeField(options ...bool) string {
+	return md.alphaVariableField(md.TestProductionCode, 1, md.parseFirstOption(options))
 }
 
 // MessageDispositionMessageDuplicationCodeField gets a string of the MessageDuplicationCode field
-func (md *MessageDisposition) MessageDispositionMessageDuplicationCodeField() string {
-	return md.alphaField(md.MessageDuplicationCode, 1)
+func (md *MessageDisposition) MessageDispositionMessageDuplicationCodeField(options ...bool) string {
+	return md.alphaVariableField(md.MessageDuplicationCode, 1, md.parseFirstOption(options))
 }
 
 // MessageDispositionMessageStatusIndicatorField gets a string of the MessageDuplicationCode field
-func (md *MessageDisposition) MessageDispositionMessageStatusIndicatorField() string {
-	return md.alphaField(md.MessageStatusIndicator, 1)
+func (md *MessageDisposition) MessageDispositionMessageStatusIndicatorField(options ...bool) string {
+	return md.alphaVariableField(md.MessageStatusIndicator, 1, md.parseFirstOption(options))
 }

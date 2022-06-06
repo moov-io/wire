@@ -164,7 +164,6 @@ func TestAccountDebitedDrawdownTagError(t *testing.T) {
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, debitDD.tag).Error())
 }
 
-
 // TestStringDebitedDrawdownVariableLength parses using variable length
 func TestStringAccountDebitedDrawdownVariableLength(t *testing.T) {
 	var line = "{4400}"

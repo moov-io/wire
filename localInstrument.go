@@ -38,12 +38,30 @@ func NewLocalInstrument() *LocalInstrument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (li *LocalInstrument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 45 {
-		return NewTagWrongLengthErr(45, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	li.tag = record[:6]
-	li.LocalInstrumentCode = li.parseStringField(record[6:10])
-	li.ProprietaryCode = li.parseStringField(record[10:45])
+
+	var err error
+	length := 6
+	read := 0
+
+	if li.LocalInstrumentCode, read, err = li.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("LocalInstrumentCode", err)
+	}
+	length += read
+
+	if li.ProprietaryCode, read, err = li.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("ProprietaryCode", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,13 +80,19 @@ func (li *LocalInstrument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes LocalInstrument
-func (li *LocalInstrument) String() string {
+func (li *LocalInstrument) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(45)
+
 	buf.WriteString(li.tag)
-	buf.WriteString(li.LocalInstrumentCodeField())
-	buf.WriteString(li.ProprietaryCodeField())
-	return buf.String()
+	buf.WriteString(li.LocalInstrumentCodeField(options...))
+	buf.WriteString(li.ProprietaryCodeField(options...))
+
+	if li.parseFirstOption(options) {
+		return li.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on LocalInstrument and returns an error if not Validated
@@ -100,11 +124,11 @@ func (li *LocalInstrument) fieldInclusion() error {
 }
 
 // LocalInstrumentCodeField gets a string of LocalInstrumentCode field
-func (li *LocalInstrument) LocalInstrumentCodeField() string {
-	return li.alphaField(li.LocalInstrumentCode, 4)
+func (li *LocalInstrument) LocalInstrumentCodeField(options ...bool) string {
+	return li.alphaVariableField(li.LocalInstrumentCode, 4, li.parseFirstOption(options))
 }
 
 // ProprietaryCodeField gets a string of ProprietaryCode field
-func (li *LocalInstrument) ProprietaryCodeField() string {
-	return li.alphaField(li.ProprietaryCode, 35)
+func (li *LocalInstrument) ProprietaryCodeField(options ...bool) string {
+	return li.alphaVariableField(li.ProprietaryCode, 35, li.parseFirstOption(options))
 }

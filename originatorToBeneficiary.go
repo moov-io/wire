@@ -42,14 +42,40 @@ func NewOriginatorToBeneficiary() *OriginatorToBeneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ob *OriginatorToBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 146 {
-		return NewTagWrongLengthErr(146, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	ob.tag = record[:6]
-	ob.LineOne = ob.parseStringField(record[6:41])
-	ob.LineTwo = ob.parseStringField(record[41:76])
-	ob.LineThree = ob.parseStringField(record[76:111])
-	ob.LineFour = ob.parseStringField(record[111:146])
+
+	var err error
+	length := 6
+	read := 0
+
+	if ob.LineOne, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if ob.LineTwo, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if ob.LineThree, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if ob.LineFour, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineFour", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -68,15 +94,21 @@ func (ob *OriginatorToBeneficiary) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OriginatorToBeneficiary
-func (ob *OriginatorToBeneficiary) String() string {
+func (ob *OriginatorToBeneficiary) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(146)
+
 	buf.WriteString(ob.tag)
-	buf.WriteString(ob.LineOneField())
-	buf.WriteString(ob.LineTwoField())
-	buf.WriteString(ob.LineThreeField())
-	buf.WriteString(ob.LineFourField())
-	return buf.String()
+	buf.WriteString(ob.LineOneField(options...))
+	buf.WriteString(ob.LineTwoField(options...))
+	buf.WriteString(ob.LineThreeField(options...))
+	buf.WriteString(ob.LineFourField(options...))
+
+	if ob.parseFirstOption(options) {
+		return ob.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OriginatorToBeneficiary and returns an error if not Validated
@@ -102,21 +134,21 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (ob *OriginatorToBeneficiary) LineOneField() string {
-	return ob.alphaField(ob.LineOne, 35)
+func (ob *OriginatorToBeneficiary) LineOneField(options ...bool) string {
+	return ob.alphaVariableField(ob.LineOne, 35, ob.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (ob *OriginatorToBeneficiary) LineTwoField() string {
-	return ob.alphaField(ob.LineTwo, 35)
+func (ob *OriginatorToBeneficiary) LineTwoField(options ...bool) string {
+	return ob.alphaVariableField(ob.LineTwo, 35, ob.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (ob *OriginatorToBeneficiary) LineThreeField() string {
-	return ob.alphaField(ob.LineThree, 35)
+func (ob *OriginatorToBeneficiary) LineThreeField(options ...bool) string {
+	return ob.alphaVariableField(ob.LineThree, 35, ob.parseFirstOption(options))
 }
 
 // LineFourField gets a string of the LineFour field
-func (ob *OriginatorToBeneficiary) LineFourField() string {
-	return ob.alphaField(ob.LineFour, 35)
+func (ob *OriginatorToBeneficiary) LineFourField(options ...bool) string {
+	return ob.alphaVariableField(ob.LineFour, 35, ob.parseFirstOption(options))
 }

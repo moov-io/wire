@@ -70,7 +70,7 @@ func TestParseInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseInstructedAmount()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(24, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseInstructedAmountReaderParseError parses a wrong InstructedAmount reader parse error
@@ -94,4 +94,51 @@ func TestInstructedAmountTagError(t *testing.T) {
 	ia.tag = "{9999}"
 
 	require.EqualError(t, ia.Validate(), fieldError("tag", ErrValidTagForType, ia.tag).Error())
+}
+
+// TestStringInstructedAmountVariableLength parses using variable length
+func TestStringInstructedAmountVariableLength(t *testing.T) {
+	var line = "{3710}USD4567,89*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructedAmount()
+	require.Nil(t, err)
+
+	line = "{3710}USD4567,89        NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructedAmount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3710}USD4567,89**"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructedAmount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3710}USD4567,89*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructedAmount()
+	require.Equal(t, err, nil)
+}
+
+// TestStringInstructedAmountOptions validates string() with options
+func TestStringInstructedAmountOptions(t *testing.T) {
+	var line = "{3710}USD4567,89*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructedAmount()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.InstructedAmount.String()
+	require.Equal(t, str, "{3710}USD4567,89        ")
+
+	str = r.currentFEDWireMessage.InstructedAmount.String(true)
+	require.Equal(t, str, "{3710}USD4567,89*")
 }

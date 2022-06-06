@@ -104,12 +104,12 @@ func TestParseOrderingCustomerWrongLength(t *testing.T) {
 
 	err := r.parseOrderingCustomer()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
 }
 
 // TestParseOrderingCustomerReaderParseError parses a wrong OrderingCustomer reader parse error
 func TestParseOrderingCustomerReaderParseError(t *testing.T) {
-	var line = "{7050}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	var line = "{7050}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -128,4 +128,51 @@ func TestOrderingCustomerTagError(t *testing.T) {
 	oc.tag = "{9999}"
 
 	require.EqualError(t, oc.Validate(), fieldError("tag", ErrValidTagForType, oc.tag).Error())
+}
+
+// TestStringOrderingCustomerVariableLength parses using variable length
+func TestStringOrderingCustomerVariableLength(t *testing.T) {
+	var line = "{7050}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOrderingCustomer()
+	require.Nil(t, err)
+
+	line = "{7050}                                                                                                                                                                                    NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOrderingCustomer()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7050}*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOrderingCustomer()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7050}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOrderingCustomer()
+	require.Equal(t, err, nil)
+}
+
+// TestStringOrderingCustomerOptions validates string() with options
+func TestStringOrderingCustomerOptions(t *testing.T) {
+	var line = "{7050}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOrderingCustomer()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.OrderingCustomer.String()
+	require.Equal(t, str, "{7050}                                                                                                                                                                                    ")
+
+	str = r.currentFEDWireMessage.OrderingCustomer.String(true)
+	require.Equal(t, str, "{7050}*")
 }

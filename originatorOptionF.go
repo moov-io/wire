@@ -100,15 +100,45 @@ func NewOriginatorOptionF() *OriginatorOptionF {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (oof *OriginatorOptionF) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagMinLengthErr(13, len(record))
 	}
+
 	oof.tag = oof.parseStringField(record[:6])
-	oof.PartyIdentifier = oof.parseStringField(record[6:41])
-	oof.Name = oof.parseStringField(record[41:76])
-	oof.LineOne = oof.parseStringField(record[76:111])
-	oof.LineTwo = oof.parseStringField(record[111:146])
-	oof.LineThree = oof.parseStringField(record[146:181])
+
+	var err error
+	length := 6
+	read := 0
+
+	if oof.PartyIdentifier, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("PartyIdentifier", err)
+	}
+	length += read
+
+	if oof.Name, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if oof.LineOne, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if oof.LineTwo, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if oof.LineThree, read, err = oof.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -127,16 +157,22 @@ func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OriginatorOptionF
-func (oof *OriginatorOptionF) String() string {
+func (oof *OriginatorOptionF) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(oof.tag)
-	buf.WriteString(oof.PartyIdentifierField())
-	buf.WriteString(oof.NameField())
-	buf.WriteString(oof.LineOneField())
-	buf.WriteString(oof.LineTwoField())
-	buf.WriteString(oof.LineThreeField())
-	return buf.String()
+	buf.WriteString(oof.PartyIdentifierField(options...))
+	buf.WriteString(oof.NameField(options...))
+	buf.WriteString(oof.LineOneField(options...))
+	buf.WriteString(oof.LineTwoField(options...))
+	buf.WriteString(oof.LineThreeField(options...))
+
+	if oof.parseFirstOption(options) {
+		return oof.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OriginatorOptionF and returns an error if not Validated
@@ -170,26 +206,26 @@ func (oof *OriginatorOptionF) fieldInclusion() error {
 }
 
 // PartyIdentifierField gets a string of the PartyIdentifier field
-func (oof *OriginatorOptionF) PartyIdentifierField() string {
-	return oof.alphaField(oof.PartyIdentifier, 35)
+func (oof *OriginatorOptionF) PartyIdentifierField(options ...bool) string {
+	return oof.alphaVariableField(oof.PartyIdentifier, 35, oof.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (oof *OriginatorOptionF) NameField() string {
-	return oof.alphaField(oof.Name, 35)
+func (oof *OriginatorOptionF) NameField(options ...bool) string {
+	return oof.alphaVariableField(oof.Name, 35, oof.parseFirstOption(options))
 }
 
 // LineOneField gets a string of the LineOne field
-func (oof *OriginatorOptionF) LineOneField() string {
-	return oof.alphaField(oof.LineOne, 35)
+func (oof *OriginatorOptionF) LineOneField(options ...bool) string {
+	return oof.alphaVariableField(oof.LineOne, 35, oof.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (oof *OriginatorOptionF) LineTwoField() string {
-	return oof.alphaField(oof.LineTwo, 35)
+func (oof *OriginatorOptionF) LineTwoField(options ...bool) string {
+	return oof.alphaVariableField(oof.LineTwo, 35, oof.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (oof *OriginatorOptionF) LineThreeField() string {
-	return oof.alphaField(oof.LineThree, 35)
+func (oof *OriginatorOptionF) LineThreeField(options ...bool) string {
+	return oof.alphaVariableField(oof.LineThree, 35, oof.parseFirstOption(options))
 }

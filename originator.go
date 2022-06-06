@@ -36,16 +36,46 @@ func NewOriginator() *Originator {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (o *Originator) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	o.tag = record[:6]
 	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
-	o.Personal.Identifier = o.parseStringField(record[7:41])
-	o.Personal.Name = o.parseStringField(record[41:76])
-	o.Personal.Address.AddressLineOne = o.parseStringField(record[76:111])
-	o.Personal.Address.AddressLineTwo = o.parseStringField(record[111:146])
-	o.Personal.Address.AddressLineThree = o.parseStringField(record[146:181])
+
+	var err error
+	length := 7
+	read := 0
+
+	if o.Personal.Identifier, read, err = o.parseVariableStringField(record[length:], 34); err != nil {
+		return fieldError("Identifier", err)
+	}
+	length += read
+
+	if o.Personal.Name, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if o.Personal.Address.AddressLineOne, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if o.Personal.Address.AddressLineTwo, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if o.Personal.Address.AddressLineThree, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +94,23 @@ func (o *Originator) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Originator
-func (o *Originator) String() string {
+func (o *Originator) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
-	buf.WriteString(o.IdentifierField())
-	buf.WriteString(o.NameField())
-	buf.WriteString(o.AddressLineOneField())
-	buf.WriteString(o.AddressLineTwoField())
-	buf.WriteString(o.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(o.IdentifierField(options...))
+	buf.WriteString(o.NameField(options...))
+	buf.WriteString(o.AddressLineOneField(options...))
+	buf.WriteString(o.AddressLineTwoField(options...))
+	buf.WriteString(o.AddressLineThreeField(options...))
+
+	if o.parseFirstOption(options) {
+		return o.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Originator and returns an error if not Validated
@@ -126,26 +162,26 @@ func (o *Originator) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (o *Originator) IdentifierField() string {
-	return o.alphaField(o.Personal.Identifier, 34)
+func (o *Originator) IdentifierField(options ...bool) string {
+	return o.alphaVariableField(o.Personal.Identifier, 34, o.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (o *Originator) NameField() string {
-	return o.alphaField(o.Personal.Name, 35)
+func (o *Originator) NameField(options ...bool) string {
+	return o.alphaVariableField(o.Personal.Name, 35, o.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (o *Originator) AddressLineOneField() string {
-	return o.alphaField(o.Personal.Address.AddressLineOne, 35)
+func (o *Originator) AddressLineOneField(options ...bool) string {
+	return o.alphaVariableField(o.Personal.Address.AddressLineOne, 35, o.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (o *Originator) AddressLineTwoField() string {
-	return o.alphaField(o.Personal.Address.AddressLineTwo, 35)
+func (o *Originator) AddressLineTwoField(options ...bool) string {
+	return o.alphaVariableField(o.Personal.Address.AddressLineTwo, 35, o.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (o *Originator) AddressLineThreeField() string {
-	return o.alphaField(o.Personal.Address.AddressLineThree, 35)
+func (o *Originator) AddressLineThreeField(options ...bool) string {
+	return o.alphaVariableField(o.Personal.Address.AddressLineThree, 35, o.parseFirstOption(options))
 }

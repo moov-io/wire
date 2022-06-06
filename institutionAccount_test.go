@@ -104,12 +104,12 @@ func TestParseInstitutionAccountWrongLength(t *testing.T) {
 
 	err := r.parseInstitutionAccount()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
 }
 
 // TestParseInstitutionAccountReaderParseError parses a wrong InstitutionAccount reader parse error
 func TestParseInstitutionAccountReaderParseError(t *testing.T) {
-	var line = "{7057}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	var line = "{7057}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -128,4 +128,51 @@ func TestInstitutionAccountTagError(t *testing.T) {
 	iAccount.tag = "{9999}"
 
 	require.EqualError(t, iAccount.Validate(), fieldError("tag", ErrValidTagForType, iAccount.tag).Error())
+}
+
+// TestStringInstitutionAccountVariableLength parses using variable length
+func TestStringInstitutionAccountVariableLength(t *testing.T) {
+	var line = "{7057}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstitutionAccount()
+	require.Nil(t, err)
+
+	line = "{7057}Swift                                                                                                                                                                               NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstitutionAccount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7057}*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstitutionAccount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7057}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstitutionAccount()
+	require.Equal(t, err, nil)
+}
+
+// TestStringInstitutionAccountOptions validates string() with options
+func TestStringInstitutionAccountOptions(t *testing.T) {
+	var line = "{7057}Swift*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstitutionAccount()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.InstitutionAccount.String()
+	require.Equal(t, str, "{7057}Swift                                                                                                                                                                               ")
+
+	str = r.currentFEDWireMessage.InstitutionAccount.String(true)
+	require.Equal(t, str, "{7057}Swift*")
 }

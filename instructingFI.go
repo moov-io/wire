@@ -36,16 +36,46 @@ func NewInstructingFI() *InstructingFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ifi *InstructingFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	ifi.tag = record[:6]
 	ifi.FinancialInstitution.IdentificationCode = ifi.parseStringField(record[6:7])
-	ifi.FinancialInstitution.Identifier = ifi.parseStringField(record[7:41])
-	ifi.FinancialInstitution.Name = ifi.parseStringField(record[41:76])
-	ifi.FinancialInstitution.Address.AddressLineOne = ifi.parseStringField(record[76:111])
-	ifi.FinancialInstitution.Address.AddressLineTwo = ifi.parseStringField(record[111:146])
-	ifi.FinancialInstitution.Address.AddressLineThree = ifi.parseStringField(record[146:181])
+
+	var err error
+	length := 7
+	read := 0
+
+	if ifi.FinancialInstitution.Identifier, read, err = ifi.parseVariableStringField(record[length:], 34); err != nil {
+		return fieldError("Identifier", err)
+	}
+	length += read
+
+	if ifi.FinancialInstitution.Name, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if ifi.FinancialInstitution.Address.AddressLineOne, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if ifi.FinancialInstitution.Address.AddressLineTwo, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if ifi.FinancialInstitution.Address.AddressLineThree, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +94,23 @@ func (ifi *InstructingFI) UnmarshalJSON(data []byte) error {
 }
 
 // String writes InstructingFI
-func (ifi *InstructingFI) String() string {
+func (ifi *InstructingFI) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(ifi.tag)
 	buf.WriteString(ifi.IdentificationCodeField())
-	buf.WriteString(ifi.IdentifierField())
-	buf.WriteString(ifi.NameField())
-	buf.WriteString(ifi.AddressLineOneField())
-	buf.WriteString(ifi.AddressLineTwoField())
-	buf.WriteString(ifi.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(ifi.IdentifierField(options...))
+	buf.WriteString(ifi.NameField(options...))
+	buf.WriteString(ifi.AddressLineOneField(options...))
+	buf.WriteString(ifi.AddressLineTwoField(options...))
+	buf.WriteString(ifi.AddressLineThreeField(options...))
+
+	if ifi.parseFirstOption(options) {
+		return ifi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on InstructingFI and returns an error if not Validated
@@ -133,26 +169,26 @@ func (ifi *InstructingFI) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (ifi *InstructingFI) IdentifierField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Identifier, 34)
+func (ifi *InstructingFI) IdentifierField(options ...bool) string {
+	return ifi.alphaVariableField(ifi.FinancialInstitution.Identifier, 34, ifi.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (ifi *InstructingFI) NameField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Name, 35)
+func (ifi *InstructingFI) NameField(options ...bool) string {
+	return ifi.alphaVariableField(ifi.FinancialInstitution.Name, 35, ifi.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (ifi *InstructingFI) AddressLineOneField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineOne, 35)
+func (ifi *InstructingFI) AddressLineOneField(options ...bool) string {
+	return ifi.alphaVariableField(ifi.FinancialInstitution.Address.AddressLineOne, 35, ifi.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (ifi *InstructingFI) AddressLineTwoField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineTwo, 35)
+func (ifi *InstructingFI) AddressLineTwoField(options ...bool) string {
+	return ifi.alphaVariableField(ifi.FinancialInstitution.Address.AddressLineTwo, 35, ifi.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (ifi *InstructingFI) AddressLineThreeField() string {
-	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35)
+func (ifi *InstructingFI) AddressLineThreeField(options ...bool) string {
+	return ifi.alphaVariableField(ifi.FinancialInstitution.Address.AddressLineThree, 35, ifi.parseFirstOption(options))
 }

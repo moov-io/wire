@@ -36,16 +36,50 @@ func NewOrderingInstitution() *OrderingInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (oi *OrderingInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	oi.tag = record[:6]
-	oi.CoverPayment.SwiftFieldTag = oi.parseStringField(record[6:11])
-	oi.CoverPayment.SwiftLineOne = oi.parseStringField(record[11:46])
-	oi.CoverPayment.SwiftLineTwo = oi.parseStringField(record[46:81])
-	oi.CoverPayment.SwiftLineThree = oi.parseStringField(record[81:116])
-	oi.CoverPayment.SwiftLineFour = oi.parseStringField(record[116:151])
-	oi.CoverPayment.SwiftLineFive = oi.parseStringField(record[151:186])
+
+	var err error
+	length := 6
+	read := 0
+
+	if oi.CoverPayment.SwiftFieldTag, read, err = oi.parseVariableStringField(record[length:], 5); err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	length += read
+
+	if oi.CoverPayment.SwiftLineOne, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	length += read
+
+	if oi.CoverPayment.SwiftLineTwo, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	length += read
+
+	if oi.CoverPayment.SwiftLineThree, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	length += read
+
+	if oi.CoverPayment.SwiftLineFour, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	length += read
+
+	if oi.CoverPayment.SwiftLineFive, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +98,23 @@ func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes OrderingInstitution
-func (oi *OrderingInstitution) String() string {
+func (oi *OrderingInstitution) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(186)
 	buf.WriteString(oi.tag)
-	buf.WriteString(oi.SwiftFieldTagField())
-	buf.WriteString(oi.SwiftLineOneField())
-	buf.WriteString(oi.SwiftLineTwoField())
-	buf.WriteString(oi.SwiftLineThreeField())
-	buf.WriteString(oi.SwiftLineFourField())
-	buf.WriteString(oi.SwiftLineFiveField())
-	return buf.String()
+
+	buf.WriteString(oi.SwiftFieldTagField(options...))
+	buf.WriteString(oi.SwiftLineOneField(options...))
+	buf.WriteString(oi.SwiftLineTwoField(options...))
+	buf.WriteString(oi.SwiftLineThreeField(options...))
+	buf.WriteString(oi.SwiftLineFourField(options...))
+	buf.WriteString(oi.SwiftLineFiveField(options...))
+
+	if oi.parseFirstOption(options) {
+		return oi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OrderingInstitution and returns an error if not Validated
@@ -117,31 +157,31 @@ func (oi *OrderingInstitution) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (oi *OrderingInstitution) SwiftFieldTagField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftFieldTag, 5)
+func (oi *OrderingInstitution) SwiftFieldTagField(options ...bool) string {
+	return oi.alphaVariableField(oi.CoverPayment.SwiftFieldTag, 5, oi.parseFirstOption(options))
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (oi *OrderingInstitution) SwiftLineOneField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineOne, 35)
+func (oi *OrderingInstitution) SwiftLineOneField(options ...bool) string {
+	return oi.alphaVariableField(oi.CoverPayment.SwiftLineOne, 35, oi.parseFirstOption(options))
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (oi *OrderingInstitution) SwiftLineTwoField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineTwo, 35)
+func (oi *OrderingInstitution) SwiftLineTwoField(options ...bool) string {
+	return oi.alphaVariableField(oi.CoverPayment.SwiftLineTwo, 35, oi.parseFirstOption(options))
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (oi *OrderingInstitution) SwiftLineThreeField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineThree, 35)
+func (oi *OrderingInstitution) SwiftLineThreeField(options ...bool) string {
+	return oi.alphaVariableField(oi.CoverPayment.SwiftLineThree, 35, oi.parseFirstOption(options))
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (oi *OrderingInstitution) SwiftLineFourField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineFour, 35)
+func (oi *OrderingInstitution) SwiftLineFourField(options ...bool) string {
+	return oi.alphaVariableField(oi.CoverPayment.SwiftLineFour, 35, oi.parseFirstOption(options))
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (oi *OrderingInstitution) SwiftLineFiveField() string {
-	return oi.alphaField(oi.CoverPayment.SwiftLineFive, 35)
+func (oi *OrderingInstitution) SwiftLineFiveField(options ...bool) string {
+	return oi.alphaVariableField(oi.CoverPayment.SwiftLineFive, 35, oi.parseFirstOption(options))
 }

@@ -104,12 +104,12 @@ func TestParseIntermediaryInstitutionWrongLength(t *testing.T) {
 
 	err := r.parseIntermediaryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
 }
 
 // TestParseIntermediaryInstitutionReaderParseError parses a wrong IntermediaryInstitution reader parse error
 func TestParseIntermediaryInstitutionReaderParseError(t *testing.T) {
-	var line = "{7056}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	var line = "{7056}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -128,4 +128,51 @@ func TestIntermediaryInstitutionTagError(t *testing.T) {
 	ii.tag = "{9999}"
 
 	require.EqualError(t, ii.Validate(), fieldError("tag", ErrValidTagForType, ii.tag).Error())
+}
+
+// TestStringIntermediaryInstitutionVariableLength parses using variable length
+func TestStringIntermediaryInstitutionVariableLength(t *testing.T) {
+	var line = "{7056}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseIntermediaryInstitution()
+	require.Nil(t, err)
+
+	line = "{7056}                                                                                                                                                                                    NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseIntermediaryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7056}***********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseIntermediaryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7056}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseIntermediaryInstitution()
+	require.Equal(t, err, nil)
+}
+
+// TestStringIntermediaryInstitutionOptions validates string() with options
+func TestStringIntermediaryInstitutionOptions(t *testing.T) {
+	var line = "{7056}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseIntermediaryInstitution()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.IntermediaryInstitution.String()
+	require.Equal(t, str, "{7056}                                                                                                                                                                                    ")
+
+	str = r.currentFEDWireMessage.IntermediaryInstitution.String(true)
+	require.Equal(t, str, "{7056}*")
 }

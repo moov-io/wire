@@ -61,7 +61,7 @@ func TestParseLocalInstrumentWrongLength(t *testing.T) {
 
 	err := r.parseLocalInstrument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(45, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ProprietaryCode", ErrValidLengthSize)).Error())
 }
 
 // TestParseLocalInstrumentReaderParseError parses a wrong LocalInstrumente reader parse error
@@ -85,4 +85,51 @@ func TestLocalInstrumentTagError(t *testing.T) {
 	li.tag = "{9999}"
 
 	require.EqualError(t, li.Validate(), fieldError("tag", ErrValidTagForType, li.tag).Error())
+}
+
+// TestStringLocalInstrumentVariableLength parses using variable length
+func TestStringLocalInstrumentVariableLength(t *testing.T) {
+	var line = "{3610}ANSI*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseLocalInstrument()
+	require.Nil(t, err)
+
+	line = "{3610}ANSI                                   NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseLocalInstrument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3610}***********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseLocalInstrument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3610}ANSI*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseLocalInstrument()
+	require.Equal(t, err, nil)
+}
+
+// TestStringLocalInstrumentOptions validates string() with options
+func TestStringLocalInstrumentOptions(t *testing.T) {
+	var line = "{3610}ANSI*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseLocalInstrument()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.LocalInstrument.String()
+	require.Equal(t, str, "{3610}ANSI                                   ")
+
+	str = r.currentFEDWireMessage.LocalInstrument.String(true)
+	require.Equal(t, str, "{3610}ANSI*")
 }

@@ -39,12 +39,30 @@ func NewInstructedAmount() *InstructedAmount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ia *InstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 24 {
-		return NewTagWrongLengthErr(24, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	ia.tag = record[:6]
-	ia.CurrencyCode = ia.parseStringField(record[6:9])
-	ia.Amount = ia.parseStringField(record[9:24])
+
+	var err error
+	length := 6
+	read := 0
+
+	if ia.CurrencyCode, read, err = ia.parseVariableStringField(record[length:], 3); err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	length += read
+
+	if ia.Amount, read, err = ia.parseVariableStringField(record[length:], 15); err != nil {
+		return fieldError("Amount", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,12 +81,14 @@ func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes InstructedAmount
-func (ia *InstructedAmount) String() string {
+func (ia *InstructedAmount) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(24)
+
 	buf.WriteString(ia.tag)
-	buf.WriteString(ia.CurrencyCodeField())
-	buf.WriteString(ia.AmountField())
+	buf.WriteString(ia.CurrencyCodeField(options...))
+	buf.WriteString(ia.AmountField(options...))
+
 	return buf.String()
 }
 
@@ -104,11 +124,11 @@ func (ia *InstructedAmount) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (ia *InstructedAmount) CurrencyCodeField() string {
-	return ia.alphaField(ia.CurrencyCode, 3)
+func (ia *InstructedAmount) CurrencyCodeField(options ...bool) string {
+	return ia.alphaVariableField(ia.CurrencyCode, 3, ia.parseFirstOption(options))
 }
 
 // AmountField gets a string of the Amount field
-func (ia *InstructedAmount) AmountField() string {
-	return ia.alphaField(ia.Amount, 15)
+func (ia *InstructedAmount) AmountField(options ...bool) string {
+	return ia.alphaVariableField(ia.Amount, 15, ia.parseFirstOption(options))
 }

@@ -62,7 +62,7 @@ func TestParseGrossAmountRemittanceWrongLength(t *testing.T) {
 
 	err := r.parseGrossAmountRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseGrossAmountRemittanceReaderParseError parses a wrong GrossAmountRemittance reader parse error
@@ -88,4 +88,51 @@ func TestGrossAmountRemittanceTagError(t *testing.T) {
 	gard.tag = "{9999}"
 
 	require.EqualError(t, gard.Validate(), fieldError("tag", ErrValidTagForType, gard.tag).Error())
+}
+
+// TestStringGrossAmountRemittanceDocumentVariableLength parses using variable length
+func TestStringGrossAmountRemittanceDocumentVariableLength(t *testing.T) {
+	var line = "{8500}USD1234.56*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseGrossAmountRemittanceDocument()
+	require.Nil(t, err)
+
+	line = "{8500}USD1234.56            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseGrossAmountRemittanceDocument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8500}USD1234.56**"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseGrossAmountRemittanceDocument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8500}USD1234.56*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseGrossAmountRemittanceDocument()
+	require.Equal(t, err, nil)
+}
+
+// TestStringGrossAmountRemittanceDocumentOptions validates string() with options
+func TestStringGrossAmountRemittanceDocumentOptions(t *testing.T) {
+	var line = "{8500}USD1234.56*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseGrossAmountRemittanceDocument()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.GrossAmountRemittanceDocument.String()
+	require.Equal(t, str, "{8500}USD1234.56            ")
+
+	str = r.currentFEDWireMessage.GrossAmountRemittanceDocument.String(true)
+	require.Equal(t, str, "{8500}USD1234.56*")
 }

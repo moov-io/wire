@@ -36,16 +36,50 @@ func NewInstitutionAccount() *InstitutionAccount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (iAccount *InstitutionAccount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	iAccount.tag = record[:6]
-	iAccount.CoverPayment.SwiftFieldTag = iAccount.parseStringField(record[6:11])
-	iAccount.CoverPayment.SwiftLineOne = iAccount.parseStringField(record[11:46])
-	iAccount.CoverPayment.SwiftLineTwo = iAccount.parseStringField(record[46:81])
-	iAccount.CoverPayment.SwiftLineThree = iAccount.parseStringField(record[81:116])
-	iAccount.CoverPayment.SwiftLineFour = iAccount.parseStringField(record[116:151])
-	iAccount.CoverPayment.SwiftLineFive = iAccount.parseStringField(record[151:186])
+
+	var err error
+	length := 6
+	read := 0
+
+	if iAccount.CoverPayment.SwiftFieldTag, read, err = iAccount.parseVariableStringField(record[length:], 5); err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	length += read
+
+	if iAccount.CoverPayment.SwiftLineOne, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	length += read
+
+	if iAccount.CoverPayment.SwiftLineTwo, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	length += read
+
+	if iAccount.CoverPayment.SwiftLineThree, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	length += read
+
+	if iAccount.CoverPayment.SwiftLineFour, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	length += read
+
+	if iAccount.CoverPayment.SwiftLineFive, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,17 +98,23 @@ func (iAccount *InstitutionAccount) UnmarshalJSON(data []byte) error {
 }
 
 // String writes InstitutionAccount
-func (iAccount *InstitutionAccount) String() string {
+func (iAccount *InstitutionAccount) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(iAccount.tag)
-	buf.WriteString(iAccount.SwiftFieldTagField())
-	buf.WriteString(iAccount.SwiftLineOneField())
-	buf.WriteString(iAccount.SwiftLineTwoField())
-	buf.WriteString(iAccount.SwiftLineThreeField())
-	buf.WriteString(iAccount.SwiftLineFourField())
-	buf.WriteString(iAccount.SwiftLineFiveField())
-	return buf.String()
+	buf.WriteString(iAccount.SwiftFieldTagField(options...))
+	buf.WriteString(iAccount.SwiftLineOneField(options...))
+	buf.WriteString(iAccount.SwiftLineTwoField(options...))
+	buf.WriteString(iAccount.SwiftLineThreeField(options...))
+	buf.WriteString(iAccount.SwiftLineFourField(options...))
+	buf.WriteString(iAccount.SwiftLineFiveField(options...))
+
+	if iAccount.parseFirstOption(options) {
+		return iAccount.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on InstitutionAccount and returns an error if not Validated
@@ -117,31 +157,31 @@ func (iAccount *InstitutionAccount) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (iAccount *InstitutionAccount) SwiftFieldTagField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftFieldTag, 5)
+func (iAccount *InstitutionAccount) SwiftFieldTagField(options ...bool) string {
+	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftFieldTag, 5, iAccount.parseFirstOption(options))
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (iAccount *InstitutionAccount) SwiftLineOneField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineOne, 35)
+func (iAccount *InstitutionAccount) SwiftLineOneField(options ...bool) string {
+	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineOne, 35, iAccount.parseFirstOption(options))
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (iAccount *InstitutionAccount) SwiftLineTwoField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineTwo, 35)
+func (iAccount *InstitutionAccount) SwiftLineTwoField(options ...bool) string {
+	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineTwo, 35, iAccount.parseFirstOption(options))
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (iAccount *InstitutionAccount) SwiftLineThreeField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineThree, 35)
+func (iAccount *InstitutionAccount) SwiftLineThreeField(options ...bool) string {
+	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineThree, 35, iAccount.parseFirstOption(options))
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (iAccount *InstitutionAccount) SwiftLineFourField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFour, 35)
+func (iAccount *InstitutionAccount) SwiftLineFourField(options ...bool) string {
+	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineFour, 35, iAccount.parseFirstOption(options))
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (iAccount *InstitutionAccount) SwiftLineFiveField() string {
-	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFive, 35)
+func (iAccount *InstitutionAccount) SwiftLineFiveField(options ...bool) string {
+	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineFive, 35, iAccount.parseFirstOption(options))
 }

@@ -1089,7 +1089,9 @@ func (r *Reader) parseServiceMessage() error {
 func (r *Reader) parseMessageDisposition() error {
 	r.tagName = "MessageDisposition"
 	md := new(MessageDisposition)
-	md.Parse(r.line)
+	if err := md.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := md.Validate(); err != nil {
 		return r.parseError(err)
 	}
