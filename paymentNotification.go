@@ -50,17 +50,55 @@ func NewPaymentNotification() *PaymentNotification {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pn *PaymentNotification) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 2335 {
-		return NewTagWrongLengthErr(2335, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	pn.tag = record[:6]
-	pn.PaymentNotificationIndicator = pn.parseStringField(record[6:7])
-	pn.ContactNotificationElectronicAddress = pn.parseStringField(record[7:2055])
-	pn.ContactName = pn.parseStringField(record[2055:2195])
-	pn.ContactPhoneNumber = pn.parseStringField(record[2195:2230])
-	pn.ContactMobileNumber = pn.parseStringField(record[2230:2265])
-	pn.ContactFaxNumber = pn.parseStringField(record[2265:2300])
-	pn.EndToEndIdentification = pn.parseStringField(record[2300:2335])
+
+	var err error
+	length := 6
+	read := 0
+
+	if pn.PaymentNotificationIndicator, read, err = pn.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("PaymentNotificationIndicator", err)
+	}
+	length += read
+
+	if pn.ContactNotificationElectronicAddress, read, err = pn.parseVariableStringField(record[length:], 2048); err != nil {
+		return fieldError("ContactNotificationElectronicAddress", err)
+	}
+	length += read
+
+	if pn.ContactName, read, err = pn.parseVariableStringField(record[length:], 140); err != nil {
+		return fieldError("ContactName", err)
+	}
+	length += read
+
+	if pn.ContactPhoneNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("ContactPhoneNumber", err)
+	}
+	length += read
+
+	if pn.ContactMobileNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("ContactMobileNumber", err)
+	}
+	length += read
+
+	if pn.ContactFaxNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("ContactFaxNumber", err)
+	}
+	length += read
+
+	if pn.EndToEndIdentification, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("EndToEndIdentification", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -79,18 +117,24 @@ func (pn *PaymentNotification) UnmarshalJSON(data []byte) error {
 }
 
 // String writes PaymentNotification
-func (pn *PaymentNotification) String() string {
+func (pn *PaymentNotification) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(2335)
+
 	buf.WriteString(pn.tag)
-	buf.WriteString(pn.PaymentNotificationIndicatorField())
-	buf.WriteString(pn.ContactNotificationElectronicAddressField())
-	buf.WriteString(pn.ContactNameField())
-	buf.WriteString(pn.ContactPhoneNumberField())
-	buf.WriteString(pn.ContactMobileNumberField())
-	buf.WriteString(pn.ContactFaxNumberField())
-	buf.WriteString(pn.EndToEndIdentificationField())
-	return buf.String()
+	buf.WriteString(pn.PaymentNotificationIndicatorField(options...))
+	buf.WriteString(pn.ContactNotificationElectronicAddressField(options...))
+	buf.WriteString(pn.ContactNameField(options...))
+	buf.WriteString(pn.ContactPhoneNumberField(options...))
+	buf.WriteString(pn.ContactMobileNumberField(options...))
+	buf.WriteString(pn.ContactFaxNumberField(options...))
+	buf.WriteString(pn.EndToEndIdentificationField(options...))
+
+	if pn.parseFirstOption(options) {
+		return pn.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on PaymentNotification and returns an error if not Validated
@@ -124,36 +168,36 @@ func (pn *PaymentNotification) Validate() error {
 }
 
 // PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
-func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
-	return pn.alphaField(pn.PaymentNotificationIndicator, 1)
+func (pn *PaymentNotification) PaymentNotificationIndicatorField(options ...bool) string {
+	return pn.alphaVariableField(pn.PaymentNotificationIndicator, 1, pn.parseFirstOption(options))
 }
 
 // ContactNotificationElectronicAddressField gets a string of ContactNotificationElectronicAddress field
-func (pn *PaymentNotification) ContactNotificationElectronicAddressField() string {
-	return pn.alphaField(pn.ContactNotificationElectronicAddress, 2048)
+func (pn *PaymentNotification) ContactNotificationElectronicAddressField(options ...bool) string {
+	return pn.alphaVariableField(pn.ContactNotificationElectronicAddress, 2048, pn.parseFirstOption(options))
 }
 
 // ContactNameField gets a string of ContactName field
-func (pn *PaymentNotification) ContactNameField() string {
-	return pn.alphaField(pn.ContactName, 140)
+func (pn *PaymentNotification) ContactNameField(options ...bool) string {
+	return pn.alphaVariableField(pn.ContactName, 140, pn.parseFirstOption(options))
 }
 
 // ContactPhoneNumberField gets a string of ContactPhoneNumberField field
-func (pn *PaymentNotification) ContactPhoneNumberField() string {
-	return pn.alphaField(pn.ContactPhoneNumber, 35)
+func (pn *PaymentNotification) ContactPhoneNumberField(options ...bool) string {
+	return pn.alphaVariableField(pn.ContactPhoneNumber, 35, pn.parseFirstOption(options))
 }
 
 // ContactMobileNumberField gets a string of ContactMobileNumber field
-func (pn *PaymentNotification) ContactMobileNumberField() string {
-	return pn.alphaField(pn.ContactMobileNumber, 35)
+func (pn *PaymentNotification) ContactMobileNumberField(options ...bool) string {
+	return pn.alphaVariableField(pn.ContactMobileNumber, 35, pn.parseFirstOption(options))
 }
 
 // ContactFaxNumberField gets a string of FaxNumber field
-func (pn *PaymentNotification) ContactFaxNumberField() string {
-	return pn.alphaField(pn.ContactFaxNumber, 35)
+func (pn *PaymentNotification) ContactFaxNumberField(options ...bool) string {
+	return pn.alphaVariableField(pn.ContactFaxNumber, 35, pn.parseFirstOption(options))
 }
 
 // EndToEndIdentificationField gets a string of EndToEndIdentification field
-func (pn *PaymentNotification) EndToEndIdentificationField() string {
-	return pn.alphaField(pn.EndToEndIdentification, 35)
+func (pn *PaymentNotification) EndToEndIdentificationField(options ...bool) string {
+	return pn.alphaVariableField(pn.EndToEndIdentification, 35, pn.parseFirstOption(options))
 }

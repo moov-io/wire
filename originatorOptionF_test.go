@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"fmt"
 	"strings"
 	"testing"
 
@@ -213,7 +212,6 @@ func TestStringOriginatorOptionFOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorOptionF()
-	fmt.Println(err)
 	require.Equal(t, err, nil)
 
 	str := r.currentFEDWireMessage.OriginatorOptionF.String()

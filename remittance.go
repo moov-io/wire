@@ -36,15 +36,45 @@ func NewRemittance() *Remittance {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ri *Remittance) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 151 {
-		return NewTagWrongLengthErr(151, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	ri.tag = record[:6]
-	ri.CoverPayment.SwiftFieldTag = ri.parseStringField(record[6:11])
-	ri.CoverPayment.SwiftLineOne = ri.parseStringField(record[11:46])
-	ri.CoverPayment.SwiftLineTwo = ri.parseStringField(record[46:81])
-	ri.CoverPayment.SwiftLineThree = ri.parseStringField(record[81:116])
-	ri.CoverPayment.SwiftLineFour = ri.parseStringField(record[116:151])
+
+	var err error
+	length := 6
+	read := 0
+
+	if ri.CoverPayment.SwiftFieldTag, read, err = ri.parseVariableStringField(record[length:], 5); err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	length += read
+
+	if ri.CoverPayment.SwiftLineOne, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	length += read
+
+	if ri.CoverPayment.SwiftLineTwo, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	length += read
+
+	if ri.CoverPayment.SwiftLineThree, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	length += read
+
+	if ri.CoverPayment.SwiftLineFour, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,16 +93,22 @@ func (ri *Remittance) UnmarshalJSON(data []byte) error {
 }
 
 // String writes Remittance
-func (ri *Remittance) String() string {
+func (ri *Remittance) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(151)
+
 	buf.WriteString(ri.tag)
-	buf.WriteString(ri.SwiftFieldTagField())
-	buf.WriteString(ri.SwiftLineOneField())
-	buf.WriteString(ri.SwiftLineTwoField())
-	buf.WriteString(ri.SwiftLineThreeField())
-	buf.WriteString(ri.SwiftLineFourField())
-	return buf.String()
+	buf.WriteString(ri.SwiftFieldTagField(options...))
+	buf.WriteString(ri.SwiftLineOneField(options...))
+	buf.WriteString(ri.SwiftLineTwoField(options...))
+	buf.WriteString(ri.SwiftLineThreeField(options...))
+	buf.WriteString(ri.SwiftLineFourField(options...))
+
+	if ri.parseFirstOption(options) {
+		return ri.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Remittance and returns an error if not Validated
@@ -115,26 +151,26 @@ func (ri *Remittance) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (ri *Remittance) SwiftFieldTagField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftFieldTag, 5)
+func (ri *Remittance) SwiftFieldTagField(options ...bool) string {
+	return ri.alphaVariableField(ri.CoverPayment.SwiftFieldTag, 5, ri.parseFirstOption(options))
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (ri *Remittance) SwiftLineOneField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineOne, 35)
+func (ri *Remittance) SwiftLineOneField(options ...bool) string {
+	return ri.alphaVariableField(ri.CoverPayment.SwiftLineOne, 35, ri.parseFirstOption(options))
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (ri *Remittance) SwiftLineTwoField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineTwo, 35)
+func (ri *Remittance) SwiftLineTwoField(options ...bool) string {
+	return ri.alphaVariableField(ri.CoverPayment.SwiftLineTwo, 35, ri.parseFirstOption(options))
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (ri *Remittance) SwiftLineThreeField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineThree, 35)
+func (ri *Remittance) SwiftLineThreeField(options ...bool) string {
+	return ri.alphaVariableField(ri.CoverPayment.SwiftLineThree, 35, ri.parseFirstOption(options))
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (ri *Remittance) SwiftLineFourField() string {
-	return ri.alphaField(ri.CoverPayment.SwiftLineFour, 35)
+func (ri *Remittance) SwiftLineFourField(options ...bool) string {
+	return ri.alphaVariableField(ri.CoverPayment.SwiftLineFour, 35, ri.parseFirstOption(options))
 }

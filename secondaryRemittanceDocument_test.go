@@ -105,7 +105,7 @@ func TestParseSecondaryRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parseSecondaryRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(115, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLengthSize)).Error())
 }
 
 // TestParseSecondaryRemittanceDocumentReaderParseError parses a wrong SecondaryRemittanceDocument reader parse error
@@ -129,4 +129,51 @@ func TestSecondaryRemittanceDocumentTagError(t *testing.T) {
 	srd.tag = "{9999}"
 
 	require.EqualError(t, srd.Validate(), fieldError("tag", ErrValidTagForType, srd.tag).Error())
+}
+
+// TestStringSecondaryRemittanceDocumentVariableLength parses using variable length
+func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
+	var line = "{8700}AROI*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSecondaryRemittanceDocument()
+	require.Nil(t, err)
+
+	line = "{8700}AROI                                   A                                                                     NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSecondaryRemittanceDocument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8700}AROI*A******************************"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSecondaryRemittanceDocument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8700}AROI*A*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSecondaryRemittanceDocument()
+	require.Equal(t, err, nil)
+}
+
+// TestStringSecondaryRemittanceDocumentOptions validates string() with options
+func TestStringSecondaryRemittanceDocumentOptions(t *testing.T) {
+	var line = "{8700}AROI*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSecondaryRemittanceDocument()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.SecondaryRemittanceDocument.String()
+	require.Equal(t, str, "{8700}AROI                                   A                                                                     ")
+
+	str = r.currentFEDWireMessage.SecondaryRemittanceDocument.String(true)
+	require.Equal(t, str, "{8700}AROI*A*")
 }

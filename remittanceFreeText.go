@@ -40,13 +40,35 @@ func NewRemittanceFreeText() *RemittanceFreeText {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rft *RemittanceFreeText) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 426 {
-		return NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	rft.tag = record[:6]
-	rft.LineOne = rft.parseStringField(record[6:146])
-	rft.LineTwo = rft.parseStringField(record[146:286])
-	rft.LineThree = rft.parseStringField(record[286:426])
+
+	var err error
+	length := 6
+	read := 0
+
+	if rft.LineOne, read, err = rft.parseVariableStringField(record[length:], 140); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if rft.LineTwo, read, err = rft.parseVariableStringField(record[length:], 140); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if rft.LineThree, read, err = rft.parseVariableStringField(record[length:], 140); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -65,14 +87,20 @@ func (rft *RemittanceFreeText) UnmarshalJSON(data []byte) error {
 }
 
 // String writes RemittanceFreeText
-func (rft *RemittanceFreeText) String() string {
+func (rft *RemittanceFreeText) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(426)
+
 	buf.WriteString(rft.tag)
-	buf.WriteString(rft.LineOneField())
-	buf.WriteString(rft.LineTwoField())
-	buf.WriteString(rft.LineThreeField())
-	return buf.String()
+	buf.WriteString(rft.LineOneField(options...))
+	buf.WriteString(rft.LineTwoField(options...))
+	buf.WriteString(rft.LineThreeField(options...))
+
+	if rft.parseFirstOption(options) {
+		return rft.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on RemittanceFreeText and returns an error if not Validated
@@ -94,16 +122,16 @@ func (rft *RemittanceFreeText) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (rft *RemittanceFreeText) LineOneField() string {
-	return rft.alphaField(rft.LineOne, 140)
+func (rft *RemittanceFreeText) LineOneField(options ...bool) string {
+	return rft.alphaVariableField(rft.LineOne, 140, rft.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (rft *RemittanceFreeText) LineTwoField() string {
-	return rft.alphaField(rft.LineTwo, 140)
+func (rft *RemittanceFreeText) LineTwoField(options ...bool) string {
+	return rft.alphaVariableField(rft.LineTwo, 140, rft.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (rft *RemittanceFreeText) LineThreeField() string {
-	return rft.alphaField(rft.LineThree, 140)
+func (rft *RemittanceFreeText) LineThreeField(options ...bool) string {
+	return rft.alphaVariableField(rft.LineThree, 140, rft.parseFirstOption(options))
 }

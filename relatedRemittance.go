@@ -42,30 +42,120 @@ func NewRelatedRemittance() *RelatedRemittance {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rr *RelatedRemittance) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 3041 {
-		return NewTagWrongLengthErr(3041, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 18 {
+		return NewTagMinLengthErr(18, len(record))
 	}
+
 	rr.tag = record[:6]
-	rr.RemittanceIdentification = rr.parseStringField(record[6:41])
-	rr.RemittanceLocationMethod = rr.parseStringField(record[41:45])
-	rr.RemittanceLocationElectronicAddress = rr.parseStringField(record[45:2093])
-	rr.RemittanceData.Name = rr.parseStringField(record[2093:2233])
-	rr.RemittanceData.AddressType = rr.parseStringField(record[2233:2237])
-	rr.RemittanceData.Department = rr.parseStringField(record[2237:2307])
-	rr.RemittanceData.SubDepartment = rr.parseStringField(record[2307:2377])
-	rr.RemittanceData.StreetName = rr.parseStringField(record[2377:2447])
-	rr.RemittanceData.BuildingNumber = rr.parseStringField(record[2447:2463])
-	rr.RemittanceData.PostCode = rr.parseStringField(record[2463:2479])
-	rr.RemittanceData.TownName = rr.parseStringField(record[2479:2514])
-	rr.RemittanceData.CountrySubDivisionState = rr.parseStringField(record[2514:2549])
-	rr.RemittanceData.Country = rr.parseStringField(record[2549:2551])
-	rr.RemittanceData.AddressLineOne = rr.parseStringField(record[2551:2621])
-	rr.RemittanceData.AddressLineTwo = rr.parseStringField(record[2621:2691])
-	rr.RemittanceData.AddressLineThree = rr.parseStringField(record[2691:2761])
-	rr.RemittanceData.AddressLineFour = rr.parseStringField(record[2761:2831])
-	rr.RemittanceData.AddressLineFive = rr.parseStringField(record[2831:2901])
-	rr.RemittanceData.AddressLineSix = rr.parseStringField(record[2901:2971])
-	rr.RemittanceData.AddressLineSeven = rr.parseStringField(record[2971:3041])
+
+	var err error
+	length := 6
+	read := 0
+
+	if rr.RemittanceIdentification, read, err = rr.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("RemittanceIdentification", err)
+	}
+	length += read
+
+	if rr.RemittanceLocationMethod, read, err = rr.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("RemittanceLocationMethod", err)
+	}
+	length += read
+
+	if rr.RemittanceLocationElectronicAddress, read, err = rr.parseVariableStringField(record[length:], 2048); err != nil {
+		return fieldError("RemittanceLocationElectronicAddress", err)
+	}
+	length += read
+
+	if rr.RemittanceData.Name, read, err = rr.parseVariableStringField(record[length:], 140); err != nil {
+		return fieldError("Name", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressType, read, err = rr.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("AddressType", err)
+	}
+	length += read
+
+	if rr.RemittanceData.Department, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("Department", err)
+	}
+	length += read
+
+	if rr.RemittanceData.SubDepartment, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("SubDepartment", err)
+	}
+	length += read
+
+	if rr.RemittanceData.StreetName, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("StreetName", err)
+	}
+	length += read
+
+		if rr.RemittanceData.BuildingNumber, read, err = rr.parseVariableStringField(record[length:], 16); err != nil {
+		return fieldError("BuildingNumber", err)
+	}
+	length += read
+
+	if rr.RemittanceData.PostCode, read, err = rr.parseVariableStringField(record[length:], 16); err != nil {
+		return fieldError("PostCode", err)
+	}
+	length += read
+
+	if rr.RemittanceData.TownName, read, err = rr.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("TownName", err)
+	}
+	length += read
+
+	if rr.RemittanceData.CountrySubDivisionState, read, err = rr.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("CountrySubDivisionState", err)
+	}
+	length += read
+
+	if rr.RemittanceData.Country, read, err = rr.parseVariableStringField(record[length:], 2); err != nil {
+		return fieldError("Country", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineOne, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineTwo, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineThree, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineFour, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineFour", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineFive, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineFive", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineSix, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineSix", err)
+	}
+	length += read
+
+	if rr.RemittanceData.AddressLineSeven, read, err = rr.parseVariableStringField(record[length:], 70); err != nil {
+		return fieldError("AddressLineSeven", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -84,31 +174,37 @@ func (rr *RelatedRemittance) UnmarshalJSON(data []byte) error {
 }
 
 // String writes RelatedRemittance
-func (rr *RelatedRemittance) String() string {
+func (rr *RelatedRemittance) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(3041)
+
 	buf.WriteString(rr.tag)
-	buf.WriteString(rr.RemittanceIdentificationField())
-	buf.WriteString(rr.RemittanceLocationMethodField())
-	buf.WriteString(rr.RemittanceLocationElectronicAddressField())
-	buf.WriteString(rr.NameField())
-	buf.WriteString(rr.AddressTypeField())
-	buf.WriteString(rr.DepartmentField())
-	buf.WriteString(rr.SubDepartmentField())
-	buf.WriteString(rr.StreetNameField())
-	buf.WriteString(rr.BuildingNumberField())
-	buf.WriteString(rr.PostCodeField())
-	buf.WriteString(rr.TownNameField())
-	buf.WriteString(rr.CountrySubDivisionStateField())
-	buf.WriteString(rr.CountryField())
-	buf.WriteString(rr.AddressLineOneField())
-	buf.WriteString(rr.AddressLineTwoField())
-	buf.WriteString(rr.AddressLineThreeField())
-	buf.WriteString(rr.AddressLineFourField())
-	buf.WriteString(rr.AddressLineFiveField())
-	buf.WriteString(rr.AddressLineSixField())
-	buf.WriteString(rr.AddressLineSevenField())
-	return buf.String()
+	buf.WriteString(rr.RemittanceIdentificationField(options...))
+	buf.WriteString(rr.RemittanceLocationMethodField(options...))
+	buf.WriteString(rr.RemittanceLocationElectronicAddressField(options...))
+	buf.WriteString(rr.NameField(options...))
+	buf.WriteString(rr.AddressTypeField(options...))
+	buf.WriteString(rr.DepartmentField(options...))
+	buf.WriteString(rr.SubDepartmentField(options...))
+	buf.WriteString(rr.StreetNameField(options...))
+	buf.WriteString(rr.BuildingNumberField(options...))
+	buf.WriteString(rr.PostCodeField(options...))
+	buf.WriteString(rr.TownNameField(options...))
+	buf.WriteString(rr.CountrySubDivisionStateField(options...))
+	buf.WriteString(rr.CountryField(options...))
+	buf.WriteString(rr.AddressLineOneField(options...))
+	buf.WriteString(rr.AddressLineTwoField(options...))
+	buf.WriteString(rr.AddressLineThreeField(options...))
+	buf.WriteString(rr.AddressLineFourField(options...))
+	buf.WriteString(rr.AddressLineFiveField(options...))
+	buf.WriteString(rr.AddressLineSixField(options...))
+	buf.WriteString(rr.AddressLineSevenField(options...))
+
+	if rr.parseFirstOption(options) {
+		return rr.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on RelatedRemittance and returns an error if not Validated
@@ -196,101 +292,101 @@ func (rr *RelatedRemittance) fieldInclusion() error {
 }
 
 // RemittanceIdentificationField gets a string of the RemittanceIdentification field
-func (rr *RelatedRemittance) RemittanceIdentificationField() string {
-	return rr.alphaField(rr.RemittanceIdentification, 35)
+func (rr *RelatedRemittance) RemittanceIdentificationField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceIdentification, 35, rr.parseFirstOption(options))
 }
 
 // RemittanceLocationMethodField gets a string of the RemittanceLocationMethod field
-func (rr *RelatedRemittance) RemittanceLocationMethodField() string {
-	return rr.alphaField(rr.RemittanceLocationMethod, 4)
+func (rr *RelatedRemittance) RemittanceLocationMethodField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceLocationMethod, 4, rr.parseFirstOption(options))
 }
 
 // RemittanceLocationElectronicAddressField gets a string of the RemittanceLocationElectronicAddress field
-func (rr *RelatedRemittance) RemittanceLocationElectronicAddressField() string {
-	return rr.alphaField(rr.RemittanceLocationElectronicAddress, 2048)
+func (rr *RelatedRemittance) RemittanceLocationElectronicAddressField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceLocationElectronicAddress, 2048, rr.parseFirstOption(options))
 }
 
 // NameField gets a string of the Name field
-func (rr *RelatedRemittance) NameField() string {
-	return rr.alphaField(rr.RemittanceData.Name, 140)
+func (rr *RelatedRemittance) NameField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.Name, 140, rr.parseFirstOption(options))
 }
 
 // AddressTypeField gets a string of the AddressType field
-func (rr *RelatedRemittance) AddressTypeField() string {
-	return rr.alphaField(rr.RemittanceData.AddressType, 4)
+func (rr *RelatedRemittance) AddressTypeField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressType, 4, rr.parseFirstOption(options))
 }
 
 // DepartmentField gets a string of the Department field
-func (rr *RelatedRemittance) DepartmentField() string {
-	return rr.alphaField(rr.RemittanceData.Department, 70)
+func (rr *RelatedRemittance) DepartmentField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.Department, 70, rr.parseFirstOption(options))
 }
 
 // SubDepartmentField gets a string of the SubDepartment field
-func (rr *RelatedRemittance) SubDepartmentField() string {
-	return rr.alphaField(rr.RemittanceData.SubDepartment, 70)
+func (rr *RelatedRemittance) SubDepartmentField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.SubDepartment, 70, rr.parseFirstOption(options))
 }
 
 // StreetNameField gets a string of the StreetName field
-func (rr *RelatedRemittance) StreetNameField() string {
-	return rr.alphaField(rr.RemittanceData.StreetName, 70)
+func (rr *RelatedRemittance) StreetNameField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.StreetName, 70, rr.parseFirstOption(options))
 }
 
 // BuildingNumberField gets a string of the BuildingNumber field
-func (rr *RelatedRemittance) BuildingNumberField() string {
-	return rr.alphaField(rr.RemittanceData.BuildingNumber, 16)
+func (rr *RelatedRemittance) BuildingNumberField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.BuildingNumber, 16, rr.parseFirstOption(options))
 }
 
 // PostCodeField gets a string of the PostCode field
-func (rr *RelatedRemittance) PostCodeField() string {
-	return rr.alphaField(rr.RemittanceData.PostCode, 16)
+func (rr *RelatedRemittance) PostCodeField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.PostCode, 16, rr.parseFirstOption(options))
 }
 
 // TownNameField gets a string of the TownName field
-func (rr *RelatedRemittance) TownNameField() string {
-	return rr.alphaField(rr.RemittanceData.TownName, 35)
+func (rr *RelatedRemittance) TownNameField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.TownName, 35, rr.parseFirstOption(options))
 }
 
 // CountrySubDivisionStateField gets a string of the CountrySubDivisionState field
-func (rr *RelatedRemittance) CountrySubDivisionStateField() string {
-	return rr.alphaField(rr.RemittanceData.CountrySubDivisionState, 35)
+func (rr *RelatedRemittance) CountrySubDivisionStateField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.CountrySubDivisionState, 35, rr.parseFirstOption(options))
 }
 
 // CountryField gets a string of the Country field
-func (rr *RelatedRemittance) CountryField() string {
-	return rr.alphaField(rr.RemittanceData.Country, 2)
+func (rr *RelatedRemittance) CountryField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.Country, 2, rr.parseFirstOption(options))
 }
 
 // AddressLineOneField gets a string of the AddressLineOne field
-func (rr *RelatedRemittance) AddressLineOneField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineOne, 70)
+func (rr *RelatedRemittance) AddressLineOneField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineOne, 70, rr.parseFirstOption(options))
 }
 
 // AddressLineTwoField gets a string of the AddressLineTwo field
-func (rr *RelatedRemittance) AddressLineTwoField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineTwo, 70)
+func (rr *RelatedRemittance) AddressLineTwoField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineTwo, 70, rr.parseFirstOption(options))
 }
 
 // AddressLineThreeField gets a string of the AddressLineThree field
-func (rr *RelatedRemittance) AddressLineThreeField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineThree, 70)
+func (rr *RelatedRemittance) AddressLineThreeField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineThree, 70, rr.parseFirstOption(options))
 }
 
 // AddressLineFourField gets a string of the AddressLineFour field
-func (rr *RelatedRemittance) AddressLineFourField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineFour, 70)
+func (rr *RelatedRemittance) AddressLineFourField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineFour, 70, rr.parseFirstOption(options))
 }
 
 // AddressLineFiveField gets a string of the AddressLineFive field
-func (rr *RelatedRemittance) AddressLineFiveField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineFive, 70)
+func (rr *RelatedRemittance) AddressLineFiveField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineFive, 70, rr.parseFirstOption(options))
 }
 
 // AddressLineSixField gets a string of the AddressLineSix field
-func (rr *RelatedRemittance) AddressLineSixField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineSix, 70)
+func (rr *RelatedRemittance) AddressLineSixField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineSix, 70, rr.parseFirstOption(options))
 }
 
 // AddressLineSevenField gets a string of the AddressLineSeven field
-func (rr *RelatedRemittance) AddressLineSevenField() string {
-	return rr.alphaField(rr.RemittanceData.AddressLineSeven, 70)
+func (rr *RelatedRemittance) AddressLineSevenField(options ...bool) string {
+	return rr.alphaVariableField(rr.RemittanceData.AddressLineSeven, 70, rr.parseFirstOption(options))
 }

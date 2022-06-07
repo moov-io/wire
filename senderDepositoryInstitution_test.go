@@ -73,7 +73,7 @@ func TestParseSenderWrongLength(t *testing.T) {
 
 	err := r.parseSenderDepositoryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(33, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SenderABANumber", ErrValidLengthSize)).Error())
 }
 
 // TestParseSenderReaderParseError parses a wrong Sender reader parse error
@@ -97,4 +97,51 @@ func TestSenderDepositoryInstitutionTagError(t *testing.T) {
 	sdi.tag = "{9999}"
 
 	require.EqualError(t, sdi.Validate(), fieldError("tag", ErrValidTagForType, sdi.tag).Error())
+}
+
+// TestStringSenderDepositoryInstitutionVariableLength parses using variable length
+func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
+	var line = "{3100}1*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderDepositoryInstitution()
+	require.Nil(t, err)
+
+	line = "{3100}1        A                 NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3100}1*A**"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3100}1*A*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.Equal(t, err, nil)
+}
+
+// TestStringSenderDepositoryInstitutionOptions validates string() with options
+func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
+	var line = "{3100}1*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.SenderDepositoryInstitution.String()
+	require.Equal(t, str, "{3100}1        A                 ")
+
+	str = r.currentFEDWireMessage.SenderDepositoryInstitution.String(true)
+	require.Equal(t, str, "{3100}1*A*")
 }

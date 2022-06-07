@@ -39,8 +39,8 @@ func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (cia *CurrencyInstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) < 6 {
-		return NewTagMinLengthErr(6, len(record))
+	if utf8.RuneCountInString(record) < 25 {
+		return NewTagMinLengthErr(25, len(record))
 	}
 
 	cia.tag = record[:6]
@@ -50,14 +50,16 @@ func (cia *CurrencyInstructedAmount) Parse(record string) error {
 	read := 0
 
 	if cia.SwiftFieldTag, read, err = cia.parseVariableStringField(record[length:], 5); err != nil {
-		return fieldError("SendersChargesOne", err)
+		return fieldError("SwiftFieldTag", err)
 	}
 	length += read
 
-	if cia.Amount, read, err = cia.parseVariableStringField(record[length:], 18); err != nil {
-		return fieldError("SendersChargesOne", err)
+	if len(record) < length+18 {
+		return fieldError("Amount", ErrValidLengthSize)
 	}
-	length += read
+
+	cia.Amount = cia.parseStringField(record[length:length+18])
+	length += 18
 
 	if len(record) != length {
 		return NewTagMaxLengthErr()
@@ -87,13 +89,9 @@ func (cia *CurrencyInstructedAmount) String(options ...bool) string {
 
 	buf.WriteString(cia.tag)
 	buf.WriteString(cia.SwiftFieldTagField(options...))
-	buf.WriteString(cia.AmountField(options...))
+	buf.WriteString(cia.AmountField())
 
-	if cia.parseFirstOption(options) {
-		return cia.stripDelimiters(buf.String())
-	} else {
-		return buf.String()
-	}
+	return buf.String()
 }
 
 // Validate performs WIRE format rule checks on CurrencyInstructedAmount and returns an error if not Validated
@@ -119,6 +117,6 @@ func (cia *CurrencyInstructedAmount) SwiftFieldTagField(options ...bool) string 
 // ToDo: The spec isn't clear if this is padded with zeros or not, so for now it is
 
 // AmountField gets a string of the AmountTag field
-func (cia *CurrencyInstructedAmount) AmountField(options ...bool) string {
-	return cia.alphaVariableField(cia.Amount, 18, cia.parseFirstOption(options))
+func (cia *CurrencyInstructedAmount) AmountField() string {
+	return cia.numericStringField(cia.Amount, 18)
 }

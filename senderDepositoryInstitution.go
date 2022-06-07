@@ -38,13 +38,30 @@ func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sdi *SenderDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
 
 	sdi.tag = record[:6]
-	sdi.SenderABANumber = sdi.parseStringField(record[6:15])
-	sdi.SenderShortName = sdi.parseStringField(record[15:33])
+
+	var err error
+	length := 6
+	read := 0
+
+	if sdi.SenderABANumber, read, err = sdi.parseVariableStringField(record[length:], 9); err != nil {
+		return fieldError("SenderABANumber", err)
+	}
+	length += read
+
+	if sdi.SenderShortName, read, err = sdi.parseVariableStringField(record[length:], 18); err != nil {
+		return fieldError("SenderShortName", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,12 +80,14 @@ func (sdi *SenderDepositoryInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderDepositoryInstitution
-func (sdi *SenderDepositoryInstitution) String() string {
+func (sdi *SenderDepositoryInstitution) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(39)
+
 	buf.WriteString(sdi.tag)
-	buf.WriteString(sdi.SenderABANumberField())
-	buf.WriteString(sdi.SenderShortNameField())
+	buf.WriteString(sdi.SenderABANumberField(options...))
+	buf.WriteString(sdi.SenderShortNameField(options...))
+
 	return buf.String()
 }
 
@@ -103,11 +122,11 @@ func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
 }
 
 // SenderABANumberField gets a string of the SenderABANumber field
-func (sdi *SenderDepositoryInstitution) SenderABANumberField() string {
-	return sdi.alphaField(sdi.SenderABANumber, 9)
+func (sdi *SenderDepositoryInstitution) SenderABANumberField(options ...bool) string {
+	return sdi.alphaVariableField(sdi.SenderABANumber, 9, sdi.parseFirstOption(options))
 }
 
 // SenderShortNameField gets a string of the SenderShortName field
-func (sdi *SenderDepositoryInstitution) SenderShortNameField() string {
-	return sdi.alphaField(sdi.SenderShortName, 18)
+func (sdi *SenderDepositoryInstitution) SenderShortNameField(options ...bool) string {
+	return sdi.alphaVariableField(sdi.SenderShortName, 18, sdi.parseFirstOption(options))
 }

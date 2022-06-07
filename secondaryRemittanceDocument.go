@@ -42,14 +42,40 @@ func NewSecondaryRemittanceDocument() *SecondaryRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (srd *SecondaryRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 115 {
-		return NewTagWrongLengthErr(115, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagMinLengthErr(13, len(record))
 	}
+
 	srd.tag = record[:6]
-	srd.DocumentTypeCode = srd.parseStringField(record[6:10])
-	srd.ProprietaryDocumentTypeCode = srd.parseStringField(record[10:45])
-	srd.DocumentIdentificationNumber = srd.parseStringField(record[45:80])
-	srd.Issuer = srd.parseStringField(record[80:115])
+
+	var err error
+	length := 6
+	read := 0
+
+	if srd.DocumentTypeCode, read, err = srd.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("DocumentTypeCode", err)
+	}
+	length += read
+
+	if srd.ProprietaryDocumentTypeCode, read, err = srd.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("ProprietaryDocumentTypeCode", err)
+	}
+	length += read
+
+	if srd.DocumentIdentificationNumber, read, err = srd.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("DocumentIdentificationNumber", err)
+	}
+	length += read
+
+	if srd.Issuer, read, err = srd.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("Issuer", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -68,15 +94,21 @@ func (srd *SecondaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SecondaryRemittanceDocument
-func (srd *SecondaryRemittanceDocument) String() string {
+func (srd *SecondaryRemittanceDocument) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(115)
+
 	buf.WriteString(srd.tag)
-	buf.WriteString(srd.DocumentTypeCodeField())
-	buf.WriteString(srd.ProprietaryDocumentTypeCodeField())
-	buf.WriteString(srd.DocumentIdentificationNumberField())
-	buf.WriteString(srd.IssuerField())
-	return buf.String()
+	buf.WriteString(srd.DocumentTypeCodeField(options...))
+	buf.WriteString(srd.ProprietaryDocumentTypeCodeField(options...))
+	buf.WriteString(srd.DocumentIdentificationNumberField(options...))
+	buf.WriteString(srd.IssuerField(options...))
+
+	if srd.parseFirstOption(options) {
+		return srd.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on SecondaryRemittanceDocument and returns an error if not Validated
@@ -125,21 +157,21 @@ func (srd *SecondaryRemittanceDocument) fieldInclusion() error {
 }
 
 // DocumentTypeCodeField gets a string of the DocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField() string {
-	return srd.alphaField(srd.DocumentTypeCode, 4)
+func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField(options ...bool) string {
+	return srd.alphaVariableField(srd.DocumentTypeCode, 4, srd.parseFirstOption(options))
 }
 
 // ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
-	return srd.alphaField(srd.ProprietaryDocumentTypeCode, 35)
+func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField(options ...bool) string {
+	return srd.alphaVariableField(srd.ProprietaryDocumentTypeCode, 35, srd.parseFirstOption(options))
 }
 
 // DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
-func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField() string {
-	return srd.alphaField(srd.DocumentIdentificationNumber, 35)
+func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField(options ...bool) string {
+	return srd.alphaVariableField(srd.DocumentIdentificationNumber, 35, srd.parseFirstOption(options))
 }
 
 // IssuerField gets a string of the Issuer field
-func (srd *SecondaryRemittanceDocument) IssuerField() string {
-	return srd.alphaField(srd.Issuer, 35)
+func (srd *SecondaryRemittanceDocument) IssuerField(options ...bool) string {
+	return srd.alphaVariableField(srd.Issuer, 35, srd.parseFirstOption(options))
 }

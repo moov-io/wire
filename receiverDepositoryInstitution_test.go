@@ -70,7 +70,7 @@ func TestParseReceiverWrongLength(t *testing.T) {
 
 	err := r.parseReceiverDepositoryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(33, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(10, len(r.line))).Error())
 }
 
 // TestParseReceiverReaderParseError parses a wrong Receiver reader parse error
@@ -94,4 +94,51 @@ func TestReceiverDepositoryInstitutionTagError(t *testing.T) {
 	rdi.tag = "{9999}"
 
 	require.EqualError(t, rdi.Validate(), fieldError("tag", ErrValidTagForType, rdi.tag).Error())
+}
+
+// TestStringReceiverDepositoryInstitutionVariableLength parses using variable length
+func TestStringReceiverDepositoryInstitutionVariableLength(t *testing.T) {
+	var line = "{3400}1*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseReceiverDepositoryInstitution()
+	require.Nil(t, err)
+
+	line = "{3400}1        A                 NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiverDepositoryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3400}1*A********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiverDepositoryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3400}1*A*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiverDepositoryInstitution()
+	require.Equal(t, err, nil)
+}
+
+// TestStringReceiverDepositoryInstitutionOptions validates string() with options
+func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
+	var line = "{3400}1*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseReceiverDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.ReceiverDepositoryInstitution.String()
+	require.Equal(t, str, "{3400}1        A                 ")
+
+	str = r.currentFEDWireMessage.ReceiverDepositoryInstitution.String(true)
+	require.Equal(t, str, "{3400}1*A*")
 }

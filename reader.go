@@ -1115,7 +1115,9 @@ func (r *Reader) parseReceiptTimeStamp() error {
 func (r *Reader) parseOutputMessageAccountabilityData() error {
 	r.tagName = "OutputMessageAccountabilityData"
 	omad := new(OutputMessageAccountabilityData)
-	omad.Parse(r.line)
+	if err := omad.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := omad.Validate(); err != nil {
 		return r.parseError(err)
 	}

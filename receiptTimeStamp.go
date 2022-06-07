@@ -40,14 +40,35 @@ func NewReceiptTimeStamp() *ReceiptTimeStamp {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rts *ReceiptTimeStamp) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
 
 	rts.tag = record[:6]
-	rts.ReceiptDate = rts.parseStringField(record[6:10])
-	rts.ReceiptTime = rts.parseStringField(record[10:14])
-	rts.ReceiptApplicationIdentification = rts.parseStringField(record[14:18])
+
+	var err error
+	length := 6
+	read := 0
+
+	if rts.ReceiptDate, read, err = rts.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("ReceiptDate", err)
+	}
+	length += read
+
+	if rts.ReceiptTime, read, err = rts.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("ReceiptTime", err)
+	}
+	length += read
+
+	if rts.ReceiptApplicationIdentification, read, err = rts.parseVariableStringField(record[length:], 4); err != nil {
+		return fieldError("ReceiptApplicationIdentification", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -66,14 +87,20 @@ func (rts *ReceiptTimeStamp) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ReceiptTimeStamp
-func (rts *ReceiptTimeStamp) String() string {
+func (rts *ReceiptTimeStamp) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(rts.tag)
-	buf.WriteString(rts.ReceiptDateField())
-	buf.WriteString(rts.ReceiptTimeField())
-	buf.WriteString(rts.ReceiptApplicationIdentificationField())
-	return buf.String()
+	buf.WriteString(rts.ReceiptDateField(options...))
+	buf.WriteString(rts.ReceiptTimeField(options...))
+	buf.WriteString(rts.ReceiptApplicationIdentificationField(options...))
+
+	if rts.parseFirstOption(options) {
+		return rts.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on ReceiptTimeStamp and returns an error if not Validated
@@ -87,16 +114,16 @@ func (rts *ReceiptTimeStamp) Validate() error {
 }
 
 // ReceiptDateField gets a string of the ReceiptDate field
-func (rts *ReceiptTimeStamp) ReceiptDateField() string {
-	return rts.alphaField(rts.ReceiptDate, 4)
+func (rts *ReceiptTimeStamp) ReceiptDateField(options ...bool) string {
+	return rts.alphaVariableField(rts.ReceiptDate, 4, rts.parseFirstOption(options))
 }
 
 // ReceiptTimeField gets a string of the ReceiptTime field
-func (rts *ReceiptTimeStamp) ReceiptTimeField() string {
-	return rts.alphaField(rts.ReceiptTime, 4)
+func (rts *ReceiptTimeStamp) ReceiptTimeField(options ...bool) string {
+	return rts.alphaVariableField(rts.ReceiptTime, 4, rts.parseFirstOption(options))
 }
 
 // ReceiptApplicationIdentificationField gets a string of the ReceiptApplicationIdentification field
-func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField() string {
-	return rts.alphaField(rts.ReceiptApplicationIdentification, 4)
+func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField(options ...bool) string {
+	return rts.alphaVariableField(rts.ReceiptApplicationIdentification, 4, rts.parseFirstOption(options))
 }

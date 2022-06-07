@@ -36,17 +36,55 @@ func NewSenderToReceiver() *SenderToReceiver {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (str *SenderToReceiver) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 221 {
-		return NewTagWrongLengthErr(221, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	str.tag = record[:6]
-	str.CoverPayment.SwiftFieldTag = str.parseStringField(record[6:11])
-	str.CoverPayment.SwiftLineOne = str.parseStringField(record[11:46])
-	str.CoverPayment.SwiftLineTwo = str.parseStringField(record[46:81])
-	str.CoverPayment.SwiftLineThree = str.parseStringField(record[81:116])
-	str.CoverPayment.SwiftLineFour = str.parseStringField(record[116:151])
-	str.CoverPayment.SwiftLineFive = str.parseStringField(record[151:186])
-	str.CoverPayment.SwiftLineSix = str.parseStringField(record[186:221])
+
+	var err error
+	length := 6
+	read := 0
+
+	if str.CoverPayment.SwiftFieldTag, read, err = str.parseVariableStringField(record[length:], 5); err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	length += read
+
+	if str.CoverPayment.SwiftLineOne, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	length += read
+
+	if str.CoverPayment.SwiftLineTwo, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	length += read
+
+	if str.CoverPayment.SwiftLineThree, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	length += read
+
+	if str.CoverPayment.SwiftLineFour, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	length += read
+
+	if str.CoverPayment.SwiftLineFive, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	length += read
+
+	if str.CoverPayment.SwiftLineSix, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("SwiftLineSix", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -65,18 +103,24 @@ func (str *SenderToReceiver) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderToReceiver
-func (str *SenderToReceiver) String() string {
+func (str *SenderToReceiver) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(221)
+
 	buf.WriteString(str.tag)
-	buf.WriteString(str.SwiftFieldTagField())
-	buf.WriteString(str.SwiftLineOneField())
-	buf.WriteString(str.SwiftLineTwoField())
-	buf.WriteString(str.SwiftLineThreeField())
-	buf.WriteString(str.SwiftLineFourField())
-	buf.WriteString(str.SwiftLineFiveField())
-	buf.WriteString(str.SwiftLineSixField())
-	return buf.String()
+	buf.WriteString(str.SwiftFieldTagField(options...))
+	buf.WriteString(str.SwiftLineOneField(options...))
+	buf.WriteString(str.SwiftLineTwoField(options...))
+	buf.WriteString(str.SwiftLineThreeField(options...))
+	buf.WriteString(str.SwiftLineFourField(options...))
+	buf.WriteString(str.SwiftLineFiveField(options...))
+	buf.WriteString(str.SwiftLineSixField(options...))
+
+	if str.parseFirstOption(options) {
+		return str.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on SenderToReceiver and returns an error if not Validated
@@ -110,36 +154,36 @@ func (str *SenderToReceiver) Validate() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (str *SenderToReceiver) SwiftFieldTagField() string {
-	return str.alphaField(str.CoverPayment.SwiftFieldTag, 5)
+func (str *SenderToReceiver) SwiftFieldTagField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftFieldTag, 5, str.parseFirstOption(options))
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (str *SenderToReceiver) SwiftLineOneField() string {
-	return str.alphaField(str.CoverPayment.SwiftLineOne, 35)
+func (str *SenderToReceiver) SwiftLineOneField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftLineOne, 35, str.parseFirstOption(options))
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (str *SenderToReceiver) SwiftLineTwoField() string {
-	return str.alphaField(str.CoverPayment.SwiftLineTwo, 35)
+func (str *SenderToReceiver) SwiftLineTwoField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftLineTwo, 35, str.parseFirstOption(options))
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (str *SenderToReceiver) SwiftLineThreeField() string {
-	return str.alphaField(str.CoverPayment.SwiftLineThree, 35)
+func (str *SenderToReceiver) SwiftLineThreeField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftLineThree, 35, str.parseFirstOption(options))
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (str *SenderToReceiver) SwiftLineFourField() string {
-	return str.alphaField(str.CoverPayment.SwiftLineFour, 35)
+func (str *SenderToReceiver) SwiftLineFourField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftLineFour, 35, str.parseFirstOption(options))
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (str *SenderToReceiver) SwiftLineFiveField() string {
-	return str.alphaField(str.CoverPayment.SwiftLineFive, 35)
+func (str *SenderToReceiver) SwiftLineFiveField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftLineFive, 35, str.parseFirstOption(options))
 }
 
 // SwiftLineSixField gets a string of the SwiftLineSix field
-func (str *SenderToReceiver) SwiftLineSixField() string {
-	return str.alphaField(str.CoverPayment.SwiftLineSix, 35)
+func (str *SenderToReceiver) SwiftLineSixField(options ...bool) string {
+	return str.alphaVariableField(str.CoverPayment.SwiftLineSix, 35, str.parseFirstOption(options))
 }

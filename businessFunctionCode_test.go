@@ -50,7 +50,7 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 
 	err := r.parseBusinessFunctionCode()
 
-	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(10, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(9, len(r.line))).Error())
 }
 
 // TestParseBusinessFunctionCodeReaderParseError parses a wrong BusinessFunctionCode reader parse error
@@ -87,7 +87,7 @@ func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseBusinessFunctionCode()
-	expected := r.parseError(NewTagMinLengthErr(10, len(r.line))).Error()
+	expected := r.parseError(NewTagMinLengthErr(9, len(r.line))).Error()
 	require.EqualError(t, err, expected)
 
 	line = "{3600}BTR   NNN"

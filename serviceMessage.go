@@ -58,22 +58,80 @@ func NewServiceMessage() *ServiceMessage {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sm *ServiceMessage) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 426 {
-		return NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	sm.tag = record[:6]
-	sm.LineOne = sm.parseStringField(record[6:41])
-	sm.LineTwo = sm.parseStringField(record[41:76])
-	sm.LineThree = sm.parseStringField(record[76:111])
-	sm.LineFour = sm.parseStringField(record[111:146])
-	sm.LineFive = sm.parseStringField(record[146:181])
-	sm.LineSix = sm.parseStringField(record[181:216])
-	sm.LineSeven = sm.parseStringField(record[216:251])
-	sm.LineEight = sm.parseStringField(record[251:286])
-	sm.LineNine = sm.parseStringField(record[286:321])
-	sm.LineTen = sm.parseStringField(record[321:356])
-	sm.LineEleven = sm.parseStringField(record[356:391])
-	sm.LineTwelve = sm.parseStringField(record[391:426])
+
+	var err error
+	length := 6
+	read := 0
+
+	if sm.LineOne, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineOne", err)
+	}
+	length += read
+
+	if sm.LineTwo, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineTwo", err)
+	}
+	length += read
+
+	if sm.LineThree, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineThree", err)
+	}
+	length += read
+
+	if sm.LineFour, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineFour", err)
+	}
+	length += read
+
+	if sm.LineFive, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineFive", err)
+	}
+	length += read
+
+	if sm.LineSix, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineSix", err)
+	}
+	length += read
+
+	if sm.LineSeven, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineSeven", err)
+	}
+	length += read
+
+	if sm.LineEight, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineEight", err)
+	}
+	length += read
+
+	if sm.LineNine, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineNine", err)
+	}
+	length += read
+
+	if sm.LineTen, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineTen", err)
+	}
+	length += read
+
+	if sm.LineEleven, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineEleven", err)
+	}
+	length += read
+
+	if sm.LineTwelve, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+		return fieldError("LineTwelve", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -92,23 +150,29 @@ func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ServiceMessage
-func (sm *ServiceMessage) String() string {
+func (sm *ServiceMessage) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(426)
+
 	buf.WriteString(sm.tag)
-	buf.WriteString(sm.LineOneField())
-	buf.WriteString(sm.LineTwoField())
-	buf.WriteString(sm.LineThreeField())
-	buf.WriteString(sm.LineFourField())
-	buf.WriteString(sm.LineFiveField())
-	buf.WriteString(sm.LineSixField())
-	buf.WriteString(sm.LineSevenField())
-	buf.WriteString(sm.LineEightField())
-	buf.WriteString(sm.LineNineField())
-	buf.WriteString(sm.LineTenField())
-	buf.WriteString(sm.LineElevenField())
-	buf.WriteString(sm.LineTwelveField())
-	return buf.String()
+	buf.WriteString(sm.LineOneField(options...))
+	buf.WriteString(sm.LineTwoField(options...))
+	buf.WriteString(sm.LineThreeField(options...))
+	buf.WriteString(sm.LineFourField(options...))
+	buf.WriteString(sm.LineFiveField(options...))
+	buf.WriteString(sm.LineSixField(options...))
+	buf.WriteString(sm.LineSevenField(options...))
+	buf.WriteString(sm.LineEightField(options...))
+	buf.WriteString(sm.LineNineField(options...))
+	buf.WriteString(sm.LineTenField(options...))
+	buf.WriteString(sm.LineElevenField(options...))
+	buf.WriteString(sm.LineTwelveField(options...))
+
+	if sm.parseFirstOption(options) {
+		return sm.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on ServiceMessage and returns an error if not Validated
@@ -171,61 +235,61 @@ func (sm *ServiceMessage) fieldInclusion() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (sm *ServiceMessage) LineOneField() string {
-	return sm.alphaField(sm.LineOne, 35)
+func (sm *ServiceMessage) LineOneField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineOne, 35, sm.parseFirstOption(options))
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (sm *ServiceMessage) LineTwoField() string {
-	return sm.alphaField(sm.LineTwo, 35)
+func (sm *ServiceMessage) LineTwoField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineTwo, 35, sm.parseFirstOption(options))
 }
 
 // LineThreeField gets a string of the LineThree field
-func (sm *ServiceMessage) LineThreeField() string {
-	return sm.alphaField(sm.LineThree, 35)
+func (sm *ServiceMessage) LineThreeField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineThree, 35, sm.parseFirstOption(options))
 }
 
 // LineFourField gets a string of the LineFour field
-func (sm *ServiceMessage) LineFourField() string {
-	return sm.alphaField(sm.LineFour, 35)
+func (sm *ServiceMessage) LineFourField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineFour, 35, sm.parseFirstOption(options))
 }
 
 // LineFiveField gets a string of the LineFive field
-func (sm *ServiceMessage) LineFiveField() string {
-	return sm.alphaField(sm.LineFive, 35)
+func (sm *ServiceMessage) LineFiveField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineFive, 35, sm.parseFirstOption(options))
 }
 
 // LineSixField gets a string of the LineSix field
-func (sm *ServiceMessage) LineSixField() string {
-	return sm.alphaField(sm.LineSix, 35)
+func (sm *ServiceMessage) LineSixField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineSix, 35, sm.parseFirstOption(options))
 }
 
 // LineSevenField gets a string of the LineSeven field
-func (sm *ServiceMessage) LineSevenField() string {
-	return sm.alphaField(sm.LineSeven, 35)
+func (sm *ServiceMessage) LineSevenField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineSeven, 35, sm.parseFirstOption(options))
 }
 
 // LineEightField gets a string of the LineEight field
-func (sm *ServiceMessage) LineEightField() string {
-	return sm.alphaField(sm.LineEight, 35)
+func (sm *ServiceMessage) LineEightField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineEight, 35, sm.parseFirstOption(options))
 }
 
 // LineNineField gets a string of the LineNine field
-func (sm *ServiceMessage) LineNineField() string {
-	return sm.alphaField(sm.LineNine, 35)
+func (sm *ServiceMessage) LineNineField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineNine, 35, sm.parseFirstOption(options))
 }
 
 // LineTenField gets a string of the LineTen field
-func (sm *ServiceMessage) LineTenField() string {
-	return sm.alphaField(sm.LineTen, 35)
+func (sm *ServiceMessage) LineTenField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineTen, 35, sm.parseFirstOption(options))
 }
 
 // LineElevenField gets a string of the LineEleven field
-func (sm *ServiceMessage) LineElevenField() string {
-	return sm.alphaField(sm.LineEleven, 35)
+func (sm *ServiceMessage) LineElevenField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineEleven, 35, sm.parseFirstOption(options))
 }
 
 // LineTwelveField gets a string of the LineTwelve field
-func (sm *ServiceMessage) LineTwelveField() string {
-	return sm.alphaField(sm.LineTwelve, 35)
+func (sm *ServiceMessage) LineTwelveField(options ...bool) string {
+	return sm.alphaVariableField(sm.LineTwelve, 35, sm.parseFirstOption(options))
 }

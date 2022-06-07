@@ -38,12 +38,30 @@ func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
+
 	rdi.tag = record[:6]
-	rdi.ReceiverABANumber = rdi.parseStringField(record[6:15])
-	rdi.ReceiverShortName = rdi.parseStringField(record[15:33])
+
+	var err error
+	length := 6
+	read := 0
+
+	if rdi.ReceiverABANumber, read, err = rdi.parseVariableStringField(record[length:], 9); err != nil {
+		return fieldError("ReceiverABANumber", err)
+	}
+	length += read
+
+	if rdi.ReceiverShortName, read, err = rdi.parseVariableStringField(record[length:], 18); err != nil {
+		return fieldError("ReceiverShortName", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,12 +80,14 @@ func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
 }
 
 // String writes ReceiverDepositoryInstitution
-func (rdi *ReceiverDepositoryInstitution) String() string {
+func (rdi *ReceiverDepositoryInstitution) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(33)
+
 	buf.WriteString(rdi.tag)
-	buf.WriteString(rdi.ReceiverABANumberField())
-	buf.WriteString(rdi.ReceiverShortNameField())
+	buf.WriteString(rdi.ReceiverABANumberField(options...))
+	buf.WriteString(rdi.ReceiverShortNameField(options...))
+
 	return buf.String()
 }
 
@@ -102,11 +122,11 @@ func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 }
 
 // ReceiverABANumberField gets a string of the ReceiverABANumber field
-func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField() string {
-	return rdi.alphaField(rdi.ReceiverABANumber, 9)
+func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField(options ...bool) string {
+	return rdi.alphaVariableField(rdi.ReceiverABANumber, 9, rdi.parseFirstOption(options))
 }
 
 // ReceiverShortNameField gets a string of the ReceiverShortName field
-func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField() string {
-	return rdi.alphaField(rdi.ReceiverShortName, 18)
+func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField(options ...bool) string {
+	return rdi.alphaVariableField(rdi.ReceiverShortName, 18, rdi.parseFirstOption(options))
 }

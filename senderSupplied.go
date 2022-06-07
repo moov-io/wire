@@ -45,14 +45,39 @@ func NewSenderSupplied() *SenderSupplied {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ss *SenderSupplied) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 11 {
+		return NewTagMinLengthErr(11, len(record))
 	}
+
 	ss.tag = record[0:6]
 	ss.FormatVersion = ss.parseStringField(record[6:8])
-	ss.UserRequestCorrelation = ss.parseStringField(record[8:16])
-	ss.TestProductionCode = ss.parseStringField(record[16:17])
-	ss.MessageDuplicationCode = ss.parseStringField(record[17:18])
+
+	var err error
+	length := 8
+	read := 0
+
+	if ss.UserRequestCorrelation, read, err = ss.parseVariableStringField(record[length:], 8); err != nil {
+		return fieldError("UserRequestCorrelation", err)
+	}
+	length += read
+
+	if len(record) < length+1 {
+		return fieldError("TestProductionCode", ErrValidLengthSize)
+	}
+
+	ss.TestProductionCode = ss.parseStringField(record[length : length+1])
+	length += 1
+
+	if ss.MessageDuplicationCode, read, err = ss.parseVariableStringField(record[length:], 1); err != nil {
+		return fieldError("MessageDuplicationCode", err)
+	}
+	length += read
+	ss.MessageDuplicationCode = ss.parseStringField(ss.MessageDuplicationCode)
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -71,14 +96,16 @@ func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
 }
 
 // String writes SenderSupplied
-func (ss *SenderSupplied) String() string {
+func (ss *SenderSupplied) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(ss.tag)
 	buf.WriteString(ss.FormatVersionField())
-	buf.WriteString(ss.UserRequestCorrelationField())
+	buf.WriteString(ss.UserRequestCorrelationField(options...))
 	buf.WriteString(ss.TestProductionCodeField())
-	buf.WriteString(ss.MessageDuplicationCodeField())
+	buf.WriteString(ss.MessageDuplicationCodeField(options...))
+
 	return buf.String()
 }
 
@@ -121,8 +148,8 @@ func (ss *SenderSupplied) FormatVersionField() string {
 }
 
 // UserRequestCorrelationField gets a string of the UserRequestCorrelation field
-func (ss *SenderSupplied) UserRequestCorrelationField() string {
-	return ss.alphaField(ss.UserRequestCorrelation, 8)
+func (ss *SenderSupplied) UserRequestCorrelationField(options ...bool) string {
+	return ss.alphaVariableField(ss.UserRequestCorrelation, 8, ss.parseFirstOption(options))
 }
 
 // TestProductionCodeField gets a string of the TestProductionCoden field
@@ -131,6 +158,6 @@ func (ss *SenderSupplied) TestProductionCodeField() string {
 }
 
 // MessageDuplicationCodeField gets a string of the MessageDuplicationCode field
-func (ss *SenderSupplied) MessageDuplicationCodeField() string {
-	return ss.alphaField(ss.MessageDuplicationCode, 1)
+func (ss *SenderSupplied) MessageDuplicationCodeField(options ...bool) string {
+	return ss.alphaVariableField(ss.MessageDuplicationCode, 1, ss.parseFirstOption(options))
 }

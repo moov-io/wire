@@ -39,12 +39,12 @@ func TestParsePreviousMessageIdentifierWrongLength(t *testing.T) {
 
 	err := r.parsePreviousMessageIdentifier()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(28, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("PreviousMessageIdentifier", ErrValidLengthSize)).Error())
 }
 
 // TestParsePreviousMessageIdentifierReaderParseError parses a wrong PreviousMessageIdentifier reader parse error
 func TestParsePreviousMessageIdentifierReaderParseError(t *testing.T) {
-	var line = "{3500}Previous®Message Ident"
+	var line = "{3500}Previous®Message Iden"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -63,4 +63,51 @@ func TestPreviousMessageIdentifierTagError(t *testing.T) {
 	pmi.tag = "{9999}"
 
 	require.EqualError(t, pmi.Validate(), fieldError("tag", ErrValidTagForType, pmi.tag).Error())
+}
+
+// TestStringPreviousMessageIdentifierVariableLength parses using variable length
+func TestStringPreviousMessageIdentifierVariableLength(t *testing.T) {
+	var line = "{3500}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePreviousMessageIdentifier()
+	require.Nil(t, err)
+
+	line = "{3500}                      NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePreviousMessageIdentifier()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3500}********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePreviousMessageIdentifier()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3500}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePreviousMessageIdentifier()
+	require.Equal(t, err, nil)
+}
+
+// TestStringPreviousMessageIdentifierOptions validates string() with options
+func TestStringPreviousMessageIdentifierOptions(t *testing.T) {
+	var line = "{3500}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePreviousMessageIdentifier()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.PreviousMessageIdentifier.String()
+	require.Equal(t, str, "{3500}                      ")
+
+	str = r.currentFEDWireMessage.PreviousMessageIdentifier.String(true)
+	require.Equal(t, str, "{3500}*")
 }

@@ -50,11 +50,11 @@ func TestParseCurrencyInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseCurrencyInstructedAmount()
 
-	require.EqualError(t, err, r.parseError(fieldError("SendersChargesOne", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 
 	_, err = r.Read()
 
-	require.EqualError(t, err, r.parseError(fieldError("SendersChargesOne", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
 }
 
 // TestParseCurrencyInstructedAmountReaderParseError parses a wrong CurrencyInstructedAmount reader parse error
@@ -84,7 +84,7 @@ func TestCurrencyInstructedAmountTagError(t *testing.T) {
 
 // TestStringCurrencyInstructedAmountVariableLength parses using variable length
 func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
-	var line = "{7033}"
+	var line = "{7033}*000000000001500,49"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -97,25 +97,11 @@ func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
 
 	err = r.parseCurrencyInstructedAmount()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
-
-	line = "{7033}B*****"
-	r = NewReader(strings.NewReader(line))
-	r.line = line
-
-	err = r.parseCurrencyInstructedAmount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
-
-	line = "{7033}B*"
-	r = NewReader(strings.NewReader(line))
-	r.line = line
-
-	err = r.parseCurrencyInstructedAmount()
-	require.Equal(t, err, nil)
 }
 
 // TestStringCurrencyInstructedAmountOptions validates string() with options
 func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
-	var line = "{7033}Swift0001500,4*"
+	var line = "{7033}*000000000001500,49"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -123,8 +109,8 @@ func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	str := r.currentFEDWireMessage.CurrencyInstructedAmount.String()
-	require.Equal(t, str, "{7033}Swift0001500,4         ")
+	require.Equal(t, str, "{7033}     000000000001500,49")
 
 	str = r.currentFEDWireMessage.CurrencyInstructedAmount.String(true)
-	require.Equal(t, str, "{7033}Swift0001500,4*")
+	require.Equal(t, str, "{7033}*000000000001500,49")
 }

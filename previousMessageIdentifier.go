@@ -36,11 +36,25 @@ func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pmi *PreviousMessageIdentifier) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	pmi.tag = record[:6]
-	pmi.PreviousMessageIdentifier = pmi.parseStringField(record[6:28])
+
+	var err error
+	length := 6
+	read := 0
+
+	if pmi.PreviousMessageIdentifier, read, err = pmi.parseVariableStringField(record[length:], 22); err != nil {
+		return fieldError("PreviousMessageIdentifier", err)
+	}
+	length += read
+
+	if len(record) != length {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,11 +73,13 @@ func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
 }
 
 // String writes PreviousMessageIdentifier
-func (pmi *PreviousMessageIdentifier) String() string {
+func (pmi *PreviousMessageIdentifier) String(options ...bool) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(pmi.tag)
-	buf.WriteString(pmi.PreviousMessageIdentifierField())
+	buf.WriteString(pmi.PreviousMessageIdentifierField(options...))
+
 	return buf.String()
 }
 
@@ -80,6 +96,6 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 }
 
 // PreviousMessageIdentifierField gets a string of PreviousMessageIdentifier field
-func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField() string {
-	return pmi.alphaField(pmi.PreviousMessageIdentifier, 22)
+func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField(options ...bool) string {
+	return pmi.alphaVariableField(pmi.PreviousMessageIdentifier, 22, pmi.parseFirstOption(options))
 }

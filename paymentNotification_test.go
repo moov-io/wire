@@ -105,7 +105,7 @@ func TestParsePaymentNotificationWrongLength(t *testing.T) {
 
 	err := r.parsePaymentNotification()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(2335, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("EndToEndIdentification", ErrValidLengthSize)).Error())
 }
 
 // TestParsePaymentNotificationReaderParseError parses a wrong PaymentNotification reader parse error
@@ -129,4 +129,51 @@ func TestPaymentNotificationTagError(t *testing.T) {
 	pn.tag = "{9999}"
 
 	require.EqualError(t, pn.Validate(), fieldError("tag", ErrValidTagForType, pn.tag).Error())
+}
+
+// TestStringPaymentNotificationVariableLength parses using variable length
+func TestStringPaymentNotificationVariableLength(t *testing.T) {
+	var line = "{3620}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePaymentNotification()
+	require.Nil(t, err)
+
+	line = "{3620}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePaymentNotification()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3620}********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePaymentNotification()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3620}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePaymentNotification()
+	require.Equal(t, err, nil)
+}
+
+// TestStringPaymentNotificationOptions validates string() with options
+func TestStringPaymentNotificationOptions(t *testing.T) {
+	var line = "{3620}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePaymentNotification()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.PaymentNotification.String()
+	require.Equal(t, str, "{3620}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ")
+
+	str = r.currentFEDWireMessage.PaymentNotification.String(true)
+	require.Equal(t, str, "{3620}*")
 }

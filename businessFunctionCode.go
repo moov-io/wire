@@ -38,8 +38,8 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bfc *BusinessFunctionCode) Parse(record string) error {
-	if utf8.RuneCountInString(record) < 10 {
-		return NewTagMinLengthErr(10, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
 
 	bfc.tag = record[:6]

@@ -103,12 +103,12 @@ func TestParseRemittanceWrongLength(t *testing.T) {
 
 	err := r.parseRemittance()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(151, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFour", ErrValidLengthSize)).Error())
 }
 
 // TestParseRemittanceReaderParseError parses a wrong Remittance reader parse error
 func TestParseRemittanceReaderParseError(t *testing.T) {
-	var line = "{7070}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    "
+	var line = "{7070}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -127,4 +127,52 @@ func TestRemittanceTagError(t *testing.T) {
 	ri.tag = "{9999}"
 
 	require.EqualError(t, ri.Validate(), fieldError("tag", ErrValidTagForType, ri.tag).Error())
+}
+
+
+// TestStringRemittanceVariableLength parses using variable length
+func TestStringRemittanceVariableLength(t *testing.T) {
+	var line = "{7070}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseRemittance()
+	require.Nil(t, err)
+
+	line = "{7070}                                                                                                                                                 NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittance()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7070}************"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittance()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7070}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittance()
+	require.Equal(t, err, nil)
+}
+
+// TestStringRemittanceOptions validates string() with options
+func TestStringRemittanceOptions(t *testing.T) {
+	var line = "{7070}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseRemittance()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.Remittance.String()
+	require.Equal(t, str, "{7070}                                                                                                                                                 ")
+
+	str = r.currentFEDWireMessage.Remittance.String(true)
+	require.Equal(t, str, "{7070}*")
 }

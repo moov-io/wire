@@ -62,3 +62,50 @@ func TestOutputMessageAccountabilityDataTagError(t *testing.T) {
 
 	require.EqualError(t, omad.Validate(), fieldError("tag", ErrValidTagForType, omad.tag).Error())
 }
+
+// TestStringOutputMessageAccountabilityDataVariableLength parses using variable length
+func TestStringOutputMessageAccountabilityDataVariableLength(t *testing.T) {
+	var line = "{1120}**000001"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOutputMessageAccountabilityData()
+	require.Nil(t, err)
+
+	line = "{1120}                000001            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOutputMessageAccountabilityData()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1120}**000001********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOutputMessageAccountabilityData()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1120}**000001*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOutputMessageAccountabilityData()
+	require.Equal(t, err, nil)
+}
+
+// TestStringOutputMessageAccountabilityDataOptions validates string() with options
+func TestStringOutputMessageAccountabilityDataOptions(t *testing.T) {
+	var line = "{1120}**000001"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOutputMessageAccountabilityData()
+	require.Equal(t, err, nil)
+
+	str := r.currentFEDWireMessage.OutputMessageAccountabilityData.String()
+	require.Equal(t, str, "{1120}                000001            ")
+
+	str = r.currentFEDWireMessage.OutputMessageAccountabilityData.String(true)
+	require.Equal(t, str, "{1120}**000001*")
+}
