@@ -41,39 +41,48 @@ func (oi *OrderingInstitution) Parse(record string) error {
 	}
 
 	oi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if oi.CoverPayment.SwiftFieldTag, read, err = oi.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := oi.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	oi.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if oi.CoverPayment.SwiftLineOne, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	oi.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if oi.CoverPayment.SwiftLineTwo, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	oi.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if oi.CoverPayment.SwiftLineThree, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	oi.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if oi.CoverPayment.SwiftLineFour, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	oi.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if oi.CoverPayment.SwiftLineFive, read, err = oi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFive", err)
 	}
+	oi.CoverPayment.SwiftLineFive = value
 	length += read
 
 	if len(record) != length {

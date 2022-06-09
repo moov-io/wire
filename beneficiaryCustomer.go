@@ -41,39 +41,48 @@ func (bc *BeneficiaryCustomer) Parse(record string) error {
 	}
 
 	bc.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if bc.CoverPayment.SwiftFieldTag, read, err = bc.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := bc.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	bc.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if bc.CoverPayment.SwiftLineOne, read, err = bc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	bc.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if bc.CoverPayment.SwiftLineTwo, read, err = bc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	bc.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if bc.CoverPayment.SwiftLineThree, read, err = bc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	bc.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if bc.CoverPayment.SwiftLineFour, read, err = bc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	bc.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if bc.CoverPayment.SwiftLineFive, read, err = bc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFive", err)
 	}
+	bc.CoverPayment.SwiftLineFive = value
 	length += read
 
 	if len(record) != length {

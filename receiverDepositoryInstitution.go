@@ -43,19 +43,20 @@ func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
 	}
 
 	rdi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if rdi.ReceiverABANumber, read, err = rdi.parseVariableStringField(record[length:], 9); err != nil {
+	value, read, err := rdi.parseVariableStringField(record[length:], 9)
+	if err != nil {
 		return fieldError("ReceiverABANumber", err)
 	}
+	rdi.ReceiverABANumber = value
 	length += read
 
-	if rdi.ReceiverShortName, read, err = rdi.parseVariableStringField(record[length:], 18); err != nil {
+	value, read, err = rdi.parseVariableStringField(record[length:], 18)
+	if err != nil {
 		return fieldError("ReceiverShortName", err)
 	}
+	rdi.ReceiverShortName = value
 	length += read
 
 	if len(record) != length {

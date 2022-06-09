@@ -41,14 +41,13 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
 	}
 
 	creditDD.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if creditDD.DrawdownCreditAccountNumber, read, err = creditDD.parseVariableStringField(record[length:], 9); err != nil {
+	value, read, err := creditDD.parseVariableStringField(record[length:], 9)
+	if err != nil {
 		return fieldError("DrawdownCreditAccountNumber", err)
 	}
+	creditDD.DrawdownCreditAccountNumber = value
 	length += read
 
 	if len(record) != length {

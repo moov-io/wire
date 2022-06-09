@@ -44,19 +44,20 @@ func (ia *InstructedAmount) Parse(record string) error {
 	}
 
 	ia.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if ia.CurrencyCode, read, err = ia.parseVariableStringField(record[length:], 3); err != nil {
-		return fieldError("CurrencyCode", err)
+	value, read, err := ia.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
 	}
+	ia.CurrencyCode = value
 	length += read
 
-	if ia.Amount, read, err = ia.parseVariableStringField(record[length:], 15); err != nil {
+	value, read, err = ia.parseVariableStringField(record[length:], 15)
+	if err != nil {
 		return fieldError("Amount", err)
 	}
+	ia.Amount = value
 	length += read
 
 	if len(record) != length {

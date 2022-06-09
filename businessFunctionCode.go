@@ -44,14 +44,13 @@ func (bfc *BusinessFunctionCode) Parse(record string) error {
 
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
-
-	var err error
 	length := 9
-	read := 0
 
-	if bfc.TransactionTypeCode, read, err = bfc.parseVariableStringField(record[length:], 3); err != nil {
-		return fieldError("BeneficiaryReference", err)
+	value, read, err := bfc.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("TransactionTypeCode", err)
 	}
+	bfc.TransactionTypeCode = value
 	length += read
 
 	if len(record) != length {

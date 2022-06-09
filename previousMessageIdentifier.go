@@ -41,14 +41,13 @@ func (pmi *PreviousMessageIdentifier) Parse(record string) error {
 	}
 
 	pmi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if pmi.PreviousMessageIdentifier, read, err = pmi.parseVariableStringField(record[length:], 22); err != nil {
+	value, read, err := pmi.parseVariableStringField(record[length:], 22)
+	if err != nil {
 		return fieldError("PreviousMessageIdentifier", err)
 	}
+	pmi.PreviousMessageIdentifier = value
 	length += read
 
 	if len(record) != length {

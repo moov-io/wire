@@ -42,39 +42,48 @@ func (fiba *FIBeneficiaryAdvice) Parse(record string) error {
 
 	fiba.tag = record[:6]
 	fiba.Advice.AdviceCode = fiba.parseStringField(record[6:9])
-
-	var err error
 	length := 9
-	read := 0
 
-	if fiba.Advice.LineOne, read, err = fiba.parseVariableStringField(record[length:], 26); err != nil {
+	value, read, err := fiba.parseVariableStringField(record[length:], 26)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	fiba.Advice.LineOne = value
 	length += read
 
-	if fiba.Advice.LineTwo, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	fiba.Advice.LineTwo = value
 	length += read
 
-	if fiba.Advice.LineThree, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	fiba.Advice.LineThree = value
 	length += read
 
-	if fiba.Advice.LineFour, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	fiba.Advice.LineFour = value
 	length += read
 
-	if fiba.Advice.LineFive, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	fiba.Advice.LineFive = value
 	length += read
 
-	if fiba.Advice.LineSix, read, err = fiba.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	fiba.Advice.LineSix = value
 	length += read
 
 	if len(record) != length {

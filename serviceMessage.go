@@ -63,69 +63,90 @@ func (sm *ServiceMessage) Parse(record string) error {
 	}
 
 	sm.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if sm.LineOne, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err := sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	sm.LineOne = value
 	length += read
 
-	if sm.LineTwo, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	sm.LineTwo = value
 	length += read
 
-	if sm.LineThree, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	sm.LineThree = value
 	length += read
 
-	if sm.LineFour, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	sm.LineFour = value
 	length += read
 
-	if sm.LineFive, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	sm.LineFive = value
 	length += read
 
-	if sm.LineSix, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	sm.LineSix = value
 	length += read
 
-	if sm.LineSeven, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineSeven", err)
 	}
+	sm.LineSeven = value
 	length += read
 
-	if sm.LineEight, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineEight", err)
 	}
+	sm.LineEight = value
 	length += read
 
-	if sm.LineNine, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineNine", err)
 	}
+	sm.LineNine = value
 	length += read
 
-	if sm.LineTen, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineTen", err)
 	}
+	sm.LineTen = value
 	length += read
 
-	if sm.LineEleven, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineEleven", err)
 	}
+	sm.LineEleven = value
 	length += read
 
-	if sm.LineTwelve, read, err = sm.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineTwelve", err)
 	}
+	sm.LineTwelve = value
 	length += read
 
 	if len(record) != length {

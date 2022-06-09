@@ -41,34 +41,41 @@ func (ri *Remittance) Parse(record string) error {
 	}
 
 	ri.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if ri.CoverPayment.SwiftFieldTag, read, err = ri.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := ri.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	ri.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if ri.CoverPayment.SwiftLineOne, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ri.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	ri.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if ri.CoverPayment.SwiftLineTwo, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ri.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	ri.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if ri.CoverPayment.SwiftLineThree, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ri.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	ri.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if ri.CoverPayment.SwiftLineFour, read, err = ri.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ri.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	ri.CoverPayment.SwiftLineFour = value
 	length += read
 
 	if len(record) != length {

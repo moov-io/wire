@@ -45,24 +45,27 @@ func (rft *RemittanceFreeText) Parse(record string) error {
 	}
 
 	rft.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if rft.LineOne, read, err = rft.parseVariableStringField(record[length:], 140); err != nil {
+	value, read, err := rft.parseVariableStringField(record[length:], 140)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	rft.LineOne = value
 	length += read
 
-	if rft.LineTwo, read, err = rft.parseVariableStringField(record[length:], 140); err != nil {
+	value, read, err = rft.parseVariableStringField(record[length:], 140)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	rft.LineTwo = value
 	length += read
 
-	if rft.LineThree, read, err = rft.parseVariableStringField(record[length:], 140); err != nil {
+	value, read, err = rft.parseVariableStringField(record[length:], 140)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	rft.LineThree = value
 	length += read
 
 	if len(record) != length {

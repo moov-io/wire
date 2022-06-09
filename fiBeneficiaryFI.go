@@ -41,39 +41,48 @@ func (fibfi *FIBeneficiaryFI) Parse(record string) error {
 	}
 
 	fibfi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if fibfi.FIToFI.LineOne, read, err = fibfi.parseVariableStringField(record[length:], 30); err != nil {
+	value, read, err := fibfi.parseVariableStringField(record[length:], 30)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	fibfi.FIToFI.LineOne = value
 	length += read
 
-	if fibfi.FIToFI.LineTwo, read, err = fibfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	fibfi.FIToFI.LineTwo = value
 	length += read
 
-	if fibfi.FIToFI.LineThree, read, err = fibfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	fibfi.FIToFI.LineThree = value
 	length += read
 
-	if fibfi.FIToFI.LineFour, read, err = fibfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	fibfi.FIToFI.LineFour = value
 	length += read
 
-	if fibfi.FIToFI.LineFive, read, err = fibfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	fibfi.FIToFI.LineFive = value
 	length += read
 
-	if fibfi.FIToFI.LineSix, read, err = fibfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	fibfi.FIToFI.LineSix = value
 	length += read
 
 	if len(record) != length {

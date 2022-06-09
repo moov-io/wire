@@ -42,34 +42,41 @@ func (bfi *BeneficiaryFI) Parse(record string) error {
 
 	bfi.tag = record[:6]
 	bfi.FinancialInstitution.IdentificationCode = bfi.parseStringField(record[6:7])
-
-	var err error
 	length := 7
-	read := 0
 
-	if bfi.FinancialInstitution.Identifier, read, err = bfi.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err := bfi.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	bfi.FinancialInstitution.Identifier = value
 	length += read
 
-	if bfi.FinancialInstitution.Name, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bfi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	bfi.FinancialInstitution.Name = value
 	length += read
 
-	if bfi.FinancialInstitution.Address.AddressLineOne, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bfi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	bfi.FinancialInstitution.Address.AddressLineOne = value
 	length += read
 
-	if bfi.FinancialInstitution.Address.AddressLineTwo, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bfi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	bfi.FinancialInstitution.Address.AddressLineTwo = value
 	length += read
 
-	if bfi.FinancialInstitution.Address.AddressLineThree, read, err = bfi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bfi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	bfi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

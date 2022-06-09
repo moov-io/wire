@@ -41,39 +41,48 @@ func (oc *OrderingCustomer) Parse(record string) error {
 	}
 
 	oc.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if oc.CoverPayment.SwiftFieldTag, read, err = oc.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := oc.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	oc.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if oc.CoverPayment.SwiftLineOne, read, err = oc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	oc.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if oc.CoverPayment.SwiftLineTwo, read, err = oc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	oc.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if oc.CoverPayment.SwiftLineThree, read, err = oc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	oc.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if oc.CoverPayment.SwiftLineFour, read, err = oc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	oc.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if oc.CoverPayment.SwiftLineFive, read, err = oc.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFive", err)
 	}
+	oc.CoverPayment.SwiftLineFive = value
 	length += read
 
 	if len(record) != length {

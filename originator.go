@@ -42,34 +42,41 @@ func (o *Originator) Parse(record string) error {
 
 	o.tag = record[:6]
 	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
-
-	var err error
 	length := 7
-	read := 0
 
-	if o.Personal.Identifier, read, err = o.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err := o.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	o.Personal.Identifier = value
 	length += read
 
-	if o.Personal.Name, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	o.Personal.Name = value
 	length += read
 
-	if o.Personal.Address.AddressLineOne, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	o.Personal.Address.AddressLineOne = value
 	length += read
 
-	if o.Personal.Address.AddressLineTwo, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	o.Personal.Address.AddressLineTwo = value
 	length += read
 
-	if o.Personal.Address.AddressLineThree, read, err = o.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	o.Personal.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

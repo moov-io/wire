@@ -41,39 +41,48 @@ func (firfi *FIReceiverFI) Parse(record string) error {
 	}
 
 	firfi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if firfi.FIToFI.LineOne, read, err = firfi.parseVariableStringField(record[length:], 30); err != nil {
+	value, read, err := firfi.parseVariableStringField(record[length:], 30)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	firfi.FIToFI.LineOne = value
 	length += read
 
-	if firfi.FIToFI.LineTwo, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = firfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	firfi.FIToFI.LineTwo = value
 	length += read
 
-	if firfi.FIToFI.LineThree, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = firfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	firfi.FIToFI.LineThree = value
 	length += read
 
-	if firfi.FIToFI.LineFour, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = firfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	firfi.FIToFI.LineFour = value
 	length += read
 
-	if firfi.FIToFI.LineFive, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = firfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	firfi.FIToFI.LineFive = value
 	length += read
 
-	if firfi.FIToFI.LineSix, read, err = firfi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = firfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	firfi.FIToFI.LineSix = value
 	length += read
 
 	if len(record) != length {

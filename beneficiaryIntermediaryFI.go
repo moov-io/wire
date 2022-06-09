@@ -42,34 +42,41 @@ func (bifi *BeneficiaryIntermediaryFI) Parse(record string) error {
 
 	bifi.tag = record[:6]
 	bifi.FinancialInstitution.IdentificationCode = bifi.parseStringField(record[6:7])
-
-	var err error
 	length := 7
-	read := 0
 
-	if bifi.FinancialInstitution.Identifier, read, err = bifi.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err := bifi.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	bifi.FinancialInstitution.Identifier = value
 	length += read
 
-	if bifi.FinancialInstitution.Name, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	bifi.FinancialInstitution.Name = value
 	length += read
 
-	if bifi.FinancialInstitution.Address.AddressLineOne, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	bifi.FinancialInstitution.Address.AddressLineOne = value
 	length += read
 
-	if bifi.FinancialInstitution.Address.AddressLineTwo, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	bifi.FinancialInstitution.Address.AddressLineTwo = value
 	length += read
 
-	if bifi.FinancialInstitution.Address.AddressLineThree, read, err = bifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = bifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	bifi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

@@ -45,24 +45,27 @@ func (ew *ErrorWire) Parse(record string) error {
 	}
 
 	ew.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if ew.ErrorCategory, read, err = ew.parseVariableStringField(record[length:], 1); err != nil {
+	value, read, err := ew.parseVariableStringField(record[length:], 1)
+	if err != nil {
 		return fieldError("ErrorCategory", err)
 	}
+	ew.ErrorCategory = value
 	length += read
 
-	if ew.ErrorCode, read, err = ew.parseVariableStringField(record[length:], 3); err != nil {
+	value, read, err = ew.parseVariableStringField(record[length:], 3)
+	if err != nil {
 		return fieldError("ErrorCode", err)
 	}
+	ew.ErrorCode = value
 	length += read
 
-	if ew.ErrorDescription, read, err = ew.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ew.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("ErrorDescription", err)
 	}
+	ew.ErrorDescription = value
 	length += read
 
 	if len(record) != length {

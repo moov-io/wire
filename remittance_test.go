@@ -129,7 +129,6 @@ func TestRemittanceTagError(t *testing.T) {
 	require.EqualError(t, ri.Validate(), fieldError("tag", ErrValidTagForType, ri.tag).Error())
 }
 
-
 // TestStringRemittanceVariableLength parses using variable length
 func TestStringRemittanceVariableLength(t *testing.T) {
 	var line = "{7070}"

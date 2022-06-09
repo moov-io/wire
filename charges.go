@@ -58,29 +58,34 @@ func (c *Charges) Parse(record string) error {
 
 	c.tag = record[:6]
 	c.ChargeDetails = c.parseStringField(record[6:7])
-
-	var err error
 	length := 7
-	read := 0
 
-	if c.SendersChargesOne, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+	value, read, err := c.parseVariableStringField(record[length:], 15)
+	if err != nil {
 		return fieldError("SendersChargesOne", err)
 	}
+	c.SendersChargesOne = value
 	length += read
 
-	if c.SendersChargesTwo, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+	value, read, err = c.parseVariableStringField(record[length:], 15)
+	if err != nil {
 		return fieldError("SendersChargesTwo", err)
 	}
+	c.SendersChargesTwo = value
 	length += read
 
-	if c.SendersChargesThree, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+	value, read, err = c.parseVariableStringField(record[length:], 15)
+	if err != nil {
 		return fieldError("SendersChargesThree", err)
 	}
+	c.SendersChargesThree = value
 	length += read
 
-	if c.SendersChargesFour, read, err = c.parseVariableStringField(record[length:], 15); err != nil {
+	value, read, err = c.parseVariableStringField(record[length:], 15)
+	if err != nil {
 		return fieldError("SendersChargesFour", err)
 	}
+	c.SendersChargesFour = value
 	length += read
 
 	if len(record) != length {

@@ -41,44 +41,55 @@ func (str *SenderToReceiver) Parse(record string) error {
 	}
 
 	str.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if str.CoverPayment.SwiftFieldTag, read, err = str.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := str.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	str.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if str.CoverPayment.SwiftLineOne, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = str.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	str.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if str.CoverPayment.SwiftLineTwo, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = str.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	str.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if str.CoverPayment.SwiftLineThree, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = str.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	str.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if str.CoverPayment.SwiftLineFour, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = str.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	str.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if str.CoverPayment.SwiftLineFive, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = str.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFive", err)
 	}
+	str.CoverPayment.SwiftLineFive = value
 	length += read
 
-	if str.CoverPayment.SwiftLineSix, read, err = str.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = str.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineSix", err)
 	}
+	str.CoverPayment.SwiftLineSix = value
 	length += read
 
 	if len(record) != length {

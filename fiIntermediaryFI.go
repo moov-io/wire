@@ -41,39 +41,48 @@ func (fiifi *FIIntermediaryFI) Parse(record string) error {
 	}
 
 	fiifi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if fiifi.FIToFI.LineOne, read, err = fiifi.parseVariableStringField(record[length:], 30); err != nil {
+	value, read, err := fiifi.parseVariableStringField(record[length:], 30)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	fiifi.FIToFI.LineOne = value
 	length += read
 
-	if fiifi.FIToFI.LineTwo, read, err = fiifi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	fiifi.FIToFI.LineTwo = value
 	length += read
 
-	if fiifi.FIToFI.LineThree, read, err = fiifi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	fiifi.FIToFI.LineThree = value
 	length += read
 
-	if fiifi.FIToFI.LineFour, read, err = fiifi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	fiifi.FIToFI.LineFour = value
 	length += read
 
-	if fiifi.FIToFI.LineFive, read, err = fiifi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	fiifi.FIToFI.LineFive = value
 	length += read
 
-	if fiifi.FIToFI.LineSix, read, err = fiifi.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	fiifi.FIToFI.LineSix = value
 	length += read
 
 	if len(record) != length {

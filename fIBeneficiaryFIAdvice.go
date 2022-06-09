@@ -42,39 +42,48 @@ func (fibfia *FIBeneficiaryFIAdvice) Parse(record string) error {
 
 	fibfia.tag = record[:6]
 	fibfia.Advice.AdviceCode = fibfia.parseStringField(record[6:9])
-
-	var err error
 	length := 9
-	read := 0
 
-	if fibfia.Advice.LineOne, read, err = fibfia.parseVariableStringField(record[length:], 26); err != nil {
+	value, read, err := fibfia.parseVariableStringField(record[length:], 26)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	fibfia.Advice.LineOne = value
 	length += read
 
-	if fibfia.Advice.LineTwo, read, err = fibfia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	fibfia.Advice.LineTwo = value
 	length += read
 
-	if fibfia.Advice.LineThree, read, err = fibfia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	fibfia.Advice.LineThree = value
 	length += read
 
-	if fibfia.Advice.LineFour, read, err = fibfia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	fibfia.Advice.LineFour = value
 	length += read
 
-	if fibfia.Advice.LineFive, read, err = fibfia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	fibfia.Advice.LineFive = value
 	length += read
 
-	if fibfia.Advice.LineSix, read, err = fibfia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fibfia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	fibfia.Advice.LineSix = value
 	length += read
 
 	if len(record) != length {

@@ -43,19 +43,20 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) error {
 	}
 
 	sdi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if sdi.SenderABANumber, read, err = sdi.parseVariableStringField(record[length:], 9); err != nil {
+	value, read, err := sdi.parseVariableStringField(record[length:], 9)
+	if err != nil {
 		return fieldError("SenderABANumber", err)
 	}
+	sdi.SenderABANumber = value
 	length += read
 
-	if sdi.SenderShortName, read, err = sdi.parseVariableStringField(record[length:], 18); err != nil {
+	value, read, err = sdi.parseVariableStringField(record[length:], 18)
+	if err != nil {
 		return fieldError("SenderShortName", err)
 	}
+	sdi.SenderShortName = value
 	length += read
 
 	if len(record) != length {

@@ -42,14 +42,13 @@ func (eRate *ExchangeRate) Parse(record string) error {
 	}
 
 	eRate.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if eRate.ExchangeRate, read, err = eRate.parseVariableStringField(record[length:], 12); err != nil {
+	value, read, err := eRate.parseVariableStringField(record[length:], 12)
+	if err != nil {
 		return fieldError("ExchangeRate", err)
 	}
+	eRate.ExchangeRate = value
 	length += read
 
 	if len(record) != length {

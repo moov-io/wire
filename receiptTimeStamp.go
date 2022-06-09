@@ -45,24 +45,27 @@ func (rts *ReceiptTimeStamp) Parse(record string) error {
 	}
 
 	rts.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if rts.ReceiptDate, read, err = rts.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err := rts.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("ReceiptDate", err)
 	}
+	rts.ReceiptDate = value
 	length += read
 
-	if rts.ReceiptTime, read, err = rts.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err = rts.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("ReceiptTime", err)
 	}
+	rts.ReceiptTime = value
 	length += read
 
-	if rts.ReceiptApplicationIdentification, read, err = rts.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err = rts.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("ReceiptApplicationIdentification", err)
 	}
+	rts.ReceiptApplicationIdentification = value
 	length += read
 
 	if len(record) != length {

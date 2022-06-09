@@ -42,34 +42,41 @@ func (ifi *InstructingFI) Parse(record string) error {
 
 	ifi.tag = record[:6]
 	ifi.FinancialInstitution.IdentificationCode = ifi.parseStringField(record[6:7])
-
-	var err error
 	length := 7
-	read := 0
 
-	if ifi.FinancialInstitution.Identifier, read, err = ifi.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err := ifi.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	ifi.FinancialInstitution.Identifier = value
 	length += read
 
-	if ifi.FinancialInstitution.Name, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	ifi.FinancialInstitution.Name = value
 	length += read
 
-	if ifi.FinancialInstitution.Address.AddressLineOne, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	ifi.FinancialInstitution.Address.AddressLineOne = value
 	length += read
 
-	if ifi.FinancialInstitution.Address.AddressLineTwo, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	ifi.FinancialInstitution.Address.AddressLineTwo = value
 	length += read
 
-	if ifi.FinancialInstitution.Address.AddressLineThree, read, err = ifi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	ifi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

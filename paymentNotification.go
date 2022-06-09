@@ -55,44 +55,55 @@ func (pn *PaymentNotification) Parse(record string) error {
 	}
 
 	pn.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if pn.PaymentNotificationIndicator, read, err = pn.parseVariableStringField(record[length:], 1); err != nil {
+	value, read, err := pn.parseVariableStringField(record[length:], 1)
+	if err != nil {
 		return fieldError("PaymentNotificationIndicator", err)
 	}
+	pn.PaymentNotificationIndicator = value
 	length += read
 
-	if pn.ContactNotificationElectronicAddress, read, err = pn.parseVariableStringField(record[length:], 2048); err != nil {
+	value, read, err = pn.parseVariableStringField(record[length:], 2048)
+	if err != nil {
 		return fieldError("ContactNotificationElectronicAddress", err)
 	}
+	pn.ContactNotificationElectronicAddress = value
 	length += read
 
-	if pn.ContactName, read, err = pn.parseVariableStringField(record[length:], 140); err != nil {
+	value, read, err = pn.parseVariableStringField(record[length:], 140)
+	if err != nil {
 		return fieldError("ContactName", err)
 	}
+	pn.ContactName = value
 	length += read
 
-	if pn.ContactPhoneNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = pn.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("ContactPhoneNumber", err)
 	}
+	pn.ContactPhoneNumber = value
 	length += read
 
-	if pn.ContactMobileNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = pn.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("ContactMobileNumber", err)
 	}
+	pn.ContactMobileNumber = value
 	length += read
 
-	if pn.ContactFaxNumber, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = pn.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("ContactFaxNumber", err)
 	}
+	pn.ContactFaxNumber = value
 	length += read
 
-	if pn.EndToEndIdentification, read, err = pn.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = pn.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("EndToEndIdentification", err)
 	}
+	pn.EndToEndIdentification = value
 	length += read
 
 	if len(record) != length {

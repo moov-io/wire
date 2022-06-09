@@ -41,39 +41,48 @@ func (ofi *OriginatorFI) Parse(record string) error {
 	}
 
 	ofi.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if ofi.FinancialInstitution.IdentificationCode, read, err = ofi.parseVariableStringField(record[length:], 1); err != nil {
+	value, read, err := ofi.parseVariableStringField(record[length:], 1)
+	if err != nil {
 		return fieldError("IdentificationCode", err)
 	}
+	ofi.FinancialInstitution.IdentificationCode = value
 	length += read
 
-	if ofi.FinancialInstitution.Identifier, read, err = ofi.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err = ofi.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	ofi.FinancialInstitution.Identifier = value
 	length += read
 
-	if ofi.FinancialInstitution.Name, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ofi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	ofi.FinancialInstitution.Name = value
 	length += read
 
-	if ofi.FinancialInstitution.Address.AddressLineOne, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ofi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	ofi.FinancialInstitution.Address.AddressLineOne = value
 	length += read
 
-	if ofi.FinancialInstitution.Address.AddressLineTwo, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ofi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	ofi.FinancialInstitution.Address.AddressLineTwo = value
 	length += read
 
-	if ofi.FinancialInstitution.Address.AddressLineThree, read, err = ofi.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ofi.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	ofi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

@@ -41,14 +41,13 @@ func (br *BeneficiaryReference) Parse(record string) error {
 	}
 
 	br.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if br.BeneficiaryReference, read, err = br.parseVariableStringField(record[length:], 16); err != nil {
+	value, read, err := br.parseVariableStringField(record[length:], 16)
+	if err != nil {
 		return fieldError("BeneficiaryReference", err)
 	}
+	br.BeneficiaryReference = value
 	length += read
 
 	if len(record) != length {

@@ -41,19 +41,20 @@ func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
 	}
 
 	gard.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if gard.RemittanceAmount.CurrencyCode, read, err = gard.parseVariableStringField(record[length:], 3); err != nil {
+	value, read, err := gard.parseVariableStringField(record[length:], 3)
+	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
+	gard.RemittanceAmount.CurrencyCode = value
 	length += read
 
-	if gard.RemittanceAmount.Amount, read, err = gard.parseVariableStringField(record[length:], 19); err != nil {
+	value, read, err = gard.parseVariableStringField(record[length:], 19)
+	if err != nil {
 		return fieldError("Amount", err)
 	}
+	gard.RemittanceAmount.Amount = value
 	length += read
 
 	if len(record) != length {

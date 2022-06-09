@@ -42,39 +42,48 @@ func (fiifia *FIIntermediaryFIAdvice) Parse(record string) error {
 
 	fiifia.tag = record[:6]
 	fiifia.Advice.AdviceCode = fiifia.parseStringField(record[6:9])
-
-	var err error
 	length := 9
-	read := 0
 
-	if fiifia.Advice.LineOne, read, err = fiifia.parseVariableStringField(record[length:], 26); err != nil {
+	value, read, err := fiifia.parseVariableStringField(record[length:], 26)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	fiifia.Advice.LineOne = value
 	length += read
 
-	if fiifia.Advice.LineTwo, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	fiifia.Advice.LineTwo = value
 	length += read
 
-	if fiifia.Advice.LineThree, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	fiifia.Advice.LineThree = value
 	length += read
 
-	if fiifia.Advice.LineFour, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	fiifia.Advice.LineFour = value
 	length += read
 
-	if fiifia.Advice.LineFive, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	fiifia.Advice.LineFive = value
 	length += read
 
-	if fiifia.Advice.LineSix, read, err = fiifia.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	fiifia.Advice.LineSix = value
 	length += read
 
 	if len(record) != length {

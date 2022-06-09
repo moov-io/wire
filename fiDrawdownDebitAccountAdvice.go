@@ -42,39 +42,48 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) error {
 
 	debitDDAdvice.tag = record[:6]
 	debitDDAdvice.Advice.AdviceCode = debitDDAdvice.parseStringField(record[6:9])
-
-	var err error
 	length := 9
-	read := 0
 
-	if debitDDAdvice.Advice.LineOne, read, err = debitDDAdvice.parseVariableStringField(record[length:], 26); err != nil {
+	value, read, err := debitDDAdvice.parseVariableStringField(record[length:], 26)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	debitDDAdvice.Advice.LineOne = value
 	length += read
 
-	if debitDDAdvice.Advice.LineTwo, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	debitDDAdvice.Advice.LineTwo = value
 	length += read
 
-	if debitDDAdvice.Advice.LineThree, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	debitDDAdvice.Advice.LineThree = value
 	length += read
 
-	if debitDDAdvice.Advice.LineFour, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	debitDDAdvice.Advice.LineFour = value
 	length += read
 
-	if debitDDAdvice.Advice.LineFive, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineFive", err)
 	}
+	debitDDAdvice.Advice.LineFive = value
 	length += read
 
-	if debitDDAdvice.Advice.LineSix, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33); err != nil {
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
 		return fieldError("LineSix", err)
 	}
+	debitDDAdvice.Advice.LineSix = value
 	length += read
 
 	if len(record) != length {

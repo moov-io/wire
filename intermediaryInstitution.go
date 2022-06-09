@@ -41,39 +41,48 @@ func (ii *IntermediaryInstitution) Parse(record string) error {
 	}
 
 	ii.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if ii.CoverPayment.SwiftFieldTag, read, err = ii.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := ii.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	ii.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if ii.CoverPayment.SwiftLineOne, read, err = ii.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	ii.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if ii.CoverPayment.SwiftLineTwo, read, err = ii.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	ii.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if ii.CoverPayment.SwiftLineThree, read, err = ii.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	ii.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if ii.CoverPayment.SwiftLineFour, read, err = ii.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	ii.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if ii.CoverPayment.SwiftLineFive, read, err = ii.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFive", err)
 	}
+	ii.CoverPayment.SwiftLineFive = value
 	length += read
 
 	if len(record) != length {

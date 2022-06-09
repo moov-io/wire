@@ -47,34 +47,41 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) error {
 
 	debitDD.tag = record[:6]
 	debitDD.IdentificationCode = record[6:7]
-
-	var err error
 	length := 7
-	read := 0
 
-	if debitDD.Identifier, read, err = debitDD.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err := debitDD.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	debitDD.Identifier = value
 	length += read
 
-	if debitDD.Name, read, err = debitDD.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	debitDD.Name = value
 	length += read
 
-	if debitDD.Address.AddressLineOne, read, err = debitDD.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	debitDD.Address.AddressLineOne = value
 	length += read
 
-	if debitDD.Address.AddressLineTwo, read, err = debitDD.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	debitDD.Address.AddressLineTwo = value
 	length += read
 
-	if debitDD.Address.AddressLineThree, read, err = debitDD.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	debitDD.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

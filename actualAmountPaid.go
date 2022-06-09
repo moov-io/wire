@@ -41,19 +41,20 @@ func (aap *ActualAmountPaid) Parse(record string) error {
 	}
 
 	aap.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if aap.RemittanceAmount.CurrencyCode, read, err = aap.parseVariableStringField(record[length:], 3); err != nil {
+	value, read, err := aap.parseVariableStringField(record[length:], 3)
+	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
+	aap.RemittanceAmount.CurrencyCode = value
 	length += read
 
-	if aap.RemittanceAmount.Amount, read, err = aap.parseVariableStringField(record[length:], 19); err != nil {
+	value, read, err = aap.parseVariableStringField(record[length:], 19)
+	if err != nil {
 		return fieldError("Amount", err)
 	}
+	aap.RemittanceAmount.Amount = value
 	length += read
 
 	if len(record) != length {

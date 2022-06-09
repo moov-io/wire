@@ -41,39 +41,48 @@ func (iAccount *InstitutionAccount) Parse(record string) error {
 	}
 
 	iAccount.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if iAccount.CoverPayment.SwiftFieldTag, read, err = iAccount.parseVariableStringField(record[length:], 5); err != nil {
+	value, read, err := iAccount.parseVariableStringField(record[length:], 5)
+	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
+	iAccount.CoverPayment.SwiftFieldTag = value
 	length += read
 
-	if iAccount.CoverPayment.SwiftLineOne, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = iAccount.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineOne", err)
 	}
+	iAccount.CoverPayment.SwiftLineOne = value
 	length += read
 
-	if iAccount.CoverPayment.SwiftLineTwo, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = iAccount.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineTwo", err)
 	}
+	iAccount.CoverPayment.SwiftLineTwo = value
 	length += read
 
-	if iAccount.CoverPayment.SwiftLineThree, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = iAccount.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineThree", err)
 	}
+	iAccount.CoverPayment.SwiftLineThree = value
 	length += read
 
-	if iAccount.CoverPayment.SwiftLineFour, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = iAccount.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFour", err)
 	}
+	iAccount.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if iAccount.CoverPayment.SwiftLineFive, read, err = iAccount.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = iAccount.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("SwiftLineFive", err)
 	}
+	iAccount.CoverPayment.SwiftLineFive = value
 	length += read
 
 	if len(record) != length {

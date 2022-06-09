@@ -45,14 +45,13 @@ func (pm *FIPaymentMethodToBeneficiary) Parse(record string) error {
 
 	pm.tag = record[:6]
 	pm.PaymentMethod = pm.parseStringField(record[6:11])
-
-	var err error
 	length := 11
-	read := 0
 
-	if pm.AdditionalInformation, read, err = pm.parseVariableStringField(record[length:], 30); err != nil {
+	value, read, err := pm.parseVariableStringField(record[length:], 30)
+	if err != nil {
 		return fieldError("AdditionalInformation", err)
 	}
+	pm.AdditionalInformation = value
 	length += read
 
 	if len(record) != length {

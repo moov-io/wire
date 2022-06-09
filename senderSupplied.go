@@ -51,14 +51,13 @@ func (ss *SenderSupplied) Parse(record string) error {
 
 	ss.tag = record[0:6]
 	ss.FormatVersion = ss.parseStringField(record[6:8])
-
-	var err error
 	length := 8
-	read := 0
 
-	if ss.UserRequestCorrelation, read, err = ss.parseVariableStringField(record[length:], 8); err != nil {
+	value, read, err := ss.parseVariableStringField(record[length:], 8)
+	if err != nil {
 		return fieldError("UserRequestCorrelation", err)
 	}
+	ss.UserRequestCorrelation = value
 	length += read
 
 	if len(record) < length+1 {
@@ -68,10 +67,13 @@ func (ss *SenderSupplied) Parse(record string) error {
 	ss.TestProductionCode = ss.parseStringField(record[length : length+1])
 	length += 1
 
-	if ss.MessageDuplicationCode, read, err = ss.parseVariableStringField(record[length:], 1); err != nil {
+	value, read, err = ss.parseVariableStringField(record[length:], 1)
+	if err != nil {
 		return fieldError("MessageDuplicationCode", err)
 	}
+	ss.MessageDuplicationCode = value
 	length += read
+
 	ss.MessageDuplicationCode = ss.parseStringField(ss.MessageDuplicationCode)
 
 	if len(record) != length {

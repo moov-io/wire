@@ -41,14 +41,13 @@ func (sr *SenderReference) Parse(record string) error {
 	}
 
 	sr.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if sr.SenderReference, read, err = sr.parseVariableStringField(record[length:], 16); err != nil {
+	value, read, err := sr.parseVariableStringField(record[length:], 16)
+	if err != nil {
 		return fieldError("SenderReference", err)
 	}
+	sr.SenderReference = value
 	length += read
 
 	if len(record) != length {

@@ -43,19 +43,20 @@ func (li *LocalInstrument) Parse(record string) error {
 	}
 
 	li.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if li.LocalInstrumentCode, read, err = li.parseVariableStringField(record[length:], 4); err != nil {
-		return fieldError("LocalInstrumentCode", err)
+	value, read, err := li.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
 	}
+	li.LocalInstrumentCode = value
 	length += read
 
-	if li.ProprietaryCode, read, err = li.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = li.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("ProprietaryCode", err)
 	}
+	li.ProprietaryCode = value
 	length += read
 
 	if len(record) != length {

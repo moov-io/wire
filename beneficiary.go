@@ -42,34 +42,41 @@ func (ben *Beneficiary) Parse(record string) error {
 
 	ben.tag = record[:6]
 	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
-
-	var err error
 	length := 7
-	read := 0
 
-	if ben.Personal.Identifier, read, err = ben.parseVariableStringField(record[length:], 34); err != nil {
+	value, read, err := ben.parseVariableStringField(record[length:], 34)
+	if err != nil {
 		return fieldError("Identifier", err)
 	}
+	ben.Personal.Identifier = value
 	length += read
 
-	if ben.Personal.Name, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Name", err)
 	}
+	ben.Personal.Name = value
 	length += read
 
-	if ben.Personal.Address.AddressLineOne, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineOne", err)
 	}
+	ben.Personal.Address.AddressLineOne = value
 	length += read
 
-	if ben.Personal.Address.AddressLineTwo, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineTwo", err)
 	}
+	ben.Personal.Address.AddressLineTwo = value
 	length += read
 
-	if ben.Personal.Address.AddressLineThree, read, err = ben.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("AddressLineThree", err)
 	}
+	ben.Personal.Address.AddressLineThree = value
 	length += read
 
 	if len(record) != length {

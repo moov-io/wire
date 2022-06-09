@@ -47,29 +47,34 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	}
 
 	ob.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if ob.LineOne, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err := ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineOne", err)
 	}
+	ob.LineOne = value
 	length += read
 
-	if ob.LineTwo, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineTwo", err)
 	}
+	ob.LineTwo = value
 	length += read
 
-	if ob.LineThree, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineThree", err)
 	}
+	ob.LineThree = value
 	length += read
 
-	if ob.LineFour, read, err = ob.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("LineFour", err)
 	}
+	ob.LineFour = value
 	length += read
 
 	if len(record) != length {

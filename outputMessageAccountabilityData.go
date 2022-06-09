@@ -51,41 +51,48 @@ func (omad *OutputMessageAccountabilityData) Parse(record string) error {
 	}
 
 	omad.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if omad.OutputCycleDate, read, err = omad.parseVariableStringField(record[length:], 8); err != nil {
+	value, read, err := omad.parseVariableStringField(record[length:], 8)
+	if err != nil {
 		return fieldError("OutputCycleDate", err)
 	}
+	omad.OutputCycleDate = value
 	length += read
 
-	if omad.OutputDestinationID, read, err = omad.parseVariableStringField(record[length:], 8); err != nil {
+	value, read, err = omad.parseVariableStringField(record[length:], 8)
+	if err != nil {
 		return fieldError("OutputDestinationID", err)
 	}
+	omad.OutputDestinationID = value
 	length += read
 
 	if len(record) < length+6 {
 		return fieldError("OutputSequenceNumber", ErrValidLengthSize)
 	}
 
-	omad.OutputSequenceNumber = record[length:length+6]
+	omad.OutputSequenceNumber = record[length : length+6]
 	length += 6
 
-	if omad.OutputDate, read, err = omad.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err = omad.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("OutputDate", err)
 	}
+	omad.OutputDate = value
 	length += read
 
-	if omad.OutputTime, read, err = omad.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err = omad.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("OutputTime", err)
 	}
+	omad.OutputTime = value
 	length += read
 
-	if omad.OutputFRBApplicationIdentification, read, err = omad.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err = omad.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("OutputFRBApplicationIdentification", err)
 	}
+	omad.OutputFRBApplicationIdentification = value
 	length += read
 
 	if len(record) != length {

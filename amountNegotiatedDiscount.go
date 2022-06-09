@@ -41,19 +41,20 @@ func (nd *AmountNegotiatedDiscount) Parse(record string) error {
 	}
 
 	nd.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if nd.RemittanceAmount.CurrencyCode, read, err = nd.parseVariableStringField(record[length:], 3); err != nil {
+	value, read, err := nd.parseVariableStringField(record[length:], 3)
+	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
+	nd.RemittanceAmount.CurrencyCode = value
 	length += read
 
-	if nd.RemittanceAmount.Amount, read, err = nd.parseVariableStringField(record[length:], 19); err != nil {
+	value, read, err = nd.parseVariableStringField(record[length:], 19)
+	if err != nil {
 		return fieldError("Amount", err)
 	}
+	nd.RemittanceAmount.Amount = value
 	length += read
 
 	if len(record) != length {

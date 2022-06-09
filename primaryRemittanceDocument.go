@@ -48,24 +48,27 @@ func (prd *PrimaryRemittanceDocument) Parse(record string) error {
 
 	prd.tag = record[:6]
 	prd.DocumentTypeCode = record[6:10]
-
-	var err error
 	length := 10
-	read := 0
 
-	if prd.ProprietaryDocumentTypeCode, read, err = prd.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err := prd.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("ProprietaryDocumentTypeCode", err)
 	}
+	prd.ProprietaryDocumentTypeCode = value
 	length += read
 
-	if prd.DocumentIdentificationNumber, read, err = prd.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = prd.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("DocumentIdentificationNumber", err)
 	}
+	prd.DocumentIdentificationNumber = value
 	length += read
 
-	if prd.Issuer, read, err = prd.parseVariableStringField(record[length:], 35); err != nil {
+	value, read, err = prd.parseVariableStringField(record[length:], 35)
+	if err != nil {
 		return fieldError("Issuer", err)
 	}
+	prd.Issuer = value
 	length += read
 
 	if len(record) != length {

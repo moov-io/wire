@@ -47,34 +47,41 @@ func (adj *Adjustment) Parse(record string) error {
 	}
 
 	adj.tag = record[:6]
-
-	var err error
 	length := 6
-	read := 0
 
-	if adj.AdjustmentReasonCode, read, err = adj.parseVariableStringField(record[length:], 2); err != nil {
+	value, read, err := adj.parseVariableStringField(record[length:], 2)
+	if err != nil {
 		return fieldError("AdjustmentReasonCode", err)
 	}
+	adj.AdjustmentReasonCode = value
 	length += read
 
-	if adj.CreditDebitIndicator, read, err = adj.parseVariableStringField(record[length:], 4); err != nil {
+	value, read, err = adj.parseVariableStringField(record[length:], 4)
+	if err != nil {
 		return fieldError("CreditDebitIndicator", err)
 	}
+	adj.CreditDebitIndicator = value
 	length += read
 
-	if adj.RemittanceAmount.CurrencyCode, read, err = adj.parseVariableStringField(record[length:], 3); err != nil {
+	value, read, err = adj.parseVariableStringField(record[length:], 3)
+	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
+	adj.RemittanceAmount.CurrencyCode = value
 	length += read
 
-	if adj.RemittanceAmount.Amount, read, err = adj.parseVariableStringField(record[length:], 19); err != nil {
-		return fieldError("Amount", err)
+	value, read, err = adj.parseVariableStringField(record[length:], 19)
+	if err != nil {
+		return fieldError("CurrencyCode", err)
 	}
+	adj.RemittanceAmount.Amount = value
 	length += read
 
-	if adj.AdditionalInfo, read, err = adj.parseVariableStringField(record[length:], 140); err != nil {
+	value, read, err = adj.parseVariableStringField(record[length:], 140)
+	if err != nil {
 		return fieldError("AdditionalInfo", err)
 	}
+	adj.AdditionalInfo = value
 	length += read
 
 	if len(record) != length {
