@@ -71,23 +71,13 @@ func NewReader(r io.Reader) *Reader {
 // the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
 
-	stripNewLines := func(input string) string {
-		// windows
-		input = strings.ReplaceAll(input, "\r\n", "")
-
-		// mac, linux
-		input = strings.ReplaceAll(input, "\n", "")
-
-		return input
-	}
-
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		r.lineNum++
 		// ToDo: File length Check?
-		r.line = stripNewLines(line)
+		r.line = strings.TrimRight(line, "\r\n")
 		if err := r.parseLine(); err != nil {
 			r.errors.Add(err)
 		}
