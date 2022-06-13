@@ -106,7 +106,7 @@ func TestStringGrossAmountRemittanceDocumentVariableLength(t *testing.T) {
 	err = r.parseGrossAmountRemittanceDocument()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{8500}USD1234.56**"
+	line = "{8500}USD1234.56***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

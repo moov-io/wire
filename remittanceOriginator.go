@@ -266,7 +266,7 @@ func (ro *RemittanceOriginator) Parse(record string) error {
 	ro.ContactOther = value
 	length += read
 
-	if len(record) != length {
+	if !ro.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

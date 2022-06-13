@@ -149,7 +149,7 @@ func (sm *ServiceMessage) Parse(record string) error {
 	sm.LineTwelve = value
 	length += read
 
-	if len(record) != length {
+	if !sm.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

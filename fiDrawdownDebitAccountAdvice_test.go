@@ -151,7 +151,7 @@ func TestStringFIDrawdownDebitAccountAdviceVariableLength(t *testing.T) {
 	err = r.parseFIDrawdownDebitAccountAdvice()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{6110}HLD*******"
+	line = "{6110}HLD********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

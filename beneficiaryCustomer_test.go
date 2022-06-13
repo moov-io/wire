@@ -150,7 +150,7 @@ func TestStringBeneficiaryCustomerVariableLength(t *testing.T) {
 	err = r.parseBeneficiaryCustomer()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{7059}*******"
+	line = "{7059}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

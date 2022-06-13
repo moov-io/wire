@@ -85,7 +85,7 @@ func (ofi *OriginatorFI) Parse(record string) error {
 	ofi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
-	if len(record) != length {
+	if !ofi.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

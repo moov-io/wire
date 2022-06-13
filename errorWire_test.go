@@ -65,7 +65,7 @@ func TestStringErrorWireAmountVariableLength(t *testing.T) {
 	err = r.parseErrorWire()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{1130}1XYZData Error**"
+	line = "{1130}1XYZData Error***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

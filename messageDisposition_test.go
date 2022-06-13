@@ -75,7 +75,7 @@ func TestStringMessageDispositionVariableLength(t *testing.T) {
 	err = r.parseMessageDisposition()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{1100}*****"
+	line = "{1100}*******"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

@@ -139,7 +139,7 @@ func TestStringFIAdditionalFIToFIVariableLength(t *testing.T) {
 	err = r.parseFIAdditionalFIToFI()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{6500}*******"
+	line = "{6500}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

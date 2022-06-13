@@ -117,7 +117,7 @@ func TestStringAmountNegotiatedDiscountVariableLength(t *testing.T) {
 	err = r.parseAmountNegotiatedDiscount()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{8550}USD1234.56**"
+	line = "{8550}USD1234.56***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

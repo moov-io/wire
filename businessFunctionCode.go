@@ -53,7 +53,7 @@ func (bfc *BusinessFunctionCode) Parse(record string) error {
 	bfc.TransactionTypeCode = value
 	length += read
 
-	if len(record) != length {
+	if !bfc.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

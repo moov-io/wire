@@ -60,7 +60,7 @@ func (cia *CurrencyInstructedAmount) Parse(record string) error {
 	cia.Amount = cia.parseStringField(record[length : length+18])
 	length += 18
 
-	if len(record) != length {
+	if !cia.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

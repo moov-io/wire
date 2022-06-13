@@ -151,7 +151,7 @@ func TestStringFIBeneficiaryFIAdviceVariableLength(t *testing.T) {
 	err = r.parseFIBeneficiaryFIAdvice()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{6310}HLD*******"
+	line = "{6310}HLD********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

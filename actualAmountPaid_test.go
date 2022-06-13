@@ -117,7 +117,7 @@ func TestStringActualAmountPaidVariableLength(t *testing.T) {
 	err = r.parseActualAmountPaid()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{8450}***"
+	line = "{8450}****"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

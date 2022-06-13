@@ -78,7 +78,7 @@ func (ri *Remittance) Parse(record string) error {
 	ri.CoverPayment.SwiftLineFour = value
 	length += read
 
-	if len(record) != length {
+	if !ri.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

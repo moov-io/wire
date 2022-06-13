@@ -139,7 +139,7 @@ func TestStringFIReceiverFIVariableLength(t *testing.T) {
 	err = r.parseFIReceiverFI()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{6100}*******"
+	line = "{6100}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

@@ -129,7 +129,7 @@ func TestStringSenderSuppliedVariableLength(t *testing.T) {
 	err = r.parseSenderSupplied()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{1500}301*T**"
+	line = "{1500}301*T***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

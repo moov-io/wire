@@ -145,7 +145,7 @@ func TestStringOrderingInstitutionVariableLength(t *testing.T) {
 	err = r.parseOrderingInstitution()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{7052}*******"
+	line = "{7052}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

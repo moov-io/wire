@@ -79,7 +79,7 @@ func (ifi *InstructingFI) Parse(record string) error {
 	ifi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
-	if len(record) != length {
+	if !ifi.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

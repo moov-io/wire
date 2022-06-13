@@ -85,7 +85,7 @@ func (firfi *FIReceiverFI) Parse(record string) error {
 	firfi.FIToFI.LineSix = value
 	length += read
 
-	if len(record) != length {
+	if !firfi.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

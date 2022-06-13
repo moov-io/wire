@@ -68,7 +68,7 @@ func (rts *ReceiptTimeStamp) Parse(record string) error {
 	rts.ReceiptApplicationIdentification = value
 	length += read
 
-	if len(record) != length {
+	if !rts.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

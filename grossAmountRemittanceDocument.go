@@ -57,7 +57,7 @@ func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
 	gard.RemittanceAmount.Amount = value
 	length += read
 
-	if len(record) != length {
+	if !gard.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

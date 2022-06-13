@@ -32,7 +32,13 @@ type Reader struct {
 	tagName string
 	// errors holds each error encountered when attempting to parse the file
 	errors base.ErrorList
+	// headerData holds header static data for file
+	headerData string
 }
+
+var (
+	tagRegex = regexp.MustCompile(`{([0-9]{4})}`)
+)
 
 // error returns a new ParseError based on err
 func (r *Reader) parseError(err error) error {
@@ -71,15 +77,33 @@ func NewReader(r io.Reader) *Reader {
 // the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
 
+	spiltString := func(line string) []string {
+
+		// strip new lines
+		line = strings.ReplaceAll(strings.ReplaceAll(line, "\r\n", ""), "\n", "")
+
+		// split line by tag again
+		indexes := tagRegex.FindAllStringIndex(line, -1)
+		var result []string
+		last := len(line)
+		for i := range indexes {
+			index := indexes[len(indexes)-1-i][0]
+			result = append([]string{line[index:last]}, result...)
+			last = index
+		}
+		return result
+	}
+
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
-		r.lineNum++
-		// ToDo: File length Check?
-		r.line = strings.TrimRight(line, "\r\n")
-		if err := r.parseLine(); err != nil {
-			r.errors.Add(err)
+		for _, subLine := range spiltString(line) {
+			r.lineNum++
+			r.line = subLine
+			if err := r.parseLine(); err != nil {
+				r.errors.Add(err)
+			}
 		}
 	}
 
@@ -173,7 +197,6 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		if err := r.parseExchangeRate(); err != nil {
 			return err
 		}
-
 	case TagBeneficiaryIntermediaryFI:
 		if err := r.parseBeneficiaryIntermediaryFI(); err != nil {
 			return err
@@ -343,6 +366,10 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 			return err
 		}
 	default:
+		if r.lineNum == 1 && !tagRegex.MatchString(r.line[:6]) {
+			r.headerData = r.line
+			return nil
+		}
 		return NewErrInvalidTag(r.line[:6])
 	}
 	return nil
@@ -1127,10 +1154,6 @@ func (r *Reader) parseErrorWire() error {
 	r.currentFEDWireMessage.ErrorWire = ew
 	return nil
 }
-
-var (
-	tagRegex = regexp.MustCompile(`{([0-9]{4})}`)
-)
 
 //scanLinesWithSegmentFormat allows Reader to read each segment
 func scanLinesWithSegmentFormat(data []byte, atEOF bool) (advance int, token []byte, err error) {

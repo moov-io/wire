@@ -57,7 +57,7 @@ func (nd *AmountNegotiatedDiscount) Parse(record string) error {
 	nd.RemittanceAmount.Amount = value
 	length += read
 
-	if len(record) != length {
+	if !nd.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

@@ -112,7 +112,7 @@ func TestStringInstructedAmountVariableLength(t *testing.T) {
 	err = r.parseInstructedAmount()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{3710}USD4567,89**"
+	line = "{3710}USD4567,89***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

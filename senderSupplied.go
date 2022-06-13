@@ -76,7 +76,7 @@ func (ss *SenderSupplied) Parse(record string) error {
 
 	ss.MessageDuplicationCode = ss.parseStringField(ss.MessageDuplicationCode)
 
-	if len(record) != length {
+	if !ss.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

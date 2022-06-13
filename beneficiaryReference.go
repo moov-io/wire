@@ -50,7 +50,7 @@ func (br *BeneficiaryReference) Parse(record string) error {
 	br.BeneficiaryReference = value
 	length += read
 
-	if len(record) != length {
+	if !br.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

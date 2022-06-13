@@ -97,7 +97,7 @@ func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
 	err = r.parseBusinessFunctionCode()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{3600}BTR**"
+	line = "{3600}BTR***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

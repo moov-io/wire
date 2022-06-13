@@ -87,7 +87,7 @@ func TestStringErrorExchangeRateVariableLength(t *testing.T) {
 	err = r.parseExchangeRate()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{3720}123**"
+	line = "{3720}123***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

@@ -85,7 +85,7 @@ func TestStringBeneficiaryReferenceVariableLength(t *testing.T) {
 	err = r.parseBeneficiaryReference()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{4320}**"
+	line = "{4320}***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

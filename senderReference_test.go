@@ -81,7 +81,7 @@ func TestStringSenderReferenceVariableLength(t *testing.T) {
 	err = r.parseSenderReference()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{3320}**"
+	line = "{3320}***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

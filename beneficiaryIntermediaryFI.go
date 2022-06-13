@@ -79,7 +79,7 @@ func (bifi *BeneficiaryIntermediaryFI) Parse(record string) error {
 	bifi.FinancialInstitution.Address.AddressLineThree = value
 	length += read
 
-	if len(record) != length {
+	if !bifi.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

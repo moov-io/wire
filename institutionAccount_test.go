@@ -146,7 +146,7 @@ func TestStringInstitutionAccountVariableLength(t *testing.T) {
 	err = r.parseInstitutionAccount()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{7057}*******"
+	line = "{7057}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

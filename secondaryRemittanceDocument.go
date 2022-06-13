@@ -77,7 +77,7 @@ func (srd *SecondaryRemittanceDocument) Parse(record string) error {
 	srd.Issuer = value
 	length += read
 
-	if len(record) != length {
+	if !srd.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

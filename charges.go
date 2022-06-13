@@ -88,7 +88,7 @@ func (c *Charges) Parse(record string) error {
 	c.SendersChargesFour = value
 	length += read
 
-	if len(record) != length {
+	if !c.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

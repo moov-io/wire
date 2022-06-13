@@ -142,3 +142,16 @@ func (c *converters) stripDelimiters(data string) string {
 
 	return data[:index]
 }
+
+// verify input data with read length
+func (c *converters) verifyDataWithReadLength(data string, read int) bool {
+	if len(data) == read {
+		return true
+	}
+
+	if len(data) > read && data[read:] == "*" {
+		return true
+	}
+
+	return false
+}

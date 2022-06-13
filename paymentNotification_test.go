@@ -147,7 +147,7 @@ func TestStringPaymentNotificationVariableLength(t *testing.T) {
 	err = r.parsePaymentNotification()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{3620}********"
+	line = "{3620}*********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

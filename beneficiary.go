@@ -79,7 +79,7 @@ func (ben *Beneficiary) Parse(record string) error {
 	ben.Personal.Address.AddressLineThree = value
 	length += read
 
-	if len(record) != length {
+	if !ben.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

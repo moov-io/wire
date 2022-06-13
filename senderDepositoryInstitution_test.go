@@ -115,7 +115,7 @@ func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
 	err = r.parseSenderDepositoryInstitution()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{3100}1*A**"
+	line = "{3100}1*A***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

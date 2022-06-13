@@ -174,7 +174,7 @@ func TestStringBeneficiaryIntermediaryFIVariableLength(t *testing.T) {
 	err = r.parseBeneficiaryIntermediaryFI()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{4000}D123456789******"
+	line = "{4000}D123456789*******"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

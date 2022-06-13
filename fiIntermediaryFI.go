@@ -85,7 +85,7 @@ func (fiifi *FIIntermediaryFI) Parse(record string) error {
 	fiifi.FIToFI.LineSix = value
 	length += read
 
-	if len(record) != length {
+	if !fiifi.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

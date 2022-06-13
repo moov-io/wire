@@ -85,7 +85,7 @@ func (fibfi *FIBeneficiaryFI) Parse(record string) error {
 	fibfi.FIToFI.LineSix = value
 	length += read
 
-	if len(record) != length {
+	if !fibfi.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

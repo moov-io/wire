@@ -85,7 +85,7 @@ func (bc *BeneficiaryCustomer) Parse(record string) error {
 	bc.CoverPayment.SwiftLineFive = value
 	length += read
 
-	if len(record) != length {
+	if !bc.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

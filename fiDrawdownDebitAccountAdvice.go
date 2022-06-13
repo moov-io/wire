@@ -86,7 +86,7 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) error {
 	debitDDAdvice.Advice.LineSix = value
 	length += read
 
-	if len(record) != length {
+	if !debitDDAdvice.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

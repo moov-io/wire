@@ -95,7 +95,7 @@ func TestStringFIPaymentMethodToBeneficiaryVariableLength(t *testing.T) {
 	err = r.parseFIPaymentMethodToBeneficiary()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{6420}CHECK**"
+	line = "{6420}CHECK***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 

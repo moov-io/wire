@@ -85,7 +85,7 @@ func (ii *IntermediaryInstitution) Parse(record string) error {
 	ii.CoverPayment.SwiftLineFive = value
 	length += read
 
-	if len(record) != length {
+	if !ii.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

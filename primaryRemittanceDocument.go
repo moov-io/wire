@@ -71,7 +71,7 @@ func (prd *PrimaryRemittanceDocument) Parse(record string) error {
 	prd.Issuer = value
 	length += read
 
-	if len(record) != length {
+	if !prd.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

@@ -50,7 +50,7 @@ func (sr *SenderReference) Parse(record string) error {
 	sr.SenderReference = value
 	length += read
 
-	if len(record) != length {
+	if !sr.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 

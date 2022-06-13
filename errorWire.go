@@ -68,7 +68,7 @@ func (ew *ErrorWire) Parse(record string) error {
 	ew.ErrorDescription = value
 	length += read
 
-	if len(record) != length {
+	if !ew.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()
 	}
 
