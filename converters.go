@@ -149,6 +149,7 @@ func (c *converters) verifyDataWithReadLength(data string, read int) bool {
 		return true
 	}
 
+	// TODO: workaround for special case, not specification
 	if len(data) > read && data[read:] == "*" {
 		return true
 	}
