@@ -70,7 +70,7 @@ func TestParseInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseInstructedAmount()
 
-	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
 }
 
 // TestParseInstructedAmountReaderParseError parses a wrong InstructedAmount reader parse error

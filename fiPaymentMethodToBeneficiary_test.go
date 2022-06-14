@@ -49,7 +49,7 @@ func TestParseFIPaymentMethodToBeneficiaryWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIPaymentMethodToBeneficiary()
-	require.EqualError(t, err, r.parseError(fieldError("AdditionalInformation", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AdditionalInformation", ErrValidLength)).Error())
 }
 
 // TestParseFIPaymentMethodToBeneficiaryReaderParseError parses a wrong FIPaymentMethodToBeneficiary reader parse error

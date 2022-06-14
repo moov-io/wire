@@ -73,7 +73,7 @@ func TestParseSenderWrongLength(t *testing.T) {
 
 	err := r.parseSenderDepositoryInstitution()
 
-	require.EqualError(t, err, r.parseError(fieldError("SenderABANumber", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SenderABANumber", ErrValidLength)).Error())
 }
 
 // TestParseSenderReaderParseError parses a wrong Sender reader parse error

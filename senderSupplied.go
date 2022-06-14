@@ -61,7 +61,7 @@ func (ss *SenderSupplied) Parse(record string) error {
 	length += read
 
 	if len(record) < length+1 {
-		return fieldError("TestProductionCode", ErrValidLengthSize)
+		return fieldError("TestProductionCode", ErrValidLength)
 	}
 
 	ss.TestProductionCode = ss.parseStringField(record[length : length+1])

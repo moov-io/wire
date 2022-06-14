@@ -39,7 +39,7 @@ func TestParseBeneficiaryReferenceWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryReference()
 
-	require.EqualError(t, err, r.parseError(fieldError("BeneficiaryReference", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("BeneficiaryReference", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryReferenceReaderParseError parses a wrong BeneficiaryReference reader parse error

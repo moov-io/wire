@@ -416,7 +416,7 @@ func TestParseRemittanceOriginatorWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceOriginator()
 
-	require.EqualError(t, err, r.parseError(fieldError("ContactOther", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ContactOther", ErrValidLength)).Error())
 }
 
 // TestParseRemittanceOriginatorReaderParseError parses a wrong RemittanceOriginator reader parse error

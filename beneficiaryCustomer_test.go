@@ -104,7 +104,7 @@ func TestParseBeneficiaryCustomerWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryCustomer()
 
-	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryCustomerReaderParseError parses a wrong BeneficiaryCustomer reader parse error

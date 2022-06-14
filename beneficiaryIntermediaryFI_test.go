@@ -124,7 +124,7 @@ func TestParseBeneficiaryIntermediaryFIWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryIntermediaryFI()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIReaderParseError parses a wrong BeneficiaryIntermediaryFI reader parse error

@@ -124,7 +124,7 @@ func TestParseInstructingFIWrongLength(t *testing.T) {
 
 	err := r.parseInstructingFI()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseInstructingFIReaderParseError parses a wrong InstructingFI reader parse error

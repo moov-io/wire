@@ -123,8 +123,8 @@ var (
 	// ErrOptionFName is returned for an invalid name for OriginatorOptionF
 	ErrOptionFName = errors.New("is an invalid name for originator optionF")
 
-	// ErrValidLengthSize is returned for an field with invalid length
-	ErrValidLengthSize = errors.New("is an invalid length size")
+	// ErrValidLength is returned for an field with invalid length
+	ErrValidLength = errors.New("is an invalid length")
 )
 
 // FieldError is returned for errors at a field level in a tag

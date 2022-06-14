@@ -170,7 +170,7 @@ func TestParseServiceMessageWrongLength(t *testing.T) {
 
 	err := r.parseServiceMessage()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineTwelve", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineTwelve", ErrValidLength)).Error())
 }
 
 // TestParseServiceMessageReaderParseError parses a wrong ServiceMessage reader parse error

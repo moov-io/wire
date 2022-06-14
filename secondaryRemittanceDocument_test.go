@@ -105,7 +105,7 @@ func TestParseSecondaryRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parseSecondaryRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLength)).Error())
 }
 
 // TestParseSecondaryRemittanceDocumentReaderParseError parses a wrong SecondaryRemittanceDocument reader parse error

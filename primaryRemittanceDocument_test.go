@@ -105,7 +105,7 @@ func TestParsePrimaryRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parsePrimaryRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLength)).Error())
 }
 
 // TestParsePrimaryRemittanceDocumentReaderParseError parses a wrong PrimaryRemittanceDocument reader parse error

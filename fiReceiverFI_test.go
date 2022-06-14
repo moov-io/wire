@@ -93,7 +93,7 @@ func TestParseFIReceiverFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIReceiverFI()
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
 }
 
 // TestParseFIReceiverFIReaderParseError parses a wrong FIReceiverFI reader parse error

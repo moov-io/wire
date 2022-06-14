@@ -72,7 +72,7 @@ func TestParseOriginatorToBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorToBeneficiary()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineFour", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineFour", ErrValidLength)).Error())
 }
 
 // TestParseOriginatorToBeneficiaryReaderParseError parses a wrong OriginatorToBeneficiary reader parse error

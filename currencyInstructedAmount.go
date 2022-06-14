@@ -54,7 +54,7 @@ func (cia *CurrencyInstructedAmount) Parse(record string) error {
 	length += read
 
 	if len(record) < length+18 {
-		return fieldError("Amount", ErrValidLengthSize)
+		return fieldError("Amount", ErrValidLength)
 	}
 
 	cia.Amount = cia.parseStringField(record[length : length+18])

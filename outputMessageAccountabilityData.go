@@ -68,7 +68,7 @@ func (omad *OutputMessageAccountabilityData) Parse(record string) error {
 	length += read
 
 	if len(record) < length+6 {
-		return fieldError("OutputSequenceNumber", ErrValidLengthSize)
+		return fieldError("OutputSequenceNumber", ErrValidLength)
 	}
 
 	omad.OutputSequenceNumber = record[length : length+6]

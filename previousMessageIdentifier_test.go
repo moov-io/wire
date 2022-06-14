@@ -39,7 +39,7 @@ func TestParsePreviousMessageIdentifierWrongLength(t *testing.T) {
 
 	err := r.parsePreviousMessageIdentifier()
 
-	require.EqualError(t, err, r.parseError(fieldError("PreviousMessageIdentifier", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("PreviousMessageIdentifier", ErrValidLength)).Error())
 }
 
 // TestParsePreviousMessageIdentifierReaderParseError parses a wrong PreviousMessageIdentifier reader parse error

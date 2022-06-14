@@ -103,7 +103,7 @@ func TestParseOrderingInstitutionWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOrderingInstitution()
-	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLength)).Error())
 }
 
 // TestParseOrderingInstitutionReaderParseError parses a wrong OrderingInstitution reader parse error

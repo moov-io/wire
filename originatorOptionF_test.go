@@ -156,7 +156,7 @@ func TestParseOriginatorOptionFWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorOptionF()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLength)).Error())
 }
 
 // TestParseOriginatorOptionFReaderParseError parses a wrong OriginatorOptionF reader parse error

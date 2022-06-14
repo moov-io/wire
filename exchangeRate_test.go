@@ -39,11 +39,11 @@ func TestParseExchangeRateWrongLength(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLength)).Error())
 
 	_, err = r.Read()
 
-	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLength)).Error())
 }
 
 // TestParseExchangeRateReaderParseError parses a wrong ExchangeRate reader parse error

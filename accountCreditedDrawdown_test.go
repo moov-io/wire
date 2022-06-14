@@ -47,7 +47,7 @@ func TestParseAccountCreditedDrawdownWrongLength(t *testing.T) {
 
 	err := r.parseAccountCreditedDrawdown()
 
-	expected := r.parseError(fieldError("DrawdownCreditAccountNumber", ErrValidLengthSize)).Error()
+	expected := r.parseError(fieldError("DrawdownCreditAccountNumber", ErrValidLength)).Error()
 	require.EqualError(t, err, expected)
 }
 

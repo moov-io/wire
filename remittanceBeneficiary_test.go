@@ -348,7 +348,7 @@ func TestParseRemittanceBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceBeneficiary()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineSeven", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineSeven", ErrValidLength)).Error())
 }
 
 // TestParseRemittanceBeneficiaryReaderParseError parses a wrong RemittanceBeneficiary reader parse error

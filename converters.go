@@ -96,7 +96,7 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (got string,
 
 	if size > len(r) {
 		size = 0
-		err = ErrValidLengthSize
+		err = ErrValidLength
 		return
 	}
 

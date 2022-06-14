@@ -134,7 +134,7 @@ func TestParseAccountDebitedDrawdownWrongLength(t *testing.T) {
 
 	err := r.parseAccountDebitedDrawdown()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseAccountDebitedDrawdownReaderParseError parses a wrong AccountDebitedDrawdown reader parse error

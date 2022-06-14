@@ -70,7 +70,7 @@ func TestParseActualAmountPaidWrongLength(t *testing.T) {
 
 	err := r.parseActualAmountPaid()
 
-	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
 }
 
 // TestParseActualAmountPaidReaderParseError parses a wrong ActualAmountPaid reader parse error

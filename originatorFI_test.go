@@ -124,7 +124,7 @@ func TestParseOriginatorFIWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorFI()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseOriginatorFIReaderParseError parses a wrong OriginatorFI reader parse error

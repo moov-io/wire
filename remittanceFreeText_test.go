@@ -61,7 +61,7 @@ func TestParseRemittanceFreeTextWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceFreeText()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLengthSize)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLength)).Error())
 }
 
 // TestParseRemittanceFreeTextReaderParseError parses a wrong RemittanceFreeText reader parse error
