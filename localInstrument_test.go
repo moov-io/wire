@@ -61,7 +61,7 @@ func TestParseLocalInstrumentWrongLength(t *testing.T) {
 
 	err := r.parseLocalInstrument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(45, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ProprietaryCode", ErrValidLength)).Error())
 }
 
 // TestParseLocalInstrumentReaderParseError parses a wrong LocalInstrumente reader parse error
@@ -85,4 +85,50 @@ func TestLocalInstrumentTagError(t *testing.T) {
 	li.tag = "{9999}"
 
 	require.EqualError(t, li.Validate(), fieldError("tag", ErrValidTagForType, li.tag).Error())
+}
+
+// TestStringLocalInstrumentVariableLength parses using variable length
+func TestStringLocalInstrumentVariableLength(t *testing.T) {
+	var line = "{3610}ANSI*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseLocalInstrument()
+	require.Nil(t, err)
+
+	line = "{3610}ANSI                                   NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseLocalInstrument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3610}***********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseLocalInstrument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3610}ANSI*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseLocalInstrument()
+	require.Equal(t, err, nil)
+}
+
+// TestStringLocalInstrumentOptions validates Format() formatted according to the FormatOptions
+func TestStringLocalInstrumentOptions(t *testing.T) {
+	var line = "{3610}ANSI*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseLocalInstrument()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.LocalInstrument
+	require.Equal(t, record.String(), "{3610}ANSI                                   ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3610}ANSI*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -124,12 +124,12 @@ func TestParseInstructingFIWrongLength(t *testing.T) {
 
 	err := r.parseInstructingFI()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseInstructingFIReaderParseError parses a wrong InstructingFI reader parse error
 func TestParseInstructingFIReaderParseError(t *testing.T) {
-	var line = "{5200}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                      "
+	var line = "{5200}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -148,4 +148,50 @@ func TestInstructingFITagError(t *testing.T) {
 	ifi.tag = "{9999}"
 
 	require.EqualError(t, ifi.Validate(), fieldError("tag", ErrValidTagForType, ifi.tag).Error())
+}
+
+// TestStringInstructingFIVariableLength parses using variable length
+func TestStringInstructingFIVariableLength(t *testing.T) {
+	var line = "{5200}D12*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructingFI()
+	require.Nil(t, err)
+
+	line = "{5200}D12                                                                                                                                                                            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructingFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{5200}D12***********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructingFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{5200}D12*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructingFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringInstructingFIOptions validates Format() formatted according to the FormatOptions
+func TestStringInstructingFIOptions(t *testing.T) {
+	var line = "{5200}D12*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructingFI()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.InstructingFI
+	require.Equal(t, record.String(), "{5200}D12                                                                                                                                                                            ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5200}D12*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -36,16 +36,59 @@ func NewBeneficiaryCustomer() *BeneficiaryCustomer {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bc *BeneficiaryCustomer) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	bc.tag = record[:6]
-	bc.CoverPayment.SwiftFieldTag = bc.parseStringField(record[6:11])
-	bc.CoverPayment.SwiftLineOne = bc.parseStringField(record[11:46])
-	bc.CoverPayment.SwiftLineTwo = bc.parseStringField(record[46:81])
-	bc.CoverPayment.SwiftLineThree = bc.parseStringField(record[81:116])
-	bc.CoverPayment.SwiftLineFour = bc.parseStringField(record[116:151])
-	bc.CoverPayment.SwiftLineFive = bc.parseStringField(record[151:186])
+	length := 6
+
+	value, read, err := bc.parseVariableStringField(record[length:], 5)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	bc.CoverPayment.SwiftFieldTag = value
+	length += read
+
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	bc.CoverPayment.SwiftLineOne = value
+	length += read
+
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	bc.CoverPayment.SwiftLineTwo = value
+	length += read
+
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	bc.CoverPayment.SwiftLineThree = value
+	length += read
+
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	bc.CoverPayment.SwiftLineFour = value
+	length += read
+
+	value, read, err = bc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	bc.CoverPayment.SwiftLineFive = value
+	length += read
+
+	if !bc.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +106,31 @@ func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes BeneficiaryCustomer
+// String returns a fixed-width BeneficiaryCustomer record
 func (bc *BeneficiaryCustomer) String() string {
+	return bc.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a BeneficiaryCustomer record formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(bc.tag)
-	buf.WriteString(bc.SwiftFieldTagField())
-	buf.WriteString(bc.SwiftLineOneField())
-	buf.WriteString(bc.SwiftLineTwoField())
-	buf.WriteString(bc.SwiftLineThreeField())
-	buf.WriteString(bc.SwiftLineFourField())
-	buf.WriteString(bc.SwiftLineFiveField())
-	return buf.String()
+	buf.WriteString(bc.FormatSwiftFieldTag(options))
+	buf.WriteString(bc.FormatSwiftLineOne(options))
+	buf.WriteString(bc.FormatSwiftLineTwo(options))
+	buf.WriteString(bc.FormatSwiftLineThree(options))
+	buf.WriteString(bc.FormatSwiftLineFour(options))
+	buf.WriteString(bc.FormatSwiftLineFive(options))
+
+	if options.VariableLengthFields {
+		return bc.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on BeneficiaryCustomer and returns an error if not Validated
@@ -144,4 +200,34 @@ func (bc *BeneficiaryCustomer) SwiftLineFourField() string {
 // SwiftLineFiveField gets a string of the SwiftLineFive field
 func (bc *BeneficiaryCustomer) SwiftLineFiveField() string {
 	return bc.alphaField(bc.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftFieldTag(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineOne(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineTwo(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineThree(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineFour(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineFive(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineFive, 35, options)
 }

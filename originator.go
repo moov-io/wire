@@ -36,16 +36,53 @@ func NewOriginator() *Originator {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (o *Originator) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	o.tag = record[:6]
 	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
-	o.Personal.Identifier = o.parseStringField(record[7:41])
-	o.Personal.Name = o.parseStringField(record[41:76])
-	o.Personal.Address.AddressLineOne = o.parseStringField(record[76:111])
-	o.Personal.Address.AddressLineTwo = o.parseStringField(record[111:146])
-	o.Personal.Address.AddressLineThree = o.parseStringField(record[146:181])
+	length := 7
+
+	value, read, err := o.parseVariableStringField(record[length:], 34)
+	if err != nil {
+		return fieldError("Identifier", err)
+	}
+	o.Personal.Identifier = value
+	length += read
+
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("Name", err)
+	}
+	o.Personal.Name = value
+	length += read
+
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	o.Personal.Address.AddressLineOne = value
+	length += read
+
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	o.Personal.Address.AddressLineTwo = value
+	length += read
+
+	value, read, err = o.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	o.Personal.Address.AddressLineThree = value
+	length += read
+
+	if !o.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +100,31 @@ func (o *Originator) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Originator
+// String returns a fixed-width Originator record
 func (o *Originator) String() string {
+	return o.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a Originator record formatted according to the FormatOptions
+func (o *Originator) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
-	buf.WriteString(o.IdentifierField())
-	buf.WriteString(o.NameField())
-	buf.WriteString(o.AddressLineOneField())
-	buf.WriteString(o.AddressLineTwoField())
-	buf.WriteString(o.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(o.FormatIdentifier(options))
+	buf.WriteString(o.FormatName(options))
+	buf.WriteString(o.FormatAddressLineOne(options))
+	buf.WriteString(o.FormatAddressLineTwo(options))
+	buf.WriteString(o.FormatAddressLineThree(options))
+
+	if options.VariableLengthFields {
+		return o.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Originator and returns an error if not Validated
@@ -148,4 +198,29 @@ func (o *Originator) AddressLineTwoField() string {
 // AddressLineThreeField gets a string of AddressLineThree field
 func (o *Originator) AddressLineThreeField() string {
 	return o.alphaField(o.Personal.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Personal.Identifier formatted according to the FormatOptions
+func (o *Originator) FormatIdentifier(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Identifier, 34, options)
+}
+
+// FormatName returns Personal.Name formatted according to the FormatOptions
+func (o *Originator) FormatName(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Address.AddressLineOne formatted according to the FormatOptions
+func (o *Originator) FormatAddressLineOne(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Address.AddressLineTwo formatted according to the FormatOptions
+func (o *Originator) FormatAddressLineTwo(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Address.AddressLineThree formatted according to the FormatOptions
+func (o *Originator) FormatAddressLineThree(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Address.AddressLineThree, 35, options)
 }

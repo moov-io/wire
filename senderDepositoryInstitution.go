@@ -38,13 +38,31 @@ func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sdi *SenderDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
 
 	sdi.tag = record[:6]
-	sdi.SenderABANumber = sdi.parseStringField(record[6:15])
-	sdi.SenderShortName = sdi.parseStringField(record[15:33])
+	length := 6
+
+	value, read, err := sdi.parseVariableStringField(record[length:], 9)
+	if err != nil {
+		return fieldError("SenderABANumber", err)
+	}
+	sdi.SenderABANumber = value
+	length += read
+
+	value, read, err = sdi.parseVariableStringField(record[length:], 18)
+	if err != nil {
+		return fieldError("SenderShortName", err)
+	}
+	sdi.SenderShortName = value
+	length += read
+
+	if !sdi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,13 +80,22 @@ func (sdi *SenderDepositoryInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderDepositoryInstitution
+// String returns a fixed-width SenderDepositoryInstitution record
 func (sdi *SenderDepositoryInstitution) String() string {
+	return sdi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderDepositoryInstitution record formatted according to the FormatOptions
+func (sdi *SenderDepositoryInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(39)
+
 	buf.WriteString(sdi.tag)
-	buf.WriteString(sdi.SenderABANumberField())
-	buf.WriteString(sdi.SenderShortNameField())
+	buf.WriteString(sdi.FormatSenderABANumber(options))
+	buf.WriteString(sdi.FormatSenderShortName(options))
+
 	return buf.String()
 }
 
@@ -110,4 +137,14 @@ func (sdi *SenderDepositoryInstitution) SenderABANumberField() string {
 // SenderShortNameField gets a string of the SenderShortName field
 func (sdi *SenderDepositoryInstitution) SenderShortNameField() string {
 	return sdi.alphaField(sdi.SenderShortName, 18)
+}
+
+// FormatSenderABANumber returns SenderABANumber formatted according to the FormatOptions
+func (sdi *SenderDepositoryInstitution) FormatSenderABANumber(options FormatOptions) string {
+	return sdi.formatAlphaField(sdi.SenderABANumber, 9, options)
+}
+
+// FormatSenderShortName returns SenderShortName formatted according to the FormatOptions
+func (sdi *SenderDepositoryInstitution) FormatSenderShortName(options FormatOptions) string {
+	return sdi.formatAlphaField(sdi.SenderShortName, 18, options)
 }

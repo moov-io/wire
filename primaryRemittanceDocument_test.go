@@ -105,7 +105,7 @@ func TestParsePrimaryRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parsePrimaryRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(115, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLength)).Error())
 }
 
 // TestParsePrimaryRemittanceDocumentReaderParseError parses a wrong PrimaryRemittanceDocument reader parse error
@@ -129,4 +129,50 @@ func TestPrimaryRemittanceDocumentTagError(t *testing.T) {
 	prd.tag = "{9999}"
 
 	require.EqualError(t, prd.Validate(), fieldError("tag", ErrValidTagForType, prd.tag).Error())
+}
+
+// TestStringPrimaryRemittanceDocumentVariableLength parses using variable length
+func TestStringPrimaryRemittanceDocumentVariableLength(t *testing.T) {
+	var line = "{8400}AROI*Issuer*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePrimaryRemittanceDocument()
+	require.Nil(t, err)
+
+	line = "{8400}AROI                                   Issuer                                                                NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePrimaryRemittanceDocument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8400}CMCN********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePrimaryRemittanceDocument()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8400}AROI*Issuer*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePrimaryRemittanceDocument()
+	require.Equal(t, err, nil)
+}
+
+// TestStringPrimaryRemittanceDocumentOptions validates Format() formatted according to the FormatOptions
+func TestStringPrimaryRemittanceDocumentOptions(t *testing.T) {
+	var line = "{8400}AROI*Issuer*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePrimaryRemittanceDocument()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.PrimaryRemittanceDocument
+	require.Equal(t, record.String(), "{8400}AROI                                   Issuer                                                                ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8400}AROI*Issuer*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

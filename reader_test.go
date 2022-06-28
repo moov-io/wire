@@ -27,6 +27,7 @@ func TestRead(t *testing.T) {
 	t.Run("CustomerTransferPlusUnstructuredAddenda", testRead(filepath.Join("test", "testdata", "fedWireMessage-CustomerTransferPlusUnstructuredAddenda.txt")))
 	t.Run("CustomerTransferPlusStructuredRemittance", testRead(filepath.Join("test", "testdata", "fedWireMessage-CustomerTransferPlusStructuredRemittance.txt")))
 	t.Run("FedAppendedTags", testRead(filepath.Join("test", "testdata", "fedWireMessage-FedAppendedTags.txt")))
+	t.Run("FiservMessage", testRead(filepath.Join("test", "testdata", "fedWireMessage-fiserv.txt")))
 }
 
 func testRead(filePathName string) func(t *testing.T) {
@@ -79,5 +80,5 @@ func TestRead_missingTag(t *testing.T) {
 
 	_, err = r.Read()
 
-	require.EqualError(t, err, "file validation failed: FIBeneficiaryAdvice <nil> is a required field")
+	require.EqualError(t, err, "file validation failed: FIBeneficiaryAdvice is a required field")
 }

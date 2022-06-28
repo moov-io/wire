@@ -36,12 +36,31 @@ func NewActualAmountPaid() *ActualAmountPaid {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (aap *ActualAmountPaid) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	aap.tag = record[:6]
-	aap.RemittanceAmount.CurrencyCode = aap.parseStringField(record[6:9])
-	aap.RemittanceAmount.Amount = aap.parseStringField(record[9:28])
+	length := 6
+
+	value, read, err := aap.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	aap.RemittanceAmount.CurrencyCode = value
+	length += read
+
+	value, read, err = aap.parseVariableStringField(record[length:], 19)
+	if err != nil {
+		return fieldError("Amount", err)
+	}
+	aap.RemittanceAmount.Amount = value
+	length += read
+
+	if !aap.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,13 +78,22 @@ func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ActualAmountPaid
+// String returns a fixed-width ActualAmountPaid record
 func (aap *ActualAmountPaid) String() string {
+	return aap.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an ActualAmountPaid record formatted according to the FormatOptions
+func (aap *ActualAmountPaid) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(aap.tag)
-	buf.WriteString(aap.CurrencyCodeField())
-	buf.WriteString(aap.AmountField())
+	buf.WriteString(aap.FormatCurrencyCode(options))
+	buf.WriteString(aap.FormatAmount(options))
+
 	return buf.String()
 }
 
@@ -101,12 +129,22 @@ func (aap *ActualAmountPaid) fieldInclusion() error {
 	return nil
 }
 
-// CurrencyCodeField gets a string of the CurrencyCode field
+// CurrencyCodeField gets a string of the RemittanceAmount.CurrencyCode field
 func (aap *ActualAmountPaid) CurrencyCodeField() string {
 	return aap.alphaField(aap.RemittanceAmount.CurrencyCode, 3)
 }
 
-// AmountField gets a string of the Amount field
+// AmountField gets a string of the RemittanceAmount.Amount field
 func (aap *ActualAmountPaid) AmountField() string {
 	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (aap *ActualAmountPaid) FormatCurrencyCode(options FormatOptions) string {
+	return aap.formatAlphaField(aap.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (aap *ActualAmountPaid) FormatAmount(options FormatOptions) string {
+	return aap.formatAlphaField(aap.RemittanceAmount.Amount, 19, options)
 }

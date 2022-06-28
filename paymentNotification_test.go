@@ -105,7 +105,7 @@ func TestParsePaymentNotificationWrongLength(t *testing.T) {
 
 	err := r.parsePaymentNotification()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(2335, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("EndToEndIdentification", ErrValidLength)).Error())
 }
 
 // TestParsePaymentNotificationReaderParseError parses a wrong PaymentNotification reader parse error
@@ -129,4 +129,50 @@ func TestPaymentNotificationTagError(t *testing.T) {
 	pn.tag = "{9999}"
 
 	require.EqualError(t, pn.Validate(), fieldError("tag", ErrValidTagForType, pn.tag).Error())
+}
+
+// TestStringPaymentNotificationVariableLength parses using variable length
+func TestStringPaymentNotificationVariableLength(t *testing.T) {
+	var line = "{3620}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePaymentNotification()
+	require.Nil(t, err)
+
+	line = "{3620}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePaymentNotification()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3620}*********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePaymentNotification()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3620}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parsePaymentNotification()
+	require.Equal(t, err, nil)
+}
+
+// TestStringPaymentNotificationOptions validates Format() formatted according to the FormatOptions
+func TestStringPaymentNotificationOptions(t *testing.T) {
+	var line = "{3620}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parsePaymentNotification()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.PaymentNotification
+	require.Equal(t, record.String(), "{3620}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3620}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

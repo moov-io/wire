@@ -104,12 +104,12 @@ func TestParseBeneficiaryCustomerWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryCustomer()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(186, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryCustomerReaderParseError parses a wrong BeneficiaryCustomer reader parse error
 func TestParseBeneficiaryCustomerReaderParseError(t *testing.T) {
-	var line = "{7059}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    "
+	var line = "{7059}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -132,4 +132,50 @@ func TestBeneficiaryCustomerTagError(t *testing.T) {
 	err := bc.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bc.tag).Error())
+}
+
+// TestStringBeneficiaryCustomerVariableLength parses using variable length
+func TestStringBeneficiaryCustomerVariableLength(t *testing.T) {
+	var line = "{7059}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryCustomer()
+	require.Nil(t, err)
+
+	line = "{7059}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    NN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryCustomer()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7059}********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryCustomer()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7059}******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryCustomer()
+	require.Equal(t, err, nil)
+}
+
+// TestStringBeneficiaryCustomerOptions validates Format() formatted according to the FormatOptions
+func TestStringBeneficiaryCustomerOptions(t *testing.T) {
+	var line = "{7059}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryCustomer()
+	require.Equal(t, err, nil)
+
+	bc := r.currentFEDWireMessage.BeneficiaryCustomer
+	require.Equal(t, bc.String(), "{7059}                                                                                                                                                                                    ")
+	require.Equal(t, bc.Format(FormatOptions{VariableLengthFields: true}), "{7059}*")
+	require.Equal(t, bc.String(), bc.Format(FormatOptions{VariableLengthFields: false}))
 }

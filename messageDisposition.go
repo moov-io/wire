@@ -7,6 +7,7 @@ package wire
 import (
 	"encoding/json"
 	"strings"
+	"unicode/utf8"
 )
 
 // MessageDisposition is the message disposition of the wire
@@ -43,12 +44,47 @@ func NewMessageDisposition() *MessageDisposition {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (md *MessageDisposition) Parse(record string) {
+func (md *MessageDisposition) Parse(record string) error {
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
+	}
+
 	md.tag = record[:6]
-	md.FormatVersion = md.parseStringField(record[6:8])
-	md.TestProductionCode = md.parseStringField(record[8:9])
-	md.MessageDuplicationCode = md.parseStringField(record[9:10])
-	md.MessageStatusIndicator = md.parseStringField(record[10:11])
+	length := 6
+
+	value, read, err := md.parseVariableStringField(record[length:], 2)
+	if err != nil {
+		return fieldError("FormatVersion", err)
+	}
+	md.FormatVersion = value
+	length += read
+
+	value, read, err = md.parseVariableStringField(record[length:], 1)
+	if err != nil {
+		return fieldError("TestProductionCode", err)
+	}
+	md.TestProductionCode = value
+	length += read
+
+	value, read, err = md.parseVariableStringField(record[length:], 1)
+	if err != nil {
+		return fieldError("MessageDuplicationCode", err)
+	}
+	md.MessageDuplicationCode = value
+	length += read
+
+	value, read, err = md.parseVariableStringField(record[length:], 1)
+	if err != nil {
+		return fieldError("MessageStatusIndicator", err)
+	}
+	md.MessageStatusIndicator = value
+	length += read
+
+	if !md.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
+	return nil
 }
 
 func (md *MessageDisposition) UnmarshalJSON(data []byte) error {
@@ -65,16 +101,29 @@ func (md *MessageDisposition) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes MessageDisposition
+// String returns a fixed-width MessageDisposition record
 func (md *MessageDisposition) String() string {
+	return md.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a MessageDisposition record formatted according to the FormatOptions
+func (md *MessageDisposition) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(11)
+
 	buf.WriteString(md.tag)
-	buf.WriteString(md.MessageDispositionFormatVersionField())
-	buf.WriteString(md.MessageDispositionTestProductionCodeField())
-	buf.WriteString(md.MessageDispositionMessageDuplicationCodeField())
-	buf.WriteString(md.MessageDispositionMessageStatusIndicatorField())
-	return buf.String()
+	buf.WriteString(md.FormatMessageDispositionFormatVersion(options))
+	buf.WriteString(md.FormatMessageDispositionTestProductionCode(options))
+	buf.WriteString(md.FormatMessageDispositionMessageDuplicationCode(options))
+	buf.WriteString(md.FormatMessageDispositionMessageStatusIndicator(options))
+
+	if options.VariableLengthFields {
+		return md.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on MessageDisposition and returns an error if not Validated
@@ -105,4 +154,24 @@ func (md *MessageDisposition) MessageDispositionMessageDuplicationCodeField() st
 // MessageDispositionMessageStatusIndicatorField gets a string of the MessageDuplicationCode field
 func (md *MessageDisposition) MessageDispositionMessageStatusIndicatorField() string {
 	return md.alphaField(md.MessageStatusIndicator, 1)
+}
+
+// FormatMessageDispositionFormatVersion returns FormatVersion formatted according to the FormatOptions
+func (md *MessageDisposition) FormatMessageDispositionFormatVersion(options FormatOptions) string {
+	return md.formatAlphaField(md.FormatVersion, 2, options)
+}
+
+// FormatMessageDispositionTestProductionCode returns TestProductionCode formatted according to the FormatOptions
+func (md *MessageDisposition) FormatMessageDispositionTestProductionCode(options FormatOptions) string {
+	return md.formatAlphaField(md.TestProductionCode, 1, options)
+}
+
+// FormatMessageDispositionMessageDuplicationCode returns MessageDuplicationCode formatted according to the FormatOptions
+func (md *MessageDisposition) FormatMessageDispositionMessageDuplicationCode(options FormatOptions) string {
+	return md.formatAlphaField(md.MessageDuplicationCode, 1, options)
+}
+
+// FormatMessageDispositionMessageStatusIndicator returns MessageStatusIndicator formatted according to the FormatOptions
+func (md *MessageDisposition) FormatMessageDispositionMessageStatusIndicator(options FormatOptions) string {
+	return md.formatAlphaField(md.MessageStatusIndicator, 1, options)
 }

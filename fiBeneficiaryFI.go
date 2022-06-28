@@ -36,16 +36,59 @@ func NewFIBeneficiaryFI() *FIBeneficiaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fibfi *FIBeneficiaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 201 {
-		return NewTagWrongLengthErr(201, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	fibfi.tag = record[:6]
-	fibfi.FIToFI.LineOne = fibfi.parseStringField(record[6:36])
-	fibfi.FIToFI.LineTwo = fibfi.parseStringField(record[36:69])
-	fibfi.FIToFI.LineThree = fibfi.parseStringField(record[69:102])
-	fibfi.FIToFI.LineFour = fibfi.parseStringField(record[102:135])
-	fibfi.FIToFI.LineFive = fibfi.parseStringField(record[135:168])
-	fibfi.FIToFI.LineSix = fibfi.parseStringField(record[168:201])
+	length := 6
+
+	value, read, err := fibfi.parseVariableStringField(record[length:], 30)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	fibfi.FIToFI.LineOne = value
+	length += read
+
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	fibfi.FIToFI.LineTwo = value
+	length += read
+
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	fibfi.FIToFI.LineThree = value
+	length += read
+
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	fibfi.FIToFI.LineFour = value
+	length += read
+
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFive", err)
+	}
+	fibfi.FIToFI.LineFive = value
+	length += read
+
+	value, read, err = fibfi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineSix", err)
+	}
+	fibfi.FIToFI.LineSix = value
+	length += read
+
+	if !fibfi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +106,31 @@ func (fibfi *FIBeneficiaryFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIBeneficiaryFI
+// String returns a fixed-width FIBeneficiaryFI record
 func (fibfi *FIBeneficiaryFI) String() string {
+	return fibfi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIBeneficiaryFI record formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(201)
+
 	buf.WriteString(fibfi.tag)
-	buf.WriteString(fibfi.LineOneField())
-	buf.WriteString(fibfi.LineTwoField())
-	buf.WriteString(fibfi.LineThreeField())
-	buf.WriteString(fibfi.LineFourField())
-	buf.WriteString(fibfi.LineFiveField())
-	buf.WriteString(fibfi.LineSixField())
-	return buf.String()
+	buf.WriteString(fibfi.FormatLineOne(options))
+	buf.WriteString(fibfi.FormatLineTwo(options))
+	buf.WriteString(fibfi.FormatLineThree(options))
+	buf.WriteString(fibfi.FormatLineFour(options))
+	buf.WriteString(fibfi.FormatLineFive(options))
+	buf.WriteString(fibfi.FormatLineSix(options))
+
+	if options.VariableLengthFields {
+		return fibfi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIBeneficiaryFI and returns an error if not Validated
@@ -132,4 +188,34 @@ func (fibfi *FIBeneficiaryFI) LineFiveField() string {
 // LineSixField gets a string of the LineSix field
 func (fibfi *FIBeneficiaryFI) LineSixField() string {
 	return fibfi.alphaField(fibfi.FIToFI.LineSix, 33)
+}
+
+// FormatLineOne returns FIToFI.LineOne formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineOne(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineOne, 30, options)
+}
+
+// FormatLineTwo returns FIToFI.LineTwo formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineTwo(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineTwo, 33, options)
+}
+
+// FormatLineThree FIToFI.LineThree LineOne formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineThree(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineThree, 33, options)
+}
+
+// FormatLineFour returns FIToFI.LineFour formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineFour(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineFour, 33, options)
+}
+
+// FormatLineFive returns FIToFI.LineFive formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineFive(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineFive, 33, options)
+}
+
+// FormatLineSix returns FIToFI.LineSix formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineSix(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineSix, 33, options)
 }

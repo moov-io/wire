@@ -37,11 +37,24 @@ func NewExchangeRate() *ExchangeRate {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (eRate *ExchangeRate) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	eRate.tag = record[:6]
-	eRate.ExchangeRate = eRate.parseStringField(record[6:18])
+	length := 6
+
+	value, read, err := eRate.parseVariableStringField(record[length:], 12)
+	if err != nil {
+		return fieldError("ExchangeRate", err)
+	}
+	eRate.ExchangeRate = value
+	length += read
+
+	if !eRate.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,13 +72,26 @@ func (eRate *ExchangeRate) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ExchangeRate
+// String returns a fixed-width ExchangeRate record
 func (eRate *ExchangeRate) String() string {
+	return eRate.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ExchangeRate record formatted according to the FormatOptions
+func (eRate *ExchangeRate) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(eRate.tag)
-	buf.WriteString(eRate.ExchangeRateField())
-	return buf.String()
+	buf.WriteString(eRate.FormatExchangeRate(options))
+
+	if options.VariableLengthFields {
+		return eRate.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on ExchangeRate and returns an error if not Validated
@@ -83,4 +109,9 @@ func (eRate *ExchangeRate) Validate() error {
 // ExchangeRateField gets a string of the ExchangeRate field
 func (eRate *ExchangeRate) ExchangeRateField() string {
 	return eRate.alphaField(eRate.ExchangeRate, 12)
+}
+
+// FormatExchangeRate returns ExchangeRate formatted according to the FormatOptions
+func (eRate *ExchangeRate) FormatExchangeRate(options FormatOptions) string {
+	return eRate.formatAlphaField(eRate.ExchangeRate, 12, options)
 }

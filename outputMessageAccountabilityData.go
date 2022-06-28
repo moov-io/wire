@@ -7,6 +7,7 @@ package wire
 import (
 	"encoding/json"
 	"strings"
+	"unicode/utf8"
 )
 
 // OutputMessageAccountabilityData is the Output Message Accountability Data (OMAD) of the wire
@@ -44,14 +45,61 @@ func NewOutputMessageAccountabilityData() *OutputMessageAccountabilityData {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (omad *OutputMessageAccountabilityData) Parse(record string) {
+func (omad *OutputMessageAccountabilityData) Parse(record string) error {
+	if utf8.RuneCountInString(record) < 14 {
+		return NewTagMinLengthErr(14, len(record))
+	}
+
 	omad.tag = record[:6]
-	omad.OutputCycleDate = omad.parseStringField(record[6:14])
-	omad.OutputDestinationID = omad.parseStringField(record[14:22])
-	omad.OutputSequenceNumber = omad.parseStringField(record[22:28])
-	omad.OutputDate = omad.parseStringField(record[28:32])
-	omad.OutputTime = omad.parseStringField(record[32:36])
-	omad.OutputFRBApplicationIdentification = omad.parseStringField(record[36:40])
+	length := 6
+
+	value, read, err := omad.parseVariableStringField(record[length:], 8)
+	if err != nil {
+		return fieldError("OutputCycleDate", err)
+	}
+	omad.OutputCycleDate = value
+	length += read
+
+	value, read, err = omad.parseVariableStringField(record[length:], 8)
+	if err != nil {
+		return fieldError("OutputDestinationID", err)
+	}
+	omad.OutputDestinationID = value
+	length += read
+
+	if len(record) < length+6 {
+		return fieldError("OutputSequenceNumber", ErrValidLength)
+	}
+
+	omad.OutputSequenceNumber = record[length : length+6]
+	length += 6
+
+	value, read, err = omad.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("OutputDate", err)
+	}
+	omad.OutputDate = value
+	length += read
+
+	value, read, err = omad.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("OutputTime", err)
+	}
+	omad.OutputTime = value
+	length += read
+
+	value, read, err = omad.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("OutputFRBApplicationIdentification", err)
+	}
+	omad.OutputFRBApplicationIdentification = value
+	length += read
+
+	if !omad.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
+	return nil
 }
 
 func (omad *OutputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
@@ -68,18 +116,31 @@ func (omad *OutputMessageAccountabilityData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OutputMessageAccountabilityData
+// String returns a fixed-width OutputMessageAccountabilityData record
 func (omad *OutputMessageAccountabilityData) String() string {
+	return omad.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OutputMessageAccountabilityData record formatted according to the FormatOptions
+func (omad *OutputMessageAccountabilityData) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(40)
+
 	buf.WriteString(omad.tag)
-	buf.WriteString(omad.OutputCycleDateField())
-	buf.WriteString(omad.OutputDestinationIDField())
+	buf.WriteString(omad.FormatOutputCycleDate(options))
+	buf.WriteString(omad.FormatOutputDestinationID(options))
 	buf.WriteString(omad.OutputSequenceNumberField())
-	buf.WriteString(omad.OutputDateField())
-	buf.WriteString(omad.OutputTimeField())
-	buf.WriteString(omad.OutputFRBApplicationIdentificationField())
-	return buf.String()
+	buf.WriteString(omad.FormatOutputDate(options))
+	buf.WriteString(omad.FormatOutputTime(options))
+	buf.WriteString(omad.FormatOutputFRBApplicationIdentification(options))
+
+	if options.VariableLengthFields {
+		return omad.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OutputMessageAccountabilityData and returns an error if not Validated
@@ -92,14 +153,14 @@ func (omad *OutputMessageAccountabilityData) Validate() error {
 	return nil
 }
 
-// OutputCycleDateField gets a string of the OutputCycleDate field
-func (omad *OutputMessageAccountabilityData) OutputCycleDateField() string {
-	return omad.alphaField(omad.OutputCycleDate, 8)
+// FormatOutputCycleDate returns OutputCycleDate formatted according to the FormatOptions
+func (omad *OutputMessageAccountabilityData) FormatOutputCycleDate(options FormatOptions) string {
+	return omad.formatAlphaField(omad.OutputCycleDate, 8, options)
 }
 
-// OutputDestinationIDField gets a string of the OutputDestinationID field
-func (omad *OutputMessageAccountabilityData) OutputDestinationIDField() string {
-	return omad.alphaField(omad.OutputDestinationID, 8)
+// FormatOutputDestinationID returns OutputDestinationID formatted according to the FormatOptions
+func (omad *OutputMessageAccountabilityData) FormatOutputDestinationID(options FormatOptions) string {
+	return omad.formatAlphaField(omad.OutputDestinationID, 8, options)
 }
 
 // OutputSequenceNumberField gets a string of the OutputSequenceNumber field
@@ -107,17 +168,17 @@ func (omad *OutputMessageAccountabilityData) OutputSequenceNumberField() string 
 	return omad.numericStringField(omad.OutputSequenceNumber, 6)
 }
 
-// OutputDateField gets a string of the OutputDate field
-func (omad *OutputMessageAccountabilityData) OutputDateField() string {
-	return omad.alphaField(omad.OutputDate, 4)
+// FormatOutputDate returns OutputDate formatted according to the FormatOptions
+func (omad *OutputMessageAccountabilityData) FormatOutputDate(options FormatOptions) string {
+	return omad.formatAlphaField(omad.OutputDate, 4, options)
 }
 
-// OutputTimeField gets a string of the OutputTime field
-func (omad *OutputMessageAccountabilityData) OutputTimeField() string {
-	return omad.alphaField(omad.OutputTime, 4)
+// FormatOutputTime returns OutputTime formatted according to the FormatOptions
+func (omad *OutputMessageAccountabilityData) FormatOutputTime(options FormatOptions) string {
+	return omad.formatAlphaField(omad.OutputTime, 4, options)
 }
 
-// OutputFRBApplicationIdentificationField gets a string of the OutputFRBApplicationIdentification field
-func (omad *OutputMessageAccountabilityData) OutputFRBApplicationIdentificationField() string {
-	return omad.alphaField(omad.OutputFRBApplicationIdentification, 4)
+// FormatOutputFRBApplicationIdentification returns OutputFRBApplicationIdentification formatted according to the FormatOptions
+func (omad *OutputMessageAccountabilityData) FormatOutputFRBApplicationIdentification(options FormatOptions) string {
+	return omad.formatAlphaField(omad.OutputFRBApplicationIdentification, 4, options)
 }

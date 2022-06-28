@@ -36,11 +36,24 @@ func NewPreviousMessageIdentifier() *PreviousMessageIdentifier {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pmi *PreviousMessageIdentifier) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	pmi.tag = record[:6]
-	pmi.PreviousMessageIdentifier = pmi.parseStringField(record[6:28])
+	length := 6
+
+	value, read, err := pmi.parseVariableStringField(record[length:], 22)
+	if err != nil {
+		return fieldError("PreviousMessageIdentifier", err)
+	}
+	pmi.PreviousMessageIdentifier = value
+	length += read
+
+	if !pmi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -58,12 +71,21 @@ func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes PreviousMessageIdentifier
+// String returns a fixed-width PreviousMessageIdentifier record
 func (pmi *PreviousMessageIdentifier) String() string {
+	return pmi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a PreviousMessageIdentifier record formatted according to the FormatOptions
+func (pmi *PreviousMessageIdentifier) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(pmi.tag)
-	buf.WriteString(pmi.PreviousMessageIdentifierField())
+	buf.WriteString(pmi.FormatPreviousMessageIdentifier(options))
+
 	return buf.String()
 }
 
@@ -82,4 +104,9 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 // PreviousMessageIdentifierField gets a string of PreviousMessageIdentifier field
 func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField() string {
 	return pmi.alphaField(pmi.PreviousMessageIdentifier, 22)
+}
+
+// FormatPreviousMessageIdentifier returns PreviousMessageIdentifier formatted according to the FormatOptions
+func (pmi *PreviousMessageIdentifier) FormatPreviousMessageIdentifier(options FormatOptions) string {
+	return pmi.formatAlphaField(pmi.PreviousMessageIdentifier, 22, options)
 }

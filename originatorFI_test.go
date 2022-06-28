@@ -124,12 +124,12 @@ func TestParseOriginatorFIWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorFI()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseOriginatorFIReaderParseError parses a wrong OriginatorFI reader parse error
 func TestParseOriginatorFIReaderParseError(t *testing.T) {
-	var line = "{5100}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                      "
+	var line = "{5100}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -148,4 +148,50 @@ func TestOriginatorFITagError(t *testing.T) {
 	ofi.tag = "{9999}"
 
 	require.EqualError(t, ofi.Validate(), fieldError("tag", ErrValidTagForType, ofi.tag).Error())
+}
+
+// TestStringOriginatorFIVariableLength parses using variable length
+func TestStringOriginatorFIVariableLength(t *testing.T) {
+	var line = "{5100}B1*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorFI()
+	require.Nil(t, err)
+
+	line = "{5100}B1                                                                                                                                                                             NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{5100}B1*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{5100}B1*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringOriginatorFIOptions validates Format() formatted according to the FormatOptions
+func TestStringOriginatorFIOptions(t *testing.T) {
+	var line = "{5100}B1*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorFI()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.OriginatorFI
+	require.Equal(t, record.String(), "{5100}B1                                                                                                                                                                             ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5100}B1*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

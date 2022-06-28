@@ -39,12 +39,12 @@ func TestParseBeneficiaryReferenceWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryReference()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(22, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("BeneficiaryReference", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryReferenceReaderParseError parses a wrong BeneficiaryReference reader parse error
 func TestParseBeneficiaryReferenceReaderParseError(t *testing.T) {
-	var line = "{4320}Reference®      "
+	var line = "{4320}Reference®     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -67,4 +67,50 @@ func TestBeneficiaryReferenceTagError(t *testing.T) {
 	err := br.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, br.tag).Error())
+}
+
+// TestStringBeneficiaryReferenceVariableLength parses using variable length
+func TestStringBeneficiaryReferenceVariableLength(t *testing.T) {
+	var line = "{4320}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryReference()
+	require.Nil(t, err)
+
+	line = "{4320}Reference       NN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryReference()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4320}***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryReference()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4320}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryReference()
+	require.Equal(t, err, nil)
+}
+
+// TestStringBeneficiaryReferenceOptions validates Format() formatted according to the FormatOptions
+func TestStringBeneficiaryReferenceOptions(t *testing.T) {
+	var line = "{4320}Reference*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryReference()
+	require.Equal(t, err, nil)
+
+	br := r.currentFEDWireMessage.BeneficiaryReference
+	require.Equal(t, br.String(), "{4320}Reference       ")
+	require.Equal(t, br.Format(FormatOptions{VariableLengthFields: true}), "{4320}Reference*")
+	require.Equal(t, br.String(), br.Format(FormatOptions{VariableLengthFields: false}))
 }

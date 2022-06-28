@@ -36,16 +36,59 @@ func NewOrderingInstitution() *OrderingInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (oi *OrderingInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	oi.tag = record[:6]
-	oi.CoverPayment.SwiftFieldTag = oi.parseStringField(record[6:11])
-	oi.CoverPayment.SwiftLineOne = oi.parseStringField(record[11:46])
-	oi.CoverPayment.SwiftLineTwo = oi.parseStringField(record[46:81])
-	oi.CoverPayment.SwiftLineThree = oi.parseStringField(record[81:116])
-	oi.CoverPayment.SwiftLineFour = oi.parseStringField(record[116:151])
-	oi.CoverPayment.SwiftLineFive = oi.parseStringField(record[151:186])
+	length := 6
+
+	value, read, err := oi.parseVariableStringField(record[length:], 5)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	oi.CoverPayment.SwiftFieldTag = value
+	length += read
+
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	oi.CoverPayment.SwiftLineOne = value
+	length += read
+
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	oi.CoverPayment.SwiftLineTwo = value
+	length += read
+
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	oi.CoverPayment.SwiftLineThree = value
+	length += read
+
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	oi.CoverPayment.SwiftLineFour = value
+	length += read
+
+	value, read, err = oi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	oi.CoverPayment.SwiftLineFive = value
+	length += read
+
+	if !oi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +106,31 @@ func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OrderingInstitution
+// String returns a fixed-width OrderingInstitution record
 func (oi *OrderingInstitution) String() string {
+	return oi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OrderingInstitution record formatted according to the FormatOptions
+func (oi *OrderingInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
 	buf.WriteString(oi.tag)
-	buf.WriteString(oi.SwiftFieldTagField())
-	buf.WriteString(oi.SwiftLineOneField())
-	buf.WriteString(oi.SwiftLineTwoField())
-	buf.WriteString(oi.SwiftLineThreeField())
-	buf.WriteString(oi.SwiftLineFourField())
-	buf.WriteString(oi.SwiftLineFiveField())
-	return buf.String()
+
+	buf.WriteString(oi.FormatSwiftFieldTag(options))
+	buf.WriteString(oi.FormatSwiftLineOne(options))
+	buf.WriteString(oi.FormatSwiftLineTwo(options))
+	buf.WriteString(oi.FormatSwiftLineThree(options))
+	buf.WriteString(oi.FormatSwiftLineFour(options))
+	buf.WriteString(oi.FormatSwiftLineFive(options))
+
+	if options.VariableLengthFields {
+		return oi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OrderingInstitution and returns an error if not Validated
@@ -144,4 +200,34 @@ func (oi *OrderingInstitution) SwiftLineFourField() string {
 // SwiftLineFiveField gets a string of the SwiftLineFive field
 func (oi *OrderingInstitution) SwiftLineFiveField() string {
 	return oi.alphaField(oi.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftFieldTag(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineOne(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineTwo(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineThree(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineFour(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineFive(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineFive, 35, options)
 }

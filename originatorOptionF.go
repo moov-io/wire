@@ -100,15 +100,52 @@ func NewOriginatorOptionF() *OriginatorOptionF {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (oof *OriginatorOptionF) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagMinLengthErr(13, len(record))
 	}
+
 	oof.tag = oof.parseStringField(record[:6])
-	oof.PartyIdentifier = oof.parseStringField(record[6:41])
-	oof.Name = oof.parseStringField(record[41:76])
-	oof.LineOne = oof.parseStringField(record[76:111])
-	oof.LineTwo = oof.parseStringField(record[111:146])
-	oof.LineThree = oof.parseStringField(record[146:181])
+	length := 6
+
+	value, read, err := oof.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("PartyIdentifier", err)
+	}
+	oof.PartyIdentifier = value
+	length += read
+
+	value, read, err = oof.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("Name", err)
+	}
+	oof.Name = value
+	length += read
+
+	value, read, err = oof.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	oof.LineOne = value
+	length += read
+
+	value, read, err = oof.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	oof.LineTwo = value
+	length += read
+
+	value, read, err = oof.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	oof.LineThree = value
+	length += read
+
+	if !oof.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -126,17 +163,30 @@ func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OriginatorOptionF
+// String returns a fixed-width OriginatorOptionF record
 func (oof *OriginatorOptionF) String() string {
+	return oof.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OriginatorOptionF record formatted according to the FormatOptions
+func (oof *OriginatorOptionF) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(oof.tag)
-	buf.WriteString(oof.PartyIdentifierField())
-	buf.WriteString(oof.NameField())
-	buf.WriteString(oof.LineOneField())
-	buf.WriteString(oof.LineTwoField())
-	buf.WriteString(oof.LineThreeField())
-	return buf.String()
+	buf.WriteString(oof.FormatPartyIdentifier(options))
+	buf.WriteString(oof.FormatName(options))
+	buf.WriteString(oof.FormatLineOne(options))
+	buf.WriteString(oof.FormatLineTwo(options))
+	buf.WriteString(oof.FormatLineThree(options))
+
+	if options.VariableLengthFields {
+		return oof.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OriginatorOptionF and returns an error if not Validated
@@ -169,27 +219,27 @@ func (oof *OriginatorOptionF) fieldInclusion() error {
 	return nil
 }
 
-// PartyIdentifierField gets a string of the PartyIdentifier field
-func (oof *OriginatorOptionF) PartyIdentifierField() string {
-	return oof.alphaField(oof.PartyIdentifier, 35)
+// FormatPartyIdentifier returns PartyIdentifier formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatPartyIdentifier(options FormatOptions) string {
+	return oof.formatAlphaField(oof.PartyIdentifier, 35, options)
 }
 
-// NameField gets a string of the Name field
-func (oof *OriginatorOptionF) NameField() string {
-	return oof.alphaField(oof.Name, 35)
+// FormatName returns Name formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatName(options FormatOptions) string {
+	return oof.formatAlphaField(oof.Name, 35, options)
 }
 
-// LineOneField gets a string of the LineOne field
-func (oof *OriginatorOptionF) LineOneField() string {
-	return oof.alphaField(oof.LineOne, 35)
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatLineOne(options FormatOptions) string {
+	return oof.formatAlphaField(oof.LineOne, 35, options)
 }
 
-// LineTwoField gets a string of the LineTwo field
-func (oof *OriginatorOptionF) LineTwoField() string {
-	return oof.alphaField(oof.LineTwo, 35)
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatLineTwo(options FormatOptions) string {
+	return oof.formatAlphaField(oof.LineTwo, 35, options)
 }
 
-// LineThreeField gets a string of the LineThree field
-func (oof *OriginatorOptionF) LineThreeField() string {
-	return oof.alphaField(oof.LineThree, 35)
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatLineThree(options FormatOptions) string {
+	return oof.formatAlphaField(oof.LineThree, 35, options)
 }

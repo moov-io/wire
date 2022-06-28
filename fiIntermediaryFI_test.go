@@ -93,12 +93,12 @@ func TestParseFIIntermediaryFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIIntermediaryFI()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(201, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
 }
 
 // TestParseFIIntermediaryFIReaderParseError parses a wrong FIIntermediaryFI reader parse error
 func TestParseFIIntermediaryFIReaderParseError(t *testing.T) {
-	var line = "{6200}Line ®ix                                                                                                                                                                                           "
+	var line = "{6200}Line ®ix                                                                                                                                                                                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -121,4 +121,50 @@ func TestFIIntermediaryFITagError(t *testing.T) {
 	err := fiifi.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, fiifi.tag).Error())
+}
+
+// TestStringFIIntermediaryFIVariableLength parses using variable length
+func TestStringFIIntermediaryFIVariableLength(t *testing.T) {
+	var line = "{6200}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIIntermediaryFI()
+	require.Nil(t, err)
+
+	line = "{6200}                                                                                                                                                                                                                  NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIIntermediaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6200}********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIIntermediaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6200}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIIntermediaryFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringFIIntermediaryFIOptions validates Format() formatted according to the FormatOptions
+func TestStringFIIntermediaryFIOptions(t *testing.T) {
+	var line = "{6200}*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIIntermediaryFI()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.FIIntermediaryFI
+	require.Equal(t, record.String(), "{6200}                                                                                                                                                                                                   ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6200}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

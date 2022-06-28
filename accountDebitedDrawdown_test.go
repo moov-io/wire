@@ -134,12 +134,12 @@ func TestParseAccountDebitedDrawdownWrongLength(t *testing.T) {
 
 	err := r.parseAccountDebitedDrawdown()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseAccountDebitedDrawdownReaderParseError parses a wrong AccountDebitedDrawdown reader parse error
 func TestParseAccountDebitedDrawdownReaderParseError(t *testing.T) {
-	var line = "{4400}D123456789                         debitDD ®ame                       Address One                        Address Two                        Address Three                      "
+	var line = "{4400}D123456789                         debitDD ®ame                       Address One                        Address Two                        Address Three                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -162,4 +162,52 @@ func TestAccountDebitedDrawdownTagError(t *testing.T) {
 	err := debitDD.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, debitDD.tag).Error())
+}
+
+// TestStringDebitedDrawdownVariableLength parses using variable length
+func TestStringAccountDebitedDrawdownVariableLength(t *testing.T) {
+	var line = "{4400}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseAccountDebitedDrawdown()
+	expected := r.parseError(NewTagMinLengthErr(9, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{4400}D123456789                         debitDD Name                       Address One                        Address Two                        Address Three                    NNNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAccountDebitedDrawdown()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4400}***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAccountDebitedDrawdown()
+	expected = r.parseError(fieldError("Identifier", ErrFieldRequired)).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{4400}D2*3*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseAccountDebitedDrawdown()
+	require.Equal(t, err, nil)
+}
+
+// TestStringDebitedDrawdownOptions validates Format() formatted according to the FormatOptions
+func TestStringAccountDebitedDrawdownOptions(t *testing.T) {
+	var line = "{4400}D2*3*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseAccountDebitedDrawdown()
+	require.Equal(t, err, nil)
+
+	add := r.currentFEDWireMessage.AccountDebitedDrawdown
+	require.Equal(t, add.String(), "{4400}D2                                 3                                                                                                                                           ")
+	require.Equal(t, add.Format(FormatOptions{VariableLengthFields: true}), "{4400}D2*3*")
+	require.Equal(t, add.String(), add.Format(FormatOptions{VariableLengthFields: false}))
 }

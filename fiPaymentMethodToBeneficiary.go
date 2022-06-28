@@ -39,12 +39,25 @@ func NewFIPaymentMethodToBeneficiary() *FIPaymentMethodToBeneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (pm *FIPaymentMethodToBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 41 {
-		return NewTagWrongLengthErr(41, len(record))
+	if utf8.RuneCountInString(record) < 11 {
+		return NewTagMinLengthErr(11, len(record))
 	}
+
 	pm.tag = record[:6]
 	pm.PaymentMethod = pm.parseStringField(record[6:11])
-	pm.AdditionalInformation = pm.parseStringField(record[11:41])
+	length := 11
+
+	value, read, err := pm.parseVariableStringField(record[length:], 30)
+	if err != nil {
+		return fieldError("AdditionalInformation", err)
+	}
+	pm.AdditionalInformation = value
+	length += read
+
+	if !pm.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,13 +75,22 @@ func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIPaymentMethodToBeneficiary
+// String returns a fixed-width FIPaymentMethodToBeneficiary record
 func (pm *FIPaymentMethodToBeneficiary) String() string {
+	return pm.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIPaymentMethodToBeneficiary record formatted according to the FormatOptions
+func (pm *FIPaymentMethodToBeneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(41)
+
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())
-	buf.WriteString(pm.AdditionalInformationField())
+	buf.WriteString(pm.FormatAdditionalInformation(options))
+
 	return buf.String()
 }
 
@@ -104,4 +126,9 @@ func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField() string {
 // AdditionalInformationField gets a string of the AdditionalInformation field
 func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField() string {
 	return pm.alphaField(pm.AdditionalInformation, 30)
+}
+
+// FormatAdditionalInformation returns AdditionalInformation formatted according to the FormatOptions
+func (pm *FIPaymentMethodToBeneficiary) FormatAdditionalInformation(options FormatOptions) string {
+	return pm.formatAlphaField(pm.AdditionalInformation, 30, options)
 }

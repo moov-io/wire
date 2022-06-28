@@ -70,7 +70,7 @@ func TestParseInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseInstructedAmount()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(24, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
 }
 
 // TestParseInstructedAmountReaderParseError parses a wrong InstructedAmount reader parse error
@@ -94,4 +94,50 @@ func TestInstructedAmountTagError(t *testing.T) {
 	ia.tag = "{9999}"
 
 	require.EqualError(t, ia.Validate(), fieldError("tag", ErrValidTagForType, ia.tag).Error())
+}
+
+// TestStringInstructedAmountVariableLength parses using variable length
+func TestStringInstructedAmountVariableLength(t *testing.T) {
+	var line = "{3710}USD4567,89*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructedAmount()
+	require.Nil(t, err)
+
+	line = "{3710}USD4567,89        NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructedAmount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3710}USD4567,89***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructedAmount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3710}USD4567,89*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseInstructedAmount()
+	require.Equal(t, err, nil)
+}
+
+// TestStringInstructedAmountOptions validates Format() formatted according to the FormatOptions
+func TestStringInstructedAmountOptions(t *testing.T) {
+	var line = "{3710}USD4567,89*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructedAmount()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.InstructedAmount
+	require.Equal(t, record.String(), "{3710}USD4567,89        ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3710}USD4567,89*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

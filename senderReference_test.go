@@ -39,12 +39,12 @@ func TestParseSenderReferenceWrongLength(t *testing.T) {
 
 	err := r.parseSenderReference()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(22, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SenderReference", ErrValidLength)).Error())
 }
 
 // TestParseSenderReferenceReaderParseError parses a wrong SenderReference reader parse error
 func TestParseSenderReferenceReaderParseError(t *testing.T) {
-	var line = "{3320}Sender®Reference"
+	var line = "{3320}Sender®Referenc"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -63,4 +63,50 @@ func TestSenderReferenceTagError(t *testing.T) {
 	sr.tag = "{9999}"
 
 	require.EqualError(t, sr.Validate(), fieldError("tag", ErrValidTagForType, sr.tag).Error())
+}
+
+// TestStringSenderReferenceVariableLength parses using variable length
+func TestStringSenderReferenceVariableLength(t *testing.T) {
+	var line = "{3320}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderReference()
+	require.Nil(t, err)
+
+	line = "{3320}                NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderReference()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3320}***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderReference()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3320}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderReference()
+	require.Equal(t, err, nil)
+}
+
+// TestStringSenderReferenceOptions validates Format() formatted according to the FormatOptions
+func TestStringSenderReferenceOptions(t *testing.T) {
+	var line = "{3320}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderReference()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.SenderReference
+	require.Equal(t, record.String(), "{3320}                ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3320}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

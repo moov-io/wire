@@ -36,11 +36,24 @@ func NewSenderReference() *SenderReference {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sr *SenderReference) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 22 {
-		return NewTagWrongLengthErr(22, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	sr.tag = record[:6]
-	sr.SenderReference = record[6:22]
+	length := 6
+
+	value, read, err := sr.parseVariableStringField(record[length:], 16)
+	if err != nil {
+		return fieldError("SenderReference", err)
+	}
+	sr.SenderReference = value
+	length += read
+
+	if !sr.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -58,12 +71,21 @@ func (sr *SenderReference) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderReference
+// String returns a fixed-width SenderReference record
 func (sr *SenderReference) String() string {
+	return sr.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderReference record formatted according to the FormatOptions
+func (sr *SenderReference) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(22)
+
 	buf.WriteString(sr.tag)
-	buf.WriteString(sr.SenderReferenceField())
+	buf.WriteString(sr.FormatSenderReference(options))
+
 	return buf.String()
 }
 
@@ -79,7 +101,7 @@ func (sr *SenderReference) Validate() error {
 	return nil
 }
 
-// SenderReferenceField gets a string of SenderReference field
-func (sr *SenderReference) SenderReferenceField() string {
-	return sr.alphaField(sr.SenderReference, 16)
+// FormatSenderReference returns SenderReference formatted according to the FormatOptions
+func (sr *SenderReference) FormatSenderReference(options FormatOptions) string {
+	return sr.formatAlphaField(sr.SenderReference, 16, options)
 }

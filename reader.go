@@ -8,6 +8,8 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"regexp"
+	"strings"
 	"unicode/utf8"
 
 	"github.com/moov-io/base"
@@ -30,7 +32,13 @@ type Reader struct {
 	tagName string
 	// errors holds each error encountered when attempting to parse the file
 	errors base.ErrorList
+	// headerData holds header static data for file
+	headerData string
 }
+
+var (
+	tagRegex = regexp.MustCompile(`{([0-9]{4})}`)
+)
 
 // error returns a new ParseError based on err
 func (r *Reader) parseError(err error) error {
@@ -49,9 +57,13 @@ func (r *Reader) parseError(err error) error {
 
 // NewReader returns a new ACH Reader that reads from r.
 func NewReader(r io.Reader) *Reader {
-	return &Reader{
+	reader := &Reader{
 		scanner: bufio.NewScanner(r),
 	}
+
+	reader.scanner.Split(scanLinesWithSegmentFormat)
+
+	return reader
 }
 
 // addCurrentFEDWireMessage creates the current FEDWireMessage for the file being read. A successful
@@ -64,15 +76,34 @@ func NewReader(r io.Reader) *Reader {
 // on the first character of each line. It also enforces FED Wire formatting rules and returns
 // the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
+
+	spiltString := func(line string) []string {
+
+		// strip new lines
+		line = strings.ReplaceAll(strings.ReplaceAll(line, "\r\n", ""), "\n", "")
+
+		// split line by tag again
+		indexes := tagRegex.FindAllStringIndex(line, -1)
+		var result []string
+		last := len(line)
+		for i := range indexes {
+			index := indexes[len(indexes)-1-i][0]
+			result = append([]string{line[index:last]}, result...)
+			last = index
+		}
+		return result
+	}
+
 	r.lineNum = 0
 	// read through the entire file
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
-		r.lineNum++
-		// ToDo: File length Check?
-		r.line = line
-		if err := r.parseLine(); err != nil {
-			r.errors.Add(err)
+		for _, subLine := range spiltString(line) {
+			r.lineNum++
+			r.line = subLine
+			if err := r.parseLine(); err != nil {
+				r.errors.Add(err)
+			}
 		}
 	}
 
@@ -166,7 +197,6 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 		if err := r.parseExchangeRate(); err != nil {
 			return err
 		}
-
 	case TagBeneficiaryIntermediaryFI:
 		if err := r.parseBeneficiaryIntermediaryFI(); err != nil {
 			return err
@@ -336,6 +366,10 @@ func (r *Reader) parseLine() error { //nolint:gocyclo
 			return err
 		}
 	default:
+		if r.lineNum == 1 && !tagRegex.MatchString(r.line[:6]) {
+			r.headerData = r.line
+			return nil
+		}
 		return NewErrInvalidTag(r.line[:6])
 	}
 	return nil
@@ -487,7 +521,9 @@ func (r *Reader) parsePaymentNotification() error {
 func (r *Reader) parseCharges() error {
 	r.tagName = "Charges"
 	c := new(Charges)
-	c.Parse(r.line)
+	if err := c.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := c.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -1070,7 +1106,9 @@ func (r *Reader) parseServiceMessage() error {
 func (r *Reader) parseMessageDisposition() error {
 	r.tagName = "MessageDisposition"
 	md := new(MessageDisposition)
-	md.Parse(r.line)
+	if err := md.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := md.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -1094,7 +1132,9 @@ func (r *Reader) parseReceiptTimeStamp() error {
 func (r *Reader) parseOutputMessageAccountabilityData() error {
 	r.tagName = "OutputMessageAccountabilityData"
 	omad := new(OutputMessageAccountabilityData)
-	omad.Parse(r.line)
+	if err := omad.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := omad.Validate(); err != nil {
 		return r.parseError(err)
 	}
@@ -1105,10 +1145,44 @@ func (r *Reader) parseOutputMessageAccountabilityData() error {
 func (r *Reader) parseErrorWire() error {
 	r.tagName = "ErrorWire"
 	ew := new(ErrorWire)
-	ew.Parse(r.line)
+	if err := ew.Parse(r.line); err != nil {
+		return r.parseError(err)
+	}
 	if err := ew.Validate(); err != nil {
 		return r.parseError(err)
 	}
 	r.currentFEDWireMessage.ErrorWire = ew
 	return nil
+}
+
+//scanLinesWithSegmentFormat allows Reader to read each segment
+func scanLinesWithSegmentFormat(data []byte, atEOF bool) (advance int, token []byte, err error) {
+
+	if atEOF && len(data) == 0 {
+		return 0, nil, nil
+	}
+
+	indexes := tagRegex.FindAllIndex(data, -1)
+	if len(indexes) == 0 {
+		return len(data), data, nil
+	}
+
+	if len(indexes) < 2 && !atEOF {
+		// need more data
+		return 0, nil, nil
+	}
+
+	firstIndex := indexes[0]
+	if firstIndex[0] > 0 {
+		return firstIndex[0], data[:firstIndex[0]], nil
+	}
+
+	if len(indexes) == 1 {
+		return len(data), data, nil
+	}
+
+	secondIndex := indexes[1]
+	length := secondIndex[0]
+
+	return length, data[:length], nil
 }

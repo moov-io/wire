@@ -36,17 +36,60 @@ func NewFIIntermediaryFIAdvice() *FIIntermediaryFIAdvice {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fiifia *FIIntermediaryFIAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	fiifia.tag = record[:6]
 	fiifia.Advice.AdviceCode = fiifia.parseStringField(record[6:9])
-	fiifia.Advice.LineOne = fiifia.parseStringField(record[9:35])
-	fiifia.Advice.LineTwo = fiifia.parseStringField(record[35:68])
-	fiifia.Advice.LineThree = fiifia.parseStringField(record[68:101])
-	fiifia.Advice.LineFour = fiifia.parseStringField(record[101:134])
-	fiifia.Advice.LineFive = fiifia.parseStringField(record[134:167])
-	fiifia.Advice.LineSix = fiifia.parseStringField(record[167:200])
+	length := 9
+
+	value, read, err := fiifia.parseVariableStringField(record[length:], 26)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	fiifia.Advice.LineOne = value
+	length += read
+
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	fiifia.Advice.LineTwo = value
+	length += read
+
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	fiifia.Advice.LineThree = value
+	length += read
+
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	fiifia.Advice.LineFour = value
+	length += read
+
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFive", err)
+	}
+	fiifia.Advice.LineFive = value
+	length += read
+
+	value, read, err = fiifia.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineSix", err)
+	}
+	fiifia.Advice.LineSix = value
+	length += read
+
+	if !fiifia.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,19 +107,32 @@ func (fiifia *FIIntermediaryFIAdvice) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIIntermediaryFIAdvice
+// String returns a fixed-width FIIntermediaryFIAdvice record
 func (fiifia *FIIntermediaryFIAdvice) String() string {
+	return fiifia.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIIntermediaryFIAdvice record formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fiifia.tag)
 	buf.WriteString(fiifia.AdviceCodeField())
-	buf.WriteString(fiifia.LineOneField())
-	buf.WriteString(fiifia.LineTwoField())
-	buf.WriteString(fiifia.LineThreeField())
-	buf.WriteString(fiifia.LineFourField())
-	buf.WriteString(fiifia.LineFiveField())
-	buf.WriteString(fiifia.LineSixField())
-	return buf.String()
+	buf.WriteString(fiifia.FormatLineOne(options))
+	buf.WriteString(fiifia.FormatLineTwo(options))
+	buf.WriteString(fiifia.FormatLineThree(options))
+	buf.WriteString(fiifia.FormatLineFour(options))
+	buf.WriteString(fiifia.FormatLineFive(options))
+	buf.WriteString(fiifia.FormatLineSix(options))
+
+	if options.VariableLengthFields {
+		return fiifia.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIIntermediaryFIAdvice and returns an error if not Validated
@@ -142,4 +198,34 @@ func (fiifia *FIIntermediaryFIAdvice) LineFiveField() string {
 // LineSixField gets a string of the LineSix field
 func (fiifia *FIIntermediaryFIAdvice) LineSixField() string {
 	return fiifia.alphaField(fiifia.Advice.LineSix, 33)
+}
+
+// FormatLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) FormatLineOne(options FormatOptions) string {
+	return fiifia.formatAlphaField(fiifia.Advice.LineOne, 26, options)
+}
+
+// FormatLineTwo returns Advice.LineTwo formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) FormatLineTwo(options FormatOptions) string {
+	return fiifia.formatAlphaField(fiifia.Advice.LineTwo, 33, options)
+}
+
+// FormatLineThree returns Advice.LineThree formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) FormatLineThree(options FormatOptions) string {
+	return fiifia.formatAlphaField(fiifia.Advice.LineThree, 33, options)
+}
+
+// FormatLineFour returns Advice.LineFour formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) FormatLineFour(options FormatOptions) string {
+	return fiifia.formatAlphaField(fiifia.Advice.LineFour, 33, options)
+}
+
+// FormatLineFive returns Advice.LineFive formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) FormatLineFive(options FormatOptions) string {
+	return fiifia.formatAlphaField(fiifia.Advice.LineFive, 33, options)
+}
+
+// FormatLineSix returns Advice.LineSix formatted according to the FormatOptions
+func (fiifia *FIIntermediaryFIAdvice) FormatLineSix(options FormatOptions) string {
+	return fiifia.formatAlphaField(fiifia.Advice.LineSix, 33, options)
 }

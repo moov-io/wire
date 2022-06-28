@@ -56,3 +56,49 @@ func TestReceiptTimeStampTagError(t *testing.T) {
 
 	require.EqualError(t, rts.Validate(), fieldError("tag", ErrValidTagForType, rts.tag).Error())
 }
+
+// TestStringReceiptTimeStampVariableLength parses using variable length
+func TestStringReceiptTimeStampVariableLength(t *testing.T) {
+	var line = "{1110}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseReceiptTimeStamp()
+	require.Nil(t, err)
+
+	line = "{1110}            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiptTimeStamp()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1110}********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiptTimeStamp()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1110}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiptTimeStamp()
+	require.Equal(t, err, nil)
+}
+
+// TestStringReceiptTimeStampOptions validates Format() formatted according to the FormatOptions
+func TestStringReceiptTimeStampOptions(t *testing.T) {
+	var line = "{1110}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseReceiptTimeStamp()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.ReceiptTimeStamp
+	require.Equal(t, record.String(), "{1110}            ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1110}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
+}

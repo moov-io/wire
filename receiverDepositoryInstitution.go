@@ -38,12 +38,31 @@ func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 33 {
-		return NewTagWrongLengthErr(33, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
+
 	rdi.tag = record[:6]
-	rdi.ReceiverABANumber = rdi.parseStringField(record[6:15])
-	rdi.ReceiverShortName = rdi.parseStringField(record[15:33])
+	length := 6
+
+	value, read, err := rdi.parseVariableStringField(record[length:], 9)
+	if err != nil {
+		return fieldError("ReceiverABANumber", err)
+	}
+	rdi.ReceiverABANumber = value
+	length += read
+
+	value, read, err = rdi.parseVariableStringField(record[length:], 18)
+	if err != nil {
+		return fieldError("ReceiverShortName", err)
+	}
+	rdi.ReceiverShortName = value
+	length += read
+
+	if !rdi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -61,13 +80,22 @@ func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ReceiverDepositoryInstitution
+// String returns a fixed-width ReceiverDepositoryInstitution record
 func (rdi *ReceiverDepositoryInstitution) String() string {
+	return rdi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ReceiverDepositoryInstitution record formatted according to the FormatOptions
+func (rdi *ReceiverDepositoryInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(33)
+
 	buf.WriteString(rdi.tag)
-	buf.WriteString(rdi.ReceiverABANumberField())
-	buf.WriteString(rdi.ReceiverShortNameField())
+	buf.WriteString(rdi.FormatReceiverABANumber(options))
+	buf.WriteString(rdi.FormatReceiverShortName(options))
+
 	return buf.String()
 }
 
@@ -109,4 +137,14 @@ func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField() string {
 // ReceiverShortNameField gets a string of the ReceiverShortName field
 func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField() string {
 	return rdi.alphaField(rdi.ReceiverShortName, 18)
+}
+
+// FormatReceiverABANumber returns ReceiverABANumber formatted according to the FormatOptions
+func (rdi *ReceiverDepositoryInstitution) FormatReceiverABANumber(options FormatOptions) string {
+	return rdi.formatAlphaField(rdi.ReceiverABANumber, 9, options)
+}
+
+// FormatReceiverShortName returns ReceiverShortName formatted according to the FormatOptions
+func (rdi *ReceiverDepositoryInstitution) FormatReceiverShortName(options FormatOptions) string {
+	return rdi.formatAlphaField(rdi.ReceiverShortName, 18, options)
 }

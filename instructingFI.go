@@ -36,16 +36,53 @@ func NewInstructingFI() *InstructingFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ifi *InstructingFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	ifi.tag = record[:6]
 	ifi.FinancialInstitution.IdentificationCode = ifi.parseStringField(record[6:7])
-	ifi.FinancialInstitution.Identifier = ifi.parseStringField(record[7:41])
-	ifi.FinancialInstitution.Name = ifi.parseStringField(record[41:76])
-	ifi.FinancialInstitution.Address.AddressLineOne = ifi.parseStringField(record[76:111])
-	ifi.FinancialInstitution.Address.AddressLineTwo = ifi.parseStringField(record[111:146])
-	ifi.FinancialInstitution.Address.AddressLineThree = ifi.parseStringField(record[146:181])
+	length := 7
+
+	value, read, err := ifi.parseVariableStringField(record[length:], 34)
+	if err != nil {
+		return fieldError("Identifier", err)
+	}
+	ifi.FinancialInstitution.Identifier = value
+	length += read
+
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("Name", err)
+	}
+	ifi.FinancialInstitution.Name = value
+	length += read
+
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	ifi.FinancialInstitution.Address.AddressLineOne = value
+	length += read
+
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	ifi.FinancialInstitution.Address.AddressLineTwo = value
+	length += read
+
+	value, read, err = ifi.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	ifi.FinancialInstitution.Address.AddressLineThree = value
+	length += read
+
+	if !ifi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +100,31 @@ func (ifi *InstructingFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes InstructingFI
+// String returns a fixed-width InstructingFI record
 func (ifi *InstructingFI) String() string {
+	return ifi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a InstructingFI record formatted according to the FormatOptions
+func (ifi *InstructingFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(ifi.tag)
 	buf.WriteString(ifi.IdentificationCodeField())
-	buf.WriteString(ifi.IdentifierField())
-	buf.WriteString(ifi.NameField())
-	buf.WriteString(ifi.AddressLineOneField())
-	buf.WriteString(ifi.AddressLineTwoField())
-	buf.WriteString(ifi.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(ifi.FormatIdentifier(options))
+	buf.WriteString(ifi.FormatName(options))
+	buf.WriteString(ifi.FormatAddressLineOne(options))
+	buf.WriteString(ifi.FormatAddressLineTwo(options))
+	buf.WriteString(ifi.FormatAddressLineThree(options))
+
+	if options.VariableLengthFields {
+		return ifi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on InstructingFI and returns an error if not Validated
@@ -155,4 +205,29 @@ func (ifi *InstructingFI) AddressLineTwoField() string {
 // AddressLineThreeField gets a string of AddressLineThree field
 func (ifi *InstructingFI) AddressLineThreeField() string {
 	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatIdentifier(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Identifier, 34, options)
+}
+
+// FormatName returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatName(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatAddressLineOne(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatAddressLineTwo(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatAddressLineThree(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35, options)
 }

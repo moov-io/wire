@@ -38,12 +38,25 @@ func NewBusinessFunctionCode() *BusinessFunctionCode {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (bfc *BusinessFunctionCode) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 12 {
-		return NewTagWrongLengthErr(12, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	bfc.tag = record[:6]
 	bfc.BusinessFunctionCode = bfc.parseStringField(record[6:9])
-	bfc.TransactionTypeCode = record[9:12]
+	length := 9
+
+	value, read, err := bfc.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("TransactionTypeCode", err)
+	}
+	bfc.TransactionTypeCode = value
+	length += read
+
+	if !bfc.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -61,13 +74,22 @@ func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes BusinessFunctionCode
+// String returns a fixed-width BusinessFunctionCode record
 func (bfc *BusinessFunctionCode) String() string {
+	return bfc.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a BusinessFunctionCode record formatted according to the FormatOptions
+func (bfc *BusinessFunctionCode) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(12)
+
 	buf.WriteString(bfc.tag)
 	buf.WriteString(bfc.BusinessFunctionCodeField())
-	buf.WriteString(bfc.TransactionTypeCodeField())
+	buf.WriteString(bfc.FormatTransactionTypeCode(options))
+
 	return buf.String()
 }
 
@@ -108,4 +130,9 @@ func (bfc *BusinessFunctionCode) BusinessFunctionCodeField() string {
 // TransactionTypeCodeField gets a string of the TransactionTypeCode field
 func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
 	return bfc.alphaField(bfc.TransactionTypeCode, 3)
+}
+
+// FormatTransactionTypeCode returns TransactionTypeCode formatted according to the FormatOptions
+func (bfc *BusinessFunctionCode) FormatTransactionTypeCode(options FormatOptions) string {
+	return bfc.formatAlphaField(bfc.TransactionTypeCode, 3, options)
 }

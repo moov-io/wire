@@ -87,7 +87,7 @@ func TestParseSenderSuppliedWrongLength(t *testing.T) {
 
 	err := r.parseSenderSupplied()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(11, len(r.line))).Error())
 }
 
 // TestParseSenderSuppliedReaderParseError parses a wrong SenderSupplied reader parse error
@@ -111,4 +111,50 @@ func TestSenderSuppliedTagError(t *testing.T) {
 	ss.tag = "{9999}"
 
 	require.EqualError(t, ss.Validate(), fieldError("tag", ErrValidTagForType, ss.tag).Error())
+}
+
+// TestStringSenderSuppliedVariableLength parses using variable length
+func TestStringSenderSuppliedVariableLength(t *testing.T) {
+	var line = "{1500}301*T"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderSupplied()
+	require.Nil(t, err)
+
+	line = "{1500}301       T NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderSupplied()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1500}301*T***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderSupplied()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{1500}301*T*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderSupplied()
+	require.Equal(t, err, nil)
+}
+
+// TestStringSenderSuppliedOptions validates Format() formatted according to the FormatOptions
+func TestStringSenderSuppliedOptions(t *testing.T) {
+	var line = "{1500}301*T"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderSupplied()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.SenderSupplied
+	require.Equal(t, record.String(), "{1500}301       T ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1500}301*T*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

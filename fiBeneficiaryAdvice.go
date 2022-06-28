@@ -36,17 +36,60 @@ func NewFIBeneficiaryAdvice() *FIBeneficiaryAdvice {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fiba *FIBeneficiaryAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	fiba.tag = record[:6]
 	fiba.Advice.AdviceCode = fiba.parseStringField(record[6:9])
-	fiba.Advice.LineOne = fiba.parseStringField(record[9:35])
-	fiba.Advice.LineTwo = fiba.parseStringField(record[35:68])
-	fiba.Advice.LineThree = fiba.parseStringField(record[68:101])
-	fiba.Advice.LineFour = fiba.parseStringField(record[101:134])
-	fiba.Advice.LineFive = fiba.parseStringField(record[134:167])
-	fiba.Advice.LineSix = fiba.parseStringField(record[167:200])
+	length := 9
+
+	value, read, err := fiba.parseVariableStringField(record[length:], 26)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	fiba.Advice.LineOne = value
+	length += read
+
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	fiba.Advice.LineTwo = value
+	length += read
+
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	fiba.Advice.LineThree = value
+	length += read
+
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	fiba.Advice.LineFour = value
+	length += read
+
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFive", err)
+	}
+	fiba.Advice.LineFive = value
+	length += read
+
+	value, read, err = fiba.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineSix", err)
+	}
+	fiba.Advice.LineSix = value
+	length += read
+
+	if !fiba.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,19 +107,32 @@ func (fiba *FIBeneficiaryAdvice) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIBeneficiaryAdvice
+// String returns a fixed-width FIBeneficiaryAdvice record
 func (fiba *FIBeneficiaryAdvice) String() string {
+	return fiba.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIBeneficiaryAdvice record formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(fiba.tag)
 	buf.WriteString(fiba.AdviceCodeField())
-	buf.WriteString(fiba.LineOneField())
-	buf.WriteString(fiba.LineTwoField())
-	buf.WriteString(fiba.LineThreeField())
-	buf.WriteString(fiba.LineFourField())
-	buf.WriteString(fiba.LineFiveField())
-	buf.WriteString(fiba.LineSixField())
-	return buf.String()
+	buf.WriteString(fiba.FormatLineOne(options))
+	buf.WriteString(fiba.FormatLineTwo(options))
+	buf.WriteString(fiba.FormatLineThree(options))
+	buf.WriteString(fiba.FormatLineFour(options))
+	buf.WriteString(fiba.FormatLineFive(options))
+	buf.WriteString(fiba.FormatLineSix(options))
+
+	if options.VariableLengthFields {
+		return fiba.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIBeneficiaryAdvice and returns an error if not Validated
@@ -142,4 +198,34 @@ func (fiba *FIBeneficiaryAdvice) LineFiveField() string {
 // LineSixField gets a string of the LineSix field
 func (fiba *FIBeneficiaryAdvice) LineSixField() string {
 	return fiba.alphaField(fiba.Advice.LineSix, 33)
+}
+
+// FormatLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineOne(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineOne, 26, options)
+}
+
+// FormatLineTwo returns Advice.LineTwo formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineTwo(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineTwo, 33, options)
+}
+
+// FormatLineThree returns Advice.LineThree formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineThree(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineThree, 33, options)
+}
+
+// FormatLineFour returns Advice.LineFour formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineFour(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineFour, 33, options)
+}
+
+// FormatLineFive returns Advice.LineFive formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineFive(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineFive, 33, options)
+}
+
+// FormatLineSix returns Advice.LineSix formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineSix(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineSix, 33, options)
 }

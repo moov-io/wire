@@ -156,12 +156,12 @@ func TestParseOriginatorOptionFWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorOptionF()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLength)).Error())
 }
 
 // TestParseOriginatorOptionFReaderParseError parses a wrong OriginatorOptionF reader parse error
 func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
-	var line = "{5010}TXID/123-45-6789                   ®ame                               LineOne                            LineTwo                            LineThree                          "
+	var line = "{5010}TXID/123-45-6789                   ®ame                               LineOne                            LineTwo                            LineThree                         "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -172,4 +172,50 @@ func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
 	_, err = r.Read()
 
 	require.EqualError(t, err, r.parseError(fieldError("Name", ErrOptionFName, "®ame")).Error())
+}
+
+// TestStringOriginatorOptionFVariableLength parses using variable length
+func TestStringOriginatorOptionFVariableLength(t *testing.T) {
+	var line = "{5010}TXID/123-45-6789*1/Name*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorOptionF()
+	require.Nil(t, err)
+
+	line = "{5010}TXID/123-45-6789                   1/Name                                                                                                                                      NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorOptionF()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{5010}TXID/123-45-6789*1/Name********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorOptionF()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{5010}TXID/123-45-6789*1/Name*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorOptionF()
+	require.Equal(t, err, nil)
+}
+
+// TestStringOriginatorOptionFOptions validates Format() formatted according to the FormatOptions
+func TestStringOriginatorOptionFOptions(t *testing.T) {
+	var line = "{5010}TXID/123-45-6789*1/Name*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorOptionF()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.OriginatorOptionF
+	require.Equal(t, record.String(), "{5010}TXID/123-45-6789                   1/Name                                                                                                                                      ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5010}TXID/123-45-6789*1/Name*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

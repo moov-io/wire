@@ -72,12 +72,12 @@ func TestParseOriginatorToBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorToBeneficiary()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(146, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineFour", ErrValidLength)).Error())
 }
 
 // TestParseOriginatorToBeneficiaryReaderParseError parses a wrong OriginatorToBeneficiary reader parse error
 func TestParseOriginatorToBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{6000}LineOne                            ®ineTwo                            LineThree                          LineFour                           "
+	var line = "{6000}LineOne                            ®ineTwo                            LineThree                          LineFour                          "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -96,4 +96,50 @@ func TestOriginatorToBeneficiaryTagError(t *testing.T) {
 	ob.tag = "{9999}"
 
 	require.EqualError(t, ob.Validate(), fieldError("tag", ErrValidTagForType, ob.tag).Error())
+}
+
+// TestStringOriginatorToBeneficiaryVariableLength parses using variable length
+func TestStringOriginatorToBeneficiaryVariableLength(t *testing.T) {
+	var line = "{6000}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorToBeneficiary()
+	require.Nil(t, err)
+
+	line = "{6000}                                                                                                                                            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorToBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6000}********"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorToBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6000}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseOriginatorToBeneficiary()
+	require.Equal(t, err, nil)
+}
+
+// TestStringOriginatorToBeneficiaryOptions validates Format() formatted according to the FormatOptions
+func TestStringOriginatorToBeneficiaryOptions(t *testing.T) {
+	var line = "{6000}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorToBeneficiary()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.OriginatorToBeneficiary
+	require.Equal(t, record.String(), "{6000}                                                                                                                                            ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6000}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

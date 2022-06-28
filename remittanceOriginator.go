@@ -56,39 +56,220 @@ func NewRemittanceOriginator() *RemittanceOriginator {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ro *RemittanceOriginator) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 3442 {
-		return NewTagWrongLengthErr(3442, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 21 {
+		return NewTagMinLengthErr(21, len(record))
 	}
+
 	ro.tag = record[:6]
-	ro.IdentificationType = ro.parseStringField(record[6:8])
-	ro.IdentificationCode = ro.parseStringField(record[8:12])
-	ro.RemittanceData.Name = ro.parseStringField(record[12:152])
-	ro.IdentificationNumber = ro.parseStringField(record[152:187])
-	ro.IdentificationNumberIssuer = ro.parseStringField(record[187:222])
-	ro.RemittanceData.DateBirthPlace = ro.parseStringField(record[222:304])
-	ro.RemittanceData.AddressType = ro.parseStringField(record[304:308])
-	ro.RemittanceData.Department = ro.parseStringField(record[308:378])
-	ro.RemittanceData.SubDepartment = ro.parseStringField(record[378:448])
-	ro.RemittanceData.StreetName = ro.parseStringField(record[448:518])
-	ro.RemittanceData.BuildingNumber = ro.parseStringField(record[518:534])
-	ro.RemittanceData.PostCode = ro.parseStringField(record[534:550])
-	ro.RemittanceData.TownName = ro.parseStringField(record[550:585])
-	ro.RemittanceData.CountrySubDivisionState = ro.parseStringField(record[585:620])
-	ro.RemittanceData.Country = ro.parseStringField(record[620:622])
-	ro.RemittanceData.AddressLineOne = ro.parseStringField(record[622:692])
-	ro.RemittanceData.AddressLineTwo = ro.parseStringField(record[692:762])
-	ro.RemittanceData.AddressLineThree = ro.parseStringField(record[762:832])
-	ro.RemittanceData.AddressLineFour = ro.parseStringField(record[832:902])
-	ro.RemittanceData.AddressLineFive = ro.parseStringField(record[902:972])
-	ro.RemittanceData.AddressLineSix = ro.parseStringField(record[972:1042])
-	ro.RemittanceData.AddressLineSeven = ro.parseStringField(record[1042:1112])
-	ro.RemittanceData.CountryOfResidence = ro.parseStringField(record[1112:1114])
-	ro.ContactName = ro.parseStringField(record[1114:1254])
-	ro.ContactPhoneNumber = ro.parseStringField(record[1254:1289])
-	ro.ContactMobileNumber = ro.parseStringField(record[1289:1324])
-	ro.ContactFaxNumber = ro.parseStringField(record[1324:1359])
-	ro.ContactElectronicAddress = ro.parseStringField(record[1359:3407])
-	ro.ContactOther = ro.parseStringField(record[3407:3442])
+	length := 6
+
+	value, read, err := ro.parseVariableStringField(record[length:], 2)
+	if err != nil {
+		return fieldError("IdentificationType", err)
+	}
+	ro.IdentificationType = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("IdentificationCode", err)
+	}
+	ro.IdentificationCode = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 140)
+	if err != nil {
+		return fieldError("Name", err)
+	}
+	ro.RemittanceData.Name = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("IdentificationNumber", err)
+	}
+	ro.IdentificationNumber = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("IdentificationNumberIssuer", err)
+	}
+	ro.IdentificationNumberIssuer = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 82)
+	if err != nil {
+		return fieldError("DateBirthPlace", err)
+	}
+	ro.RemittanceData.DateBirthPlace = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("AddressType", err)
+	}
+	ro.RemittanceData.AddressType = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("Department", err)
+	}
+	ro.RemittanceData.Department = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("SubDepartment", err)
+	}
+	ro.RemittanceData.SubDepartment = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("StreetName", err)
+	}
+	ro.RemittanceData.StreetName = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 16)
+	if err != nil {
+		return fieldError("BuildingNumber", err)
+	}
+	ro.RemittanceData.BuildingNumber = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 16)
+	if err != nil {
+		return fieldError("PostCode", err)
+	}
+	ro.RemittanceData.PostCode = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("TownName", err)
+	}
+	ro.RemittanceData.TownName = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("CountrySubDivisionState", err)
+	}
+	ro.RemittanceData.CountrySubDivisionState = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 2)
+	if err != nil {
+		return fieldError("Country", err)
+	}
+	ro.RemittanceData.Country = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	ro.RemittanceData.AddressLineOne = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	ro.RemittanceData.AddressLineTwo = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	ro.RemittanceData.AddressLineThree = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineFour", err)
+	}
+	ro.RemittanceData.AddressLineFour = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineFive", err)
+	}
+	ro.RemittanceData.AddressLineFive = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineSix", err)
+	}
+	ro.RemittanceData.AddressLineSix = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineSeven", err)
+	}
+	ro.RemittanceData.AddressLineSeven = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 2)
+	if err != nil {
+		return fieldError("CountryOfResidence", err)
+	}
+	ro.RemittanceData.CountryOfResidence = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 140)
+	if err != nil {
+		return fieldError("ContactName", err)
+	}
+	ro.ContactName = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("ContactPhoneNumber", err)
+	}
+	ro.ContactPhoneNumber = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("ContactMobileNumber", err)
+	}
+	ro.ContactMobileNumber = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("ContactFaxNumber", err)
+	}
+	ro.ContactFaxNumber = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 2048)
+	if err != nil {
+		return fieldError("ContactElectronicAddress", err)
+	}
+	ro.ContactElectronicAddress = value
+	length += read
+
+	value, read, err = ro.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("ContactOther", err)
+	}
+	ro.ContactOther = value
+	length += read
+
+	if !ro.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -106,41 +287,54 @@ func (ro *RemittanceOriginator) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes RemittanceOriginator
+// String returns a fixed-width RemittanceOriginator record
 func (ro *RemittanceOriginator) String() string {
+	return ro.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a RemittanceOriginator record formatted according to the FormatOptions
+func (ro *RemittanceOriginator) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(3442)
+
 	buf.WriteString(ro.tag)
-	buf.WriteString(ro.IdentificationTypeField())
-	buf.WriteString(ro.IdentificationCodeField())
-	buf.WriteString(ro.NameField())
-	buf.WriteString(ro.IdentificationNumberField())
-	buf.WriteString(ro.IdentificationNumberIssuerField())
-	buf.WriteString(ro.DateBirthPlaceField())
-	buf.WriteString(ro.AddressTypeField())
-	buf.WriteString(ro.DepartmentField())
-	buf.WriteString(ro.SubDepartmentField())
-	buf.WriteString(ro.StreetNameField())
-	buf.WriteString(ro.BuildingNumberField())
-	buf.WriteString(ro.PostCodeField())
-	buf.WriteString(ro.TownNameField())
-	buf.WriteString(ro.CountrySubDivisionStateField())
-	buf.WriteString(ro.CountryField())
-	buf.WriteString(ro.AddressLineOneField())
-	buf.WriteString(ro.AddressLineTwoField())
-	buf.WriteString(ro.AddressLineThreeField())
-	buf.WriteString(ro.AddressLineFourField())
-	buf.WriteString(ro.AddressLineFiveField())
-	buf.WriteString(ro.AddressLineSixField())
-	buf.WriteString(ro.AddressLineSevenField())
-	buf.WriteString(ro.CountryOfResidenceField())
-	buf.WriteString(ro.ContactNameField())
-	buf.WriteString(ro.ContactPhoneNumberField())
-	buf.WriteString(ro.ContactMobileNumberField())
-	buf.WriteString(ro.ContactFaxNumberField())
-	buf.WriteString(ro.ContactElectronicAddressField())
-	buf.WriteString(ro.ContactOtherField())
-	return buf.String()
+	buf.WriteString(ro.FormatIdentificationType(options))
+	buf.WriteString(ro.FormatIdentificationCode(options))
+	buf.WriteString(ro.FormatName(options))
+	buf.WriteString(ro.FormatIdentificationNumber(options))
+	buf.WriteString(ro.FormatIdentificationNumberIssuer(options))
+	buf.WriteString(ro.FormatDateBirthPlace(options))
+	buf.WriteString(ro.FormatAddressType(options))
+	buf.WriteString(ro.FormatDepartment(options))
+	buf.WriteString(ro.FormatSubDepartment(options))
+	buf.WriteString(ro.FormatStreetName(options))
+	buf.WriteString(ro.FormatBuildingNumber(options))
+	buf.WriteString(ro.FormatPostCode(options))
+	buf.WriteString(ro.FormatTownName(options))
+	buf.WriteString(ro.FormatCountrySubDivisionState(options))
+	buf.WriteString(ro.FormatCountry(options))
+	buf.WriteString(ro.FormatAddressLineOne(options))
+	buf.WriteString(ro.FormatAddressLineTwo(options))
+	buf.WriteString(ro.FormatAddressLineThree(options))
+	buf.WriteString(ro.FormatAddressLineFour(options))
+	buf.WriteString(ro.FormatAddressLineFive(options))
+	buf.WriteString(ro.FormatAddressLineSix(options))
+	buf.WriteString(ro.FormatAddressLineSeven(options))
+	buf.WriteString(ro.FormatCountryOfResidence(options))
+	buf.WriteString(ro.FormatContactName(options))
+	buf.WriteString(ro.FormatContactPhoneNumber(options))
+	buf.WriteString(ro.FormatContactMobileNumber(options))
+	buf.WriteString(ro.FormatContactFaxNumber(options))
+	buf.WriteString(ro.FormatContactElectronicAddress(options))
+	buf.WriteString(ro.FormatContactOther(options))
+
+	if options.VariableLengthFields {
+		return ro.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on RemittanceOriginator and returns an error if not Validated
@@ -424,4 +618,149 @@ func (ro *RemittanceOriginator) ContactElectronicAddressField() string {
 // ContactOtherField gets a string of the ContactOther field
 func (ro *RemittanceOriginator) ContactOtherField() string {
 	return ro.alphaField(ro.ContactOther, 35)
+}
+
+// FormatIdentificationType returns IdentificationType formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatIdentificationType(options FormatOptions) string {
+	return ro.formatAlphaField(ro.IdentificationType, 2, options)
+}
+
+// FormatIdentificationCode returns IdentificationCode formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatIdentificationCode(options FormatOptions) string {
+	return ro.formatAlphaField(ro.IdentificationCode, 4, options)
+}
+
+// FormatName returns Name formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatName(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.Name, 140, options)
+}
+
+// FormatIdentificationNumber returns IdentificationNumber formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatIdentificationNumber(options FormatOptions) string {
+	return ro.formatAlphaField(ro.IdentificationNumber, 35, options)
+}
+
+// FormatIdentificationNumberIssuer returns IdentificationNumberIssuer formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatIdentificationNumberIssuer(options FormatOptions) string {
+	return ro.formatAlphaField(ro.IdentificationNumberIssuer, 35, options)
+}
+
+// FormatDateBirthPlace returns DateBirthPlace formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatDateBirthPlace(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.DateBirthPlace, 82, options)
+}
+
+// FormatAddressType returns AddressType formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressType(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressType, 4, options)
+}
+
+// FormatDepartment returns Department formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatDepartment(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.Department, 70, options)
+}
+
+// FormatSubDepartment returns SubDepartment formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatSubDepartment(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.SubDepartment, 70, options)
+}
+
+// FormatStreetName returns StreetName formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatStreetName(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.StreetName, 70, options)
+}
+
+// FormatBuildingNumber returns BuildingNumber formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatBuildingNumber(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.BuildingNumber, 16, options)
+}
+
+// FormatPostCode returns PostCode formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatPostCode(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.PostCode, 16, options)
+}
+
+// FormatTownName returns TownName formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatTownName(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.TownName, 35, options)
+}
+
+// FormatCountrySubDivisionState returns CountrySubDivisionState formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatCountrySubDivisionState(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.CountrySubDivisionState, 35, options)
+}
+
+// FormatCountry returns Country formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatCountry(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.Country, 2, options)
+}
+
+// FormatAddressLineOne returns AddressLineOne formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineOne(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineOne, 70, options)
+}
+
+// FormatAddressLineTwo returns AddressLineTwo formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineTwo(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineTwo, 70, options)
+}
+
+// FormatAddressLineThree returns AddressLineThree formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineThree(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineThree, 70, options)
+}
+
+// FormatAddressLineFour returns AddressLineFour formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineFour(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineOne, 70, options)
+}
+
+// FormatAddressLineFive returns AddressLineFive formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineFive(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineFive, 70, options)
+}
+
+// FormatAddressLineSix returns AddressLineSix formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineSix(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineSix, 70, options)
+}
+
+// FormatAddressLineSeven returns AddressLineSeven formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatAddressLineSeven(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.AddressLineSeven, 70, options)
+}
+
+// FormatCountryOfResidence returns CountryOfResidence formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatCountryOfResidence(options FormatOptions) string {
+	return ro.formatAlphaField(ro.RemittanceData.CountryOfResidence, 2, options)
+}
+
+// FormatContactName returns ContactName formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatContactName(options FormatOptions) string {
+	return ro.formatAlphaField(ro.ContactName, 140, options)
+}
+
+// FormatContactPhoneNumber returns ContactPhoneNumber formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatContactPhoneNumber(options FormatOptions) string {
+	return ro.formatAlphaField(ro.ContactPhoneNumber, 35, options)
+}
+
+// FormatContactMobileNumber returns ContactMobileNumber formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatContactMobileNumber(options FormatOptions) string {
+	return ro.formatAlphaField(ro.ContactMobileNumber, 35, options)
+}
+
+// FormatContactFaxNumber returns ContactFaxNumber formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatContactFaxNumber(options FormatOptions) string {
+	return ro.formatAlphaField(ro.ContactFaxNumber, 35, options)
+}
+
+// FormatContactElectronicAddress returns ContactElectronicAddress formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatContactElectronicAddress(options FormatOptions) string {
+	return ro.formatAlphaField(ro.ContactElectronicAddress, 2048, options)
+}
+
+// FormatContactOther returns ContactOther formatted according to the FormatOptions
+func (ro *RemittanceOriginator) FormatContactOther(options FormatOptions) string {
+	return ro.formatAlphaField(ro.ContactOther, 35, options)
 }

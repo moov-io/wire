@@ -42,14 +42,45 @@ func NewOriginatorToBeneficiary() *OriginatorToBeneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ob *OriginatorToBeneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 146 {
-		return NewTagWrongLengthErr(146, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	ob.tag = record[:6]
-	ob.LineOne = ob.parseStringField(record[6:41])
-	ob.LineTwo = ob.parseStringField(record[41:76])
-	ob.LineThree = ob.parseStringField(record[76:111])
-	ob.LineFour = ob.parseStringField(record[111:146])
+	length := 6
+
+	value, read, err := ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	ob.LineOne = value
+	length += read
+
+	value, read, err = ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	ob.LineTwo = value
+	length += read
+
+	value, read, err = ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	ob.LineThree = value
+	length += read
+
+	value, read, err = ob.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	ob.LineFour = value
+	length += read
+
+	if !ob.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -67,16 +98,29 @@ func (ob *OriginatorToBeneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OriginatorToBeneficiary
+// String returns a fixed-width OriginatorToBeneficiary record
 func (ob *OriginatorToBeneficiary) String() string {
+	return ob.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OriginatorToBeneficiary record formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(146)
+
 	buf.WriteString(ob.tag)
-	buf.WriteString(ob.LineOneField())
-	buf.WriteString(ob.LineTwoField())
-	buf.WriteString(ob.LineThreeField())
-	buf.WriteString(ob.LineFourField())
-	return buf.String()
+	buf.WriteString(ob.FormatLineOne(options))
+	buf.WriteString(ob.FormatLineTwo(options))
+	buf.WriteString(ob.FormatLineThree(options))
+	buf.WriteString(ob.FormatLineFour(options))
+
+	if options.VariableLengthFields {
+		return ob.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OriginatorToBeneficiary and returns an error if not Validated
@@ -101,22 +145,22 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 	return nil
 }
 
-// LineOneField gets a string of the LineOne field
-func (ob *OriginatorToBeneficiary) LineOneField() string {
-	return ob.alphaField(ob.LineOne, 35)
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineOne(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineOne, 35, options)
 }
 
-// LineTwoField gets a string of the LineTwo field
-func (ob *OriginatorToBeneficiary) LineTwoField() string {
-	return ob.alphaField(ob.LineTwo, 35)
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineTwo(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineTwo, 35, options)
 }
 
-// LineThreeField gets a string of the LineThree field
-func (ob *OriginatorToBeneficiary) LineThreeField() string {
-	return ob.alphaField(ob.LineThree, 35)
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineThree(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineThree, 35, options)
 }
 
-// LineFourField gets a string of the LineFour field
-func (ob *OriginatorToBeneficiary) LineFourField() string {
-	return ob.alphaField(ob.LineFour, 35)
+// FormatLineFour returns LineFour formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineFour(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineFour, 35, options)
 }

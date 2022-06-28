@@ -124,12 +124,12 @@ func TestParseBeneficiaryFIWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryFI()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryFIReaderParseError parses a wrong BeneficiaryFI reader parse error
 func TestParseBeneficiaryFIReaderParseError(t *testing.T) {
-	var line = "{4100}D123456789                         F® Name                            Address One                        Address Two                        Address Three                      "
+	var line = "{4100}D123456789                         F® Name                            Address One                        Address Two                        Address Three                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -152,4 +152,51 @@ func TestBeneficiaryFITagError(t *testing.T) {
 	err := bfi.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bfi.tag).Error())
+}
+
+// TestStringBeneficiaryFIVariableLength parses using variable length
+func TestStringBeneficiaryFIVariableLength(t *testing.T) {
+	var line = "{4100}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryFI()
+	expected := r.parseError(NewTagMinLengthErr(7, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{4100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4100}D123456789*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryFI()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4100}D123456789****"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiaryFI()
+	require.Equal(t, err, nil)
+}
+
+// TestStringBeneficiaryFIOptions validates Format() formatted according to the FormatOptions
+func TestStringBeneficiaryFIOptions(t *testing.T) {
+	var line = "{4100}D123456789*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiaryFI()
+	require.Equal(t, err, nil)
+
+	bfi := r.currentFEDWireMessage.BeneficiaryFI
+	require.Equal(t, bfi.String(), "{4100}D123456789                                                                                                                                                                     ")
+	require.Equal(t, bfi.Format(FormatOptions{VariableLengthFields: true}), "{4100}D123456789*")
+	require.Equal(t, bfi.String(), bfi.Format(FormatOptions{VariableLengthFields: false}))
 }

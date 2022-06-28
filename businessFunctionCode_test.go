@@ -50,7 +50,7 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 
 	err := r.parseBusinessFunctionCode()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(12, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(9, len(r.line))).Error())
 }
 
 // TestParseBusinessFunctionCodeReaderParseError parses a wrong BusinessFunctionCode reader parse error
@@ -78,4 +78,52 @@ func TestBusinessFunctionCodeTagError(t *testing.T) {
 	err := bfc.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bfc.tag).Error())
+}
+
+// TestStringBusinessFunctionCodeVariableLength parses using variable length
+func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
+	var line = "{3600}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBusinessFunctionCode()
+	expected := r.parseError(NewTagMinLengthErr(9, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{3600}BTR   NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBusinessFunctionCode()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3600}BTR***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBusinessFunctionCode()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3600}BTR*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBusinessFunctionCode()
+	require.Equal(t, err, nil)
+}
+
+// TestStringBusinessFunctionCodeOptions validates Format() formatted according to the FormatOptions
+func TestStringBusinessFunctionCodeOptions(t *testing.T) {
+	var line = "{3600}BTR*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBusinessFunctionCode()
+	require.Equal(t, err, nil)
+
+	bfc := r.currentFEDWireMessage.BusinessFunctionCode
+	require.Equal(t, bfc.String(), "{3600}BTR   ")
+	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: true}), "{3600}BTR*")
+	require.Equal(t, bfc.String(), bfc.Format(FormatOptions{VariableLengthFields: false}))
+
 }

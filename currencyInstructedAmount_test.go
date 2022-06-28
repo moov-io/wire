@@ -50,13 +50,11 @@ func TestParseCurrencyInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseCurrencyInstructedAmount()
 
-	expected := r.parseError(NewTagWrongLengthErr(29, len(r.line))).Error()
-	require.EqualError(t, err, expected)
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
 
 	_, err = r.Read()
 
-	expected = r.parseError(NewTagWrongLengthErr(29, len(r.line))).Error()
-	require.EqualError(t, err, expected)
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
 }
 
 // TestParseCurrencyInstructedAmountReaderParseError parses a wrong CurrencyInstructedAmount reader parse error
@@ -82,4 +80,36 @@ func TestCurrencyInstructedAmountTagError(t *testing.T) {
 	err := cia.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, cia.tag).Error())
+}
+
+// TestStringCurrencyInstructedAmountVariableLength parses using variable length
+func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
+	var line = "{7033}*000000000001500,49"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseCurrencyInstructedAmount()
+	require.Nil(t, err)
+
+	line = "{7033}B                                                            NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseCurrencyInstructedAmount()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+}
+
+// TestStringCurrencyInstructedAmountOptions validates Format() formatted according to the FormatOptions
+func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
+	var line = "{7033}*000000000001500,49"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseCurrencyInstructedAmount()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.CurrencyInstructedAmount
+	require.Equal(t, record.String(), "{7033}     000000000001500,49")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7033}*000000000001500,49")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

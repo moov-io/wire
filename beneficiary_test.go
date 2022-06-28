@@ -114,12 +114,12 @@ func TestParseBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiary()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(181, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
 }
 
 // TestParseBeneficiaryReaderParseError parses a wrong Beneficiary reader parse error
 func TestParseBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                      "
+	var line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                     "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -142,4 +142,51 @@ func TestBeneficiaryTagError(t *testing.T) {
 	err := ben.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, ben.tag).Error())
+}
+
+// TestStringBeneficiaryVariableLength parses using variable length
+func TestStringBeneficiaryVariableLength(t *testing.T) {
+	var line = "{4200}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiary()
+	expected := r.parseError(NewTagMinLengthErr(7, len(r.line))).Error()
+	require.EqualError(t, err, expected)
+
+	line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                     NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4200}31234*******"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{4200}31234*****"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseBeneficiary()
+	require.Equal(t, err, nil)
+}
+
+// TestStringBeneficiaryOptions validates Format() formatted according to the FormatOptions
+func TestStringBeneficiaryOptions(t *testing.T) {
+	var line = "{4200}31234*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseBeneficiary()
+	require.Equal(t, err, nil)
+
+	ben := r.currentFEDWireMessage.Beneficiary
+	require.Equal(t, ben.String(), "{4200}31234                                                                                                                                                                          ")
+	require.Equal(t, ben.Format(FormatOptions{VariableLengthFields: true}), "{4200}31234*")
+	require.Equal(t, ben.String(), ben.Format(FormatOptions{VariableLengthFields: false}))
 }

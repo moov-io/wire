@@ -73,7 +73,7 @@ func TestParseSenderWrongLength(t *testing.T) {
 
 	err := r.parseSenderDepositoryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(33, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SenderABANumber", ErrValidLength)).Error())
 }
 
 // TestParseSenderReaderParseError parses a wrong Sender reader parse error
@@ -97,4 +97,50 @@ func TestSenderDepositoryInstitutionTagError(t *testing.T) {
 	sdi.tag = "{9999}"
 
 	require.EqualError(t, sdi.Validate(), fieldError("tag", ErrValidTagForType, sdi.tag).Error())
+}
+
+// TestStringSenderDepositoryInstitutionVariableLength parses using variable length
+func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
+	var line = "{3100}1*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderDepositoryInstitution()
+	require.Nil(t, err)
+
+	line = "{3100}1        A                 NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3100}1*A***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3100}1*A*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.Equal(t, err, nil)
+}
+
+// TestStringSenderDepositoryInstitutionOptions validates Format() formatted according to the FormatOptions
+func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
+	var line = "{3100}1*A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.SenderDepositoryInstitution
+	require.Equal(t, record.String(), "{3100}1        A                 ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1*A*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

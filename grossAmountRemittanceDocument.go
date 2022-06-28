@@ -36,12 +36,31 @@ func NewGrossAmountRemittanceDocument() *GrossAmountRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	gard.tag = record[:6]
-	gard.RemittanceAmount.CurrencyCode = gard.parseStringField(record[6:9])
-	gard.RemittanceAmount.Amount = gard.parseStringField(record[9:28])
+	length := 6
+
+	value, read, err := gard.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	gard.RemittanceAmount.CurrencyCode = value
+	length += read
+
+	value, read, err = gard.parseVariableStringField(record[length:], 19)
+	if err != nil {
+		return fieldError("Amount", err)
+	}
+	gard.RemittanceAmount.Amount = value
+	length += read
+
+	if !gard.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,14 +78,27 @@ func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes GrossAmountRemittanceDocument
+// String returns a fixed-width GrossAmountRemittanceDocument record
 func (gard *GrossAmountRemittanceDocument) String() string {
+	return gard.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a GrossAmountRemittanceDocument record formatted according to the FormatOptions
+func (gard *GrossAmountRemittanceDocument) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(gard.tag)
-	buf.WriteString(gard.CurrencyCodeField())
-	buf.WriteString(gard.AmountField())
-	return buf.String()
+	buf.WriteString(gard.FormatCurrencyCode(options))
+	buf.WriteString(gard.FormatAmount(options))
+
+	if options.VariableLengthFields {
+		return gard.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on GrossAmountRemittanceDocument and returns an error if not Validated
@@ -107,4 +139,14 @@ func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
 // AmountField gets a string of the Amount field
 func (gard *GrossAmountRemittanceDocument) AmountField() string {
 	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (gard *GrossAmountRemittanceDocument) FormatCurrencyCode(options FormatOptions) string {
+	return gard.formatAlphaField(gard.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (gard *GrossAmountRemittanceDocument) FormatAmount(options FormatOptions) string {
+	return gard.formatAlphaField(gard.RemittanceAmount.Amount, 19, options)
 }

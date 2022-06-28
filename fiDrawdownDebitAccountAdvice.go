@@ -36,17 +36,60 @@ func NewFIDrawdownDebitAccountAdvice() *FIDrawdownDebitAccountAdvice {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 200 {
-		return NewTagWrongLengthErr(200, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	debitDDAdvice.tag = record[:6]
 	debitDDAdvice.Advice.AdviceCode = debitDDAdvice.parseStringField(record[6:9])
-	debitDDAdvice.Advice.LineOne = debitDDAdvice.parseStringField(record[9:35])
-	debitDDAdvice.Advice.LineTwo = debitDDAdvice.parseStringField(record[35:68])
-	debitDDAdvice.Advice.LineThree = debitDDAdvice.parseStringField(record[68:101])
-	debitDDAdvice.Advice.LineFour = debitDDAdvice.parseStringField(record[101:134])
-	debitDDAdvice.Advice.LineFive = debitDDAdvice.parseStringField(record[134:167])
-	debitDDAdvice.Advice.LineSix = debitDDAdvice.parseStringField(record[167:200])
+	length := 9
+
+	value, read, err := debitDDAdvice.parseVariableStringField(record[length:], 26)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	debitDDAdvice.Advice.LineOne = value
+	length += read
+
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	debitDDAdvice.Advice.LineTwo = value
+	length += read
+
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	debitDDAdvice.Advice.LineThree = value
+	length += read
+
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	debitDDAdvice.Advice.LineFour = value
+	length += read
+
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFive", err)
+	}
+	debitDDAdvice.Advice.LineFive = value
+	length += read
+
+	value, read, err = debitDDAdvice.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineSix", err)
+	}
+	debitDDAdvice.Advice.LineSix = value
+	length += read
+
+	if !debitDDAdvice.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -64,19 +107,32 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) er
 	return nil
 }
 
-// String writes FIDrawdownDebitAccountAdvice
+// String returns a fixed-width FIDrawdownDebitAccountAdvice record
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
+	return debitDDAdvice.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIDrawdownDebitAccountAdvice record formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(200)
+
 	buf.WriteString(debitDDAdvice.tag)
 	buf.WriteString(debitDDAdvice.AdviceCodeField())
-	buf.WriteString(debitDDAdvice.LineOneField())
-	buf.WriteString(debitDDAdvice.LineTwoField())
-	buf.WriteString(debitDDAdvice.LineThreeField())
-	buf.WriteString(debitDDAdvice.LineFourField())
-	buf.WriteString(debitDDAdvice.LineFiveField())
-	buf.WriteString(debitDDAdvice.LineSixField())
-	return buf.String()
+	buf.WriteString(debitDDAdvice.FormatLineOne(options))
+	buf.WriteString(debitDDAdvice.FormatLineTwo(options))
+	buf.WriteString(debitDDAdvice.FormatLineThree(options))
+	buf.WriteString(debitDDAdvice.FormatLineFour(options))
+	buf.WriteString(debitDDAdvice.FormatLineFive(options))
+	buf.WriteString(debitDDAdvice.FormatLineSix(options))
+
+	if options.VariableLengthFields {
+		return debitDDAdvice.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIDrawdownDebitAccountAdvice and returns an error if not Validated
@@ -142,4 +198,34 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFiveField() string {
 // LineSixField gets a string of the LineSix field
 func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineSixField() string {
 	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineSix, 33)
+}
+
+// FormatLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineOne(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineOne, 26, options)
+}
+
+// FormatLineTwo returns Advice.LineTwo formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineTwo(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineTwo, 33, options)
+}
+
+// FormatLineThree returns Advice.LineThree formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineThree(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineThree, 33, options)
+}
+
+// FormatLineFour returns Advice.LineFour formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineFour(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineFour, 33, options)
+}
+
+// FormatLineFive returns Advice.LineFive formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineFive(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineFive, 33, options)
+}
+
+// FormatLineSix returns Advice.LineSix formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineSix(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineSix, 33, options)
 }

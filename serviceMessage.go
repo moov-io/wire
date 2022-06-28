@@ -58,22 +58,101 @@ func NewServiceMessage() *ServiceMessage {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sm *ServiceMessage) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 426 {
-		return NewTagWrongLengthErr(426, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	sm.tag = record[:6]
-	sm.LineOne = sm.parseStringField(record[6:41])
-	sm.LineTwo = sm.parseStringField(record[41:76])
-	sm.LineThree = sm.parseStringField(record[76:111])
-	sm.LineFour = sm.parseStringField(record[111:146])
-	sm.LineFive = sm.parseStringField(record[146:181])
-	sm.LineSix = sm.parseStringField(record[181:216])
-	sm.LineSeven = sm.parseStringField(record[216:251])
-	sm.LineEight = sm.parseStringField(record[251:286])
-	sm.LineNine = sm.parseStringField(record[286:321])
-	sm.LineTen = sm.parseStringField(record[321:356])
-	sm.LineEleven = sm.parseStringField(record[356:391])
-	sm.LineTwelve = sm.parseStringField(record[391:426])
+	length := 6
+
+	value, read, err := sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	sm.LineOne = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	sm.LineTwo = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	sm.LineThree = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	sm.LineFour = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineFive", err)
+	}
+	sm.LineFive = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineSix", err)
+	}
+	sm.LineSix = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineSeven", err)
+	}
+	sm.LineSeven = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineEight", err)
+	}
+	sm.LineEight = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineNine", err)
+	}
+	sm.LineNine = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineTen", err)
+	}
+	sm.LineTen = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineEleven", err)
+	}
+	sm.LineEleven = value
+	length += read
+
+	value, read, err = sm.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("LineTwelve", err)
+	}
+	sm.LineTwelve = value
+	length += read
+
+	if !sm.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -91,24 +170,37 @@ func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ServiceMessage
+// String returns a fixed-width ServiceMessage record
 func (sm *ServiceMessage) String() string {
+	return sm.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ServiceMessage record formatted according to the FormatOptions
+func (sm *ServiceMessage) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(426)
+
 	buf.WriteString(sm.tag)
-	buf.WriteString(sm.LineOneField())
-	buf.WriteString(sm.LineTwoField())
-	buf.WriteString(sm.LineThreeField())
-	buf.WriteString(sm.LineFourField())
-	buf.WriteString(sm.LineFiveField())
-	buf.WriteString(sm.LineSixField())
-	buf.WriteString(sm.LineSevenField())
-	buf.WriteString(sm.LineEightField())
-	buf.WriteString(sm.LineNineField())
-	buf.WriteString(sm.LineTenField())
-	buf.WriteString(sm.LineElevenField())
-	buf.WriteString(sm.LineTwelveField())
-	return buf.String()
+	buf.WriteString(sm.FormatLineOne(options))
+	buf.WriteString(sm.FormatLineTwo(options))
+	buf.WriteString(sm.FormatLineThree(options))
+	buf.WriteString(sm.FormatLineFour(options))
+	buf.WriteString(sm.FormatLineFive(options))
+	buf.WriteString(sm.FormatLineSix(options))
+	buf.WriteString(sm.FormatLineSeven(options))
+	buf.WriteString(sm.FormatLineEight(options))
+	buf.WriteString(sm.FormatLineNine(options))
+	buf.WriteString(sm.FormatLineTen(options))
+	buf.WriteString(sm.FormatLineEleven(options))
+	buf.WriteString(sm.FormatLineTwelve(options))
+
+	if options.VariableLengthFields {
+		return sm.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on ServiceMessage and returns an error if not Validated
@@ -228,4 +320,64 @@ func (sm *ServiceMessage) LineElevenField() string {
 // LineTwelveField gets a string of the LineTwelve field
 func (sm *ServiceMessage) LineTwelveField() string {
 	return sm.alphaField(sm.LineTwelve, 35)
+}
+
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineOne(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineOne, 35, options)
+}
+
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineTwo(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineTwo, 35, options)
+}
+
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineThree(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineThree, 35, options)
+}
+
+// FormatLineFour returns LineFour formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineFour(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineFour, 35, options)
+}
+
+// FormatLineFive returns LineFive formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineFive(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineFive, 35, options)
+}
+
+// FormatLineSix returns LineSix formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineSix(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineSix, 35, options)
+}
+
+// FormatLineSeven returns LineSeven formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineSeven(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineSeven, 35, options)
+}
+
+// FormatLineEight returns LineEight formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineEight(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineEight, 35, options)
+}
+
+// FormatLineNine returns LineNine formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineNine(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineNine, 35, options)
+}
+
+// FormatLineTen returns LineTen formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineTen(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineTen, 35, options)
+}
+
+// FormatLineEleven returns LineEleven formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineEleven(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineEleven, 35, options)
+}
+
+// FormatLineTwelve returns LineTwelve formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineTwelve(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineTwelve, 35, options)
 }

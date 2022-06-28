@@ -342,18 +342,18 @@ func TestRemittanceBeneficiaryDateBirthPlaceInvalid(t *testing.T) {
 
 // TestParseRemittanceBeneficiaryWrongLength parses a wrong RemittanceBeneficiary record length
 func TestParseRemittanceBeneficiaryWrongLength(t *testing.T) {
-	var line = "{8350}Name                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                  US"
+	var line = "{8350}Name                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                 US"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseRemittanceBeneficiary()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(1114, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineSeven", ErrValidLength)).Error())
 }
 
 // TestParseRemittanceBeneficiaryReaderParseError parses a wrong RemittanceBeneficiary reader parse error
 func TestParseRemittanceBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{8350}®ame                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                    US"
+	var line = "{8350}®ame                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                   US"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -372,4 +372,50 @@ func TestRemittanceBeneficiaryTagError(t *testing.T) {
 	rb.tag = "{9999}"
 
 	require.EqualError(t, rb.Validate(), fieldError("tag", ErrValidTagForType, rb.tag).Error())
+}
+
+// TestStringRemittanceBeneficiaryVariableLength parses using variable length
+func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
+	var line = "{8350}Name*PIARNU***ADDR*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseRemittanceBeneficiary()
+	require.Nil(t, err)
+
+	line = "{8350}Name                                                                                                                                        PIARNU                                                                                                                                                        ADDR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittanceBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8350}Name*PIARNU***ADDR****************************"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittanceBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8350}Name*PIARNU***ADDR*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittanceBeneficiary()
+	require.Equal(t, err, nil)
+}
+
+// TestStringRemittanceBeneficiaryOptions validates Format() formatted according to the FormatOptions
+func TestStringRemittanceBeneficiaryOptions(t *testing.T) {
+	var line = "{8350}Name*PIARNU***ADDR"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseRemittanceBeneficiary()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.RemittanceBeneficiary
+	require.Equal(t, record.String(), "{8350}Name                                                                                                                                        PIARNU                                                                                                                                                        ADDR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8350}Name*PIARNU***ADDR*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

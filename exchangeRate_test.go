@@ -39,13 +39,11 @@ func TestParseExchangeRateWrongLength(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	expected := r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
-	require.EqualError(t, err, expected)
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLength)).Error())
 
 	_, err = r.Read()
 
-	expected = r.parseError(NewTagWrongLengthErr(18, len(r.line))).Error()
-	require.EqualError(t, err, expected)
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLength)).Error())
 }
 
 // TestParseExchangeRateReaderParseError parses a wrong ExchangeRate reader parse error
@@ -71,4 +69,50 @@ func TestExchangeRateTagError(t *testing.T) {
 	err := eRate.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, eRate.tag).Error())
+}
+
+// TestStringErrorExchangeRateVariableLength parses using variable length
+func TestStringErrorExchangeRateVariableLength(t *testing.T) {
+	var line = "{3720}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseExchangeRate()
+	require.Nil(t, err)
+
+	line = "{3720}123         NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseExchangeRate()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3720}123***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseExchangeRate()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{3720}123*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseExchangeRate()
+	require.Equal(t, err, nil)
+}
+
+// TestStringExchangeRateOptions validates Format() formatted according to the FormatOptions
+func TestStringExchangeRateOptions(t *testing.T) {
+	var line = "{3720}123*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseExchangeRate()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.ExchangeRate
+	require.Equal(t, record.String(), "{3720}123         ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3720}123*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

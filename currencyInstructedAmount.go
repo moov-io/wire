@@ -17,7 +17,7 @@ type CurrencyInstructedAmount struct {
 	// SwiftFieldTag
 	SwiftFieldTag string `json:"swiftFieldTag"`
 	// Amount is the instructed amount
-	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
+	// Amount Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
 	// (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
 	Amount string `json:"amount"`
 	// validator is composed for data validation
@@ -39,12 +39,31 @@ func NewCurrencyInstructedAmount() *CurrencyInstructedAmount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (cia *CurrencyInstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 29 {
-		return NewTagWrongLengthErr(29, len(record))
+	if utf8.RuneCountInString(record) < 25 {
+		return NewTagMinLengthErr(25, len(record))
 	}
+
 	cia.tag = record[:6]
-	cia.SwiftFieldTag = cia.parseStringField(record[6:11])
-	cia.Amount = cia.parseStringField(record[11:29])
+	length := 6
+
+	value, read, err := cia.parseVariableStringField(record[length:], 5)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	cia.SwiftFieldTag = value
+	length += read
+
+	if len(record) < length+18 {
+		return fieldError("Amount", ErrValidLength)
+	}
+
+	cia.Amount = cia.parseStringField(record[length : length+18])
+	length += 18
+
+	if !cia.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,13 +81,22 @@ func (cia *CurrencyInstructedAmount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes CurrencyInstructedAmount
+// String returns a fixed-width CurrencyInstructedAmount record
 func (cia *CurrencyInstructedAmount) String() string {
+	return cia.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a CurrencyInstructedAmount record formatted according to the FormatOptions
+func (cia *CurrencyInstructedAmount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(29)
+
 	buf.WriteString(cia.tag)
-	buf.WriteString(cia.SwiftFieldTagField())
+	buf.WriteString(cia.FormatSwiftFieldTag(options))
 	buf.WriteString(cia.AmountField())
+
 	return buf.String()
 }
 
@@ -97,4 +125,9 @@ func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
 // AmountField gets a string of the AmountTag field
 func (cia *CurrencyInstructedAmount) AmountField() string {
 	return cia.numericStringField(cia.Amount, 18)
+}
+
+// FormatSwiftFieldTag returns SwiftFieldTag formatted according to the FormatOptions
+func (cia *CurrencyInstructedAmount) FormatSwiftFieldTag(options FormatOptions) string {
+	return cia.formatAlphaField(cia.SwiftFieldTag, 5, options)
 }

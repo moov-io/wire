@@ -41,16 +41,53 @@ func NewAccountDebitedDrawdown() *AccountDebitedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (debitDD *AccountDebitedDrawdown) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 9 {
+		return NewTagMinLengthErr(9, len(record))
 	}
+
 	debitDD.tag = record[:6]
-	debitDD.IdentificationCode = debitDD.parseStringField(record[6:7])
-	debitDD.Identifier = debitDD.parseStringField(record[7:41])
-	debitDD.Name = debitDD.parseStringField(record[41:76])
-	debitDD.Address.AddressLineOne = debitDD.parseStringField(record[76:111])
-	debitDD.Address.AddressLineTwo = debitDD.parseStringField(record[111:146])
-	debitDD.Address.AddressLineThree = debitDD.parseStringField(record[146:181])
+	debitDD.IdentificationCode = record[6:7]
+	length := 7
+
+	value, read, err := debitDD.parseVariableStringField(record[length:], 34)
+	if err != nil {
+		return fieldError("Identifier", err)
+	}
+	debitDD.Identifier = value
+	length += read
+
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("Name", err)
+	}
+	debitDD.Name = value
+	length += read
+
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	debitDD.Address.AddressLineOne = value
+	length += read
+
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	debitDD.Address.AddressLineTwo = value
+	length += read
+
+	value, read, err = debitDD.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	debitDD.Address.AddressLineThree = value
+	length += read
+
+	if !debitDD.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -68,18 +105,31 @@ func (debitDD *AccountDebitedDrawdown) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes AccountDebitedDrawdown
+// String returns a fixed-width AccountDebitedDrawdown record
 func (debitDD *AccountDebitedDrawdown) String() string {
+	return debitDD.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an AccountDebitedDrawdown record formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(debitDD.tag)
 	buf.WriteString(debitDD.IdentificationCodeField())
-	buf.WriteString(debitDD.IdentifierField())
-	buf.WriteString(debitDD.NameField())
-	buf.WriteString(debitDD.AddressLineOneField())
-	buf.WriteString(debitDD.AddressLineTwoField())
-	buf.WriteString(debitDD.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(debitDD.FormatIdentifier(options))
+	buf.WriteString(debitDD.FormatName(options))
+	buf.WriteString(debitDD.FormatAddressLineOne(options))
+	buf.WriteString(debitDD.FormatAddressLineTwo(options))
+	buf.WriteString(debitDD.FormatAddressLineThree(options))
+
+	if options.VariableLengthFields {
+		return debitDD.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on AccountDebitedDrawdown and returns an error if not Validated
@@ -149,17 +199,42 @@ func (debitDD *AccountDebitedDrawdown) NameField() string {
 	return debitDD.alphaField(debitDD.Name, 35)
 }
 
-// AddressLineOneField gets a string of AddressLineOne field
+// AddressLineOneField gets a string of Address.AddressLineOne field
 func (debitDD *AccountDebitedDrawdown) AddressLineOneField() string {
 	return debitDD.alphaField(debitDD.Address.AddressLineOne, 35)
 }
 
-// AddressLineTwoField gets a string of AddressLineTwo field
+// AddressLineTwoField gets a string of Address.AddressLineTwo field
 func (debitDD *AccountDebitedDrawdown) AddressLineTwoField() string {
 	return debitDD.alphaField(debitDD.Address.AddressLineTwo, 35)
 }
 
-// AddressLineThreeField gets a string of AddressLineThree field
+// AddressLineThreeField gets a string of Address.AddressLineThree field
 func (debitDD *AccountDebitedDrawdown) AddressLineThreeField() string {
 	return debitDD.alphaField(debitDD.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Identifier formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatIdentifier(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Identifier, 34, options)
+}
+
+// FormatName returns Name formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatName(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Address.AddressLineOne formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatAddressLineOne(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Address.AddressLineTwo formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatAddressLineTwo(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Address.AddressLineThree formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatAddressLineThree(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Address.AddressLineThree, 35, options)
 }

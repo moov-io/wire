@@ -175,7 +175,7 @@ func (v *validator) isChargeDetails(code string) error {
 func (v *validator) isTransactionTypeCode(code string) error {
 	switch code {
 	case
-		"   ", "COV":
+		"   ", "COV", "":
 		return nil
 	}
 	return ErrTransactionTypeCode

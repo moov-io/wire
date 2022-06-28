@@ -170,12 +170,12 @@ func TestParseServiceMessageWrongLength(t *testing.T) {
 
 	err := r.parseServiceMessage()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(426, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineTwelve", ErrValidLength)).Error())
 }
 
 // TestParseServiceMessageReaderParseError parses a wrong ServiceMessage reader parse error
 func TestParseServiceMessageReaderParseError(t *testing.T) {
-	var line = "{9000}®ine One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                        "
+	var line = "{9000}®ine One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                       "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -353,4 +353,50 @@ func TestServiceMessageTagError(t *testing.T) {
 	sm.tag = "{9999}"
 
 	require.EqualError(t, sm.Validate(), fieldError("tag", ErrValidTagForType, sm.tag).Error())
+}
+
+// TestStringServiceMessageVariableLength parses using variable length
+func TestStringServiceMessageVariableLength(t *testing.T) {
+	var line = "{9000}A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseServiceMessage()
+	require.Nil(t, err)
+
+	line = "{9000}A                                                                                                                                                                                                                                                                                                                                                                                                                                   NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseServiceMessage()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{9000}**************"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseServiceMessage()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{9000}A*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseServiceMessage()
+	require.Equal(t, err, nil)
+}
+
+// TestStringServiceMessageOptions validates Format() formatted according to the FormatOptions
+func TestStringServiceMessageOptions(t *testing.T) {
+	var line = "{9000}A*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseServiceMessage()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.ServiceMessage
+	require.Equal(t, record.String(), "{9000}A                                                                                                                                                                                                                                                                                                                                                                                                                                   ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{9000}A*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

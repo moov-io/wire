@@ -42,14 +42,39 @@ func NewPrimaryRemittanceDocument() *PrimaryRemittanceDocument {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (prd *PrimaryRemittanceDocument) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 115 {
-		return NewTagWrongLengthErr(115, len(record))
+	if utf8.RuneCountInString(record) < 13 {
+		return NewTagMinLengthErr(13, len(record))
 	}
+
 	prd.tag = record[:6]
 	prd.DocumentTypeCode = record[6:10]
-	prd.ProprietaryDocumentTypeCode = record[10:45]
-	prd.DocumentIdentificationNumber = record[45:80]
-	prd.Issuer = record[80:115]
+	length := 10
+
+	value, read, err := prd.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("ProprietaryDocumentTypeCode", err)
+	}
+	prd.ProprietaryDocumentTypeCode = value
+	length += read
+
+	value, read, err = prd.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("DocumentIdentificationNumber", err)
+	}
+	prd.DocumentIdentificationNumber = value
+	length += read
+
+	value, read, err = prd.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("Issuer", err)
+	}
+	prd.Issuer = value
+	length += read
+
+	if !prd.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -67,16 +92,29 @@ func (prd *PrimaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes PrimaryRemittanceDocument
+// String returns a fixed-width PrimaryRemittanceDocument record
 func (prd *PrimaryRemittanceDocument) String() string {
+	return prd.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a PrimaryRemittanceDocument record formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(115)
+
 	buf.WriteString(prd.tag)
 	buf.WriteString(prd.DocumentTypeCodeField())
-	buf.WriteString(prd.ProprietaryDocumentTypeCodeField())
-	buf.WriteString(prd.DocumentIdentificationNumberField())
-	buf.WriteString(prd.IssuerField())
-	return buf.String()
+	buf.WriteString(prd.FormatProprietaryDocumentTypeCode(options))
+	buf.WriteString(prd.FormatDocumentIdentificationNumber(options))
+	buf.WriteString(prd.FormatIssuer(options))
+
+	if options.VariableLengthFields {
+		return prd.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on PrimaryRemittanceDocument and returns an error if not Validated
@@ -142,4 +180,19 @@ func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField() string
 // IssuerField gets a string of the Issuer field
 func (prd *PrimaryRemittanceDocument) IssuerField() string {
 	return prd.alphaField(prd.Issuer, 35)
+}
+
+// FormatProprietaryDocumentTypeCode returns ProprietaryDocumentTypeCode formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) FormatProprietaryDocumentTypeCode(options FormatOptions) string {
+	return prd.formatAlphaField(prd.ProprietaryDocumentTypeCode, 35, options)
+}
+
+// FormatDocumentIdentificationNumber returns DocumentIdentificationNumber formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) FormatDocumentIdentificationNumber(options FormatOptions) string {
+	return prd.formatAlphaField(prd.DocumentIdentificationNumber, 35, options)
+}
+
+// FormatIssuer returns Issuer formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) FormatIssuer(options FormatOptions) string {
+	return prd.formatAlphaField(prd.Issuer, 35, options)
 }

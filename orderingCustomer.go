@@ -36,16 +36,59 @@ func NewOrderingCustomer() *OrderingCustomer {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (oc *OrderingCustomer) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	oc.tag = record[:6]
-	oc.CoverPayment.SwiftFieldTag = oc.parseStringField(record[6:11])
-	oc.CoverPayment.SwiftLineOne = oc.parseStringField(record[11:46])
-	oc.CoverPayment.SwiftLineTwo = oc.parseStringField(record[46:81])
-	oc.CoverPayment.SwiftLineThree = oc.parseStringField(record[81:116])
-	oc.CoverPayment.SwiftLineFour = oc.parseStringField(record[116:151])
-	oc.CoverPayment.SwiftLineFive = oc.parseStringField(record[151:186])
+	length := 6
+
+	value, read, err := oc.parseVariableStringField(record[length:], 5)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	oc.CoverPayment.SwiftFieldTag = value
+	length += read
+
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	oc.CoverPayment.SwiftLineOne = value
+	length += read
+
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	oc.CoverPayment.SwiftLineTwo = value
+	length += read
+
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	oc.CoverPayment.SwiftLineThree = value
+	length += read
+
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	oc.CoverPayment.SwiftLineFour = value
+	length += read
+
+	value, read, err = oc.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	oc.CoverPayment.SwiftLineFive = value
+	length += read
+
+	if !oc.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +106,31 @@ func (oc *OrderingCustomer) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OrderingCustomer
+// String returns a fixed-width OrderingCustomer record
 func (oc *OrderingCustomer) String() string {
+	return oc.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OrderingCustomer record formatted according to the FormatOptions
+func (oc *OrderingCustomer) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
 	buf.WriteString(oc.tag)
-	buf.WriteString(oc.SwiftFieldTagField())
-	buf.WriteString(oc.SwiftLineOneField())
-	buf.WriteString(oc.SwiftLineTwoField())
-	buf.WriteString(oc.SwiftLineThreeField())
-	buf.WriteString(oc.SwiftLineFourField())
-	buf.WriteString(oc.SwiftLineFiveField())
-	return buf.String()
+
+	buf.WriteString(oc.FormatSwiftFieldTag(options))
+	buf.WriteString(oc.FormatSwiftLineOne(options))
+	buf.WriteString(oc.FormatSwiftLineTwo(options))
+	buf.WriteString(oc.FormatSwiftLineThree(options))
+	buf.WriteString(oc.FormatSwiftLineFour(options))
+	buf.WriteString(oc.FormatSwiftLineFive(options))
+
+	if options.VariableLengthFields {
+		return oc.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on OrderingCustomer and returns an error if not Validated
@@ -144,4 +200,34 @@ func (oc *OrderingCustomer) SwiftLineFourField() string {
 // SwiftLineFiveField gets a string of the SwiftLineFive field
 func (oc *OrderingCustomer) SwiftLineFiveField() string {
 	return oc.alphaField(oc.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (oc *OrderingCustomer) FormatSwiftFieldTag(options FormatOptions) string {
+	return oc.formatAlphaField(oc.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (oc *OrderingCustomer) FormatSwiftLineOne(options FormatOptions) string {
+	return oc.formatAlphaField(oc.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (oc *OrderingCustomer) FormatSwiftLineTwo(options FormatOptions) string {
+	return oc.formatAlphaField(oc.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (oc *OrderingCustomer) FormatSwiftLineThree(options FormatOptions) string {
+	return oc.formatAlphaField(oc.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (oc *OrderingCustomer) FormatSwiftLineFour(options FormatOptions) string {
+	return oc.formatAlphaField(oc.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (oc *OrderingCustomer) FormatSwiftLineFive(options FormatOptions) string {
+	return oc.formatAlphaField(oc.CoverPayment.SwiftLineFive, 35, options)
 }

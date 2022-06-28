@@ -36,16 +36,59 @@ func NewFIIntermediaryFI() *FIIntermediaryFI {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (fiifi *FIIntermediaryFI) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 201 {
-		return NewTagWrongLengthErr(201, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	fiifi.tag = record[:6]
-	fiifi.FIToFI.LineOne = fiifi.parseStringField(record[6:36])
-	fiifi.FIToFI.LineTwo = fiifi.parseStringField(record[36:69])
-	fiifi.FIToFI.LineThree = fiifi.parseStringField(record[69:102])
-	fiifi.FIToFI.LineFour = fiifi.parseStringField(record[102:135])
-	fiifi.FIToFI.LineFive = fiifi.parseStringField(record[135:168])
-	fiifi.FIToFI.LineSix = fiifi.parseStringField(record[168:201])
+	length := 6
+
+	value, read, err := fiifi.parseVariableStringField(record[length:], 30)
+	if err != nil {
+		return fieldError("LineOne", err)
+	}
+	fiifi.FIToFI.LineOne = value
+	length += read
+
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineTwo", err)
+	}
+	fiifi.FIToFI.LineTwo = value
+	length += read
+
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineThree", err)
+	}
+	fiifi.FIToFI.LineThree = value
+	length += read
+
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFour", err)
+	}
+	fiifi.FIToFI.LineFour = value
+	length += read
+
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineFive", err)
+	}
+	fiifi.FIToFI.LineFive = value
+	length += read
+
+	value, read, err = fiifi.parseVariableStringField(record[length:], 33)
+	if err != nil {
+		return fieldError("LineSix", err)
+	}
+	fiifi.FIToFI.LineSix = value
+	length += read
+
+	if !fiifi.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +106,31 @@ func (fiifi *FIIntermediaryFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIIntermediaryFI
+// String returns a fixed-width FIIntermediaryFI record
 func (fiifi *FIIntermediaryFI) String() string {
+	return fiifi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIIntermediaryFI record formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(201)
+
 	buf.WriteString(fiifi.tag)
-	buf.WriteString(fiifi.LineOneField())
-	buf.WriteString(fiifi.LineTwoField())
-	buf.WriteString(fiifi.LineThreeField())
-	buf.WriteString(fiifi.LineFourField())
-	buf.WriteString(fiifi.LineFiveField())
-	buf.WriteString(fiifi.LineSixField())
-	return buf.String()
+	buf.WriteString(fiifi.FormatLineOne(options))
+	buf.WriteString(fiifi.FormatLineTwo(options))
+	buf.WriteString(fiifi.FormatLineThree(options))
+	buf.WriteString(fiifi.FormatLineFour(options))
+	buf.WriteString(fiifi.FormatLineFive(options))
+	buf.WriteString(fiifi.FormatLineSix(options))
+
+	if options.VariableLengthFields {
+		return fiifi.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on FIIntermediaryFI and returns an error if not Validated
@@ -132,4 +188,34 @@ func (fiifi *FIIntermediaryFI) LineFiveField() string {
 // LineSixField gets a string of the LineSix field
 func (fiifi *FIIntermediaryFI) LineSixField() string {
 	return fiifi.alphaField(fiifi.FIToFI.LineSix, 33)
+}
+
+// FormatLineOne returns FIToFI.LineOne formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineOne(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineOne, 30, options)
+}
+
+// FormatLineTwo returns FIToFI.LineTwo formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineTwo(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineTwo, 33, options)
+}
+
+// FormatLineThree returns FIToFI.LineThree formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineThree(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineThree, 33, options)
+}
+
+// FormatLineFour returns FIToFI.LineFour formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineFour(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineFour, 33, options)
+}
+
+// FormatLineFive returns FIToFI.LineFive formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineFive(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineFive, 33, options)
+}
+
+// FormatLineSix returns FIToFI.LineSix formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineSix(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineSix, 33, options)
 }

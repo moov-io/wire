@@ -36,11 +36,24 @@ func NewAccountCreditedDrawdown() *AccountCreditedDrawdown {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 15 {
-		return NewTagWrongLengthErr(15, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	creditDD.tag = record[:6]
-	creditDD.DrawdownCreditAccountNumber = creditDD.parseStringField(record[6:15])
+	length := 6
+
+	value, read, err := creditDD.parseVariableStringField(record[length:], 9)
+	if err != nil {
+		return fieldError("DrawdownCreditAccountNumber", err)
+	}
+	creditDD.DrawdownCreditAccountNumber = value
+	length += read
+
+	if !creditDD.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -58,12 +71,19 @@ func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes AccountCreditedDrawdown
+// String returns a fixed-width AccountCreditedDrawdown record
 func (creditDD *AccountCreditedDrawdown) String() string {
+	return creditDD.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an AccountCreditedDrawdown record formatted according to the FormatOptions
+func (creditDD *AccountCreditedDrawdown) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(15)
 	buf.WriteString(creditDD.tag)
-	buf.WriteString(creditDD.DrawdownCreditAccountNumberField())
+	buf.WriteString(creditDD.FormatCreditAccountNumber(options))
 	return buf.String()
 }
 
@@ -94,4 +114,9 @@ func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
 // DrawdownCreditAccountNumberField gets a string of the DrawdownCreditAccountNumber field
 func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField() string {
 	return creditDD.alphaField(creditDD.DrawdownCreditAccountNumber, 9)
+}
+
+// FormatCreditAccountNumber returns DrawdownCreditAccountNumber formatted according to the FormatOptions
+func (creditDD *AccountCreditedDrawdown) FormatCreditAccountNumber(options FormatOptions) string {
+	return creditDD.formatAlphaField(creditDD.DrawdownCreditAccountNumber, 9, options)
 }

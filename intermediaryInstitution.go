@@ -36,16 +36,59 @@ func NewIntermediaryInstitution() *IntermediaryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ii *IntermediaryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 186 {
-		return NewTagWrongLengthErr(186, len(record))
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
 	}
+
 	ii.tag = record[:6]
-	ii.CoverPayment.SwiftFieldTag = ii.parseStringField(record[6:11])
-	ii.CoverPayment.SwiftLineOne = ii.parseStringField(record[11:46])
-	ii.CoverPayment.SwiftLineTwo = ii.parseStringField(record[46:81])
-	ii.CoverPayment.SwiftLineThree = ii.parseStringField(record[81:116])
-	ii.CoverPayment.SwiftLineFour = ii.parseStringField(record[116:151])
-	ii.CoverPayment.SwiftLineFive = ii.parseStringField(record[151:186])
+	length := 6
+
+	value, read, err := ii.parseVariableStringField(record[length:], 5)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	ii.CoverPayment.SwiftFieldTag = value
+	length += read
+
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineOne", err)
+	}
+	ii.CoverPayment.SwiftLineOne = value
+	length += read
+
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineTwo", err)
+	}
+	ii.CoverPayment.SwiftLineTwo = value
+	length += read
+
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineThree", err)
+	}
+	ii.CoverPayment.SwiftLineThree = value
+	length += read
+
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFour", err)
+	}
+	ii.CoverPayment.SwiftLineFour = value
+	length += read
+
+	value, read, err = ii.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("SwiftLineFive", err)
+	}
+	ii.CoverPayment.SwiftLineFive = value
+	length += read
+
+	if !ii.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +106,31 @@ func (ii *IntermediaryInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes IntermediaryInstitution
+// String returns a fixed-width IntermediaryInstitution record
 func (ii *IntermediaryInstitution) String() string {
+	return ii.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a IntermediaryInstitution record formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
+
 	buf.WriteString(ii.tag)
-	buf.WriteString(ii.SwiftFieldTagField())
-	buf.WriteString(ii.SwiftLineOneField())
-	buf.WriteString(ii.SwiftLineTwoField())
-	buf.WriteString(ii.SwiftLineThreeField())
-	buf.WriteString(ii.SwiftLineFourField())
-	buf.WriteString(ii.SwiftLineFiveField())
-	return buf.String()
+	buf.WriteString(ii.FormatSwiftFieldTag(options))
+	buf.WriteString(ii.FormatSwiftLineOne(options))
+	buf.WriteString(ii.FormatSwiftLineTwo(options))
+	buf.WriteString(ii.FormatSwiftLineThree(options))
+	buf.WriteString(ii.FormatSwiftLineFour(options))
+	buf.WriteString(ii.FormatSwiftLineFive(options))
+
+	if options.VariableLengthFields {
+		return ii.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on IntermediaryInstitution and returns an error if not Validated
@@ -144,4 +200,34 @@ func (ii *IntermediaryInstitution) SwiftLineFourField() string {
 // SwiftLineFiveField gets a string of the SwiftLineFive field
 func (ii *IntermediaryInstitution) SwiftLineFiveField() string {
 	return ii.alphaField(ii.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) FormatSwiftFieldTag(options FormatOptions) string {
+	return ii.formatAlphaField(ii.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) FormatSwiftLineOne(options FormatOptions) string {
+	return ii.formatAlphaField(ii.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) FormatSwiftLineTwo(options FormatOptions) string {
+	return ii.formatAlphaField(ii.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) FormatSwiftLineThree(options FormatOptions) string {
+	return ii.formatAlphaField(ii.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) FormatSwiftLineFour(options FormatOptions) string {
+	return ii.formatAlphaField(ii.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (ii *IntermediaryInstitution) FormatSwiftLineFive(options FormatOptions) string {
+	return ii.formatAlphaField(ii.CoverPayment.SwiftLineFive, 35, options)
 }

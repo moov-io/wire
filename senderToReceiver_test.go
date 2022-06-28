@@ -105,12 +105,12 @@ func TestParseSenderToReceiverWrongLength(t *testing.T) {
 
 	err := r.parseSenderToReceiver()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(221, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineSix", ErrValidLength)).Error())
 }
 
 // TestParseSenderToReceiverReaderParseError parses a wrong SenderToReceiver reader parse error
 func TestParseSenderToReceiverReaderParseError(t *testing.T) {
-	var line = "{7072}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    Swift Line Six                     "
+	var line = "{7072}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                    Swift Line Six                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -129,4 +129,50 @@ func TestSenderToReceiverTagError(t *testing.T) {
 	str.tag = "{9999}"
 
 	require.EqualError(t, str.Validate(), fieldError("tag", ErrValidTagForType, str.tag).Error())
+}
+
+// TestStringSenderToReceiverVariableLength parses using variable length
+func TestStringSenderToReceiverVariableLength(t *testing.T) {
+	var line = "{7072}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderToReceiver()
+	require.Nil(t, err)
+
+	line = "{7072}                                                                                                                                                                                                                       NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderToReceiver()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7072}**************"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderToReceiver()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{7072}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderToReceiver()
+	require.Equal(t, err, nil)
+}
+
+// TestStringSenderToReceiverOptions validates Format() formatted according to the FormatOptions
+func TestStringSenderToReceiverOptions(t *testing.T) {
+	var line = "{7072}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseSenderToReceiver()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.SenderToReceiver
+	require.Equal(t, record.String(), "{7072}                                                                                                                                                                                                                       ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7072}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

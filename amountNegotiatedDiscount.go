@@ -36,12 +36,31 @@ func NewAmountNegotiatedDiscount() *AmountNegotiatedDiscount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (nd *AmountNegotiatedDiscount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 28 {
-		return NewTagWrongLengthErr(28, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	nd.tag = record[:6]
-	nd.RemittanceAmount.CurrencyCode = nd.parseStringField(record[6:9])
-	nd.RemittanceAmount.Amount = nd.parseStringField(record[9:28])
+	length := 6
+
+	value, read, err := nd.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	nd.RemittanceAmount.CurrencyCode = value
+	length += read
+
+	value, read, err = nd.parseVariableStringField(record[length:], 19)
+	if err != nil {
+		return fieldError("Amount", err)
+	}
+	nd.RemittanceAmount.Amount = value
+	length += read
+
+	if !nd.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -59,13 +78,22 @@ func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes AmountNegotiatedDiscount
+// String returns a fixed-width AmountNegotiatedDiscount record
 func (nd *AmountNegotiatedDiscount) String() string {
+	return nd.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an AmountNegotiatedDiscount record formatted according to the FormatOptions
+func (nd *AmountNegotiatedDiscount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
+
 	buf.WriteString(nd.tag)
-	buf.WriteString(nd.CurrencyCodeField())
-	buf.WriteString(nd.AmountField())
+	buf.WriteString(nd.FormatCurrencyCode(options))
+	buf.WriteString(nd.FormatAmount(options))
+
 	return buf.String()
 }
 
@@ -107,4 +135,14 @@ func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
 // AmountField gets a string of the Amount field
 func (nd *AmountNegotiatedDiscount) AmountField() string {
 	return nd.alphaField(nd.RemittanceAmount.Amount, 19)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (nd *AmountNegotiatedDiscount) FormatCurrencyCode(options FormatOptions) string {
+	return nd.formatAlphaField(nd.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (nd *AmountNegotiatedDiscount) FormatAmount(options FormatOptions) string {
+	return nd.formatAlphaField(nd.RemittanceAmount.Amount, 19, options)
 }

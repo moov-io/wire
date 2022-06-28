@@ -61,12 +61,12 @@ func TestParseRemittanceFreeTextWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceFreeText()
 
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(426, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLength)).Error())
 }
 
 // TestParseRemittanceFreeTextReaderParseError parses a wrong RemittanceFreeText reader parse error
 func TestParseRemittanceFreeTextReaderParseError(t *testing.T) {
-	var line = "{8750}Re®ittance Free Text Line One                                                                                                               Remittance Free Text Line Two                                                                                                               Remittance Free Text Line Three                                                                                                             "
+	var line = "{8750}Re®ittance Free Text Line One                                                                                                               Remittance Free Text Line Two                                                                                                               Remittance Free Text Line Three                                                                                                            "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -85,4 +85,50 @@ func TestRemittanceFreeTextTagError(t *testing.T) {
 	rft.tag = "{9999}"
 
 	require.EqualError(t, rft.Validate(), fieldError("tag", ErrValidTagForType, rft.tag).Error())
+}
+
+// TestStringRemittanceFreeTextVariableLength parses using variable length
+func TestStringRemittanceFreeTextVariableLength(t *testing.T) {
+	var line = "{8750}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseRemittanceFreeText()
+	require.Nil(t, err)
+
+	line = "{8750}                                                                                                                                                                                                                                                                                                                                                                                                                                    NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittanceFreeText()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8750}****************************"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittanceFreeText()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{8750}*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseRemittanceFreeText()
+	require.Equal(t, err, nil)
+}
+
+// TestStringRemittanceFreeTextOptions validates Format() formatted according to the FormatOptions
+func TestStringRemittanceFreeTextOptions(t *testing.T) {
+	var line = "{8750}"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseRemittanceFreeText()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.RemittanceFreeText
+	require.Equal(t, record.String(), "{8750}                                                                                                                                                                                                                                                                                                                                                                                                                                    ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8750}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

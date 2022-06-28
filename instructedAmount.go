@@ -39,12 +39,31 @@ func NewInstructedAmount() *InstructedAmount {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ia *InstructedAmount) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 24 {
-		return NewTagWrongLengthErr(24, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
+
 	ia.tag = record[:6]
-	ia.CurrencyCode = ia.parseStringField(record[6:9])
-	ia.Amount = ia.parseStringField(record[9:24])
+	length := 6
+
+	value, read, err := ia.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("SwiftFieldTag", err)
+	}
+	ia.CurrencyCode = value
+	length += read
+
+	value, read, err = ia.parseVariableStringField(record[length:], 15)
+	if err != nil {
+		return fieldError("Amount", err)
+	}
+	ia.Amount = value
+	length += read
+
+	if !ia.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -62,13 +81,22 @@ func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes InstructedAmount
+// String returns a fixed-width InstructedAmount record
 func (ia *InstructedAmount) String() string {
+	return ia.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a InstructedAmount record formatted according to the FormatOptions
+func (ia *InstructedAmount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(24)
+
 	buf.WriteString(ia.tag)
-	buf.WriteString(ia.CurrencyCodeField())
-	buf.WriteString(ia.AmountField())
+	buf.WriteString(ia.FormatCurrencyCode(options))
+	buf.WriteString(ia.FormatAmount(options))
+
 	return buf.String()
 }
 
@@ -111,4 +139,14 @@ func (ia *InstructedAmount) CurrencyCodeField() string {
 // AmountField gets a string of the Amount field
 func (ia *InstructedAmount) AmountField() string {
 	return ia.alphaField(ia.Amount, 15)
+}
+
+// FormatCurrencyCode returns CurrencyCode formatted according to the FormatOptions
+func (ia *InstructedAmount) FormatCurrencyCode(options FormatOptions) string {
+	return ia.formatAlphaField(ia.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns Amount formatted according to the FormatOptions
+func (ia *InstructedAmount) FormatAmount(options FormatOptions) string {
+	return ia.formatAlphaField(ia.Amount, 15, options)
 }

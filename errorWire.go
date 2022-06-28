@@ -7,6 +7,7 @@ package wire
 import (
 	"encoding/json"
 	"strings"
+	"unicode/utf8"
 )
 
 // ErrorWire is a wire error with the fedwire message
@@ -38,11 +39,40 @@ func NewErrorWire() *ErrorWire {
 //
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
-func (ew *ErrorWire) Parse(record string) {
+func (ew *ErrorWire) Parse(record string) error {
+	if utf8.RuneCountInString(record) < 6 {
+		return NewTagMinLengthErr(6, len(record))
+	}
+
 	ew.tag = record[:6]
-	ew.ErrorCategory = ew.parseStringField(record[6:7])
-	ew.ErrorCode = ew.parseStringField(record[7:10])
-	ew.ErrorDescription = ew.parseStringField(record[10:45])
+	length := 6
+
+	value, read, err := ew.parseVariableStringField(record[length:], 1)
+	if err != nil {
+		return fieldError("ErrorCategory", err)
+	}
+	ew.ErrorCategory = value
+	length += read
+
+	value, read, err = ew.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("ErrorCode", err)
+	}
+	ew.ErrorCode = value
+	length += read
+
+	value, read, err = ew.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("ErrorDescription", err)
+	}
+	ew.ErrorDescription = value
+	length += read
+
+	if !ew.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
+	return nil
 }
 
 func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
@@ -59,15 +89,28 @@ func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ErrorWire
+// String returns a fixed-width ErrorWire record
 func (ew *ErrorWire) String() string {
+	return ew.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ErrorWire record formatted according to the FormatOptions
+func (ew *ErrorWire) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(45)
 	buf.WriteString(ew.tag)
-	buf.WriteString(ew.ErrorCategoryField())
-	buf.WriteString(ew.ErrorCodeField())
-	buf.WriteString(ew.ErrorDescriptionField())
-	return buf.String()
+
+	buf.WriteString(ew.FormatErrorCategory(options))
+	buf.WriteString(ew.FormatErrorCode(options))
+	buf.WriteString(ew.FormatErrorDescription(options))
+
+	if options.VariableLengthFields {
+		return ew.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on ErrorWire and returns an error if not Validated
@@ -90,4 +133,19 @@ func (ew *ErrorWire) ErrorCodeField() string {
 // ErrorDescriptionField gets a string of the ErrorDescription field
 func (ew *ErrorWire) ErrorDescriptionField() string {
 	return ew.alphaField(ew.ErrorDescription, 35)
+}
+
+// FormatErrorCategory returns ErrorCategory formatted according to the FormatOptions
+func (ew *ErrorWire) FormatErrorCategory(options FormatOptions) string {
+	return ew.formatAlphaField(ew.ErrorCategory, 1, options)
+}
+
+// FormatErrorCode returns ErrorCode formatted according to the FormatOptions
+func (ew *ErrorWire) FormatErrorCode(options FormatOptions) string {
+	return ew.formatAlphaField(ew.ErrorCode, 3, options)
+}
+
+// FormatErrorDescription returns ErrorDescription formatted according to the FormatOptions
+func (ew *ErrorWire) FormatErrorDescription(options FormatOptions) string {
+	return ew.formatAlphaField(ew.ErrorDescription, 35, options)
 }

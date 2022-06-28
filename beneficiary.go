@@ -36,16 +36,53 @@ func NewBeneficiary() *Beneficiary {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ben *Beneficiary) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 181 {
-		return NewTagWrongLengthErr(181, len(record))
+	if utf8.RuneCountInString(record) < 7 {
+		return NewTagMinLengthErr(7, len(record))
 	}
+
 	ben.tag = record[:6]
 	ben.Personal.IdentificationCode = ben.parseStringField(record[6:7])
-	ben.Personal.Identifier = ben.parseStringField(record[7:41])
-	ben.Personal.Name = ben.parseStringField(record[41:76])
-	ben.Personal.Address.AddressLineOne = ben.parseStringField(record[76:111])
-	ben.Personal.Address.AddressLineTwo = ben.parseStringField(record[111:146])
-	ben.Personal.Address.AddressLineThree = ben.parseStringField(record[146:181])
+	length := 7
+
+	value, read, err := ben.parseVariableStringField(record[length:], 34)
+	if err != nil {
+		return fieldError("Identifier", err)
+	}
+	ben.Personal.Identifier = value
+	length += read
+
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("Name", err)
+	}
+	ben.Personal.Name = value
+	length += read
+
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	ben.Personal.Address.AddressLineOne = value
+	length += read
+
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	ben.Personal.Address.AddressLineTwo = value
+	length += read
+
+	value, read, err = ben.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	ben.Personal.Address.AddressLineThree = value
+	length += read
+
+	if !ben.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -63,18 +100,31 @@ func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Beneficiary
+// String returns a fixed-width Beneficiary record
 func (ben *Beneficiary) String() string {
+	return ben.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a Beneficiary record formatted according to the FormatOptions
+func (ben *Beneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
+
 	buf.WriteString(ben.tag)
 	buf.WriteString(ben.IdentificationCodeField())
-	buf.WriteString(ben.IdentifierField())
-	buf.WriteString(ben.NameField())
-	buf.WriteString(ben.AddressLineOneField())
-	buf.WriteString(ben.AddressLineTwoField())
-	buf.WriteString(ben.AddressLineThreeField())
-	return buf.String()
+	buf.WriteString(ben.FormatIdentifier(options))
+	buf.WriteString(ben.FormatName(options))
+	buf.WriteString(ben.FormatAddressLineOne(options))
+	buf.WriteString(ben.FormatAddressLineTwo(options))
+	buf.WriteString(ben.FormatAddressLineThree(options))
+
+	if options.VariableLengthFields {
+		return ben.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Beneficiary and returns an error if not Validated
@@ -149,4 +199,29 @@ func (ben *Beneficiary) AddressLineTwoField() string {
 // AddressLineThreeField gets a string of AddressLineThree field
 func (ben *Beneficiary) AddressLineThreeField() string {
 	return ben.alphaField(ben.Personal.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Personal.Identifier formatted according to the FormatOptions
+func (ben *Beneficiary) FormatIdentifier(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Identifier, 34, options)
+}
+
+// FormatName returns Personal.Name formatted according to the FormatOptions
+func (ben *Beneficiary) FormatName(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Personal.Address.AddressLineOne formatted according to the FormatOptions
+func (ben *Beneficiary) FormatAddressLineOne(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Personal.Address.AddressLineTwo formatted according to the FormatOptions
+func (ben *Beneficiary) FormatAddressLineTwo(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Personal.Address.AddressLineThree formatted according to the FormatOptions
+func (ben *Beneficiary) FormatAddressLineThree(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Address.AddressLineThree, 35, options)
 }

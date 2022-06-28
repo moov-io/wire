@@ -42,15 +42,52 @@ func NewAdjustment() *Adjustment {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (adj *Adjustment) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 174 {
-		return NewTagWrongLengthErr(174, len(record))
+	if utf8.RuneCountInString(record) < 10 {
+		return NewTagMinLengthErr(10, len(record))
 	}
+
 	adj.tag = record[:6]
-	adj.AdjustmentReasonCode = adj.parseStringField(record[6:8])
-	adj.CreditDebitIndicator = adj.parseStringField(record[8:12])
-	adj.RemittanceAmount.CurrencyCode = adj.parseStringField(record[12:15])
-	adj.RemittanceAmount.Amount = adj.parseStringField(record[15:34])
-	adj.AdditionalInfo = adj.parseStringField(record[34:174])
+	length := 6
+
+	value, read, err := adj.parseVariableStringField(record[length:], 2)
+	if err != nil {
+		return fieldError("AdjustmentReasonCode", err)
+	}
+	adj.AdjustmentReasonCode = value
+	length += read
+
+	value, read, err = adj.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("CreditDebitIndicator", err)
+	}
+	adj.CreditDebitIndicator = value
+	length += read
+
+	value, read, err = adj.parseVariableStringField(record[length:], 3)
+	if err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	adj.RemittanceAmount.CurrencyCode = value
+	length += read
+
+	value, read, err = adj.parseVariableStringField(record[length:], 19)
+	if err != nil {
+		return fieldError("CurrencyCode", err)
+	}
+	adj.RemittanceAmount.Amount = value
+	length += read
+
+	value, read, err = adj.parseVariableStringField(record[length:], 140)
+	if err != nil {
+		return fieldError("AdditionalInfo", err)
+	}
+	adj.AdditionalInfo = value
+	length += read
+
+	if !adj.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -68,17 +105,30 @@ func (adj *Adjustment) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Adjustment
+// String returns a fixed-width Adjustment record
 func (adj *Adjustment) String() string {
+	return adj.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an Adjustment record formatted according to the FormatOptions
+func (adj *Adjustment) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(168)
+
 	buf.WriteString(adj.tag)
-	buf.WriteString(adj.AdjustmentReasonCodeField())
-	buf.WriteString(adj.CreditDebitIndicatorField())
-	buf.WriteString(adj.CurrencyCodeField())
-	buf.WriteString(adj.AmountField())
-	buf.WriteString(adj.AdditionalInfoField())
-	return buf.String()
+	buf.WriteString(adj.FormatAdjustmentReasonCode(options))
+	buf.WriteString(adj.FormatCreditDebitIndicator(options))
+	buf.WriteString(adj.FormatCurrencyCode(options))
+	buf.WriteString(adj.FormatAmount(options))
+	buf.WriteString(adj.FormatAdditionalInfo(options))
+
+	if options.VariableLengthFields {
+		return adj.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on Adjustment and returns an error if not Validated
@@ -147,4 +197,29 @@ func (adj *Adjustment) AmountField() string {
 // AdditionalInfoField gets a string of the AdditionalInfo field
 func (adj *Adjustment) AdditionalInfoField() string {
 	return adj.alphaField(adj.AdditionalInfo, 140)
+}
+
+// FormatAdjustmentReasonCode returns AdjustmentReasonCode formatted according to the FormatOptions
+func (adj *Adjustment) FormatAdjustmentReasonCode(options FormatOptions) string {
+	return adj.formatAlphaField(adj.AdjustmentReasonCode, 2, options)
+}
+
+// FormatCreditDebitIndicator returns CreditDebitIndicator formatted according to the FormatOptions
+func (adj *Adjustment) FormatCreditDebitIndicator(options FormatOptions) string {
+	return adj.formatAlphaField(adj.CreditDebitIndicator, 4, options)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (adj *Adjustment) FormatCurrencyCode(options FormatOptions) string {
+	return adj.formatAlphaField(adj.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (adj *Adjustment) FormatAmount(options FormatOptions) string {
+	return adj.formatAlphaField(adj.RemittanceAmount.Amount, 19, options)
+}
+
+// FormatAdditionalInfo returns AdditionalInfo formatted according to the FormatOptions
+func (adj *Adjustment) FormatAdditionalInfo(options FormatOptions) string {
+	return adj.formatAlphaField(adj.AdditionalInfo, 140, options)
 }

@@ -49,12 +49,12 @@ func TestParseFIPaymentMethodToBeneficiaryWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIPaymentMethodToBeneficiary()
-	require.EqualError(t, err, r.parseError(NewTagWrongLengthErr(41, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AdditionalInformation", ErrValidLength)).Error())
 }
 
 // TestParseFIPaymentMethodToBeneficiaryReaderParseError parses a wrong FIPaymentMethodToBeneficiary reader parse error
 func TestParseFIPaymentMethodToBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{6420}CHECK®dditional Information        "
+	var line = "{6420}CHECK®dditional Information       "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -77,4 +77,50 @@ func TestFIPaymentMethodToBeneficiaryTagError(t *testing.T) {
 	err := pm.Validate()
 
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, pm.tag).Error())
+}
+
+// TestStringFIPaymentMethodToBeneficiaryVariableLength parses using variable length
+func TestStringFIPaymentMethodToBeneficiaryVariableLength(t *testing.T) {
+	var line = "{6420}CHECK"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIPaymentMethodToBeneficiary()
+	require.Nil(t, err)
+
+	line = "{6420}CHECK                              NNN"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIPaymentMethodToBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6420}CHECK***"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIPaymentMethodToBeneficiary()
+	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+
+	line = "{6420}CHECK*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseFIPaymentMethodToBeneficiary()
+	require.Equal(t, err, nil)
+}
+
+// TestStringFIPaymentMethodToBeneficiaryOptions validates Format() formatted according to the FormatOptions
+func TestStringFIPaymentMethodToBeneficiaryOptions(t *testing.T) {
+	var line = "{6420}CHECK*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseFIPaymentMethodToBeneficiary()
+	require.Equal(t, err, nil)
+
+	record := r.currentFEDWireMessage.FIPaymentMethodToBeneficiary
+	require.Equal(t, record.String(), "{6420}CHECK                              ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6420}CHECK*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

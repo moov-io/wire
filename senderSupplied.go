@@ -45,14 +45,41 @@ func NewSenderSupplied() *SenderSupplied {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (ss *SenderSupplied) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 18 {
-		return NewTagWrongLengthErr(18, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 11 {
+		return NewTagMinLengthErr(11, len(record))
 	}
+
 	ss.tag = record[0:6]
 	ss.FormatVersion = ss.parseStringField(record[6:8])
-	ss.UserRequestCorrelation = ss.parseStringField(record[8:16])
-	ss.TestProductionCode = ss.parseStringField(record[16:17])
-	ss.MessageDuplicationCode = ss.parseStringField(record[17:18])
+	length := 8
+
+	value, read, err := ss.parseVariableStringField(record[length:], 8)
+	if err != nil {
+		return fieldError("UserRequestCorrelation", err)
+	}
+	ss.UserRequestCorrelation = value
+	length += read
+
+	if len(record) < length+1 {
+		return fieldError("TestProductionCode", ErrValidLength)
+	}
+
+	ss.TestProductionCode = ss.parseStringField(record[length : length+1])
+	length += 1
+
+	value, read, err = ss.parseVariableStringField(record[length:], 1)
+	if err != nil {
+		return fieldError("MessageDuplicationCode", err)
+	}
+	ss.MessageDuplicationCode = value
+	length += read
+
+	ss.MessageDuplicationCode = ss.parseStringField(ss.MessageDuplicationCode)
+
+	if !ss.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -70,15 +97,24 @@ func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderSupplied
+// String returns a fixed-width SenderSupplied record
 func (ss *SenderSupplied) String() string {
+	return ss.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderSupplied record formatted according to the FormatOptions
+func (ss *SenderSupplied) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(18)
+
 	buf.WriteString(ss.tag)
 	buf.WriteString(ss.FormatVersionField())
-	buf.WriteString(ss.UserRequestCorrelationField())
+	buf.WriteString(ss.FormatUserRequestCorrelation(options))
 	buf.WriteString(ss.TestProductionCodeField())
-	buf.WriteString(ss.MessageDuplicationCodeField())
+	buf.WriteString(ss.FormatMessageDuplicationCode(options))
+
 	return buf.String()
 }
 
@@ -133,4 +169,14 @@ func (ss *SenderSupplied) TestProductionCodeField() string {
 // MessageDuplicationCodeField gets a string of the MessageDuplicationCode field
 func (ss *SenderSupplied) MessageDuplicationCodeField() string {
 	return ss.alphaField(ss.MessageDuplicationCode, 1)
+}
+
+// FormatUserRequestCorrelation returns UserRequestCorrelation formatted according to the FormatOptions
+func (ss *SenderSupplied) FormatUserRequestCorrelation(options FormatOptions) string {
+	return ss.formatAlphaField(ss.UserRequestCorrelation, 8, options)
+}
+
+// FormatMessageDuplicationCode returns MessageDuplicationCode formatted according to the FormatOptions
+func (ss *SenderSupplied) FormatMessageDuplicationCode(options FormatOptions) string {
+	return ss.formatAlphaField(ss.MessageDuplicationCode, 1, options)
 }

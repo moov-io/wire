@@ -42,30 +42,157 @@ func NewRelatedRemittance() *RelatedRemittance {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rr *RelatedRemittance) Parse(record string) error {
-	if utf8.RuneCountInString(record) != 3041 {
-		return NewTagWrongLengthErr(3041, utf8.RuneCountInString(record))
+	if utf8.RuneCountInString(record) < 18 {
+		return NewTagMinLengthErr(18, len(record))
 	}
+
 	rr.tag = record[:6]
-	rr.RemittanceIdentification = rr.parseStringField(record[6:41])
-	rr.RemittanceLocationMethod = rr.parseStringField(record[41:45])
-	rr.RemittanceLocationElectronicAddress = rr.parseStringField(record[45:2093])
-	rr.RemittanceData.Name = rr.parseStringField(record[2093:2233])
-	rr.RemittanceData.AddressType = rr.parseStringField(record[2233:2237])
-	rr.RemittanceData.Department = rr.parseStringField(record[2237:2307])
-	rr.RemittanceData.SubDepartment = rr.parseStringField(record[2307:2377])
-	rr.RemittanceData.StreetName = rr.parseStringField(record[2377:2447])
-	rr.RemittanceData.BuildingNumber = rr.parseStringField(record[2447:2463])
-	rr.RemittanceData.PostCode = rr.parseStringField(record[2463:2479])
-	rr.RemittanceData.TownName = rr.parseStringField(record[2479:2514])
-	rr.RemittanceData.CountrySubDivisionState = rr.parseStringField(record[2514:2549])
-	rr.RemittanceData.Country = rr.parseStringField(record[2549:2551])
-	rr.RemittanceData.AddressLineOne = rr.parseStringField(record[2551:2621])
-	rr.RemittanceData.AddressLineTwo = rr.parseStringField(record[2621:2691])
-	rr.RemittanceData.AddressLineThree = rr.parseStringField(record[2691:2761])
-	rr.RemittanceData.AddressLineFour = rr.parseStringField(record[2761:2831])
-	rr.RemittanceData.AddressLineFive = rr.parseStringField(record[2831:2901])
-	rr.RemittanceData.AddressLineSix = rr.parseStringField(record[2901:2971])
-	rr.RemittanceData.AddressLineSeven = rr.parseStringField(record[2971:3041])
+	length := 6
+
+	value, read, err := rr.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("RemittanceIdentification", err)
+	}
+	rr.RemittanceIdentification = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("RemittanceLocationMethod", err)
+	}
+	rr.RemittanceLocationMethod = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 2048)
+	if err != nil {
+		return fieldError("RemittanceLocationElectronicAddress", err)
+	}
+	rr.RemittanceLocationElectronicAddress = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 140)
+	if err != nil {
+		return fieldError("RemittanceData", err)
+	}
+	rr.RemittanceData.Name = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 4)
+	if err != nil {
+		return fieldError("AddressType", err)
+	}
+	rr.RemittanceData.AddressType = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("Department", err)
+	}
+	rr.RemittanceData.Department = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("SubDepartment", err)
+	}
+	rr.RemittanceData.SubDepartment = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("StreetName", err)
+	}
+	rr.RemittanceData.StreetName = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 16)
+	if err != nil {
+		return fieldError("BuildingNumber", err)
+	}
+	rr.RemittanceData.BuildingNumber = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 16)
+	if err != nil {
+		return fieldError("PostCode", err)
+	}
+	rr.RemittanceData.PostCode = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("TownName", err)
+	}
+	rr.RemittanceData.TownName = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 35)
+	if err != nil {
+		return fieldError("CountrySubDivisionState", err)
+	}
+	rr.RemittanceData.CountrySubDivisionState = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 2)
+	if err != nil {
+		return fieldError("Country", err)
+	}
+	rr.RemittanceData.Country = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineOne", err)
+	}
+	rr.RemittanceData.AddressLineOne = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineTwo", err)
+	}
+	rr.RemittanceData.AddressLineTwo = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineThree", err)
+	}
+	rr.RemittanceData.AddressLineThree = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineFour", err)
+	}
+	rr.RemittanceData.AddressLineFour = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineFive", err)
+	}
+	rr.RemittanceData.AddressLineFive = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineSix", err)
+	}
+	rr.RemittanceData.AddressLineSix = value
+	length += read
+
+	value, read, err = rr.parseVariableStringField(record[length:], 70)
+	if err != nil {
+		return fieldError("AddressLineSeven", err)
+	}
+	rr.RemittanceData.AddressLineSeven = value
+	length += read
+
+	if !rr.verifyDataWithReadLength(record, length) {
+		return NewTagMaxLengthErr()
+	}
+
 	return nil
 }
 
@@ -83,32 +210,45 @@ func (rr *RelatedRemittance) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes RelatedRemittance
+// String returns a fixed-width RelatedRemittance record
 func (rr *RelatedRemittance) String() string {
+	return rr.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a RelatedRemittance record formatted according to the FormatOptions
+func (rr *RelatedRemittance) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(3041)
+
 	buf.WriteString(rr.tag)
-	buf.WriteString(rr.RemittanceIdentificationField())
-	buf.WriteString(rr.RemittanceLocationMethodField())
-	buf.WriteString(rr.RemittanceLocationElectronicAddressField())
-	buf.WriteString(rr.NameField())
-	buf.WriteString(rr.AddressTypeField())
-	buf.WriteString(rr.DepartmentField())
-	buf.WriteString(rr.SubDepartmentField())
-	buf.WriteString(rr.StreetNameField())
-	buf.WriteString(rr.BuildingNumberField())
-	buf.WriteString(rr.PostCodeField())
-	buf.WriteString(rr.TownNameField())
-	buf.WriteString(rr.CountrySubDivisionStateField())
-	buf.WriteString(rr.CountryField())
-	buf.WriteString(rr.AddressLineOneField())
-	buf.WriteString(rr.AddressLineTwoField())
-	buf.WriteString(rr.AddressLineThreeField())
-	buf.WriteString(rr.AddressLineFourField())
-	buf.WriteString(rr.AddressLineFiveField())
-	buf.WriteString(rr.AddressLineSixField())
-	buf.WriteString(rr.AddressLineSevenField())
-	return buf.String()
+	buf.WriteString(rr.FormatRemittanceIdentification(options))
+	buf.WriteString(rr.FormatRemittanceLocationMethod(options))
+	buf.WriteString(rr.FormatRemittanceLocationElectronicAddress(options))
+	buf.WriteString(rr.FormatName(options))
+	buf.WriteString(rr.FormatAddressType(options))
+	buf.WriteString(rr.FormatDepartment(options))
+	buf.WriteString(rr.FormatSubDepartment(options))
+	buf.WriteString(rr.FormatStreetName(options))
+	buf.WriteString(rr.FormatBuildingNumber(options))
+	buf.WriteString(rr.FormatPostCode(options))
+	buf.WriteString(rr.FormatTownName(options))
+	buf.WriteString(rr.FormatCountrySubDivisionState(options))
+	buf.WriteString(rr.FormatCountry(options))
+	buf.WriteString(rr.FormatAddressLineOne(options))
+	buf.WriteString(rr.FormatAddressLineTwo(options))
+	buf.WriteString(rr.FormatAddressLineThree(options))
+	buf.WriteString(rr.FormatAddressLineFour(options))
+	buf.WriteString(rr.FormatAddressLineFive(options))
+	buf.WriteString(rr.FormatAddressLineSix(options))
+	buf.WriteString(rr.FormatAddressLineSeven(options))
+
+	if options.VariableLengthFields {
+		return rr.stripDelimiters(buf.String())
+	} else {
+		return buf.String()
+	}
 }
 
 // Validate performs WIRE format rule checks on RelatedRemittance and returns an error if not Validated
@@ -293,4 +433,104 @@ func (rr *RelatedRemittance) AddressLineSixField() string {
 // AddressLineSevenField gets a string of the AddressLineSeven field
 func (rr *RelatedRemittance) AddressLineSevenField() string {
 	return rr.alphaField(rr.RemittanceData.AddressLineSeven, 70)
+}
+
+// FormatRemittanceIdentification returns rr.RemittanceIdentification formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatRemittanceIdentification(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceIdentification, 35, options)
+}
+
+// FormatRemittanceLocationMethod returns rr.RemittanceLocationMethod formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatRemittanceLocationMethod(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceLocationMethod, 4, options)
+}
+
+// FormatRemittanceLocationElectronicAddress returns rr.RemittanceLocationElectronicAddress formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatRemittanceLocationElectronicAddress(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceLocationElectronicAddress, 2048, options)
+}
+
+// FormatName returns RemittanceData.Name formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatName(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.Name, 140, options)
+}
+
+// FormatAddressType returns RemittanceData.AddressType formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressType(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressType, 4, options)
+}
+
+// FormatDepartment returns RemittanceData.Department formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatDepartment(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.Department, 70, options)
+}
+
+// FormatSubDepartment returns RemittanceData.SubDepartment formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatSubDepartment(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.SubDepartment, 70, options)
+}
+
+// FormatStreetName returns RemittanceData.StreetName formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatStreetName(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.StreetName, 70, options)
+}
+
+// FormatBuildingNumber returns RemittanceData.BuildingNumber formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatBuildingNumber(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.BuildingNumber, 16, options)
+}
+
+// FormatPostCode returns RemittanceData.PostCode formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatPostCode(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.PostCode, 16, options)
+}
+
+// FormatTownName returns RemittanceData.TownName formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatTownName(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.TownName, 35, options)
+}
+
+// FormatCountrySubDivisionState returns RemittanceData.CountrySubDivisionState formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatCountrySubDivisionState(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.CountrySubDivisionState, 35, options)
+}
+
+// FormatCountry returns RemittanceData.Country formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatCountry(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.Country, 2, options)
+}
+
+// FormatAddressLineOne returns RemittanceData.AddressLineOne formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineOne(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineOne, 70, options)
+}
+
+// FormatAddressLineTwo returns RemittanceData.AddressLineTwo formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineTwo(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineTwo, 70, options)
+}
+
+// FormatAddressLineThree returns RemittanceData.AddressLineThree formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineThree(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineThree, 70, options)
+}
+
+// FormatAddressLineFour returns RemittanceData.AddressLineFour formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineFour(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineFour, 70, options)
+}
+
+// FormatAddressLineFive returns RemittanceData.AddressLineFive formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineFive(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineFive, 70, options)
+}
+
+// FormatAddressLineSix returns RemittanceData.AddressLineSix formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineSix(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineSix, 70, options)
+}
+
+// FormatAddressLineSeven returns RemittanceData.AddressLineSeven formatted according to the FormatOptions
+func (rr *RelatedRemittance) FormatAddressLineSeven(options FormatOptions) string {
+	return rr.formatAlphaField(rr.RemittanceData.AddressLineSeven, 70, options)
 }
