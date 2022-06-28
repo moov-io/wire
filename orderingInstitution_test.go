@@ -160,7 +160,7 @@ func TestStringOrderingInstitutionVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringOrderingInstitutionOptions validates string() with options
+// TestStringOrderingInstitutionOptions validates Format() formatted according to the FormatOptions
 func TestStringOrderingInstitutionOptions(t *testing.T) {
 	var line = "{7052}"
 	r := NewReader(strings.NewReader(line))
@@ -169,9 +169,8 @@ func TestStringOrderingInstitutionOptions(t *testing.T) {
 	err := r.parseOrderingInstitution()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.OrderingInstitution.String()
-	require.Equal(t, str, "{7052}                                                                                                                                                                                    ")
-
-	str = r.currentFEDWireMessage.OrderingInstitution.String(true)
-	require.Equal(t, str, "{7052}*")
+	record := r.currentFEDWireMessage.OrderingInstitution
+	require.Equal(t, record.String(), "{7052}                                                                                                                                                                                    ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7052}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

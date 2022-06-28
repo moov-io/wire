@@ -174,7 +174,7 @@ func TestStringOriginatorVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringOriginatorOptions validates string() with options
+// TestStringOriginatorOptions validates Format() formatted according to the FormatOptions
 func TestStringOriginatorOptions(t *testing.T) {
 	var line = "{5000}B1*"
 	r := NewReader(strings.NewReader(line))
@@ -183,9 +183,8 @@ func TestStringOriginatorOptions(t *testing.T) {
 	err := r.parseOriginator()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.Originator.String()
-	require.Equal(t, str, "{5000}B1                                                                                                                                                                             ")
-
-	str = r.currentFEDWireMessage.Originator.String(true)
-	require.Equal(t, str, "{5000}B1*")
+	record := r.currentFEDWireMessage.Originator
+	require.Equal(t, record.String(), "{5000}B1                                                                                                                                                                             ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5000}B1*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

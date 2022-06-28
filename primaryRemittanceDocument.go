@@ -92,18 +92,25 @@ func (prd *PrimaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes PrimaryRemittanceDocument
-func (prd *PrimaryRemittanceDocument) String(options ...bool) string {
+// String returns a fixed-width PrimaryRemittanceDocument record
+func (prd *PrimaryRemittanceDocument) String() string {
+	return prd.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a PrimaryRemittanceDocument record formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(115)
 
 	buf.WriteString(prd.tag)
 	buf.WriteString(prd.DocumentTypeCodeField())
-	buf.WriteString(prd.ProprietaryDocumentTypeCodeField(options...))
-	buf.WriteString(prd.DocumentIdentificationNumberField(options...))
-	buf.WriteString(prd.IssuerField(options...))
+	buf.WriteString(prd.FormatProprietaryDocumentTypeCode(options))
+	buf.WriteString(prd.FormatDocumentIdentificationNumber(options))
+	buf.WriteString(prd.FormatIssuer(options))
 
-	if prd.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return prd.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -161,16 +168,31 @@ func (prd *PrimaryRemittanceDocument) DocumentTypeCodeField() string {
 }
 
 // ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
-func (prd *PrimaryRemittanceDocument) ProprietaryDocumentTypeCodeField(options ...bool) string {
-	return prd.alphaVariableField(prd.ProprietaryDocumentTypeCode, 35, prd.parseFirstOption(options))
+func (prd *PrimaryRemittanceDocument) ProprietaryDocumentTypeCodeField() string {
+	return prd.alphaField(prd.ProprietaryDocumentTypeCode, 35)
 }
 
 // DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
-func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField(options ...bool) string {
-	return prd.alphaVariableField(prd.DocumentIdentificationNumber, 35, prd.parseFirstOption(options))
+func (prd *PrimaryRemittanceDocument) DocumentIdentificationNumberField() string {
+	return prd.alphaField(prd.DocumentIdentificationNumber, 35)
 }
 
 // IssuerField gets a string of the Issuer field
-func (prd *PrimaryRemittanceDocument) IssuerField(options ...bool) string {
-	return prd.alphaVariableField(prd.Issuer, 35, prd.parseFirstOption(options))
+func (prd *PrimaryRemittanceDocument) IssuerField() string {
+	return prd.alphaField(prd.Issuer, 35)
+}
+
+// FormatProprietaryDocumentTypeCode returns ProprietaryDocumentTypeCode formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) FormatProprietaryDocumentTypeCode(options FormatOptions) string {
+	return prd.formatAlphaField(prd.ProprietaryDocumentTypeCode, 35, options)
+}
+
+// FormatDocumentIdentificationNumber returns DocumentIdentificationNumber formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) FormatDocumentIdentificationNumber(options FormatOptions) string {
+	return prd.formatAlphaField(prd.DocumentIdentificationNumber, 35, options)
+}
+
+// FormatIssuer returns Issuer formatted according to the FormatOptions
+func (prd *PrimaryRemittanceDocument) FormatIssuer(options FormatOptions) string {
+	return prd.formatAlphaField(prd.Issuer, 35, options)
 }

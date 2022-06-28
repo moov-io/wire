@@ -22,16 +22,6 @@ func (c *converters) parseStringField(r string) (s string) {
 	return s
 }
 
-// alphaField Alphanumeric and Alphabetic fields are left-justified and space filled.
-func (c *converters) alphaField(s string, max uint) string {
-	ln := uint(len(s))
-	if ln > max {
-		return s[:max]
-	}
-	s += strings.Repeat(" ", int(max-ln))
-	return s
-}
-
 // numericStringField right-justified zero filled
 func (c *converters) numericStringField(s string, max uint) string {
 	ln := uint(len(s))
@@ -42,14 +32,22 @@ func (c *converters) numericStringField(s string, max uint) string {
 	return s
 }
 
-// alphaVariableField Alphanumeric and Alphabetic fields are left-justified and space filled.
-func (c *converters) alphaVariableField(s string, max uint, isVariable bool) string {
+// alphaField returns the input formatted as a fixed-width alphanumeric string.
+// If the length of s exceeds max, s will be truncated to max.
+func (c *converters) alphaField(s string, max uint) string {
+	return c.formatAlphaField(s, max, FormatOptions{})
+}
+
+// formatAlphaField returns the input formatted according to the FormatOptions.
+// If the length of s exceeds max, s will be truncated to max. If options.VariableLengthFields
+// is set, any trailing whitespace is replaced with a single asterisk (*) character.
+func (c *converters) formatAlphaField(s string, max uint, options FormatOptions) string {
 	ln := uint(len(s))
 	if ln > max {
 		return s[:max]
 	}
 
-	if isVariable {
+	if options.VariableLengthFields {
 		if max-ln > 0 {
 			s += "*"
 		}

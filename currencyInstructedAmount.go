@@ -17,7 +17,7 @@ type CurrencyInstructedAmount struct {
 	// SwiftFieldTag
 	SwiftFieldTag string `json:"swiftFieldTag"`
 	// Amount is the instructed amount
-	// Amount  Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
+	// Amount Must begin with at least one numeric character (0-9) and contain only one decimal comma marker
 	// (e.g., $1,234.56 should be entered as 1234,56 and $0.99 should be entered as
 	Amount string `json:"amount"`
 	// validator is composed for data validation
@@ -81,13 +81,20 @@ func (cia *CurrencyInstructedAmount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes CurrencyInstructedAmount
-func (cia *CurrencyInstructedAmount) String(options ...bool) string {
+// String returns a fixed-width CurrencyInstructedAmount record
+func (cia *CurrencyInstructedAmount) String() string {
+	return cia.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a CurrencyInstructedAmount record formatted according to the FormatOptions
+func (cia *CurrencyInstructedAmount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(29)
 
 	buf.WriteString(cia.tag)
-	buf.WriteString(cia.SwiftFieldTagField(options...))
+	buf.WriteString(cia.FormatSwiftFieldTag(options))
 	buf.WriteString(cia.AmountField())
 
 	return buf.String()
@@ -109,8 +116,8 @@ func (cia *CurrencyInstructedAmount) Validate() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (cia *CurrencyInstructedAmount) SwiftFieldTagField(options ...bool) string {
-	return cia.alphaVariableField(cia.SwiftFieldTag, 5, cia.parseFirstOption(options))
+func (cia *CurrencyInstructedAmount) SwiftFieldTagField() string {
+	return cia.alphaField(cia.SwiftFieldTag, 5)
 }
 
 // ToDo: The spec isn't clear if this is padded with zeros or not, so for now it is
@@ -118,4 +125,9 @@ func (cia *CurrencyInstructedAmount) SwiftFieldTagField(options ...bool) string 
 // AmountField gets a string of the AmountTag field
 func (cia *CurrencyInstructedAmount) AmountField() string {
 	return cia.numericStringField(cia.Amount, 18)
+}
+
+// FormatSwiftFieldTag returns SwiftFieldTag formatted according to the FormatOptions
+func (cia *CurrencyInstructedAmount) FormatSwiftFieldTag(options FormatOptions) string {
+	return cia.formatAlphaField(cia.SwiftFieldTag, 5, options)
 }

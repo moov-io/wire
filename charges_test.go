@@ -75,7 +75,7 @@ func TestStringChargesVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringChargesOptions validates string() with options
+// TestStringChargesOptions validates Format() formatted according to the FormatOptions
 func TestStringChargesOptions(t *testing.T) {
 	var line = "{3700}B*"
 	r := NewReader(strings.NewReader(line))
@@ -84,9 +84,8 @@ func TestStringChargesOptions(t *testing.T) {
 	err := r.parseCharges()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.Charges.String()
-	require.Equal(t, str, "{3700}B                                                            ")
-
-	str = r.currentFEDWireMessage.Charges.String(true)
-	require.Equal(t, str, "{3700}B*")
+	record := r.currentFEDWireMessage.Charges
+	require.Equal(t, record.String(), "{3700}B                                                            ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3700}B*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

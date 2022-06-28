@@ -170,26 +170,33 @@ func (sm *ServiceMessage) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ServiceMessage
-func (sm *ServiceMessage) String(options ...bool) string {
+// String returns a fixed-width ServiceMessage record
+func (sm *ServiceMessage) String() string {
+	return sm.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ServiceMessage record formatted according to the FormatOptions
+func (sm *ServiceMessage) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(426)
 
 	buf.WriteString(sm.tag)
-	buf.WriteString(sm.LineOneField(options...))
-	buf.WriteString(sm.LineTwoField(options...))
-	buf.WriteString(sm.LineThreeField(options...))
-	buf.WriteString(sm.LineFourField(options...))
-	buf.WriteString(sm.LineFiveField(options...))
-	buf.WriteString(sm.LineSixField(options...))
-	buf.WriteString(sm.LineSevenField(options...))
-	buf.WriteString(sm.LineEightField(options...))
-	buf.WriteString(sm.LineNineField(options...))
-	buf.WriteString(sm.LineTenField(options...))
-	buf.WriteString(sm.LineElevenField(options...))
-	buf.WriteString(sm.LineTwelveField(options...))
+	buf.WriteString(sm.FormatLineOne(options))
+	buf.WriteString(sm.FormatLineTwo(options))
+	buf.WriteString(sm.FormatLineThree(options))
+	buf.WriteString(sm.FormatLineFour(options))
+	buf.WriteString(sm.FormatLineFive(options))
+	buf.WriteString(sm.FormatLineSix(options))
+	buf.WriteString(sm.FormatLineSeven(options))
+	buf.WriteString(sm.FormatLineEight(options))
+	buf.WriteString(sm.FormatLineNine(options))
+	buf.WriteString(sm.FormatLineTen(options))
+	buf.WriteString(sm.FormatLineEleven(options))
+	buf.WriteString(sm.FormatLineTwelve(options))
 
-	if sm.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return sm.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -256,61 +263,121 @@ func (sm *ServiceMessage) fieldInclusion() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (sm *ServiceMessage) LineOneField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineOne, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineOneField() string {
+	return sm.alphaField(sm.LineOne, 35)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (sm *ServiceMessage) LineTwoField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineTwo, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineTwoField() string {
+	return sm.alphaField(sm.LineTwo, 35)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (sm *ServiceMessage) LineThreeField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineThree, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineThreeField() string {
+	return sm.alphaField(sm.LineThree, 35)
 }
 
 // LineFourField gets a string of the LineFour field
-func (sm *ServiceMessage) LineFourField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineFour, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineFourField() string {
+	return sm.alphaField(sm.LineFour, 35)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (sm *ServiceMessage) LineFiveField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineFive, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineFiveField() string {
+	return sm.alphaField(sm.LineFive, 35)
 }
 
 // LineSixField gets a string of the LineSix field
-func (sm *ServiceMessage) LineSixField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineSix, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineSixField() string {
+	return sm.alphaField(sm.LineSix, 35)
 }
 
 // LineSevenField gets a string of the LineSeven field
-func (sm *ServiceMessage) LineSevenField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineSeven, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineSevenField() string {
+	return sm.alphaField(sm.LineSeven, 35)
 }
 
 // LineEightField gets a string of the LineEight field
-func (sm *ServiceMessage) LineEightField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineEight, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineEightField() string {
+	return sm.alphaField(sm.LineEight, 35)
 }
 
 // LineNineField gets a string of the LineNine field
-func (sm *ServiceMessage) LineNineField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineNine, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineNineField() string {
+	return sm.alphaField(sm.LineNine, 35)
 }
 
 // LineTenField gets a string of the LineTen field
-func (sm *ServiceMessage) LineTenField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineTen, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineTenField() string {
+	return sm.alphaField(sm.LineTen, 35)
 }
 
 // LineElevenField gets a string of the LineEleven field
-func (sm *ServiceMessage) LineElevenField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineEleven, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineElevenField() string {
+	return sm.alphaField(sm.LineEleven, 35)
 }
 
 // LineTwelveField gets a string of the LineTwelve field
-func (sm *ServiceMessage) LineTwelveField(options ...bool) string {
-	return sm.alphaVariableField(sm.LineTwelve, 35, sm.parseFirstOption(options))
+func (sm *ServiceMessage) LineTwelveField() string {
+	return sm.alphaField(sm.LineTwelve, 35)
+}
+
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineOne(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineOne, 35, options)
+}
+
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineTwo(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineTwo, 35, options)
+}
+
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineThree(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineThree, 35, options)
+}
+
+// FormatLineFour returns LineFour formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineFour(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineFour, 35, options)
+}
+
+// FormatLineFive returns LineFive formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineFive(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineFive, 35, options)
+}
+
+// FormatLineSix returns LineSix formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineSix(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineSix, 35, options)
+}
+
+// FormatLineSeven returns LineSeven formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineSeven(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineSeven, 35, options)
+}
+
+// FormatLineEight returns LineEight formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineEight(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineEight, 35, options)
+}
+
+// FormatLineNine returns LineNine formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineNine(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineNine, 35, options)
+}
+
+// FormatLineTen returns LineTen formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineTen(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineTen, 35, options)
+}
+
+// FormatLineEleven returns LineEleven formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineEleven(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineEleven, 35, options)
+}
+
+// FormatLineTwelve returns LineTwelve formatted according to the FormatOptions
+func (sm *ServiceMessage) FormatLineTwelve(options FormatOptions) string {
+	return sm.formatAlphaField(sm.LineTwelve, 35, options)
 }

@@ -89,17 +89,24 @@ func (rts *ReceiptTimeStamp) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ReceiptTimeStamp
-func (rts *ReceiptTimeStamp) String(options ...bool) string {
+// String returns a fixed-width ReceiptTimeStamp record
+func (rts *ReceiptTimeStamp) String() string {
+	return rts.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ReceiptTimeStamp record formatted according to the FormatOptions
+func (rts *ReceiptTimeStamp) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(18)
 
 	buf.WriteString(rts.tag)
-	buf.WriteString(rts.ReceiptDateField(options...))
-	buf.WriteString(rts.ReceiptTimeField(options...))
-	buf.WriteString(rts.ReceiptApplicationIdentificationField(options...))
+	buf.WriteString(rts.FormatReceiptDate(options))
+	buf.WriteString(rts.FormatReceiptTime(options))
+	buf.WriteString(rts.FormatReceiptApplicationIdentification(options))
 
-	if rts.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return rts.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -117,16 +124,31 @@ func (rts *ReceiptTimeStamp) Validate() error {
 }
 
 // ReceiptDateField gets a string of the ReceiptDate field
-func (rts *ReceiptTimeStamp) ReceiptDateField(options ...bool) string {
-	return rts.alphaVariableField(rts.ReceiptDate, 4, rts.parseFirstOption(options))
+func (rts *ReceiptTimeStamp) ReceiptDateField() string {
+	return rts.alphaField(rts.ReceiptDate, 4)
 }
 
 // ReceiptTimeField gets a string of the ReceiptTime field
-func (rts *ReceiptTimeStamp) ReceiptTimeField(options ...bool) string {
-	return rts.alphaVariableField(rts.ReceiptTime, 4, rts.parseFirstOption(options))
+func (rts *ReceiptTimeStamp) ReceiptTimeField() string {
+	return rts.alphaField(rts.ReceiptTime, 4)
 }
 
 // ReceiptApplicationIdentificationField gets a string of the ReceiptApplicationIdentification field
-func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField(options ...bool) string {
-	return rts.alphaVariableField(rts.ReceiptApplicationIdentification, 4, rts.parseFirstOption(options))
+func (rts *ReceiptTimeStamp) ReceiptApplicationIdentificationField() string {
+	return rts.alphaField(rts.ReceiptApplicationIdentification, 4)
+}
+
+// FormatReceiptDate returns ReceiptDate formatted according to the FormatOptions
+func (rts *ReceiptTimeStamp) FormatReceiptDate(options FormatOptions) string {
+	return rts.formatAlphaField(rts.ReceiptDate, 4, options)
+}
+
+// FormatReceiptTime returns ReceiptTime formatted according to the FormatOptions
+func (rts *ReceiptTimeStamp) FormatReceiptTime(options FormatOptions) string {
+	return rts.formatAlphaField(rts.ReceiptTime, 4, options)
+}
+
+// FormatReceiptApplicationIdentification returns ReceiptApplicationIdentification formatted according to the FormatOptions
+func (rts *ReceiptTimeStamp) FormatReceiptApplicationIdentification(options FormatOptions) string {
+	return rts.formatAlphaField(rts.ReceiptApplicationIdentification, 4, options)
 }

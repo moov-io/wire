@@ -90,7 +90,7 @@ func TestStringMessageDispositionVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringMessageDispositionOptions validates string() with options
+// TestStringMessageDispositionOptions validates Format() formatted according to the FormatOptions
 func TestStringMessageDispositionOptions(t *testing.T) {
 	var line = "{1100}"
 	r := NewReader(strings.NewReader(line))
@@ -99,9 +99,8 @@ func TestStringMessageDispositionOptions(t *testing.T) {
 	err := r.parseMessageDisposition()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.MessageDisposition.String()
-	require.Equal(t, str, "{1100}     ")
-
-	str = r.currentFEDWireMessage.MessageDisposition.String(true)
-	require.Equal(t, str, "{1100}*")
+	record := r.currentFEDWireMessage.MessageDisposition
+	require.Equal(t, record.String(), "{1100}     ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1100}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -106,20 +106,27 @@ func (ofi *OriginatorFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OriginatorFI
-func (ofi *OriginatorFI) String(options ...bool) string {
+// String returns a fixed-width OriginatorFI record
+func (ofi *OriginatorFI) String() string {
+	return ofi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OriginatorFI record formatted according to the FormatOptions
+func (ofi *OriginatorFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 	buf.WriteString(ofi.tag)
 
-	buf.WriteString(ofi.IdentificationCodeField(options...))
-	buf.WriteString(ofi.IdentifierField(options...))
-	buf.WriteString(ofi.NameField(options...))
-	buf.WriteString(ofi.AddressLineOneField(options...))
-	buf.WriteString(ofi.AddressLineTwoField(options...))
-	buf.WriteString(ofi.AddressLineThreeField(options...))
+	buf.WriteString(ofi.FormatIdentificationCode(options))
+	buf.WriteString(ofi.FormatIdentifier(options))
+	buf.WriteString(ofi.FormatName(options))
+	buf.WriteString(ofi.FormatAddressLineOne(options))
+	buf.WriteString(ofi.FormatAddressLineTwo(options))
+	buf.WriteString(ofi.FormatAddressLineThree(options))
 
-	if ofi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return ofi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -177,31 +184,61 @@ func (ofi *OriginatorFI) fieldInclusion() error {
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
-func (ofi *OriginatorFI) IdentificationCodeField(options ...bool) string {
-	return ofi.alphaVariableField(ofi.FinancialInstitution.IdentificationCode, 1, ofi.parseFirstOption(options))
+func (ofi *OriginatorFI) IdentificationCodeField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.IdentificationCode, 1)
 }
 
 // IdentifierField gets a string of the Identifier field
-func (ofi *OriginatorFI) IdentifierField(options ...bool) string {
-	return ofi.alphaVariableField(ofi.FinancialInstitution.Identifier, 34, ofi.parseFirstOption(options))
+func (ofi *OriginatorFI) IdentifierField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (ofi *OriginatorFI) NameField(options ...bool) string {
-	return ofi.alphaVariableField(ofi.FinancialInstitution.Name, 35, ofi.parseFirstOption(options))
+func (ofi *OriginatorFI) NameField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Name, 35)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (ofi *OriginatorFI) AddressLineOneField(options ...bool) string {
-	return ofi.alphaVariableField(ofi.FinancialInstitution.Address.AddressLineOne, 35, ofi.parseFirstOption(options))
+func (ofi *OriginatorFI) AddressLineOneField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineOne, 35)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (ofi *OriginatorFI) AddressLineTwoField(options ...bool) string {
-	return ofi.alphaVariableField(ofi.FinancialInstitution.Address.AddressLineTwo, 35, ofi.parseFirstOption(options))
+func (ofi *OriginatorFI) AddressLineTwoField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineTwo, 35)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (ofi *OriginatorFI) AddressLineThreeField(options ...bool) string {
-	return ofi.alphaVariableField(ofi.FinancialInstitution.Address.AddressLineThree, 35, ofi.parseFirstOption(options))
+func (ofi *OriginatorFI) AddressLineThreeField() string {
+	return ofi.alphaField(ofi.FinancialInstitution.Address.AddressLineThree, 35)
+}
+
+// FormatIdentificationCode returns FinancialInstitution.IdentificationCode formatted according to the FormatOptions
+func (ofi *OriginatorFI) FormatIdentificationCode(options FormatOptions) string {
+	return ofi.formatAlphaField(ofi.FinancialInstitution.IdentificationCode, 1, options)
+}
+
+// FormatIdentifier returns FinancialInstitution.Identifier formatted according to the FormatOptions
+func (ofi *OriginatorFI) FormatIdentifier(options FormatOptions) string {
+	return ofi.formatAlphaField(ofi.FinancialInstitution.Identifier, 34, options)
+}
+
+// FormatName returns FinancialInstitution.Name formatted according to the FormatOptions
+func (ofi *OriginatorFI) FormatName(options FormatOptions) string {
+	return ofi.formatAlphaField(ofi.FinancialInstitution.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Address.AddressLineOne formatted according to the FormatOptions
+func (ofi *OriginatorFI) FormatAddressLineOne(options FormatOptions) string {
+	return ofi.formatAlphaField(ofi.FinancialInstitution.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Address.AddressLineTwo formatted according to the FormatOptions
+func (ofi *OriginatorFI) FormatAddressLineTwo(options FormatOptions) string {
+	return ofi.formatAlphaField(ofi.FinancialInstitution.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Address.AddressLineThree formatted according to the FormatOptions
+func (ofi *OriginatorFI) FormatAddressLineThree(options FormatOptions) string {
+	return ofi.formatAlphaField(ofi.FinancialInstitution.Address.AddressLineThree, 35, options)
 }

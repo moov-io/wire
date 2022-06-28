@@ -154,7 +154,7 @@ func TestStringFIBeneficiaryVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringFIBeneficiaryOptions validates string() with options
+// TestStringFIBeneficiaryOptions validates Format() formatted according to the FormatOptions
 func TestStringFIBeneficiaryOptions(t *testing.T) {
 	var line = "{6400}*"
 	r := NewReader(strings.NewReader(line))
@@ -163,9 +163,8 @@ func TestStringFIBeneficiaryOptions(t *testing.T) {
 	err := r.parseFIBeneficiary()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.FIBeneficiary.String()
-	require.Equal(t, str, "{6400}                                                                                                                                                                                                   ")
-
-	str = r.currentFEDWireMessage.FIBeneficiary.String(true)
-	require.Equal(t, str, "{6400}*")
+	record := r.currentFEDWireMessage.FIBeneficiary
+	require.Equal(t, record.String(), "{6400}                                                                                                                                                                                                   ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6400}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

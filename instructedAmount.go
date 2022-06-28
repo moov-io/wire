@@ -81,14 +81,21 @@ func (ia *InstructedAmount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes InstructedAmount
-func (ia *InstructedAmount) String(options ...bool) string {
+// String returns a fixed-width InstructedAmount record
+func (ia *InstructedAmount) String() string {
+	return ia.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a InstructedAmount record formatted according to the FormatOptions
+func (ia *InstructedAmount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(24)
 
 	buf.WriteString(ia.tag)
-	buf.WriteString(ia.CurrencyCodeField(options...))
-	buf.WriteString(ia.AmountField(options...))
+	buf.WriteString(ia.FormatCurrencyCode(options))
+	buf.WriteString(ia.FormatAmount(options))
 
 	return buf.String()
 }
@@ -125,11 +132,21 @@ func (ia *InstructedAmount) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (ia *InstructedAmount) CurrencyCodeField(options ...bool) string {
-	return ia.alphaVariableField(ia.CurrencyCode, 3, ia.parseFirstOption(options))
+func (ia *InstructedAmount) CurrencyCodeField() string {
+	return ia.alphaField(ia.CurrencyCode, 3)
 }
 
 // AmountField gets a string of the Amount field
-func (ia *InstructedAmount) AmountField(options ...bool) string {
-	return ia.alphaVariableField(ia.Amount, 15, ia.parseFirstOption(options))
+func (ia *InstructedAmount) AmountField() string {
+	return ia.alphaField(ia.Amount, 15)
+}
+
+// FormatCurrencyCode returns CurrencyCode formatted according to the FormatOptions
+func (ia *InstructedAmount) FormatCurrencyCode(options FormatOptions) string {
+	return ia.formatAlphaField(ia.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns Amount formatted according to the FormatOptions
+func (ia *InstructedAmount) FormatAmount(options FormatOptions) string {
+	return ia.formatAlphaField(ia.Amount, 15, options)
 }

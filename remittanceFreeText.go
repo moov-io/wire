@@ -89,17 +89,24 @@ func (rft *RemittanceFreeText) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes RemittanceFreeText
-func (rft *RemittanceFreeText) String(options ...bool) string {
+// String returns a fixed-width RemittanceFreeText record
+func (rft *RemittanceFreeText) String() string {
+	return rft.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a RemittanceFreeText record formatted according to the FormatOptions
+func (rft *RemittanceFreeText) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(426)
 
 	buf.WriteString(rft.tag)
-	buf.WriteString(rft.LineOneField(options...))
-	buf.WriteString(rft.LineTwoField(options...))
-	buf.WriteString(rft.LineThreeField(options...))
+	buf.WriteString(rft.FormatLineOne(options))
+	buf.WriteString(rft.FormatLineTwo(options))
+	buf.WriteString(rft.FormatLineThree(options))
 
-	if rft.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return rft.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -125,16 +132,31 @@ func (rft *RemittanceFreeText) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (rft *RemittanceFreeText) LineOneField(options ...bool) string {
-	return rft.alphaVariableField(rft.LineOne, 140, rft.parseFirstOption(options))
+func (rft *RemittanceFreeText) LineOneField() string {
+	return rft.alphaField(rft.LineOne, 140)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (rft *RemittanceFreeText) LineTwoField(options ...bool) string {
-	return rft.alphaVariableField(rft.LineTwo, 140, rft.parseFirstOption(options))
+func (rft *RemittanceFreeText) LineTwoField() string {
+	return rft.alphaField(rft.LineTwo, 140)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (rft *RemittanceFreeText) LineThreeField(options ...bool) string {
-	return rft.alphaVariableField(rft.LineThree, 140, rft.parseFirstOption(options))
+func (rft *RemittanceFreeText) LineThreeField() string {
+	return rft.alphaField(rft.LineThree, 140)
+}
+
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (rft *RemittanceFreeText) FormatLineOne(options FormatOptions) string {
+	return rft.formatAlphaField(rft.LineOne, 140, options)
+}
+
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (rft *RemittanceFreeText) FormatLineTwo(options FormatOptions) string {
+	return rft.formatAlphaField(rft.LineTwo, 140, options)
+}
+
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (rft *RemittanceFreeText) FormatLineThree(options FormatOptions) string {
+	return rft.formatAlphaField(rft.LineThree, 140, options)
 }

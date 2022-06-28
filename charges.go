@@ -109,19 +109,26 @@ func (c *Charges) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Charges
-func (c *Charges) String(options ...bool) string {
+// String returns a fixed-width Charges record
+func (c *Charges) String() string {
+	return c.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a Charges record formatted according to the FormatOptions
+func (c *Charges) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(67)
 
 	buf.WriteString(c.tag)
 	buf.WriteString(c.ChargeDetailsField())
-	buf.WriteString(c.SendersChargesOneField(options...))
-	buf.WriteString(c.SendersChargesTwoField(options...))
-	buf.WriteString(c.SendersChargesThreeField(options...))
-	buf.WriteString(c.SendersChargesFourField(options...))
+	buf.WriteString(c.FormatSendersChargesOne(options))
+	buf.WriteString(c.FormatSendersChargesTwo(options))
+	buf.WriteString(c.FormatSendersChargesThree(options))
+	buf.WriteString(c.FormatSendersChargesFour(options))
 
-	if c.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return c.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -176,21 +183,41 @@ func (c *Charges) ChargeDetailsField() string {
 }
 
 // SendersChargesOneField gets a string of the SendersChargesOne field
-func (c *Charges) SendersChargesOneField(options ...bool) string {
-	return c.alphaVariableField(c.SendersChargesOne, 15, c.parseFirstOption(options))
+func (c *Charges) SendersChargesOneField() string {
+	return c.alphaField(c.SendersChargesOne, 15)
 }
 
 // SendersChargesTwoField gets a string of the SendersChargesTwo field
-func (c *Charges) SendersChargesTwoField(options ...bool) string {
-	return c.alphaVariableField(c.SendersChargesTwo, 15, c.parseFirstOption(options))
+func (c *Charges) SendersChargesTwoField() string {
+	return c.alphaField(c.SendersChargesTwo, 15)
 }
 
 // SendersChargesThreeField gets a string of the SendersChargesThree field
-func (c *Charges) SendersChargesThreeField(options ...bool) string {
-	return c.alphaVariableField(c.SendersChargesThree, 15, c.parseFirstOption(options))
+func (c *Charges) SendersChargesThreeField() string {
+	return c.alphaField(c.SendersChargesThree, 15)
 }
 
 // SendersChargesFourField gets a string of the SendersChargesFour field
-func (c *Charges) SendersChargesFourField(options ...bool) string {
-	return c.alphaVariableField(c.SendersChargesFour, 15, c.parseFirstOption(options))
+func (c *Charges) SendersChargesFourField() string {
+	return c.alphaField(c.SendersChargesFour, 15)
+}
+
+// FormatSendersChargesOne returns SendersChargesOne formatted according to the FormatOptions
+func (c *Charges) FormatSendersChargesOne(options FormatOptions) string {
+	return c.formatAlphaField(c.SendersChargesOne, 15, options)
+}
+
+// FormatSendersChargesTwo returns SendersChargesTwo formatted according to the FormatOptions
+func (c *Charges) FormatSendersChargesTwo(options FormatOptions) string {
+	return c.formatAlphaField(c.SendersChargesTwo, 15, options)
+}
+
+// FormatSendersChargesThree returns SendersChargesThree formatted according to the FormatOptions
+func (c *Charges) FormatSendersChargesThree(options FormatOptions) string {
+	return c.formatAlphaField(c.SendersChargesThree, 15, options)
+}
+
+// FormatSendersChargesFour returns SendersChargesFour formatted according to the FormatOptions
+func (c *Charges) FormatSendersChargesFour(options FormatOptions) string {
+	return c.formatAlphaField(c.SendersChargesFour, 15, options)
 }

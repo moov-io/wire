@@ -105,20 +105,27 @@ func (debitDD *AccountDebitedDrawdown) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes AccountDebitedDrawdown
-func (debitDD *AccountDebitedDrawdown) String(options ...bool) string {
+// String returns a fixed-width AccountDebitedDrawdown record
+func (debitDD *AccountDebitedDrawdown) String() string {
+	return debitDD.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an AccountDebitedDrawdown record formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(debitDD.tag)
 	buf.WriteString(debitDD.IdentificationCodeField())
-	buf.WriteString(debitDD.IdentifierField(options...))
-	buf.WriteString(debitDD.NameField(options...))
-	buf.WriteString(debitDD.AddressLineOneField(options...))
-	buf.WriteString(debitDD.AddressLineTwoField(options...))
-	buf.WriteString(debitDD.AddressLineThreeField(options...))
+	buf.WriteString(debitDD.FormatIdentifier(options))
+	buf.WriteString(debitDD.FormatName(options))
+	buf.WriteString(debitDD.FormatAddressLineOne(options))
+	buf.WriteString(debitDD.FormatAddressLineTwo(options))
+	buf.WriteString(debitDD.FormatAddressLineThree(options))
 
-	if debitDD.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return debitDD.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -183,26 +190,51 @@ func (debitDD *AccountDebitedDrawdown) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (debitDD *AccountDebitedDrawdown) IdentifierField(options ...bool) string {
-	return debitDD.alphaVariableField(debitDD.Identifier, 34, debitDD.parseFirstOption(options))
+func (debitDD *AccountDebitedDrawdown) IdentifierField() string {
+	return debitDD.alphaField(debitDD.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (debitDD *AccountDebitedDrawdown) NameField(options ...bool) string {
-	return debitDD.alphaVariableField(debitDD.Name, 35, debitDD.parseFirstOption(options))
+func (debitDD *AccountDebitedDrawdown) NameField() string {
+	return debitDD.alphaField(debitDD.Name, 35)
 }
 
-// AddressLineOneField gets a string of AddressLineOne field
-func (debitDD *AccountDebitedDrawdown) AddressLineOneField(options ...bool) string {
-	return debitDD.alphaVariableField(debitDD.Address.AddressLineOne, 35, debitDD.parseFirstOption(options))
+// AddressLineOneField gets a string of Address.AddressLineOne field
+func (debitDD *AccountDebitedDrawdown) AddressLineOneField() string {
+	return debitDD.alphaField(debitDD.Address.AddressLineOne, 35)
 }
 
-// AddressLineTwoField gets a string of AddressLineTwo field
-func (debitDD *AccountDebitedDrawdown) AddressLineTwoField(options ...bool) string {
-	return debitDD.alphaVariableField(debitDD.Address.AddressLineTwo, 35, debitDD.parseFirstOption(options))
+// AddressLineTwoField gets a string of Address.AddressLineTwo field
+func (debitDD *AccountDebitedDrawdown) AddressLineTwoField() string {
+	return debitDD.alphaField(debitDD.Address.AddressLineTwo, 35)
 }
 
-// AddressLineThreeField gets a string of AddressLineThree field
-func (debitDD *AccountDebitedDrawdown) AddressLineThreeField(options ...bool) string {
-	return debitDD.alphaVariableField(debitDD.Address.AddressLineThree, 35, debitDD.parseFirstOption(options))
+// AddressLineThreeField gets a string of Address.AddressLineThree field
+func (debitDD *AccountDebitedDrawdown) AddressLineThreeField() string {
+	return debitDD.alphaField(debitDD.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Identifier formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatIdentifier(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Identifier, 34, options)
+}
+
+// FormatName returns Name formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatName(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Address.AddressLineOne formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatAddressLineOne(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Address.AddressLineTwo formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatAddressLineTwo(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Address.AddressLineThree formatted according to the FormatOptions
+func (debitDD *AccountDebitedDrawdown) FormatAddressLineThree(options FormatOptions) string {
+	return debitDD.formatAlphaField(debitDD.Address.AddressLineThree, 35, options)
 }

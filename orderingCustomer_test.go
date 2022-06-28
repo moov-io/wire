@@ -161,7 +161,7 @@ func TestStringOrderingCustomerVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringOrderingCustomerOptions validates string() with options
+// TestStringOrderingCustomerOptions validates Format() formatted according to the FormatOptions
 func TestStringOrderingCustomerOptions(t *testing.T) {
 	var line = "{7050}"
 	r := NewReader(strings.NewReader(line))
@@ -170,9 +170,8 @@ func TestStringOrderingCustomerOptions(t *testing.T) {
 	err := r.parseOrderingCustomer()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.OrderingCustomer.String()
-	require.Equal(t, str, "{7050}                                                                                                                                                                                    ")
-
-	str = r.currentFEDWireMessage.OrderingCustomer.String(true)
-	require.Equal(t, str, "{7050}*")
+	record := r.currentFEDWireMessage.OrderingCustomer
+	require.Equal(t, record.String(), "{7050}                                                                                                                                                                                    ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7050}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

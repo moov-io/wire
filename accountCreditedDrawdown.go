@@ -71,12 +71,19 @@ func (creditDD *AccountCreditedDrawdown) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes AccountCreditedDrawdown
-func (creditDD *AccountCreditedDrawdown) String(options ...bool) string {
+// String returns a fixed-width AccountCreditedDrawdown record
+func (creditDD *AccountCreditedDrawdown) String() string {
+	return creditDD.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an AccountCreditedDrawdown record formatted according to the FormatOptions
+func (creditDD *AccountCreditedDrawdown) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(15)
 	buf.WriteString(creditDD.tag)
-	buf.WriteString(creditDD.DrawdownCreditAccountNumberField(options...))
+	buf.WriteString(creditDD.FormatCreditAccountNumber(options))
 	return buf.String()
 }
 
@@ -105,6 +112,11 @@ func (creditDD *AccountCreditedDrawdown) fieldInclusion() error {
 }
 
 // DrawdownCreditAccountNumberField gets a string of the DrawdownCreditAccountNumber field
-func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField(options ...bool) string {
-	return creditDD.alphaVariableField(creditDD.DrawdownCreditAccountNumber, 9, creditDD.parseFirstOption(options))
+func (creditDD *AccountCreditedDrawdown) DrawdownCreditAccountNumberField() string {
+	return creditDD.alphaField(creditDD.DrawdownCreditAccountNumber, 9)
+}
+
+// FormatCreditAccountNumber returns DrawdownCreditAccountNumber formatted according to the FormatOptions
+func (creditDD *AccountCreditedDrawdown) FormatCreditAccountNumber(options FormatOptions) string {
+	return creditDD.formatAlphaField(creditDD.DrawdownCreditAccountNumber, 9, options)
 }

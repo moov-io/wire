@@ -99,19 +99,26 @@ func (ri *Remittance) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Remittance
-func (ri *Remittance) String(options ...bool) string {
+// String returns a fixed-width Remittance record
+func (ri *Remittance) String() string {
+	return ri.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a Remittance record formatted according to the FormatOptions
+func (ri *Remittance) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(151)
 
 	buf.WriteString(ri.tag)
-	buf.WriteString(ri.SwiftFieldTagField(options...))
-	buf.WriteString(ri.SwiftLineOneField(options...))
-	buf.WriteString(ri.SwiftLineTwoField(options...))
-	buf.WriteString(ri.SwiftLineThreeField(options...))
-	buf.WriteString(ri.SwiftLineFourField(options...))
+	buf.WriteString(ri.FormatSwiftFieldTag(options))
+	buf.WriteString(ri.FormatSwiftLineOne(options))
+	buf.WriteString(ri.FormatSwiftLineTwo(options))
+	buf.WriteString(ri.FormatSwiftLineThree(options))
+	buf.WriteString(ri.FormatSwiftLineFour(options))
 
-	if ri.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return ri.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -158,26 +165,51 @@ func (ri *Remittance) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (ri *Remittance) SwiftFieldTagField(options ...bool) string {
-	return ri.alphaVariableField(ri.CoverPayment.SwiftFieldTag, 5, ri.parseFirstOption(options))
+func (ri *Remittance) SwiftFieldTagField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (ri *Remittance) SwiftLineOneField(options ...bool) string {
-	return ri.alphaVariableField(ri.CoverPayment.SwiftLineOne, 35, ri.parseFirstOption(options))
+func (ri *Remittance) SwiftLineOneField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (ri *Remittance) SwiftLineTwoField(options ...bool) string {
-	return ri.alphaVariableField(ri.CoverPayment.SwiftLineTwo, 35, ri.parseFirstOption(options))
+func (ri *Remittance) SwiftLineTwoField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (ri *Remittance) SwiftLineThreeField(options ...bool) string {
-	return ri.alphaVariableField(ri.CoverPayment.SwiftLineThree, 35, ri.parseFirstOption(options))
+func (ri *Remittance) SwiftLineThreeField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (ri *Remittance) SwiftLineFourField(options ...bool) string {
-	return ri.alphaVariableField(ri.CoverPayment.SwiftLineFour, 35, ri.parseFirstOption(options))
+func (ri *Remittance) SwiftLineFourField() string {
+	return ri.alphaField(ri.CoverPayment.SwiftLineFour, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (ri *Remittance) FormatSwiftFieldTag(options FormatOptions) string {
+	return ri.formatAlphaField(ri.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (ri *Remittance) FormatSwiftLineOne(options FormatOptions) string {
+	return ri.formatAlphaField(ri.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (ri *Remittance) FormatSwiftLineTwo(options FormatOptions) string {
+	return ri.formatAlphaField(ri.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (ri *Remittance) FormatSwiftLineThree(options FormatOptions) string {
+	return ri.formatAlphaField(ri.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (ri *Remittance) FormatSwiftLineFour(options FormatOptions) string {
+	return ri.formatAlphaField(ri.CoverPayment.SwiftLineFour, 35, options)
 }

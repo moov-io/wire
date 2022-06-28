@@ -71,13 +71,20 @@ func (br *BeneficiaryReference) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes BeneficiaryReference
-func (br *BeneficiaryReference) String(options ...bool) string {
+// String returns a fixed-width BeneficiaryReference record
+func (br *BeneficiaryReference) String() string {
+	return br.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a BeneficiaryReference record formatted according to the FormatOptions
+func (br *BeneficiaryReference) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(22)
 
 	buf.WriteString(br.tag)
-	buf.WriteString(br.BeneficiaryReferenceField(options...))
+	buf.WriteString(br.FormatBeneficiaryReference(options))
 
 	return buf.String()
 }
@@ -95,6 +102,11 @@ func (br *BeneficiaryReference) Validate() error {
 }
 
 // BeneficiaryReferenceField gets a string of the BeneficiaryReference field
-func (br *BeneficiaryReference) BeneficiaryReferenceField(options ...bool) string {
-	return br.alphaVariableField(br.BeneficiaryReference, 16, br.parseFirstOption(options))
+func (br *BeneficiaryReference) BeneficiaryReferenceField() string {
+	return br.alphaField(br.BeneficiaryReference, 16)
+}
+
+// FormatBeneficiaryReference returns BeneficiaryReference formatted according to the FormatOptions
+func (br *BeneficiaryReference) FormatBeneficiaryReference(options FormatOptions) string {
+	return br.formatAlphaField(br.BeneficiaryReference, 16, options)
 }

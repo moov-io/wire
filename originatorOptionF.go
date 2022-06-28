@@ -163,19 +163,26 @@ func (oof *OriginatorOptionF) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OriginatorOptionF
-func (oof *OriginatorOptionF) String(options ...bool) string {
+// String returns a fixed-width OriginatorOptionF record
+func (oof *OriginatorOptionF) String() string {
+	return oof.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OriginatorOptionF record formatted according to the FormatOptions
+func (oof *OriginatorOptionF) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(oof.tag)
-	buf.WriteString(oof.PartyIdentifierField(options...))
-	buf.WriteString(oof.NameField(options...))
-	buf.WriteString(oof.LineOneField(options...))
-	buf.WriteString(oof.LineTwoField(options...))
-	buf.WriteString(oof.LineThreeField(options...))
+	buf.WriteString(oof.FormatPartyIdentifier(options))
+	buf.WriteString(oof.FormatName(options))
+	buf.WriteString(oof.FormatLineOne(options))
+	buf.WriteString(oof.FormatLineTwo(options))
+	buf.WriteString(oof.FormatLineThree(options))
 
-	if oof.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return oof.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -212,27 +219,27 @@ func (oof *OriginatorOptionF) fieldInclusion() error {
 	return nil
 }
 
-// PartyIdentifierField gets a string of the PartyIdentifier field
-func (oof *OriginatorOptionF) PartyIdentifierField(options ...bool) string {
-	return oof.alphaVariableField(oof.PartyIdentifier, 35, oof.parseFirstOption(options))
+// FormatPartyIdentifier returns PartyIdentifier formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatPartyIdentifier(options FormatOptions) string {
+	return oof.formatAlphaField(oof.PartyIdentifier, 35, options)
 }
 
-// NameField gets a string of the Name field
-func (oof *OriginatorOptionF) NameField(options ...bool) string {
-	return oof.alphaVariableField(oof.Name, 35, oof.parseFirstOption(options))
+// FormatName returns Name formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatName(options FormatOptions) string {
+	return oof.formatAlphaField(oof.Name, 35, options)
 }
 
-// LineOneField gets a string of the LineOne field
-func (oof *OriginatorOptionF) LineOneField(options ...bool) string {
-	return oof.alphaVariableField(oof.LineOne, 35, oof.parseFirstOption(options))
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatLineOne(options FormatOptions) string {
+	return oof.formatAlphaField(oof.LineOne, 35, options)
 }
 
-// LineTwoField gets a string of the LineTwo field
-func (oof *OriginatorOptionF) LineTwoField(options ...bool) string {
-	return oof.alphaVariableField(oof.LineTwo, 35, oof.parseFirstOption(options))
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatLineTwo(options FormatOptions) string {
+	return oof.formatAlphaField(oof.LineTwo, 35, options)
 }
 
-// LineThreeField gets a string of the LineThree field
-func (oof *OriginatorOptionF) LineThreeField(options ...bool) string {
-	return oof.alphaVariableField(oof.LineThree, 35, oof.parseFirstOption(options))
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (oof *OriginatorOptionF) FormatLineThree(options FormatOptions) string {
+	return oof.formatAlphaField(oof.LineThree, 35, options)
 }

@@ -98,18 +98,25 @@ func (srd *SecondaryRemittanceDocument) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SecondaryRemittanceDocument
-func (srd *SecondaryRemittanceDocument) String(options ...bool) string {
+// String returns a fixed-width SecondaryRemittanceDocument record
+func (srd *SecondaryRemittanceDocument) String() string {
+	return srd.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SecondaryRemittanceDocument record formatted according to the FormatOptions
+func (srd *SecondaryRemittanceDocument) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(115)
 
 	buf.WriteString(srd.tag)
-	buf.WriteString(srd.DocumentTypeCodeField(options...))
-	buf.WriteString(srd.ProprietaryDocumentTypeCodeField(options...))
-	buf.WriteString(srd.DocumentIdentificationNumberField(options...))
-	buf.WriteString(srd.IssuerField(options...))
+	buf.WriteString(srd.FormatDocumentTypeCode(options))
+	buf.WriteString(srd.FormatProprietaryDocumentTypeCode(options))
+	buf.WriteString(srd.FormatDocumentIdentificationNumber(options))
+	buf.WriteString(srd.FormatIssuer(options))
 
-	if srd.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return srd.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -161,22 +168,22 @@ func (srd *SecondaryRemittanceDocument) fieldInclusion() error {
 	return nil
 }
 
-// DocumentTypeCodeField gets a string of the DocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField(options ...bool) string {
-	return srd.alphaVariableField(srd.DocumentTypeCode, 4, srd.parseFirstOption(options))
+// FormatDocumentTypeCode returns DocumentTypeCode formatted according to the FormatOptions
+func (srd *SecondaryRemittanceDocument) FormatDocumentTypeCode(options FormatOptions) string {
+	return srd.formatAlphaField(srd.DocumentTypeCode, 4, options)
 }
 
-// ProprietaryDocumentTypeCodeField gets a string of the ProprietaryDocumentTypeCode field
-func (srd *SecondaryRemittanceDocument) ProprietaryDocumentTypeCodeField(options ...bool) string {
-	return srd.alphaVariableField(srd.ProprietaryDocumentTypeCode, 35, srd.parseFirstOption(options))
+// FormatProprietaryDocumentTypeCode returns ProprietaryDocumentTypeCode formatted according to the FormatOptions
+func (srd *SecondaryRemittanceDocument) FormatProprietaryDocumentTypeCode(options FormatOptions) string {
+	return srd.formatAlphaField(srd.ProprietaryDocumentTypeCode, 35, options)
 }
 
-// DocumentIdentificationNumberField gets a string of the DocumentIdentificationNumber field
-func (srd *SecondaryRemittanceDocument) DocumentIdentificationNumberField(options ...bool) string {
-	return srd.alphaVariableField(srd.DocumentIdentificationNumber, 35, srd.parseFirstOption(options))
+// FormatDocumentIdentificationNumber returns DocumentIdentificationNumber formatted according to the FormatOptions
+func (srd *SecondaryRemittanceDocument) FormatDocumentIdentificationNumber(options FormatOptions) string {
+	return srd.formatAlphaField(srd.DocumentIdentificationNumber, 35, options)
 }
 
-// IssuerField gets a string of the Issuer field
-func (srd *SecondaryRemittanceDocument) IssuerField(options ...bool) string {
-	return srd.alphaVariableField(srd.Issuer, 35, srd.parseFirstOption(options))
+// FormatIssuer returns Issuer formatted according to the FormatOptions
+func (srd *SecondaryRemittanceDocument) FormatIssuer(options FormatOptions) string {
+	return srd.formatAlphaField(srd.Issuer, 35, options)
 }

@@ -106,20 +106,27 @@ func (firfi *FIReceiverFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIReceiverFI
-func (firfi *FIReceiverFI) String(options ...bool) string {
+// String returns a fixed-width FIReceiverFI record
+func (firfi *FIReceiverFI) String() string {
+	return firfi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIReceiverFI record formatted according to the FormatOptions
+func (firfi *FIReceiverFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(201)
 
 	buf.WriteString(firfi.tag)
-	buf.WriteString(firfi.LineOneField(options...))
-	buf.WriteString(firfi.LineTwoField(options...))
-	buf.WriteString(firfi.LineThreeField(options...))
-	buf.WriteString(firfi.LineFourField(options...))
-	buf.WriteString(firfi.LineFiveField(options...))
-	buf.WriteString(firfi.LineSixField(options...))
+	buf.WriteString(firfi.FormatLineOne(options))
+	buf.WriteString(firfi.FormatLineTwo(options))
+	buf.WriteString(firfi.FormatLineThree(options))
+	buf.WriteString(firfi.FormatLineFour(options))
+	buf.WriteString(firfi.FormatLineFive(options))
+	buf.WriteString(firfi.FormatLineSix(options))
 
-	if firfi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return firfi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -154,31 +161,61 @@ func (firfi *FIReceiverFI) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (firfi *FIReceiverFI) LineOneField(options ...bool) string {
-	return firfi.alphaVariableField(firfi.FIToFI.LineOne, 30, firfi.parseFirstOption(options))
+func (firfi *FIReceiverFI) LineOneField() string {
+	return firfi.alphaField(firfi.FIToFI.LineOne, 30)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (firfi *FIReceiverFI) LineTwoField(options ...bool) string {
-	return firfi.alphaVariableField(firfi.FIToFI.LineTwo, 33, firfi.parseFirstOption(options))
+func (firfi *FIReceiverFI) LineTwoField() string {
+	return firfi.alphaField(firfi.FIToFI.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (firfi *FIReceiverFI) LineThreeField(options ...bool) string {
-	return firfi.alphaVariableField(firfi.FIToFI.LineThree, 33, firfi.parseFirstOption(options))
+func (firfi *FIReceiverFI) LineThreeField() string {
+	return firfi.alphaField(firfi.FIToFI.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
-func (firfi *FIReceiverFI) LineFourField(options ...bool) string {
-	return firfi.alphaVariableField(firfi.FIToFI.LineFour, 33, firfi.parseFirstOption(options))
+func (firfi *FIReceiverFI) LineFourField() string {
+	return firfi.alphaField(firfi.FIToFI.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (firfi *FIReceiverFI) LineFiveField(options ...bool) string {
-	return firfi.alphaVariableField(firfi.FIToFI.LineFive, 33, firfi.parseFirstOption(options))
+func (firfi *FIReceiverFI) LineFiveField() string {
+	return firfi.alphaField(firfi.FIToFI.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
-func (firfi *FIReceiverFI) LineSixField(options ...bool) string {
-	return firfi.alphaVariableField(firfi.FIToFI.LineSix, 33, firfi.parseFirstOption(options))
+func (firfi *FIReceiverFI) LineSixField() string {
+	return firfi.alphaField(firfi.FIToFI.LineSix, 33)
+}
+
+// FormatLineOne returns FIToFI.LineOne formatted according to the FormatOptions
+func (firfi *FIReceiverFI) FormatLineOne(options FormatOptions) string {
+	return firfi.formatAlphaField(firfi.FIToFI.LineOne, 30, options)
+}
+
+// FormatLineTwo returns FIToFI.LineTwo formatted according to the FormatOptions
+func (firfi *FIReceiverFI) FormatLineTwo(options FormatOptions) string {
+	return firfi.formatAlphaField(firfi.FIToFI.LineTwo, 33, options)
+}
+
+// FormatLineThree returns FIToFI.LineThree formatted according to the FormatOptions
+func (firfi *FIReceiverFI) FormatLineThree(options FormatOptions) string {
+	return firfi.formatAlphaField(firfi.FIToFI.LineThree, 33, options)
+}
+
+// FormatLineFour returns FIToFI.LineFour formatted according to the FormatOptions
+func (firfi *FIReceiverFI) FormatLineFour(options FormatOptions) string {
+	return firfi.formatAlphaField(firfi.FIToFI.LineFour, 33, options)
+}
+
+// FormatLineFive returns FIToFI.LineFive formatted according to the FormatOptions
+func (firfi *FIReceiverFI) FormatLineFive(options FormatOptions) string {
+	return firfi.formatAlphaField(firfi.FIToFI.LineFive, 33, options)
+}
+
+// FormatLineSix returns FIToFI.LineSix formatted according to the FormatOptions
+func (firfi *FIReceiverFI) FormatLineSix(options FormatOptions) string {
+	return firfi.formatAlphaField(firfi.FIToFI.LineSix, 33, options)
 }

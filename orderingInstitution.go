@@ -106,20 +106,27 @@ func (oi *OrderingInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OrderingInstitution
-func (oi *OrderingInstitution) String(options ...bool) string {
+// String returns a fixed-width OrderingInstitution record
+func (oi *OrderingInstitution) String() string {
+	return oi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OrderingInstitution record formatted according to the FormatOptions
+func (oi *OrderingInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
 	buf.WriteString(oi.tag)
 
-	buf.WriteString(oi.SwiftFieldTagField(options...))
-	buf.WriteString(oi.SwiftLineOneField(options...))
-	buf.WriteString(oi.SwiftLineTwoField(options...))
-	buf.WriteString(oi.SwiftLineThreeField(options...))
-	buf.WriteString(oi.SwiftLineFourField(options...))
-	buf.WriteString(oi.SwiftLineFiveField(options...))
+	buf.WriteString(oi.FormatSwiftFieldTag(options))
+	buf.WriteString(oi.FormatSwiftLineOne(options))
+	buf.WriteString(oi.FormatSwiftLineTwo(options))
+	buf.WriteString(oi.FormatSwiftLineThree(options))
+	buf.WriteString(oi.FormatSwiftLineFour(options))
+	buf.WriteString(oi.FormatSwiftLineFive(options))
 
-	if oi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return oi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -166,31 +173,61 @@ func (oi *OrderingInstitution) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (oi *OrderingInstitution) SwiftFieldTagField(options ...bool) string {
-	return oi.alphaVariableField(oi.CoverPayment.SwiftFieldTag, 5, oi.parseFirstOption(options))
+func (oi *OrderingInstitution) SwiftFieldTagField() string {
+	return oi.alphaField(oi.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (oi *OrderingInstitution) SwiftLineOneField(options ...bool) string {
-	return oi.alphaVariableField(oi.CoverPayment.SwiftLineOne, 35, oi.parseFirstOption(options))
+func (oi *OrderingInstitution) SwiftLineOneField() string {
+	return oi.alphaField(oi.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (oi *OrderingInstitution) SwiftLineTwoField(options ...bool) string {
-	return oi.alphaVariableField(oi.CoverPayment.SwiftLineTwo, 35, oi.parseFirstOption(options))
+func (oi *OrderingInstitution) SwiftLineTwoField() string {
+	return oi.alphaField(oi.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (oi *OrderingInstitution) SwiftLineThreeField(options ...bool) string {
-	return oi.alphaVariableField(oi.CoverPayment.SwiftLineThree, 35, oi.parseFirstOption(options))
+func (oi *OrderingInstitution) SwiftLineThreeField() string {
+	return oi.alphaField(oi.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (oi *OrderingInstitution) SwiftLineFourField(options ...bool) string {
-	return oi.alphaVariableField(oi.CoverPayment.SwiftLineFour, 35, oi.parseFirstOption(options))
+func (oi *OrderingInstitution) SwiftLineFourField() string {
+	return oi.alphaField(oi.CoverPayment.SwiftLineFour, 35)
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (oi *OrderingInstitution) SwiftLineFiveField(options ...bool) string {
-	return oi.alphaVariableField(oi.CoverPayment.SwiftLineFive, 35, oi.parseFirstOption(options))
+func (oi *OrderingInstitution) SwiftLineFiveField() string {
+	return oi.alphaField(oi.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftFieldTag(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineOne(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineTwo(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineThree(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineFour(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (oi *OrderingInstitution) FormatSwiftLineFive(options FormatOptions) string {
+	return oi.formatAlphaField(oi.CoverPayment.SwiftLineFive, 35, options)
 }

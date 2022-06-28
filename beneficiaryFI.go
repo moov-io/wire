@@ -100,20 +100,27 @@ func (bfi *BeneficiaryFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes BeneficiaryFI
-func (bfi *BeneficiaryFI) String(options ...bool) string {
+// String returns a fixed-width BeneficiaryFI record
+func (bfi *BeneficiaryFI) String() string {
+	return bfi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a BeneficiaryFI record formatted according to the FormatOptions
+func (bfi *BeneficiaryFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(bfi.tag)
 	buf.WriteString(bfi.IdentificationCodeField())
-	buf.WriteString(bfi.IdentifierField(options...))
-	buf.WriteString(bfi.NameField(options...))
-	buf.WriteString(bfi.AddressLineOneField(options...))
-	buf.WriteString(bfi.AddressLineTwoField(options...))
-	buf.WriteString(bfi.AddressLineThreeField(options...))
+	buf.WriteString(bfi.FormatIdentifier(options))
+	buf.WriteString(bfi.FormatName(options))
+	buf.WriteString(bfi.FormatAddressLineOne(options))
+	buf.WriteString(bfi.FormatAddressLineTwo(options))
+	buf.WriteString(bfi.FormatAddressLineThree(options))
 
-	if bfi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return bfi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -179,26 +186,51 @@ func (bfi *BeneficiaryFI) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (bfi *BeneficiaryFI) IdentifierField(options ...bool) string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Identifier, 34, bfi.parseFirstOption(options))
+func (bfi *BeneficiaryFI) IdentifierField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (bfi *BeneficiaryFI) NameField(options ...bool) string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Name, 35, bfi.parseFirstOption(options))
+func (bfi *BeneficiaryFI) NameField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Name, 35)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (bfi *BeneficiaryFI) AddressLineOneField(options ...bool) string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineOne, 35, bfi.parseFirstOption(options))
+func (bfi *BeneficiaryFI) AddressLineOneField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineOne, 35)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (bfi *BeneficiaryFI) AddressLineTwoField(options ...bool) string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineTwo, 35, bfi.parseFirstOption(options))
+func (bfi *BeneficiaryFI) AddressLineTwoField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineTwo, 35)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (bfi *BeneficiaryFI) AddressLineThreeField(options ...bool) string {
-	return bfi.alphaVariableField(bfi.FinancialInstitution.Address.AddressLineThree, 35, bfi.parseFirstOption(options))
+func (bfi *BeneficiaryFI) AddressLineThreeField() string {
+	return bfi.alphaField(bfi.FinancialInstitution.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns FinancialInstitution.Identifier formatted according to the FormatOptions
+func (bfi *BeneficiaryFI) FormatIdentifier(options FormatOptions) string {
+	return bfi.formatAlphaField(bfi.FinancialInstitution.Identifier, 34, options)
+}
+
+// FormatName returns FinancialInstitution.Name formatted according to the FormatOptions
+func (bfi *BeneficiaryFI) FormatName(options FormatOptions) string {
+	return bfi.formatAlphaField(bfi.FinancialInstitution.Name, 35, options)
+}
+
+// FormatAddressLineOne returns FinancialInstitution.Address.AddressLineOne formatted according to the FormatOptions
+func (bfi *BeneficiaryFI) FormatAddressLineOne(options FormatOptions) string {
+	return bfi.formatAlphaField(bfi.FinancialInstitution.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns FinancialInstitution.Address.AddressLineTwo formatted according to the FormatOptions
+func (bfi *BeneficiaryFI) FormatAddressLineTwo(options FormatOptions) string {
+	return bfi.formatAlphaField(bfi.FinancialInstitution.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns FinancialInstitution.Address.AddressLineThree formatted according to the FormatOptions
+func (bfi *BeneficiaryFI) FormatAddressLineThree(options FormatOptions) string {
+	return bfi.formatAlphaField(bfi.FinancialInstitution.Address.AddressLineThree, 35, options)
 }

@@ -107,21 +107,28 @@ func (fiba *FIBeneficiaryAdvice) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIBeneficiaryAdvice
-func (fiba *FIBeneficiaryAdvice) String(options ...bool) string {
+// String returns a fixed-width FIBeneficiaryAdvice record
+func (fiba *FIBeneficiaryAdvice) String() string {
+	return fiba.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIBeneficiaryAdvice record formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(200)
 
 	buf.WriteString(fiba.tag)
 	buf.WriteString(fiba.AdviceCodeField())
-	buf.WriteString(fiba.LineOneField(options...))
-	buf.WriteString(fiba.LineTwoField(options...))
-	buf.WriteString(fiba.LineThreeField(options...))
-	buf.WriteString(fiba.LineFourField(options...))
-	buf.WriteString(fiba.LineFiveField(options...))
-	buf.WriteString(fiba.LineSixField(options...))
+	buf.WriteString(fiba.FormatLineOne(options))
+	buf.WriteString(fiba.FormatLineTwo(options))
+	buf.WriteString(fiba.FormatLineThree(options))
+	buf.WriteString(fiba.FormatLineFour(options))
+	buf.WriteString(fiba.FormatLineFive(options))
+	buf.WriteString(fiba.FormatLineSix(options))
 
-	if fiba.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return fiba.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -164,31 +171,61 @@ func (fiba *FIBeneficiaryAdvice) AdviceCodeField() string {
 }
 
 // LineOneField gets a string of the LineOne field
-func (fiba *FIBeneficiaryAdvice) LineOneField(options ...bool) string {
-	return fiba.alphaVariableField(fiba.Advice.LineOne, 26, fiba.parseFirstOption(options))
+func (fiba *FIBeneficiaryAdvice) LineOneField() string {
+	return fiba.alphaField(fiba.Advice.LineOne, 26)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (fiba *FIBeneficiaryAdvice) LineTwoField(options ...bool) string {
-	return fiba.alphaVariableField(fiba.Advice.LineTwo, 33, fiba.parseFirstOption(options))
+func (fiba *FIBeneficiaryAdvice) LineTwoField() string {
+	return fiba.alphaField(fiba.Advice.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (fiba *FIBeneficiaryAdvice) LineThreeField(options ...bool) string {
-	return fiba.alphaVariableField(fiba.Advice.LineThree, 33, fiba.parseFirstOption(options))
+func (fiba *FIBeneficiaryAdvice) LineThreeField() string {
+	return fiba.alphaField(fiba.Advice.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
-func (fiba *FIBeneficiaryAdvice) LineFourField(options ...bool) string {
-	return fiba.alphaVariableField(fiba.Advice.LineFour, 33, fiba.parseFirstOption(options))
+func (fiba *FIBeneficiaryAdvice) LineFourField() string {
+	return fiba.alphaField(fiba.Advice.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (fiba *FIBeneficiaryAdvice) LineFiveField(options ...bool) string {
-	return fiba.alphaVariableField(fiba.Advice.LineFive, 33, fiba.parseFirstOption(options))
+func (fiba *FIBeneficiaryAdvice) LineFiveField() string {
+	return fiba.alphaField(fiba.Advice.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
-func (fiba *FIBeneficiaryAdvice) LineSixField(options ...bool) string {
-	return fiba.alphaVariableField(fiba.Advice.LineSix, 33, fiba.parseFirstOption(options))
+func (fiba *FIBeneficiaryAdvice) LineSixField() string {
+	return fiba.alphaField(fiba.Advice.LineSix, 33)
+}
+
+// FormatLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineOne(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineOne, 26, options)
+}
+
+// FormatLineTwo returns Advice.LineTwo formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineTwo(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineTwo, 33, options)
+}
+
+// FormatLineThree returns Advice.LineThree formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineThree(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineThree, 33, options)
+}
+
+// FormatLineFour returns Advice.LineFour formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineFour(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineFour, 33, options)
+}
+
+// FormatLineFive returns Advice.LineFive formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineFive(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineFive, 33, options)
+}
+
+// FormatLineSix returns Advice.LineSix formatted according to the FormatOptions
+func (fiba *FIBeneficiaryAdvice) FormatLineSix(options FormatOptions) string {
+	return fiba.formatAlphaField(fiba.Advice.LineSix, 33, options)
 }

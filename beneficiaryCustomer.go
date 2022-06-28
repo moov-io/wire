@@ -106,20 +106,27 @@ func (bc *BeneficiaryCustomer) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes BeneficiaryCustomer
-func (bc *BeneficiaryCustomer) String(options ...bool) string {
+// String returns a fixed-width BeneficiaryCustomer record
+func (bc *BeneficiaryCustomer) String() string {
+	return bc.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a BeneficiaryCustomer record formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(bc.tag)
-	buf.WriteString(bc.SwiftFieldTagField(options...))
-	buf.WriteString(bc.SwiftLineOneField(options...))
-	buf.WriteString(bc.SwiftLineTwoField(options...))
-	buf.WriteString(bc.SwiftLineThreeField(options...))
-	buf.WriteString(bc.SwiftLineFourField(options...))
-	buf.WriteString(bc.SwiftLineFiveField(options...))
+	buf.WriteString(bc.FormatSwiftFieldTag(options))
+	buf.WriteString(bc.FormatSwiftLineOne(options))
+	buf.WriteString(bc.FormatSwiftLineTwo(options))
+	buf.WriteString(bc.FormatSwiftLineThree(options))
+	buf.WriteString(bc.FormatSwiftLineFour(options))
+	buf.WriteString(bc.FormatSwiftLineFive(options))
 
-	if bc.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return bc.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -166,31 +173,61 @@ func (bc *BeneficiaryCustomer) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (bc *BeneficiaryCustomer) SwiftFieldTagField(options ...bool) string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftFieldTag, 5, bc.parseFirstOption(options))
+func (bc *BeneficiaryCustomer) SwiftFieldTagField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (bc *BeneficiaryCustomer) SwiftLineOneField(options ...bool) string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineOne, 35, bc.parseFirstOption(options))
+func (bc *BeneficiaryCustomer) SwiftLineOneField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (bc *BeneficiaryCustomer) SwiftLineTwoField(options ...bool) string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineTwo, 35, bc.parseFirstOption(options))
+func (bc *BeneficiaryCustomer) SwiftLineTwoField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (bc *BeneficiaryCustomer) SwiftLineThreeField(options ...bool) string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineThree, 35, bc.parseFirstOption(options))
+func (bc *BeneficiaryCustomer) SwiftLineThreeField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (bc *BeneficiaryCustomer) SwiftLineFourField(options ...bool) string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineFour, 35, bc.parseFirstOption(options))
+func (bc *BeneficiaryCustomer) SwiftLineFourField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineFour, 35)
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (bc *BeneficiaryCustomer) SwiftLineFiveField(options ...bool) string {
-	return bc.alphaVariableField(bc.CoverPayment.SwiftLineFive, 35, bc.parseFirstOption(options))
+func (bc *BeneficiaryCustomer) SwiftLineFiveField() string {
+	return bc.alphaField(bc.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftFieldTag(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineOne(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineTwo(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineThree(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineFour(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (bc *BeneficiaryCustomer) FormatSwiftLineFive(options FormatOptions) string {
+	return bc.formatAlphaField(bc.CoverPayment.SwiftLineFive, 35, options)
 }

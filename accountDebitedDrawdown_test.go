@@ -197,7 +197,7 @@ func TestStringAccountDebitedDrawdownVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringDebitedDrawdownOptions validates string() with options
+// TestStringDebitedDrawdownOptions validates Format() formatted according to the FormatOptions
 func TestStringAccountDebitedDrawdownOptions(t *testing.T) {
 	var line = "{4400}D2*3*"
 	r := NewReader(strings.NewReader(line))
@@ -206,9 +206,8 @@ func TestStringAccountDebitedDrawdownOptions(t *testing.T) {
 	err := r.parseAccountDebitedDrawdown()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.AccountDebitedDrawdown.String()
-	require.Equal(t, str, "{4400}D2                                 3                                                                                                                                           ")
-
-	str = r.currentFEDWireMessage.AccountDebitedDrawdown.String(true)
-	require.Equal(t, str, "{4400}D2*3*")
+	add := r.currentFEDWireMessage.AccountDebitedDrawdown
+	require.Equal(t, add.String(), "{4400}D2                                 3                                                                                                                                           ")
+	require.Equal(t, add.Format(FormatOptions{VariableLengthFields: true}), "{4400}D2*3*")
+	require.Equal(t, add.String(), add.Format(FormatOptions{VariableLengthFields: false}))
 }

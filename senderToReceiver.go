@@ -113,21 +113,28 @@ func (str *SenderToReceiver) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderToReceiver
-func (str *SenderToReceiver) String(options ...bool) string {
+// String returns a fixed-width SenderToReceiver record
+func (str *SenderToReceiver) String() string {
+	return str.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderToReceiver record formatted according to the FormatOptions
+func (str *SenderToReceiver) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(221)
 
 	buf.WriteString(str.tag)
-	buf.WriteString(str.SwiftFieldTagField(options...))
-	buf.WriteString(str.SwiftLineOneField(options...))
-	buf.WriteString(str.SwiftLineTwoField(options...))
-	buf.WriteString(str.SwiftLineThreeField(options...))
-	buf.WriteString(str.SwiftLineFourField(options...))
-	buf.WriteString(str.SwiftLineFiveField(options...))
-	buf.WriteString(str.SwiftLineSixField(options...))
+	buf.WriteString(str.FormatSwiftFieldTag(options))
+	buf.WriteString(str.FormatSwiftLineOne(options))
+	buf.WriteString(str.FormatSwiftLineTwo(options))
+	buf.WriteString(str.FormatSwiftLineThree(options))
+	buf.WriteString(str.FormatSwiftLineFour(options))
+	buf.WriteString(str.FormatSwiftLineFive(options))
+	buf.WriteString(str.FormatSwiftLineSix(options))
 
-	if str.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return str.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -165,36 +172,71 @@ func (str *SenderToReceiver) Validate() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (str *SenderToReceiver) SwiftFieldTagField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftFieldTag, 5, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftFieldTagField() string {
+	return str.alphaField(str.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (str *SenderToReceiver) SwiftLineOneField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftLineOne, 35, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftLineOneField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (str *SenderToReceiver) SwiftLineTwoField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftLineTwo, 35, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftLineTwoField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (str *SenderToReceiver) SwiftLineThreeField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftLineThree, 35, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftLineThreeField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (str *SenderToReceiver) SwiftLineFourField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftLineFour, 35, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftLineFourField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineFour, 35)
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (str *SenderToReceiver) SwiftLineFiveField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftLineFive, 35, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftLineFiveField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineFive, 35)
 }
 
 // SwiftLineSixField gets a string of the SwiftLineSix field
-func (str *SenderToReceiver) SwiftLineSixField(options ...bool) string {
-	return str.alphaVariableField(str.CoverPayment.SwiftLineSix, 35, str.parseFirstOption(options))
+func (str *SenderToReceiver) SwiftLineSixField() string {
+	return str.alphaField(str.CoverPayment.SwiftLineSix, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftFieldTag(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftLineOne(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftLineTwo(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftLineThree(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftLineFour(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftLineFive(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftLineFive, 35, options)
+}
+
+// FormatSwiftLineSix returns CoverPayment.SwiftLineSix formatted according to the FormatOptions
+func (str *SenderToReceiver) FormatSwiftLineSix(options FormatOptions) string {
+	return str.formatAlphaField(str.CoverPayment.SwiftLineSix, 35, options)
 }

@@ -80,14 +80,21 @@ func (rdi *ReceiverDepositoryInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ReceiverDepositoryInstitution
-func (rdi *ReceiverDepositoryInstitution) String(options ...bool) string {
+// String returns a fixed-width ReceiverDepositoryInstitution record
+func (rdi *ReceiverDepositoryInstitution) String() string {
+	return rdi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ReceiverDepositoryInstitution record formatted according to the FormatOptions
+func (rdi *ReceiverDepositoryInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(33)
 
 	buf.WriteString(rdi.tag)
-	buf.WriteString(rdi.ReceiverABANumberField(options...))
-	buf.WriteString(rdi.ReceiverShortNameField(options...))
+	buf.WriteString(rdi.FormatReceiverABANumber(options))
+	buf.WriteString(rdi.FormatReceiverShortName(options))
 
 	return buf.String()
 }
@@ -123,11 +130,21 @@ func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 }
 
 // ReceiverABANumberField gets a string of the ReceiverABANumber field
-func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField(options ...bool) string {
-	return rdi.alphaVariableField(rdi.ReceiverABANumber, 9, rdi.parseFirstOption(options))
+func (rdi *ReceiverDepositoryInstitution) ReceiverABANumberField() string {
+	return rdi.alphaField(rdi.ReceiverABANumber, 9)
 }
 
 // ReceiverShortNameField gets a string of the ReceiverShortName field
-func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField(options ...bool) string {
-	return rdi.alphaVariableField(rdi.ReceiverShortName, 18, rdi.parseFirstOption(options))
+func (rdi *ReceiverDepositoryInstitution) ReceiverShortNameField() string {
+	return rdi.alphaField(rdi.ReceiverShortName, 18)
+}
+
+// FormatReceiverABANumber returns ReceiverABANumber formatted according to the FormatOptions
+func (rdi *ReceiverDepositoryInstitution) FormatReceiverABANumber(options FormatOptions) string {
+	return rdi.formatAlphaField(rdi.ReceiverABANumber, 9, options)
+}
+
+// FormatReceiverShortName returns ReceiverShortName formatted according to the FormatOptions
+func (rdi *ReceiverDepositoryInstitution) FormatReceiverShortName(options FormatOptions) string {
+	return rdi.formatAlphaField(rdi.ReceiverShortName, 18, options)
 }

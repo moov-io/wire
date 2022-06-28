@@ -99,7 +99,7 @@ func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 }
 
-// TestStringCurrencyInstructedAmountOptions validates string() with options
+// TestStringCurrencyInstructedAmountOptions validates Format() formatted according to the FormatOptions
 func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
 	var line = "{7033}*000000000001500,49"
 	r := NewReader(strings.NewReader(line))
@@ -108,9 +108,8 @@ func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
 	err := r.parseCurrencyInstructedAmount()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.CurrencyInstructedAmount.String()
-	require.Equal(t, str, "{7033}     000000000001500,49")
-
-	str = r.currentFEDWireMessage.CurrencyInstructedAmount.String(true)
-	require.Equal(t, str, "{7033}*000000000001500,49")
+	record := r.currentFEDWireMessage.CurrencyInstructedAmount
+	require.Equal(t, record.String(), "{7033}     000000000001500,49")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7033}*000000000001500,49")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

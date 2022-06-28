@@ -166,7 +166,7 @@ func TestStringFIDrawdownDebitAccountAdviceVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringFIDrawdownDebitAccountAdviceOptions validates string() with options
+// TestStringFIDrawdownDebitAccountAdviceOptions validates Format() formatted according to the FormatOptions
 func TestStringFIDrawdownDebitAccountAdviceOptions(t *testing.T) {
 	var line = "{6110}HLD*"
 	r := NewReader(strings.NewReader(line))
@@ -175,9 +175,8 @@ func TestStringFIDrawdownDebitAccountAdviceOptions(t *testing.T) {
 	err := r.parseFIDrawdownDebitAccountAdvice()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.FIDrawdownDebitAccountAdvice.String()
-	require.Equal(t, str, "{6110}HLD                                                                                                                                                                                               ")
-
-	str = r.currentFEDWireMessage.FIDrawdownDebitAccountAdvice.String(true)
-	require.Equal(t, str, "{6110}HLD*")
+	record := r.currentFEDWireMessage.FIDrawdownDebitAccountAdvice
+	require.Equal(t, record.String(), "{6110}HLD                                                                                                                                                                                               ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6110}HLD*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

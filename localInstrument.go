@@ -80,16 +80,23 @@ func (li *LocalInstrument) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes LocalInstrument
-func (li *LocalInstrument) String(options ...bool) string {
+// String returns a fixed-width LocalInstrument record
+func (li *LocalInstrument) String() string {
+	return li.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a LocalInstrument record formatted according to the FormatOptions
+func (li *LocalInstrument) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(45)
 
 	buf.WriteString(li.tag)
-	buf.WriteString(li.LocalInstrumentCodeField(options...))
-	buf.WriteString(li.ProprietaryCodeField(options...))
+	buf.WriteString(li.FormatLocalInstrumentCode(options))
+	buf.WriteString(li.FormatProprietaryCode(options))
 
-	if li.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return li.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -125,11 +132,21 @@ func (li *LocalInstrument) fieldInclusion() error {
 }
 
 // LocalInstrumentCodeField gets a string of LocalInstrumentCode field
-func (li *LocalInstrument) LocalInstrumentCodeField(options ...bool) string {
-	return li.alphaVariableField(li.LocalInstrumentCode, 4, li.parseFirstOption(options))
+func (li *LocalInstrument) LocalInstrumentCodeField() string {
+	return li.alphaField(li.LocalInstrumentCode, 4)
 }
 
 // ProprietaryCodeField gets a string of ProprietaryCode field
-func (li *LocalInstrument) ProprietaryCodeField(options ...bool) string {
-	return li.alphaVariableField(li.ProprietaryCode, 35, li.parseFirstOption(options))
+func (li *LocalInstrument) ProprietaryCodeField() string {
+	return li.alphaField(li.ProprietaryCode, 35)
+}
+
+// FormatLocalInstrumentCode returns LocalInstrumentCode formatted according to the FormatOptions
+func (li *LocalInstrument) FormatLocalInstrumentCode(options FormatOptions) string {
+	return li.formatAlphaField(li.LocalInstrumentCode, 4, options)
+}
+
+// FormatProprietaryCode returns ProprietaryCode formatted according to the FormatOptions
+func (li *LocalInstrument) FormatProprietaryCode(options FormatOptions) string {
+	return li.formatAlphaField(li.ProprietaryCode, 35, options)
 }

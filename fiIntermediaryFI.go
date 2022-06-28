@@ -106,20 +106,27 @@ func (fiifi *FIIntermediaryFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIIntermediaryFI
-func (fiifi *FIIntermediaryFI) String(options ...bool) string {
+// String returns a fixed-width FIIntermediaryFI record
+func (fiifi *FIIntermediaryFI) String() string {
+	return fiifi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIIntermediaryFI record formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(201)
 
 	buf.WriteString(fiifi.tag)
-	buf.WriteString(fiifi.LineOneField(options...))
-	buf.WriteString(fiifi.LineTwoField(options...))
-	buf.WriteString(fiifi.LineThreeField(options...))
-	buf.WriteString(fiifi.LineFourField(options...))
-	buf.WriteString(fiifi.LineFiveField(options...))
-	buf.WriteString(fiifi.LineSixField(options...))
+	buf.WriteString(fiifi.FormatLineOne(options))
+	buf.WriteString(fiifi.FormatLineTwo(options))
+	buf.WriteString(fiifi.FormatLineThree(options))
+	buf.WriteString(fiifi.FormatLineFour(options))
+	buf.WriteString(fiifi.FormatLineFive(options))
+	buf.WriteString(fiifi.FormatLineSix(options))
 
-	if fiifi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return fiifi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -154,31 +161,61 @@ func (fiifi *FIIntermediaryFI) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (fiifi *FIIntermediaryFI) LineOneField(options ...bool) string {
-	return fiifi.alphaVariableField(fiifi.FIToFI.LineOne, 30, fiifi.parseFirstOption(options))
+func (fiifi *FIIntermediaryFI) LineOneField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineOne, 30)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (fiifi *FIIntermediaryFI) LineTwoField(options ...bool) string {
-	return fiifi.alphaVariableField(fiifi.FIToFI.LineTwo, 33, fiifi.parseFirstOption(options))
+func (fiifi *FIIntermediaryFI) LineTwoField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (fiifi *FIIntermediaryFI) LineThreeField(options ...bool) string {
-	return fiifi.alphaVariableField(fiifi.FIToFI.LineThree, 33, fiifi.parseFirstOption(options))
+func (fiifi *FIIntermediaryFI) LineThreeField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
-func (fiifi *FIIntermediaryFI) LineFourField(options ...bool) string {
-	return fiifi.alphaVariableField(fiifi.FIToFI.LineFour, 33, fiifi.parseFirstOption(options))
+func (fiifi *FIIntermediaryFI) LineFourField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (fiifi *FIIntermediaryFI) LineFiveField(options ...bool) string {
-	return fiifi.alphaVariableField(fiifi.FIToFI.LineFive, 33, fiifi.parseFirstOption(options))
+func (fiifi *FIIntermediaryFI) LineFiveField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
-func (fiifi *FIIntermediaryFI) LineSixField(options ...bool) string {
-	return fiifi.alphaVariableField(fiifi.FIToFI.LineSix, 33, fiifi.parseFirstOption(options))
+func (fiifi *FIIntermediaryFI) LineSixField() string {
+	return fiifi.alphaField(fiifi.FIToFI.LineSix, 33)
+}
+
+// FormatLineOne returns FIToFI.LineOne formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineOne(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineOne, 30, options)
+}
+
+// FormatLineTwo returns FIToFI.LineTwo formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineTwo(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineTwo, 33, options)
+}
+
+// FormatLineThree returns FIToFI.LineThree formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineThree(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineThree, 33, options)
+}
+
+// FormatLineFour returns FIToFI.LineFour formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineFour(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineFour, 33, options)
+}
+
+// FormatLineFive returns FIToFI.LineFive formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineFive(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineFive, 33, options)
+}
+
+// FormatLineSix returns FIToFI.LineSix formatted according to the FormatOptions
+func (fiifi *FIIntermediaryFI) FormatLineSix(options FormatOptions) string {
+	return fiifi.formatAlphaField(fiifi.FIToFI.LineSix, 33, options)
 }

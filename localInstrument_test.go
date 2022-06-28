@@ -118,7 +118,7 @@ func TestStringLocalInstrumentVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringLocalInstrumentOptions validates string() with options
+// TestStringLocalInstrumentOptions validates Format() formatted according to the FormatOptions
 func TestStringLocalInstrumentOptions(t *testing.T) {
 	var line = "{3610}ANSI*"
 	r := NewReader(strings.NewReader(line))
@@ -127,9 +127,8 @@ func TestStringLocalInstrumentOptions(t *testing.T) {
 	err := r.parseLocalInstrument()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.LocalInstrument.String()
-	require.Equal(t, str, "{3610}ANSI                                   ")
-
-	str = r.currentFEDWireMessage.LocalInstrument.String(true)
-	require.Equal(t, str, "{3610}ANSI*")
+	record := r.currentFEDWireMessage.LocalInstrument
+	require.Equal(t, record.String(), "{3610}ANSI                                   ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3610}ANSI*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

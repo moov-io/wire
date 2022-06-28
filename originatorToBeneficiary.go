@@ -98,18 +98,25 @@ func (ob *OriginatorToBeneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes OriginatorToBeneficiary
-func (ob *OriginatorToBeneficiary) String(options ...bool) string {
+// String returns a fixed-width OriginatorToBeneficiary record
+func (ob *OriginatorToBeneficiary) String() string {
+	return ob.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a OriginatorToBeneficiary record formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(146)
 
 	buf.WriteString(ob.tag)
-	buf.WriteString(ob.LineOneField(options...))
-	buf.WriteString(ob.LineTwoField(options...))
-	buf.WriteString(ob.LineThreeField(options...))
-	buf.WriteString(ob.LineFourField(options...))
+	buf.WriteString(ob.FormatLineOne(options))
+	buf.WriteString(ob.FormatLineTwo(options))
+	buf.WriteString(ob.FormatLineThree(options))
+	buf.WriteString(ob.FormatLineFour(options))
 
-	if ob.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return ob.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -138,22 +145,22 @@ func (ob *OriginatorToBeneficiary) Validate() error {
 	return nil
 }
 
-// LineOneField gets a string of the LineOne field
-func (ob *OriginatorToBeneficiary) LineOneField(options ...bool) string {
-	return ob.alphaVariableField(ob.LineOne, 35, ob.parseFirstOption(options))
+// FormatLineOne returns LineOne formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineOne(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineOne, 35, options)
 }
 
-// LineTwoField gets a string of the LineTwo field
-func (ob *OriginatorToBeneficiary) LineTwoField(options ...bool) string {
-	return ob.alphaVariableField(ob.LineTwo, 35, ob.parseFirstOption(options))
+// FormatLineTwo returns LineTwo formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineTwo(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineTwo, 35, options)
 }
 
-// LineThreeField gets a string of the LineThree field
-func (ob *OriginatorToBeneficiary) LineThreeField(options ...bool) string {
-	return ob.alphaVariableField(ob.LineThree, 35, ob.parseFirstOption(options))
+// FormatLineThree returns LineThree formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineThree(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineThree, 35, options)
 }
 
-// LineFourField gets a string of the LineFour field
-func (ob *OriginatorToBeneficiary) LineFourField(options ...bool) string {
-	return ob.alphaVariableField(ob.LineFour, 35, ob.parseFirstOption(options))
+// FormatLineFour returns LineFour formatted according to the FormatOptions
+func (ob *OriginatorToBeneficiary) FormatLineFour(options FormatOptions) string {
+	return ob.formatAlphaField(ob.LineFour, 35, options)
 }

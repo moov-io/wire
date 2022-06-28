@@ -74,14 +74,21 @@ func (bfc *BusinessFunctionCode) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes BusinessFunctionCode
-func (bfc *BusinessFunctionCode) String(options ...bool) string {
+// String returns a fixed-width BusinessFunctionCode record
+func (bfc *BusinessFunctionCode) String() string {
+	return bfc.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a BusinessFunctionCode record formatted according to the FormatOptions
+func (bfc *BusinessFunctionCode) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(12)
 
 	buf.WriteString(bfc.tag)
 	buf.WriteString(bfc.BusinessFunctionCodeField())
-	buf.WriteString(bfc.TransactionTypeCodeField(options...))
+	buf.WriteString(bfc.FormatTransactionTypeCode(options))
 
 	return buf.String()
 }
@@ -121,6 +128,11 @@ func (bfc *BusinessFunctionCode) BusinessFunctionCodeField() string {
 }
 
 // TransactionTypeCodeField gets a string of the TransactionTypeCode field
-func (bfc *BusinessFunctionCode) TransactionTypeCodeField(options ...bool) string {
-	return bfc.alphaVariableField(bfc.TransactionTypeCode, 3, bfc.parseFirstOption(options))
+func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
+	return bfc.alphaField(bfc.TransactionTypeCode, 3)
+}
+
+// FormatTransactionTypeCode returns TransactionTypeCode formatted according to the FormatOptions
+func (bfc *BusinessFunctionCode) FormatTransactionTypeCode(options FormatOptions) string {
+	return bfc.formatAlphaField(bfc.TransactionTypeCode, 3, options)
 }

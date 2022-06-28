@@ -162,7 +162,7 @@ func TestStringSenderToReceiverVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringSenderToReceiverOptions validates string() with options
+// TestStringSenderToReceiverOptions validates Format() formatted according to the FormatOptions
 func TestStringSenderToReceiverOptions(t *testing.T) {
 	var line = "{7072}"
 	r := NewReader(strings.NewReader(line))
@@ -171,9 +171,8 @@ func TestStringSenderToReceiverOptions(t *testing.T) {
 	err := r.parseSenderToReceiver()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.SenderToReceiver.String()
-	require.Equal(t, str, "{7072}                                                                                                                                                                                                                       ")
-
-	str = r.currentFEDWireMessage.SenderToReceiver.String(true)
-	require.Equal(t, str, "{7072}*")
+	record := r.currentFEDWireMessage.SenderToReceiver
+	require.Equal(t, record.String(), "{7072}                                                                                                                                                                                                                       ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7072}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

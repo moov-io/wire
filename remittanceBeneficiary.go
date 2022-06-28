@@ -233,37 +233,44 @@ func (rb *RemittanceBeneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes RemittanceBeneficiary
-func (rb *RemittanceBeneficiary) String(options ...bool) string {
+// String returns a fixed-width RemittanceBeneficiary record
+func (rb *RemittanceBeneficiary) String() string {
+	return rb.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a RemittanceBeneficiary record formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(1114)
 
 	buf.WriteString(rb.tag)
-	buf.WriteString(rb.NameField(options...))
-	buf.WriteString(rb.IdentificationTypeField(options...))
-	buf.WriteString(rb.IdentificationCodeField(options...))
-	buf.WriteString(rb.IdentificationNumberField(options...))
-	buf.WriteString(rb.IdentificationNumberIssuerField(options...))
-	buf.WriteString(rb.DateBirthPlaceField(options...))
-	buf.WriteString(rb.AddressTypeField(options...))
-	buf.WriteString(rb.DepartmentField(options...))
-	buf.WriteString(rb.SubDepartmentField(options...))
-	buf.WriteString(rb.StreetNameField(options...))
-	buf.WriteString(rb.BuildingNumberField(options...))
-	buf.WriteString(rb.PostCodeField(options...))
-	buf.WriteString(rb.TownNameField(options...))
-	buf.WriteString(rb.CountrySubDivisionStateField(options...))
-	buf.WriteString(rb.CountryField(options...))
-	buf.WriteString(rb.AddressLineOneField(options...))
-	buf.WriteString(rb.AddressLineTwoField(options...))
-	buf.WriteString(rb.AddressLineThreeField(options...))
-	buf.WriteString(rb.AddressLineFourField(options...))
-	buf.WriteString(rb.AddressLineFiveField(options...))
-	buf.WriteString(rb.AddressLineSixField(options...))
-	buf.WriteString(rb.AddressLineSevenField(options...))
-	buf.WriteString(rb.CountryOfResidenceField(options...))
+	buf.WriteString(rb.FormatName(options))
+	buf.WriteString(rb.FormatIdentificationType(options))
+	buf.WriteString(rb.FormatIdentificationCode(options))
+	buf.WriteString(rb.FormatIdentificationNumber(options))
+	buf.WriteString(rb.FormatIdentificationNumberIssuer(options))
+	buf.WriteString(rb.FormatDateBirthPlace(options))
+	buf.WriteString(rb.FormatAddressType(options))
+	buf.WriteString(rb.FormatDepartment(options))
+	buf.WriteString(rb.FormatSubDepartment(options))
+	buf.WriteString(rb.FormatStreetName(options))
+	buf.WriteString(rb.FormatBuildingNumber(options))
+	buf.WriteString(rb.FormatPostCode(options))
+	buf.WriteString(rb.FormatTownName(options))
+	buf.WriteString(rb.FormatCountrySubDivisionState(options))
+	buf.WriteString(rb.FormatCountry(options))
+	buf.WriteString(rb.FormatAddressLineOne(options))
+	buf.WriteString(rb.FormatAddressLineTwo(options))
+	buf.WriteString(rb.FormatAddressLineThree(options))
+	buf.WriteString(rb.FormatAddressLineFour(options))
+	buf.WriteString(rb.FormatAddressLineFive(options))
+	buf.WriteString(rb.FormatAddressLineSix(options))
+	buf.WriteString(rb.FormatAddressLineSeven(options))
+	buf.WriteString(rb.FormatCountryOfResidence(options))
 
-	if rb.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return rb.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -392,116 +399,231 @@ func (rb *RemittanceBeneficiary) fieldInclusion() error {
 }
 
 // NameField gets a string of the Name field
-func (rb *RemittanceBeneficiary) NameField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.Name, 140, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) NameField() string {
+	return rb.alphaField(rb.RemittanceData.Name, 140)
 }
 
 // IdentificationTypeField gets a string of the IdentificationType field
-func (rb *RemittanceBeneficiary) IdentificationTypeField(options ...bool) string {
-	return rb.alphaVariableField(rb.IdentificationType, 2, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) IdentificationTypeField() string {
+	return rb.alphaField(rb.IdentificationType, 2)
 }
 
 // IdentificationCodeField gets a string of the IdentificationCode field
-func (rb *RemittanceBeneficiary) IdentificationCodeField(options ...bool) string {
-	return rb.alphaVariableField(rb.IdentificationCode, 4, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) IdentificationCodeField() string {
+	return rb.alphaField(rb.IdentificationCode, 4)
 }
 
 // IdentificationNumberField gets a string of the IdentificationNumber field
-func (rb *RemittanceBeneficiary) IdentificationNumberField(options ...bool) string {
-	return rb.alphaVariableField(rb.IdentificationNumber, 35, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) IdentificationNumberField() string {
+	return rb.alphaField(rb.IdentificationNumber, 35)
 }
 
 // IdentificationNumberIssuerField gets a string of the IdentificationNumberIssuer field
-func (rb *RemittanceBeneficiary) IdentificationNumberIssuerField(options ...bool) string {
-	return rb.alphaVariableField(rb.IdentificationNumberIssuer, 35, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) IdentificationNumberIssuerField() string {
+	return rb.alphaField(rb.IdentificationNumberIssuer, 35)
 }
 
 // DateBirthPlaceField gets a string of the DateBirthPlace field
-func (rb *RemittanceBeneficiary) DateBirthPlaceField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.DateBirthPlace, 82, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) DateBirthPlaceField() string {
+	return rb.alphaField(rb.RemittanceData.DateBirthPlace, 82)
 }
 
 // AddressTypeField gets a string of the AddressType field
-func (rb *RemittanceBeneficiary) AddressTypeField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressType, 4, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressTypeField() string {
+	return rb.alphaField(rb.RemittanceData.AddressType, 4)
 }
 
 // DepartmentField gets a string of the Department field
-func (rb *RemittanceBeneficiary) DepartmentField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.Department, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) DepartmentField() string {
+	return rb.alphaField(rb.RemittanceData.Department, 70)
 }
 
 // SubDepartmentField gets a string of the SubDepartment field
-func (rb *RemittanceBeneficiary) SubDepartmentField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.SubDepartment, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) SubDepartmentField() string {
+	return rb.alphaField(rb.RemittanceData.SubDepartment, 70)
 }
 
 // StreetNameField gets a string of the StreetName field
-func (rb *RemittanceBeneficiary) StreetNameField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.StreetName, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) StreetNameField() string {
+	return rb.alphaField(rb.RemittanceData.StreetName, 70)
 }
 
 // BuildingNumberField gets a string of the BuildingNumber field
-func (rb *RemittanceBeneficiary) BuildingNumberField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.BuildingNumber, 16, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) BuildingNumberField() string {
+	return rb.alphaField(rb.RemittanceData.BuildingNumber, 16)
 }
 
 // PostCodeField gets a string of the PostCode field
-func (rb *RemittanceBeneficiary) PostCodeField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.PostCode, 16, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) PostCodeField() string {
+	return rb.alphaField(rb.RemittanceData.PostCode, 16)
 }
 
 // TownNameField gets a string of the TownName field
-func (rb *RemittanceBeneficiary) TownNameField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.TownName, 35, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) TownNameField() string {
+	return rb.alphaField(rb.RemittanceData.TownName, 35)
 }
 
 // CountrySubDivisionStateField gets a string of the CountrySubDivisionState field
-func (rb *RemittanceBeneficiary) CountrySubDivisionStateField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.CountrySubDivisionState, 35, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) CountrySubDivisionStateField() string {
+	return rb.alphaField(rb.RemittanceData.CountrySubDivisionState, 35)
 }
 
 // CountryField gets a string of the Country field
-func (rb *RemittanceBeneficiary) CountryField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.Country, 2, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) CountryField() string {
+	return rb.alphaField(rb.RemittanceData.Country, 2)
 }
 
 // AddressLineOneField gets a string of the AddressLineOne field
-func (rb *RemittanceBeneficiary) AddressLineOneField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineOne, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineOneField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineOne, 70)
 }
 
 // AddressLineTwoField gets a string of the AddressLineTwo field
-func (rb *RemittanceBeneficiary) AddressLineTwoField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineTwo, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineTwoField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineTwo, 70)
 }
 
 // AddressLineThreeField gets a string of the AddressLineThree field
-func (rb *RemittanceBeneficiary) AddressLineThreeField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineThree, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineThreeField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineThree, 70)
 }
 
 // AddressLineFourField gets a string of the AddressLineFour field
-func (rb *RemittanceBeneficiary) AddressLineFourField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineFour, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineFourField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineFour, 70)
 }
 
 // AddressLineFiveField gets a string of the AddressLineFive field
-func (rb *RemittanceBeneficiary) AddressLineFiveField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineFive, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineFiveField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineFive, 70)
 }
 
 // AddressLineSixField gets a string of the AddressLineSix field
-func (rb *RemittanceBeneficiary) AddressLineSixField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineSix, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineSixField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineSix, 70)
 }
 
 // AddressLineSevenField gets a string of the AddressLineSeven field
-func (rb *RemittanceBeneficiary) AddressLineSevenField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.AddressLineSeven, 70, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) AddressLineSevenField() string {
+	return rb.alphaField(rb.RemittanceData.AddressLineSeven, 70)
 }
 
 // CountryOfResidenceField gets a string of the CountryOfResidence field
-func (rb *RemittanceBeneficiary) CountryOfResidenceField(options ...bool) string {
-	return rb.alphaVariableField(rb.RemittanceData.CountryOfResidence, 2, rb.parseFirstOption(options))
+func (rb *RemittanceBeneficiary) CountryOfResidenceField() string {
+	return rb.alphaField(rb.RemittanceData.CountryOfResidence, 2)
+}
+
+// FormatName returns Name formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatName(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.Name, 140, options)
+}
+
+// FormatIdentificationType returns IdentificationType formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatIdentificationType(options FormatOptions) string {
+	return rb.formatAlphaField(rb.IdentificationType, 2, options)
+}
+
+// FormatIdentificationCode returns IdentificationCode formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatIdentificationCode(options FormatOptions) string {
+	return rb.formatAlphaField(rb.IdentificationCode, 4, options)
+}
+
+// FormatIdentificationNumber returns IdentificationNumber formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatIdentificationNumber(options FormatOptions) string {
+	return rb.formatAlphaField(rb.IdentificationNumber, 35, options)
+}
+
+// FormatIdentificationNumberIssuer returns IdentificationNumberIssuer formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatIdentificationNumberIssuer(options FormatOptions) string {
+	return rb.formatAlphaField(rb.IdentificationNumberIssuer, 35, options)
+}
+
+// FormatDateBirthPlace returns DateBirthPlace formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatDateBirthPlace(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.DateBirthPlace, 82, options)
+}
+
+// FormatAddressType returns AddressType formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressType(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressType, 4, options)
+}
+
+// FormatDepartment returns Department formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatDepartment(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.Department, 70, options)
+}
+
+// FormatSubDepartment returns SubDepartment formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatSubDepartment(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.SubDepartment, 70, options)
+}
+
+// FormatStreetName returns StreetName formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatStreetName(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.StreetName, 70, options)
+}
+
+// FormatBuildingNumber returns BuildingNumber formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatBuildingNumber(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.BuildingNumber, 16, options)
+}
+
+// FormatPostCode returns PostCode formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatPostCode(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.PostCode, 16, options)
+}
+
+// FormatTownName returns TownName formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatTownName(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.TownName, 35, options)
+}
+
+// FormatCountrySubDivisionState returns CountrySubDivisionState formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatCountrySubDivisionState(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.CountrySubDivisionState, 35, options)
+}
+
+// FormatCountry returns Country formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatCountry(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.Country, 2, options)
+}
+
+// FormatAddressLineOne returns AddressLineOne formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineOne(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineOne, 70, options)
+}
+
+// FormatAddressLineTwo returns AddressLineTwo formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineTwo(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineTwo, 70, options)
+}
+
+// FormatAddressLineThree returns AddressLineThree formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineThree(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineThree, 70, options)
+}
+
+// FormatAddressLineFour returns AddressLineFour formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineFour(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineFour, 70, options)
+}
+
+// FormatAddressLineFive returns AddressLineFive formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineFive(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineFive, 70, options)
+}
+
+// FormatAddressLineSix returns AddressLineSix formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineSix(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineSix, 70, options)
+}
+
+// FormatAddressLineSeven returns AddressLineSeven formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatAddressLineSeven(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.AddressLineSeven, 70, options)
+}
+
+// FormatCountryOfResidence returns CountryOfResidence formatted according to the FormatOptions
+func (rb *RemittanceBeneficiary) FormatCountryOfResidence(options FormatOptions) string {
+	return rb.formatAlphaField(rb.RemittanceData.CountryOfResidence, 2, options)
 }

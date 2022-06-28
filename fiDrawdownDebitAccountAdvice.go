@@ -107,21 +107,28 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) UnmarshalJSON(data []byte) er
 	return nil
 }
 
-// String writes FIDrawdownDebitAccountAdvice
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String(options ...bool) string {
+// String returns a fixed-width FIDrawdownDebitAccountAdvice record
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) String() string {
+	return debitDDAdvice.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIDrawdownDebitAccountAdvice record formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(200)
 
 	buf.WriteString(debitDDAdvice.tag)
 	buf.WriteString(debitDDAdvice.AdviceCodeField())
-	buf.WriteString(debitDDAdvice.LineOneField(options...))
-	buf.WriteString(debitDDAdvice.LineTwoField(options...))
-	buf.WriteString(debitDDAdvice.LineThreeField(options...))
-	buf.WriteString(debitDDAdvice.LineFourField(options...))
-	buf.WriteString(debitDDAdvice.LineFiveField(options...))
-	buf.WriteString(debitDDAdvice.LineSixField(options...))
+	buf.WriteString(debitDDAdvice.FormatLineOne(options))
+	buf.WriteString(debitDDAdvice.FormatLineTwo(options))
+	buf.WriteString(debitDDAdvice.FormatLineThree(options))
+	buf.WriteString(debitDDAdvice.FormatLineFour(options))
+	buf.WriteString(debitDDAdvice.FormatLineFive(options))
+	buf.WriteString(debitDDAdvice.FormatLineSix(options))
 
-	if debitDDAdvice.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return debitDDAdvice.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -164,31 +171,61 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) AdviceCodeField() string {
 }
 
 // LineOneField gets a string of the LineOne field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineOneField(options ...bool) string {
-	return debitDDAdvice.alphaVariableField(debitDDAdvice.Advice.LineOne, 26, debitDDAdvice.parseFirstOption(options))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineOneField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineOne, 26)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineTwoField(options ...bool) string {
-	return debitDDAdvice.alphaVariableField(debitDDAdvice.Advice.LineTwo, 33, debitDDAdvice.parseFirstOption(options))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineTwoField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineThreeField(options ...bool) string {
-	return debitDDAdvice.alphaVariableField(debitDDAdvice.Advice.LineThree, 33, debitDDAdvice.parseFirstOption(options))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineThreeField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFourField(options ...bool) string {
-	return debitDDAdvice.alphaVariableField(debitDDAdvice.Advice.LineFour, 33, debitDDAdvice.parseFirstOption(options))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFourField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFiveField(options ...bool) string {
-	return debitDDAdvice.alphaVariableField(debitDDAdvice.Advice.LineFive, 33, debitDDAdvice.parseFirstOption(options))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineFiveField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
-func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineSixField(options ...bool) string {
-	return debitDDAdvice.alphaVariableField(debitDDAdvice.Advice.LineSix, 33, debitDDAdvice.parseFirstOption(options))
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) LineSixField() string {
+	return debitDDAdvice.alphaField(debitDDAdvice.Advice.LineSix, 33)
+}
+
+// FormatLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineOne(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineOne, 26, options)
+}
+
+// FormatLineTwo returns Advice.LineTwo formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineTwo(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineTwo, 33, options)
+}
+
+// FormatLineThree returns Advice.LineThree formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineThree(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineThree, 33, options)
+}
+
+// FormatLineFour returns Advice.LineFour formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineFour(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineFour, 33, options)
+}
+
+// FormatLineFive returns Advice.LineFive formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineFive(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineFive, 33, options)
+}
+
+// FormatLineSix returns Advice.LineSix formatted according to the FormatOptions
+func (debitDDAdvice *FIDrawdownDebitAccountAdvice) FormatLineSix(options FormatOptions) string {
+	return debitDDAdvice.formatAlphaField(debitDDAdvice.Advice.LineSix, 33, options)
 }

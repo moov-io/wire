@@ -112,7 +112,7 @@ func TestStringAccountCreditedDrawdownVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringAccountCreditedDrawdownOptions validates string() with options
+// TestStringAccountCreditedDrawdownOptions validates Format() formatted according to the FormatOptions
 func TestStringAccountCreditedDrawdownOptions(t *testing.T) {
 	var line = "{5400}1*"
 	r := NewReader(strings.NewReader(line))
@@ -121,9 +121,8 @@ func TestStringAccountCreditedDrawdownOptions(t *testing.T) {
 	err := r.parseAccountCreditedDrawdown()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.AccountCreditedDrawdown.String()
-	require.Equal(t, str, "{5400}1        ")
-
-	str = r.currentFEDWireMessage.AccountCreditedDrawdown.String(true)
-	require.Equal(t, str, "{5400}1*")
+	acd := r.currentFEDWireMessage.AccountCreditedDrawdown
+	require.Equal(t, acd.String(), "{5400}1        ")
+	require.Equal(t, acd.Format(FormatOptions{VariableLengthFields: true}), "{5400}1*")
+	require.Equal(t, acd.String(), acd.Format(FormatOptions{VariableLengthFields: false}))
 }

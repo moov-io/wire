@@ -127,21 +127,28 @@ func (pn *PaymentNotification) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes PaymentNotification
-func (pn *PaymentNotification) String(options ...bool) string {
+// String returns a fixed-width PaymentNotification record
+func (pn *PaymentNotification) String() string {
+	return pn.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a PaymentNotification record formatted according to the FormatOptions
+func (pn *PaymentNotification) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(2335)
 
 	buf.WriteString(pn.tag)
-	buf.WriteString(pn.PaymentNotificationIndicatorField(options...))
-	buf.WriteString(pn.ContactNotificationElectronicAddressField(options...))
-	buf.WriteString(pn.ContactNameField(options...))
-	buf.WriteString(pn.ContactPhoneNumberField(options...))
-	buf.WriteString(pn.ContactMobileNumberField(options...))
-	buf.WriteString(pn.ContactFaxNumberField(options...))
-	buf.WriteString(pn.EndToEndIdentificationField(options...))
+	buf.WriteString(pn.FormatPaymentNotificationIndicator(options))
+	buf.WriteString(pn.FormatContactNotificationElectronicAddress(options))
+	buf.WriteString(pn.FormatContactName(options))
+	buf.WriteString(pn.FormatContactPhoneNumber(options))
+	buf.WriteString(pn.FormatContactMobileNumber(options))
+	buf.WriteString(pn.FormatContactFaxNumber(options))
+	buf.WriteString(pn.FormatEndToEndIdentification(options))
 
-	if pn.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return pn.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -179,36 +186,36 @@ func (pn *PaymentNotification) Validate() error {
 }
 
 // PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
-func (pn *PaymentNotification) PaymentNotificationIndicatorField(options ...bool) string {
-	return pn.alphaVariableField(pn.PaymentNotificationIndicator, 1, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatPaymentNotificationIndicator(options FormatOptions) string {
+	return pn.formatAlphaField(pn.PaymentNotificationIndicator, 1, options)
 }
 
 // ContactNotificationElectronicAddressField gets a string of ContactNotificationElectronicAddress field
-func (pn *PaymentNotification) ContactNotificationElectronicAddressField(options ...bool) string {
-	return pn.alphaVariableField(pn.ContactNotificationElectronicAddress, 2048, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatContactNotificationElectronicAddress(options FormatOptions) string {
+	return pn.formatAlphaField(pn.ContactNotificationElectronicAddress, 2048, options)
 }
 
 // ContactNameField gets a string of ContactName field
-func (pn *PaymentNotification) ContactNameField(options ...bool) string {
-	return pn.alphaVariableField(pn.ContactName, 140, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatContactName(options FormatOptions) string {
+	return pn.formatAlphaField(pn.ContactName, 140, options)
 }
 
 // ContactPhoneNumberField gets a string of ContactPhoneNumberField field
-func (pn *PaymentNotification) ContactPhoneNumberField(options ...bool) string {
-	return pn.alphaVariableField(pn.ContactPhoneNumber, 35, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatContactPhoneNumber(options FormatOptions) string {
+	return pn.formatAlphaField(pn.ContactPhoneNumber, 35, options)
 }
 
 // ContactMobileNumberField gets a string of ContactMobileNumber field
-func (pn *PaymentNotification) ContactMobileNumberField(options ...bool) string {
-	return pn.alphaVariableField(pn.ContactMobileNumber, 35, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatContactMobileNumber(options FormatOptions) string {
+	return pn.formatAlphaField(pn.ContactMobileNumber, 35, options)
 }
 
 // ContactFaxNumberField gets a string of FaxNumber field
-func (pn *PaymentNotification) ContactFaxNumberField(options ...bool) string {
-	return pn.alphaVariableField(pn.ContactFaxNumber, 35, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatContactFaxNumber(options FormatOptions) string {
+	return pn.formatAlphaField(pn.ContactFaxNumber, 35, options)
 }
 
 // EndToEndIdentificationField gets a string of EndToEndIdentification field
-func (pn *PaymentNotification) EndToEndIdentificationField(options ...bool) string {
-	return pn.alphaVariableField(pn.EndToEndIdentification, 35, pn.parseFirstOption(options))
+func (pn *PaymentNotification) FormatEndToEndIdentification(options FormatOptions) string {
+	return pn.formatAlphaField(pn.EndToEndIdentification, 35, options)
 }

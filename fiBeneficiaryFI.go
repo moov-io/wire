@@ -106,20 +106,27 @@ func (fibfi *FIBeneficiaryFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIBeneficiaryFI
-func (fibfi *FIBeneficiaryFI) String(options ...bool) string {
+// String returns a fixed-width FIBeneficiaryFI record
+func (fibfi *FIBeneficiaryFI) String() string {
+	return fibfi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIBeneficiaryFI record formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(201)
 
 	buf.WriteString(fibfi.tag)
-	buf.WriteString(fibfi.LineOneField(options...))
-	buf.WriteString(fibfi.LineTwoField(options...))
-	buf.WriteString(fibfi.LineThreeField(options...))
-	buf.WriteString(fibfi.LineFourField(options...))
-	buf.WriteString(fibfi.LineFiveField(options...))
-	buf.WriteString(fibfi.LineSixField(options...))
+	buf.WriteString(fibfi.FormatLineOne(options))
+	buf.WriteString(fibfi.FormatLineTwo(options))
+	buf.WriteString(fibfi.FormatLineThree(options))
+	buf.WriteString(fibfi.FormatLineFour(options))
+	buf.WriteString(fibfi.FormatLineFive(options))
+	buf.WriteString(fibfi.FormatLineSix(options))
 
-	if fibfi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return fibfi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -154,31 +161,61 @@ func (fibfi *FIBeneficiaryFI) Validate() error {
 }
 
 // LineOneField gets a string of the LineOne field
-func (fibfi *FIBeneficiaryFI) LineOneField(options ...bool) string {
-	return fibfi.alphaVariableField(fibfi.FIToFI.LineOne, 30, fibfi.parseFirstOption(options))
+func (fibfi *FIBeneficiaryFI) LineOneField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineOne, 30)
 }
 
 // LineTwoField gets a string of the LineTwo field
-func (fibfi *FIBeneficiaryFI) LineTwoField(options ...bool) string {
-	return fibfi.alphaVariableField(fibfi.FIToFI.LineTwo, 33, fibfi.parseFirstOption(options))
+func (fibfi *FIBeneficiaryFI) LineTwoField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineTwo, 33)
 }
 
 // LineThreeField gets a string of the LineThree field
-func (fibfi *FIBeneficiaryFI) LineThreeField(options ...bool) string {
-	return fibfi.alphaVariableField(fibfi.FIToFI.LineThree, 33, fibfi.parseFirstOption(options))
+func (fibfi *FIBeneficiaryFI) LineThreeField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineThree, 33)
 }
 
 // LineFourField gets a string of the LineFour field
-func (fibfi *FIBeneficiaryFI) LineFourField(options ...bool) string {
-	return fibfi.alphaVariableField(fibfi.FIToFI.LineFour, 33, fibfi.parseFirstOption(options))
+func (fibfi *FIBeneficiaryFI) LineFourField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineFour, 33)
 }
 
 // LineFiveField gets a string of the LineFive field
-func (fibfi *FIBeneficiaryFI) LineFiveField(options ...bool) string {
-	return fibfi.alphaVariableField(fibfi.FIToFI.LineFive, 33, fibfi.parseFirstOption(options))
+func (fibfi *FIBeneficiaryFI) LineFiveField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineFive, 33)
 }
 
 // LineSixField gets a string of the LineSix field
-func (fibfi *FIBeneficiaryFI) LineSixField(options ...bool) string {
-	return fibfi.alphaVariableField(fibfi.FIToFI.LineSix, 33, fibfi.parseFirstOption(options))
+func (fibfi *FIBeneficiaryFI) LineSixField() string {
+	return fibfi.alphaField(fibfi.FIToFI.LineSix, 33)
+}
+
+// FormatLineOne returns FIToFI.LineOne formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineOne(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineOne, 30, options)
+}
+
+// FormatLineTwo returns FIToFI.LineTwo formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineTwo(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineTwo, 33, options)
+}
+
+// FormatLineThree FIToFI.LineThree LineOne formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineThree(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineThree, 33, options)
+}
+
+// FormatLineFour returns FIToFI.LineFour formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineFour(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineFour, 33, options)
+}
+
+// FormatLineFive returns FIToFI.LineFive formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineFive(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineFive, 33, options)
+}
+
+// FormatLineSix returns FIToFI.LineSix formatted according to the FormatOptions
+func (fibfi *FIBeneficiaryFI) FormatLineSix(options FormatOptions) string {
+	return fibfi.formatAlphaField(fibfi.FIToFI.LineSix, 33, options)
 }

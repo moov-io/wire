@@ -75,14 +75,21 @@ func (pm *FIPaymentMethodToBeneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes FIPaymentMethodToBeneficiary
-func (pm *FIPaymentMethodToBeneficiary) String(options ...bool) string {
+// String returns a fixed-width FIPaymentMethodToBeneficiary record
+func (pm *FIPaymentMethodToBeneficiary) String() string {
+	return pm.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a FIPaymentMethodToBeneficiary record formatted according to the FormatOptions
+func (pm *FIPaymentMethodToBeneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(41)
 
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())
-	buf.WriteString(pm.AdditionalInformationField(options...))
+	buf.WriteString(pm.FormatAdditionalInformation(options))
 
 	return buf.String()
 }
@@ -117,6 +124,11 @@ func (pm *FIPaymentMethodToBeneficiary) PaymentMethodField() string {
 }
 
 // AdditionalInformationField gets a string of the AdditionalInformation field
-func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField(options ...bool) string {
-	return pm.alphaVariableField(pm.AdditionalInformation, 30, pm.parseFirstOption(options))
+func (pm *FIPaymentMethodToBeneficiary) AdditionalInformationField() string {
+	return pm.alphaField(pm.AdditionalInformation, 30)
+}
+
+// FormatAdditionalInformation returns AdditionalInformation formatted according to the FormatOptions
+func (pm *FIPaymentMethodToBeneficiary) FormatAdditionalInformation(options FormatOptions) string {
+	return pm.formatAlphaField(pm.AdditionalInformation, 30, options)
 }

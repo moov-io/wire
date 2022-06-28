@@ -100,20 +100,27 @@ func (o *Originator) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Originator
-func (o *Originator) String(options ...bool) string {
+// String returns a fixed-width Originator record
+func (o *Originator) String() string {
+	return o.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a Originator record formatted according to the FormatOptions
+func (o *Originator) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
-	buf.WriteString(o.IdentifierField(options...))
-	buf.WriteString(o.NameField(options...))
-	buf.WriteString(o.AddressLineOneField(options...))
-	buf.WriteString(o.AddressLineTwoField(options...))
-	buf.WriteString(o.AddressLineThreeField(options...))
+	buf.WriteString(o.FormatIdentifier(options))
+	buf.WriteString(o.FormatName(options))
+	buf.WriteString(o.FormatAddressLineOne(options))
+	buf.WriteString(o.FormatAddressLineTwo(options))
+	buf.WriteString(o.FormatAddressLineThree(options))
 
-	if o.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return o.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -169,26 +176,51 @@ func (o *Originator) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (o *Originator) IdentifierField(options ...bool) string {
-	return o.alphaVariableField(o.Personal.Identifier, 34, o.parseFirstOption(options))
+func (o *Originator) IdentifierField() string {
+	return o.alphaField(o.Personal.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (o *Originator) NameField(options ...bool) string {
-	return o.alphaVariableField(o.Personal.Name, 35, o.parseFirstOption(options))
+func (o *Originator) NameField() string {
+	return o.alphaField(o.Personal.Name, 35)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (o *Originator) AddressLineOneField(options ...bool) string {
-	return o.alphaVariableField(o.Personal.Address.AddressLineOne, 35, o.parseFirstOption(options))
+func (o *Originator) AddressLineOneField() string {
+	return o.alphaField(o.Personal.Address.AddressLineOne, 35)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (o *Originator) AddressLineTwoField(options ...bool) string {
-	return o.alphaVariableField(o.Personal.Address.AddressLineTwo, 35, o.parseFirstOption(options))
+func (o *Originator) AddressLineTwoField() string {
+	return o.alphaField(o.Personal.Address.AddressLineTwo, 35)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (o *Originator) AddressLineThreeField(options ...bool) string {
-	return o.alphaVariableField(o.Personal.Address.AddressLineThree, 35, o.parseFirstOption(options))
+func (o *Originator) AddressLineThreeField() string {
+	return o.alphaField(o.Personal.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Personal.Identifier formatted according to the FormatOptions
+func (o *Originator) FormatIdentifier(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Identifier, 34, options)
+}
+
+// FormatName returns Personal.Name formatted according to the FormatOptions
+func (o *Originator) FormatName(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Address.AddressLineOne formatted according to the FormatOptions
+func (o *Originator) FormatAddressLineOne(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Address.AddressLineTwo formatted according to the FormatOptions
+func (o *Originator) FormatAddressLineTwo(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Address.AddressLineThree formatted according to the FormatOptions
+func (o *Originator) FormatAddressLineThree(options FormatOptions) string {
+	return o.formatAlphaField(o.Personal.Address.AddressLineThree, 35, options)
 }

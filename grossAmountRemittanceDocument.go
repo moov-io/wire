@@ -78,16 +78,23 @@ func (gard *GrossAmountRemittanceDocument) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes GrossAmountRemittanceDocument
-func (gard *GrossAmountRemittanceDocument) String(options ...bool) string {
+// String returns a fixed-width GrossAmountRemittanceDocument record
+func (gard *GrossAmountRemittanceDocument) String() string {
+	return gard.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a GrossAmountRemittanceDocument record formatted according to the FormatOptions
+func (gard *GrossAmountRemittanceDocument) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(gard.tag)
-	buf.WriteString(gard.CurrencyCodeField(options...))
-	buf.WriteString(gard.AmountField(options...))
+	buf.WriteString(gard.FormatCurrencyCode(options))
+	buf.WriteString(gard.FormatAmount(options))
 
-	if gard.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return gard.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -125,11 +132,21 @@ func (gard *GrossAmountRemittanceDocument) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (gard *GrossAmountRemittanceDocument) CurrencyCodeField(options ...bool) string {
-	return gard.alphaVariableField(gard.RemittanceAmount.CurrencyCode, 3, gard.parseFirstOption(options))
+func (gard *GrossAmountRemittanceDocument) CurrencyCodeField() string {
+	return gard.alphaField(gard.RemittanceAmount.CurrencyCode, 3)
 }
 
 // AmountField gets a string of the Amount field
-func (gard *GrossAmountRemittanceDocument) AmountField(options ...bool) string {
-	return gard.alphaVariableField(gard.RemittanceAmount.Amount, 19, gard.parseFirstOption(options))
+func (gard *GrossAmountRemittanceDocument) AmountField() string {
+	return gard.alphaField(gard.RemittanceAmount.Amount, 19)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (gard *GrossAmountRemittanceDocument) FormatCurrencyCode(options FormatOptions) string {
+	return gard.formatAlphaField(gard.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (gard *GrossAmountRemittanceDocument) FormatAmount(options FormatOptions) string {
+	return gard.formatAlphaField(gard.RemittanceAmount.Amount, 19, options)
 }

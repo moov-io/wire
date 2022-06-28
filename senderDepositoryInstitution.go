@@ -80,14 +80,21 @@ func (sdi *SenderDepositoryInstitution) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderDepositoryInstitution
-func (sdi *SenderDepositoryInstitution) String(options ...bool) string {
+// String returns a fixed-width SenderDepositoryInstitution record
+func (sdi *SenderDepositoryInstitution) String() string {
+	return sdi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderDepositoryInstitution record formatted according to the FormatOptions
+func (sdi *SenderDepositoryInstitution) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(39)
 
 	buf.WriteString(sdi.tag)
-	buf.WriteString(sdi.SenderABANumberField(options...))
-	buf.WriteString(sdi.SenderShortNameField(options...))
+	buf.WriteString(sdi.FormatSenderABANumber(options))
+	buf.WriteString(sdi.FormatSenderShortName(options))
 
 	return buf.String()
 }
@@ -123,11 +130,21 @@ func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
 }
 
 // SenderABANumberField gets a string of the SenderABANumber field
-func (sdi *SenderDepositoryInstitution) SenderABANumberField(options ...bool) string {
-	return sdi.alphaVariableField(sdi.SenderABANumber, 9, sdi.parseFirstOption(options))
+func (sdi *SenderDepositoryInstitution) SenderABANumberField() string {
+	return sdi.alphaField(sdi.SenderABANumber, 9)
 }
 
 // SenderShortNameField gets a string of the SenderShortName field
-func (sdi *SenderDepositoryInstitution) SenderShortNameField(options ...bool) string {
-	return sdi.alphaVariableField(sdi.SenderShortName, 18, sdi.parseFirstOption(options))
+func (sdi *SenderDepositoryInstitution) SenderShortNameField() string {
+	return sdi.alphaField(sdi.SenderShortName, 18)
+}
+
+// FormatSenderABANumber returns SenderABANumber formatted according to the FormatOptions
+func (sdi *SenderDepositoryInstitution) FormatSenderABANumber(options FormatOptions) string {
+	return sdi.formatAlphaField(sdi.SenderABANumber, 9, options)
+}
+
+// FormatSenderShortName returns SenderShortName formatted according to the FormatOptions
+func (sdi *SenderDepositoryInstitution) FormatSenderShortName(options FormatOptions) string {
+	return sdi.formatAlphaField(sdi.SenderShortName, 18, options)
 }

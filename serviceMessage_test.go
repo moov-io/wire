@@ -386,7 +386,7 @@ func TestStringServiceMessageVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringServiceMessageOptions validates string() with options
+// TestStringServiceMessageOptions validates Format() formatted according to the FormatOptions
 func TestStringServiceMessageOptions(t *testing.T) {
 	var line = "{9000}A*"
 	r := NewReader(strings.NewReader(line))
@@ -395,9 +395,8 @@ func TestStringServiceMessageOptions(t *testing.T) {
 	err := r.parseServiceMessage()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.ServiceMessage.String()
-	require.Equal(t, str, "{9000}A                                                                                                                                                                                                                                                                                                                                                                                                                                   ")
-
-	str = r.currentFEDWireMessage.ServiceMessage.String(true)
-	require.Equal(t, str, "{9000}A*")
+	record := r.currentFEDWireMessage.ServiceMessage
+	require.Equal(t, record.String(), "{9000}A                                                                                                                                                                                                                                                                                                                                                                                                                                   ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{9000}A*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

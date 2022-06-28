@@ -118,7 +118,7 @@ func TestStringRemittanceFreeTextVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringRemittanceFreeTextOptions validates string() with options
+// TestStringRemittanceFreeTextOptions validates Format() formatted according to the FormatOptions
 func TestStringRemittanceFreeTextOptions(t *testing.T) {
 	var line = "{8750}"
 	r := NewReader(strings.NewReader(line))
@@ -127,9 +127,8 @@ func TestStringRemittanceFreeTextOptions(t *testing.T) {
 	err := r.parseRemittanceFreeText()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.RemittanceFreeText.String()
-	require.Equal(t, str, "{8750}                                                                                                                                                                                                                                                                                                                                                                                                                                    ")
-
-	str = r.currentFEDWireMessage.RemittanceFreeText.String(true)
-	require.Equal(t, str, "{8750}*")
+	record := r.currentFEDWireMessage.RemittanceFreeText
+	require.Equal(t, record.String(), "{8750}                                                                                                                                                                                                                                                                                                                                                                                                                                    ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8750}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

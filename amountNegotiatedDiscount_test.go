@@ -132,7 +132,7 @@ func TestStringAmountNegotiatedDiscountVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringAmountNegotiatedDiscountOptions validates string() with options
+// TestStringAmountNegotiatedDiscountOptions validates Format() formatted according to the FormatOptions
 func TestStringAmountNegotiatedDiscountOptions(t *testing.T) {
 	var line = "{8550}USD1234.56*"
 	r := NewReader(strings.NewReader(line))
@@ -141,9 +141,8 @@ func TestStringAmountNegotiatedDiscountOptions(t *testing.T) {
 	err := r.parseAmountNegotiatedDiscount()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.AmountNegotiatedDiscount.String()
-	require.Equal(t, str, "{8550}USD1234.56            ")
-
-	str = r.currentFEDWireMessage.AmountNegotiatedDiscount.String(true)
-	require.Equal(t, str, "{8550}USD1234.56*")
+	and := r.currentFEDWireMessage.AmountNegotiatedDiscount
+	require.Equal(t, and.String(), "{8550}USD1234.56            ")
+	require.Equal(t, and.Format(FormatOptions{VariableLengthFields: true}), "{8550}USD1234.56*")
+	require.Equal(t, and.String(), and.Format(FormatOptions{VariableLengthFields: false}))
 }

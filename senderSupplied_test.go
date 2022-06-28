@@ -144,7 +144,7 @@ func TestStringSenderSuppliedVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringSenderSuppliedOptions validates string() with options
+// TestStringSenderSuppliedOptions validates Format() formatted according to the FormatOptions
 func TestStringSenderSuppliedOptions(t *testing.T) {
 	var line = "{1500}301*T"
 	r := NewReader(strings.NewReader(line))
@@ -153,9 +153,8 @@ func TestStringSenderSuppliedOptions(t *testing.T) {
 	err := r.parseSenderSupplied()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.SenderSupplied.String()
-	require.Equal(t, str, "{1500}301       T ")
-
-	str = r.currentFEDWireMessage.SenderSupplied.String(true)
-	require.Equal(t, str, "{1500}301*T*")
+	record := r.currentFEDWireMessage.SenderSupplied
+	require.Equal(t, record.String(), "{1500}301       T ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1500}301*T*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

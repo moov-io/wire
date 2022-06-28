@@ -100,20 +100,27 @@ func (ben *Beneficiary) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Beneficiary
-func (ben *Beneficiary) String(options ...bool) string {
+// String returns a fixed-width Beneficiary record
+func (ben *Beneficiary) String() string {
+	return ben.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a Beneficiary record formatted according to the FormatOptions
+func (ben *Beneficiary) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(ben.tag)
 	buf.WriteString(ben.IdentificationCodeField())
-	buf.WriteString(ben.IdentifierField(options...))
-	buf.WriteString(ben.NameField(options...))
-	buf.WriteString(ben.AddressLineOneField(options...))
-	buf.WriteString(ben.AddressLineTwoField(options...))
-	buf.WriteString(ben.AddressLineThreeField(options...))
+	buf.WriteString(ben.FormatIdentifier(options))
+	buf.WriteString(ben.FormatName(options))
+	buf.WriteString(ben.FormatAddressLineOne(options))
+	buf.WriteString(ben.FormatAddressLineTwo(options))
+	buf.WriteString(ben.FormatAddressLineThree(options))
 
-	if ben.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return ben.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -170,26 +177,51 @@ func (ben *Beneficiary) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (ben *Beneficiary) IdentifierField(options ...bool) string {
-	return ben.alphaVariableField(ben.Personal.Identifier, 34, ben.parseFirstOption(options))
+func (ben *Beneficiary) IdentifierField() string {
+	return ben.alphaField(ben.Personal.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (ben *Beneficiary) NameField(options ...bool) string {
-	return ben.alphaVariableField(ben.Personal.Name, 35, ben.parseFirstOption(options))
+func (ben *Beneficiary) NameField() string {
+	return ben.alphaField(ben.Personal.Name, 35)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (ben *Beneficiary) AddressLineOneField(options ...bool) string {
-	return ben.alphaVariableField(ben.Personal.Address.AddressLineOne, 35, ben.parseFirstOption(options))
+func (ben *Beneficiary) AddressLineOneField() string {
+	return ben.alphaField(ben.Personal.Address.AddressLineOne, 35)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (ben *Beneficiary) AddressLineTwoField(options ...bool) string {
-	return ben.alphaVariableField(ben.Personal.Address.AddressLineTwo, 35, ben.parseFirstOption(options))
+func (ben *Beneficiary) AddressLineTwoField() string {
+	return ben.alphaField(ben.Personal.Address.AddressLineTwo, 35)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (ben *Beneficiary) AddressLineThreeField(options ...bool) string {
-	return ben.alphaVariableField(ben.Personal.Address.AddressLineThree, 35, ben.parseFirstOption(options))
+func (ben *Beneficiary) AddressLineThreeField() string {
+	return ben.alphaField(ben.Personal.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Personal.Identifier formatted according to the FormatOptions
+func (ben *Beneficiary) FormatIdentifier(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Identifier, 34, options)
+}
+
+// FormatName returns Personal.Name formatted according to the FormatOptions
+func (ben *Beneficiary) FormatName(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Personal.Address.AddressLineOne formatted according to the FormatOptions
+func (ben *Beneficiary) FormatAddressLineOne(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Personal.Address.AddressLineTwo formatted according to the FormatOptions
+func (ben *Beneficiary) FormatAddressLineTwo(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Personal.Address.AddressLineThree formatted according to the FormatOptions
+func (ben *Beneficiary) FormatAddressLineThree(options FormatOptions) string {
+	return ben.formatAlphaField(ben.Personal.Address.AddressLineThree, 35, options)
 }

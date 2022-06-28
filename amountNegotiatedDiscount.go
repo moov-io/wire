@@ -78,14 +78,21 @@ func (nd *AmountNegotiatedDiscount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes AmountNegotiatedDiscount
-func (nd *AmountNegotiatedDiscount) String(options ...bool) string {
+// String returns a fixed-width AmountNegotiatedDiscount record
+func (nd *AmountNegotiatedDiscount) String() string {
+	return nd.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an AmountNegotiatedDiscount record formatted according to the FormatOptions
+func (nd *AmountNegotiatedDiscount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(nd.tag)
-	buf.WriteString(nd.CurrencyCodeField(options...))
-	buf.WriteString(nd.AmountField(options...))
+	buf.WriteString(nd.FormatCurrencyCode(options))
+	buf.WriteString(nd.FormatAmount(options))
 
 	return buf.String()
 }
@@ -121,11 +128,21 @@ func (nd *AmountNegotiatedDiscount) fieldInclusion() error {
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (nd *AmountNegotiatedDiscount) CurrencyCodeField(options ...bool) string {
-	return nd.alphaVariableField(nd.RemittanceAmount.CurrencyCode, 3, nd.parseFirstOption(options))
+func (nd *AmountNegotiatedDiscount) CurrencyCodeField() string {
+	return nd.alphaField(nd.RemittanceAmount.CurrencyCode, 3)
 }
 
 // AmountField gets a string of the Amount field
-func (nd *AmountNegotiatedDiscount) AmountField(options ...bool) string {
-	return nd.alphaVariableField(nd.RemittanceAmount.Amount, 19, nd.parseFirstOption(options))
+func (nd *AmountNegotiatedDiscount) AmountField() string {
+	return nd.alphaField(nd.RemittanceAmount.Amount, 19)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (nd *AmountNegotiatedDiscount) FormatCurrencyCode(options FormatOptions) string {
+	return nd.formatAlphaField(nd.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (nd *AmountNegotiatedDiscount) FormatAmount(options FormatOptions) string {
+	return nd.formatAlphaField(nd.RemittanceAmount.Amount, 19, options)
 }

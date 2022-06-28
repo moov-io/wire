@@ -130,7 +130,7 @@ func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringSenderDepositoryInstitutionOptions validates string() with options
+// TestStringSenderDepositoryInstitutionOptions validates Format() formatted according to the FormatOptions
 func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
 	var line = "{3100}1*A*"
 	r := NewReader(strings.NewReader(line))
@@ -139,9 +139,8 @@ func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
 	err := r.parseSenderDepositoryInstitution()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.SenderDepositoryInstitution.String()
-	require.Equal(t, str, "{3100}1        A                 ")
-
-	str = r.currentFEDWireMessage.SenderDepositoryInstitution.String(true)
-	require.Equal(t, str, "{3100}1*A*")
+	record := r.currentFEDWireMessage.SenderDepositoryInstitution
+	require.Equal(t, record.String(), "{3100}1        A                 ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1*A*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

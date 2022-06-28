@@ -71,13 +71,20 @@ func (pmi *PreviousMessageIdentifier) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes PreviousMessageIdentifier
-func (pmi *PreviousMessageIdentifier) String(options ...bool) string {
+// String returns a fixed-width PreviousMessageIdentifier record
+func (pmi *PreviousMessageIdentifier) String() string {
+	return pmi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a PreviousMessageIdentifier record formatted according to the FormatOptions
+func (pmi *PreviousMessageIdentifier) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(pmi.tag)
-	buf.WriteString(pmi.PreviousMessageIdentifierField(options...))
+	buf.WriteString(pmi.FormatPreviousMessageIdentifier(options))
 
 	return buf.String()
 }
@@ -95,6 +102,11 @@ func (pmi *PreviousMessageIdentifier) Validate() error {
 }
 
 // PreviousMessageIdentifierField gets a string of PreviousMessageIdentifier field
-func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField(options ...bool) string {
-	return pmi.alphaVariableField(pmi.PreviousMessageIdentifier, 22, pmi.parseFirstOption(options))
+func (pmi *PreviousMessageIdentifier) PreviousMessageIdentifierField() string {
+	return pmi.alphaField(pmi.PreviousMessageIdentifier, 22)
+}
+
+// FormatPreviousMessageIdentifier returns PreviousMessageIdentifier formatted according to the FormatOptions
+func (pmi *PreviousMessageIdentifier) FormatPreviousMessageIdentifier(options FormatOptions) string {
+	return pmi.formatAlphaField(pmi.PreviousMessageIdentifier, 22, options)
 }

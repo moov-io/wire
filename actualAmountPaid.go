@@ -78,14 +78,21 @@ func (aap *ActualAmountPaid) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ActualAmountPaid
-func (aap *ActualAmountPaid) String(options ...bool) string {
+// String returns a fixed-width ActualAmountPaid record
+func (aap *ActualAmountPaid) String() string {
+	return aap.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an ActualAmountPaid record formatted according to the FormatOptions
+func (aap *ActualAmountPaid) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(28)
 
 	buf.WriteString(aap.tag)
-	buf.WriteString(aap.CurrencyCodeField(options...))
-	buf.WriteString(aap.AmountField(options...))
+	buf.WriteString(aap.FormatCurrencyCode(options))
+	buf.WriteString(aap.FormatAmount(options))
 
 	return buf.String()
 }
@@ -122,12 +129,22 @@ func (aap *ActualAmountPaid) fieldInclusion() error {
 	return nil
 }
 
-// CurrencyCodeField gets a string of the CurrencyCode field
-func (aap *ActualAmountPaid) CurrencyCodeField(options ...bool) string {
-	return aap.alphaVariableField(aap.RemittanceAmount.CurrencyCode, 3, aap.parseFirstOption(options))
+// CurrencyCodeField gets a string of the RemittanceAmount.CurrencyCode field
+func (aap *ActualAmountPaid) CurrencyCodeField() string {
+	return aap.alphaField(aap.RemittanceAmount.CurrencyCode, 3)
 }
 
-// AmountField gets a string of the Amount field
-func (aap *ActualAmountPaid) AmountField(options ...bool) string {
-	return aap.alphaVariableField(aap.RemittanceAmount.Amount, 19, aap.parseFirstOption(options))
+// AmountField gets a string of the RemittanceAmount.Amount field
+func (aap *ActualAmountPaid) AmountField() string {
+	return aap.alphaField(aap.RemittanceAmount.Amount, 19)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (aap *ActualAmountPaid) FormatCurrencyCode(options FormatOptions) string {
+	return aap.formatAlphaField(aap.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (aap *ActualAmountPaid) FormatAmount(options FormatOptions) string {
+	return aap.formatAlphaField(aap.RemittanceAmount.Amount, 19, options)
 }

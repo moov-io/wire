@@ -71,13 +71,20 @@ func (sr *SenderReference) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderReference
-func (sr *SenderReference) String(options ...bool) string {
+// String returns a fixed-width SenderReference record
+func (sr *SenderReference) String() string {
+	return sr.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderReference record formatted according to the FormatOptions
+func (sr *SenderReference) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(22)
 
 	buf.WriteString(sr.tag)
-	buf.WriteString(sr.SenderReferenceField(options...))
+	buf.WriteString(sr.FormatSenderReference(options))
 
 	return buf.String()
 }
@@ -94,7 +101,7 @@ func (sr *SenderReference) Validate() error {
 	return nil
 }
 
-// SenderReferenceField gets a string of SenderReference field
-func (sr *SenderReference) SenderReferenceField(options ...bool) string {
-	return sr.alphaVariableField(sr.SenderReference, 16, sr.parseFirstOption(options))
+// FormatSenderReference returns SenderReference formatted according to the FormatOptions
+func (sr *SenderReference) FormatSenderReference(options FormatOptions) string {
+	return sr.formatAlphaField(sr.SenderReference, 16, options)
 }

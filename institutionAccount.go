@@ -106,20 +106,27 @@ func (iAccount *InstitutionAccount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes InstitutionAccount
-func (iAccount *InstitutionAccount) String(options ...bool) string {
+// String returns a fixed-width InstitutionAccount record
+func (iAccount *InstitutionAccount) String() string {
+	return iAccount.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a InstitutionAccount record formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(186)
 
 	buf.WriteString(iAccount.tag)
-	buf.WriteString(iAccount.SwiftFieldTagField(options...))
-	buf.WriteString(iAccount.SwiftLineOneField(options...))
-	buf.WriteString(iAccount.SwiftLineTwoField(options...))
-	buf.WriteString(iAccount.SwiftLineThreeField(options...))
-	buf.WriteString(iAccount.SwiftLineFourField(options...))
-	buf.WriteString(iAccount.SwiftLineFiveField(options...))
+	buf.WriteString(iAccount.FormatSwiftFieldTag(options))
+	buf.WriteString(iAccount.FormatSwiftLineOne(options))
+	buf.WriteString(iAccount.FormatSwiftLineTwo(options))
+	buf.WriteString(iAccount.FormatSwiftLineThree(options))
+	buf.WriteString(iAccount.FormatSwiftLineFour(options))
+	buf.WriteString(iAccount.FormatSwiftLineFive(options))
 
-	if iAccount.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return iAccount.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -166,31 +173,61 @@ func (iAccount *InstitutionAccount) fieldInclusion() error {
 }
 
 // SwiftFieldTagField gets a string of the SwiftFieldTag field
-func (iAccount *InstitutionAccount) SwiftFieldTagField(options ...bool) string {
-	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftFieldTag, 5, iAccount.parseFirstOption(options))
+func (iAccount *InstitutionAccount) SwiftFieldTagField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftFieldTag, 5)
 }
 
 // SwiftLineOneField gets a string of the SwiftLineOne field
-func (iAccount *InstitutionAccount) SwiftLineOneField(options ...bool) string {
-	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineOne, 35, iAccount.parseFirstOption(options))
+func (iAccount *InstitutionAccount) SwiftLineOneField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineOne, 35)
 }
 
 // SwiftLineTwoField gets a string of the SwiftLineTwo field
-func (iAccount *InstitutionAccount) SwiftLineTwoField(options ...bool) string {
-	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineTwo, 35, iAccount.parseFirstOption(options))
+func (iAccount *InstitutionAccount) SwiftLineTwoField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineTwo, 35)
 }
 
 // SwiftLineThreeField gets a string of the SwiftLineThree field
-func (iAccount *InstitutionAccount) SwiftLineThreeField(options ...bool) string {
-	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineThree, 35, iAccount.parseFirstOption(options))
+func (iAccount *InstitutionAccount) SwiftLineThreeField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineThree, 35)
 }
 
 // SwiftLineFourField gets a string of the SwiftLineFour field
-func (iAccount *InstitutionAccount) SwiftLineFourField(options ...bool) string {
-	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineFour, 35, iAccount.parseFirstOption(options))
+func (iAccount *InstitutionAccount) SwiftLineFourField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFour, 35)
 }
 
 // SwiftLineFiveField gets a string of the SwiftLineFive field
-func (iAccount *InstitutionAccount) SwiftLineFiveField(options ...bool) string {
-	return iAccount.alphaVariableField(iAccount.CoverPayment.SwiftLineFive, 35, iAccount.parseFirstOption(options))
+func (iAccount *InstitutionAccount) SwiftLineFiveField() string {
+	return iAccount.alphaField(iAccount.CoverPayment.SwiftLineFive, 35)
+}
+
+// FormatSwiftFieldTag returns CoverPayment.SwiftFieldTag formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) FormatSwiftFieldTag(options FormatOptions) string {
+	return iAccount.formatAlphaField(iAccount.CoverPayment.SwiftFieldTag, 5, options)
+}
+
+// FormatSwiftLineOne returns CoverPayment.SwiftLineOne formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) FormatSwiftLineOne(options FormatOptions) string {
+	return iAccount.formatAlphaField(iAccount.CoverPayment.SwiftLineOne, 35, options)
+}
+
+// FormatSwiftLineTwo returns CoverPayment.SwiftLineTwo formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) FormatSwiftLineTwo(options FormatOptions) string {
+	return iAccount.formatAlphaField(iAccount.CoverPayment.SwiftLineTwo, 35, options)
+}
+
+// FormatSwiftLineThree returns CoverPayment.SwiftLineThree formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) FormatSwiftLineThree(options FormatOptions) string {
+	return iAccount.formatAlphaField(iAccount.CoverPayment.SwiftLineThree, 35, options)
+}
+
+// FormatSwiftLineFour returns CoverPayment.SwiftLineFour formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) FormatSwiftLineFour(options FormatOptions) string {
+	return iAccount.formatAlphaField(iAccount.CoverPayment.SwiftLineFour, 35, options)
+}
+
+// FormatSwiftLineFive returns CoverPayment.SwiftLineFive formatted according to the FormatOptions
+func (iAccount *InstitutionAccount) FormatSwiftLineFive(options FormatOptions) string {
+	return iAccount.formatAlphaField(iAccount.CoverPayment.SwiftLineFive, 35, options)
 }

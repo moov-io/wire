@@ -161,7 +161,7 @@ func TestStringIntermediaryInstitutionVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringIntermediaryInstitutionOptions validates string() with options
+// TestStringIntermediaryInstitutionOptions validates Format() formatted according to the FormatOptions
 func TestStringIntermediaryInstitutionOptions(t *testing.T) {
 	var line = "{7056}*"
 	r := NewReader(strings.NewReader(line))
@@ -170,9 +170,8 @@ func TestStringIntermediaryInstitutionOptions(t *testing.T) {
 	err := r.parseIntermediaryInstitution()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.IntermediaryInstitution.String()
-	require.Equal(t, str, "{7056}                                                                                                                                                                                    ")
-
-	str = r.currentFEDWireMessage.IntermediaryInstitution.String(true)
-	require.Equal(t, str, "{7056}*")
+	record := r.currentFEDWireMessage.IntermediaryInstitution
+	require.Equal(t, record.String(), "{7056}                                                                                                                                                                                    ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7056}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

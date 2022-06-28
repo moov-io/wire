@@ -105,19 +105,26 @@ func (adj *Adjustment) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Adjustment
-func (adj *Adjustment) String(options ...bool) string {
+// String returns a fixed-width Adjustment record
+func (adj *Adjustment) String() string {
+	return adj.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns an Adjustment record formatted according to the FormatOptions
+func (adj *Adjustment) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(168)
 
 	buf.WriteString(adj.tag)
-	buf.WriteString(adj.AdjustmentReasonCodeField(options...))
-	buf.WriteString(adj.CreditDebitIndicatorField(options...))
-	buf.WriteString(adj.CurrencyCodeField(options...))
-	buf.WriteString(adj.AmountField(options...))
-	buf.WriteString(adj.AdditionalInfoField(options...))
+	buf.WriteString(adj.FormatAdjustmentReasonCode(options))
+	buf.WriteString(adj.FormatCreditDebitIndicator(options))
+	buf.WriteString(adj.FormatCurrencyCode(options))
+	buf.WriteString(adj.FormatAmount(options))
+	buf.WriteString(adj.FormatAdditionalInfo(options))
 
-	if adj.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return adj.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -168,26 +175,51 @@ func (adj *Adjustment) fieldInclusion() error {
 }
 
 // AdjustmentReasonCodeField gets a string of the AdjustmentReasonCode field
-func (adj *Adjustment) AdjustmentReasonCodeField(options ...bool) string {
-	return adj.alphaVariableField(adj.AdjustmentReasonCode, 2, adj.parseFirstOption(options))
+func (adj *Adjustment) AdjustmentReasonCodeField() string {
+	return adj.alphaField(adj.AdjustmentReasonCode, 2)
 }
 
 // CreditDebitIndicatorField gets a string of the CreditDebitIndicator field
-func (adj *Adjustment) CreditDebitIndicatorField(options ...bool) string {
-	return adj.alphaVariableField(adj.CreditDebitIndicator, 4, adj.parseFirstOption(options))
+func (adj *Adjustment) CreditDebitIndicatorField() string {
+	return adj.alphaField(adj.CreditDebitIndicator, 4)
 }
 
 // CurrencyCodeField gets a string of the CurrencyCode field
-func (adj *Adjustment) CurrencyCodeField(options ...bool) string {
-	return adj.alphaVariableField(adj.RemittanceAmount.CurrencyCode, 3, adj.parseFirstOption(options))
+func (adj *Adjustment) CurrencyCodeField() string {
+	return adj.alphaField(adj.RemittanceAmount.CurrencyCode, 3)
 }
 
 // AmountField gets a string of the Amount field
-func (adj *Adjustment) AmountField(options ...bool) string {
-	return adj.alphaVariableField(adj.RemittanceAmount.Amount, 19, adj.parseFirstOption(options))
+func (adj *Adjustment) AmountField() string {
+	return adj.alphaField(adj.RemittanceAmount.Amount, 19)
 }
 
 // AdditionalInfoField gets a string of the AdditionalInfo field
-func (adj *Adjustment) AdditionalInfoField(options ...bool) string {
-	return adj.alphaVariableField(adj.AdditionalInfo, 140, adj.parseFirstOption(options))
+func (adj *Adjustment) AdditionalInfoField() string {
+	return adj.alphaField(adj.AdditionalInfo, 140)
+}
+
+// FormatAdjustmentReasonCode returns AdjustmentReasonCode formatted according to the FormatOptions
+func (adj *Adjustment) FormatAdjustmentReasonCode(options FormatOptions) string {
+	return adj.formatAlphaField(adj.AdjustmentReasonCode, 2, options)
+}
+
+// FormatCreditDebitIndicator returns CreditDebitIndicator formatted according to the FormatOptions
+func (adj *Adjustment) FormatCreditDebitIndicator(options FormatOptions) string {
+	return adj.formatAlphaField(adj.CreditDebitIndicator, 4, options)
+}
+
+// FormatCurrencyCode returns RemittanceAmount.CurrencyCode formatted according to the FormatOptions
+func (adj *Adjustment) FormatCurrencyCode(options FormatOptions) string {
+	return adj.formatAlphaField(adj.RemittanceAmount.CurrencyCode, 3, options)
+}
+
+// FormatAmount returns RemittanceAmount.Amount formatted according to the FormatOptions
+func (adj *Adjustment) FormatAmount(options FormatOptions) string {
+	return adj.formatAlphaField(adj.RemittanceAmount.Amount, 19, options)
+}
+
+// FormatAdditionalInfo returns AdditionalInfo formatted according to the FormatOptions
+func (adj *Adjustment) FormatAdditionalInfo(options FormatOptions) string {
+	return adj.formatAlphaField(adj.AdditionalInfo, 140, options)
 }

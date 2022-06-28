@@ -154,7 +154,7 @@ func TestStringFIReceiverFIVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringFIReceiverFIOptions validates string() with options
+// TestStringFIReceiverFIOptions validates Format() formatted according to the FormatOptions
 func TestStringFIReceiverFIOptions(t *testing.T) {
 	var line = "{6100}*"
 	r := NewReader(strings.NewReader(line))
@@ -163,9 +163,9 @@ func TestStringFIReceiverFIOptions(t *testing.T) {
 	err := r.parseFIReceiverFI()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.FIReceiverFI.String()
-	require.Equal(t, str, "{6100}                                                                                                                                                                                                   ")
+	record := r.currentFEDWireMessage.FIReceiverFI
+	require.Equal(t, record.String(), "{6100}                                                                                                                                                                                                   ")
 
-	str = r.currentFEDWireMessage.FIReceiverFI.String(true)
-	require.Equal(t, str, "{6100}*")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6100}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -58,7 +58,7 @@ func (a *Amount) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes Amount
+// String returns a fixed-width Amount record
 func (a *Amount) String() string {
 	var buf strings.Builder
 	buf.Grow(18)

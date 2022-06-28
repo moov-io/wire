@@ -129,7 +129,7 @@ func TestStringOriginatorToBeneficiaryVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringOriginatorToBeneficiaryOptions validates string() with options
+// TestStringOriginatorToBeneficiaryOptions validates Format() formatted according to the FormatOptions
 func TestStringOriginatorToBeneficiaryOptions(t *testing.T) {
 	var line = "{6000}"
 	r := NewReader(strings.NewReader(line))
@@ -138,9 +138,8 @@ func TestStringOriginatorToBeneficiaryOptions(t *testing.T) {
 	err := r.parseOriginatorToBeneficiary()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.OriginatorToBeneficiary.String()
-	require.Equal(t, str, "{6000}                                                                                                                                            ")
-
-	str = r.currentFEDWireMessage.OriginatorToBeneficiary.String(true)
-	require.Equal(t, str, "{6000}*")
+	record := r.currentFEDWireMessage.OriginatorToBeneficiary
+	require.Equal(t, record.String(), "{6000}                                                                                                                                            ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6000}*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -140,7 +140,7 @@ func TestStringActualAmountPaidVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringActualAmountPaidOptions validates string() with options
+// TestStringActualAmountPaidOptions validates Format() formatted according to the FormatOptions
 func TestStringActualAmountPaidOptions(t *testing.T) {
 	var line = "{8450}USD1234.56*"
 	r := NewReader(strings.NewReader(line))
@@ -149,9 +149,8 @@ func TestStringActualAmountPaidOptions(t *testing.T) {
 	err := r.parseActualAmountPaid()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.ActualAmountPaid.String()
-	require.Equal(t, str, "{8450}USD1234.56            ")
-
-	str = r.currentFEDWireMessage.ActualAmountPaid.String(true)
-	require.Equal(t, str, "{8450}USD1234.56*")
+	aap := r.currentFEDWireMessage.ActualAmountPaid
+	require.Equal(t, aap.String(), "{8450}USD1234.56            ")
+	require.Equal(t, aap.Format(FormatOptions{VariableLengthFields: true}), "{8450}USD1234.56*")
+	require.Equal(t, aap.String(), aap.Format(FormatOptions{VariableLengthFields: false}))
 }

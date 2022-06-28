@@ -61,11 +61,46 @@ func TestConverters__parseVariableStringField(t *testing.T) {
 	require.Nil(t, err)
 }
 
-func TestConverters__alphaVariableField(t *testing.T) {
+func TestConverters_alphaVariableField(t *testing.T) {
+	tests := []struct {
+		input          string
+		variableLength bool
+		maxLength      uint
+		want           string
+	}{
+		{
+			input:          "{0000}1234  ",
+			variableLength: false,
+			maxLength:      10,
+			want:           "{0000}1234",
+		},
+		{
+			input:          "{0000}1234  ",
+			variableLength: true,
+			maxLength:      10,
+			want:           "{0000}1234",
+		},
+		{
+			input:          "{0000}12",
+			variableLength: false,
+			maxLength:      10,
+			want:           "{0000}12  ",
+		},
+		{
+			input:          "{0000}12",
+			variableLength: true,
+			maxLength:      10,
+			want:           "{0000}12*",
+		},
+	}
 	c := &converters{}
 
-	require.Equal(t, "{0000}1234", c.alphaVariableField("{0000}1234  ", 10, false))
-	require.Equal(t, "{0000}1234", c.alphaVariableField("{0000}1234  ", 10, true))
-	require.Equal(t, "{0000}12  ", c.alphaVariableField("{0000}12", 10, false))
-	require.Equal(t, "{0000}12*", c.alphaVariableField("{0000}12", 10, true))
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			opts := FormatOptions{
+				VariableLengthFields: tt.variableLength,
+			}
+			require.Equal(t, tt.want, c.formatAlphaField(tt.input, tt.maxLength, opts))
+		})
+	}
 }

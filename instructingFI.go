@@ -100,20 +100,27 @@ func (ifi *InstructingFI) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes InstructingFI
-func (ifi *InstructingFI) String(options ...bool) string {
+// String returns a fixed-width InstructingFI record
+func (ifi *InstructingFI) String() string {
+	return ifi.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a InstructingFI record formatted according to the FormatOptions
+func (ifi *InstructingFI) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(181)
 
 	buf.WriteString(ifi.tag)
 	buf.WriteString(ifi.IdentificationCodeField())
-	buf.WriteString(ifi.IdentifierField(options...))
-	buf.WriteString(ifi.NameField(options...))
-	buf.WriteString(ifi.AddressLineOneField(options...))
-	buf.WriteString(ifi.AddressLineTwoField(options...))
-	buf.WriteString(ifi.AddressLineThreeField(options...))
+	buf.WriteString(ifi.FormatIdentifier(options))
+	buf.WriteString(ifi.FormatName(options))
+	buf.WriteString(ifi.FormatAddressLineOne(options))
+	buf.WriteString(ifi.FormatAddressLineTwo(options))
+	buf.WriteString(ifi.FormatAddressLineThree(options))
 
-	if ifi.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return ifi.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -176,26 +183,51 @@ func (ifi *InstructingFI) IdentificationCodeField() string {
 }
 
 // IdentifierField gets a string of the Identifier field
-func (ifi *InstructingFI) IdentifierField(options ...bool) string {
-	return ifi.alphaVariableField(ifi.FinancialInstitution.Identifier, 34, ifi.parseFirstOption(options))
+func (ifi *InstructingFI) IdentifierField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Identifier, 34)
 }
 
 // NameField gets a string of the Name field
-func (ifi *InstructingFI) NameField(options ...bool) string {
-	return ifi.alphaVariableField(ifi.FinancialInstitution.Name, 35, ifi.parseFirstOption(options))
+func (ifi *InstructingFI) NameField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Name, 35)
 }
 
 // AddressLineOneField gets a string of AddressLineOne field
-func (ifi *InstructingFI) AddressLineOneField(options ...bool) string {
-	return ifi.alphaVariableField(ifi.FinancialInstitution.Address.AddressLineOne, 35, ifi.parseFirstOption(options))
+func (ifi *InstructingFI) AddressLineOneField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineOne, 35)
 }
 
 // AddressLineTwoField gets a string of AddressLineTwo field
-func (ifi *InstructingFI) AddressLineTwoField(options ...bool) string {
-	return ifi.alphaVariableField(ifi.FinancialInstitution.Address.AddressLineTwo, 35, ifi.parseFirstOption(options))
+func (ifi *InstructingFI) AddressLineTwoField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineTwo, 35)
 }
 
 // AddressLineThreeField gets a string of AddressLineThree field
-func (ifi *InstructingFI) AddressLineThreeField(options ...bool) string {
-	return ifi.alphaVariableField(ifi.FinancialInstitution.Address.AddressLineThree, 35, ifi.parseFirstOption(options))
+func (ifi *InstructingFI) AddressLineThreeField() string {
+	return ifi.alphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35)
+}
+
+// FormatIdentifier returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatIdentifier(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Identifier, 34, options)
+}
+
+// FormatName returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatName(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Name, 35, options)
+}
+
+// FormatAddressLineOne returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatAddressLineOne(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Address.AddressLineOne, 35, options)
+}
+
+// FormatAddressLineTwo returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatAddressLineTwo(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Address.AddressLineTwo, 35, options)
+}
+
+// FormatAddressLineThree returns Advice.LineOne formatted according to the FormatOptions
+func (ifi *InstructingFI) FormatAddressLineThree(options FormatOptions) string {
+	return ifi.formatAlphaField(ifi.FinancialInstitution.Address.AddressLineThree, 35, options)
 }

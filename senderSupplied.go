@@ -97,16 +97,23 @@ func (ss *SenderSupplied) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes SenderSupplied
-func (ss *SenderSupplied) String(options ...bool) string {
+// String returns a fixed-width SenderSupplied record
+func (ss *SenderSupplied) String() string {
+	return ss.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a SenderSupplied record formatted according to the FormatOptions
+func (ss *SenderSupplied) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(18)
 
 	buf.WriteString(ss.tag)
 	buf.WriteString(ss.FormatVersionField())
-	buf.WriteString(ss.UserRequestCorrelationField(options...))
+	buf.WriteString(ss.FormatUserRequestCorrelation(options))
 	buf.WriteString(ss.TestProductionCodeField())
-	buf.WriteString(ss.MessageDuplicationCodeField(options...))
+	buf.WriteString(ss.FormatMessageDuplicationCode(options))
 
 	return buf.String()
 }
@@ -150,8 +157,8 @@ func (ss *SenderSupplied) FormatVersionField() string {
 }
 
 // UserRequestCorrelationField gets a string of the UserRequestCorrelation field
-func (ss *SenderSupplied) UserRequestCorrelationField(options ...bool) string {
-	return ss.alphaVariableField(ss.UserRequestCorrelation, 8, ss.parseFirstOption(options))
+func (ss *SenderSupplied) UserRequestCorrelationField() string {
+	return ss.alphaField(ss.UserRequestCorrelation, 8)
 }
 
 // TestProductionCodeField gets a string of the TestProductionCoden field
@@ -160,6 +167,16 @@ func (ss *SenderSupplied) TestProductionCodeField() string {
 }
 
 // MessageDuplicationCodeField gets a string of the MessageDuplicationCode field
-func (ss *SenderSupplied) MessageDuplicationCodeField(options ...bool) string {
-	return ss.alphaVariableField(ss.MessageDuplicationCode, 1, ss.parseFirstOption(options))
+func (ss *SenderSupplied) MessageDuplicationCodeField() string {
+	return ss.alphaField(ss.MessageDuplicationCode, 1)
+}
+
+// FormatUserRequestCorrelation returns UserRequestCorrelation formatted according to the FormatOptions
+func (ss *SenderSupplied) FormatUserRequestCorrelation(options FormatOptions) string {
+	return ss.formatAlphaField(ss.UserRequestCorrelation, 8, options)
+}
+
+// FormatMessageDuplicationCode returns MessageDuplicationCode formatted according to the FormatOptions
+func (ss *SenderSupplied) FormatMessageDuplicationCode(options FormatOptions) string {
+	return ss.formatAlphaField(ss.MessageDuplicationCode, 1, options)
 }

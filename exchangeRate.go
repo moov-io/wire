@@ -72,15 +72,22 @@ func (eRate *ExchangeRate) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ExchangeRate
-func (eRate *ExchangeRate) String(options ...bool) string {
+// String returns a fixed-width ExchangeRate record
+func (eRate *ExchangeRate) String() string {
+	return eRate.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ExchangeRate record formatted according to the FormatOptions
+func (eRate *ExchangeRate) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(18)
 
 	buf.WriteString(eRate.tag)
-	buf.WriteString(eRate.ExchangeRateField(options...))
+	buf.WriteString(eRate.FormatExchangeRate(options))
 
-	if eRate.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return eRate.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -100,6 +107,11 @@ func (eRate *ExchangeRate) Validate() error {
 }
 
 // ExchangeRateField gets a string of the ExchangeRate field
-func (eRate *ExchangeRate) ExchangeRateField(options ...bool) string {
-	return eRate.alphaVariableField(eRate.ExchangeRate, 12, eRate.parseFirstOption(options))
+func (eRate *ExchangeRate) ExchangeRateField() string {
+	return eRate.alphaField(eRate.ExchangeRate, 12)
+}
+
+// FormatExchangeRate returns ExchangeRate formatted according to the FormatOptions
+func (eRate *ExchangeRate) FormatExchangeRate(options FormatOptions) string {
+	return eRate.formatAlphaField(eRate.ExchangeRate, 12, options)
 }

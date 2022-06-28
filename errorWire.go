@@ -89,17 +89,24 @@ func (ew *ErrorWire) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-// String writes ErrorWire
-func (ew *ErrorWire) String(options ...bool) string {
+// String returns a fixed-width ErrorWire record
+func (ew *ErrorWire) String() string {
+	return ew.Format(FormatOptions{
+		VariableLengthFields: false,
+	})
+}
+
+// Format returns a ErrorWire record formatted according to the FormatOptions
+func (ew *ErrorWire) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(45)
 	buf.WriteString(ew.tag)
 
-	buf.WriteString(ew.ErrorCategoryField(options...))
-	buf.WriteString(ew.ErrorCodeField(options...))
-	buf.WriteString(ew.ErrorDescriptionField(options...))
+	buf.WriteString(ew.FormatErrorCategory(options))
+	buf.WriteString(ew.FormatErrorCode(options))
+	buf.WriteString(ew.FormatErrorDescription(options))
 
-	if ew.parseFirstOption(options) {
+	if options.VariableLengthFields {
 		return ew.stripDelimiters(buf.String())
 	} else {
 		return buf.String()
@@ -114,16 +121,31 @@ func (ew *ErrorWire) Validate() error {
 }
 
 // ErrorCategoryField gets a string of the ErrorCategory field
-func (ew *ErrorWire) ErrorCategoryField(options ...bool) string {
-	return ew.alphaVariableField(ew.ErrorCategory, 1, ew.parseFirstOption(options))
+func (ew *ErrorWire) ErrorCategoryField() string {
+	return ew.alphaField(ew.ErrorCategory, 1)
 }
 
 // ErrorCodeField gets a string of the ErrorCode field
-func (ew *ErrorWire) ErrorCodeField(options ...bool) string {
-	return ew.alphaVariableField(ew.ErrorCode, 3, ew.parseFirstOption(options))
+func (ew *ErrorWire) ErrorCodeField() string {
+	return ew.alphaField(ew.ErrorCode, 3)
 }
 
 // ErrorDescriptionField gets a string of the ErrorDescription field
-func (ew *ErrorWire) ErrorDescriptionField(options ...bool) string {
-	return ew.alphaVariableField(ew.ErrorDescription, 35, ew.parseFirstOption(options))
+func (ew *ErrorWire) ErrorDescriptionField() string {
+	return ew.alphaField(ew.ErrorDescription, 35)
+}
+
+// FormatErrorCategory returns ErrorCategory formatted according to the FormatOptions
+func (ew *ErrorWire) FormatErrorCategory(options FormatOptions) string {
+	return ew.formatAlphaField(ew.ErrorCategory, 1, options)
+}
+
+// FormatErrorCode returns ErrorCode formatted according to the FormatOptions
+func (ew *ErrorWire) FormatErrorCode(options FormatOptions) string {
+	return ew.formatAlphaField(ew.ErrorCode, 3, options)
+}
+
+// FormatErrorDescription returns ErrorDescription formatted according to the FormatOptions
+func (ew *ErrorWire) FormatErrorDescription(options FormatOptions) string {
+	return ew.formatAlphaField(ew.ErrorDescription, 35, options)
 }

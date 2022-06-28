@@ -100,7 +100,7 @@ func TestStringBeneficiaryReferenceVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringBeneficiaryReferenceOptions validates string() with options
+// TestStringBeneficiaryReferenceOptions validates Format() formatted according to the FormatOptions
 func TestStringBeneficiaryReferenceOptions(t *testing.T) {
 	var line = "{4320}Reference*"
 	r := NewReader(strings.NewReader(line))
@@ -109,9 +109,8 @@ func TestStringBeneficiaryReferenceOptions(t *testing.T) {
 	err := r.parseBeneficiaryReference()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.BeneficiaryReference.String()
-	require.Equal(t, str, "{4320}Reference       ")
-
-	str = r.currentFEDWireMessage.BeneficiaryReference.String(true)
-	require.Equal(t, str, "{4320}Reference*")
+	br := r.currentFEDWireMessage.BeneficiaryReference
+	require.Equal(t, br.String(), "{4320}Reference       ")
+	require.Equal(t, br.Format(FormatOptions{VariableLengthFields: true}), "{4320}Reference*")
+	require.Equal(t, br.String(), br.Format(FormatOptions{VariableLengthFields: false}))
 }

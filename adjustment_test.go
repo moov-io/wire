@@ -175,7 +175,7 @@ func TestStringAdjustmentVariableLength(t *testing.T) {
 	require.Equal(t, err, nil)
 }
 
-// TestStringAdjustmentOptions validates string() with options
+// TestStringAdjustmentOptions validates Format() formatted according to the FormatOptions
 func TestStringAdjustmentOptions(t *testing.T) {
 	var line = "{8600}01CRDTUSD1234.56            *"
 	r := NewReader(strings.NewReader(line))
@@ -184,9 +184,8 @@ func TestStringAdjustmentOptions(t *testing.T) {
 	err := r.parseAdjustment()
 	require.Equal(t, err, nil)
 
-	str := r.currentFEDWireMessage.Adjustment.String()
-	require.Equal(t, str, "{8600}01CRDTUSD1234.56                                                                                                                                                        ")
-
-	str = r.currentFEDWireMessage.Adjustment.String(true)
-	require.Equal(t, str, "{8600}01CRDTUSD1234.56*")
+	adj := r.currentFEDWireMessage.Adjustment
+	require.Equal(t, adj.String(), "{8600}01CRDTUSD1234.56                                                                                                                                                        ")
+	require.Equal(t, adj.Format(FormatOptions{VariableLengthFields: true}), "{8600}01CRDTUSD1234.56*")
+	require.Equal(t, adj.String(), adj.Format(FormatOptions{VariableLengthFields: false}))
 }

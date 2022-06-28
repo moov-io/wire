@@ -41,3 +41,6 @@ test/fuzz-reader/corpus/*.tar.gz
 
 # GoLand
 /.idea/*
+
+# Gitleaks
+gitleaks.tar.gz
