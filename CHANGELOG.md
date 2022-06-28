@@ -1,3 +1,9 @@
+## v0.9.0-rc1 (Released 2022-06-28)
+
+ADDITIONS
+
+- all: support variable length fields
+
 ## v0.8.0 (Released 2022-02-09)
 
 IMPROVEMENTS
