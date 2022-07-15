@@ -103,6 +103,11 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 				moovhttp.Problem(w, err)
 				return
 			}
+			if err := req.Validate(); err != nil {
+				err = logger.LogErrorf("file validation failed: %v", err).Err()
+				moovhttp.Problem(w, err)
+				return
+			}
 		} else {
 			file, err := wire.NewReader(r.Body).Read()
 			if err != nil {
