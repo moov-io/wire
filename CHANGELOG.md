@@ -1,8 +1,20 @@
-## v0.9.0-rc1 (Released 2022-06-28)
+## v0.9.0 (Released 2022-07-15)
 
 ADDITIONS
 
-- all: support variable length fields
+- feat: support variable length fields
+
+IMPROVEMENTS
+
+- cmd/server: call validate after creating Wire file via JSON
+
+BUILD
+
+- build: upgrade to Go 1.18 for docker images
+- build: update module github.com/moov-io/base to v0.32.0
+- build: update module github.com/prometheus/client_golang to v1.12.2
+- build: update module github.com/stretchr/testify to v1.8.0
+- build: update module golang.org/x/oauth2 to v0.0.0-20220630143837-2104d58473e0
 
 ## v0.8.0 (Released 2022-02-09)
 
