@@ -8,7 +8,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -83,7 +82,7 @@ func readFile(filename string) (*wire.File, error) {
 }
 
 func TestFiles_createFile(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-CustomerTransfer.txt"))
+	bs, err := os.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-CustomerTransfer.txt"))
 	require.NoError(t, err)
 	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
 	repo := &testWireFileRepository{}
@@ -121,7 +120,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 
 	t.Run("creates file from JSON", func(t *testing.T) {
 		w := httptest.NewRecorder()
-		bs, err := ioutil.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-BankTransfer.json"))
+		bs, err := os.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-BankTransfer.json"))
 		require.NoError(t, err)
 		req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
 		req.Header.Set("content-type", "application/json")

@@ -6,14 +6,14 @@ package wire
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 )
 
 func TestIssue104(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "fedWireMessage-BankTransfer.json"))
+	bs, err := os.ReadFile(filepath.Join("test", "testdata", "fedWireMessage-BankTransfer.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
