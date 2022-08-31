@@ -8,7 +8,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/go-kit/kit/metrics/prometheus"
@@ -231,8 +233,15 @@ func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFun
 		}
 		logger.Log("rendering file contents")
 
+		writer, err := GetWriter(w, r)
+		if err != nil {
+			err = logger.LogErrorf("problem getting writer: %v", err).Err()
+			moovhttp.Problem(w, err)
+			return
+		}
+
 		w.Header().Set("Content-Type", "text/plain")
-		if err := wire.GetWriter(w, r).Write(file); err != nil {
+		if err := writer.Write(file); err != nil {
 			err = logger.LogErrorf("problem rendering file contents: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
@@ -329,4 +338,45 @@ func addFEDWireMessageToFile(logger log.Logger, repo WireFileRepository) http.Ha
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(file)
 	}
+}
+
+// GetWriter returns a new Writer based on request param `type` that writes to w.
+// query param `format`=variable - we set VariableLengthFields to `true`
+// query param `newline`=false - we set NewlineCharacter to ""
+// no query param - writer defaults to fixed-length fields and use "\n" for NewlineCharacter.
+func GetWriter(w io.Writer, r *http.Request) (*wire.Writer, error) {
+	// default writer
+	writer := wire.NewWriter(w)
+	queryParams := r.URL.Query()
+	// if the query params are not set then return the default writer
+	if queryParams.Get("format") == "" &&
+		queryParams.Get("newline") == "" {
+		return writer, nil
+	}
+
+	// default format options
+	lengthFormatOption := wire.VariableLengthFields(writer.FormatOptions.VariableLengthFields)
+	newLineFormatOption := wire.NewlineCharacter(writer.FormatOptions.NewlineCharacter)
+
+	// check for query param `type`. if "variable" then update VariableLengthFields OptionFunc to true
+	fileType := queryParams.Get("format")
+	if fileType == "variable" {
+		lengthFormatOption = wire.VariableLengthFields(true)
+	}
+
+	// check for query param `newline`. if "false" then update NewlineCharacter OptionFunc to false
+	newlineStr := queryParams.Get("newline")
+	if newlineStr != "" {
+		newline, err := strconv.ParseBool(newlineStr)
+		if err != nil {
+			return nil, err
+		}
+		if newline == false {
+			newLineFormatOption = wire.NewlineCharacter("")
+		}
+	}
+
+	// new writer based on lengthFormatOption and newLineFormatOption
+	writer = wire.NewWriter(w, lengthFormatOption, newLineFormatOption)
+	return writer, nil
 }

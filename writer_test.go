@@ -2,8 +2,6 @@ package wire
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/assert"
-	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -1300,28 +1298,4 @@ func TestFEDWireMessageWriteCustomerTransferPlusUnstructuredAddenda(t *testing.T
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
-}
-
-func TestGetWriter(t *testing.T) {
-
-	r := httptest.NewRequest("GET", "/files/foo/contents?type=variable", nil)
-	w := httptest.NewRecorder()
-	writer := GetWriter(w, r)
-	// with type=variable we have VariableLengthFields set to true and NewlineCharacter as ""
-	assert.Equal(t, writer.VariableLengthFields, true)
-	assert.Equal(t, writer.NewlineCharacter, "")
-
-	r = httptest.NewRequest("GET", "/files/foo/contents", nil)
-	w = httptest.NewRecorder()
-	writer = GetWriter(w, r)
-	// with no type we have default VariableLengthFields and NewlineCharacter
-	assert.Equal(t, writer.VariableLengthFields, false)
-	assert.Equal(t, writer.NewlineCharacter, "\n")
-
-	r = httptest.NewRequest("GET", "/files/foo/contents?type=fixed", nil)
-	w = httptest.NewRecorder()
-	writer = GetWriter(w, r)
-	// with type=fixed we have default VariableLengthFields and NewlineCharacter
-	assert.Equal(t, writer.VariableLengthFields, false)
-	assert.Equal(t, writer.NewlineCharacter, "\n")
 }

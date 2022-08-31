@@ -231,10 +231,19 @@ paths:
         example: variable
         explode: false
         in: query
-        name: type
+        name: format
         required: false
         schema:
           type: string
+        style: simple
+      - description: Optional new line flag to have new line or no new line
+        example: false
+        explode: false
+        in: query
+        name: newline
+        required: false
+        schema:
+          type: boolean
         style: simple
       responses:
         200:

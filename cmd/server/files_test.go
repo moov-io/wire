@@ -262,8 +262,7 @@ func TestFiles_getFileContents(t *testing.T) {
 	})
 }
 
-func TestFiles_getFileContentsWithFileType(t *testing.T) {
-	req := httptest.NewRequest("GET", "/files/foo/contents?type=variable", nil)
+func TestFiles_getFileContentsWithFormatAndNewLineQueryParams(t *testing.T) {
 	fwm := mockFEDWireMessage()
 	repo := &testWireFileRepository{
 		file: &wire.File{
@@ -274,6 +273,48 @@ func TestFiles_getFileContentsWithFileType(t *testing.T) {
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
 
+	// test with no format no newline=false
+	req := httptest.NewRequest("GET", "/files/foo/contents", nil)
+	t.Run("gets file contents", func(t *testing.T) {
+		w := httptest.NewRecorder()
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
+		assert.Contains(t, w.Body.String(), "\n")
+	})
+
+	// test with format=variable and newline=true
+	req = httptest.NewRequest("GET", "/files/foo/contents?format=variable&newline=false", nil)
+	t.Run("gets file contents", func(t *testing.T) {
+		w := httptest.NewRecorder()
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
+		// file does not contain "\n"
+		assert.NotContains(t, w.Body.String(), "\n")
+	})
+
+	// test with format=variable param and no `newline`
+	req = httptest.NewRequest("GET", "/files/foo/contents?format=variable", nil)
+	t.Run("gets file contents", func(t *testing.T) {
+		w := httptest.NewRecorder()
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
+		assert.Contains(t, w.Body.String(), "\n")
+	})
+
+	// test with no format and newline=false
+	req = httptest.NewRequest("GET", "/files/foo/contents?newline=false", nil)
 	t.Run("gets file contents", func(t *testing.T) {
 		w := httptest.NewRecorder()
 
@@ -283,6 +324,17 @@ func TestFiles_getFileContentsWithFileType(t *testing.T) {
 		assert.Equal(t, http.StatusOK, w.Code, w.Body)
 		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
 		assert.NotContains(t, w.Body.String(), "\n")
+	})
+
+	// test with no format and newline=false
+	req = httptest.NewRequest("GET", "/files/foo/contents?newline=test", nil)
+	t.Run("gets file contents", func(t *testing.T) {
+		w := httptest.NewRecorder()
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
 	})
 }
 

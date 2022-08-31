@@ -245,13 +245,20 @@ paths:
           schema:
             type: string
             example: 3f2d23ee214
-        - name: type
+        - name: format
           in: query
           description: Optional file type to get file as fixed length or variable length type
           required: false
           schema:
             type: string
             example: variable
+        - name: newline
+          in: query
+          description: Optional new line flag to have new line or no new line
+          required: false
+          schema:
+            type: boolean
+            example: false
       responses:
         '200':
           description: File built successfully without errors.
