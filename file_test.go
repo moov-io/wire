@@ -5,7 +5,7 @@
 package wire
 
 import (
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func TestFile__FileFromJSON(t *testing.T) {
-	bs, err := ioutil.ReadFile(filepath.Join("test", "testdata", "fedWireMessage-BankTransfer.json"))
+	bs, err := os.ReadFile(filepath.Join("test", "testdata", "fedWireMessage-BankTransfer.json"))
 	if err != nil {
 		t.Fatal(err)
 	}
