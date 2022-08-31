@@ -262,6 +262,30 @@ func TestFiles_getFileContents(t *testing.T) {
 	})
 }
 
+func TestFiles_getFileContentsWithFileType(t *testing.T) {
+	req := httptest.NewRequest("GET", "/files/foo/contents?type=variable", nil)
+	fwm := mockFEDWireMessage()
+	repo := &testWireFileRepository{
+		file: &wire.File{
+			ID:             base.ID(),
+			FEDWireMessage: fwm,
+		},
+	}
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+
+	t.Run("gets file contents", func(t *testing.T) {
+		w := httptest.NewRecorder()
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Equal(t, "text/plain", w.Header().Get("Content-Type"))
+		assert.NotContains(t, w.Body.String(), "\n")
+	})
+}
+
 func TestFiles_validateFile(t *testing.T) {
 	req := httptest.NewRequest("GET", "/files/foo/validate", nil)
 	f, err := readFile("fedWireMessage-CustomerTransfer.txt")

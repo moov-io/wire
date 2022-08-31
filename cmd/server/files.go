@@ -232,7 +232,7 @@ func getFileContents(logger log.Logger, repo WireFileRepository) http.HandlerFun
 		logger.Log("rendering file contents")
 
 		w.Header().Set("Content-Type", "text/plain")
-		if err := wire.NewWriter(w).Write(file); err != nil {
+		if err := wire.GetWriter(w, r).Write(file); err != nil {
 			err = logger.LogErrorf("problem rendering file contents: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return

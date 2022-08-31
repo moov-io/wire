@@ -7,6 +7,7 @@ package wire
 import (
 	"bufio"
 	"io"
+	"net/http"
 )
 
 // A Writer writes an fedWireMessage to an encoded file.
@@ -54,10 +55,27 @@ func NewWriter(w io.Writer, opts ...OptionFunc) *Writer {
 	return writer
 }
 
+// GetWriter returns a new Writer based on request param `type` that writes to w.
+// if r have the query param `type`="variable" - we set VariableLengthFields to `true` and NewlineCharacter as ""
+// else the writer defaults to fixed-length fields and use "\n" for NewlineCharacter.
+func GetWriter(w io.Writer, r *http.Request) *Writer {
+	// default writer
+	var writer = NewWriter(w)
+
+	// check for query param `type`. if "variable" then update writer
+	var fileType = r.URL.Query().Get("type")
+	if fileType == "variable" {
+		writer = NewWriter(w, VariableLengthFields(true), NewlineCharacter(""))
+	}
+
+	return writer
+}
+
 // Writer writes a single FEDWireMessage record to w
 // options
-//  first bool : has variable length
-//  second bool : has not new line
+//
+//	first bool : has variable length
+//	second bool : has not new line
 func (w *Writer) Write(file *File) error {
 	if err := file.Validate(); err != nil {
 		return err

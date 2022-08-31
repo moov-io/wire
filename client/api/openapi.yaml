@@ -227,6 +227,15 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
+      - description: Optional file type to get file as fixed length or variable length type
+        example: variable
+        explode: false
+        in: query
+        name: type
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         200:
           content:

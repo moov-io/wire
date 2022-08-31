@@ -245,6 +245,13 @@ paths:
           schema:
             type: string
             example: 3f2d23ee214
+        - name: type
+          in: query
+          description: Optional file type to get file as fixed length or variable length type
+          required: false
+          schema:
+            type: string
+            example: variable
       responses:
         '200':
           description: File built successfully without errors.
