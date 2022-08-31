@@ -371,7 +371,7 @@ func GetWriter(w io.Writer, r *http.Request) (*wire.Writer, error) {
 		if err != nil {
 			return nil, err
 		}
-		if newline == false {
+		if !newline {
 			newLineFormatOption = wire.NewlineCharacter("")
 		}
 	}
