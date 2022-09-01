@@ -281,11 +281,13 @@ func (rb *RemittanceBeneficiary) Format(options FormatOptions) string {
 // The first error encountered is returned and stops that parsing.
 // * Name is mandatory.
 // * Identification Number
-//   * Not permitted unless Identification Type and Identification Code are present.
-//   * Not permitted for Identification Code PICDateBirthPlace.
+//   - Not permitted unless Identification Type and Identification Code are present.
+//   - Not permitted for Identification Code PICDateBirthPlace.
+//
 // * Identification Number Issuer
-//   * Not permitted unless Identification Type, Identification Code and Identification Number are present.
-//   * Not permitted for Identification Code SWBB and PICDateBirthPlace.
+//   - Not permitted unless Identification Type, Identification Code and Identification Number are present.
+//   - Not permitted for Identification Code SWBB and PICDateBirthPlace.
+//
 // * Date & Place of Birth is only permitted for Identification Code PICDateBirthPlace.
 func (rb *RemittanceBeneficiary) Validate() error {
 	if err := rb.fieldInclusion(); err != nil {

@@ -36,12 +36,12 @@ type AddFEDWireMessageToFileOpts struct {
 /*
 AddFEDWireMessageToFile Add Fedwire message to file
 Add a Fedwire Message to the specified file.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param fedWireMessage
- * @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param fedWireMessage
+  - @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
 */
 func (a *WireFilesApiService) AddFEDWireMessageToFile(ctx _context.Context, fileID string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*_nethttp.Response, error) {
 	var (
@@ -121,11 +121,12 @@ type CreateWireFileOpts struct {
 /*
 CreateWireFile Create file
 Create a new File object from either the plaintext or JSON representation.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param wireFile Content of the Wire file (in json or raw text)
- * @param optional nil or *CreateWireFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
- * @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param wireFile Content of the Wire file (in json or raw text)
+  - @param optional nil or *CreateWireFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
+
 @return WireFile
 */
 func (a *WireFilesApiService) CreateWireFile(ctx _context.Context, wireFile WireFile, localVarOptionals *CreateWireFileOpts) (WireFile, *_nethttp.Response, error) {
@@ -233,10 +234,10 @@ type DeleteWireFileByIDOpts struct {
 /*
 DeleteWireFileByID Delete file
 Permanently delete a File and associated message. It cannot be undone.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *DeleteWireFileByIDOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *DeleteWireFileByIDOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
 */
 func (a *WireFilesApiService) DeleteWireFileByID(ctx _context.Context, fileID string, localVarOptionals *DeleteWireFileByIDOpts) (*_nethttp.Response, error) {
 	var (
@@ -310,10 +311,11 @@ type GetWireFileByIDOpts struct {
 /*
 GetWireFileByID Retrieve file
 Get the details of an existing File using the unique File identifier that was returned upon creation.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *GetWireFileByIDOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *GetWireFileByIDOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return WireFile
 */
 func (a *WireFilesApiService) GetWireFileByID(ctx _context.Context, fileID string, localVarOptionals *GetWireFileByIDOpts) (WireFile, *_nethttp.Response, error) {
@@ -408,10 +410,11 @@ type GetWireFileContentsOpts struct {
 /*
 GetWireFileContents Get file contents
 Assembles the existing file, computes sequence numbers and totals. Returns plaintext file.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *GetWireFileContentsOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *GetWireFileContentsOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return string
 */
 func (a *WireFilesApiService) GetWireFileContents(ctx _context.Context, fileID string, localVarOptionals *GetWireFileContentsOpts) (string, *_nethttp.Response, error) {
@@ -506,9 +509,10 @@ type GetWireFilesOpts struct {
 /*
 GetWireFiles List files
 List all Wire files created with the Wire service. These files are not persisted through multiple runs of the service.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param optional nil or *GetWireFilesOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param optional nil or *GetWireFilesOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return []WireFile
 */
 func (a *WireFilesApiService) GetWireFiles(ctx _context.Context, localVarOptionals *GetWireFilesOpts) ([]WireFile, *_nethttp.Response, error) {
@@ -596,7 +600,7 @@ func (a *WireFilesApiService) GetWireFiles(ctx _context.Context, localVarOptiona
 /*
 Ping Ping Wire service
 Check if the Wire service is running.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 */
 func (a *WireFilesApiService) Ping(ctx _context.Context) (*_nethttp.Response, error) {
 	var (
@@ -666,10 +670,11 @@ type ValidateWireFileOpts struct {
 /*
 ValidateWireFile Validate file
 Validates the existing file. You need only supply the unique File identifier that was returned upon creation.
- * @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- * @param fileID File ID
- * @param optional nil or *ValidateWireFileOpts - Optional Parameters:
- * @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+  - @param fileID File ID
+  - @param optional nil or *ValidateWireFileOpts - Optional Parameters:
+  - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+
 @return WireFile
 */
 func (a *WireFilesApiService) ValidateWireFile(ctx _context.Context, fileID string, localVarOptionals *ValidateWireFileOpts) (WireFile, *_nethttp.Response, error) {

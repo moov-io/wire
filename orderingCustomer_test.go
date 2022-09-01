@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//  OrderingCustomer creates a OrderingCustomer
+// OrderingCustomer creates a OrderingCustomer
 func mockOrderingCustomer() *OrderingCustomer {
 	oc := NewOrderingCustomer()
 	oc.CoverPayment.SwiftFieldTag = "Swift Field Tag"

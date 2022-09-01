@@ -1155,7 +1155,7 @@ func (r *Reader) parseErrorWire() error {
 	return nil
 }
 
-//scanLinesWithSegmentFormat allows Reader to read each segment
+// scanLinesWithSegmentFormat allows Reader to read each segment
 func scanLinesWithSegmentFormat(data []byte, atEOF bool) (advance int, token []byte, err error) {
 
 	if atEOF && len(data) == 0 {

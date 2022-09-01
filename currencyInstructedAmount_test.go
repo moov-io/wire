@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//  CurrencyInstructedAmount creates a CurrencyInstructedAmount
+// CurrencyInstructedAmount creates a CurrencyInstructedAmount
 func mockCurrencyInstructedAmount() *CurrencyInstructedAmount {
 	cia := NewCurrencyInstructedAmount()
 	cia.SwiftFieldTag = "Swift Field Tag"

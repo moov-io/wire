@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//  OrderingInstitution creates a OrderingInstitution
+// OrderingInstitution creates a OrderingInstitution
 func mockOrderingInstitution() *OrderingInstitution {
 	oi := NewOrderingInstitution()
 	oi.CoverPayment.SwiftFieldTag = "Swift Field Tag"
