@@ -81,8 +81,9 @@ func (ua *UnstructuredAddenda) String() string {
 // Validate performs WIRE format rule checks on UnstructuredAddenda and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 // AddendaLength must be numeric, padded with leading zeros if less than four characters and must equal
-//  length of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
-//  Addenda Length must be 0987).
+//
+//	length of content in Addenda Information (e.g., if content of Addenda Information is 987 characters,
+//	Addenda Length must be 0987).
 func (ua *UnstructuredAddenda) Validate() error {
 	if err := ua.fieldInclusion(); err != nil {
 		return err

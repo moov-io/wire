@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//  InstitutionAccount creates a InstitutionAccount
+// InstitutionAccount creates a InstitutionAccount
 func mockInstitutionAccount() *InstitutionAccount {
 	iAccount := NewInstitutionAccount()
 	iAccount.CoverPayment.SwiftFieldTag = "Swift Field Tag"

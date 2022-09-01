@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//  IntermediaryInstitution creates a IntermediaryInstitution
+// IntermediaryInstitution creates a IntermediaryInstitution
 func mockIntermediaryInstitution() *IntermediaryInstitution {
 	ii := NewIntermediaryInstitution()
 	ii.CoverPayment.SwiftFieldTag = "Swift Field Tag"
