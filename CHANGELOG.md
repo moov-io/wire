@@ -1,4 +1,8 @@
-## v0.10.0 (Unreleased)
+## v0.10.0 (Released 2022-09-01)
+
+ADDITIONS
+
+- feat: `format` and `newline` query params introduced to the Get File Contents endpoint to set writer `FormatOptions`
 
 BUILD
 
