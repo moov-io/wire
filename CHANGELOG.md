@@ -2,7 +2,7 @@
 
 ADDITIONS
 
-- feat: `format` and `newline` query params introduced to the Get File Contents endpoint to set writer `FormatOptions`
+- feat: `format` and `newline` query params introduced to the Get File Contents endpoint to set writer `FormatOptions` (see [#239](https://github.com/moov-io/wire/issues/239) by [@anujtewari](https://github.com/anujtewari))
 
 BUILD
 
