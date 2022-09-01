@@ -56,8 +56,9 @@ func NewWriter(w io.Writer, opts ...OptionFunc) *Writer {
 
 // Writer writes a single FEDWireMessage record to w
 // options
-//  first bool : has variable length
-//  second bool : has not new line
+//
+//	first bool : has variable length
+//	second bool : has not new line
 func (w *Writer) Write(file *File) error {
 	if err := file.Validate(); err != nil {
 		return err
