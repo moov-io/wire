@@ -1,3 +1,12 @@
+## v0.10.0 (Unreleased)
+
+BUILD
+
+- build: upgrade to Go 1.19 for docker images
+- build: update module github.com/prometheus/client_golang to v1.13.0
+- build: update module golang.org/x/oauth2 to v0.0.0-20220822191816-0ebed06d0094
+- build: update module github.com/moov-io/base to v0.34.1
+
 ## v0.9.0 (Released 2022-07-15)
 
 ADDITIONS
