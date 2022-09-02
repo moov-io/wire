@@ -8,7 +8,11 @@ import (
 
 func TestFedWireMessage_verifyIssue92(t *testing.T) {
 	fwm := issue92FedWireMessage()
-	require.NoError(t, fwm.verify())
+	require.NoError(t, fwm.verify(false))
+
+	fwm.SenderSupplied = nil
+	require.NoError(t, fwm.verify(true))
+	require.Error(t, fwm.verify(false))
 }
 
 // this is the payload reported in issue 92 (bug in fwm validation)

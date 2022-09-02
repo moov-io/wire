@@ -135,9 +135,9 @@ type FEDWireMessage struct {
 
 // verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
 // check for the expected relationships between fields within a FedWireMessage.
-func (fwm *FEDWireMessage) verify() error {
+func (fwm *FEDWireMessage) verify(isIncoming bool) error {
 
-	if err := fwm.mandatoryFields(); err != nil {
+	if err := fwm.mandatoryFields(isIncoming); err != nil {
 		return err
 	}
 
@@ -195,9 +195,26 @@ func (fwm *FEDWireMessage) verify() error {
 }
 
 // mandatoryFields validates mandatory tags for a FEDWireMessage are defined
-func (fwm *FEDWireMessage) mandatoryFields() error {
-	if err := fwm.validateSenderSupplied(); err != nil {
-		return err
+//
+//			At a minimum, the following tags are mandatory in each outgoing message sent from a DI to the Fedwire Funds Service
+//			(regardless of the business function code).
+//			Other tags are required depending on the business function code selected.
+//			- Interface Data
+//			- {1500} Sender Supplied Information
+//			- {1510} Type Code, Subtype Code
+//			- {1520} IMAD
+//			- {2000} Amount
+//			- {3100} Sender DI
+//			- {3400} Receiver DI
+//			- {3600} Business Function Code (first element)
+//
+//		 	NOTE: Not specified mandatory elements in each incoming message
+//	          Need to specify mandatory elements in this case
+func (fwm *FEDWireMessage) mandatoryFields(isIncoming bool) error {
+	if !isIncoming {
+		if err := fwm.validateSenderSupplied(); err != nil {
+			return err
+		}
 	}
 	if err := fwm.validateTypeSubType(); err != nil {
 		return err

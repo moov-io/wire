@@ -17,7 +17,7 @@ type SenderSupplied struct {
 	// FormatVersion 30
 	FormatVersion string `json:"formatVersion"`
 	// UserRequestCorrelation
-	UserRequestCorrelation string `json:"userRequestCorrelation"`
+	UserRequestCorrelation string `json:"userRequestCorrelation,omitempty"`
 	// TestProductionCode T: Test P: Production
 	TestProductionCode string `json:"testProductionCode"`
 	// MessageDuplicationCode '': Original Message P: Resend
@@ -145,9 +145,6 @@ func (ss *SenderSupplied) Validate() error {
 // fieldInclusion validate mandatory fields. If fields are
 // invalid the WIRE will return an error.
 func (ss *SenderSupplied) fieldInclusion() error {
-	if ss.UserRequestCorrelation == "" {
-		return fieldError("UserRequestCorrelation", ErrFieldRequired, ss.UserRequestCorrelation)
-	}
 	return nil
 }
 

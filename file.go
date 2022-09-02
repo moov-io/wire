@@ -12,13 +12,20 @@ import (
 
 // File contains the structures of a parsed WIRE File.
 type File struct {
+	isIncoming     bool           `json:"-"`
 	ID             string         `json:"id"`
 	FEDWireMessage FEDWireMessage `json:"fedWireMessage"`
 }
 
 // NewFile constructs a file template
-func NewFile() *File {
-	return &File{}
+func NewFile(opts ...FilePropertyFunc) *File {
+	f := &File{}
+
+	for _, opt := range opts {
+		opt(f)
+	}
+
+	return f
 }
 
 // AddFEDWireMessage appends a FEDWireMessage to the File
@@ -37,7 +44,7 @@ func (f *File) Create() error {
 
 // Validate will never modify the file.
 func (f *File) Validate() error {
-	if err := f.FEDWireMessage.verify(); err != nil {
+	if err := f.FEDWireMessage.verify(f.isIncoming); err != nil {
 		return err
 	}
 	return nil
@@ -60,4 +67,13 @@ func FileFromJSON(bs []byte) (*File, error) {
 		return nil, fmt.Errorf("problem reading File: %v", err)
 	}
 	return file, nil
+}
+
+type FilePropertyFunc func(*File)
+
+// FileDirection specify that the file is for incoming or outgoing
+func FileDirection(isIncoming bool) FilePropertyFunc {
+	return func(f *File) {
+		f.isIncoming = isIncoming
+	}
 }
