@@ -59,7 +59,7 @@ func (r *Reader) parseError(err error) error {
 func NewReader(r io.Reader) *Reader {
 	reader := &Reader{
 		scanner: bufio.NewScanner(r),
-		File:    *NewFile(FileDirection(true)),
+		File:    *NewFile(IncomingFile()),
 	}
 
 	reader.scanner.Split(scanLinesWithSegmentFormat)

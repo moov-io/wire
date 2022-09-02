@@ -12,9 +12,10 @@ import (
 
 // File contains the structures of a parsed WIRE File.
 type File struct {
-	isIncoming     bool           `json:"-"`
 	ID             string         `json:"id"`
 	FEDWireMessage FEDWireMessage `json:"fedWireMessage"`
+
+	isIncoming bool `json:"-"`
 }
 
 // NewFile constructs a file template
@@ -71,9 +72,16 @@ func FileFromJSON(bs []byte) (*File, error) {
 
 type FilePropertyFunc func(*File)
 
-// FileDirection specify that the file is for incoming or outgoing
-func FileDirection(isIncoming bool) FilePropertyFunc {
+// OutgoingFile specify that the file is for outgoing
+func OutgoingFile() FilePropertyFunc {
 	return func(f *File) {
-		f.isIncoming = isIncoming
+		f.isIncoming = false
+	}
+}
+
+// IncomingFile specify that the file is for incoming
+func IncomingFile() FilePropertyFunc {
+	return func(f *File) {
+		f.isIncoming = true
 	}
 }
