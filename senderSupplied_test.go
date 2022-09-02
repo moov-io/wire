@@ -69,14 +69,20 @@ func TestSenderSuppliedMessageDuplicationCodeValid(t *testing.T) {
 	}
 }
 
-// TestSenderSuppliedUserRequestCorrelationRequired validates SenderSupplied UserRequestCorrelation is required
-func TestSenderSuppliedUserRequestCorrelationRequired(t *testing.T) {
+// TestSenderSuppliedUserRequestCorrelation validates SenderSupplied UserRequestCorrelation is optional
+func TestSenderSuppliedUserRequestCorrelation(t *testing.T) {
 	ss := mockSenderSupplied()
 	ss.UserRequestCorrelation = ""
 
 	err := ss.Validate()
+	require.NoError(t, err)
 
-	require.EqualError(t, err, fieldError("UserRequestCorrelation", ErrFieldRequired, ss.UserRequestCorrelation).Error())
+	var line = "{1500}30        T"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderSupplied()
+	require.NoError(t, err)
 }
 
 // TestParseSenderSuppliedWrongLength parses a wrong SenderSupplied record length
