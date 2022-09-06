@@ -243,7 +243,7 @@ func (fwm *FEDWireMessage) validateSenderSupplied() error {
 	if fwm.SenderSupplied == nil {
 		return fieldError("SenderSupplied", ErrFieldRequired)
 	}
-	return nil
+	return fwm.SenderSupplied.Validate()
 }
 
 // validateTypeSubType validates TagTypeSubType within a FEDWireMessage
@@ -252,7 +252,7 @@ func (fwm *FEDWireMessage) validateTypeSubType() error {
 	if fwm.TypeSubType == nil {
 		return fieldError("TypeSubType", ErrFieldRequired)
 	}
-	return nil
+	return fwm.TypeSubType.Validate()
 }
 
 // validateIMAD validates TagInputMessageAccountabilityData within a FEDWireMessage
@@ -261,7 +261,7 @@ func (fwm *FEDWireMessage) validateIMAD() error {
 	if fwm.InputMessageAccountabilityData == nil {
 		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
-	return nil
+	return fwm.InputMessageAccountabilityData.Validate()
 }
 
 // validateAmount validates TagAmount within a FEDWireMessage
@@ -275,7 +275,7 @@ func (fwm *FEDWireMessage) validateAmount() error {
 		return NewErrInvalidPropertyForProperty("Amount", fwm.Amount.Amount,
 			"SubTypeCode", fwm.TypeSubType.SubTypeCode)
 	}
-	return nil
+	return fwm.Amount.Validate()
 }
 
 // validateSenderDI validates TagSenderDepositoryInstitution within a FEDWireMessage
@@ -284,7 +284,7 @@ func (fwm *FEDWireMessage) validateSenderDI() error {
 	if fwm.SenderDepositoryInstitution == nil {
 		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
 	}
-	return nil
+	return fwm.SenderDepositoryInstitution.Validate()
 }
 
 // validateReceiverDI validates TagReceiverDepositoryInstitution within a FEDWireMessage
@@ -293,7 +293,7 @@ func (fwm *FEDWireMessage) validateReceiverDI() error {
 	if fwm.ReceiverDepositoryInstitution == nil {
 		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
-	return nil
+	return fwm.ReceiverDepositoryInstitution.Validate()
 }
 
 // validateBusinessFunctionCode validates TagBusinessFunctionCode within a FEDWireMessage
@@ -349,7 +349,7 @@ func (fwm *FEDWireMessage) validateBusinessFunctionCode() error {
 			return err
 		}
 	}
-	return nil
+	return fwm.BusinessFunctionCode.Validate()
 }
 
 // validateBankTransfer validates the BankTransfer code and associated tags
@@ -969,7 +969,7 @@ func (fwm *FEDWireMessage) validateLocalInstrumentCode() error {
 		if fwm.BusinessFunctionCode.BusinessFunctionCode != CustomerTransferPlus {
 			return fieldError("LocalInstrument", ErrLocalInstrumentNotPermitted)
 		}
-		return nil
+		return fwm.LocalInstrument.Validate()
 	}
 	return nil
 
@@ -986,7 +986,7 @@ func (fwm *FEDWireMessage) validateCharges() error {
 			return NewErrInvalidPropertyForProperty("LocalInstrumentCode", fwm.LocalInstrument.LocalInstrumentCode,
 				"Charges", fwm.Charges.String())
 		}
-		return nil
+		return fwm.Charges.Validate()
 	}
 	return nil
 }
@@ -1008,7 +1008,7 @@ func (fwm *FEDWireMessage) validateInstructedAmount() error {
 			return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
 				fwm.LocalInstrument.LocalInstrumentCode, "Instructed Amount", fwm.InstructedAmount.String())
 		}
-		return nil
+		return fwm.InstructedAmount.Validate()
 	}
 	return nil
 }
@@ -1030,7 +1030,7 @@ func (fwm *FEDWireMessage) validateExchangeRate() error {
 			return NewErrInvalidPropertyForProperty("LocalInstrumentCode",
 				fwm.LocalInstrument.LocalInstrumentCode, "ExchangeRate", fwm.ExchangeRate.ExchangeRate)
 		}
-		return nil
+		return fwm.ExchangeRate.Validate()
 	}
 	return nil
 }
@@ -1044,7 +1044,7 @@ func (fwm *FEDWireMessage) validateBeneficiaryIntermediaryFI() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.BeneficiaryIntermediaryFI.Validate()
 	}
 	return nil
 }
@@ -1055,7 +1055,7 @@ func (fwm *FEDWireMessage) validateBeneficiaryFI() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.BeneficiaryFI.Validate()
 	}
 	return nil
 }
@@ -1073,7 +1073,7 @@ func (fwm *FEDWireMessage) validateOriginatorFI() error {
 				return fieldError("Originator", ErrFieldRequired)
 			}
 		}
-		return nil
+		return fwm.OriginatorFI.Validate()
 	}
 	return nil
 }
@@ -1094,7 +1094,7 @@ func (fwm *FEDWireMessage) validateInstructingFI() error {
 		if fwm.OriginatorFI == nil {
 			return fieldError("OriginatorFI", ErrFieldRequired)
 		}
-		return nil
+		return fwm.InstructingFI.Validate()
 	}
 	return nil
 }
@@ -1115,7 +1115,7 @@ func (fwm *FEDWireMessage) validateOriginatorToBeneficiary() error {
 				return fieldError("Originator", ErrFieldRequired)
 			}
 		}
-		return nil
+		return fwm.OriginatorToBeneficiary.Validate()
 	}
 	return nil
 }
@@ -1133,7 +1133,7 @@ func (fwm *FEDWireMessage) validateFIIntermediaryFI() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIIntermediaryFI.Validate()
 	}
 	return nil
 }
@@ -1151,7 +1151,7 @@ func (fwm *FEDWireMessage) validateFIIntermediaryFIAdvice() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIIntermediaryFIAdvice.Validate()
 	}
 	return nil
 }
@@ -1166,7 +1166,7 @@ func (fwm *FEDWireMessage) validateFIBeneficiaryFI() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIBeneficiaryFI.Validate()
 	}
 	return nil
 }
@@ -1181,7 +1181,7 @@ func (fwm *FEDWireMessage) validateFIBeneficiaryFIAdvice() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIBeneficiaryFIAdvice.Validate()
 	}
 	return nil
 }
@@ -1193,7 +1193,7 @@ func (fwm *FEDWireMessage) validateFIBeneficiary() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIBeneficiary.Validate()
 	}
 	return nil
 }
@@ -1205,7 +1205,7 @@ func (fwm *FEDWireMessage) validateFIBeneficiaryAdvice() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIBeneficiaryAdvice.Validate()
 	}
 	return nil
 }
@@ -1220,7 +1220,7 @@ func (fwm *FEDWireMessage) validateFIPaymentMethodToBeneficiary() error {
 		if fwm.Beneficiary == nil {
 			return fieldError("Beneficiary", ErrFieldRequired)
 		}
-		return nil
+		return fwm.FIPaymentMethodToBeneficiary.Validate()
 	}
 	return nil
 }
@@ -1241,6 +1241,7 @@ func (fwm *FEDWireMessage) validateUnstructuredAddenda() error {
 			if fwm.UnstructuredAddenda == nil {
 				return fieldError("UnstructuredAddenda", ErrFieldRequired)
 			}
+			return fwm.UnstructuredAddenda.Validate()
 		default:
 			if fwm.UnstructuredAddenda != nil {
 				return NewErrInvalidPropertyForProperty("UnstructuredAddenda", fwm.UnstructuredAddenda.String(),
@@ -1269,6 +1270,7 @@ func (fwm *FEDWireMessage) validateRelatedRemittance() error {
 		if fwm.RelatedRemittance == nil {
 			return fieldError("RelatedRemittance", ErrFieldRequired)
 		}
+		return fwm.RelatedRemittance.Validate()
 	} else {
 		if fwm.RelatedRemittance != nil {
 			return fieldError("RelatedRemittance", ErrNotPermitted)
@@ -1288,6 +1290,7 @@ func (fwm *FEDWireMessage) validateRemittanceOriginator() error {
 		if fwm.RemittanceOriginator == nil {
 			return fieldError("RemittanceOriginator", ErrFieldRequired)
 		}
+		return fwm.RemittanceOriginator.Validate()
 	} else {
 		if fwm.RemittanceOriginator != nil {
 			return fieldError("RemittanceOriginator", ErrNotPermitted)
@@ -1307,6 +1310,7 @@ func (fwm *FEDWireMessage) validateRemittanceBeneficiary() error {
 		if fwm.RemittanceBeneficiary == nil {
 			return fieldError("RemittanceBeneficiary", ErrFieldRequired)
 		}
+		return fwm.RemittanceBeneficiary.Validate()
 	} else {
 		if fwm.RemittanceBeneficiary != nil {
 			return fieldError("RemittanceBeneficiary", ErrNotPermitted)
@@ -1326,6 +1330,7 @@ func (fwm *FEDWireMessage) validatePrimaryRemittanceDocument() error {
 		if fwm.PrimaryRemittanceDocument == nil {
 			return fieldError("PrimaryRemittanceDocument", ErrFieldRequired)
 		}
+		return fwm.PrimaryRemittanceDocument.Validate()
 	} else {
 		if fwm.PrimaryRemittanceDocument != nil {
 			return fieldError("PrimaryRemittanceDocument", ErrNotPermitted)
@@ -1345,6 +1350,7 @@ func (fwm *FEDWireMessage) validateActualAmountPaid() error {
 		if fwm.ActualAmountPaid == nil {
 			return fieldError("ActualAmountPaid", ErrFieldRequired)
 		}
+		return fwm.ActualAmountPaid.Validate()
 	} else {
 		if fwm.ActualAmountPaid != nil {
 			return fieldError("ActualAmountPaid", ErrNotPermitted)
@@ -1364,6 +1370,7 @@ func (fwm *FEDWireMessage) validateGrossAmountRemittanceDocument() error {
 		if fwm.GrossAmountRemittanceDocument == nil {
 			return fieldError("GrossAmountRemittanceDocument", ErrFieldRequired)
 		}
+		return fwm.GrossAmountRemittanceDocument.Validate()
 	} else {
 		if fwm.GrossAmountRemittanceDocument != nil {
 			return fieldError("GrossAmountRemittanceDocument", ErrNotPermitted)
@@ -1383,6 +1390,7 @@ func (fwm *FEDWireMessage) validateAdjustment() error {
 		if fwm.Adjustment == nil {
 			return fieldError("Adjustment", ErrFieldRequired)
 		}
+		return fwm.Adjustment.Validate()
 	} else {
 		if fwm.Adjustment != nil {
 			return fieldError("Adjustment", ErrNotPermitted)
@@ -1402,6 +1410,7 @@ func (fwm *FEDWireMessage) validateDateRemittanceDocument() error {
 		if fwm.DateRemittanceDocument == nil {
 			return fieldError("DateRemittanceDocument", ErrFieldRequired)
 		}
+		return fwm.DateRemittanceDocument.Validate()
 	} else {
 		if fwm.DateRemittanceDocument != nil {
 			return fieldError("DateRemittanceDocument", ErrNotPermitted)
@@ -1440,6 +1449,7 @@ func (fwm *FEDWireMessage) validateRemittanceFreeText() error {
 		if fwm.RemittanceFreeText == nil {
 			return fieldError("RemittanceFreeText", ErrFieldRequired)
 		}
+		return fwm.RemittanceFreeText.Validate()
 	} else {
 		if fwm.RemittanceFreeText != nil {
 			return fieldError("RemittanceFreeText", ErrNotPermitted)
