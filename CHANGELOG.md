@@ -1,3 +1,14 @@
+## v0.11.0 (Released 2022-09-06)
+
+ADDITIONS
+
+- feat: introduce conditional validation for incoming vs outgoing files (see [#244](https://github.com/moov-io/wire/pull/244) by [@mfdeveloper508](https://github.com/mfdeveloper508))
+
+IMPROVEMENTS
+
+- fedWireMessage: only require `SenderSupplied` for outgoing files
+- senderSupplied: make `UserRequestCorrelation` optional
+
 ## v0.10.0 (Released 2022-09-01)
 
 ADDITIONS
