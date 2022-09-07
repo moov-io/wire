@@ -136,6 +136,24 @@ func TestFiles_createFileJSON(t *testing.T) {
 		assert.NotNil(t, resp.FEDWireMessage.FIAdditionalFIToFI)
 	})
 
+	t.Run("creates file from JSON", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		bs, err := os.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-CustomerTransfer.json"))
+		require.NoError(t, err)
+		req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
+		req.Header.Set("content-type", "application/json")
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusCreated, w.Code, w.Body)
+
+		var resp wire.File
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+		assert.NotEmpty(t, resp.ID)
+		assert.NotEmpty(t, resp.FEDWireMessage)
+	})
+
 	t.Run("invalid JSON", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		req := httptest.NewRequest("POST", "/files/create", strings.NewReader(`{...invalid-json`))
