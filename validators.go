@@ -42,7 +42,7 @@ func (v *validator) isNumeric(s string) error {
 
 // ToDo: Amount Decimal and AmountComma (only 1 per each) ?
 
-// isAmount checks if a string only contains onc comma and ASCII numeric (0-9) characters
+// isAmount checks if a string only contains one comma and ASCII numeric (0-9) characters
 func (v *validator) isAmount(s string) error {
 	str := strings.Trim(s, ",")
 	if amountRegex.MatchString(str) {
@@ -52,20 +52,10 @@ func (v *validator) isAmount(s string) error {
 	return nil
 }
 
-/*// isAmount checks if a string only contains onc decmal and ASCII numeric (0-9) characters
-func (v *validator) isAmountDecimal(s string) error {
-	str := strings.Trim(s, ".")
-	if amountRegex.MatchString(str) {
-		// [^ [0-9],.]
-		return ErrNonAmount
-	}
-	return nil
-}*/
-
-// isAmountImplied checks if a string only contains only ASCII numeric (0-9) characters, decimal precision is
+// isAmountImplied checks if a string contains only ASCII numeric (0-9) characters, decimal precision is
 // implied (2), and no commas
 func (v *validator) isAmountImplied(s string) error {
-	if amountRegex.MatchString(s) {
+	if numericRegex.MatchString(s) {
 		// [^ 0-9]
 		return ErrNonAmount
 	}

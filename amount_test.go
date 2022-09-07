@@ -21,24 +21,33 @@ func TestMockAmount(t *testing.T) {
 	require.NoError(t, a.Validate(), "mockAmount does not validate and will break other tests")
 }
 
-// TestAmountValid validates Amount
-func TestAmountValid(t *testing.T) {
-	a := mockAmount()
-	a.Amount = "X,"
+func TestAmount_Validate(t *testing.T) {
+	tests := []struct {
+		inAmount string
+		wantErr  error
+	}{
+		{mockAmount().Amount, nil},
+		{"", fieldError("Amount", ErrFieldRequired)},
+		{"X,", fieldError("Amount", ErrNonAmount, "X,")},
+		{"12.05", fieldError("Amount", ErrNonAmount, "12.05")},
+		{"1,000.39", fieldError("Amount", ErrNonAmount, "1,000.39")},
+	}
 
-	err := a.Validate()
+	for _, tt := range tests {
+		t.Run(tt.inAmount, func(t *testing.T) {
+			amt := NewAmount()
+			amt.Amount = tt.inAmount
 
-	require.EqualError(t, err, fieldError("Amount", ErrNonAmount, a.Amount).Error())
-}
+			got := amt.Validate()
 
-// TestAmountRequired validates Amount is required
-func TestAmountRequired(t *testing.T) {
-	a := mockAmount()
-	a.Amount = ""
-
-	err := a.Validate()
-
-	require.EqualError(t, err, fieldError("Amount", ErrFieldRequired).Error())
+			if tt.wantErr == nil {
+				require.NoError(t, got)
+			} else {
+				require.Error(t, got)
+				require.Equal(t, tt.wantErr, got)
+			}
+		})
+	}
 }
 
 // TestParseAmountWrongLength parses a wrong Amount record length
