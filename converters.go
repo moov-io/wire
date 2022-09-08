@@ -22,6 +22,15 @@ func (c *converters) parseStringField(r string) (s string) {
 	return s
 }
 
+func (c *converters) parseAlphaField(r string, max uint) string {
+	ln := uint(len(r))
+	if ln > max {
+		return r[ln-max:]
+	}
+	r += strings.Repeat(" ", int(max-ln))
+	return r
+}
+
 // numericStringField right-justified zero filled
 func (c *converters) numericStringField(s string, max uint) string {
 	ln := uint(len(s))
