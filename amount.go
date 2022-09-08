@@ -14,7 +14,10 @@ import (
 type Amount struct {
 	// tag
 	tag string
-	// Amount 12 numeric, right-justified with leading zeros, an implied decimal point and no commas; e.g., $12,345.67 becomes 000001234567 Can be all zeros for subtype 90
+
+	// Amount must be right justified with leading zeroes, an implied decimal point and
+	// no commas (e.g., $12,345.67 becomes 000001234567). Amount can be all zeroes for
+	// only SUBTYPE CODE 90 messages.
 	Amount string `json:"amount"`
 
 	// validator is composed for data validation
