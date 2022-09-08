@@ -67,7 +67,7 @@ func (ss *SenderSupplied) Parse(record string) error {
 	ss.TestProductionCode = ss.parseStringField(record[length : length+1])
 	length += 1
 
-	ss.MessageDuplicationCode = ss.alphaField(record[length:], 1)
+	ss.MessageDuplicationCode = ss.parseAlphaField(record[length:], 1)
 	length += 1
 
 	if !ss.verifyDataWithReadLength(record, length) {
