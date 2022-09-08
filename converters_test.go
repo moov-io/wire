@@ -59,6 +59,11 @@ func TestConverters__parseVariableStringField(t *testing.T) {
 	require.Equal(t, "123", got)
 	require.Equal(t, 3, size)
 	require.Nil(t, err)
+
+	got, size, err = c.parseVariableStringField("123*567", 3)
+	require.Equal(t, "123", got)
+	require.Equal(t, 3, size)
+	require.Nil(t, err)
 }
 
 func TestConverters_alphaVariableField(t *testing.T) {
