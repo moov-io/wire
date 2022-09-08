@@ -6,7 +6,7 @@
         "formatVersion": "30",
         "userRequestCorrelation": "User Req",
         "testProductionCode": "T",
-        "messageDuplicationCode": ""
+        "messageDuplicationCode": " "
       },
       "typeSubType": {
         "typeCode": "10",

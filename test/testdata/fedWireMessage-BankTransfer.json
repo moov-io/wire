@@ -188,7 +188,7 @@
             "typeCode": "10"
         },
         "senderSupplied": {
-            "messageDuplicationCode": "",
+            "messageDuplicationCode": " ",
             "testProductionCode": "T",
             "userRequestCorrelation": "User Req",
             "formatVersion": "30"

@@ -67,14 +67,8 @@ func (ss *SenderSupplied) Parse(record string) error {
 	ss.TestProductionCode = ss.parseStringField(record[length : length+1])
 	length += 1
 
-	value, read, err = ss.parseVariableStringField(record[length:], 1)
-	if err != nil {
-		return fieldError("MessageDuplicationCode", err)
-	}
-	ss.MessageDuplicationCode = value
-	length += read
-
-	ss.MessageDuplicationCode = ss.parseStringField(ss.MessageDuplicationCode)
+	ss.MessageDuplicationCode = ss.alphaField(record[length:], 1)
+	length += 1
 
 	if !ss.verifyDataWithReadLength(record, length) {
 		return NewTagMaxLengthErr()

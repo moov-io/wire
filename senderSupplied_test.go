@@ -77,7 +77,7 @@ func TestSenderSuppliedUserRequestCorrelation(t *testing.T) {
 	err := ss.Validate()
 	require.NoError(t, err)
 
-	var line = "{1500}30        T"
+	var line = "{1500}30        T "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -121,28 +121,28 @@ func TestSenderSuppliedTagError(t *testing.T) {
 
 // TestStringSenderSuppliedVariableLength parses using variable length
 func TestStringSenderSuppliedVariableLength(t *testing.T) {
-	var line = "{1500}301*T"
+	var line = "{1500}301*T "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseSenderSupplied()
 	require.Nil(t, err)
 
-	line = "{1500}301       T NNN"
+	line = "{1500}301       T NNN "
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseSenderSupplied()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{1500}301*T***"
+	line = "{1500}301*T** "
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseSenderSupplied()
 	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
 
-	line = "{1500}301*T*"
+	line = "{1500}301*T "
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -152,7 +152,7 @@ func TestStringSenderSuppliedVariableLength(t *testing.T) {
 
 // TestStringSenderSuppliedOptions validates Format() formatted according to the FormatOptions
 func TestStringSenderSuppliedOptions(t *testing.T) {
-	var line = "{1500}301*T"
+	var line = "{1500}301*T "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -161,6 +161,6 @@ func TestStringSenderSuppliedOptions(t *testing.T) {
 
 	record := r.currentFEDWireMessage.SenderSupplied
 	require.Equal(t, record.String(), "{1500}301       T ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1500}301*T*")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1500}301*T ")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
