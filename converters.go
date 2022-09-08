@@ -84,7 +84,7 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (got string,
 
 	hasDelimiter := false
 	size = min(endIndex, delimiterIndex)
-	if size > maxLen {
+	if size >= maxLen {
 		size = maxLen
 	} else if size < maxLen {
 		if delimiterIndex == size {
