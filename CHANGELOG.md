@@ -1,3 +1,16 @@
+## v0.12.0 (Released 2022-09-09)
+
+IMPROVEMENTS
+
+- fedWireMessage: call each tag's `Validate()` method instead of only checking for mandatory field inclusion (see [#246](https://github.com/moov-io/wire/pull/246) by [@anujtewari](https://github.com/anujtewari))
+- docs: replace outdated maintainer email addresses with oss@moov.io
+
+BUG FIXES
+
+- amount: update validation to ensure amount is strictly numeric (no commas or decimals)
+- converters: handle case where the input length is equal to max length in `parseVariableLengthField(r string, maxLen int)` (see [#252](https://github.com/moov-io/wire/pull/252) by [@bhedge](https://github.com/bhedge) and [@martinz-provisions](https://github.com/martinz-provisions))
+- senderSupplied: `MessageDuplicationCode` should be `" "` instead of `""` (see [#249](https://github.com/moov-io/wire/issues/249) by [@anujtewari](https://github.com/anujtewari))
+
 ## v0.11.0 (Released 2022-09-06)
 
 ADDITIONS
