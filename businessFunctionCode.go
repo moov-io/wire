@@ -134,5 +134,9 @@ func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
 
 // FormatTransactionTypeCode returns TransactionTypeCode formatted according to the FormatOptions
 func (bfc *BusinessFunctionCode) FormatTransactionTypeCode(options FormatOptions) string {
+	// for variable length and empty TransactionTypeCode, no formatting is needed
+	if options.VariableLengthFields && bfc.TransactionTypeCode == "" {
+		return ""
+	}
 	return bfc.formatAlphaField(bfc.TransactionTypeCode, 3, options)
 }

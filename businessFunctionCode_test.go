@@ -114,7 +114,7 @@ func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
 
 // TestStringBusinessFunctionCodeOptions validates Format() formatted according to the FormatOptions
 func TestStringBusinessFunctionCodeOptions(t *testing.T) {
-	var line = "{3600}BTR*"
+	var line = "{3600}BTR"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -123,7 +123,7 @@ func TestStringBusinessFunctionCodeOptions(t *testing.T) {
 
 	bfc := r.currentFEDWireMessage.BusinessFunctionCode
 	require.Equal(t, bfc.String(), "{3600}BTR   ")
-	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: true}), "{3600}BTR*")
+	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: true}), "{3600}BTR")
 	require.Equal(t, bfc.String(), bfc.Format(FormatOptions{VariableLengthFields: false}))
 
 }
