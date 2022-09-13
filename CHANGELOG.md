@@ -1,3 +1,14 @@
+## v0.12.1 (Released 2022-09-13)
+
+IMPROVEMENTS
+
+- businessFunctionCode: `TransactionTypeCode` is optional and can be omitted without padding from tag `{3600}` when empty (see [#240](https://github.com/moov-io/wire/issues/240) by [@anujtewari](https://github.com/anujtewari))
+
+BUILD
+
+- build: update module github.com/moov-io/base to v0.35.0
+- build: update module golang.org/x/oauth2 to v0.0.0-20220909003341-f21342109be1
+
 ## v0.12.0 (Released 2022-09-09)
 
 IMPROVEMENTS
