@@ -55,16 +55,6 @@ func TestSenderABANumberRequired(t *testing.T) {
 	require.EqualError(t, err, fieldError("SenderABANumber", ErrFieldRequired, rdi.SenderABANumber).Error())
 }
 
-// TestSenderShortNameRequired validates SenderDepositoryInstitution SenderShortName is required
-func TestSenderShortNameRequired(t *testing.T) {
-	rdi := mockSenderDepositoryInstitution()
-	rdi.SenderShortName = ""
-
-	err := rdi.Validate()
-
-	require.EqualError(t, err, fieldError("SenderShortName", ErrFieldRequired, rdi.SenderShortName).Error())
-}
-
 // TestParseSenderWrongLength parses a wrong Sender record length
 func TestParseSenderWrongLength(t *testing.T) {
 	var line = "{3100}0012"
@@ -142,5 +132,29 @@ func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
 	record := r.currentFEDWireMessage.SenderDepositoryInstitution
 	require.Equal(t, record.String(), "{3100}1        A                 ")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1*A*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
+
+	line = "{3100}1*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	record = r.currentFEDWireMessage.SenderDepositoryInstitution
+	require.Equal(t, record.String(), "{3100}1                          ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
+
+	line = "{3100}111111111*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseSenderDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	record = r.currentFEDWireMessage.SenderDepositoryInstitution
+	require.Equal(t, record.String(), "{3100}111111111                  ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}111111111")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
