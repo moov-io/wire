@@ -1,3 +1,16 @@
+## v0.12.2 (Released 2022-11-04)
+
+IMPROVEMENTS
+
+- docs: update navigation links; include (Awesome Fintech)[https://github.com/moov-io/awesome-fintech] and (Terms Dictionary)[https://github.com/moov-io/terms-dictionary]]
+- receiverDepositoryInstitution: `ReceiverShortName` is optional and can be omitted without padding or delimiter from tag `{3400}` when empty (see [#267](https://github.com/moov-io/wire/issues/267)) 
+- senderDepositoryInstitution: `SenderShortName` is optional and can be omitted without padding or delimiter from tag `{3100}` when empty (see [#267](https://github.com/moov-io/wire/issues/267)) 
+
+BUILD
+
+- build: bump nokogiri to 1.13.9 in /docs
+- build: update module github.com/moov-io/base to v0.36.1
+
 ## v0.12.1 (Released 2022-09-13)
 
 IMPROVEMENTS
