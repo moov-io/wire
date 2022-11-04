@@ -6,6 +6,7 @@ package wire
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"unicode/utf8"
 )
@@ -17,7 +18,7 @@ type SenderDepositoryInstitution struct {
 	// SenderABANumber
 	SenderABANumber string `json:"senderABANumber"`
 	// SenderShortName
-	SenderShortName string `json:"senderShortName"`
+	SenderShortName string `json:"senderShortName,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -38,8 +39,8 @@ func NewSenderDepositoryInstitution() *SenderDepositoryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (sdi *SenderDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) < 10 {
-		return NewTagMinLengthErr(10, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
 
 	sdi.tag = record[:6]
@@ -56,6 +57,7 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) error {
 	if err != nil {
 		return fieldError("SenderShortName", err)
 	}
+	fmt.Println("SenderShortName", value)
 	sdi.SenderShortName = value
 	length += read
 
@@ -123,9 +125,6 @@ func (sdi *SenderDepositoryInstitution) fieldInclusion() error {
 	if sdi.SenderABANumber == "" {
 		return fieldError("SenderABANumber", ErrFieldRequired, sdi.SenderABANumber)
 	}
-	if sdi.SenderShortName == "" {
-		return fieldError("SenderShortName", ErrFieldRequired, sdi.SenderShortName)
-	}
 	return nil
 }
 
@@ -146,5 +145,12 @@ func (sdi *SenderDepositoryInstitution) FormatSenderABANumber(options FormatOpti
 
 // FormatSenderShortName returns SenderShortName formatted according to the FormatOptions
 func (sdi *SenderDepositoryInstitution) FormatSenderShortName(options FormatOptions) string {
-	return sdi.formatAlphaField(sdi.SenderShortName, 18, options)
+	output := sdi.formatAlphaField(sdi.SenderShortName, 18, options)
+
+	//If this element is not present,the delimiter is not permitted
+	if output == "*" {
+		output = ""
+	}
+
+	return output
 }

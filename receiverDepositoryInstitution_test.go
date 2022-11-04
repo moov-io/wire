@@ -52,25 +52,15 @@ func TestReceiverABANumberRequired(t *testing.T) {
 	require.EqualError(t, err, fieldError("ReceiverABANumber", ErrFieldRequired, rdi.ReceiverABANumber).Error())
 }
 
-// TestReceiverShortNameRequired validates ReceiverDepositoryInstitution ReceiverShortName is required
-func TestReceiverShortNameRequired(t *testing.T) {
-	rdi := mockReceiverDepositoryInstitution()
-	rdi.ReceiverShortName = ""
-
-	err := rdi.Validate()
-
-	require.EqualError(t, err, fieldError("ReceiverShortName", ErrFieldRequired, rdi.ReceiverShortName).Error())
-}
-
 // TestParseReceiverWrongLength parses a wrong Receiver record length
 func TestParseReceiverWrongLength(t *testing.T) {
-	var line = "{3400}00"
+	var line = "{3400}*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseReceiverDepositoryInstitution()
 
-	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(10, len(r.line))).Error())
+	require.EqualError(t, err, r.parseError(NewTagMinLengthErr(8, len(r.line))).Error())
 }
 
 // TestParseReceiverReaderParseError parses a wrong Receiver reader parse error
@@ -139,5 +129,29 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	record := r.currentFEDWireMessage.ReceiverDepositoryInstitution
 	require.Equal(t, record.String(), "{3400}1        A                 ")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1*A*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
+
+	line = "{3400}1*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiverDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	record = r.currentFEDWireMessage.ReceiverDepositoryInstitution
+	require.Equal(t, record.String(), "{3400}1                          ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1*")
+	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
+
+	line = "{3400}111111111*"
+	r = NewReader(strings.NewReader(line))
+	r.line = line
+
+	err = r.parseReceiverDepositoryInstitution()
+	require.Equal(t, err, nil)
+
+	record = r.currentFEDWireMessage.ReceiverDepositoryInstitution
+	require.Equal(t, record.String(), "{3400}111111111                  ")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}111111111")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

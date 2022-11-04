@@ -17,7 +17,7 @@ type ReceiverDepositoryInstitution struct {
 	// ReceiverABANumber
 	ReceiverABANumber string `json:"receiverABANumber"`
 	// ReceiverShortName
-	ReceiverShortName string `json:"receiverShortName"`
+	ReceiverShortName string `json:"receiverShortName,omitempty"`
 
 	// validator is composed for data validation
 	validator
@@ -38,8 +38,8 @@ func NewReceiverDepositoryInstitution() *ReceiverDepositoryInstitution {
 // Parse provides no guarantee about all fields being filled in. Callers should make a Validate() call to confirm
 // successful parsing and data validity.
 func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
-	if utf8.RuneCountInString(record) < 10 {
-		return NewTagMinLengthErr(10, len(record))
+	if utf8.RuneCountInString(record) < 8 {
+		return NewTagMinLengthErr(8, len(record))
 	}
 
 	rdi.tag = record[:6]
@@ -123,9 +123,6 @@ func (rdi *ReceiverDepositoryInstitution) fieldInclusion() error {
 	if rdi.ReceiverABANumber == "" {
 		return fieldError("ReceiverABANumber", ErrFieldRequired, rdi.ReceiverABANumber)
 	}
-	if rdi.ReceiverShortName == "" {
-		return fieldError("ReceiverShortName", ErrFieldRequired, rdi.ReceiverShortName)
-	}
 	return nil
 }
 
@@ -146,5 +143,12 @@ func (rdi *ReceiverDepositoryInstitution) FormatReceiverABANumber(options Format
 
 // FormatReceiverShortName returns ReceiverShortName formatted according to the FormatOptions
 func (rdi *ReceiverDepositoryInstitution) FormatReceiverShortName(options FormatOptions) string {
-	return rdi.formatAlphaField(rdi.ReceiverShortName, 18, options)
+	output := rdi.formatAlphaField(rdi.ReceiverShortName, 18, options)
+
+	//If this element is not present,the delimiter is not permitted
+	if output == "*" {
+		output = ""
+	}
+
+	return output
 }
