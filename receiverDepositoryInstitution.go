@@ -145,7 +145,7 @@ func (rdi *ReceiverDepositoryInstitution) FormatReceiverABANumber(options Format
 func (rdi *ReceiverDepositoryInstitution) FormatReceiverShortName(options FormatOptions) string {
 	output := rdi.formatAlphaField(rdi.ReceiverShortName, 18, options)
 
-	//If this element is not present,the delimiter is not permitted
+	// If this element is not present,the delimiter is not permitted
 	if output == "*" {
 		output = ""
 	}

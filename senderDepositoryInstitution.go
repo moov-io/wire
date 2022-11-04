@@ -6,7 +6,6 @@ package wire
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"unicode/utf8"
 )
@@ -57,7 +56,6 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) error {
 	if err != nil {
 		return fieldError("SenderShortName", err)
 	}
-	fmt.Println("SenderShortName", value)
 	sdi.SenderShortName = value
 	length += read
 
@@ -147,7 +145,7 @@ func (sdi *SenderDepositoryInstitution) FormatSenderABANumber(options FormatOpti
 func (sdi *SenderDepositoryInstitution) FormatSenderShortName(options FormatOptions) string {
 	output := sdi.formatAlphaField(sdi.SenderShortName, 18, options)
 
-	//If this element is not present,the delimiter is not permitted
+	// If this element is not present,the delimiter is not permitted
 	if output == "*" {
 		output = ""
 	}
