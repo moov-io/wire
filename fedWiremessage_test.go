@@ -168,12 +168,20 @@ func TestFEDWireMessage_validateOriginatorFI(t *testing.T) {
 	require.EqualError(t, err, fieldError("Originator", ErrFieldRequired).Error())
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	fwm.Originator = mockOriginator()
-
-	// OriginatorOptionF required field check
 	err = fwm.validateOriginatorFI()
 
-	require.EqualError(t, err, fieldError("OriginatorOptionF", ErrFieldRequired).Error())
+	require.EqualError(t, err, fieldError("Originator or OriginatorOptionF", ErrFieldRequired).Error())
+
+	fwm.Originator = mockOriginator()
+	err = fwm.validateOriginatorFI()
+
+	require.NoError(t, err)
+
+	fwm.Originator = nil
+	fwm.OriginatorOptionF = mockOriginatorOptionF()
+	err = fwm.validateOriginatorFI()
+
+	require.NoError(t, err)
 }
 
 func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
@@ -216,14 +224,28 @@ func TestNewFEDWireMessage_validateOriginatorToBeneficiary(t *testing.T) {
 	expected = fieldError("Originator", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	fwm.Originator = mockOriginator()
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
 
 	// OriginatorOptionF required Field check
 	err = fwm.validateOriginatorToBeneficiary()
 
-	expected = fieldError("OriginatorOptionF", ErrFieldRequired).Error()
+	expected = fieldError("Originator or OriginatorOptionF", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
+
+	fwm.Originator = mockOriginator()
+
+	// OriginatorOptionF required Field check
+	err = fwm.validateOriginatorToBeneficiary()
+
+	require.NoError(t, err)
+
+	fwm.Originator = nil
+	fwm.OriginatorOptionF = mockOriginatorOptionF()
+
+	// OriginatorOptionF required Field check
+	err = fwm.validateOriginatorToBeneficiary()
+
+	require.NoError(t, err)
 
 	// check beneficiary still required
 	fwm.Beneficiary = nil
