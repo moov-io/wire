@@ -1065,8 +1065,8 @@ func (fwm *FEDWireMessage) validateOriginatorFI() error {
 	if fwm.OriginatorFI != nil {
 		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 		case CustomerTransferPlus:
-			if fwm.OriginatorOptionF == nil {
-				return fieldError("OriginatorOptionF", ErrFieldRequired)
+			if fwm.OriginatorOptionF == nil && fwm.Originator == nil {
+				return fieldError("Originator or OriginatorOptionF", ErrFieldRequired)
 			}
 		default:
 			if fwm.Originator == nil {
@@ -1107,8 +1107,8 @@ func (fwm *FEDWireMessage) validateOriginatorToBeneficiary() error {
 		}
 		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 		case CustomerTransferPlus:
-			if fwm.OriginatorOptionF == nil {
-				return fieldError("OriginatorOptionF", ErrFieldRequired)
+			if fwm.OriginatorOptionF == nil && fwm.Originator == nil {
+				return fieldError("Originator or OriginatorOptionF", ErrFieldRequired)
 			}
 		default:
 			if fwm.Originator == nil {
