@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -79,6 +80,46 @@ func readFile(filename string) (*wire.File, error) {
 	}
 	f, err := wire.NewReader(fd).Read()
 	return &f, err
+}
+
+func TestFiles_createWithInterfaceData(t *testing.T) {
+	router := mux.NewRouter()
+	repo := &testWireFileRepository{}
+	addFileRoutes(log.NewTestLogger(), router, repo)
+
+	w := httptest.NewRecorder()
+	raw := `FTI0811 XFT811  {1500}30        T {1510}1000{1520}20220128DOVTAL3C000001{2000}000000010000{3100}123456789DOVETAIL BANK US F*{3320}XX22012800000051*{3400}021000089CITIBANK NYC*{3600}CTP{3620}3*3AC4C307-0FFB-4028-BD8E-53D55BDB90E1*{3700}SUSD0,*{4200}D000100002*{5000}T000100011*DRESDEFFXXX*`
+	req, err := http.NewRequest(http.MethodPost, "/files/create", bytes.NewReader([]byte(raw)))
+	require.NoError(t, err)
+
+	// create the file
+	router.ServeHTTP(w, req)
+	require.Equal(t, http.StatusCreated, w.Code, w.Body)
+	var created wire.File
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &created))
+	require.NotEmpty(t, created.ID)
+
+	// retrieve the file
+	w = httptest.NewRecorder()
+	req, err = http.NewRequest(http.MethodGet, fmt.Sprintf("/files/%s", created.ID), nil)
+	require.NoError(t, err)
+	router.ServeHTTP(w, req)
+	require.Equal(t, http.StatusOK, w.Code, w.Body)
+	var file wire.File
+	require.NoError(t, json.Unmarshal(w.Body.Bytes(), &file))
+	require.Equal(t, created.ID, file.ID)
+
+	// retrieve the file contents
+	w = httptest.NewRecorder()
+	req, err = http.NewRequest(http.MethodGet, fmt.Sprintf("/files/%s/contents", created.ID), nil)
+	require.NoError(t, err)
+	router.ServeHTTP(w, req)
+	require.Equal(t, http.StatusOK, w.Code, w.Body)
+	contents := w.Body.String()
+	expectedTags := []string{"{1500}", "{1510}", "{1520}", "{2000}", "{3100}", "{3320}", "{3400}", "{3600}", "{3620}", "{3700}", "{4200}", "{5000}"}
+	for _, tag := range expectedTags {
+		require.Contains(t, contents, tag)
+	}
 }
 
 func TestFiles_createFile(t *testing.T) {
