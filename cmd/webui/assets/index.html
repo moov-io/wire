@@ -102,7 +102,8 @@
     <textarea id="jsoninput" name="jsoninput" cols="80" rows="40" placeholder="Paste your Wire file contents here..." required></textarea>
     <textarea id="jsonoutput" name="jsonoutput" cols="80" rows="40" readonly></textarea>
     <div id="buttons">
-        <button type="submit" onclick="json(jsoninput.value)">Parse Wire file</button>
+        <button type="submit" onclick="parse(jsoninput.value, 'wire')">Wire</button>
+        <button type="submit" onclick="parse(jsoninput.value, 'json')">JSON</button>
         <button type="submit" onclick="clearForms()">Clear Forms</button>
     </div>
     <div>
@@ -112,8 +113,8 @@
 </form>
 </body>
 <script>
-    const json = function(input) {
-        jsonoutput.value = parseContents(input)
+    const parse = function(input, format) {
+        jsonoutput.value = parseContents(input, format)
         jsonoutput.setSelectionRange(0,0)
         jsonoutput.focus()
     }
