@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -10,58 +11,105 @@ import (
 	"github.com/moov-io/wire"
 )
 
-func parseContents(input string) (string, error) {
-	r := strings.NewReader(input)
-	file, err := wire.NewReader(r).Read()
-	if err != nil {
-		return "", err
-	}
-
-	var buf bytes.Buffer
-	if err := json.NewEncoder(&buf).Encode(file); err != nil {
-		return "", err
-	}
-	return buf.String(), nil
+func isJSON(input string) bool {
+	var dummy json.RawMessage
+	return json.Unmarshal([]byte(input), &dummy) == nil
 }
 
-func prettyJson(input string) (string, error) {
-	var raw interface{}
-	if err := json.Unmarshal([]byte(input), &raw); err != nil {
-		return "", err
+func parseContents(input string) (*wire.File, error) {
+
+	var file wire.File
+	var err error
+
+	if isJSON(input) {
+		if err = json.Unmarshal([]byte(input), &file); err != nil {
+			return nil, fmt.Errorf("unable to parse with json foramt")
+		}
+	} else {
+		r := strings.NewReader(input)
+		if file, err = wire.NewReader(r).Read(); err != nil {
+			return nil, err
+		}
 	}
-	pretty, err := json.MarshalIndent(raw, "", "  ")
+
+	return &file, nil
+}
+
+func prettyJson(file *wire.File) (string, error) {
+	pretty, err := json.MarshalIndent(file, "", "  ")
 	if err != nil {
 		return "", err
 	}
 	return string(pretty), nil
 }
 
-func jsonWrapper() js.Func {
+func printWrapper() js.Func {
+	jsonFunc := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) != 2 {
+			return "Invalid no of arguments passed"
+		}
+
+		inputJSON := args[0].String()
+		outFormat := args[1].String()
+
+		file, err := parseContents(inputJSON)
+		if err != nil {
+			msg := fmt.Sprintf("unable to parse wire file - %v", err)
+			fmt.Print(msg)
+			return msg
+		}
+
+		if outFormat == "wire" {
+			var buf bytes.Buffer
+
+			w := wire.NewWriter(bufio.NewWriter(&buf))
+			if err := w.Write(file); err != nil {
+				fmt.Printf("unable to convert wire file to wire %s\n", err)
+				return "There was an error converting the wire"
+			}
+			w.Flush()
+
+			return buf.String()
+		} else {
+			pretty, err := prettyJson(file)
+			if err != nil {
+				fmt.Printf("unable to convert wire file to json %s\n", err)
+				return "There was an error converting the json"
+			}
+			return pretty
+		}
+	})
+	return jsonFunc
+}
+
+func validateWrapper() js.Func {
 	jsonFunc := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		if len(args) != 1 {
 			return "Invalid no of arguments passed"
 		}
 
 		inputJSON := args[0].String()
+		var msg string
+		defer fmt.Print(msg)
 
-		parsed, err := parseContents(inputJSON)
+		file, err := parseContents(inputJSON)
 		if err != nil {
-			msg := fmt.Sprintf("unable to parse wire file - %v", err)
-			fmt.Print(msg)
+			msg = fmt.Sprintf("unable to parse wire file - %v", err)
 			return msg
 		}
-		pretty, err := prettyJson(parsed)
-		if err != nil {
-			fmt.Printf("unable to convert wire file to json %s\n", err)
-			return "There was an error converting the json"
-		}
 
-		return pretty
+		if err = file.Validate(); err != nil {
+			msg = fmt.Sprintf("invalid wire file - %v", err)
+		} else {
+			msg = fmt.Sprintf("valid wire file")
+		}
+		return msg
 	})
 	return jsonFunc
 }
 
 func main() {
-	js.Global().Set("parseContents", jsonWrapper())
+	js.Global().Set("parseContents", printWrapper())
+	js.Global().Set("validateContents", validateWrapper())
 	<-make(chan bool)
 }
