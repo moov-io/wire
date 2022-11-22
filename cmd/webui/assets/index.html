@@ -104,6 +104,7 @@
     <div id="buttons">
         <button type="submit" onclick="parse(jsoninput.value, 'wire')">Wire</button>
         <button type="submit" onclick="parse(jsoninput.value, 'json')">JSON</button>
+        <button type="submit" onclick="validate(jsoninput.value)">Validate</button>
         <button type="submit" onclick="clearForms()">Clear Forms</button>
     </div>
     <div>
@@ -119,6 +120,12 @@
         jsonoutput.focus()
     }
 
+    const validate = function(input) {
+        jsonoutput.value = validateContents(input)
+        jsonoutput.setSelectionRange(0,0)
+        jsonoutput.focus()
+    }
+
     const clearForms = function() {
         jsoninput.value = ""
         jsonoutput.value = ""
@@ -126,7 +133,7 @@
     }
     wireform.addEventListener('submit', (event) => {
         event.preventDefault();
-        json(jsoninput.value)
+        //parse(jsoninput.value, "json")
     })
 
     document.getElementById('input-file')
@@ -143,7 +150,8 @@
 
     function placeFileContent(target, file) {
         readFileContent(file).then(content => {
-            json(content)
+            jsoninput.value = content
+            parse(content, "json")
         }).catch(error => console.log(error))
     }
 

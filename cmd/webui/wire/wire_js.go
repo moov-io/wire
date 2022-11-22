@@ -82,7 +82,34 @@ func printWrapper() js.Func {
 	return jsonFunc
 }
 
+func validateWrapper() js.Func {
+	jsonFunc := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		if len(args) != 1 {
+			return "Invalid no of arguments passed"
+		}
+
+		inputJSON := args[0].String()
+		var msg string
+		defer fmt.Print(msg)
+
+		file, err := parseContents(inputJSON)
+		if err != nil {
+			msg = fmt.Sprintf("unable to parse wire file - %v", err)
+			return msg
+		}
+
+		if err = file.Validate(); err != nil {
+			msg = fmt.Sprintf("invalid wire file - %v", err)
+		} else {
+			msg = fmt.Sprintf("valid wire file")
+		}
+		return msg
+	})
+	return jsonFunc
+}
+
 func main() {
 	js.Global().Set("parseContents", printWrapper())
+	js.Global().Set("validateContents", validateWrapper())
 	<-make(chan bool)
 }
