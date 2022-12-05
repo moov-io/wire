@@ -101,7 +101,7 @@ func validateWrapper() js.Func {
 		if err = file.Validate(); err != nil {
 			msg = fmt.Sprintf("invalid wire file - %v", err)
 		} else {
-			msg = fmt.Sprintf("valid wire file")
+			msg = "valid wire file"
 		}
 		return msg
 	})
