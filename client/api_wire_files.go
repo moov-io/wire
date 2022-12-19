@@ -29,8 +29,7 @@ type WireFilesApiService service
 
 // AddFEDWireMessageToFileOpts Optional parameters for the method 'AddFEDWireMessageToFile'
 type AddFEDWireMessageToFileOpts struct {
-	XRequestID      optional.String
-	XIdempotencyKey optional.String
+	XRequestID optional.String
 }
 
 /*
@@ -41,7 +40,6 @@ Add a Fedwire Message to the specified file.
   - @param fedWireMessage
   - @param optional nil or *AddFEDWireMessageToFileOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
-  - @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
 */
 func (a *WireFilesApiService) AddFEDWireMessageToFile(ctx _context.Context, fileID string, fedWireMessage FedWireMessage, localVarOptionals *AddFEDWireMessageToFileOpts) (*_nethttp.Response, error) {
 	var (
@@ -80,9 +78,6 @@ func (a *WireFilesApiService) AddFEDWireMessageToFile(ctx _context.Context, file
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
 	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
-	}
 	// body params
 	localVarPostBody = &fedWireMessage
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFormFileName, localVarFileName, localVarFileBytes)
@@ -114,8 +109,7 @@ func (a *WireFilesApiService) AddFEDWireMessageToFile(ctx _context.Context, file
 
 // CreateWireFileOpts Optional parameters for the method 'CreateWireFile'
 type CreateWireFileOpts struct {
-	XRequestID      optional.String
-	XIdempotencyKey optional.String
+	XRequestID optional.String
 }
 
 /*
@@ -125,7 +119,6 @@ Create a new File object from either the plaintext or JSON representation.
   - @param wireFile Content of the Wire file (in json or raw text)
   - @param optional nil or *CreateWireFileOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
-  - @param "XIdempotencyKey" (optional.String) -  Idempotent key in the header which expires after 24 hours. These strings should contain enough entropy to not collide with each other in your requests.
 
 @return WireFile
 */
@@ -165,9 +158,6 @@ func (a *WireFilesApiService) CreateWireFile(ctx _context.Context, wireFile Wire
 	}
 	if localVarOptionals != nil && localVarOptionals.XRequestID.IsSet() {
 		localVarHeaderParams["X-Request-ID"] = parameterToString(localVarOptionals.XRequestID.Value(), "")
-	}
-	if localVarOptionals != nil && localVarOptionals.XIdempotencyKey.IsSet() {
-		localVarHeaderParams["X-Idempotency-Key"] = parameterToString(localVarOptionals.XIdempotencyKey.Value(), "")
 	}
 	// body params
 	localVarPostBody = &wireFile
@@ -405,6 +395,8 @@ func (a *WireFilesApiService) GetWireFileByID(ctx _context.Context, fileID strin
 // GetWireFileContentsOpts Optional parameters for the method 'GetWireFileContents'
 type GetWireFileContentsOpts struct {
 	XRequestID optional.String
+	Format     optional.String
+	Newline    optional.Bool
 }
 
 /*
@@ -414,6 +406,8 @@ Assembles the existing file, computes sequence numbers and totals. Returns plain
   - @param fileID File ID
   - @param optional nil or *GetWireFileContentsOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param "Format" (optional.String) -  Optional file type to get file as fixed length or variable length type
+  - @param "Newline" (optional.Bool) -  Optional new line flag to have new line or no new line
 
 @return string
 */
@@ -435,6 +429,12 @@ func (a *WireFilesApiService) GetWireFileContents(ctx _context.Context, fileID s
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
+	if localVarOptionals != nil && localVarOptionals.Format.IsSet() {
+		localVarQueryParams.Add("format", parameterToString(localVarOptionals.Format.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.Newline.IsSet() {
+		localVarQueryParams.Add("newline", parameterToString(localVarOptionals.Newline.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 

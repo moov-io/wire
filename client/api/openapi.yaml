@@ -78,17 +78,6 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These
-          strings should contain enough entropy to not collide with each other in
-          your requests.
-        example: a4f88150
-        explode: false
-        in: header
-        name: X-Idempotency-Key
-        required: false
-        schema:
-          type: string
-        style: simple
       requestBody:
         content:
           application/json:
@@ -227,24 +216,25 @@ paths:
           example: 3f2d23ee214
           type: string
         style: simple
-      - description: Optional file type to get file as fixed length or variable length type
-        example: variable
-        explode: false
+      - description: Optional file type to get file as fixed length or variable length
+          type
+        explode: true
         in: query
         name: format
         required: false
         schema:
+          example: variable
           type: string
-        style: simple
+        style: form
       - description: Optional new line flag to have new line or no new line
-        example: false
-        explode: false
+        explode: true
         in: query
         name: newline
         required: false
         schema:
+          example: false
           type: boolean
-        style: simple
+        style: form
       responses:
         200:
           content:
@@ -313,17 +303,6 @@ paths:
         explode: false
         in: header
         name: X-Request-ID
-        required: false
-        schema:
-          type: string
-        style: simple
-      - description: Idempotent key in the header which expires after 24 hours. These
-          strings should contain enough entropy to not collide with each other in
-          your requests.
-        example: a4f88150
-        explode: false
-        in: header
-        name: X-Idempotency-Key
         required: false
         schema:
           type: string
