@@ -121,6 +121,53 @@ func (r *Reader) Read() (File, error) {
 	return r.File, r.errors
 }
 
+func (r *Reader) ReadWithOpts(opts *ValidateOpts) (File, error) {
+	spiltString := func(line string) []string {
+
+		// strip new lines
+		line = strings.ReplaceAll(strings.ReplaceAll(line, "\r\n", ""), "\n", "")
+
+		// split line by tag again
+		indexes := tagRegex.FindAllStringIndex(line, -1)
+		var result []string
+		last := len(line)
+		for i := range indexes {
+			index := indexes[len(indexes)-1-i][0]
+			result = append([]string{line[index:last]}, result...)
+			last = index
+		}
+		return result
+	}
+
+	r.lineNum = 0
+	// read through the entire file
+	for r.scanner.Scan() {
+		line := r.scanner.Text()
+		for _, subLine := range spiltString(line) {
+			r.lineNum++
+			r.line = subLine
+			if err := r.parseLine(); err != nil {
+				r.errors.Add(err)
+			}
+		}
+	}
+
+	r.File.AddFEDWireMessage(r.currentFEDWireMessage)
+	r.currentFEDWireMessage = FEDWireMessage{}
+
+	if r.errors.Empty() {
+		if opts != nil {
+			r.File.SetValidation(opts)
+		}
+		err := r.File.Validate()
+		if err == nil {
+			return r.File, nil
+		}
+		r.errors.Add(fmt.Errorf("file validation failed: %v", err))
+	}
+	return r.File, r.errors
+}
+
 func (r *Reader) parseLine() error { //nolint:gocyclo
 	if n := utf8.RuneCountInString(r.line); n < 6 {
 		return fmt.Errorf("line %q is too short for tag", r.line)

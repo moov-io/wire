@@ -1225,8 +1225,7 @@ func TestFEDWireMessage_skipIMAD(t *testing.T) {
 	err := file.Validate()
 	require.NoError(t, err)
 
-	fwm.InputMessageAccountabilityData = nil
-	file.AddFEDWireMessage(fwm)
+	file.FEDWireMessage.InputMessageAccountabilityData = nil
 
 	err = file.Validate()
 	expected := fieldError("InputMessageAccountabilityData", ErrFieldRequired).Error()
@@ -1242,6 +1241,7 @@ func TestFEDWireMessage_skipIMAD(t *testing.T) {
 	newFile, err := FileFromJSON(bs)
 	require.NoError(t, err)
 	require.NotNil(t, newFile, "Created file shouldn't be nil")
+	require.Nil(t, newFile.FEDWireMessage.InputMessageAccountabilityData)
 
 	err = newFile.Validate()
 	require.EqualError(t, err, expected)
