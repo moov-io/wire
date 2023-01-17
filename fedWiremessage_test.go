@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -1206,4 +1207,46 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 
 	expected := fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown).Error()
 	require.EqualError(t, err, expected)
+}
+
+func TestFEDWireMessage_skipIMAD(t *testing.T) {
+	file := NewFile()
+	fwm := mockCustomerTransferData()
+	// Beneficiary
+	fwm.Beneficiary = mockBeneficiary()
+	// Originator
+	fwm.Originator = mockOriginator()
+	file.AddFEDWireMessage(fwm)
+	// Create file
+	if err := file.Create(); err != nil {
+		t.Fatalf("%T: %s", err, err)
+	}
+
+	err := file.Validate()
+	require.NoError(t, err)
+
+	fwm.InputMessageAccountabilityData = nil
+	file.AddFEDWireMessage(fwm)
+
+	err = file.Validate()
+	expected := fieldError("InputMessageAccountabilityData", ErrFieldRequired).Error()
+	require.EqualError(t, err, expected)
+
+	file.SetValidation(&ValidateOpts{SkipMandatoryIMAD: true})
+	err = file.Validate()
+	require.NoError(t, err)
+
+	bs, err := json.Marshal(file)
+	require.NoError(t, err)
+
+	newFile, err := FileFromJSON(bs)
+	require.NoError(t, err)
+	require.NotNil(t, newFile, "Created file shouldn't be nil")
+
+	err = newFile.Validate()
+	require.EqualError(t, err, expected)
+
+	newFile.SetValidation(&ValidateOpts{SkipMandatoryIMAD: true})
+	err = newFile.Validate()
+	require.NoError(t, err)
 }
