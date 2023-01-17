@@ -92,7 +92,8 @@ func TestReadWithValidateOpts(t *testing.T) {
 	defer f.Close()
 	r := NewReader(f)
 
-	file, err := r.Read()
+	var file File
+	file, err = r.Read()
 	file.FEDWireMessage.InputMessageAccountabilityData = nil
 
 	b := &bytes.Buffer{}
