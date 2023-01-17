@@ -1249,4 +1249,7 @@ func TestFEDWireMessage_skipIMAD(t *testing.T) {
 	newFile.SetValidation(&ValidateOpts{SkipMandatoryIMAD: true})
 	err = newFile.Validate()
 	require.NoError(t, err)
+
+	v := newFile.GetValidation()
+	require.Equal(t, true, v.SkipMandatoryIMAD)
 }

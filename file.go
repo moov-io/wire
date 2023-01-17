@@ -37,6 +37,11 @@ func (f *File) SetValidation(opts *ValidateOpts) {
 	f.FEDWireMessage.setValidation(opts)
 }
 
+// GetValidation returns validation rules of FEDWireMessage
+func (f *File) GetValidation() *ValidateOpts {
+	return f.FEDWireMessage.getValidation()
+}
+
 // AddFEDWireMessage appends a FEDWireMessage to the File
 func (f *File) AddFEDWireMessage(fwm FEDWireMessage) FEDWireMessage {
 	f.FEDWireMessage = fwm
