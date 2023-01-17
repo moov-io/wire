@@ -92,8 +92,10 @@ func TestReadWithValidateOpts(t *testing.T) {
 	defer f.Close()
 	r := NewReader(f)
 
-	var file File
-	file, err = r.Read()
+	file, err := r.Read()
+	require.Error(t, err)
+	require.Nil(t, file)
+
 	file.FEDWireMessage.InputMessageAccountabilityData = nil
 
 	b := &bytes.Buffer{}
@@ -107,5 +109,6 @@ func TestReadWithValidateOpts(t *testing.T) {
 	})
 
 	require.Error(t, err)
+	require.Nil(t, file)
 	require.Nil(t, file.FEDWireMessage.InputMessageAccountabilityData)
 }
