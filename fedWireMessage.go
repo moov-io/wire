@@ -1513,11 +1513,3 @@ func (fwm *FEDWireMessage) isRemittanceValid() error {
 	}
 	return nil
 }
-
-func (fwm *FEDWireMessage) GetValidation() *ValidateOpts {
-	return fwm.ValidateOptions
-}
-
-func (fwm *FEDWireMessage) SetValidation(opts *ValidateOpts) {
-	fwm.ValidateOptions = opts
-}

@@ -34,12 +34,12 @@ func (f *File) SetValidation(opts *ValidateOpts) {
 	if opts == nil {
 		return
 	}
-	f.FEDWireMessage.SetValidation(opts)
+	f.FEDWireMessage.ValidateOptions = opts
 }
 
 // GetValidation returns validation rules of FEDWireMessage
 func (f *File) GetValidation() *ValidateOpts {
-	return f.FEDWireMessage.GetValidation()
+	return f.FEDWireMessage.ValidateOptions
 }
 
 // AddFEDWireMessage appends a FEDWireMessage to the File
