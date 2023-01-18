@@ -77,51 +77,14 @@ func NewReader(r io.Reader) *Reader {
 // on the first character of each line. It also enforces FED Wire formatting rules and returns
 // the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
-
-	spiltString := func(line string) []string {
-
-		// strip new lines
-		line = strings.ReplaceAll(strings.ReplaceAll(line, "\r\n", ""), "\n", "")
-
-		// split line by tag again
-		indexes := tagRegex.FindAllStringIndex(line, -1)
-		var result []string
-		last := len(line)
-		for i := range indexes {
-			index := indexes[len(indexes)-1-i][0]
-			result = append([]string{line[index:last]}, result...)
-			last = index
-		}
-		return result
-	}
-
-	r.lineNum = 0
-	// read through the entire file
-	for r.scanner.Scan() {
-		line := r.scanner.Text()
-		for _, subLine := range spiltString(line) {
-			r.lineNum++
-			r.line = subLine
-			if err := r.parseLine(); err != nil {
-				r.errors.Add(err)
-			}
-		}
-	}
-
-	r.File.AddFEDWireMessage(r.currentFEDWireMessage)
-	r.currentFEDWireMessage = FEDWireMessage{}
-
-	if r.errors.Empty() {
-		err := r.File.Validate()
-		if err == nil {
-			return r.File, nil
-		}
-		r.errors.Add(fmt.Errorf("file validation failed: %v", err))
-	}
-	return r.File, r.errors
+	return r.read(nil)
 }
 
 func (r *Reader) ReadWithOpts(opts *ValidateOpts) (File, error) {
+	return r.read(opts)
+}
+
+func (r *Reader) read(opts *ValidateOpts) (File, error) {
 	spiltString := func(line string) []string {
 
 		// strip new lines

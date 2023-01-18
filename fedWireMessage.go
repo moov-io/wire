@@ -137,8 +137,8 @@ type FEDWireMessage struct {
 	RemittanceFreeText *RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	// ServiceMessage
 	ServiceMessage *ServiceMessage `json:"serviceMessage,omitempty"`
-
-	validateOpts *ValidateOpts
+	// ValidateOpts
+	ValidateOptions *ValidateOpts `json:"validateOptions,omitempty"`
 }
 
 // verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
@@ -228,7 +228,7 @@ func (fwm *FEDWireMessage) mandatoryFields(isIncoming bool) error {
 		return err
 	}
 
-	if fwm.validateOpts == nil || !fwm.validateOpts.SkipMandatoryIMAD {
+	if fwm.ValidateOptions == nil || !fwm.ValidateOptions.SkipMandatoryIMAD {
 		if err := fwm.validateIMAD(); err != nil {
 			return err
 		}
@@ -1514,17 +1514,10 @@ func (fwm *FEDWireMessage) isRemittanceValid() error {
 	return nil
 }
 
-func (fwm *FEDWireMessage) getValidation() *ValidateOpts {
-	if fwm == nil {
-		return nil
-	}
-	return fwm.validateOpts
+func (fwm *FEDWireMessage) GetValidation() *ValidateOpts {
+	return fwm.ValidateOptions
 }
 
-func (fwm *FEDWireMessage) setValidation(opts *ValidateOpts) {
-	if fwm == nil {
-		return
-	}
-
-	fwm.validateOpts = opts
+func (fwm *FEDWireMessage) SetValidation(opts *ValidateOpts) {
+	fwm.ValidateOptions = opts
 }
