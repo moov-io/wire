@@ -31,7 +31,7 @@ func NewFile(opts ...FilePropertyFunc) *File {
 
 // SetValidation stores ValidateOpts on the FEDWireMessage's validation rules
 func (f *File) SetValidation(opts *ValidateOpts) {
-	if opts == nil {
+	if f == nil || opts == nil {
 		return
 	}
 	f.FEDWireMessage.ValidateOptions = opts
@@ -39,6 +39,9 @@ func (f *File) SetValidation(opts *ValidateOpts) {
 
 // GetValidation returns validation rules of FEDWireMessage
 func (f *File) GetValidation() *ValidateOpts {
+	if f == nil || f.FEDWireMessage.ValidateOptions == nil {
+		return nil
+	}
 	return f.FEDWireMessage.ValidateOptions
 }
 
