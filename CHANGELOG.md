@@ -1,3 +1,28 @@
+## v0.13.0 (Released 2023-02-01)
+
+BUG FIXES
+
+- fedWireMessage: correct validation of OriginatorFI and OriginatorToBeneficiary (see [PR #272](https://github.com/moov-io/wire/pull/272) by [@mfdeveloper508](https://github.com/mfdeveloper508) and [Issue #217](https://github.com/moov-io/wire/issues/217) by [@vishwasbabu](https://github.com/vishwasbabu))
+
+ADDITIONS
+
+- feat: Introduced `ValidateOpts`, which allows users to customize file validation logic for their use cases (see [PR #283](https://github.com/moov-io/wire/pull/283) by [@mfdeveloper508](https://github.com/mfdeveloper508))
+  - The first option implemented for this new feature is the ability to skip validation of IMAD, which is optional for FedLine Advantage customers (see [Issue #207](https://github.com/moov-io/wire/issues/207) by [@gpark1005](https://github.com/gpark1005))
+- webui: Added buttons to convert between JSON and Wire formats, and validate files (see [PR #275](https://github.com/moov-io/wire/pull/275) by [@mfdeveloper508](https://github.com/mfdeveloper508))
+
+BUILD
+
+- build: update module github.com/moov-io/base to v0.39.0
+- build: update module github.com/prometheus/client_golang to v1.14.0
+- build: update module golang.org/x/oauth2 to v0.4.0
+- build: update module golang.org/x/text to v0.6.0
+- build(docs): bump activesupport to 6.0.6.1
+- build(docs): bump concurrent-ruby to 1.2.0
+- build(docs): bump minitest to 5.17.0
+- build(docs): bump nokogiri to 1.13.10
+- build(docs): bump racc to 1.6.1
+- build(docs): bump zeitwerk to 2.6.6
+
 ## v0.12.2 (Released 2022-11-04)
 
 IMPROVEMENTS
