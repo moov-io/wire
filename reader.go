@@ -77,7 +77,14 @@ func NewReader(r io.Reader) *Reader {
 // on the first character of each line. It also enforces FED Wire formatting rules and returns
 // the appropriate error if issues are found.
 func (r *Reader) Read() (File, error) {
+	return r.read(nil)
+}
 
+func (r *Reader) ReadWithOpts(opts *ValidateOpts) (File, error) {
+	return r.read(opts)
+}
+
+func (r *Reader) read(opts *ValidateOpts) (File, error) {
 	spiltString := func(line string) []string {
 
 		// strip new lines
@@ -112,6 +119,9 @@ func (r *Reader) Read() (File, error) {
 	r.currentFEDWireMessage = FEDWireMessage{}
 
 	if r.errors.Empty() {
+		if opts != nil {
+			r.File.SetValidation(opts)
+		}
 		err := r.File.Validate()
 		if err == nil {
 			return r.File, nil

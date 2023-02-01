@@ -6,6 +6,12 @@ package wire
 
 import "strings"
 
+// ValidateOpts contains specific overrides from the default set of validations
+type ValidateOpts struct {
+	// SkipMandatoryIMAD skips checking that InputMessageAccountabilityData is mandatory tag.
+	SkipMandatoryIMAD bool `json:"skipMandatoryIMAD"`
+}
+
 // FEDWireMessage is a FedWire Message
 type FEDWireMessage struct {
 	// ID
@@ -131,6 +137,8 @@ type FEDWireMessage struct {
 	RemittanceFreeText *RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	// ServiceMessage
 	ServiceMessage *ServiceMessage `json:"serviceMessage,omitempty"`
+	// ValidateOpts
+	ValidateOptions *ValidateOpts `json:"validateOptions,omitempty"`
 }
 
 // verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
@@ -219,8 +227,11 @@ func (fwm *FEDWireMessage) mandatoryFields(isIncoming bool) error {
 	if err := fwm.validateTypeSubType(); err != nil {
 		return err
 	}
-	if err := fwm.validateIMAD(); err != nil {
-		return err
+
+	if fwm.ValidateOptions == nil || !fwm.ValidateOptions.SkipMandatoryIMAD {
+		if err := fwm.validateIMAD(); err != nil {
+			return err
+		}
 	}
 	if err := fwm.validateAmount(); err != nil {
 		return err
