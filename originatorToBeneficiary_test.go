@@ -143,3 +143,33 @@ func TestStringOriginatorToBeneficiaryOptions(t *testing.T) {
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6000}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
+
+// TestStringOriginatorToBeneficiaryOptionsWithExtraLength validates the length of each line if it exceeds the limit of 35 chars per line 
+func TestStringOriginatorToBeneficiaryOptionsWithExtraLength(t *testing.T) {
+	var line = "{6000}Lorem ipsum dolor sit amet, co WOODEN*adipiscing elit, sed do eiusmod 54F*022/FROM MYCOMPY INC. VIA MYBANKNIF*SUC INTERNAL BANK TO BANK TRANSFER,*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorToBeneficiary()
+	require.Equal(t, err, nil)
+
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineOne, "Lorem ipsum dolor sit amet, co WOOD")
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineTwo, "adipiscing elit, sed do eiusmod 54F")
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineThree, "022/FROM MYCOMPY INC. VIA MYBANKNIF")
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineFour, "SUC INTERNAL BANK TO BANK TRANSFER,")
+}
+
+// TestStringOriginatorToBeneficiaryOptionsWithSmallerLength // TestStringOriginatorToBeneficiaryOptionsWithExtraLength validates the length of each line if it is less than the limit of 35 chars per line
+func TestStringOriginatorToBeneficiaryOptionsWithSmallerLength(t *testing.T) {
+	var line = "{6000}Lorem ipsum dolor sit amet, co W*adipiscing elit, sed do eiusmod 54F*022/FROM INC. VIA MYBANKNIF*SUC INTERNAL BANK TO TRANSFER,*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseOriginatorToBeneficiary()
+	require.Equal(t, err, nil)
+
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineOne, "Lorem ipsum dolor sit amet, co W")
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineTwo, "adipiscing elit, sed do eiusmod 54F")
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineThree, "022/FROM INC. VIA MYBANKNIF")
+	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineFour, "SUC INTERNAL BANK TO TRANSFER,")
+}
