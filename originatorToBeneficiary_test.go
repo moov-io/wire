@@ -144,7 +144,7 @@ func TestStringOriginatorToBeneficiaryOptions(t *testing.T) {
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
 
-// TestStringOriginatorToBeneficiaryOptionsWithExtraLength validates the length of each line if it exceeds the limit of 35 chars per line 
+// TestStringOriginatorToBeneficiaryOptionsWithExtraLength validates the length of each line if it exceeds the limit of 35 chars per line
 func TestStringOriginatorToBeneficiaryOptionsWithExtraLength(t *testing.T) {
 	var line = "{6000}Lorem ipsum dolor sit amet, co WOODEN*adipiscing elit, sed do eiusmod 54F*022/FROM MYCOMPY INC. VIA MYBANKNIF*SUC INTERNAL BANK TO BANK TRANSFER,*"
 	r := NewReader(strings.NewReader(line))
