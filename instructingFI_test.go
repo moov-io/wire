@@ -3,7 +3,6 @@ package wire
 import (
 	"strings"
 	"testing"
-
 	"github.com/stretchr/testify/require"
 )
 
@@ -194,4 +193,17 @@ func TestStringInstructingFIOptions(t *testing.T) {
 	require.Equal(t, record.String(), "{5200}D12                                                                                                                                                                            ")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5200}D12*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
+}
+
+// TestInstructingFIVariableLength parses using variable length exceeding max limit
+func TestInstructingFIVariableLength(t *testing.T) {
+	var line = "{5200}BCITIGB2LXXX*CITIBANK LONDONENGLAND*CITIGROUP CENTRELONDONGREATER LONDONENGLAND*NGB*LONDON WC2R 1HB, ENGLAND*"
+	r := NewReader(strings.NewReader(line))
+	r.line = line
+
+	err := r.parseInstructingFI()
+	require.Nil(t, err)
+
+	err = r.parseInstructingFI()
+	require.Equal(t, err, nil)
 }
