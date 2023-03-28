@@ -1,3 +1,19 @@
+## v0.13.2 (Released 2023-03-22)
+
+IMPROVEMENTS
+
+- fix: delimiter issue resolved for OriginatorToBeneficiary Lines if it exceeds limit of 35 chars per line and 140 chars in total (#296)
+
+BUILD
+
+- build: upgrade golang to 1.20
+- build(deps): bump golang.org/x/net from 0.6.0 to 0.7.0
+- chore(deps): update dependency bulma-clean-theme to v0.13.2
+- chore(deps): update dependency github-pages to v228
+- fix(deps): update module github.com/stretchr/testify to v1.8.2
+- fix(deps): update module golang.org/x/oauth2 to v0.6.0
+- fix(deps): update module golang.org/x/text to v0.8.0
+
 ## v0.13.0 (Released 2023-02-01)
 
 BUG FIXES
@@ -28,8 +44,8 @@ BUILD
 IMPROVEMENTS
 
 - docs: update navigation links; include (Awesome Fintech)[https://github.com/moov-io/awesome-fintech] and (Terms Dictionary)[https://github.com/moov-io/terms-dictionary]]
-- receiverDepositoryInstitution: `ReceiverShortName` is optional and can be omitted without padding or delimiter from tag `{3400}` when empty (see [#267](https://github.com/moov-io/wire/issues/267)) 
-- senderDepositoryInstitution: `SenderShortName` is optional and can be omitted without padding or delimiter from tag `{3100}` when empty (see [#267](https://github.com/moov-io/wire/issues/267)) 
+- receiverDepositoryInstitution: `ReceiverShortName` is optional and can be omitted without padding or delimiter from tag `{3400}` when empty (see [#267](https://github.com/moov-io/wire/issues/267))
+- senderDepositoryInstitution: `SenderShortName` is optional and can be omitted without padding or delimiter from tag `{3100}` when empty (see [#267](https://github.com/moov-io/wire/issues/267))
 
 BUILD
 
@@ -106,7 +122,7 @@ BUILD
 
 IMPROVEMENTS
 
-- fedWireMessage: support fed-appended tags (`{1100}`, `{1110}`, `{1120}`, and `{1130}`) in `Reader` and `Writer` 
+- fedWireMessage: support fed-appended tags (`{1100}`, `{1110}`, `{1120}`, and `{1130}`) in `Reader` and `Writer`
 
 ## v0.7.5 (Released 2021-09-13)
 

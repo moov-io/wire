@@ -57,7 +57,7 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	length += read
 
 	if len(ob.LineOne) >= 35 {
-		length += (strings.Index(record[length:], "*") +1)
+		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ob.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -66,8 +66,8 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	ob.LineTwo = value
 	length += read
 
-	if len(ob.LineTwo) >= 35  {
-		length += (strings.Index(record[length:], "*") +1)
+	if len(ob.LineTwo) >= 35 {
+		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ob.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -76,8 +76,8 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	ob.LineThree = value
 	length += read
 
-	if len(ob.LineThree) >= 35  {
-		length += (strings.Index(record[length:], "*") +1)
+	if len(ob.LineThree) >= 35 {
+		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ob.parseVariableStringField(record[length:], 35)
 	if err != nil {
