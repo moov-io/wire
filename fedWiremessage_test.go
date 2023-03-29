@@ -202,7 +202,7 @@ func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 	// OriginatorOptionF required field check
 	err = fwm.validateInstructingFI()
 
-	expected = fieldError("OriginatorOptionF", ErrFieldRequired).Error()
+	expected = fieldError("Originator or OriginatorOptionF", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 }
 

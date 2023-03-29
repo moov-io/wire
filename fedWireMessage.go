@@ -1094,8 +1094,8 @@ func (fwm *FEDWireMessage) validateInstructingFI() error {
 	if fwm.InstructingFI != nil {
 		switch fwm.BusinessFunctionCode.BusinessFunctionCode {
 		case CustomerTransferPlus:
-			if fwm.OriginatorOptionF == nil {
-				return fieldError("OriginatorOptionF", ErrFieldRequired)
+			if fwm.OriginatorOptionF == nil && fwm.Originator == nil { 
+				return fieldError("Originator or OriginatorOptionF", ErrFieldRequired)
 			}
 		default:
 			if fwm.Originator == nil {
