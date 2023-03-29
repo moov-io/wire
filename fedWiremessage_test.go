@@ -197,12 +197,17 @@ func TestFEDWireMessage_validateInstructingFI(t *testing.T) {
 	require.EqualError(t, err, expected)
 
 	fwm.BusinessFunctionCode.BusinessFunctionCode = CustomerTransferPlus
-	fwm.Originator = mockOriginator()
 
 	// OriginatorOptionF required field check
 	err = fwm.validateInstructingFI()
 
 	expected = fieldError("OriginatorOptionF", ErrFieldRequired).Error()
+	require.EqualError(t, err, expected)
+
+	fwm.Originator = mockOriginator()
+	err = fwm.validateInstructingFI()
+	expected = fieldError("OriginatorFI", ErrFieldRequired).Error()
+
 	require.EqualError(t, err, expected)
 }
 
