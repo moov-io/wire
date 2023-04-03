@@ -1,9 +1,9 @@
 package wire
 
 import (
+	"github.com/stretchr/testify/require"
 	"strings"
 	"testing"
-	"github.com/stretchr/testify/require"
 )
 
 // mockInstructingFI creates a InstructingFI
