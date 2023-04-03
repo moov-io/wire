@@ -1,3 +1,10 @@
+## v0.13.3 (Released 2023-04-03)
+
+IMPROVEMENTS
+
+- Max Length issue resolved for InstructingFI Lines if it exceeds max char Limit
+- 5010(OriginatorOptionF should be mandatory only if {5000} is not present and {3600} is CTP)
+
 ## v0.13.2 (Released 2023-03-22)
 
 IMPROVEMENTS
