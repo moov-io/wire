@@ -50,6 +50,8 @@ github.com/moov-io/base v0.40.1 h1:HS8yunbfCV9EQrCjmsE64Qxo8IZ/6khrafADzjZiKj4=
 github.com/moov-io/base v0.40.1/go.mod h1:iZCWSt+2fvldf5/l1yLF6fJQtyLQRO3+Hmrm/wk8bdc=
 github.com/moov-io/base v0.40.2 h1:CSTL/oDu7Cx8rnxbYFQlY96X08Bn0KXw/6riNbymIDA=
 github.com/moov-io/base v0.40.2/go.mod h1:iZCWSt+2fvldf5/l1yLF6fJQtyLQRO3+Hmrm/wk8bdc=
+github.com/moov-io/base v0.42.0 h1:JXNNSLuCifCDNhOKEKHeiI0C9rpZ5M9VIfMMYAMliTE=
+github.com/moov-io/base v0.42.0/go.mod h1:HfRbA4Ng1skBEA0iF264g+FyvzabBxji2lvZURNhtq4=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
@@ -57,6 +59,8 @@ github.com/prometheus/client_golang v1.14.0 h1:nJdhIvne2eSX/XRAFV9PcvFFRbrjbcTUj
 github.com/prometheus/client_golang v1.14.0/go.mod h1:8vpkKitgIVNcqrRBWh1C4TIUQgYNtG/XQE4E/Zae36Y=
 github.com/prometheus/client_golang v1.15.0 h1:5fCgGYogn0hFdhyhLbw7hEsWxufKtY9klyvdNfFlFhM=
 github.com/prometheus/client_golang v1.15.0/go.mod h1:e9yaBhRPU2pPNsZwE+JdQl0KEt1N9XgF6zxWmaC0xOk=
+github.com/prometheus/client_golang v1.15.1 h1:8tXpTmJbyH5lydzFPoxSIJ0J46jdh3tylbvM1xCv0LI=
+github.com/prometheus/client_golang v1.15.1/go.mod h1:e9yaBhRPU2pPNsZwE+JdQl0KEt1N9XgF6zxWmaC0xOk=
 github.com/prometheus/client_model v0.3.0 h1:UBgGFHqYdG/TPFD1B1ogZywDqEkwp3fBMvqdiQ7Xew4=
 github.com/prometheus/client_model v0.3.0/go.mod h1:LDGWKZIo7rky3hgvBe+caln+Dr3dPggB5dvjtD7w9+w=
 github.com/prometheus/common v0.38.0 h1:VTQitp6mXTdUoCmDMugDVOJ1opi6ADftKfp/yeqTR/E=
