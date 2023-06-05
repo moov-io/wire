@@ -366,7 +366,7 @@ func (v *validator) isMonth(s string) error {
 }
 
 // isDay validates a 2 digit day based on a 2 digit month
-// month 01-12 day 01-31 based on month
+// months are 01-12, days are 01-29, 01-30, or 01-31
 func (v *validator) isDay(m string, d string) error {
 	switch m {
 	// February
@@ -429,10 +429,8 @@ func (v *validator) validateDate(s string) error {
 	return nil
 }
 
-// validatePartyIdentifier validates OriginatorOptionF PartyIdentifier
-// PartyIdentifier must be one of the following two formats:
-// 1. /Account Number (slash followed by at least one
-// valid non-space character:  e.g., /123456)
+// validatePartyIdentifier validates that PartyIdentifier must be one of the following two formats:
+// 1. /Account Number (slash followed by at least one valid non-space character:  e.g., /123456)
 func (v *validator) validatePartyIdentifier(s string) error {
 	if s == "" {
 		return ErrPartyIdentifier
@@ -549,8 +547,11 @@ func (v *validator) validateOptionFLine(s string) error {
 	return nil
 }
 
-// validateOptionFName validates OriginatorOptionF Name
-// Name  Format:  Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+// validateOptionFName validates OriginatorOptionF
+// Name  Format:
+//
+//	Must begin with Line Code 1 followed by a slash and at least one valid non-space character:
+//
 // e.g., 1/SMITH JOHN.
 func (v *validator) validateOptionFName(s string) error {
 	if utf8.RuneCountInString(s) < 3 {

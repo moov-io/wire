@@ -22,7 +22,7 @@ func TestMockDateRemittanceDocument(t *testing.T) {
 	require.NoError(t, drd.Validate(), "mockDateRemittanceDocument does not validate and will break other tests")
 }
 
-// TestDateRemittanceDocumentRequired validates DateRemittanceDocument DateRemittanceDocument is required
+// TestDateRemittanceDocumentRequired validates DateRemittanceDocument is required
 func TestDateRemittanceDocumentDateRemittanceDocumentRequired(t *testing.T) {
 	drd := mockDateRemittanceDocument()
 	drd.DateRemittanceDocument = ""
