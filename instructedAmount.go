@@ -60,8 +60,8 @@ func (ia *InstructedAmount) Parse(record string) error {
 	ia.Amount = value
 	length += read
 
-	if !ia.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := ia.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

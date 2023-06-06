@@ -59,8 +59,8 @@ func (li *LocalInstrument) Parse(record string) error {
 	li.ProprietaryCode = value
 	length += read
 
-	if !li.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := li.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

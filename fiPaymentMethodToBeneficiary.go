@@ -54,8 +54,8 @@ func (pm *FIPaymentMethodToBeneficiary) Parse(record string) error {
 	pm.AdditionalInformation = value
 	length += read
 
-	if !pm.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := pm.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -103,14 +104,14 @@ func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSenderDepositoryInstitution()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3100}1*A***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseSenderDepositoryInstitution()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3100}1*A*"
 	r = NewReader(strings.NewReader(line))

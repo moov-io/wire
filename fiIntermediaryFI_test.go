@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -137,14 +138,14 @@ func TestStringFIIntermediaryFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIIntermediaryFI()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{6200}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseFIIntermediaryFI()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{6200}*"
 	r = NewReader(strings.NewReader(line))

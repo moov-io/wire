@@ -59,8 +59,8 @@ func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
 	rdi.ReceiverShortName = value
 	length += read
 
-	if !rdi.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := rdi.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

@@ -1,9 +1,11 @@
 package wire
 
 import (
-	"github.com/stretchr/testify/require"
+	"errors"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 // mockInstructingFI creates a InstructingFI
@@ -163,14 +165,14 @@ func TestStringInstructingFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstructingFI()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{5200}D12***********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseInstructingFI()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{5200}D12*"
 	r = NewReader(strings.NewReader(line))

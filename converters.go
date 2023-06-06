@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -68,7 +69,6 @@ func (c *converters) formatAlphaField(s string, max uint, options FormatOptions)
 }
 
 func (c *converters) parseVariableStringField(r string, maxLen int) (got string, size int, err error) {
-
 	min := func(x, y int) int {
 		if x > y {
 			return y
@@ -151,15 +151,13 @@ func (c *converters) stripDelimiters(data string) string {
 }
 
 // verify input data with read length
-func (c *converters) verifyDataWithReadLength(data string, read int) bool {
-	if len(data) == read {
-		return true
+func (c *converters) verifyDataWithReadLength(data string, expected int) error {
+	n := len(data) // utf8.RuneCountInString(data)
+	if n == expected {
+		return nil
 	}
-
-	// TODO: workaround for special case, not specification
-	if len(data) > read && data[read:] == "*" {
-		return true
+	if n > expected && data[expected:] == "*" {
+		return nil
 	}
-
-	return false
+	return fmt.Errorf("found data of %d length but expected %d", n, expected)
 }

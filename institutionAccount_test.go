@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -144,14 +145,14 @@ func TestStringInstitutionAccountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstitutionAccount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{7057}********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseInstitutionAccount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{7057}*"
 	r = NewReader(strings.NewReader(line))

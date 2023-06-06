@@ -189,8 +189,8 @@ func (rr *RelatedRemittance) Parse(record string) error {
 	rr.RemittanceData.AddressLineSeven = value
 	length += read
 
-	if !rr.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := rr.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

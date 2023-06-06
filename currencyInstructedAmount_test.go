@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -96,7 +97,7 @@ func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseCurrencyInstructedAmount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 }
 
 // TestStringCurrencyInstructedAmountOptions validates Format() formatted according to the FormatOptions

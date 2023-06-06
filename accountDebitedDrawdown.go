@@ -84,8 +84,8 @@ func (debitDD *AccountDebitedDrawdown) Parse(record string) error {
 	debitDD.Address.AddressLineThree = value
 	length += read
 
-	if !debitDD.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := debitDD.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

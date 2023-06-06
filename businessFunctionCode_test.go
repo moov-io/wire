@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -95,14 +96,14 @@ func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseBusinessFunctionCode()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3600}BTR***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseBusinessFunctionCode()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3600}BTR*"
 	r = NewReader(strings.NewReader(line))

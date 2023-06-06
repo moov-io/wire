@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -369,14 +370,14 @@ func TestStringServiceMessageVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseServiceMessage()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{9000}**************"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseServiceMessage()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{9000}A*"
 	r = NewReader(strings.NewReader(line))

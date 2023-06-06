@@ -84,8 +84,8 @@ func (adj *Adjustment) Parse(record string) error {
 	adj.AdditionalInfo = value
 	length += read
 
-	if !adj.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := adj.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

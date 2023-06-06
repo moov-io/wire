@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -115,14 +116,14 @@ func TestStringAmountNegotiatedDiscountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseAmountNegotiatedDiscount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8550}USD1234.56***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseAmountNegotiatedDiscount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8550}USD1234.56*"
 	r = NewReader(strings.NewReader(line))

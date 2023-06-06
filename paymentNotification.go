@@ -106,8 +106,8 @@ func (pn *PaymentNotification) Parse(record string) error {
 	pn.EndToEndIdentification = value
 	length += read
 
-	if !pn.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := pn.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

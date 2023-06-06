@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -77,14 +78,14 @@ func TestStringOutputMessageAccountabilityDataVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOutputMessageAccountabilityData()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{1120}**000001********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseOutputMessageAccountabilityData()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{1120}**000001*"
 	r = NewReader(strings.NewReader(line))

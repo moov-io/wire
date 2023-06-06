@@ -86,8 +86,8 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	ob.LineFour = value
 	length += read
 
-	if !ob.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := ob.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

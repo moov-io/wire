@@ -92,8 +92,8 @@ func (str *SenderToReceiver) Parse(record string) error {
 	str.CoverPayment.SwiftLineSix = value
 	length += read
 
-	if !str.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := str.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

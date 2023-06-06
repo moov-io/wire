@@ -85,8 +85,8 @@ func (oc *OrderingCustomer) Parse(record string) error {
 	oc.CoverPayment.SwiftLineFive = value
 	length += read
 
-	if !oc.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := oc.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

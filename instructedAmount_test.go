@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -110,14 +111,14 @@ func TestStringInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstructedAmount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3710}USD4567,89***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseInstructedAmount()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3710}USD4567,89*"
 	r = NewReader(strings.NewReader(line))

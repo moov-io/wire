@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -85,14 +86,14 @@ func TestStringErrorExchangeRateVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseExchangeRate()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3720}123***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseExchangeRate()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{3720}123*"
 	r = NewReader(strings.NewReader(line))

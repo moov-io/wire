@@ -50,8 +50,8 @@ func (pmi *PreviousMessageIdentifier) Parse(record string) error {
 	pmi.PreviousMessageIdentifier = value
 	length += read
 
-	if !pmi.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := pmi.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -93,14 +94,14 @@ func TestStringFIPaymentMethodToBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIPaymentMethodToBeneficiary()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{6420}CHECK***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseFIPaymentMethodToBeneficiary()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{6420}CHECK*"
 	r = NewReader(strings.NewReader(line))

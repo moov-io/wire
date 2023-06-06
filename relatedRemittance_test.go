@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -299,14 +300,14 @@ func TestStringRelatedRemittanceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseRelatedRemittance()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8250}*EDIC*A*ADDR***************************"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseRelatedRemittance()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8250}*EDIC*A*ADDR*"
 	r = NewReader(strings.NewReader(line))

@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -133,14 +134,14 @@ func TestStringSenderSuppliedVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSenderSupplied()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{1500}301*T** "
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseSenderSupplied()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{1500}301*T "
 	r = NewReader(strings.NewReader(line))

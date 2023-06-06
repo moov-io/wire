@@ -57,8 +57,8 @@ func (aap *ActualAmountPaid) Parse(record string) error {
 	aap.RemittanceAmount.Amount = value
 	length += read
 
-	if !aap.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := aap.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

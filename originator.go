@@ -6,6 +6,7 @@ package wire
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"unicode/utf8"
 )
@@ -42,6 +43,7 @@ func (o *Originator) Parse(record string) error {
 
 	o.tag = record[:6]
 	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
+	fmt.Printf("o.tag=%q  o.Personal.IdentificationCode=%q\n", o.tag, o.Personal.IdentificationCode)
 	length := 7
 
 	value, read, err := o.parseVariableStringField(record[length:], 34)
@@ -50,6 +52,7 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Identifier = value
 	length += read
+	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -57,6 +60,7 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Name = value
 	length += read
+	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -64,6 +68,7 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Address.AddressLineOne = value
 	length += read
+	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -71,6 +76,7 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Address.AddressLineTwo = value
 	length += read
+	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -78,9 +84,10 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Address.AddressLineThree = value
 	length += read
+	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
-	if !o.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := o.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil
