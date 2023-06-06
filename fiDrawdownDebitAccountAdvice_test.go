@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -149,14 +150,14 @@ func TestStringFIDrawdownDebitAccountAdviceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIDrawdownDebitAccountAdvice()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{6110}HLD********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseFIDrawdownDebitAccountAdvice()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{6110}HLD*"
 	r = NewReader(strings.NewReader(line))

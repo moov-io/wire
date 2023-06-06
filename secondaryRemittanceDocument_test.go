@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -145,14 +146,14 @@ func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSecondaryRemittanceDocument()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8700}AROI*A******************************"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseSecondaryRemittanceDocument()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8700}AROI*A*"
 	r = NewReader(strings.NewReader(line))

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 )
 
 // converters handles golang to WIRE type Converters
@@ -153,7 +152,7 @@ func (c *converters) stripDelimiters(data string) string {
 
 // verify input data with read length
 func (c *converters) verifyDataWithReadLength(data string, expected int) error {
-	n := utf8.RuneCountInString(data)
+	n := len(data) // utf8.RuneCountInString(data)
 	if n == expected {
 		return nil
 	}

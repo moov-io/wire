@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -188,14 +189,14 @@ func TestStringOriginatorOptionFVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOriginatorOptionF()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{5010}TXID/123-45-6789*1/Name********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseOriginatorOptionF()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{5010}TXID/123-45-6789*1/Name*"
 	r = NewReader(strings.NewReader(line))

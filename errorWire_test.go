@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -63,14 +64,14 @@ func TestStringErrorWireAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseErrorWire()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{1130}1XYZData Error***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseErrorWire()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{1130}1XYZData Error*"
 	r = NewReader(strings.NewReader(line))

@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -456,14 +457,14 @@ func TestStringRemittanceOriginatorVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseRemittanceOriginator()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8300}OICUSTName****ADDR*****************************"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseRemittanceOriginator()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8300}OICUSTName****ADDR*"
 	r = NewReader(strings.NewReader(line))

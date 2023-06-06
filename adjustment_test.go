@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -158,14 +159,14 @@ func TestStringAdjustmentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseAdjustment()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8600}01CRDTUSD1234.56****"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseAdjustment()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{8600}01CRDTUSD1234.56*"
 	r = NewReader(strings.NewReader(line))

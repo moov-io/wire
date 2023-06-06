@@ -1,6 +1,7 @@
 package wire
 
 import (
+	"errors"
 	"strings"
 	"testing"
 
@@ -179,7 +180,7 @@ func TestStringAccountDebitedDrawdownVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseAccountDebitedDrawdown()
-	require.EqualError(t, err, r.parseError(NewTagMaxLengthErr()).Error())
+	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
 	line = "{4400}***"
 	r = NewReader(strings.NewReader(line))
