@@ -70,8 +70,8 @@ func (ss *SenderSupplied) Parse(record string) error {
 	ss.MessageDuplicationCode = ss.parseAlphaField(record[length:], 1)
 	length += 1
 
-	if !ss.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := ss.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

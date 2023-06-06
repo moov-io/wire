@@ -51,8 +51,8 @@ func (eRate *ExchangeRate) Parse(record string) error {
 	eRate.ExchangeRate = value
 	length += read
 
-	if !eRate.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := eRate.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

@@ -79,8 +79,8 @@ func (o *Originator) Parse(record string) error {
 	o.Personal.Address.AddressLineThree = value
 	length += read
 
-	if !o.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := o.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

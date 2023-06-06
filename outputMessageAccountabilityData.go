@@ -95,8 +95,8 @@ func (omad *OutputMessageAccountabilityData) Parse(record string) error {
 	omad.OutputFRBApplicationIdentification = value
 	length += read
 
-	if !omad.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := omad.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

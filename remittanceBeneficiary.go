@@ -212,8 +212,8 @@ func (rb *RemittanceBeneficiary) Parse(record string) error {
 	rb.RemittanceData.CountryOfResidence = value
 	length += read
 
-	if !rb.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := rb.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

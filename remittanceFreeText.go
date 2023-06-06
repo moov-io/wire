@@ -68,8 +68,8 @@ func (rft *RemittanceFreeText) Parse(record string) error {
 	rft.LineThree = value
 	length += read
 
-	if !rft.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := rft.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

@@ -86,8 +86,8 @@ func (fiba *FIBeneficiaryAdvice) Parse(record string) error {
 	fiba.Advice.LineSix = value
 	length += read
 
-	if !fiba.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := fiba.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

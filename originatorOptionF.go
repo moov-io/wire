@@ -142,8 +142,8 @@ func (oof *OriginatorOptionF) Parse(record string) error {
 	oof.LineThree = value
 	length += read
 
-	if !oof.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := oof.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

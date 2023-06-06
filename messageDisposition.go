@@ -80,8 +80,8 @@ func (md *MessageDisposition) Parse(record string) error {
 	md.MessageStatusIndicator = value
 	length += read
 
-	if !md.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := md.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

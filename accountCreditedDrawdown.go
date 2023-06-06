@@ -50,8 +50,8 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
 	creditDD.DrawdownCreditAccountNumber = value
 	length += read
 
-	if !creditDD.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := creditDD.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil

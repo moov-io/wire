@@ -59,8 +59,8 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) error {
 	sdi.SenderShortName = value
 	length += read
 
-	if !sdi.verifyDataWithReadLength(record, length) {
-		return NewTagMaxLengthErr()
+	if err := sdi.verifyDataWithReadLength(record, length); err != nil {
+		return NewTagMaxLengthErr(err)
 	}
 
 	return nil
