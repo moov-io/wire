@@ -377,7 +377,7 @@ func TestRemittanceBeneficiaryTagError(t *testing.T) {
 
 // TestStringRemittanceBeneficiaryVariableLength parses using variable length
 func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
-	var line = "{8350}Name*PIARNU***ADDR*"
+	var line = "{8350}Name*PIARNU****ADDR*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -398,7 +398,7 @@ func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
 	err = r.parseRemittanceBeneficiary()
 	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
-	line = "{8350}Name*PIARNU***ADDR*"
+	line = "{8350}Name*PIARNU****ADDR*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -408,7 +408,7 @@ func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
 
 // TestStringRemittanceBeneficiaryOptions validates Format() formatted according to the FormatOptions
 func TestStringRemittanceBeneficiaryOptions(t *testing.T) {
-	var line = "{8350}Name*PIARNU***ADDR"
+	var line = "{8350}Name*PIARNU****ADDR"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 

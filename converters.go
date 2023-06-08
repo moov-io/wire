@@ -95,6 +95,10 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (got string,
 	size = min(endIndex, delimiterIndex)
 	if size >= maxLen {
 		size = maxLen
+		// checking delimiter if max's next position is not last post
+		if len(r) > maxLen+1 && r[maxLen:maxLen+1] == "*" {
+			hasDelimiter = true
+		}
 	} else if size < maxLen {
 		if delimiterIndex == size {
 			hasDelimiter = true

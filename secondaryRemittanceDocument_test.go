@@ -134,7 +134,7 @@ func TestSecondaryRemittanceDocumentTagError(t *testing.T) {
 
 // TestStringSecondaryRemittanceDocumentVariableLength parses using variable length
 func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
-	var line = "{8700}AROI*A*"
+	var line = "{8700}AROI**A*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -155,7 +155,7 @@ func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
 	err = r.parseSecondaryRemittanceDocument()
 	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
-	line = "{8700}AROI*A*"
+	line = "{8700}AROI**A*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -165,7 +165,7 @@ func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
 
 // TestStringSecondaryRemittanceDocumentOptions validates Format() formatted according to the FormatOptions
 func TestStringSecondaryRemittanceDocumentOptions(t *testing.T) {
-	var line = "{8700}AROI*A*"
+	var line = "{8700}AROI**A*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 

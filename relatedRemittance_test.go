@@ -288,7 +288,7 @@ func TestRelatedRemittanceTagError(t *testing.T) {
 
 // TestStringRelatedRemittanceVariableLength parses using variable length
 func TestStringRelatedRemittanceVariableLength(t *testing.T) {
-	var line = "{8250}*EDIC*A*ADDR*"
+	var line = "{8250}*EDIC**A*ADDR*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -309,7 +309,7 @@ func TestStringRelatedRemittanceVariableLength(t *testing.T) {
 	err = r.parseRelatedRemittance()
 	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
-	line = "{8250}*EDIC*A*ADDR*"
+	line = "{8250}*EDIC**A*ADDR*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -319,7 +319,7 @@ func TestStringRelatedRemittanceVariableLength(t *testing.T) {
 
 // TestStringRelatedRemittanceOptions validates Format() formatted according to the FormatOptions
 func TestStringRelatedRemittanceOptions(t *testing.T) {
-	var line = "{8250}*EDIC*A*ADDR*"
+	var line = "{8250}*EDIC**A*ADDR*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
