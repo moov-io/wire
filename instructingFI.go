@@ -51,7 +51,7 @@ func (ifi *InstructingFI) Parse(record string) error {
 	ifi.FinancialInstitution.Identifier = value
 	length += read
 
-	if len(ifi.FinancialInstitution.Identifier) >= 34 {
+	if len(ifi.FinancialInstitution.Identifier) >= 34 && record[length-1:length] != "*" {
 		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ifi.parseVariableStringField(record[length:], 35)
@@ -61,7 +61,7 @@ func (ifi *InstructingFI) Parse(record string) error {
 	ifi.FinancialInstitution.Name = value
 	length += read
 
-	if len(ifi.FinancialInstitution.Name) >= 35 {
+	if len(ifi.FinancialInstitution.Name) >= 35 && record[length-1:length] != "*" {
 		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ifi.parseVariableStringField(record[length:], 35)
@@ -71,7 +71,7 @@ func (ifi *InstructingFI) Parse(record string) error {
 	ifi.FinancialInstitution.Address.AddressLineOne = value
 	length += read
 
-	if len(ifi.FinancialInstitution.Address.AddressLineOne) >= 35 {
+	if len(ifi.FinancialInstitution.Address.AddressLineOne) >= 35 && record[length-1:length] != "*" {
 		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ifi.parseVariableStringField(record[length:], 35)
@@ -81,7 +81,7 @@ func (ifi *InstructingFI) Parse(record string) error {
 	ifi.FinancialInstitution.Address.AddressLineTwo = value
 	length += read
 
-	if len(ifi.FinancialInstitution.Address.AddressLineTwo) >= 35 {
+	if len(ifi.FinancialInstitution.Address.AddressLineTwo) >= 35 && record[length-1:length] != "*" {
 		length += (strings.Index(record[length:], "*") + 1)
 	}
 	value, read, err = ifi.parseVariableStringField(record[length:], 35)
