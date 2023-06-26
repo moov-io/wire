@@ -119,12 +119,12 @@ func (ii *IntermediaryInstitution) Format(options FormatOptions) string {
 	buf.Grow(186)
 
 	buf.WriteString(ii.tag)
-	buf.WriteString(ii.FormatSwiftFieldTag(options))
-	buf.WriteString(ii.FormatSwiftLineOne(options))
-	buf.WriteString(ii.FormatSwiftLineTwo(options))
-	buf.WriteString(ii.FormatSwiftLineThree(options))
-	buf.WriteString(ii.FormatSwiftLineFour(options))
-	buf.WriteString(ii.FormatSwiftLineFive(options))
+	buf.WriteString(ii.FormatSwiftFieldTag(options) + Delimiter)
+	buf.WriteString(ii.FormatSwiftLineOne(options) + Delimiter)
+	buf.WriteString(ii.FormatSwiftLineTwo(options) + Delimiter)
+	buf.WriteString(ii.FormatSwiftLineThree(options) + Delimiter)
+	buf.WriteString(ii.FormatSwiftLineFour(options) + Delimiter)
+	buf.WriteString(ii.FormatSwiftLineFive(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return ii.stripDelimiters(buf.String())

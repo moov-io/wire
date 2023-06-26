@@ -45,9 +45,9 @@ func (li *LocalInstrument) Parse(record string) error {
 	li.tag = record[:6]
 	length := 6
 
-	value, read, err := li.parseVariableStringField(record[length:], 4)
+	value, read, err := li.parseFixedStringField(record[length:], 4)
 	if err != nil {
-		return fieldError("SwiftFieldTag", err)
+		return fieldError("LocalInstrumentCode", err)
 	}
 	li.LocalInstrumentCode = value
 	length += read
@@ -93,8 +93,8 @@ func (li *LocalInstrument) Format(options FormatOptions) string {
 	buf.Grow(45)
 
 	buf.WriteString(li.tag)
-	buf.WriteString(li.FormatLocalInstrumentCode(options))
-	buf.WriteString(li.FormatProprietaryCode(options))
+	buf.WriteString(li.LocalInstrumentCodeField())
+	buf.WriteString(li.FormatProprietaryCode(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return li.stripDelimiters(buf.String())

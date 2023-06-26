@@ -104,12 +104,12 @@ func TestParseOrderingInstitutionWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOrderingInstitution()
-	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftFieldTag", ErrRequireDelimiter)).Error())
 }
 
 // TestParseOrderingInstitutionReaderParseError parses a wrong OrderingInstitution reader parse error
 func TestParseOrderingInstitutionReaderParseError(t *testing.T) {
-	var line = "{7052}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
+	var line = "{7052}Swift*Swift ®ine One                     *Swift Line Two                     *Swift Line Three                   *Swift Line Four                    *Swift Line Five                   *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -144,7 +144,7 @@ func TestStringOrderingInstitutionVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOrderingInstitution()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{7052}********"
 	r = NewReader(strings.NewReader(line))
@@ -171,7 +171,7 @@ func TestStringOrderingInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.OrderingInstitution
-	require.Equal(t, record.String(), "{7052}                                                                                                                                                                                    ")
+	require.Equal(t, record.String(), "{7052}     *                                   *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7052}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

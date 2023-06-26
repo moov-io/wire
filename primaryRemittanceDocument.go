@@ -106,9 +106,9 @@ func (prd *PrimaryRemittanceDocument) Format(options FormatOptions) string {
 
 	buf.WriteString(prd.tag)
 	buf.WriteString(prd.DocumentTypeCodeField())
-	buf.WriteString(prd.FormatProprietaryDocumentTypeCode(options))
-	buf.WriteString(prd.FormatDocumentIdentificationNumber(options))
-	buf.WriteString(prd.FormatIssuer(options))
+	buf.WriteString(prd.FormatProprietaryDocumentTypeCode(options) + Delimiter)
+	buf.WriteString(prd.FormatDocumentIdentificationNumber(options) + Delimiter)
+	buf.WriteString(prd.FormatIssuer(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return prd.stripDelimiters(buf.String())

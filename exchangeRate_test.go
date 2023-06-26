@@ -40,16 +40,16 @@ func TestParseExchangeRateWrongLength(t *testing.T) {
 
 	err := r.parseExchangeRate()
 
-	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrRequireDelimiter)).Error())
 
 	_, err = r.Read()
 
-	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ExchangeRate", ErrRequireDelimiter)).Error())
 }
 
 // TestParseExchangeRateReaderParseError parses a wrong ExchangeRate reader parse error
 func TestParseExchangeRateReaderParseError(t *testing.T) {
-	var line = "{3720}1,2345Z     "
+	var line = "{3720}1,2345Z     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -86,7 +86,7 @@ func TestStringErrorExchangeRateVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseExchangeRate()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3720}123***"
 	r = NewReader(strings.NewReader(line))
@@ -113,7 +113,7 @@ func TestStringExchangeRateOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.ExchangeRate
-	require.Equal(t, record.String(), "{3720}123         ")
+	require.Equal(t, record.String(), "{3720}123         *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3720}123*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

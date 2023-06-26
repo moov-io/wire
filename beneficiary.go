@@ -114,11 +114,11 @@ func (ben *Beneficiary) Format(options FormatOptions) string {
 
 	buf.WriteString(ben.tag)
 	buf.WriteString(ben.IdentificationCodeField())
-	buf.WriteString(ben.FormatIdentifier(options))
-	buf.WriteString(ben.FormatName(options))
-	buf.WriteString(ben.FormatAddressLineOne(options))
-	buf.WriteString(ben.FormatAddressLineTwo(options))
-	buf.WriteString(ben.FormatAddressLineThree(options))
+	buf.WriteString(ben.FormatIdentifier(options) + Delimiter)
+	buf.WriteString(ben.FormatName(options) + Delimiter)
+	buf.WriteString(ben.FormatAddressLineOne(options) + Delimiter)
+	buf.WriteString(ben.FormatAddressLineTwo(options) + Delimiter)
+	buf.WriteString(ben.FormatAddressLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return ben.stripDelimiters(buf.String())

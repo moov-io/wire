@@ -121,12 +121,12 @@ func (fiifia *FIIntermediaryFIAdvice) Format(options FormatOptions) string {
 
 	buf.WriteString(fiifia.tag)
 	buf.WriteString(fiifia.AdviceCodeField())
-	buf.WriteString(fiifia.FormatLineOne(options))
-	buf.WriteString(fiifia.FormatLineTwo(options))
-	buf.WriteString(fiifia.FormatLineThree(options))
-	buf.WriteString(fiifia.FormatLineFour(options))
-	buf.WriteString(fiifia.FormatLineFive(options))
-	buf.WriteString(fiifia.FormatLineSix(options))
+	buf.WriteString(fiifia.FormatLineOne(options) + Delimiter)
+	buf.WriteString(fiifia.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(fiifia.FormatLineThree(options) + Delimiter)
+	buf.WriteString(fiifia.FormatLineFour(options) + Delimiter)
+	buf.WriteString(fiifia.FormatLineFive(options) + Delimiter)
+	buf.WriteString(fiifia.FormatLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return fiifia.stripDelimiters(buf.String())

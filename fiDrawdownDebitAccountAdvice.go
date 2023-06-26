@@ -121,12 +121,12 @@ func (debitDDAdvice *FIDrawdownDebitAccountAdvice) Format(options FormatOptions)
 
 	buf.WriteString(debitDDAdvice.tag)
 	buf.WriteString(debitDDAdvice.AdviceCodeField())
-	buf.WriteString(debitDDAdvice.FormatLineOne(options))
-	buf.WriteString(debitDDAdvice.FormatLineTwo(options))
-	buf.WriteString(debitDDAdvice.FormatLineThree(options))
-	buf.WriteString(debitDDAdvice.FormatLineFour(options))
-	buf.WriteString(debitDDAdvice.FormatLineFive(options))
-	buf.WriteString(debitDDAdvice.FormatLineSix(options))
+	buf.WriteString(debitDDAdvice.FormatLineOne(options) + Delimiter)
+	buf.WriteString(debitDDAdvice.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(debitDDAdvice.FormatLineThree(options) + Delimiter)
+	buf.WriteString(debitDDAdvice.FormatLineFour(options) + Delimiter)
+	buf.WriteString(debitDDAdvice.FormatLineFive(options) + Delimiter)
+	buf.WriteString(debitDDAdvice.FormatLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return debitDDAdvice.stripDelimiters(buf.String())

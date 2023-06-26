@@ -106,12 +106,12 @@ func TestParsePrimaryRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parsePrimaryRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ProprietaryDocumentTypeCode", ErrRequireDelimiter)).Error())
 }
 
 // TestParsePrimaryRemittanceDocumentReaderParseError parses a wrong PrimaryRemittanceDocument reader parse error
 func TestParsePrimaryRemittanceDocumentReaderParseError(t *testing.T) {
-	var line = "{8400}ZZZZ                                   111111                             Issuer                             "
+	var line = "{8400}ZZZZ                                   *111111                             *Issuer                             *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -146,7 +146,7 @@ func TestStringPrimaryRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parsePrimaryRemittanceDocument()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{8400}CMCN********"
 	r = NewReader(strings.NewReader(line))
@@ -173,7 +173,7 @@ func TestStringPrimaryRemittanceDocumentOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.PrimaryRemittanceDocument
-	require.Equal(t, record.String(), "{8400}AROI                                   Issuer                                                                ")
+	require.Equal(t, record.String(), "{8400}AROI                                   *Issuer                             *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8400}AROI*Issuer*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -57,7 +57,7 @@ func (pn *PaymentNotification) Parse(record string) error {
 	pn.tag = record[:6]
 	length := 6
 
-	value, read, err := pn.parseVariableStringField(record[length:], 1)
+	value, read, err := pn.parseFixedStringField(record[length:], 1)
 	if err != nil {
 		return fieldError("PaymentNotificationIndicator", err)
 	}
@@ -140,13 +140,13 @@ func (pn *PaymentNotification) Format(options FormatOptions) string {
 	buf.Grow(2335)
 
 	buf.WriteString(pn.tag)
-	buf.WriteString(pn.FormatPaymentNotificationIndicator(options))
-	buf.WriteString(pn.FormatContactNotificationElectronicAddress(options))
-	buf.WriteString(pn.FormatContactName(options))
-	buf.WriteString(pn.FormatContactPhoneNumber(options))
-	buf.WriteString(pn.FormatContactMobileNumber(options))
-	buf.WriteString(pn.FormatContactFaxNumber(options))
-	buf.WriteString(pn.FormatEndToEndIdentification(options))
+	buf.WriteString(pn.PaymentNotificationIndicatorField())
+	buf.WriteString(pn.FormatContactNotificationElectronicAddress(options) + Delimiter)
+	buf.WriteString(pn.FormatContactName(options) + Delimiter)
+	buf.WriteString(pn.FormatContactPhoneNumber(options) + Delimiter)
+	buf.WriteString(pn.FormatContactMobileNumber(options) + Delimiter)
+	buf.WriteString(pn.FormatContactFaxNumber(options) + Delimiter)
+	buf.WriteString(pn.FormatEndToEndIdentification(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return pn.stripDelimiters(buf.String())
@@ -183,6 +183,11 @@ func (pn *PaymentNotification) Validate() error {
 		return fieldError("EndToEndIdentification", err, pn.EndToEndIdentification)
 	}
 	return nil
+}
+
+// PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field
+func (pn *PaymentNotification) PaymentNotificationIndicatorField() string {
+	return pn.alphaField(pn.PaymentNotificationIndicator, 1)
 }
 
 // PaymentNotificationIndicatorField gets a string of PaymentNotificationIndicator field

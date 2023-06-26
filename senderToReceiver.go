@@ -126,13 +126,13 @@ func (str *SenderToReceiver) Format(options FormatOptions) string {
 	buf.Grow(221)
 
 	buf.WriteString(str.tag)
-	buf.WriteString(str.FormatSwiftFieldTag(options))
-	buf.WriteString(str.FormatSwiftLineOne(options))
-	buf.WriteString(str.FormatSwiftLineTwo(options))
-	buf.WriteString(str.FormatSwiftLineThree(options))
-	buf.WriteString(str.FormatSwiftLineFour(options))
-	buf.WriteString(str.FormatSwiftLineFive(options))
-	buf.WriteString(str.FormatSwiftLineSix(options))
+	buf.WriteString(str.FormatSwiftFieldTag(options) + Delimiter)
+	buf.WriteString(str.FormatSwiftLineOne(options) + Delimiter)
+	buf.WriteString(str.FormatSwiftLineTwo(options) + Delimiter)
+	buf.WriteString(str.FormatSwiftLineThree(options) + Delimiter)
+	buf.WriteString(str.FormatSwiftLineFour(options) + Delimiter)
+	buf.WriteString(str.FormatSwiftLineFive(options) + Delimiter)
+	buf.WriteString(str.FormatSwiftLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return str.stripDelimiters(buf.String())

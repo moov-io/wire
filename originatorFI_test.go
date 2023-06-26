@@ -125,12 +125,12 @@ func TestParseOriginatorFIWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorFI()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Identifier", ErrRequireDelimiter)).Error())
 }
 
 // TestParseOriginatorFIReaderParseError parses a wrong OriginatorFI reader parse error
 func TestParseOriginatorFIReaderParseError(t *testing.T) {
-	var line = "{5100}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                     "
+	var line = "{5100}D123456789                         *®I Name                            *Address One                        *Address Two                        *Address Three                     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -165,7 +165,7 @@ func TestStringOriginatorFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOriginatorFI()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{5100}B1*******"
 	r = NewReader(strings.NewReader(line))
@@ -192,7 +192,7 @@ func TestStringOriginatorFIOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.OriginatorFI
-	require.Equal(t, record.String(), "{5100}B1                                                                                                                                                                             ")
+	require.Equal(t, record.String(), "{5100}B1                                 *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5100}B1*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

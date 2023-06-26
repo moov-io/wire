@@ -49,7 +49,7 @@ func (srd *SecondaryRemittanceDocument) Parse(record string) error {
 	srd.tag = record[:6]
 	length := 6
 
-	value, read, err := srd.parseVariableStringField(record[length:], 4)
+	value, read, err := srd.parseFixedStringField(record[length:], 4)
 	if err != nil {
 		return fieldError("DocumentTypeCode", err)
 	}
@@ -111,10 +111,10 @@ func (srd *SecondaryRemittanceDocument) Format(options FormatOptions) string {
 	buf.Grow(115)
 
 	buf.WriteString(srd.tag)
-	buf.WriteString(srd.FormatDocumentTypeCode(options))
-	buf.WriteString(srd.FormatProprietaryDocumentTypeCode(options))
-	buf.WriteString(srd.FormatDocumentIdentificationNumber(options))
-	buf.WriteString(srd.FormatIssuer(options))
+	buf.WriteString(srd.DocumentTypeCodeField())
+	buf.WriteString(srd.FormatProprietaryDocumentTypeCode(options) + Delimiter)
+	buf.WriteString(srd.FormatDocumentIdentificationNumber(options) + Delimiter)
+	buf.WriteString(srd.FormatIssuer(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return srd.stripDelimiters(buf.String())
@@ -166,6 +166,11 @@ func (srd *SecondaryRemittanceDocument) fieldInclusion() error {
 		}
 	}
 	return nil
+}
+
+// DocumentTypeCodeField
+func (srd *SecondaryRemittanceDocument) DocumentTypeCodeField() string {
+	return srd.alphaField(srd.DocumentTypeCode, 4)
 }
 
 // FormatDocumentTypeCode returns DocumentTypeCode formatted according to the FormatOptions

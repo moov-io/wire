@@ -27,7 +27,7 @@ func TestMockErrorWire(t *testing.T) {
 
 // TestParseErrorWire parses a known ErrorWire  record string
 func TestParseErrorWire(t *testing.T) {
-	var line = "{1130}1XYZData Error                         "
+	var line = "{1130}1XYZData Error                         *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -41,7 +41,7 @@ func TestParseErrorWire(t *testing.T) {
 
 // TestWriteErrorWire writes a ErrorWire record string
 func TestWriteErrorWire(t *testing.T) {
-	var line = "{1130}1XYZData Error                         "
+	var line = "{1130}1XYZData Error                         *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	require.NoError(t, r.parseErrorWire())
@@ -64,7 +64,7 @@ func TestStringErrorWireAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseErrorWire()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{1130}1XYZData Error***"
 	r = NewReader(strings.NewReader(line))
@@ -91,7 +91,7 @@ func TestStringErrorWireOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.ErrorWire
-	require.Equal(t, record.String(), "{1130}1XYZData Error                         ")
+	require.Equal(t, record.String(), "{1130}1XYZData Error                         *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1130}1XYZData Error*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

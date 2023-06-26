@@ -45,7 +45,7 @@ func (sdi *SenderDepositoryInstitution) Parse(record string) error {
 	sdi.tag = record[:6]
 	length := 6
 
-	value, read, err := sdi.parseVariableStringField(record[length:], 9)
+	value, read, err := sdi.parseFixedStringField(record[length:], 9)
 	if err != nil {
 		return fieldError("SenderABANumber", err)
 	}
@@ -93,8 +93,8 @@ func (sdi *SenderDepositoryInstitution) Format(options FormatOptions) string {
 	buf.Grow(39)
 
 	buf.WriteString(sdi.tag)
-	buf.WriteString(sdi.FormatSenderABANumber(options))
-	buf.WriteString(sdi.FormatSenderShortName(options))
+	buf.WriteString(sdi.SenderABANumberField())
+	buf.WriteString(sdi.FormatSenderShortName(options) + Delimiter)
 
 	return buf.String()
 }

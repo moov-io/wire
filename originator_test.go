@@ -118,12 +118,12 @@ func TestParseOriginatorWrongLength(t *testing.T) {
 
 	err := r.parseOriginator()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Identifier", ErrRequireDelimiter)).Error())
 }
 
 // TestParseOriginatorReaderParseError parses a wrong Originator reader parse error
 func TestParseOriginatorReaderParseError(t *testing.T) {
-	var line = "{5000}11234                              ®ame                               Address One                        Address Two                        Address Three                     "
+	var line = "{5000}11234                              *®ame                               *Address One                        *Address Two                        *Address Three                     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -158,7 +158,7 @@ func TestStringOriginatorVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOriginator()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{5000}B1*******"
 	r = NewReader(strings.NewReader(line))
@@ -185,7 +185,7 @@ func TestStringOriginatorOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.Originator
-	require.Equal(t, record.String(), "{5000}B1                                                                                                                                                                             ")
+	require.Equal(t, record.String(), "{5000}B1                                 *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5000}B1*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

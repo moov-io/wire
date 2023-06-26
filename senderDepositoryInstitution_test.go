@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -69,7 +68,7 @@ func TestParseSenderWrongLength(t *testing.T) {
 
 // TestParseSenderReaderParseError parses a wrong Sender reader parse error
 func TestParseSenderReaderParseError(t *testing.T) {
-	var line = "{3100}1210Z2882Wells Fargo NA    "
+	var line = "{3100}1210Z2882Wells Fargo NA    *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -92,7 +91,7 @@ func TestSenderDepositoryInstitutionTagError(t *testing.T) {
 
 // TestStringSenderDepositoryInstitutionVariableLength parses using variable length
 func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
-	var line = "{3100}1*A*"
+	var line = "{3100}1        A*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -104,16 +103,16 @@ func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSenderDepositoryInstitution()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3100}1*A***"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseSenderDepositoryInstitution()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrValidLength.Error())
 
-	line = "{3100}1*A*"
+	line = "{3100}1        A*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -123,7 +122,7 @@ func TestStringSenderDepositoryInstitutionVariableLength(t *testing.T) {
 
 // TestStringSenderDepositoryInstitutionOptions validates Format() formatted according to the FormatOptions
 func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
-	var line = "{3100}1*A*"
+	var line = "{3100}1        A*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -131,11 +130,11 @@ func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.SenderDepositoryInstitution
-	require.Equal(t, record.String(), "{3100}1        A                 ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1*A*")
+	require.Equal(t, record.String(), "{3100}1        A                 *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1        A*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 
-	line = "{3100}1*"
+	line = "{3100}1        *"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -143,8 +142,8 @@ func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record = r.currentFEDWireMessage.SenderDepositoryInstitution
-	require.Equal(t, record.String(), "{3100}1                          ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1*")
+	require.Equal(t, record.String(), "{3100}1                          *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}1        *")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 
 	line = "{3100}111111111*"
@@ -155,7 +154,7 @@ func TestStringSenderDepositoryInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record = r.currentFEDWireMessage.SenderDepositoryInstitution
-	require.Equal(t, record.String(), "{3100}111111111                  ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}111111111")
+	require.Equal(t, record.String(), "{3100}111111111                  *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3100}111111111*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

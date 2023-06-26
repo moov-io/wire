@@ -59,7 +59,7 @@ func TestStringChargesVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseCharges()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3700}B******"
 	r = NewReader(strings.NewReader(line))
@@ -86,7 +86,7 @@ func TestStringChargesOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.Charges
-	require.Equal(t, record.String(), "{3700}B                                                            ")
+	require.Equal(t, record.String(), "{3700}B               *               *               *               *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3700}B*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

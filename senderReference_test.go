@@ -40,12 +40,12 @@ func TestParseSenderReferenceWrongLength(t *testing.T) {
 
 	err := r.parseSenderReference()
 
-	require.EqualError(t, err, r.parseError(fieldError("SenderReference", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SenderReference", ErrRequireDelimiter)).Error())
 }
 
 // TestParseSenderReferenceReaderParseError parses a wrong SenderReference reader parse error
 func TestParseSenderReferenceReaderParseError(t *testing.T) {
-	var line = "{3320}Sender®Referenc"
+	var line = "{3320}Sender®Referenc*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -80,7 +80,7 @@ func TestStringSenderReferenceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSenderReference()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3320}***"
 	r = NewReader(strings.NewReader(line))
@@ -107,7 +107,7 @@ func TestStringSenderReferenceOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.SenderReference
-	require.Equal(t, record.String(), "{3320}                ")
+	require.Equal(t, record.String(), "{3320}                *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3320}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

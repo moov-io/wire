@@ -119,12 +119,12 @@ func (fibfi *FIBeneficiaryFI) Format(options FormatOptions) string {
 	buf.Grow(201)
 
 	buf.WriteString(fibfi.tag)
-	buf.WriteString(fibfi.FormatLineOne(options))
-	buf.WriteString(fibfi.FormatLineTwo(options))
-	buf.WriteString(fibfi.FormatLineThree(options))
-	buf.WriteString(fibfi.FormatLineFour(options))
-	buf.WriteString(fibfi.FormatLineFive(options))
-	buf.WriteString(fibfi.FormatLineSix(options))
+	buf.WriteString(fibfi.FormatLineOne(options) + Delimiter)
+	buf.WriteString(fibfi.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(fibfi.FormatLineThree(options) + Delimiter)
+	buf.WriteString(fibfi.FormatLineFour(options) + Delimiter)
+	buf.WriteString(fibfi.FormatLineFive(options) + Delimiter)
+	buf.WriteString(fibfi.FormatLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return fibfi.stripDelimiters(buf.String())

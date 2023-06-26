@@ -109,18 +109,18 @@ func TestBeneficiaryIdentifierRequired(t *testing.T) {
 
 // TestParseBeneficiaryWrongLength parses a wrong Beneficiary record length
 func TestParseBeneficiaryWrongLength(t *testing.T) {
-	var line = "{4200}31234                              Name                               Address One                        Address Two                        Address Three                    "
+	var line = "{4200}31234                              *Name                               *Address One                        *Address Two                        *Address Three                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseBeneficiary()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrRequireDelimiter)).Error())
 }
 
 // TestParseBeneficiaryReaderParseError parses a wrong Beneficiary reader parse error
 func TestParseBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                     "
+	var line = "{4200}31234                              *Na®e                               *Address One                        *Address Two                        *Address Three                     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -155,12 +155,12 @@ func TestStringBeneficiaryVariableLength(t *testing.T) {
 	expected := r.parseError(NewTagMinLengthErr(7, len(r.line))).Error()
 	require.EqualError(t, err, expected)
 
-	line = "{4200}31234                              Na®e                               Address One                        Address Two                        Address Three                     NNN"
+	line = "{4200}31234                              *Na®e                               *Address One                        *Address Two                        *Address Three                     NNN"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseBeneficiary()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{4200}31234*******"
 	r = NewReader(strings.NewReader(line))
@@ -187,7 +187,7 @@ func TestStringBeneficiaryOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	ben := r.currentFEDWireMessage.Beneficiary
-	require.Equal(t, ben.String(), "{4200}31234                                                                                                                                                                          ")
+	require.Equal(t, ben.String(), "{4200}31234                              *                                   *                                   *                                   *                                   *")
 	require.Equal(t, ben.Format(FormatOptions{VariableLengthFields: true}), "{4200}31234*")
 	require.Equal(t, ben.String(), ben.Format(FormatOptions{VariableLengthFields: false}))
 }

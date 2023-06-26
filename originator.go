@@ -121,11 +121,11 @@ func (o *Originator) Format(options FormatOptions) string {
 
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
-	buf.WriteString(o.FormatIdentifier(options))
-	buf.WriteString(o.FormatName(options))
-	buf.WriteString(o.FormatAddressLineOne(options))
-	buf.WriteString(o.FormatAddressLineTwo(options))
-	buf.WriteString(o.FormatAddressLineThree(options))
+	buf.WriteString(o.FormatIdentifier(options) + Delimiter)
+	buf.WriteString(o.FormatName(options) + Delimiter)
+	buf.WriteString(o.FormatAddressLineOne(options) + Delimiter)
+	buf.WriteString(o.FormatAddressLineTwo(options) + Delimiter)
+	buf.WriteString(o.FormatAddressLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return o.stripDelimiters(buf.String())

@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -62,12 +61,12 @@ func TestParseLocalInstrumentWrongLength(t *testing.T) {
 
 	err := r.parseLocalInstrument()
 
-	require.EqualError(t, err, r.parseError(fieldError("ProprietaryCode", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ProprietaryCode", ErrRequireDelimiter)).Error())
 }
 
 // TestParseLocalInstrumentReaderParseError parses a wrong LocalInstrumente reader parse error
 func TestParseLocalInstrumentReaderParseError(t *testing.T) {
-	var line = "{3610}ABCD                                   "
+	var line = "{3610}ABCD                                   *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -102,14 +101,14 @@ func TestStringLocalInstrumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseLocalInstrument()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3610}***********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseLocalInstrument()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrValidLength.Error())
 
 	line = "{3610}ANSI*"
 	r = NewReader(strings.NewReader(line))
@@ -129,7 +128,7 @@ func TestStringLocalInstrumentOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.LocalInstrument
-	require.Equal(t, record.String(), "{3610}ANSI                                   ")
+	require.Equal(t, record.String(), "{3610}ANSI                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3610}ANSI*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -106,12 +105,12 @@ func TestParsePaymentNotificationWrongLength(t *testing.T) {
 
 	err := r.parsePaymentNotification()
 
-	require.EqualError(t, err, r.parseError(fieldError("EndToEndIdentification", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ContactNotificationElectronicAddress", ErrRequireDelimiter)).Error())
 }
 
 // TestParsePaymentNotificationReaderParseError parses a wrong PaymentNotification reader parse error
 func TestParsePaymentNotificationReaderParseError(t *testing.T) {
-	var line = "{3620}Zhttp://moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Contact Name                                                                                                                                5555551212                         5551231212                         5554561212                         End To End Identification"
+	var line = "{3620}Zhttp://moov.io                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Contact Name                                                                                                                                5555551212                         5551231212                         5554561212                         End To End Identification*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -146,21 +145,14 @@ func TestStringPaymentNotificationVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parsePaymentNotification()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3620}*********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parsePaymentNotification()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
-
-	line = "{3620}*"
-	r = NewReader(strings.NewReader(line))
-	r.line = line
-
-	err = r.parsePaymentNotification()
-	require.Equal(t, err, nil)
+	require.ErrorContains(t, err, ErrValidLength.Error())
 }
 
 // TestStringPaymentNotificationOptions validates Format() formatted according to the FormatOptions
@@ -173,7 +165,7 @@ func TestStringPaymentNotificationOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.PaymentNotification
-	require.Equal(t, record.String(), "{3620}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3620}*")
+	require.Equal(t, record.String(), "{3620}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 *                                                                                                                                            *                                   *                                   *                                   *                                   *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3620} *")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -88,7 +88,7 @@ func (bfc *BusinessFunctionCode) Format(options FormatOptions) string {
 
 	buf.WriteString(bfc.tag)
 	buf.WriteString(bfc.BusinessFunctionCodeField())
-	buf.WriteString(bfc.FormatTransactionTypeCode(options))
+	buf.WriteString(bfc.FormatTransactionTypeCode(options) + Delimiter)
 
 	return buf.String()
 }

@@ -84,7 +84,7 @@ func (sr *SenderReference) Format(options FormatOptions) string {
 	buf.Grow(22)
 
 	buf.WriteString(sr.tag)
-	buf.WriteString(sr.FormatSenderReference(options))
+	buf.WriteString(sr.FormatSenderReference(options) + Delimiter)
 
 	return buf.String()
 }

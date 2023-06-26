@@ -119,12 +119,12 @@ func (oi *OrderingInstitution) Format(options FormatOptions) string {
 	buf.Grow(186)
 	buf.WriteString(oi.tag)
 
-	buf.WriteString(oi.FormatSwiftFieldTag(options))
-	buf.WriteString(oi.FormatSwiftLineOne(options))
-	buf.WriteString(oi.FormatSwiftLineTwo(options))
-	buf.WriteString(oi.FormatSwiftLineThree(options))
-	buf.WriteString(oi.FormatSwiftLineFour(options))
-	buf.WriteString(oi.FormatSwiftLineFive(options))
+	buf.WriteString(oi.FormatSwiftFieldTag(options) + Delimiter)
+	buf.WriteString(oi.FormatSwiftLineOne(options) + Delimiter)
+	buf.WriteString(oi.FormatSwiftLineTwo(options) + Delimiter)
+	buf.WriteString(oi.FormatSwiftLineThree(options) + Delimiter)
+	buf.WriteString(oi.FormatSwiftLineFour(options) + Delimiter)
+	buf.WriteString(oi.FormatSwiftLineFive(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return oi.stripDelimiters(buf.String())

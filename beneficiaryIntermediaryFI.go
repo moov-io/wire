@@ -114,11 +114,11 @@ func (bifi *BeneficiaryIntermediaryFI) Format(options FormatOptions) string {
 
 	buf.WriteString(bifi.tag)
 	buf.WriteString(bifi.IdentificationCodeField())
-	buf.WriteString(bifi.FormatIdentifier(options))
-	buf.WriteString(bifi.FormatName(options))
-	buf.WriteString(bifi.FormatAddressLineOne(options))
-	buf.WriteString(bifi.FormatAddressLineTwo(options))
-	buf.WriteString(bifi.FormatAddressLineThree(options))
+	buf.WriteString(bifi.FormatIdentifier(options) + Delimiter)
+	buf.WriteString(bifi.FormatName(options) + Delimiter)
+	buf.WriteString(bifi.FormatAddressLineOne(options) + Delimiter)
+	buf.WriteString(bifi.FormatAddressLineTwo(options) + Delimiter)
+	buf.WriteString(bifi.FormatAddressLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return bifi.stripDelimiters(buf.String())

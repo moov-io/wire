@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -129,18 +128,18 @@ func TestIdentificationCodeBogus(t *testing.T) {
 
 // TestParseAccountDebitedDrawdownWrongLength parses a wrong AccountDebitedDrawdown record length
 func TestParseAccountDebitedDrawdownWrongLength(t *testing.T) {
-	var line = "{4400}D123456789                         debitDD Name                       Address One                        Address Two                        Address Three                    "
+	var line = "{4400}D123456789                         *debitDD Name                       *Address One                        *Address Two                        *Address Three                    "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseAccountDebitedDrawdown()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrRequireDelimiter)).Error())
 }
 
 // TestParseAccountDebitedDrawdownReaderParseError parses a wrong AccountDebitedDrawdown reader parse error
 func TestParseAccountDebitedDrawdownReaderParseError(t *testing.T) {
-	var line = "{4400}D123456789                         debitDD ®ame                       Address One                        Address Two                        Address Three                     "
+	var line = "{4400}D123456789                         *debitDD ®ame                       *Address One                        *Address Two                        *Address Three                     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -175,12 +174,12 @@ func TestStringAccountDebitedDrawdownVariableLength(t *testing.T) {
 	expected := r.parseError(NewTagMinLengthErr(9, len(r.line))).Error()
 	require.EqualError(t, err, expected)
 
-	line = "{4400}D123456789                         debitDD Name                       Address One                        Address Two                        Address Three                    NNNN"
+	line = "{4400}D123456789                         *debitDD Name                       *Address One                        *Address Two                        *Address Three                    NNNNNNNN*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseAccountDebitedDrawdown()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.NoError(t, err)
 
 	line = "{4400}***"
 	r = NewReader(strings.NewReader(line))
@@ -208,7 +207,7 @@ func TestStringAccountDebitedDrawdownOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	add := r.currentFEDWireMessage.AccountDebitedDrawdown
-	require.Equal(t, add.String(), "{4400}D2                                 3                                                                                                                                           ")
+	require.Equal(t, add.String(), "{4400}D2                                 *3                                  *                                   *                                   *                                   *")
 	require.Equal(t, add.Format(FormatOptions{VariableLengthFields: true}), "{4400}D2*3*")
 	require.Equal(t, add.String(), add.Format(FormatOptions{VariableLengthFields: false}))
 }

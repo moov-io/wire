@@ -47,21 +47,21 @@ func (rts *ReceiptTimeStamp) Parse(record string) error {
 	rts.tag = record[:6]
 	length := 6
 
-	value, read, err := rts.parseVariableStringField(record[length:], 4)
+	value, read, err := rts.parseFixedStringField(record[length:], 4)
 	if err != nil {
 		return fieldError("ReceiptDate", err)
 	}
 	rts.ReceiptDate = value
 	length += read
 
-	value, read, err = rts.parseVariableStringField(record[length:], 4)
+	value, read, err = rts.parseFixedStringField(record[length:], 4)
 	if err != nil {
 		return fieldError("ReceiptTime", err)
 	}
 	rts.ReceiptTime = value
 	length += read
 
-	value, read, err = rts.parseVariableStringField(record[length:], 4)
+	value, read, err = rts.parseFixedStringField(record[length:], 4)
 	if err != nil {
 		return fieldError("ReceiptApplicationIdentification", err)
 	}
@@ -102,9 +102,9 @@ func (rts *ReceiptTimeStamp) Format(options FormatOptions) string {
 	buf.Grow(18)
 
 	buf.WriteString(rts.tag)
-	buf.WriteString(rts.FormatReceiptDate(options))
-	buf.WriteString(rts.FormatReceiptTime(options))
-	buf.WriteString(rts.FormatReceiptApplicationIdentification(options))
+	buf.WriteString(rts.ReceiptDateField())
+	buf.WriteString(rts.ReceiptTimeField())
+	buf.WriteString(rts.ReceiptApplicationIdentificationField())
 
 	if options.VariableLengthFields {
 		return rts.stripDelimiters(buf.String())

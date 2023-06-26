@@ -52,28 +52,28 @@ func (md *MessageDisposition) Parse(record string) error {
 	md.tag = record[:6]
 	length := 6
 
-	value, read, err := md.parseVariableStringField(record[length:], 2)
+	value, read, err := md.parseFixedStringField(record[length:], 2)
 	if err != nil {
 		return fieldError("FormatVersion", err)
 	}
 	md.FormatVersion = value
 	length += read
 
-	value, read, err = md.parseVariableStringField(record[length:], 1)
+	value, read, err = md.parseFixedStringField(record[length:], 1)
 	if err != nil {
 		return fieldError("TestProductionCode", err)
 	}
 	md.TestProductionCode = value
 	length += read
 
-	value, read, err = md.parseVariableStringField(record[length:], 1)
+	value, read, err = md.parseFixedStringField(record[length:], 1)
 	if err != nil {
 		return fieldError("MessageDuplicationCode", err)
 	}
 	md.MessageDuplicationCode = value
 	length += read
 
-	value, read, err = md.parseVariableStringField(record[length:], 1)
+	value, read, err = md.parseFixedStringField(record[length:], 1)
 	if err != nil {
 		return fieldError("MessageStatusIndicator", err)
 	}
@@ -114,10 +114,10 @@ func (md *MessageDisposition) Format(options FormatOptions) string {
 	buf.Grow(11)
 
 	buf.WriteString(md.tag)
-	buf.WriteString(md.FormatMessageDispositionFormatVersion(options))
-	buf.WriteString(md.FormatMessageDispositionTestProductionCode(options))
-	buf.WriteString(md.FormatMessageDispositionMessageDuplicationCode(options))
-	buf.WriteString(md.FormatMessageDispositionMessageStatusIndicator(options))
+	buf.WriteString(md.MessageDispositionFormatVersionField())
+	buf.WriteString(md.MessageDispositionTestProductionCodeField())
+	buf.WriteString(md.MessageDispositionMessageDuplicationCodeField())
+	buf.WriteString(md.MessageDispositionMessageStatusIndicatorField())
 
 	if options.VariableLengthFields {
 		return md.stripDelimiters(buf.String())

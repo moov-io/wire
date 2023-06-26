@@ -171,12 +171,12 @@ func TestParseServiceMessageWrongLength(t *testing.T) {
 
 	err := r.parseServiceMessage()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineTwelve", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrRequireDelimiter)).Error())
 }
 
 // TestParseServiceMessageReaderParseError parses a wrong ServiceMessage reader parse error
 func TestParseServiceMessageReaderParseError(t *testing.T) {
-	var line = "{9000}®ine One                           Line Two                           Line Three                         Line Four                          Line Five                          Line Six                           Line Seven                         Line Eight                         Line Nine                          Line Ten                           Line Eleven                        line Twelve                       "
+	var line = "{9000}®ine One                           *Line Two                           *Line Three                         *Line Four                          *Line Five                          *Line Six                           *Line Seven                         *Line Eight                         *Line Nine                          *Line Ten                           *Line Eleven                        *line Twelve                       *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -370,7 +370,7 @@ func TestStringServiceMessageVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseServiceMessage()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{9000}**************"
 	r = NewReader(strings.NewReader(line))
@@ -397,7 +397,7 @@ func TestStringServiceMessageOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.ServiceMessage
-	require.Equal(t, record.String(), "{9000}A                                                                                                                                                                                                                                                                                                                                                                                                                                   ")
+	require.Equal(t, record.String(), "{9000}A                                  *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{9000}A*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

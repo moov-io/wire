@@ -119,12 +119,12 @@ func (oc *OrderingCustomer) Format(options FormatOptions) string {
 	buf.Grow(186)
 	buf.WriteString(oc.tag)
 
-	buf.WriteString(oc.FormatSwiftFieldTag(options))
-	buf.WriteString(oc.FormatSwiftLineOne(options))
-	buf.WriteString(oc.FormatSwiftLineTwo(options))
-	buf.WriteString(oc.FormatSwiftLineThree(options))
-	buf.WriteString(oc.FormatSwiftLineFour(options))
-	buf.WriteString(oc.FormatSwiftLineFive(options))
+	buf.WriteString(oc.FormatSwiftFieldTag(options) + Delimiter)
+	buf.WriteString(oc.FormatSwiftLineOne(options) + Delimiter)
+	buf.WriteString(oc.FormatSwiftLineTwo(options) + Delimiter)
+	buf.WriteString(oc.FormatSwiftLineThree(options) + Delimiter)
+	buf.WriteString(oc.FormatSwiftLineFour(options) + Delimiter)
+	buf.WriteString(oc.FormatSwiftLineFive(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return oc.stripDelimiters(buf.String())

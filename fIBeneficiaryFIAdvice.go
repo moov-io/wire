@@ -121,12 +121,12 @@ func (fibfia *FIBeneficiaryFIAdvice) Format(options FormatOptions) string {
 
 	buf.WriteString(fibfia.tag)
 	buf.WriteString(fibfia.AdviceCodeField())
-	buf.WriteString(fibfia.FormatLineOne(options))
-	buf.WriteString(fibfia.FormatLineTwo(options))
-	buf.WriteString(fibfia.FormatLineThree(options))
-	buf.WriteString(fibfia.FormatLineFour(options))
-	buf.WriteString(fibfia.FormatLineFive(options))
-	buf.WriteString(fibfia.FormatLineSix(options))
+	buf.WriteString(fibfia.FormatLineOne(options) + Delimiter)
+	buf.WriteString(fibfia.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(fibfia.FormatLineThree(options) + Delimiter)
+	buf.WriteString(fibfia.FormatLineFour(options) + Delimiter)
+	buf.WriteString(fibfia.FormatLineFive(options) + Delimiter)
+	buf.WriteString(fibfia.FormatLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return fibfia.stripDelimiters(buf.String())

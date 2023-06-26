@@ -40,12 +40,12 @@ func TestParseBeneficiaryReferenceWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryReference()
 
-	require.EqualError(t, err, r.parseError(fieldError("BeneficiaryReference", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("BeneficiaryReference", ErrRequireDelimiter)).Error())
 }
 
 // TestParseBeneficiaryReferenceReaderParseError parses a wrong BeneficiaryReference reader parse error
 func TestParseBeneficiaryReferenceReaderParseError(t *testing.T) {
-	var line = "{4320}Reference®     "
+	var line = "{4320}Reference®     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -84,7 +84,7 @@ func TestStringBeneficiaryReferenceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseBeneficiaryReference()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{4320}***"
 	r = NewReader(strings.NewReader(line))
@@ -111,7 +111,7 @@ func TestStringBeneficiaryReferenceOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	br := r.currentFEDWireMessage.BeneficiaryReference
-	require.Equal(t, br.String(), "{4320}Reference       ")
+	require.Equal(t, br.String(), "{4320}Reference       *")
 	require.Equal(t, br.Format(FormatOptions{VariableLengthFields: true}), "{4320}Reference*")
 	require.Equal(t, br.String(), br.Format(FormatOptions{VariableLengthFields: false}))
 }

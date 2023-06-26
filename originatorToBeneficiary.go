@@ -56,9 +56,6 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	ob.LineOne = value
 	length += read
 
-	if len(ob.LineOne) >= 35 && record[length-1:length] != "*" {
-		length += (strings.Index(record[length:], "*") + 1)
-	}
 	value, read, err = ob.parseVariableStringField(record[length:], 35)
 	if err != nil {
 		return fieldError("LineTwo", err)
@@ -66,9 +63,6 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	ob.LineTwo = value
 	length += read
 
-	if len(ob.LineTwo) >= 35 && record[length-1:length] != "*" {
-		length += (strings.Index(record[length:], "*") + 1)
-	}
 	value, read, err = ob.parseVariableStringField(record[length:], 35)
 	if err != nil {
 		return fieldError("LineThree", err)
@@ -76,9 +70,6 @@ func (ob *OriginatorToBeneficiary) Parse(record string) error {
 	ob.LineThree = value
 	length += read
 
-	if len(ob.LineThree) >= 35 && record[length-1:length] != "*" {
-		length += (strings.Index(record[length:], "*") + 1)
-	}
 	value, read, err = ob.parseVariableStringField(record[length:], 35)
 	if err != nil {
 		return fieldError("LineFour", err)
@@ -120,10 +111,10 @@ func (ob *OriginatorToBeneficiary) Format(options FormatOptions) string {
 	buf.Grow(146)
 
 	buf.WriteString(ob.tag)
-	buf.WriteString(ob.FormatLineOne(options))
-	buf.WriteString(ob.FormatLineTwo(options))
-	buf.WriteString(ob.FormatLineThree(options))
-	buf.WriteString(ob.FormatLineFour(options))
+	buf.WriteString(ob.FormatLineOne(options) + Delimiter)
+	buf.WriteString(ob.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(ob.FormatLineThree(options) + Delimiter)
+	buf.WriteString(ob.FormatLineFour(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return ob.stripDelimiters(buf.String())
