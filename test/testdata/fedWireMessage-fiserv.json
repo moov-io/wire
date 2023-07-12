@@ -1,0 +1,103 @@
+{
+    "id": "accb403bb445aa1fcf63d6e24b0a06f10c3d9fca",
+    "fedWireMessage": {
+        "id": "",
+        "senderSupplied": {
+            "formatVersion": "30",
+            "userRequestCorrelation": "3O004HE8",
+            "testProductionCode": "P",
+            "messageDuplicationCode": " "
+        },
+        "typeSubType": {
+            "typeCode": "10",
+            "subTypeCode": "00"
+        },
+        "inputMessageAccountabilityData": {
+            "inputCycleDate": "20220324",
+            "inputSource": "00000000",
+            "inputSequenceNumber": "000001"
+        },
+        "amount": {
+            "amount": "000000022200"
+        },
+        "senderDepositoryInstitution": {
+            "senderABANumber": "021000021",
+            "senderShortName": "JPMORGAN CHASE"
+        },
+        "receiverDepositoryInstitution": {
+            "receiverABANumber": "021000021",
+            "receiverShortName": "JPMCHASE"
+        },
+        "businessFunctionCode": {
+            "businessFunctionCode": "CTR"
+        },
+        "beneficiaryFI": {
+            "financialInstitution": {
+                "identificationCode": "F",
+                "identifier": "021000021",
+                "name": "JPMC",
+                "address": {
+                    "addressLineOne": "123 Test st",
+                    "addressLineTwo": "Test",
+                    "addressLineThree": "Test"
+                }
+            }
+        },
+        "beneficiary": {
+            "personal": {
+                "identificationCode": "D",
+                "identifier": "123455",
+                "name": "Test Name",
+                "address": {
+                    "addressLineOne": "123 Test St",
+                    "addressLineTwo": "Town",
+                    "addressLineThree": "MO"
+                }
+            }
+        },
+        "originator": {
+            "personal": {
+                "identificationCode": "D",
+                "identifier": "123456",
+                "name": "John Doe",
+                "address": {
+                    "addressLineOne": "123 Anywhere St",
+                    "addressLineTwo": "Anywhere",
+                    "addressLineThree": "MO"
+                }
+            }
+        },
+        "originatorFI": {
+            "financialInstitution": {
+                "identificationCode": "D",
+                "identifier": "998877",
+                "name": "Xxxx First Bank",
+                "address": {
+                    "addressLineOne": "158 Anywhere St",
+                    "addressLineTwo": "Anywhere",
+                    "addressLineThree": "MO"
+                }
+            }
+        },
+        "instructingFI": {
+            "financialInstitution": {
+                "identificationCode": "F",
+                "identifier": "404123787",
+                "name": "Xxxxxxx Bank",
+                "address": {
+                    "addressLineOne": "144 Anywhere St",
+                    "addressLineTwo": "Anywhere",
+                    "addressLineThree": "MO"
+                }
+            }
+        },
+        "originatorToBeneficiary": {
+            "lineOne": "Test"
+        },
+        "fiAdditionalFiToFi": {
+            "additionalFiToFi": {
+                "lineOne": "Test"
+            }
+        }
+    }
+}
