@@ -256,7 +256,7 @@ func (rb *RemittanceBeneficiary) Format(options FormatOptions) string {
 	buf.WriteString(rb.FormatDepartment(options) + Delimiter)
 	buf.WriteString(rb.FormatSubDepartment(options) + Delimiter)
 	buf.WriteString(rb.FormatStreetName(options) + Delimiter)
-	buf.WriteString(rb.FormatBuildingNumber(options))
+	buf.WriteString(rb.FormatBuildingNumber(options) + Delimiter)
 	buf.WriteString(rb.FormatPostCode(options) + Delimiter)
 	buf.WriteString(rb.FormatTownName(options) + Delimiter)
 	buf.WriteString(rb.FormatCountrySubDivisionState(options) + Delimiter)
