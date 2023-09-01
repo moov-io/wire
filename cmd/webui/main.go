@@ -20,7 +20,6 @@ import (
 	"github.com/moov-io/wire"
 
 	"github.com/gorilla/mux"
-	"github.com/pkg/errors"
 )
 
 var (
@@ -128,7 +127,7 @@ func addPingRoute(r *mux.Router) {
 
 func addAssetsPath(r *mux.Router, assetPath string) error {
 	if _, err := os.Stat(assetPath); err != nil {
-		return errors.Wrap(err, fmt.Sprintf("ERROR: unable to stat %s", assetPath))
+		return fmt.Errorf("ERROR: unable to stat %s: %w", assetPath, err)
 	}
 	r.Methods("GET").PathPrefix("/").Handler(http.StripPrefix(*flagBasePath, http.FileServer(http.Dir(assetPath))))
 	return nil
