@@ -89,7 +89,7 @@ func (pm *FIPaymentMethodToBeneficiary) Format(options FormatOptions) string {
 
 	buf.WriteString(pm.tag)
 	buf.WriteString(pm.PaymentMethodField())
-	buf.WriteString(pm.FormatAdditionalInformation(options))
+	buf.WriteString(pm.FormatAdditionalInformation(options) + Delimiter)
 
 	return buf.String()
 }

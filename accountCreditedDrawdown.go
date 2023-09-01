@@ -43,7 +43,7 @@ func (creditDD *AccountCreditedDrawdown) Parse(record string) error {
 	creditDD.tag = record[:6]
 	length := 6
 
-	value, read, err := creditDD.parseVariableStringField(record[length:], 9)
+	value, read, err := creditDD.parseFixedStringField(record[length:], 9)
 	if err != nil {
 		return fieldError("DrawdownCreditAccountNumber", err)
 	}
@@ -83,7 +83,7 @@ func (creditDD *AccountCreditedDrawdown) Format(options FormatOptions) string {
 	var buf strings.Builder
 	buf.Grow(15)
 	buf.WriteString(creditDD.tag)
-	buf.WriteString(creditDD.FormatCreditAccountNumber(options))
+	buf.WriteString(creditDD.DrawdownCreditAccountNumberField())
 	return buf.String()
 }
 

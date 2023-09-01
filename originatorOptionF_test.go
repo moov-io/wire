@@ -157,12 +157,12 @@ func TestParseOriginatorOptionFWrongLength(t *testing.T) {
 
 	err := r.parseOriginatorOptionF()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("PartyIdentifier", ErrRequireDelimiter)).Error())
 }
 
 // TestParseOriginatorOptionFReaderParseError parses a wrong OriginatorOptionF reader parse error
 func TestParseOriginatorOptionFReaderParseError(t *testing.T) {
-	var line = "{5010}TXID/123-45-6789                   ®ame                               LineOne                            LineTwo                            LineThree                         "
+	var line = "{5010}TXID/123-45-6789                   *®ame                               *LineOne                            *LineTwo                            *LineThree                         *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -189,7 +189,7 @@ func TestStringOriginatorOptionFVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOriginatorOptionF()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{5010}TXID/123-45-6789*1/Name********"
 	r = NewReader(strings.NewReader(line))
@@ -216,7 +216,7 @@ func TestStringOriginatorOptionFOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.OriginatorOptionF
-	require.Equal(t, record.String(), "{5010}TXID/123-45-6789                   1/Name                                                                                                                                      ")
+	require.Equal(t, record.String(), "{5010}TXID/123-45-6789                   *1/Name                             *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5010}TXID/123-45-6789*1/Name*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

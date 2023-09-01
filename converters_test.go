@@ -5,6 +5,7 @@
 package wire
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -33,37 +34,152 @@ func TestConverters__parseFirstOption(t *testing.T) {
 }
 
 func TestConverters__parseVariableStringField(t *testing.T) {
+
+	tests := []struct {
+		input     string
+		maxLength int
+		want      string
+		gotSize   int
+		err       error
+	}{
+		{
+			input:     "1234{0000}56789",
+			maxLength: 3,
+			want:      "",
+			gotSize:   0,
+			err:       ErrRequireDelimiter,
+		},
+		{
+			input:     "1234{0000}56789",
+			maxLength: 4,
+			want:      "",
+			gotSize:   0,
+			err:       ErrRequireDelimiter,
+		},
+		{
+			input:     "1234{0000}56789",
+			maxLength: 5,
+			want:      "",
+			gotSize:   0,
+			err:       ErrRequireDelimiter,
+		},
+		{
+			input:     "123456789",
+			maxLength: 5,
+			want:      "",
+			gotSize:   0,
+			err:       ErrRequireDelimiter,
+		},
+		{
+			input:     "1234*56789",
+			maxLength: 5,
+			want:      "1234",
+			gotSize:   5,
+			err:       nil,
+		},
+		{
+			input:     "1234*56789",
+			maxLength: 4,
+			want:      "1234",
+			gotSize:   5,
+			err:       nil,
+		},
+		{
+			input:     "1234*56789",
+			maxLength: 3,
+			want:      "123",
+			gotSize:   5,
+			err:       nil,
+		},
+		{
+			input:     "*123456789",
+			maxLength: 3,
+			want:      "",
+			gotSize:   1,
+			err:       nil,
+		},
+	}
 	c := &converters{}
 
-	got, size, err := c.parseVariableStringField("1234{0000}56789", 3)
-	require.Equal(t, "123", got)
-	require.Equal(t, 3, size)
-	require.Nil(t, err)
+	for index, tt := range tests {
+		t.Run(fmt.Sprintf("sub_%d", index), func(t *testing.T) {
+			got, size, err := c.parseVariableStringField(tt.input, tt.maxLength)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.gotSize, size)
+			require.Equal(t, tt.err, err)
+		})
+	}
+}
 
-	got, size, err = c.parseVariableStringField("1234{0000}56789", 4)
-	require.Equal(t, "1234", got)
-	require.Equal(t, 4, size)
-	require.Nil(t, err)
+func TestConverters__parseFixedStringField(t *testing.T) {
 
-	got, size, err = c.parseVariableStringField("1234{0000}56789", 5)
-	require.Equal(t, "1234", got)
-	require.Equal(t, 4, size)
-	require.Nil(t, err)
+	tests := []struct {
+		input     string
+		maxLength int
+		want      string
+		gotSize   int
+		err       error
+	}{
+		{
+			input:     "1234{0000}56789",
+			maxLength: 3,
+			want:      "123",
+			gotSize:   3,
+			err:       nil,
+		},
+		{
+			input:     "1234{0000}56789",
+			maxLength: 4,
+			want:      "1234",
+			gotSize:   4,
+			err:       nil,
+		},
+		{
+			input:     "1234{0000}56789",
+			maxLength: 5,
+			want:      "",
+			gotSize:   0,
+			err:       ErrValidLength,
+		},
+		{
+			input:     "1234*56789",
+			maxLength: 5,
+			want:      "",
+			gotSize:   0,
+			err:       ErrValidLength,
+		},
+		{
+			input:     "1234*56789",
+			maxLength: 4,
+			want:      "1234",
+			gotSize:   4,
+			err:       nil,
+		},
+		{
+			input:     "1234*56789",
+			maxLength: 3,
+			want:      "123",
+			gotSize:   3,
+			err:       nil,
+		},
+		{
+			input:     "*123456789",
+			maxLength: 3,
+			want:      "",
+			gotSize:   0,
+			err:       ErrValidLength,
+		},
+	}
+	c := &converters{}
 
-	got, size, err = c.parseVariableStringField("1234*56789", 7)
-	require.Equal(t, "1234", got)
-	require.Equal(t, 5, size)
-	require.Nil(t, err)
-
-	got, size, err = c.parseVariableStringField("1234*56789", 3)
-	require.Equal(t, "123", got)
-	require.Equal(t, 3, size)
-	require.Nil(t, err)
-
-	got, size, err = c.parseVariableStringField("123*567", 3)
-	require.Equal(t, "123", got)
-	require.Equal(t, 3, size)
-	require.Nil(t, err)
+	for index, tt := range tests {
+		t.Run(fmt.Sprintf("sub_%d", index), func(t *testing.T) {
+			got, size, err := c.parseFixedStringField(tt.input, tt.maxLength)
+			require.Equal(t, tt.want, got)
+			require.Equal(t, tt.gotSize, size)
+			require.Equal(t, tt.err, err)
+		})
+	}
 }
 
 func TestConverters_alphaVariableField(t *testing.T) {
@@ -95,7 +211,7 @@ func TestConverters_alphaVariableField(t *testing.T) {
 			input:          "{0000}12",
 			variableLength: true,
 			maxLength:      10,
-			want:           "{0000}12*",
+			want:           "{0000}12",
 		},
 	}
 	c := &converters{}

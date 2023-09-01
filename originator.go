@@ -6,7 +6,6 @@ package wire
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"unicode/utf8"
 )
@@ -43,7 +42,6 @@ func (o *Originator) Parse(record string) error {
 
 	o.tag = record[:6]
 	o.Personal.IdentificationCode = o.parseStringField(record[6:7])
-	fmt.Printf("o.tag=%q  o.Personal.IdentificationCode=%q\n", o.tag, o.Personal.IdentificationCode)
 	length := 7
 
 	value, read, err := o.parseVariableStringField(record[length:], 34)
@@ -52,7 +50,6 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Identifier = value
 	length += read
-	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -60,7 +57,6 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Name = value
 	length += read
-	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -68,7 +64,6 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Address.AddressLineOne = value
 	length += read
-	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -76,7 +71,6 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Address.AddressLineTwo = value
 	length += read
-	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	value, read, err = o.parseVariableStringField(record[length:], 35)
 	if err != nil {
@@ -84,7 +78,6 @@ func (o *Originator) Parse(record string) error {
 	}
 	o.Personal.Address.AddressLineThree = value
 	length += read
-	fmt.Printf("value=%q  read=%d  length=%d\n", value, read, length)
 
 	if err := o.verifyDataWithReadLength(record, length); err != nil {
 		return NewTagMaxLengthErr(err)
@@ -121,11 +114,11 @@ func (o *Originator) Format(options FormatOptions) string {
 
 	buf.WriteString(o.tag)
 	buf.WriteString(o.IdentificationCodeField())
-	buf.WriteString(o.FormatIdentifier(options))
-	buf.WriteString(o.FormatName(options))
-	buf.WriteString(o.FormatAddressLineOne(options))
-	buf.WriteString(o.FormatAddressLineTwo(options))
-	buf.WriteString(o.FormatAddressLineThree(options))
+	buf.WriteString(o.FormatIdentifier(options) + Delimiter)
+	buf.WriteString(o.FormatName(options) + Delimiter)
+	buf.WriteString(o.FormatAddressLineOne(options) + Delimiter)
+	buf.WriteString(o.FormatAddressLineTwo(options) + Delimiter)
+	buf.WriteString(o.FormatAddressLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return o.stripDelimiters(buf.String())

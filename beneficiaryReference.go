@@ -84,7 +84,7 @@ func (br *BeneficiaryReference) Format(options FormatOptions) string {
 	buf.Grow(22)
 
 	buf.WriteString(br.tag)
-	buf.WriteString(br.FormatBeneficiaryReference(options))
+	buf.WriteString(br.FormatBeneficiaryReference(options) + Delimiter)
 
 	return buf.String()
 }

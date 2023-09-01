@@ -119,12 +119,12 @@ func (iAccount *InstitutionAccount) Format(options FormatOptions) string {
 	buf.Grow(186)
 
 	buf.WriteString(iAccount.tag)
-	buf.WriteString(iAccount.FormatSwiftFieldTag(options))
-	buf.WriteString(iAccount.FormatSwiftLineOne(options))
-	buf.WriteString(iAccount.FormatSwiftLineTwo(options))
-	buf.WriteString(iAccount.FormatSwiftLineThree(options))
-	buf.WriteString(iAccount.FormatSwiftLineFour(options))
-	buf.WriteString(iAccount.FormatSwiftLineFive(options))
+	buf.WriteString(iAccount.FormatSwiftFieldTag(options) + Delimiter)
+	buf.WriteString(iAccount.FormatSwiftLineOne(options) + Delimiter)
+	buf.WriteString(iAccount.FormatSwiftLineTwo(options) + Delimiter)
+	buf.WriteString(iAccount.FormatSwiftLineThree(options) + Delimiter)
+	buf.WriteString(iAccount.FormatSwiftLineFour(options) + Delimiter)
+	buf.WriteString(iAccount.FormatSwiftLineFive(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return iAccount.stripDelimiters(buf.String())

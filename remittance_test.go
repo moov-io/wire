@@ -98,18 +98,18 @@ func TestRemittanceSwiftLineSixAlphaNumeric(t *testing.T) {
 
 // TestParseRemittanceWrongLength parses a wrong Remittance record length
 func TestParseRemittanceWrongLength(t *testing.T) {
-	var line = "{7070}SwiftSwift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                  "
+	var line = "{7070}Swift*Swift Line One                     *Swift Line Two                     *Swift Line Three                   *Swift Line Four                  "
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseRemittance()
 
-	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFour", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFour", ErrRequireDelimiter)).Error())
 }
 
 // TestParseRemittanceReaderParseError parses a wrong Remittance reader parse error
 func TestParseRemittanceReaderParseError(t *testing.T) {
-	var line = "{7070}Swift®wift Line One                     Swift Line Two                     Swift Line Three                   Swift Line Four                   "
+	var line = "{7070}Swift*®wift Line One                     *Swift Line Two                     *Swift Line Three                   *Swift Line Four                   *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -144,7 +144,7 @@ func TestStringRemittanceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseRemittance()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{7070}************"
 	r = NewReader(strings.NewReader(line))
@@ -171,7 +171,7 @@ func TestStringRemittanceOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.Remittance
-	require.Equal(t, record.String(), "{7070}                                                                                                                                                 ")
+	require.Equal(t, record.String(), "{7070}     *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7070}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

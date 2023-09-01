@@ -71,12 +71,12 @@ func TestParseInstructedAmountWrongLength(t *testing.T) {
 
 	err := r.parseInstructedAmount()
 
-	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrRequireDelimiter)).Error())
 }
 
 // TestParseInstructedAmountReaderParseError parses a wrong InstructedAmount reader parse error
 func TestParseInstructedAmountReaderParseError(t *testing.T) {
-	var line = "{3710}USD000000004567Z89"
+	var line = "{3710}USD000000004567Z89*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -111,7 +111,7 @@ func TestStringInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstructedAmount()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3710}USD4567,89***"
 	r = NewReader(strings.NewReader(line))
@@ -138,7 +138,7 @@ func TestStringInstructedAmountOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.InstructedAmount
-	require.Equal(t, record.String(), "{3710}USD4567,89        ")
+	require.Equal(t, record.String(), "{3710}USD4567,89        *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3710}USD4567,89*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

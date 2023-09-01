@@ -125,6 +125,9 @@ var (
 
 	// ErrValidLength is returned for an field with invalid length
 	ErrValidLength = errors.New("is an invalid length")
+
+	// ErrRequireDelimiter is returned for an field without a delimiter
+	ErrRequireDelimiter = errors.New("is require delimiter")
 )
 
 // FieldError is returned for errors at a field level in a tag

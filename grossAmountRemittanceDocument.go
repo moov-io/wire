@@ -43,7 +43,7 @@ func (gard *GrossAmountRemittanceDocument) Parse(record string) error {
 	gard.tag = record[:6]
 	length := 6
 
-	value, read, err := gard.parseVariableStringField(record[length:], 3)
+	value, read, err := gard.parseFixedStringField(record[length:], 3)
 	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
@@ -91,8 +91,8 @@ func (gard *GrossAmountRemittanceDocument) Format(options FormatOptions) string 
 	buf.Grow(28)
 
 	buf.WriteString(gard.tag)
-	buf.WriteString(gard.FormatCurrencyCode(options))
-	buf.WriteString(gard.FormatAmount(options))
+	buf.WriteString(gard.CurrencyCodeField())
+	buf.WriteString(gard.FormatAmount(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return gard.stripDelimiters(buf.String())

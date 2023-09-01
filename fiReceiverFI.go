@@ -119,12 +119,12 @@ func (firfi *FIReceiverFI) Format(options FormatOptions) string {
 	buf.Grow(201)
 
 	buf.WriteString(firfi.tag)
-	buf.WriteString(firfi.FormatLineOne(options))
-	buf.WriteString(firfi.FormatLineTwo(options))
-	buf.WriteString(firfi.FormatLineThree(options))
-	buf.WriteString(firfi.FormatLineFour(options))
-	buf.WriteString(firfi.FormatLineFive(options))
-	buf.WriteString(firfi.FormatLineSix(options))
+	buf.WriteString(firfi.FormatLineOne(options) + Delimiter)
+	buf.WriteString(firfi.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(firfi.FormatLineThree(options) + Delimiter)
+	buf.WriteString(firfi.FormatLineFour(options) + Delimiter)
+	buf.WriteString(firfi.FormatLineFive(options) + Delimiter)
+	buf.WriteString(firfi.FormatLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return firfi.stripDelimiters(buf.String())

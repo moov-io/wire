@@ -125,12 +125,12 @@ func TestParseInstructingFIWrongLength(t *testing.T) {
 
 	err := r.parseInstructingFI()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Identifier", ErrRequireDelimiter)).Error())
 }
 
 // TestParseInstructingFIReaderParseError parses a wrong InstructingFI reader parse error
 func TestParseInstructingFIReaderParseError(t *testing.T) {
-	var line = "{5200}D123456789                         ®I Name                            Address One                        Address Two                        Address Three                     "
+	var line = "{5200}D123456789                         *®I Name                            *Address One                        *Address Two                        *Address Three                     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -165,7 +165,7 @@ func TestStringInstructingFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstructingFI()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{5200}D12***********"
 	r = NewReader(strings.NewReader(line))
@@ -192,7 +192,7 @@ func TestStringInstructingFIOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.InstructingFI
-	require.Equal(t, record.String(), "{5200}D12                                                                                                                                                                            ")
+	require.Equal(t, record.String(), "{5200}D12                                *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5200}D12*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

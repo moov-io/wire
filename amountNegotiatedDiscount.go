@@ -43,7 +43,7 @@ func (nd *AmountNegotiatedDiscount) Parse(record string) error {
 	nd.tag = record[:6]
 	length := 6
 
-	value, read, err := nd.parseVariableStringField(record[length:], 3)
+	value, read, err := nd.parseFixedStringField(record[length:], 3)
 	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
@@ -91,8 +91,8 @@ func (nd *AmountNegotiatedDiscount) Format(options FormatOptions) string {
 	buf.Grow(28)
 
 	buf.WriteString(nd.tag)
-	buf.WriteString(nd.FormatCurrencyCode(options))
-	buf.WriteString(nd.FormatAmount(options))
+	buf.WriteString(nd.CurrencyCodeField())
+	buf.WriteString(nd.FormatAmount(options) + Delimiter)
 
 	return buf.String()
 }

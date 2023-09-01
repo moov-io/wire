@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -45,22 +44,22 @@ func TestCurrencyInstructedAmountValid(t *testing.T) {
 
 // TestParseCurrencyInstructedAmountWrongLength parses a wrong CurrencyInstructedAmount record length
 func TestParseCurrencyInstructedAmountWrongLength(t *testing.T) {
-	var line = "{7033}Swift000000000001500,4"
+	var line = "{7033}Swift*000000000001500,4"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseCurrencyInstructedAmount()
 
-	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrRequireDelimiter)).Error())
 
 	_, err = r.Read()
 
-	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrRequireDelimiter)).Error())
 }
 
 // TestParseCurrencyInstructedAmountReaderParseError parses a wrong CurrencyInstructedAmount reader parse error
 func TestParseCurrencyInstructedAmountReaderParseError(t *testing.T) {
-	var line = "{7033}Swift00000000Z001500,49"
+	var line = "{7033}Swift*00000000Z001500,49*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -85,7 +84,7 @@ func TestCurrencyInstructedAmountTagError(t *testing.T) {
 
 // TestStringCurrencyInstructedAmountVariableLength parses using variable length
 func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
-	var line = "{7033}*000000000001500,49"
+	var line = "{7033}*000000000001500,49*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -97,12 +96,12 @@ func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseCurrencyInstructedAmount()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 }
 
 // TestStringCurrencyInstructedAmountOptions validates Format() formatted according to the FormatOptions
 func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
-	var line = "{7033}*000000000001500,49"
+	var line = "{7033}*000000000001500,49*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -110,7 +109,7 @@ func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.CurrencyInstructedAmount
-	require.Equal(t, record.String(), "{7033}     000000000001500,49")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7033}*000000000001500,49")
+	require.Equal(t, record.String(), "{7033}     *000000000001500,49*")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7033}*000000000001500,49*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -106,12 +106,12 @@ func TestParseFIBeneficiaryFIAdviceWrongLength(t *testing.T) {
 
 	err := r.parseFIBeneficiaryFIAdvice()
 
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrRequireDelimiter)).Error())
 }
 
 // TestParseFIBeneficiaryFIAdviceReaderParseError parses a wrong FIBeneficiaryFIAdvice reader parse error
 func TestParseFIBeneficiaryFIAdviceReaderParseError(t *testing.T) {
-	var line = "{6310}TLXLine ®ne                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                        "
+	var line = "{6310}TLXLine ®ne                  *Line Two                         *Line Three                       *Line Four                        *Line Five                        *Line Six                        *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -150,7 +150,7 @@ func TestStringFIBeneficiaryFIAdviceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIBeneficiaryFIAdvice()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{6310}HLD********"
 	r = NewReader(strings.NewReader(line))
@@ -177,7 +177,7 @@ func TestStringFIBeneficiaryFIAdviceOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.FIBeneficiaryFIAdvice
-	require.Equal(t, record.String(), "{6310}HLD                                                                                                                                                                                               ")
+	require.Equal(t, record.String(), "{6310}HLD                          *                                 *                                 *                                 *                                 *                                 *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6310}HLD*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -56,7 +56,7 @@ func TestParseBusinessFunctionCodeWrongLength(t *testing.T) {
 
 // TestParseBusinessFunctionCodeReaderParseError parses a wrong BusinessFunctionCode reader parse error
 func TestParseBusinessFunctionCodeReaderParseError(t *testing.T) {
-	var line = "{3600}CTAXXY"
+	var line = "{3600}CTAXXY*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -96,7 +96,7 @@ func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseBusinessFunctionCode()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{3600}BTR***"
 	r = NewReader(strings.NewReader(line))
@@ -123,8 +123,8 @@ func TestStringBusinessFunctionCodeOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	bfc := r.currentFEDWireMessage.BusinessFunctionCode
-	require.Equal(t, bfc.String(), "{3600}BTR   ")
-	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: true}), "{3600}BTR")
+	require.Equal(t, bfc.String(), "{3600}BTR   *")
+	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: true}), "{3600}BTR*")
 	require.Equal(t, bfc.String(), bfc.Format(FormatOptions{VariableLengthFields: false}))
 
 }

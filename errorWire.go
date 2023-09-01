@@ -47,14 +47,14 @@ func (ew *ErrorWire) Parse(record string) error {
 	ew.tag = record[:6]
 	length := 6
 
-	value, read, err := ew.parseVariableStringField(record[length:], 1)
+	value, read, err := ew.parseFixedStringField(record[length:], 1)
 	if err != nil {
 		return fieldError("ErrorCategory", err)
 	}
 	ew.ErrorCategory = value
 	length += read
 
-	value, read, err = ew.parseVariableStringField(record[length:], 3)
+	value, read, err = ew.parseFixedStringField(record[length:], 3)
 	if err != nil {
 		return fieldError("ErrorCode", err)
 	}
@@ -102,9 +102,9 @@ func (ew *ErrorWire) Format(options FormatOptions) string {
 	buf.Grow(45)
 	buf.WriteString(ew.tag)
 
-	buf.WriteString(ew.FormatErrorCategory(options))
-	buf.WriteString(ew.FormatErrorCode(options))
-	buf.WriteString(ew.FormatErrorDescription(options))
+	buf.WriteString(ew.ErrorCategoryField())
+	buf.WriteString(ew.ErrorCodeField())
+	buf.WriteString(ew.FormatErrorDescription(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return ew.stripDelimiters(buf.String())

@@ -106,12 +106,12 @@ func TestParseSecondaryRemittanceDocumentWrongLength(t *testing.T) {
 
 	err := r.parseSecondaryRemittanceDocument()
 
-	require.EqualError(t, err, r.parseError(fieldError("Issuer", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("ProprietaryDocumentTypeCode", ErrRequireDelimiter)).Error())
 }
 
 // TestParseSecondaryRemittanceDocumentReaderParseError parses a wrong SecondaryRemittanceDocument reader parse error
 func TestParseSecondaryRemittanceDocumentReaderParseError(t *testing.T) {
-	var line = "{8700}ZZZZ                                   222222                             Issuer 2                           "
+	var line = "{8700}ZZZZ                                   *222222                             *Issuer 2                           *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -146,7 +146,7 @@ func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSecondaryRemittanceDocument()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{8700}AROI*A******************************"
 	r = NewReader(strings.NewReader(line))
@@ -173,7 +173,7 @@ func TestStringSecondaryRemittanceDocumentOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.SecondaryRemittanceDocument
-	require.Equal(t, record.String(), "{8700}AROI                                   A                                                                     ")
+	require.Equal(t, record.String(), "{8700}AROI                                   *A                                  *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8700}AROI*A*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

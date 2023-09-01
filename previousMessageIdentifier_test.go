@@ -87,9 +87,9 @@ func TestStringPreviousMessageIdentifierVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parsePreviousMessageIdentifier()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrValidLength.Error())
 
-	line = "{3500}*"
+	line = "{3500}                      *"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -108,6 +108,6 @@ func TestStringPreviousMessageIdentifierOptions(t *testing.T) {
 
 	record := r.currentFEDWireMessage.PreviousMessageIdentifier
 	require.Equal(t, record.String(), "{3500}                      ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3500}*")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3500}                      ")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

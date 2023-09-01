@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -65,18 +64,17 @@ func TestActualAmountPaidCurrencyCodeValid(t *testing.T) {
 
 // TestParseActualAmountPaidWrongLength parses a wrong ActualAmountPaid record length
 func TestParseActualAmountPaidWrongLength(t *testing.T) {
-	var line = "{8450}USD1234.56          "
+	var line = "{8450}USD1234.56          *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseActualAmountPaid()
-
-	require.EqualError(t, err, r.parseError(fieldError("Amount", ErrValidLength)).Error())
+	require.NoError(t, err)
 }
 
 // TestParseActualAmountPaidReaderParseError parses a wrong ActualAmountPaid reader parse error
 func TestParseActualAmountPaidReaderParseError(t *testing.T) {
-	var line = "{8450}USD1234.56Z           "
+	var line = "{8450}USD1234.56Z           *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -111,21 +109,21 @@ func TestStringActualAmountPaidVariableLength(t *testing.T) {
 	expected := r.parseError(NewTagMinLengthErr(8, len(r.line))).Error()
 	require.EqualError(t, err, expected)
 
-	line = "{8450}USD1234.56            NNN"
+	line = "{8450}USD1234.56            NNN*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseActualAmountPaid()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrNonAmount.Error())
 
 	line = "{8450}****"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseActualAmountPaid()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrValidLength.Error())
 
-	line = "{8450}**"
+	line = "{8450}USD*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -151,7 +149,7 @@ func TestStringActualAmountPaidOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	aap := r.currentFEDWireMessage.ActualAmountPaid
-	require.Equal(t, aap.String(), "{8450}USD1234.56            ")
+	require.Equal(t, aap.String(), "{8450}USD1234.56            *")
 	require.Equal(t, aap.Format(FormatOptions{VariableLengthFields: true}), "{8450}USD1234.56*")
 	require.Equal(t, aap.String(), aap.Format(FormatOptions{VariableLengthFields: false}))
 }

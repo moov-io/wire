@@ -43,7 +43,7 @@ func (aap *ActualAmountPaid) Parse(record string) error {
 	aap.tag = record[:6]
 	length := 6
 
-	value, read, err := aap.parseVariableStringField(record[length:], 3)
+	value, read, err := aap.parseFixedStringField(record[length:], 3)
 	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
@@ -91,8 +91,8 @@ func (aap *ActualAmountPaid) Format(options FormatOptions) string {
 	buf.Grow(28)
 
 	buf.WriteString(aap.tag)
-	buf.WriteString(aap.FormatCurrencyCode(options))
-	buf.WriteString(aap.FormatAmount(options))
+	buf.WriteString(aap.CurrencyCodeField())
+	buf.WriteString(aap.FormatAmount(options) + Delimiter)
 
 	return buf.String()
 }

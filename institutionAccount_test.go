@@ -105,12 +105,12 @@ func TestParseInstitutionAccountWrongLength(t *testing.T) {
 
 	err := r.parseInstitutionAccount()
 
-	require.EqualError(t, err, r.parseError(fieldError("SwiftLineFive", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("SwiftFieldTag", ErrRequireDelimiter)).Error())
 }
 
 // TestParseInstitutionAccountReaderParseError parses a wrong InstitutionAccount reader parse error
 func TestParseInstitutionAccountReaderParseError(t *testing.T) {
-	var line = "{7057}SwiftSwift ®ine One                     Swift Line Two                     Swift Line Three                   Swift Line Four                    Swift Line Five                   "
+	var line = "{7057}Swift*Swift ®ine One                     *Swift Line Two                     *Swift Line Three                   *Swift Line Four                    *Swift Line Five                   *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -145,7 +145,7 @@ func TestStringInstitutionAccountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstitutionAccount()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{7057}********"
 	r = NewReader(strings.NewReader(line))
@@ -172,7 +172,7 @@ func TestStringInstitutionAccountOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.InstitutionAccount
-	require.Equal(t, record.String(), "{7057}Swift                                                                                                                                                                               ")
+	require.Equal(t, record.String(), "{7057}Swift*                                   *                                   *                                   *                                   *                                   *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7057}Swift*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

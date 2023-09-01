@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+const (
+	Delimiter = "*"
+)
+
 // converters handles golang to WIRE type Converters
 type converters struct{}
 
@@ -50,30 +54,30 @@ func (c *converters) alphaField(s string, max uint) string {
 
 // formatAlphaField returns the input formatted according to the FormatOptions.
 // If the length of s exceeds max, s will be truncated to max. If options.VariableLengthFields
-// is set, any trailing whitespace is replaced with a single asterisk (*) character.
+// is set, any trailing whitespace is stripped
 func (c *converters) formatAlphaField(s string, max uint, options FormatOptions) string {
 	ln := uint(len(s))
 	if ln > max {
 		return s[:max]
 	}
 
-	if options.VariableLengthFields {
-		if max-ln > 0 {
-			s += "*"
-		}
-	} else {
+	if !options.VariableLengthFields {
 		s += strings.Repeat(" ", int(max-ln))
 	}
 
 	return s
 }
 
-func (c *converters) parseVariableStringField(r string, maxLen int) (got string, size int, err error) {
-	min := func(x, y int) int {
+// parseFixedStringField will use to parse for mandatory fixed length elements
+//   - Has fixed length
+//   - Not permitted Delimiter
+func (c *converters) parseFixedStringField(r string, maxLen int) (got string, size int, err error) {
+	max := func(x, y int) int {
 		if x > y {
-			return y
+			return x
 		}
-		return x
+
+		return y
 	}
 
 	// Omit field?
@@ -81,39 +85,61 @@ func (c *converters) parseVariableStringField(r string, maxLen int) (got string,
 		return
 	}
 
-	endIndex := maxLen
-	delimiterIndex := maxLen
+	endIndex := -1
+	delimiterIndex := -1
 
-	if index := strings.Index(r, "*"); index > -1 {
+	if index := strings.Index(r, Delimiter); index > -1 {
 		delimiterIndex = index
 	}
 	if index := strings.Index(r, "{"); index > -1 {
 		endIndex = index
 	}
 
-	hasDelimiter := false
-	size = min(endIndex, delimiterIndex)
-	if size >= maxLen {
-		size = maxLen
-	} else if size < maxLen {
-		if delimiterIndex == size {
-			hasDelimiter = true
-		}
+	size = max(endIndex, delimiterIndex)
+	if size == -1 {
+		size = len(r)
 	}
 
-	if size > len(r) {
+	if size > maxLen {
+		size = maxLen
+	} else if size < maxLen {
 		size = 0
 		err = ErrValidLength
 		return
 	}
 
-	if got = strings.TrimSpace(r[:size]); got == "*" {
+	got = strings.TrimSpace(r[:size])
+
+	return
+}
+
+// parseVariableStringField will use to parse for mandatory variable length/optional fixed length/optional variable length elements
+//   - Has variable length
+//   - Always required delimiter
+func (c *converters) parseVariableStringField(r string, maxLen int) (got string, size int, err error) {
+	// Omit field?
+	if len(r) == 0 {
+		return
+	}
+
+	if index := strings.Index(r, Delimiter); index > -1 {
+		size = index
+	} else {
+		size = 0
+		err = ErrRequireDelimiter
+		return
+	}
+
+	if got = strings.TrimSpace(r[:size]); got == Delimiter {
 		got = ""
 	}
 
-	if hasDelimiter {
-		size++
+	if len(got) > maxLen {
+		got = got[:maxLen]
 	}
+
+	// skip delimiter
+	size++
 
 	return
 }
@@ -140,7 +166,7 @@ func (c *converters) stripDelimiters(data string) string {
 		inspectLetter1 := string(data[i])
 		inspectLetter2 := string(data[i-1])
 
-		if inspectLetter1 != "*" || inspectLetter2 != "*" || i == 6 {
+		if inspectLetter1 != Delimiter || inspectLetter2 != Delimiter || i == 6 {
 			index = i + 1
 			break
 		}
@@ -156,7 +182,7 @@ func (c *converters) verifyDataWithReadLength(data string, expected int) error {
 	if n == expected {
 		return nil
 	}
-	if n > expected && data[expected:] == "*" {
+	if n > expected && data[expected:] == Delimiter {
 		return nil
 	}
 	return fmt.Errorf("found data of %d length but expected %d", n, expected)

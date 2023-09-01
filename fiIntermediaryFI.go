@@ -119,12 +119,12 @@ func (fiifi *FIIntermediaryFI) Format(options FormatOptions) string {
 	buf.Grow(201)
 
 	buf.WriteString(fiifi.tag)
-	buf.WriteString(fiifi.FormatLineOne(options))
-	buf.WriteString(fiifi.FormatLineTwo(options))
-	buf.WriteString(fiifi.FormatLineThree(options))
-	buf.WriteString(fiifi.FormatLineFour(options))
-	buf.WriteString(fiifi.FormatLineFive(options))
-	buf.WriteString(fiifi.FormatLineSix(options))
+	buf.WriteString(fiifi.FormatLineOne(options) + Delimiter)
+	buf.WriteString(fiifi.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(fiifi.FormatLineThree(options) + Delimiter)
+	buf.WriteString(fiifi.FormatLineFour(options) + Delimiter)
+	buf.WriteString(fiifi.FormatLineFive(options) + Delimiter)
+	buf.WriteString(fiifi.FormatLineSix(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return fiifi.stripDelimiters(buf.String())

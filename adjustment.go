@@ -49,21 +49,21 @@ func (adj *Adjustment) Parse(record string) error {
 	adj.tag = record[:6]
 	length := 6
 
-	value, read, err := adj.parseVariableStringField(record[length:], 2)
+	value, read, err := adj.parseFixedStringField(record[length:], 2)
 	if err != nil {
 		return fieldError("AdjustmentReasonCode", err)
 	}
 	adj.AdjustmentReasonCode = value
 	length += read
 
-	value, read, err = adj.parseVariableStringField(record[length:], 4)
+	value, read, err = adj.parseFixedStringField(record[length:], 4)
 	if err != nil {
 		return fieldError("CreditDebitIndicator", err)
 	}
 	adj.CreditDebitIndicator = value
 	length += read
 
-	value, read, err = adj.parseVariableStringField(record[length:], 3)
+	value, read, err = adj.parseFixedStringField(record[length:], 3)
 	if err != nil {
 		return fieldError("CurrencyCode", err)
 	}
@@ -72,7 +72,7 @@ func (adj *Adjustment) Parse(record string) error {
 
 	value, read, err = adj.parseVariableStringField(record[length:], 19)
 	if err != nil {
-		return fieldError("CurrencyCode", err)
+		return fieldError("Amount", err)
 	}
 	adj.RemittanceAmount.Amount = value
 	length += read
@@ -118,11 +118,11 @@ func (adj *Adjustment) Format(options FormatOptions) string {
 	buf.Grow(168)
 
 	buf.WriteString(adj.tag)
-	buf.WriteString(adj.FormatAdjustmentReasonCode(options))
-	buf.WriteString(adj.FormatCreditDebitIndicator(options))
-	buf.WriteString(adj.FormatCurrencyCode(options))
-	buf.WriteString(adj.FormatAmount(options))
-	buf.WriteString(adj.FormatAdditionalInfo(options))
+	buf.WriteString(adj.AdjustmentReasonCodeField())
+	buf.WriteString(adj.CreditDebitIndicatorField())
+	buf.WriteString(adj.CurrencyCodeField())
+	buf.WriteString(adj.FormatAmount(options) + Delimiter)
+	buf.WriteString(adj.FormatAdditionalInfo(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return adj.stripDelimiters(buf.String())

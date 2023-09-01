@@ -102,9 +102,9 @@ func (rft *RemittanceFreeText) Format(options FormatOptions) string {
 	buf.Grow(426)
 
 	buf.WriteString(rft.tag)
-	buf.WriteString(rft.FormatLineOne(options))
-	buf.WriteString(rft.FormatLineTwo(options))
-	buf.WriteString(rft.FormatLineThree(options))
+	buf.WriteString(rft.FormatLineOne(options) + Delimiter)
+	buf.WriteString(rft.FormatLineTwo(options) + Delimiter)
+	buf.WriteString(rft.FormatLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return rft.stripDelimiters(buf.String())

@@ -108,18 +108,17 @@ func TestAdjustmentCurrencyCodeRequired(t *testing.T) {
 
 // TestParseAdjustmentWrongLength parses a wrong Adjustment record length
 func TestParseAdjustmentWrongLength(t *testing.T) {
-	var line = "{8600}01CRDTUSD1234.56Z             Adjustment Additional Information                                                                                                       "
+	var line = "{8600}01CRDTUSD1234.56   *Additional Information                                                                                                       *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseAdjustment()
-
-	require.EqualError(t, err, r.parseError(fieldError("AdditionalInfo", ErrValidLength)).Error())
+	require.NoError(t, err)
 }
 
 // TestParseAdjustmentReaderParseError parses a wrong Adjustment reader parse error
 func TestParseAdjustmentReaderParseError(t *testing.T) {
-	var line = "{8600}01CRDTUSD1234.56Z             Adjustment Additional Information                                                                                                         "
+	var line = "{8600}01CRDTUSD1234.56Z             *Additional Information                                                                                                         *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -159,7 +158,7 @@ func TestStringAdjustmentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseAdjustment()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{8600}01CRDTUSD1234.56****"
 	r = NewReader(strings.NewReader(line))
@@ -186,7 +185,7 @@ func TestStringAdjustmentOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	adj := r.currentFEDWireMessage.Adjustment
-	require.Equal(t, adj.String(), "{8600}01CRDTUSD1234.56                                                                                                                                                        ")
+	require.Equal(t, adj.String(), "{8600}01CRDTUSD1234.56            *                                                                                                                                            *")
 	require.Equal(t, adj.Format(FormatOptions{VariableLengthFields: true}), "{8600}01CRDTUSD1234.56*")
 	require.Equal(t, adj.String(), adj.Format(FormatOptions{VariableLengthFields: false}))
 }

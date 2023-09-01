@@ -112,11 +112,11 @@ func (ri *Remittance) Format(options FormatOptions) string {
 	buf.Grow(151)
 
 	buf.WriteString(ri.tag)
-	buf.WriteString(ri.FormatSwiftFieldTag(options))
-	buf.WriteString(ri.FormatSwiftLineOne(options))
-	buf.WriteString(ri.FormatSwiftLineTwo(options))
-	buf.WriteString(ri.FormatSwiftLineThree(options))
-	buf.WriteString(ri.FormatSwiftLineFour(options))
+	buf.WriteString(ri.FormatSwiftFieldTag(options) + Delimiter)
+	buf.WriteString(ri.FormatSwiftLineOne(options) + Delimiter)
+	buf.WriteString(ri.FormatSwiftLineTwo(options) + Delimiter)
+	buf.WriteString(ri.FormatSwiftLineThree(options) + Delimiter)
+	buf.WriteString(ri.FormatSwiftLineFour(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return ri.stripDelimiters(buf.String())

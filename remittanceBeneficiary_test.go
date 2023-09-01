@@ -349,12 +349,12 @@ func TestParseRemittanceBeneficiaryWrongLength(t *testing.T) {
 
 	err := r.parseRemittanceBeneficiary()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineSeven", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Name", ErrRequireDelimiter)).Error())
 }
 
 // TestParseRemittanceBeneficiaryReaderParseError parses a wrong RemittanceBeneficiary reader parse error
 func TestParseRemittanceBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{8350}®ame                                                                                                                                        OICUST111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                   US"
+	var line = "{8350}®ame                                                                                                                                        *OICUST*111111                             Bank                                                                                                                 ADDRDepartment                                                            Sub-Department                                                        Street Name                                                           16              19405           AnyTown                            PA                                 UAAddress Line One                                                      Address Line Two                                                      Address Line Three                                                    Address Line Four                                                     Address Line Five                                                     Address Line Six                                                      Address Line Seven                                                   US*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -377,7 +377,7 @@ func TestRemittanceBeneficiaryTagError(t *testing.T) {
 
 // TestStringRemittanceBeneficiaryVariableLength parses using variable length
 func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
-	var line = "{8350}Name*PIARNU***ADDR*"
+	var line = "{8350}Name*PI*ARNU****ADDR*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -389,26 +389,26 @@ func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseRemittanceBeneficiary()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
-	line = "{8350}Name*PIARNU***ADDR****************************"
+	line = "{8350}Name*PI*ARNU***ADDR****************************"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseRemittanceBeneficiary()
 	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
 
-	line = "{8350}Name*PIARNU***ADDR*"
+	line = "{8350}Name*PI*ARNU****ADDR****"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseRemittanceBeneficiary()
-	require.Equal(t, err, nil)
+	require.Nil(t, err)
 }
 
 // TestStringRemittanceBeneficiaryOptions validates Format() formatted according to the FormatOptions
 func TestStringRemittanceBeneficiaryOptions(t *testing.T) {
-	var line = "{8350}Name*PIARNU***ADDR"
+	var line = "{8350}Name*PI*ARNU****ADDR*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -416,7 +416,7 @@ func TestStringRemittanceBeneficiaryOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.RemittanceBeneficiary
-	require.Equal(t, record.String(), "{8350}Name                                                                                                                                        PIARNU                                                                                                                                                        ADDR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8350}Name*PIARNU***ADDR*")
+	require.Equal(t, record.String(), "{8350}Name                                                                                                                                        *PI*ARNU*                                   *                                   *                                                                                  *ADDR*                                                                      *                                                                      *                                                                      *                                *                                   *                                   *  *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *  *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8350}Name*PI*ARNU****ADDR*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

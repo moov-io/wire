@@ -94,12 +94,12 @@ func TestParseFIBeneficiaryWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIBeneficiary()
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrRequireDelimiter)).Error())
 }
 
 // TestParseFIBeneficiaryReaderParseError parses a wrong FIBeneficiary reader parse error
 func TestParseFIBeneficiaryReaderParseError(t *testing.T) {
-	var line = "{6400}Line Si®                                                                                                                                                                                          "
+	var line = "{6400}Line Si®                                                                                                                                                                                          *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -138,7 +138,7 @@ func TestStringFIBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIBeneficiary()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{6400}********"
 	r = NewReader(strings.NewReader(line))
@@ -165,7 +165,7 @@ func TestStringFIBeneficiaryOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.FIBeneficiary
-	require.Equal(t, record.String(), "{6400}                                                                                                                                                                                                   ")
+	require.Equal(t, record.String(), "{6400}                              *                                 *                                 *                                 *                                 *                                 *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6400}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

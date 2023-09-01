@@ -85,7 +85,7 @@ func (eRate *ExchangeRate) Format(options FormatOptions) string {
 	buf.Grow(18)
 
 	buf.WriteString(eRate.tag)
-	buf.WriteString(eRate.FormatExchangeRate(options))
+	buf.WriteString(eRate.FormatExchangeRate(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return eRate.stripDelimiters(buf.String())

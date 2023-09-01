@@ -94,12 +94,12 @@ func TestParseFIReceiverFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIReceiverFI()
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrRequireDelimiter)).Error())
 }
 
 // TestParseFIReceiverFIReaderParseError parses a wrong FIReceiverFI reader parse error
 func TestParseFIReceiverFIReaderParseError(t *testing.T) {
-	var line = "{6100}Line Si®                                                                                                                                                                                          "
+	var line = "{6100}Line Si®                                                                                                                                                                                          *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -138,7 +138,7 @@ func TestStringFIReceiverFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIReceiverFI()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{6100}********"
 	r = NewReader(strings.NewReader(line))
@@ -165,7 +165,7 @@ func TestStringFIReceiverFIOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.FIReceiverFI
-	require.Equal(t, record.String(), "{6100}                                                                                                                                                                                                   ")
+	require.Equal(t, record.String(), "{6100}                              *                                 *                                 *                                 *                                 *                                 *")
 
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6100}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))

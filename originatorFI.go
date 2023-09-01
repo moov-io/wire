@@ -43,7 +43,7 @@ func (ofi *OriginatorFI) Parse(record string) error {
 	ofi.tag = record[:6]
 	length := 6
 
-	value, read, err := ofi.parseVariableStringField(record[length:], 1)
+	value, read, err := ofi.parseFixedStringField(record[length:], 1)
 	if err != nil {
 		return fieldError("IdentificationCode", err)
 	}
@@ -119,12 +119,12 @@ func (ofi *OriginatorFI) Format(options FormatOptions) string {
 	buf.Grow(181)
 	buf.WriteString(ofi.tag)
 
-	buf.WriteString(ofi.FormatIdentificationCode(options))
-	buf.WriteString(ofi.FormatIdentifier(options))
-	buf.WriteString(ofi.FormatName(options))
-	buf.WriteString(ofi.FormatAddressLineOne(options))
-	buf.WriteString(ofi.FormatAddressLineTwo(options))
-	buf.WriteString(ofi.FormatAddressLineThree(options))
+	buf.WriteString(ofi.IdentificationCodeField())
+	buf.WriteString(ofi.FormatIdentifier(options) + Delimiter)
+	buf.WriteString(ofi.FormatName(options) + Delimiter)
+	buf.WriteString(ofi.FormatAddressLineOne(options) + Delimiter)
+	buf.WriteString(ofi.FormatAddressLineTwo(options) + Delimiter)
+	buf.WriteString(ofi.FormatAddressLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return ofi.stripDelimiters(buf.String())

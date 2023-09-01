@@ -119,11 +119,11 @@ func (debitDD *AccountDebitedDrawdown) Format(options FormatOptions) string {
 
 	buf.WriteString(debitDD.tag)
 	buf.WriteString(debitDD.IdentificationCodeField())
-	buf.WriteString(debitDD.FormatIdentifier(options))
-	buf.WriteString(debitDD.FormatName(options))
-	buf.WriteString(debitDD.FormatAddressLineOne(options))
-	buf.WriteString(debitDD.FormatAddressLineTwo(options))
-	buf.WriteString(debitDD.FormatAddressLineThree(options))
+	buf.WriteString(debitDD.FormatIdentifier(options) + Delimiter)
+	buf.WriteString(debitDD.FormatName(options) + Delimiter)
+	buf.WriteString(debitDD.FormatAddressLineOne(options) + Delimiter)
+	buf.WriteString(debitDD.FormatAddressLineTwo(options) + Delimiter)
+	buf.WriteString(debitDD.FormatAddressLineThree(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return debitDD.stripDelimiters(buf.String())

@@ -125,12 +125,12 @@ func TestParseBeneficiaryIntermediaryFIWrongLength(t *testing.T) {
 
 	err := r.parseBeneficiaryIntermediaryFI()
 
-	require.EqualError(t, err, r.parseError(fieldError("AddressLineThree", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("Identifier", ErrRequireDelimiter)).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIReaderParseError parses a wrong BeneficiaryIntermediaryFI reader parse error
 func TestParseBeneficiaryIntermediaryFIReaderParseError(t *testing.T) {
-	var line = "{4000}D123456789                         F® Name                            Address One                        Address Two                        Address Three                     "
+	var line = "{4000}D123456789                         *F® Name                            *Address One                        *Address Two                        *Address Three                     *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 	fwm := new(FEDWireMessage)
@@ -168,12 +168,12 @@ func TestStringBeneficiaryIntermediaryFIVariableLength(t *testing.T) {
 	expected := r.parseError(NewTagMinLengthErr(7, len(r.line))).Error()
 	require.EqualError(t, err, expected)
 
-	line = "{4000}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    NNN"
+	line = "{4000}D123456789                         *FI Name                            *Address One                        *Address Two                        *Address Three                    NNN"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseBeneficiaryIntermediaryFI()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{4000}D123456789*******"
 	r = NewReader(strings.NewReader(line))
@@ -200,7 +200,7 @@ func TestStringBeneficiaryIntermediaryFIOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	bifi := r.currentFEDWireMessage.BeneficiaryIntermediaryFI
-	require.Equal(t, bifi.String(), "{4000}D123456789                                                                                                                                                                     ")
+	require.Equal(t, bifi.String(), "{4000}D123456789                         *                                   *                                   *                                   *                                   *")
 	require.Equal(t, bifi.Format(FormatOptions{VariableLengthFields: true}), "{4000}D123456789*")
 	require.Equal(t, bifi.String(), bifi.Format(FormatOptions{VariableLengthFields: false}))
 }

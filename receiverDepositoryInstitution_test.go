@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"errors"
 	"strings"
 	"testing"
 
@@ -66,7 +65,7 @@ func TestParseReceiverWrongLength(t *testing.T) {
 
 // TestParseReceiverReaderParseError parses a wrong Receiver reader parse error
 func TestParseReceiverReaderParseError(t *testing.T) {
-	var line = "{3400}2313Z0104Citadel           "
+	var line = "{3400}2313Z0104Citadel           *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -89,28 +88,28 @@ func TestReceiverDepositoryInstitutionTagError(t *testing.T) {
 
 // TestStringReceiverDepositoryInstitutionVariableLength parses using variable length
 func TestStringReceiverDepositoryInstitutionVariableLength(t *testing.T) {
-	var line = "{3400}1*A*"
+	var line = "{3400}1        A*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
 	err := r.parseReceiverDepositoryInstitution()
 	require.Nil(t, err)
 
-	line = "{3400}1        A                 NNN"
+	line = "{3400}1        A                 NNN*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseReceiverDepositoryInstitution()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.NoError(t, err)
 
 	line = "{3400}1*A********"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
 	err = r.parseReceiverDepositoryInstitution()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrValidLength.Error())
 
-	line = "{3400}1*A*"
+	line = "{3400}1        A*"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -120,7 +119,7 @@ func TestStringReceiverDepositoryInstitutionVariableLength(t *testing.T) {
 
 // TestStringReceiverDepositoryInstitutionOptions validates Format() formatted according to the FormatOptions
 func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
-	var line = "{3400}1*A*"
+	var line = "{3400}1        A*"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -128,11 +127,11 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.ReceiverDepositoryInstitution
-	require.Equal(t, record.String(), "{3400}1        A                 ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1*A*")
+	require.Equal(t, record.String(), "{3400}1        A                 *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1        A*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 
-	line = "{3400}1*"
+	line = "{3400}1        *"
 	r = NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -140,8 +139,8 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record = r.currentFEDWireMessage.ReceiverDepositoryInstitution
-	require.Equal(t, record.String(), "{3400}1                          ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1*")
+	require.Equal(t, record.String(), "{3400}1                          *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1        *")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 
 	line = "{3400}111111111*"
@@ -152,7 +151,7 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record = r.currentFEDWireMessage.ReceiverDepositoryInstitution
-	require.Equal(t, record.String(), "{3400}111111111                  ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}111111111")
+	require.Equal(t, record.String(), "{3400}111111111                  *")
+	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}111111111*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

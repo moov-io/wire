@@ -53,7 +53,7 @@ func (ss *SenderSupplied) Parse(record string) error {
 	ss.FormatVersion = ss.parseStringField(record[6:8])
 	length := 8
 
-	value, read, err := ss.parseVariableStringField(record[length:], 8)
+	value, read, err := ss.parseFixedStringField(record[length:], 8)
 	if err != nil {
 		return fieldError("UserRequestCorrelation", err)
 	}
@@ -105,9 +105,9 @@ func (ss *SenderSupplied) Format(options FormatOptions) string {
 
 	buf.WriteString(ss.tag)
 	buf.WriteString(ss.FormatVersionField())
-	buf.WriteString(ss.FormatUserRequestCorrelation(options))
+	buf.WriteString(ss.UserRequestCorrelationField())
 	buf.WriteString(ss.TestProductionCodeField())
-	buf.WriteString(ss.FormatMessageDuplicationCode(options))
+	buf.WriteString(ss.MessageDuplicationCodeField())
 
 	return buf.String()
 }

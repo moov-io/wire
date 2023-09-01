@@ -46,7 +46,7 @@ func (ia *InstructedAmount) Parse(record string) error {
 	ia.tag = record[:6]
 	length := 6
 
-	value, read, err := ia.parseVariableStringField(record[length:], 3)
+	value, read, err := ia.parseFixedStringField(record[length:], 3)
 	if err != nil {
 		return fieldError("SwiftFieldTag", err)
 	}
@@ -94,8 +94,8 @@ func (ia *InstructedAmount) Format(options FormatOptions) string {
 	buf.Grow(24)
 
 	buf.WriteString(ia.tag)
-	buf.WriteString(ia.FormatCurrencyCode(options))
-	buf.WriteString(ia.FormatAmount(options))
+	buf.WriteString(ia.CurrencyCodeField())
+	buf.WriteString(ia.FormatAmount(options) + Delimiter)
 
 	return buf.String()
 }

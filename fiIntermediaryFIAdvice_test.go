@@ -105,12 +105,12 @@ func TestParseFIIntermediaryFIAdviceWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIIntermediaryFIAdvice()
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrRequireDelimiter)).Error())
 }
 
 // TestParseFIIntermediaryFIAdviceReaderParseError parses a wrong FIIntermediaryFIAdvice reader parse error
 func TestParseFIIntermediaryFIAdviceReaderParseError(t *testing.T) {
-	var line = "{6210}LTRLine ®ne                  Line Two                         Line Three                       Line Four                        Line Five                        Line Six                        "
+	var line = "{6210}LTRLine ®ne                  *Line Two                         *Line Three                       *Line Four                        *Line Five                        *Line Six                        *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -149,7 +149,7 @@ func TestStringFIIntermediaryFIAdviceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIIntermediaryFIAdvice()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{6210}HLD********"
 	r = NewReader(strings.NewReader(line))
@@ -176,7 +176,7 @@ func TestStringFIIntermediaryFIAdviceOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.FIIntermediaryFIAdvice
-	require.Equal(t, record.String(), "{6210}HLD                                                                                                                                                                                               ")
+	require.Equal(t, record.String(), "{6210}HLD                          *                                 *                                 *                                 *                                 *                                 *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6210}HLD*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

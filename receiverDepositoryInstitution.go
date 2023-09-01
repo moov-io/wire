@@ -45,7 +45,7 @@ func (rdi *ReceiverDepositoryInstitution) Parse(record string) error {
 	rdi.tag = record[:6]
 	length := 6
 
-	value, read, err := rdi.parseVariableStringField(record[length:], 9)
+	value, read, err := rdi.parseFixedStringField(record[length:], 9)
 	if err != nil {
 		return fieldError("ReceiverABANumber", err)
 	}
@@ -93,8 +93,8 @@ func (rdi *ReceiverDepositoryInstitution) Format(options FormatOptions) string {
 	buf.Grow(33)
 
 	buf.WriteString(rdi.tag)
-	buf.WriteString(rdi.FormatReceiverABANumber(options))
-	buf.WriteString(rdi.FormatReceiverShortName(options))
+	buf.WriteString(rdi.ReceiverABANumberField())
+	buf.WriteString(rdi.FormatReceiverShortName(options) + Delimiter)
 
 	return buf.String()
 }

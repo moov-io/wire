@@ -80,8 +80,7 @@ func TestRead_missingTag(t *testing.T) {
 	r := NewReader(f)
 
 	_, err = r.Read()
-
-	require.EqualError(t, err, "file validation failed: FIBeneficiaryAdvice is a required field")
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 }
 
 func TestReadWithValidateOpts(t *testing.T) {

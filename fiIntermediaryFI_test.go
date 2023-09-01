@@ -94,12 +94,12 @@ func TestParseFIIntermediaryFIWrongLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIIntermediaryFI()
-	require.EqualError(t, err, r.parseError(fieldError("LineSix", ErrValidLength)).Error())
+	require.EqualError(t, err, r.parseError(fieldError("LineOne", ErrRequireDelimiter)).Error())
 }
 
 // TestParseFIIntermediaryFIReaderParseError parses a wrong FIIntermediaryFI reader parse error
 func TestParseFIIntermediaryFIReaderParseError(t *testing.T) {
-	var line = "{6200}Line ®ix                                                                                                                                                                                          "
+	var line = "{6200}Line ®ix                                                                                                                                                                                          *"
 	r := NewReader(strings.NewReader(line))
 	r.line = line
 
@@ -138,7 +138,7 @@ func TestStringFIIntermediaryFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIIntermediaryFI()
-	require.ErrorContains(t, err, r.parseError(NewTagMaxLengthErr(errors.New(""))).Error())
+	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
 
 	line = "{6200}********"
 	r = NewReader(strings.NewReader(line))
@@ -165,7 +165,7 @@ func TestStringFIIntermediaryFIOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	record := r.currentFEDWireMessage.FIIntermediaryFI
-	require.Equal(t, record.String(), "{6200}                                                                                                                                                                                                   ")
+	require.Equal(t, record.String(), "{6200}                              *                                 *                                 *                                 *                                 *                                 *")
 	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6200}*")
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

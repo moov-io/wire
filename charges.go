@@ -123,10 +123,10 @@ func (c *Charges) Format(options FormatOptions) string {
 
 	buf.WriteString(c.tag)
 	buf.WriteString(c.ChargeDetailsField())
-	buf.WriteString(c.FormatSendersChargesOne(options))
-	buf.WriteString(c.FormatSendersChargesTwo(options))
-	buf.WriteString(c.FormatSendersChargesThree(options))
-	buf.WriteString(c.FormatSendersChargesFour(options))
+	buf.WriteString(c.FormatSendersChargesOne(options) + Delimiter)
+	buf.WriteString(c.FormatSendersChargesTwo(options) + Delimiter)
+	buf.WriteString(c.FormatSendersChargesThree(options) + Delimiter)
+	buf.WriteString(c.FormatSendersChargesFour(options) + Delimiter)
 
 	if options.VariableLengthFields {
 		return c.stripDelimiters(buf.String())

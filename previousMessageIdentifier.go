@@ -43,7 +43,7 @@ func (pmi *PreviousMessageIdentifier) Parse(record string) error {
 	pmi.tag = record[:6]
 	length := 6
 
-	value, read, err := pmi.parseVariableStringField(record[length:], 22)
+	value, read, err := pmi.parseFixedStringField(record[length:], 22)
 	if err != nil {
 		return fieldError("PreviousMessageIdentifier", err)
 	}
@@ -84,7 +84,7 @@ func (pmi *PreviousMessageIdentifier) Format(options FormatOptions) string {
 	buf.Grow(28)
 
 	buf.WriteString(pmi.tag)
-	buf.WriteString(pmi.FormatPreviousMessageIdentifier(options))
+	buf.WriteString(pmi.PreviousMessageIdentifierField())
 
 	return buf.String()
 }
