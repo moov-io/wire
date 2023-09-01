@@ -20,6 +20,7 @@ import (
 	"github.com/moov-io/wire"
 
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 )
 
 var (
@@ -44,7 +45,13 @@ func main() {
 	}()
 
 	// Start Admin server (with Prometheus metrics)
-	adminServer := admin.NewServer(*adminAddr)
+	adminServer, err := admin.New(admin.Opts{
+		Addr: *adminAddr,
+	})
+	if err != nil {
+		log.Print(err)
+		return
+	}
 	adminServer.AddVersionHandler(wire.Version) // Setup 'GET /version'
 	go func() {
 		log.Printf("listening on %s", adminServer.BindAddr())
@@ -63,7 +70,11 @@ func main() {
 	// Register our assets route
 	assetsPath := strx.Or(os.Getenv("ASSETS_PATH"), filepath.Join("cmd", "webui", "assets"))
 	log.Printf("serving assets from %s", assetsPath)
-	addAssetsPath(router, assetsPath)
+	err = addAssetsPath(router, assetsPath)
+	if err != nil {
+		log.Print(err)
+		return
+	}
 
 	serve := &http.Server{
 		Addr:    *httpAddr,
@@ -115,9 +126,10 @@ func addPingRoute(r *mux.Router) {
 	})
 }
 
-func addAssetsPath(r *mux.Router, assetPath string) {
+func addAssetsPath(r *mux.Router, assetPath string) error {
 	if _, err := os.Stat(assetPath); err != nil {
-		panic(fmt.Sprintf("ERROR: unable to stat %s: %v", assetPath, err))
+		return errors.Wrap(err, fmt.Sprintf("ERROR: unable to stat %s", assetPath))
 	}
 	r.Methods("GET").PathPrefix("/").Handler(http.StripPrefix(*flagBasePath, http.FileServer(http.Dir(assetPath))))
+	return nil
 }
