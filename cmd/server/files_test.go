@@ -264,6 +264,7 @@ func TestFiles_deleteFile(t *testing.T) {
 		w.Flush()
 
 		assert.Equal(t, http.StatusOK, w.Code, w.Body)
+		assert.Contains(t, w.Body.String(), `{"error":null}`)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
@@ -411,8 +412,7 @@ func TestFiles_validateFile(t *testing.T) {
 		router.ServeHTTP(w, req)
 		w.Flush()
 
-		assert.Equal(t, http.StatusOK, w.Code, w.Body)
-		assert.Contains(t, w.Body.String(), `"{\"error\": null}"`)
+		assert.Contains(t, w.Body.String(), `{"error":null}`)
 	})
 
 	t.Run("repo error", func(t *testing.T) {

@@ -201,7 +201,12 @@ func deleteFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+
+		type response struct {
+			Error error `json:"error"`
+		}
+
+		json.NewEncoder(w).Encode(&response{Error: nil})
 	}
 }
 
@@ -287,7 +292,12 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 		logger.Log("validated file")
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(`{"error": null}`)
+
+		type response struct {
+			Error error `json:"error"`
+		}
+		
+		json.NewEncoder(w).Encode(&response{Error: nil})
 	}
 }
 
