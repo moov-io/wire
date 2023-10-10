@@ -137,12 +137,16 @@ func (ben *Beneficiary) Validate() error {
 	if ben.tag != TagBeneficiary {
 		return fieldError("tag", ErrValidTagForType, ben.tag)
 	}
-	// Can be any Identification Code
-	if err := ben.isIdentificationCode(ben.Personal.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, ben.Personal.IdentificationCode)
-	}
-	if err := ben.isAlphanumeric(ben.Personal.Identifier); err != nil {
-		return fieldError("Identifier", err, ben.Personal.Identifier)
+	// Per FAIM 3.0.6, Beneficiary ID code is optional
+	if ben.Personal.IdentificationCode != "" {
+		// If it is present, confirm it is a valid code
+		if err := ben.isIdentificationCode(ben.Personal.IdentificationCode); err != nil {
+			return fieldError("IdentificationCode", err, ben.Personal.IdentificationCode)
+		}
+		// Identifier must also be present when ID code is present
+		if err := ben.isAlphanumeric(ben.Personal.Identifier); err != nil {
+			return fieldError("Identifier", err, ben.Personal.Identifier)
+		}
 	}
 	if err := ben.isAlphanumeric(ben.Personal.Name); err != nil {
 		return fieldError("Name", err, ben.Personal.Name)

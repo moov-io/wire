@@ -136,12 +136,17 @@ func (o *Originator) Validate() error {
 	if o.tag != TagOriginator {
 		return fieldError("tag", ErrValidTagForType, o.tag)
 	}
-	// Can be any Identification Code
-	if err := o.isIdentificationCode(o.Personal.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, o.Personal.IdentificationCode)
-	}
-	if err := o.isAlphanumeric(o.Personal.Identifier); err != nil {
-		return fieldError("Identifier", err, o.Personal.Identifier)
+
+	// Per FAIM 3.0.6, Originator ID code is optional
+	if o.Personal.IdentificationCode != "" {
+		// If it is present, confirm it is a valid code
+		if err := o.isIdentificationCode(o.Personal.IdentificationCode); err != nil {
+			return fieldError("IdentificationCode", err, o.Personal.IdentificationCode)
+		}
+		// Identifier must also be present when ID code is present
+		if err := o.isAlphanumeric(o.Personal.Identifier); err != nil {
+			return fieldError("Identifier", err, o.Personal.Identifier)
+		}
 	}
 	if err := o.isAlphanumeric(o.Personal.Name); err != nil {
 		return fieldError("Name", err, o.Personal.Name)
