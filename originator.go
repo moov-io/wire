@@ -130,24 +130,28 @@ func (o *Originator) Format(options FormatOptions) string {
 // Validate performs WIRE format rule checks on Originator and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (o *Originator) Validate() error {
-	if err := o.fieldInclusion(); err != nil {
-		return err
-	}
 	if o.tag != TagOriginator {
 		return fieldError("tag", ErrValidTagForType, o.tag)
 	}
 
+	if err := o.fieldInclusion(); err != nil {
+		return err
+	}
+
 	// Per FAIM 3.0.6, Originator ID code is optional
+	// fieldInclusion() above already checks for the mandatory combination of IDCode & Identifier
+	// Here we are checking for allowed values (in IDCode) and text characters (in Identifier)
 	if o.Personal.IdentificationCode != "" {
 		// If it is present, confirm it is a valid code
 		if err := o.isIdentificationCode(o.Personal.IdentificationCode); err != nil {
 			return fieldError("IdentificationCode", err, o.Personal.IdentificationCode)
 		}
-		// Identifier must also be present when ID code is present
+		// Identifier text must only contain allowed characters
 		if err := o.isAlphanumeric(o.Personal.Identifier); err != nil {
 			return fieldError("Identifier", err, o.Personal.Identifier)
 		}
 	}
+
 	if err := o.isAlphanumeric(o.Personal.Name); err != nil {
 		return fieldError("Name", err, o.Personal.Name)
 	}

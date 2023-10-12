@@ -14,9 +14,10 @@ import (
 
 var (
 	// upperAlphanumericRegex = regexp.MustCompile(`[^ A-Z0-9!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
-	// alphanumericRegex = regexp.MustCompile(`[^ \w!"#$%&'()*+,-.\\/:;<>=?@\[\]^_{}|~]+`)
 
-	// Alpha-Numeric including spaces and special characters as defined by FAIM 3.0.6
+	// Alpha-Numeric including spaces and special characters as defined by FAIM 3.0.6:
+	//   . ? ! , ; : _ @ & / \ ' " ` ~ ( ) < > $ # % + - =
+	// NOTE: This applies to all Fedwire tags except {8200} Unstructured Addenda Info
 	alphanumericRegex = regexp.MustCompile(`[^ \w.?!,;:_@&/\\'"\x60~()<>$#%+-=]+`)
 
 	numericRegex = regexp.MustCompile(`[^0-9]`)
@@ -29,7 +30,6 @@ type validator struct{}
 // isAlphanumeric checks if a string only contains ASCII alphanumeric characters
 func (v *validator) isAlphanumeric(s string) error {
 	if alphanumericRegex.MatchString(s) {
-		// ^[ A-Za-z0-9_@./#&+-]*$/
 		return ErrNonAlphanumeric
 	}
 	return nil

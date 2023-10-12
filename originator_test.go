@@ -90,24 +90,28 @@ func TestOriginatorAddressLineThreeAlphaNumeric(t *testing.T) {
 	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, o.Personal.Address.AddressLineThree).Error())
 }
 
-// TestOriginatorIdentificationCodeRequired validates Originator IdentificationCode is required
-func TestOriginatorIdentificationCodeRequired(t *testing.T) {
+// TestOriginatorIdentificationCodeWithNoIdentifier validates Originator Identifier is required
+// when IdentificationCode is present
+func TestOriginatorIdentificationCodeWithNoIdentifier(t *testing.T) {
 	o := mockOriginator()
-	o.Personal.IdentificationCode = ""
-
-	err := o.Validate()
-
-	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
-}
-
-// TestOriginatorIdentifierRequired validates Originator Identifier is required
-func TestOriginatorIdentifierRequired(t *testing.T) {
-	o := mockOriginator()
+	o.Personal.IdentificationCode = "D"
 	o.Personal.Identifier = ""
 
 	err := o.Validate()
 
 	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
+}
+
+// TestOriginatorIdentifierWithNoIdentificationCode validates Originator IdentificationCode
+// is required when Identifier is present
+func TestOriginatorIdentifierWithNoIdentificationCode(t *testing.T) {
+	o := mockOriginator()
+	o.Personal.IdentificationCode = ""
+	o.Personal.Identifier = "1234567890ABC"
+
+	err := o.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestParseOriginatorWrongLength parses a wrong Originator record length
