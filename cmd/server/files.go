@@ -296,7 +296,7 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 		type response struct {
 			Error error `json:"error"`
 		}
-		
+
 		json.NewEncoder(w).Encode(&response{Error: nil})
 	}
 }
