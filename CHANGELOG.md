@@ -1,3 +1,24 @@
+## v0.14.0 (Released 2023-10-19)
+
+IMPROVEMENTS
+
+- feat: FAIM 3.0.6 Fixed ID Code/Identifier validation
+- feat: implemted new field parser functions, updated record parse, format functions
+- fix: FAIM 3.0.6 Updated alphanumeric regex
+- fix: parse error with max length fix error tests
+- fix: wrong response data in server
+- test: updates after requiring error in NewTagMaxLengthErr(..)
+
+BUILD
+
+- build: fix openshift image, update to ubi9
+- build(deps): bump golang.org/x/net to 0.17.0
+- chore(deps): update dependency jekyll-feed to v0.17.0
+- fix(deps): update module github.com/moov-io/base to v0.47.0
+- fix(deps): update module github.com/prometheus/client_golang to v1.17.0
+- fix(deps): update module golang.org/x/oauth2 to v0.13.0
+- test: switch to Go's fuzz setup
+
 ## v0.13.3 (Released 2023-04-03)
 
 IMPROVEMENTS
