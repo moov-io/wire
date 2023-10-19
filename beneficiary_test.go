@@ -87,24 +87,28 @@ func TestBeneficiaryAddressLineThreeAlphaNumeric(t *testing.T) {
 	require.EqualError(t, err, fieldError("AddressLineThree", ErrNonAlphanumeric, ben.Personal.Address.AddressLineThree).Error())
 }
 
-// TestBeneficiaryIdentificationCodeRequired validates Beneficiary IdentificationCode is required
-func TestBeneficiaryIdentificationCodeRequired(t *testing.T) {
+// TestBeneficiaryIdentificationCodeWithNoIdentifier validates Beneficiary Identifier is required
+// when IdentificationCode is present
+func TestBeneficiaryIdentificationCodeWithNoIdentifier(t *testing.T) {
 	ben := mockBeneficiary()
-	ben.Personal.IdentificationCode = ""
-
-	err := ben.Validate()
-
-	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
-}
-
-// TestBeneficiaryIdentifierRequired validates Beneficiary Identifier is required
-func TestBeneficiaryIdentifierRequired(t *testing.T) {
-	ben := mockBeneficiary()
+	ben.Personal.IdentificationCode = "D"
 	ben.Personal.Identifier = ""
 
 	err := ben.Validate()
 
 	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
+}
+
+// TestBeneficiaryIdentifierWithNoIdentificationCode validates Beneficiary IdentificationCode
+// is required when Identifier is present
+func TestBeneficiaryIdentifierWithNoIdentificationCode(t *testing.T) {
+	ben := mockBeneficiary()
+	ben.Personal.IdentificationCode = ""
+	ben.Personal.Identifier = "1234567890ABC"
+
+	err := ben.Validate()
+
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestParseBeneficiaryWrongLength parses a wrong Beneficiary record length

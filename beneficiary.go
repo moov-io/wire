@@ -131,19 +131,28 @@ func (ben *Beneficiary) Format(options FormatOptions) string {
 // The first error encountered is returned and stops that parsing.
 // If ID Code is present, Identifier is mandatory and vice versa.
 func (ben *Beneficiary) Validate() error {
-	if err := ben.fieldInclusion(); err != nil {
-		return err
-	}
 	if ben.tag != TagBeneficiary {
 		return fieldError("tag", ErrValidTagForType, ben.tag)
 	}
-	// Can be any Identification Code
-	if err := ben.isIdentificationCode(ben.Personal.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, ben.Personal.IdentificationCode)
+
+	if err := ben.fieldInclusion(); err != nil {
+		return err
 	}
-	if err := ben.isAlphanumeric(ben.Personal.Identifier); err != nil {
-		return fieldError("Identifier", err, ben.Personal.Identifier)
+
+	// Per FAIM 3.0.6, Beneficiary ID code is optional.
+	// fieldInclusion() above already checks for the mandatory combination of IDCode & Identifier
+	// Here we are checking for allowed values (in IDCode) and text characters (in Identifier)
+	if ben.Personal.IdentificationCode != "" {
+		// If it is present, confirm it is a valid code
+		if err := ben.isIdentificationCode(ben.Personal.IdentificationCode); err != nil {
+			return fieldError("IdentificationCode", err, ben.Personal.IdentificationCode)
+		}
+		// Identifier text must only contain allowed characters
+		if err := ben.isAlphanumeric(ben.Personal.Identifier); err != nil {
+			return fieldError("Identifier", err, ben.Personal.Identifier)
+		}
 	}
+
 	if err := ben.isAlphanumeric(ben.Personal.Name); err != nil {
 		return fieldError("Name", err, ben.Personal.Name)
 	}
