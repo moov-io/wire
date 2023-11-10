@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/antihax/optional v1.0.0
 	github.com/go-kit/kit v0.13.0
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/moov-io/base v0.47.1
 	github.com/prometheus/client_golang v1.17.0
 	github.com/stretchr/testify v1.8.4
