@@ -68,7 +68,7 @@ No authorization required
 
 Create file
 
-Create a new File object from either the plaintext or JSON representation.
+Upload a new Wire file, or create one from JSON. When uploading a file, query parameters can be used to configure the FedWireMessage validation options. For JSON requests, validation options are set in the  request body under fedWireMessage.validateOptions. 
 
 ### Required Parameters
 
@@ -88,6 +88,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **skipMandatoryIMAD** | **optional.Bool**| Optional flag to skip mandatory IMAD validation | [default to false]
+ **allowMissingSenderSupplied** | **optional.Bool**| Optional flag to allow SenderSupplied to be nil, which is generally the case in incoming files. | [default to false]
 
 ### Return type
 

@@ -59,7 +59,10 @@ paths:
     post:
       tags: ['Wire Files']
       summary: Create file
-      description: Create a new File object from either the plaintext or JSON representation.
+      description: >
+        Upload a new Wire file, or create one from JSON. When uploading a file, query parameters can be used to
+        configure the FedWireMessage validation options. For JSON requests, validation options are set in the 
+        request body under fedWireMessage.validateOptions.
       operationId: createWireFile
       security:
         - bearerAuth: []
@@ -71,6 +74,22 @@ paths:
           example: rs4f9915
           schema:
             type: string
+        - name: skipMandatoryIMAD
+          in: query
+          description: Optional flag to skip mandatory IMAD validation
+          required: false
+          schema:
+            type: boolean
+            default: false
+            example: true
+        - name: allowMissingSenderSupplied
+          in: query
+          description: Optional flag to allow SenderSupplied to be nil, which is generally the case in incoming files.
+          required: false
+          schema:
+            type: boolean
+            default: false
+            example: true
       requestBody:
         description: Content of the Wire file (in json or raw text)
         required: true
@@ -471,6 +490,8 @@ components:
           $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
           $ref: '#/components/schemas/ServiceMessage'
+        validateOptions:
+          $ref: '#/components/schemas/ValidateOptions'
       required:
         - senderSupplied
         - typeSubType
@@ -2032,3 +2053,16 @@ components:
           maxLength: 35
           description: LineTwelve
           example: 'Line Twelve Text'
+    ValidateOptions:
+      nullable: true
+      properties:
+        skipMandatoryIMAD:
+          type: boolean
+          description: Skip validation of the InputMessageAccountabilityData (IMAD) field
+          default: false
+          example: true
+        allowMissingSenderSupplied:
+          type: boolean
+          description: Allow FedWireMessage.SenderSupplied to be nil
+          default: false
+          example: true

@@ -65,7 +65,8 @@ paths:
       - Wire Files
   /files/create:
     post:
-      description: Create a new File object from either the plaintext or JSON representation.
+      description: |
+        Upload a new Wire file, or create one from JSON. When uploading a file, query parameters can be used to configure the FedWireMessage validation options. For JSON requests, validation options are set in the  request body under fedWireMessage.validateOptions.
       operationId: createWireFile
       parameters:
       - description: Optional Request ID allows application developer to trace requests
@@ -78,6 +79,27 @@ paths:
         schema:
           type: string
         style: simple
+      - description: Optional flag to skip mandatory IMAD validation
+        explode: true
+        in: query
+        name: skipMandatoryIMAD
+        required: false
+        schema:
+          default: false
+          example: true
+          type: boolean
+        style: form
+      - description: Optional flag to allow SenderSupplied to be nil, which is generally
+          the case in incoming files.
+        explode: true
+        in: query
+        name: allowMissingSenderSupplied
+        required: false
+        schema:
+          default: false
+          example: true
+          type: boolean
+        style: form
       requestBody:
         content:
           application/json:
@@ -506,6 +528,9 @@ components:
             receiptTime: "1305"
             receiptDate: "0401"
             receiptApplicationIdentification: RB11
+          validateOptions:
+            allowMissingSenderSupplied: true
+            skipMandatoryIMAD: true
           previousMessageIdentifier:
             previousMessageIdentifier: Identifier
           adjustment:
@@ -923,6 +948,9 @@ components:
           receiptTime: "1305"
           receiptDate: "0401"
           receiptApplicationIdentification: RB11
+        validateOptions:
+          allowMissingSenderSupplied: true
+          skipMandatoryIMAD: true
         previousMessageIdentifier:
           previousMessageIdentifier: Identifier
         adjustment:
@@ -1279,6 +1307,8 @@ components:
           $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
           $ref: '#/components/schemas/ServiceMessage'
+        validateOptions:
+          $ref: '#/components/schemas/ValidateOptions'
       required:
       - amount
       - businessFunctionCode
@@ -3094,6 +3124,23 @@ components:
           example: Line Twelve Text
           maxLength: 35
           type: string
+    ValidateOptions:
+      example:
+        allowMissingSenderSupplied: true
+        skipMandatoryIMAD: true
+      nullable: true
+      properties:
+        skipMandatoryIMAD:
+          default: false
+          description: Skip validation of the InputMessageAccountabilityData (IMAD)
+            field
+          example: true
+          type: boolean
+        allowMissingSenderSupplied:
+          default: false
+          description: Allow FedWireMessage.SenderSupplied to be nil
+          example: true
+          type: boolean
     Error:
       properties:
         error:

@@ -90,6 +90,7 @@ Class | Method | HTTP request | Description
  - [ServiceMessage](docs/ServiceMessage.md)
  - [TypeSubType](docs/TypeSubType.md)
  - [UnstructuredAddenda](docs/UnstructuredAddenda.md)
+ - [ValidateOptions](docs/ValidateOptions.md)
  - [WireAddress](docs/WireAddress.md)
  - [WireAmount](docs/WireAmount.md)
  - [WireFile](docs/WireFile.md)

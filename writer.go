@@ -167,7 +167,9 @@ func (w *Writer) writeMandatory(fwm FEDWireMessage) error {
 			return err
 		}
 	} else {
-		return fieldError("SenderSupplied", ErrFieldRequired)
+		if fwm.requireSenderSupplied() {
+			return fieldError("SenderSupplied", ErrFieldRequired)
+		}
 	}
 
 	if fwm.TypeSubType != nil {

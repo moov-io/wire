@@ -14,8 +14,6 @@ import (
 type File struct {
 	ID             string         `json:"id"`
 	FEDWireMessage FEDWireMessage `json:"fedWireMessage"`
-
-	isIncoming bool `json:"-"`
 }
 
 // NewFile constructs a file template
@@ -61,7 +59,7 @@ func (f *File) Create() error {
 
 // Validate will never modify the file.
 func (f *File) Validate() error {
-	if err := f.FEDWireMessage.verify(f.isIncoming); err != nil {
+	if err := f.FEDWireMessage.verify(); err != nil {
 		return err
 	}
 	return nil
@@ -75,7 +73,7 @@ func (f *File) Validate() error {
 // be rejected by other Financial Institutions or ACH tools.
 func FileFromJSON(bs []byte) (*File, error) {
 	if len(bs) == 0 {
-		//return nil, errors.New("no JSON data provided")
+		// return nil, errors.New("no JSON data provided")
 		return nil, nil
 	}
 
@@ -88,16 +86,26 @@ func FileFromJSON(bs []byte) (*File, error) {
 
 type FilePropertyFunc func(*File)
 
-// OutgoingFile specify that the file is for outgoing
+// OutgoingFile configures the FedWireMessage ValidationOpts for an outgoing file
 func OutgoingFile() FilePropertyFunc {
 	return func(f *File) {
-		f.isIncoming = false
+		if f != nil {
+			if f.FEDWireMessage.ValidateOptions == nil {
+				f.FEDWireMessage.ValidateOptions = &ValidateOpts{}
+			}
+			f.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied = false
+		}
 	}
 }
 
-// IncomingFile specify that the file is for incoming
+// IncomingFile configures the FedWireMessage ValidationOpts for an incoming file
 func IncomingFile() FilePropertyFunc {
 	return func(f *File) {
-		f.isIncoming = true
+		if f != nil {
+			if f.FEDWireMessage.ValidateOptions == nil {
+				f.FEDWireMessage.ValidateOptions = &ValidateOpts{}
+			}
+			f.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied = true
+		}
 	}
 }

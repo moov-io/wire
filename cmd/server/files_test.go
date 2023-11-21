@@ -9,8 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -193,6 +195,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
 		assert.NotEmpty(t, resp.ID)
 		assert.NotEmpty(t, resp.FEDWireMessage)
+		assert.Nil(t, resp.FEDWireMessage.ValidateOptions)
 	})
 
 	t.Run("invalid JSON", func(t *testing.T) {
@@ -205,6 +208,138 @@ func TestFiles_createFileJSON(t *testing.T) {
 
 		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
 	})
+}
+
+func TestFiles_createFile_missingSenderSupplied(t *testing.T) {
+	repo := &testWireFileRepository{}
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+
+	// set up a message with no SenderSupplied field
+	fwm := mockFEDWireMessage()
+	fwm.ValidateOptions = nil
+	fwm.SenderSupplied = nil
+	file := wire.NewFile()
+	file.AddFEDWireMessage(fwm)
+
+	// create from JSON, without validation options, should fail without sender supplied
+	resp, _ := routerUploadJSON(t, router, file)
+	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+	require.Contains(t, resp.Body.String(), "SenderSupplied")
+
+	// create from JSON, using validation options, should succeed without sender supplied
+	file.FEDWireMessage.ValidateOptions = &wire.ValidateOpts{
+		AllowMissingSenderSupplied: true,
+	}
+	resp, uploaded := routerUploadJSON(t, router, file)
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	assert.NotEmpty(t, uploaded.ID)
+	assert.Nil(t, uploaded.FEDWireMessage.SenderSupplied)
+
+	// make sure the file was saved
+	resp, found := routerGetFile(t, router, uploaded.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	assert.Equal(t, uploaded.ID, found.ID)
+	assert.Nil(t, found.FEDWireMessage.SenderSupplied)
+	assert.NotNil(t, found.FEDWireMessage.ValidateOptions)
+	assert.True(t, found.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied)
+
+	// get file contents calls Validate()
+	// if isIncoming was passed properly, then the file should be valid
+	resp = routerGetFileContents(t, router, uploaded.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	assert.NotNil(t, resp.Body)
+
+	// upload raw should succeed without sender supplied
+	resp, rawUpload := routerUploadRaw(t, router, resp.Body,
+		setQueryParam("allowMissingSenderSupplied", "true"),
+	)
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	assert.NotEmpty(t, rawUpload.ID)
+	assert.Nil(t, rawUpload.FEDWireMessage.SenderSupplied)
+	assert.NotNil(t, rawUpload.FEDWireMessage.ValidateOptions)
+	assert.True(t, rawUpload.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied)
+
+	// get new file
+	resp, found = routerGetFile(t, router, rawUpload.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	assert.Equal(t, rawUpload.ID, found.ID)
+	assert.Nil(t, found.FEDWireMessage.SenderSupplied)
+
+	// get new file contents
+	resp = routerGetFileContents(t, router, rawUpload.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	assert.NotNil(t, resp.Body)
+}
+
+func setQueryParam(key, value string) func(values url.Values) url.Values {
+	return func(values url.Values) url.Values {
+		values.Set(key, value)
+		return values
+	}
+}
+
+func routerUploadJSON(t *testing.T, router *mux.Router, file *wire.File) (*httptest.ResponseRecorder, *wire.File) {
+	bs, err := json.Marshal(file)
+	require.NoError(t, err)
+
+	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
+	req.Header.Set("content-type", "application/json")
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	var resp *wire.File
+	if w.Code == http.StatusCreated {
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+	}
+	return w, resp
+}
+
+func routerUploadRaw(t *testing.T, router *mux.Router, raw io.Reader, queryOpts ...func(values url.Values) url.Values) (*httptest.ResponseRecorder, *wire.File) {
+	req := httptest.NewRequest("POST", "/files/create", raw)
+	req.Header.Set("content-type", "text/plain")
+
+	query := req.URL.Query()
+	for _, opt := range queryOpts {
+		query = opt(query)
+	}
+	req.URL.RawQuery = query.Encode()
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	var resp *wire.File
+	if w.Code == http.StatusCreated {
+		_ = json.NewDecoder(w.Body).Decode(&resp)
+	}
+	return w, resp
+}
+
+func routerGetFile(t *testing.T, router *mux.Router, id string) (*httptest.ResponseRecorder, *wire.File) {
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/files/"+id, nil)
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	var file *wire.File
+	if w.Code == http.StatusOK {
+		_ = json.NewDecoder(w.Body).Decode(&file)
+	}
+	return w, file
+}
+
+func routerGetFileContents(t *testing.T, router *mux.Router, id string) *httptest.ResponseRecorder {
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/files/"+id+"/contents", nil)
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	return w
 }
 
 func TestFiles_getFile(t *testing.T) {

@@ -109,16 +109,20 @@ func (a *WireFilesApiService) AddFEDWireMessageToFile(ctx _context.Context, file
 
 // CreateWireFileOpts Optional parameters for the method 'CreateWireFile'
 type CreateWireFileOpts struct {
-	XRequestID optional.String
+	XRequestID                 optional.String
+	SkipMandatoryIMAD          optional.Bool
+	AllowMissingSenderSupplied optional.Bool
 }
 
 /*
 CreateWireFile Create file
-Create a new File object from either the plaintext or JSON representation.
+Upload a new Wire file, or create one from JSON. When uploading a file, query parameters can be used to configure the FedWireMessage validation options. For JSON requests, validation options are set in the  request body under fedWireMessage.validateOptions.
   - @param ctx _context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
   - @param wireFile Content of the Wire file (in json or raw text)
   - @param optional nil or *CreateWireFileOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param "SkipMandatoryIMAD" (optional.Bool) -  Optional flag to skip mandatory IMAD validation
+  - @param "AllowMissingSenderSupplied" (optional.Bool) -  Optional flag to allow SenderSupplied to be nil, which is generally the case in incoming files.
 
 @return WireFile
 */
@@ -139,6 +143,12 @@ func (a *WireFilesApiService) CreateWireFile(ctx _context.Context, wireFile Wire
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
+	if localVarOptionals != nil && localVarOptionals.SkipMandatoryIMAD.IsSet() {
+		localVarQueryParams.Add("skipMandatoryIMAD", parameterToString(localVarOptionals.SkipMandatoryIMAD.Value(), ""))
+	}
+	if localVarOptionals != nil && localVarOptionals.AllowMissingSenderSupplied.IsSet() {
+		localVarQueryParams.Add("allowMissingSenderSupplied", parameterToString(localVarOptionals.AllowMissingSenderSupplied.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json", "text/plain"}
 

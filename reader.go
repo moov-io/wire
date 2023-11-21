@@ -56,10 +56,10 @@ func (r *Reader) parseError(err error) error {
 }
 
 // NewReader returns a new ACH Reader that reads from r.
-func NewReader(r io.Reader) *Reader {
+func NewReader(r io.Reader, opts ...FilePropertyFunc) *Reader {
 	reader := &Reader{
 		scanner: bufio.NewScanner(r),
-		File:    *NewFile(IncomingFile()),
+		File:    *NewFile(opts...),
 	}
 
 	reader.scanner.Split(scanLinesWithSegmentFormat)

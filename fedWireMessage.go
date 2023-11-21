@@ -6,12 +6,6 @@ package wire
 
 import "strings"
 
-// ValidateOpts contains specific overrides from the default set of validations
-type ValidateOpts struct {
-	// SkipMandatoryIMAD skips checking that InputMessageAccountabilityData is mandatory tag.
-	SkipMandatoryIMAD bool `json:"skipMandatoryIMAD"`
-}
-
 // FEDWireMessage is a FedWire Message
 type FEDWireMessage struct {
 	// ID
@@ -141,11 +135,19 @@ type FEDWireMessage struct {
 	ValidateOptions *ValidateOpts `json:"validateOptions,omitempty"`
 }
 
+func (fwm *FEDWireMessage) requireSenderSupplied() bool {
+	opts := &ValidateOpts{}
+	if fwm != nil && fwm.ValidateOptions != nil {
+		opts = fwm.ValidateOptions
+	}
+	return !opts.AllowMissingSenderSupplied
+}
+
 // verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
 // check for the expected relationships between fields within a FedWireMessage.
-func (fwm *FEDWireMessage) verify(isIncoming bool) error {
+func (fwm *FEDWireMessage) verify() error {
 
-	if err := fwm.mandatoryFields(isIncoming); err != nil {
+	if err := fwm.mandatoryFields(); err != nil {
 		return err
 	}
 
@@ -218,8 +220,8 @@ func (fwm *FEDWireMessage) verify(isIncoming bool) error {
 //
 //		 	NOTE: Not specified mandatory elements in each incoming message
 //	          Need to specify mandatory elements in this case
-func (fwm *FEDWireMessage) mandatoryFields(isIncoming bool) error {
-	if !isIncoming {
+func (fwm *FEDWireMessage) mandatoryFields() error {
+	if fwm.requireSenderSupplied() {
 		if err := fwm.validateSenderSupplied(); err != nil {
 			return err
 		}
