@@ -71,6 +71,13 @@ paths:
           example: rs4f9915
           schema:
             type: string
+        - name: isIncoming
+          in: query
+          description: Optional flag to indicate if the file is incoming or outgoing. SenderSupplied (tag 1500) is not required for incoming files.
+          required: false
+          schema:
+            type: boolean
+            example: true
       requestBody:
         description: Content of the Wire file (in json or raw text)
         required: true

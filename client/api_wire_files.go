@@ -110,6 +110,7 @@ func (a *WireFilesApiService) AddFEDWireMessageToFile(ctx _context.Context, file
 // CreateWireFileOpts Optional parameters for the method 'CreateWireFile'
 type CreateWireFileOpts struct {
 	XRequestID optional.String
+	IsIncoming optional.Bool
 }
 
 /*
@@ -119,6 +120,7 @@ Create a new File object from either the plaintext or JSON representation.
   - @param wireFile Content of the Wire file (in json or raw text)
   - @param optional nil or *CreateWireFileOpts - Optional Parameters:
   - @param "XRequestID" (optional.String) -  Optional Request ID allows application developer to trace requests through the system's logs
+  - @param "IsIncoming" (optional.Bool) -  Optional flag to indicate if the file is incoming or outgoing. SenderSupplied (tag 1500) is not required for incoming files.
 
 @return WireFile
 */
@@ -139,6 +141,9 @@ func (a *WireFilesApiService) CreateWireFile(ctx _context.Context, wireFile Wire
 	localVarQueryParams := _neturl.Values{}
 	localVarFormParams := _neturl.Values{}
 
+	if localVarOptionals != nil && localVarOptionals.IsIncoming.IsSet() {
+		localVarQueryParams.Add("isIncoming", parameterToString(localVarOptionals.IsIncoming.Value(), ""))
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json", "text/plain"}
 

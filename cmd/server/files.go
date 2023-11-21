@@ -96,7 +96,12 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 
 		w = wrapResponseWriter(logger, w, r)
 
-		req := wire.NewFile()
+		var opts []wire.FilePropertyFunc
+		if strings.EqualFold("true", r.URL.Query().Get("isIncoming")) {
+			opts = append(opts, wire.IncomingFile())
+		}
+
+		req := wire.NewFile(opts...)
 		req.ID = base.ID()
 
 		if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
@@ -111,7 +116,7 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 				return
 			}
 		} else {
-			file, err := wire.NewReader(r.Body).Read()
+			file, err := wire.NewReader(r.Body, opts...).Read()
 			if err != nil {
 				err = logger.LogErrorf("error reading file: %v", err).Err()
 				moovhttp.Problem(w, err)

@@ -84,7 +84,7 @@ func (w *Writer) writeFEDWireMessage(file *File) error {
 
 	fwm := file.FEDWireMessage
 
-	if err := w.writeMandatory(fwm); err != nil {
+	if err := w.writeMandatory(fwm, file.isIncoming); err != nil {
 		return err
 	}
 
@@ -160,14 +160,16 @@ func (w *Writer) writeFedAppended(fwm FEDWireMessage) error {
 	return nil
 }
 
-func (w *Writer) writeMandatory(fwm FEDWireMessage) error {
+func (w *Writer) writeMandatory(fwm FEDWireMessage, isIncoming bool) error {
 
 	if fwm.SenderSupplied != nil {
 		if _, err := w.w.WriteString(fwm.SenderSupplied.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
 			return err
 		}
 	} else {
-		return fieldError("SenderSupplied", ErrFieldRequired)
+		if !isIncoming {
+			return fieldError("SenderSupplied", ErrFieldRequired)
+		}
 	}
 
 	if fwm.TypeSubType != nil {

@@ -88,6 +88,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
 
  **xRequestID** | **optional.String**| Optional Request ID allows application developer to trace requests through the system&#39;s logs | 
+ **isIncoming** | **optional.Bool**| Optional flag to indicate if the file is incoming or outgoing. SenderSupplied (tag 1500) is not required for incoming files. | 
 
 ### Return type
 

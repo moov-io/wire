@@ -9,8 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -159,7 +161,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 	router := mux.NewRouter()
 	addFileRoutes(log.NewNopLogger(), router, repo)
 
-	t.Run("creates file from JSON", func(t *testing.T) {
+	t.Run("creates file from JSON - bank transfer", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		bs, err := os.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-BankTransfer.json"))
 		require.NoError(t, err)
@@ -177,7 +179,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 		assert.NotNil(t, resp.FEDWireMessage.FIAdditionalFIToFI)
 	})
 
-	t.Run("creates file from JSON", func(t *testing.T) {
+	t.Run("creates file from JSON - customer transfer", func(t *testing.T) {
 		w := httptest.NewRecorder()
 		bs, err := os.ReadFile(filepath.Join("..", "..", "test", "testdata", "fedWireMessage-CustomerTransfer.json"))
 		require.NoError(t, err)
@@ -205,6 +207,134 @@ func TestFiles_createFileJSON(t *testing.T) {
 
 		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
 	})
+}
+
+func TestFiles_createIncomingFile(t *testing.T) {
+	repo := &testWireFileRepository{}
+	router := mux.NewRouter()
+	addFileRoutes(log.NewNopLogger(), router, repo)
+
+	// set up a message with no SenderSupplied field
+	fwm := mockFEDWireMessage()
+	fwm.SenderSupplied = nil
+	file := wire.NewFile()
+	file.AddFEDWireMessage(fwm)
+
+	// upload of outgoing file should fail without sender supplied
+	resp, _ := routerUploadJSON(t, router, file)
+	require.Equal(t, http.StatusBadRequest, resp.Code, resp.Body)
+	require.Contains(t, resp.Body.String(), "SenderSupplied")
+
+	// upload of incoming file should succeed without sender supplied
+	resp, uploaded := routerUploadJSON(t, router, file, setQueryParam("isIncoming", "true"))
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	require.NotEmpty(t, uploaded.ID)
+	require.Nil(t, uploaded.FEDWireMessage.SenderSupplied)
+
+	// make sure the file was saved
+	resp, found := routerGetFile(t, router, uploaded.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	require.Equal(t, uploaded.ID, found.ID)
+	require.Nil(t, found.FEDWireMessage.SenderSupplied)
+
+	// get file contents calls Validate()
+	// if isIncoming was passed properly, then the file should be valid
+	resp = routerGetFileContents(t, router, uploaded.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	require.NotNil(t, resp.Body)
+
+	// upload raw should succeed without sender supplied
+	resp, rawUpload := routerUploadRaw(t, router, resp.Body, setQueryParam("isIncoming", "true"))
+	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
+	require.NotEmpty(t, rawUpload.ID)
+	require.Nil(t, rawUpload.FEDWireMessage.SenderSupplied)
+
+	// get new file
+	resp, found = routerGetFile(t, router, rawUpload.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	require.Equal(t, rawUpload.ID, found.ID)
+	require.Nil(t, found.FEDWireMessage.SenderSupplied)
+
+	// get new file contents
+	resp = routerGetFileContents(t, router, rawUpload.ID)
+	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
+	require.NotNil(t, resp.Body)
+}
+
+func setQueryParam(key, value string) func(values url.Values) url.Values {
+	return func(values url.Values) url.Values {
+		values.Set(key, value)
+		return values
+	}
+}
+
+func routerUploadJSON(t *testing.T, router *mux.Router, file *wire.File, queryOpts ...func(values url.Values) url.Values) (*httptest.ResponseRecorder, *wire.File) {
+	bs, err := json.Marshal(file)
+	require.NoError(t, err)
+
+	req := httptest.NewRequest("POST", "/files/create", bytes.NewReader(bs))
+	req.Header.Set("content-type", "application/json")
+
+	query := req.URL.Query()
+	for _, opt := range queryOpts {
+		query = opt(query)
+	}
+	req.URL.RawQuery = query.Encode()
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	var resp *wire.File
+	if w.Code == http.StatusCreated {
+		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
+	}
+	return w, resp
+}
+
+func routerUploadRaw(t *testing.T, router *mux.Router, raw io.Reader, queryOpts ...func(values url.Values) url.Values) (*httptest.ResponseRecorder, *wire.File) {
+	req := httptest.NewRequest("POST", "/files/create", raw)
+	req.Header.Set("content-type", "text/plain")
+
+	query := req.URL.Query()
+	for _, opt := range queryOpts {
+		query = opt(query)
+	}
+	req.URL.RawQuery = query.Encode()
+
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	var resp *wire.File
+	if w.Code == http.StatusCreated {
+		_ = json.NewDecoder(w.Body).Decode(&resp)
+	}
+	return w, resp
+}
+
+func routerGetFile(t *testing.T, router *mux.Router, id string) (*httptest.ResponseRecorder, *wire.File) {
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/files/"+id, nil)
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	var file *wire.File
+	if w.Code == http.StatusOK {
+		_ = json.NewDecoder(w.Body).Decode(&file)
+	}
+	return w, file
+}
+
+func routerGetFileContents(t *testing.T, router *mux.Router, id string) *httptest.ResponseRecorder {
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/files/"+id+"/contents", nil)
+
+	router.ServeHTTP(w, req)
+	w.Flush()
+
+	return w
 }
 
 func TestFiles_getFile(t *testing.T) {
@@ -487,37 +617,3 @@ func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
 	})
 }
-
-/*func TestFiles_removeFEDWireMessageFromFile(t *testing.T) {
-	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
-	repo := &testWireFileRepository{file: f}
-
-	FEDWireMessageID := base.ID()
-	repo.file.FEDWireMessage.ID = FedWireMessageID
-
-	w := httptest.NewRecorder()
-	req := httptest.NewRequest("DELETE", fmt.Sprintf("/files/foo/FEDWireMessage/%s", FEDWireMessageID), nil)
-
-	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
-
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-
-	// error case
-	repo.err = errors.New("bad error")
-
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
-
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-}*/

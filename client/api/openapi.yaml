@@ -78,6 +78,16 @@ paths:
         schema:
           type: string
         style: simple
+      - description: Optional flag to indicate if the file is incoming or outgoing.
+          SenderSupplied (tag 1500) is not required for incoming files.
+        explode: true
+        in: query
+        name: isIncoming
+        required: false
+        schema:
+          example: true
+          type: boolean
+        style: form
       requestBody:
         content:
           application/json:

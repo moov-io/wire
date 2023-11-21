@@ -15,7 +15,7 @@ type File struct {
 	ID             string         `json:"id"`
 	FEDWireMessage FEDWireMessage `json:"fedWireMessage"`
 
-	isIncoming bool `json:"-"`
+	isIncoming bool
 }
 
 // NewFile constructs a file template
@@ -75,7 +75,7 @@ func (f *File) Validate() error {
 // be rejected by other Financial Institutions or ACH tools.
 func FileFromJSON(bs []byte) (*File, error) {
 	if len(bs) == 0 {
-		//return nil, errors.New("no JSON data provided")
+		// return nil, errors.New("no JSON data provided")
 		return nil, nil
 	}
 
