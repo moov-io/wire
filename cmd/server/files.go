@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -96,35 +97,35 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 
 		w = wrapResponseWriter(logger, w, r)
 
-		req := wire.NewFile()
-		req.ID = base.ID()
-
+		file := wire.NewFile()
 		if strings.Contains(r.Header.Get("Content-Type"), "application/json") {
-			if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			if err := json.NewDecoder(r.Body).Decode(file); err != nil {
 				err = logger.LogErrorf("error reading request body: %v", err).Err()
 				moovhttp.Problem(w, err)
 				return
 			}
-			if err := req.Validate(); err != nil {
+
+			if err := file.Validate(); err != nil {
 				err = logger.LogErrorf("file validation failed: %v", err).Err()
 				moovhttp.Problem(w, err)
 				return
 			}
 		} else {
-			file, err := wire.NewReader(r.Body).Read()
+			f, err := wire.NewReader(r.Body).ReadWithOpts(validateOptsFromQuery(r.URL.Query()))
 			if err != nil {
 				err = logger.LogErrorf("error reading file: %v", err).Err()
 				moovhttp.Problem(w, err)
 				return
 			}
-			req = &file
+			file = &f
 		}
-		if req.ID == "" {
-			req.ID = base.ID()
-		}
-		logger = logger.Set("fileID", log.String(req.ID))
 
-		if err := repo.saveFile(req); err != nil {
+		if file.ID == "" {
+			file.ID = base.ID()
+		}
+		logger = logger.Set("fileID", log.String(file.ID))
+
+		if err := repo.saveFile(file); err != nil {
 			err = logger.LogErrorf("problem saving file: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
@@ -136,7 +137,7 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(req)
+		json.NewEncoder(w).Encode(file)
 	}
 }
 
@@ -389,4 +390,39 @@ func GetWriter(w io.Writer, r *http.Request) (*wire.Writer, error) {
 	// new writer based on lengthFormatOption and newLineFormatOption
 	writer = wire.NewWriter(w, lengthFormatOption, newLineFormatOption)
 	return writer, nil
+}
+
+// validateOptsFromQuery returns a ValidateOpts struct based on the query params.
+// If no validation query params were provided, opts will be nil.
+func validateOptsFromQuery(query url.Values) (opts *wire.ValidateOpts) {
+	if len(query) == 0 {
+		return opts
+	}
+
+	const (
+		skipMandatoryIMAD          = "skipMandatoryIMAD"
+		allowMissingSenderSupplied = "allowMissingSenderSupplied"
+	)
+
+	validationNames := []string{
+		skipMandatoryIMAD,
+		allowMissingSenderSupplied,
+	}
+
+	for _, param := range validationNames {
+		if set, _ := strconv.ParseBool(query.Get(param)); set {
+			if opts == nil {
+				opts = &wire.ValidateOpts{}
+			}
+
+			switch param {
+			case skipMandatoryIMAD:
+				opts.SkipMandatoryIMAD = true
+			case allowMissingSenderSupplied:
+				opts.AllowMissingSenderSupplied = true
+			}
+		}
+	}
+
+	return opts
 }
