@@ -1,3 +1,16 @@
+## v0.15.0 (Released 2023-11-28)
+
+ADDITIONS
+
+- cmd/server: introduced query parameters for ValidationOptions when uploading raw files
+
+BUILD
+
+- fix(deps): update module github.com/moov-io/base to v0.48.2
+- fix(deps): update module golang.org/x/oauth2 to v0.14.0
+- fix(deps): update module golang.org/x/text to v0.14.0
+- fix(deps): update module github.com/gorilla/mux to v1.8.1
+
 ## v0.14.1 (Released 2023-10-19)
 
 IMPROVEMENTS
