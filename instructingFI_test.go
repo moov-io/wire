@@ -117,6 +117,15 @@ func TestInstructingFIIdentifierRequired(t *testing.T) {
 	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
 }
 
+func TestInstructingFI_IDCodeAndIDValidation(t *testing.T) {
+	// ID Code must be empty if no identifier is present
+	line := "{5200} *FI Name*Address One*Address Two*Address Three*"
+	ifi := new(InstructingFI)
+	require.NoError(t, ifi.Parse(line))
+	require.NoError(t, ifi.Validate())
+	require.Equal(t, ifi.Format(FormatOptions{VariableLengthFields: true}), line)
+}
+
 // TestParseInstructingFIWrongLength parses a wrong InstructingFI record length
 func TestParseInstructingFIWrongLength(t *testing.T) {
 	var line = "{5200}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    "

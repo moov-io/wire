@@ -117,6 +117,15 @@ func TestOriginatorFIIdentifierRequired(t *testing.T) {
 	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
 }
 
+func TestOriginatorFI_IDCodeAndIDValidation(t *testing.T) {
+	// ID Code must be empty if no identifier is present
+	line := "{5100} *FI Name*Address One*Address Two*Address Three*"
+	ofi := new(OriginatorFI)
+	require.NoError(t, ofi.Parse(line))
+	require.NoError(t, ofi.Validate())
+	require.Equal(t, ofi.Format(FormatOptions{VariableLengthFields: true}), line)
+}
+
 // TestParseOriginatorFIWrongLength parses a wrong OriginatorFI record length
 func TestParseOriginatorFIWrongLength(t *testing.T) {
 	var line = "{5100}D123456789                         FI Name                            Address One                        Address Two                        Address Three                    "
