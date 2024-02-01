@@ -1,3 +1,17 @@
+## v0.15.1 (Released 2024-02-01)
+
+BUG FIXES
+
+- api: fix validation of IdentificationCode in InstructingFI and OriginatorFI to support valid use of empty value
+
+BUILD
+
+- build: print crashers after fuzzing
+- fix(deps): update module golang.org/x/oauth2 to v0.16.0
+- fix(deps): update module github.com/moov-io/base to v0.48.5
+- fix(deps): update module github.com/prometheus/client_golang to v1.18.0
+- chore(deps): update dependency jekyll-feed to v0.17.0
+
 ## v0.15.0 (Released 2023-11-28)
 
 ADDITIONS
