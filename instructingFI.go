@@ -137,16 +137,18 @@ func (ifi *InstructingFI) Validate() error {
 	if ifi.tag != TagInstructingFI {
 		return fieldError("tag", ErrValidTagForType, ifi.tag)
 	}
-	if err := ifi.isIdentificationCode(ifi.FinancialInstitution.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, ifi.FinancialInstitution.IdentificationCode)
+
+	// only validate IdentificationCode if a value was provided, or if it's required due to the presence of an Identifier
+	if ifi.FinancialInstitution.Identifier != "" || ifi.FinancialInstitution.IdentificationCode != "" {
+		// Can only be these Identification Codes
+		switch ifi.FinancialInstitution.IdentificationCode {
+		case
+			"B", "C", "D", "F", "U":
+		default:
+			return fieldError("IdentificationCode", ErrIdentificationCode, ifi.FinancialInstitution.IdentificationCode)
+		}
 	}
-	// Can only be these Identification Codes
-	switch ifi.FinancialInstitution.IdentificationCode {
-	case
-		"B", "C", "D", "F", "U":
-	default:
-		return fieldError("IdentificationCode", ErrIdentificationCode, ifi.FinancialInstitution.IdentificationCode)
-	}
+
 	if err := ifi.isAlphanumeric(ifi.FinancialInstitution.Identifier); err != nil {
 		return fieldError("Identifier", err, ifi.FinancialInstitution.Identifier)
 	}

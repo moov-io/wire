@@ -143,16 +143,18 @@ func (ofi *OriginatorFI) Validate() error {
 	if ofi.tag != TagOriginatorFI {
 		return fieldError("tag", ErrValidTagForType, ofi.tag)
 	}
-	if err := ofi.isIdentificationCode(ofi.FinancialInstitution.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, ofi.FinancialInstitution.IdentificationCode)
+
+	// only validate IdentificationCode if a value was provided, or if it's required due to the presence of an Identifier
+	if ofi.FinancialInstitution.Identifier != "" || ofi.FinancialInstitution.IdentificationCode != "" {
+		// Can only be these Identification Codes
+		switch ofi.FinancialInstitution.IdentificationCode {
+		case
+			"B", "C", "D", "F", "U":
+		default:
+			return fieldError("IdentificationCode", ErrIdentificationCode, ofi.FinancialInstitution.IdentificationCode)
+		}
 	}
-	// Can only be these Identification Codes
-	switch ofi.FinancialInstitution.IdentificationCode {
-	case
-		"B", "C", "D", "F", "U":
-	default:
-		return fieldError("IdentificationCode", ErrIdentificationCode, ofi.FinancialInstitution.IdentificationCode)
-	}
+
 	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Identifier); err != nil {
 		return fieldError("Identifier", err, ofi.FinancialInstitution.Identifier)
 	}
