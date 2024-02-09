@@ -4,7 +4,9 @@
 
 package wire
 
-import "slices"
+import (
+	"golang.org/x/exp/slices"
+)
 
 var (
 	financialInstitutionIDCodes = []string{
