@@ -17,8 +17,6 @@ type BeneficiaryFI struct {
 	// Financial Institution
 	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
-	// validator is composed for data validation
-	validator
 	// converters is composed for WIRE to GoLang Converters
 	converters
 }
@@ -130,53 +128,14 @@ func (bfi *BeneficiaryFI) Format(options FormatOptions) string {
 // Validate performs WIRE format rule checks on BeneficiaryFI and returns an error if not Validated
 // The first error encountered is returned and stops that parsing.
 func (bfi *BeneficiaryFI) Validate() error {
-	if err := bfi.fieldInclusion(); err != nil {
-		return err
-	}
 	if bfi.tag != TagBeneficiaryFI {
 		return fieldError("tag", ErrValidTagForType, bfi.tag)
 	}
-	if err := bfi.isIdentificationCode(bfi.FinancialInstitution.IdentificationCode); err != nil {
-		return fieldError("IdentificationCode", err, bfi.FinancialInstitution.IdentificationCode)
-	}
-	// Can only be these Identification Codes
-	switch bfi.FinancialInstitution.IdentificationCode {
-	case
-		SWIFTBankIdentifierCode,
-		CHIPSParticipant,
-		DemandDepositAccountNumber,
-		FEDRoutingNumber,
-		CHIPSIdentifier:
-	default:
-		return fieldError("IdentificationCode", ErrIdentificationCode, bfi.FinancialInstitution.IdentificationCode)
-	}
-	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Identifier); err != nil {
-		return fieldError("Identifier", err, bfi.FinancialInstitution.Identifier)
-	}
-	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Name); err != nil {
-		return fieldError("Name", err, bfi.FinancialInstitution.Name)
-	}
-	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineOne); err != nil {
-		return fieldError("AddressLineOne", err, bfi.FinancialInstitution.Address.AddressLineOne)
-	}
-	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineTwo); err != nil {
-		return fieldError("AddressLineTwo", err, bfi.FinancialInstitution.Address.AddressLineTwo)
-	}
-	if err := bfi.isAlphanumeric(bfi.FinancialInstitution.Address.AddressLineThree); err != nil {
-		return fieldError("AddressLineThree", err, bfi.FinancialInstitution.Address.AddressLineThree)
-	}
-	return nil
-}
 
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (bfi *BeneficiaryFI) fieldInclusion() error {
-	if bfi.FinancialInstitution.IdentificationCode != "" && bfi.FinancialInstitution.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
+	if err := bfi.FinancialInstitution.Validate(); err != nil {
+		return err
 	}
-	if bfi.FinancialInstitution.IdentificationCode == "" && bfi.FinancialInstitution.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
+
 	return nil
 }
 

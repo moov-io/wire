@@ -104,7 +104,7 @@ func TestBeneficiaryIntermediaryFIIdentificationCodeRequired(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.EqualError(t, err, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.IdentificationCode", ErrFieldRequired).Error())
+	require.EqualError(t, err, fieldError("IdentificationCode", ErrFieldRequired).Error())
 }
 
 // TestBeneficiaryIntermediaryFIIdentifierRequired validates BeneficiaryIntermediaryFI Identifier is required
@@ -114,7 +114,7 @@ func TestBeneficiaryIntermediaryFIIdentifierRequired(t *testing.T) {
 
 	err := bifi.Validate()
 
-	require.EqualError(t, err, fieldError("BeneficiaryIntermediaryFI.FinancialInstitution.Identifier", ErrFieldRequired).Error())
+	require.EqualError(t, err, fieldError("Identifier", ErrFieldRequired).Error())
 }
 
 // TestParseBeneficiaryIntermediaryFIWrongLength parses a wrong BeneficiaryIntermediaryFI record length
