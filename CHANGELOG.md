@@ -1,3 +1,13 @@
+## v0.15.2 (Released 2024-02-09)
+
+BUG FIXES
+
+- api: fix and consolidate duplicate validation logic for FinancialInstitution fields
+
+BUILD
+
+- build: upgrade go to 1.20 in all GitHub workflows, Dockerfiles, and go.mod
+
 ## v0.15.1 (Released 2024-02-01)
 
 BUG FIXES
