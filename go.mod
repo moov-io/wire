@@ -1,6 +1,6 @@
 module github.com/moov-io/wire
 
-go 1.19
+go 1.20
 
 require (
 	github.com/antihax/optional v1.0.0
@@ -9,6 +9,7 @@ require (
 	github.com/moov-io/base v0.48.5
 	github.com/prometheus/client_golang v1.18.0
 	github.com/stretchr/testify v1.8.4
+	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
 	golang.org/x/oauth2 v0.16.0
 	golang.org/x/text v0.14.0
 )

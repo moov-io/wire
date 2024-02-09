@@ -17,8 +17,6 @@ type OriginatorFI struct {
 	// Financial Institution
 	FinancialInstitution FinancialInstitution `json:"financialInstitution,omitempty"`
 
-	// validator is composed for data validation
-	validator
 	// converters is composed for WIRE to GoLang Converters
 	converters
 }
@@ -137,51 +135,14 @@ func (ofi *OriginatorFI) Format(options FormatOptions) string {
 // The first error encountered is returned and stops that parsing.
 // If ID Code is present, Identifier is mandatory and vice versa.
 func (ofi *OriginatorFI) Validate() error {
-	if err := ofi.fieldInclusion(); err != nil {
-		return err
-	}
 	if ofi.tag != TagOriginatorFI {
 		return fieldError("tag", ErrValidTagForType, ofi.tag)
 	}
 
-	// only validate IdentificationCode if a value was provided, or if it's required due to the presence of an Identifier
-	if ofi.FinancialInstitution.Identifier != "" || ofi.FinancialInstitution.IdentificationCode != "" {
-		// Can only be these Identification Codes
-		switch ofi.FinancialInstitution.IdentificationCode {
-		case
-			"B", "C", "D", "F", "U":
-		default:
-			return fieldError("IdentificationCode", ErrIdentificationCode, ofi.FinancialInstitution.IdentificationCode)
-		}
+	if err := ofi.FinancialInstitution.Validate(); err != nil {
+		return err
 	}
 
-	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Identifier); err != nil {
-		return fieldError("Identifier", err, ofi.FinancialInstitution.Identifier)
-	}
-	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Name); err != nil {
-		return fieldError("Name", err, ofi.FinancialInstitution.Name)
-	}
-	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Address.AddressLineOne); err != nil {
-		return fieldError("AddressLineOne", err, ofi.FinancialInstitution.Address.AddressLineOne)
-	}
-	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Address.AddressLineTwo); err != nil {
-		return fieldError("AddressLineTwo", err, ofi.FinancialInstitution.Address.AddressLineTwo)
-	}
-	if err := ofi.isAlphanumeric(ofi.FinancialInstitution.Address.AddressLineThree); err != nil {
-		return fieldError("AddressLineThree", err, ofi.FinancialInstitution.Address.AddressLineThree)
-	}
-	return nil
-}
-
-// fieldInclusion validate mandatory fields. If fields are
-// invalid the WIRE will return an error.
-func (ofi *OriginatorFI) fieldInclusion() error {
-	if ofi.FinancialInstitution.IdentificationCode != "" && ofi.FinancialInstitution.Identifier == "" {
-		return fieldError("Identifier", ErrFieldRequired)
-	}
-	if ofi.FinancialInstitution.IdentificationCode == "" && ofi.FinancialInstitution.Identifier != "" {
-		return fieldError("IdentificationCode", ErrFieldRequired)
-	}
 	return nil
 }
 
