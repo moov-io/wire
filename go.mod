@@ -10,7 +10,7 @@ require (
 	github.com/prometheus/client_golang v1.18.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
-	golang.org/x/oauth2 v0.16.0
+	golang.org/x/oauth2 v0.17.0
 	golang.org/x/text v0.14.0
 )
 
