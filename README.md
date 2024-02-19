@@ -180,7 +180,7 @@ Using our [in-browser utility](http://oss.moov.io/wire/), you can instantly conv
 
 ## Learn about Fedwire
 - [Intro to Fedwire](https://www.americanexpress.com/us/foreign-exchange/articles/fedwire-transfers/)
-- [FedWire Message Structure](./docs/fedWireMessage-Structure.md)
+- [FedWire Message Structure](./docs/message-structure.md)
 - [Sending or Receiving International Wires via the Fedwire Funds Service](https://www.youtube.com/watch?v=GSd2gZ8-bzQ)
 
 ## FAQ
