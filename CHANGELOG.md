@@ -1,3 +1,15 @@
+## v0.15.3 (Released 2024-03-07)
+
+IMPROVEMENTS
+
+- fix: Allow {6100} for CTP, but reject {6110} (matches specification)
+
+BUILD
+
+- fix(deps): update module github.com/prometheus/client_golang to v1.19.0
+- fix(deps): update module github.com/stretchr/testify to v1.9.0
+- fix(deps): update module golang.org/x/oauth2 to v0.17.0
+
 ## v0.15.2 (Released 2024-02-09)
 
 BUG FIXES
