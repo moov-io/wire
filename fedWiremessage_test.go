@@ -2,6 +2,7 @@ package wire
 
 import (
 	"encoding/json"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -1212,6 +1213,50 @@ func TestInvalidAccountCreditedDrawdownForCustomerTransferPlus(t *testing.T) {
 
 	expected := fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown).Error()
 	require.EqualError(t, err, expected)
+}
+
+func TestInvalidFIDrawdownDebitAccountAdviceForCustomerTransferPlus(t *testing.T) {
+	fwm := new(FEDWireMessage)
+	bfc := mockBusinessFunctionCode()
+	bfc.BusinessFunctionCode = CustomerTransferPlus
+	fwm.BusinessFunctionCode = bfc
+	fwm.FIDrawdownDebitAccountAdvice = mockFIDrawdownDebitAccountAdvice()
+
+	err := fwm.checkProhibitedCustomerTransferPlusTags()
+
+	expected := fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice).Error()
+	require.EqualError(t, err, expected)
+}
+
+func TestAllowFIReceiverFIForCustomerTransferPlus(t *testing.T) {
+	// Reported in the #wire slack channel. {6100} tag was being rejected when specifications allow it.
+	// {6110} is rejected however, so added TestInvalidFIDrawdownDebitAccountAdviceForCustomerTransferPlus
+
+	input := `{1100}30P N
+{1110}12345678FT01
+{1120}20240306I1B78Q1C00057312345678FT01
+{1510}1000
+{1520}20240306MMQFMPYZ012345
+{2000}000005000000
+{3100}021000000CITIBANK NA*
+{3320}D0440000000001*
+{3400}000000000AAA ABC BAN*
+{3600}CTP
+{3620}3*A1234567-1234-4567-7890-C1234A12DD34*
+{3700}SUSD0,00*
+{4200}D1234567*FBO ABC INC*XXX, YYY*051*US*
+{5000}D12345678*Hello World*A, B,*C 10*5000*
+{5100}BCITIUS33XXX*
+{6000}FFC ABC ACCT 800000*YYYY     HELLLLL*/POP:XXYY*
+{6100}AAA BBB*CCC. DDD*FW123456789 FOR ACCOUNT 780000000*17*`
+
+	opts := &ValidateOpts{
+		AllowMissingSenderSupplied: true,
+	}
+
+	file, err := NewReader(strings.NewReader(input)).ReadWithOpts(opts)
+	require.NoError(t, err)
+	require.NotNil(t, file)
 }
 
 func TestFEDWireMessage_skipIMAD(t *testing.T) {
