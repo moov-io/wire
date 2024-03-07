@@ -618,8 +618,8 @@ func (fwm *FEDWireMessage) checkProhibitedCustomerTransferPlusTags() error {
 	if fwm.AccountCreditedDrawdown != nil {
 		return fieldError("AccountCreditedDrawdown", ErrInvalidProperty, fwm.AccountCreditedDrawdown)
 	}
-	if fwm.FIReceiverFI != nil {
-		return fieldError("FIReceiverFI", ErrInvalidProperty, fwm.FIReceiverFI)
+	if fwm.FIDrawdownDebitAccountAdvice != nil {
+		return fieldError("FIDrawdownDebitAccountAdvice", ErrInvalidProperty, fwm.FIDrawdownDebitAccountAdvice)
 	}
 
 	if fwm.LocalInstrument != nil {
