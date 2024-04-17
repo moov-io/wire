@@ -73,7 +73,11 @@ func (ua *UnstructuredAddenda) String() string {
 	buf.Grow(10)
 	buf.WriteString(ua.tag)
 	buf.WriteString(ua.AddendaLengthField())
-	buf.Grow(ua.parseNumField(ua.AddendaLength))
+
+	if size := ua.parseNumField(ua.AddendaLength); validSize(size) {
+		buf.Grow(size)
+	}
+
 	buf.WriteString(ua.AddendaField())
 	return buf.String()
 }

@@ -32,7 +32,9 @@ func (c *converters) parseAlphaField(r string, max uint) string {
 	if ln > max {
 		return r[ln-max:]
 	}
-	r += strings.Repeat(" ", int(max-ln))
+	if count := int(max - ln); validSize(count) {
+		r += strings.Repeat(" ", count)
+	}
 	return r
 }
 
@@ -42,7 +44,9 @@ func (c *converters) numericStringField(s string, max uint) string {
 	if ln > max {
 		return s[ln-max:]
 	}
-	s = strings.Repeat("0", int(max-ln)) + s
+	if count := int(max - ln); validSize(count) {
+		s = strings.Repeat("0", count) + s
+	}
 	return s
 }
 
@@ -60,11 +64,11 @@ func (c *converters) formatAlphaField(s string, max uint, options FormatOptions)
 	if ln > max {
 		return s[:max]
 	}
-
 	if !options.VariableLengthFields {
-		s += strings.Repeat(" ", int(max-ln))
+		if count := int(max - ln); validSize(count) {
+			s += strings.Repeat(" ", count)
+		}
 	}
-
 	return s
 }
 
