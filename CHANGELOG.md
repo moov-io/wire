@@ -1,3 +1,14 @@
+## v0.15.4 (Released 2024-04-17)
+
+IMPROVEMENTS
+
+fix: cap buffer lengths
+
+BUILD
+
+- fix(deps): update module golang.org/x/oauth2 to v0.19.0
+- fix(deps): update golang.org/x/exp digest to fe59bbe
+
 ## v0.15.3 (Released 2024-03-07)
 
 IMPROVEMENTS
