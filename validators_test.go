@@ -5,10 +5,28 @@
 package wire
 
 import (
+	"fmt"
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
+
+func TestValidSize(t *testing.T) {
+	require.True(t, validSize(10))
+	require.True(t, validSize(1e7))
+
+	require.False(t, validSize(1e8+1))
+	require.False(t, validSize(1e9))
+	require.False(t, validSize(math.MaxInt))
+
+	t.Run("don't grow", func(t *testing.T) {
+		ua := &UnstructuredAddenda{}
+		ua.AddendaLength = fmt.Sprintf("%0.0f", 1e9)
+		expected := "1000"
+		require.Equal(t, expected, ua.String())
+	})
+}
 
 func TestValidators__validateOptionFName(t *testing.T) {
 	v := &validator{}
