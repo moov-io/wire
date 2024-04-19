@@ -1,3 +1,10 @@
+## v0.15.5 (Released 2024-04-19)
+
+IMPROVEMENTS
+
+- fix: don't add delmiter (or spaces) on {3600} when typecode is unspecified
+- fix: sort lines by their tag
+
 ## v0.15.4 (Released 2024-04-17)
 
 IMPROVEMENTS
