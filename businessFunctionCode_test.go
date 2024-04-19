@@ -81,6 +81,17 @@ func TestBusinessFunctionCodeTagError(t *testing.T) {
 	require.EqualError(t, err, fieldError("tag", ErrValidTagForType, bfc.tag).Error())
 }
 
+func TestBusinessFunctionCodeDelimiter(t *testing.T) {
+	bfc := NewBusinessFunctionCode()
+	bfc.BusinessFunctionCode = CustomerTransfer
+	require.Equal(t, "{3600}CTR", bfc.String())
+	require.Equal(t, "{3600}CTR", bfc.Format(FormatOptions{VariableLengthFields: true}))
+
+	bfc.TransactionTypeCode = "23"
+	require.Equal(t, "{3600}CTR23 *", bfc.String())
+	require.Equal(t, "{3600}CTR23*", bfc.Format(FormatOptions{VariableLengthFields: true}))
+}
+
 // TestStringBusinessFunctionCodeVariableLength parses using variable length
 func TestStringBusinessFunctionCodeVariableLength(t *testing.T) {
 	var line = "{3600}"
@@ -123,8 +134,9 @@ func TestStringBusinessFunctionCodeOptions(t *testing.T) {
 	require.Equal(t, err, nil)
 
 	bfc := r.currentFEDWireMessage.BusinessFunctionCode
-	require.Equal(t, bfc.String(), "{3600}BTR   *")
-	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: true}), "{3600}BTR*")
-	require.Equal(t, bfc.String(), bfc.Format(FormatOptions{VariableLengthFields: false}))
+	require.Equal(t, "{3600}BTR", bfc.String())
+	require.Equal(t, "{3600}BTR", bfc.Format(FormatOptions{VariableLengthFields: true}))
 
+	require.Equal(t, "{3600}BTR", bfc.Format(FormatOptions{VariableLengthFields: false}))
+	require.Equal(t, bfc.Format(FormatOptions{VariableLengthFields: false}), bfc.String())
 }
