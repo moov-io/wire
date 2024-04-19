@@ -88,7 +88,12 @@ func (bfc *BusinessFunctionCode) Format(options FormatOptions) string {
 
 	buf.WriteString(bfc.tag)
 	buf.WriteString(bfc.BusinessFunctionCodeField())
-	buf.WriteString(bfc.FormatTransactionTypeCode(options) + Delimiter)
+
+	typeCode := bfc.FormatTransactionTypeCode(options)
+	buf.WriteString(typeCode)
+	if bfc.TransactionTypeCode != "" {
+		buf.WriteString(Delimiter)
+	}
 
 	return buf.String()
 }
@@ -135,8 +140,11 @@ func (bfc *BusinessFunctionCode) TransactionTypeCodeField() string {
 // FormatTransactionTypeCode returns TransactionTypeCode formatted according to the FormatOptions
 func (bfc *BusinessFunctionCode) FormatTransactionTypeCode(options FormatOptions) string {
 	// for variable length and empty TransactionTypeCode, no formatting is needed
-	if options.VariableLengthFields && bfc.TransactionTypeCode == "" {
+	if bfc.TransactionTypeCode == "" {
 		return ""
+	}
+	if options.VariableLengthFields {
+		return bfc.TransactionTypeCode
 	}
 	return bfc.formatAlphaField(bfc.TransactionTypeCode, 3, options)
 }
