@@ -7,6 +7,9 @@ package wire
 import (
 	"bufio"
 	"io"
+	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 // A Writer writes an fedWireMessage to an encoded file.
@@ -81,466 +84,367 @@ func (w *Writer) Flush() error {
 }
 
 func (w *Writer) writeFEDWireMessage(file *File) error {
-
 	fwm := file.FEDWireMessage
 
-	if err := w.writeMandatory(fwm); err != nil {
-		return err
-	}
+	var outputLines []string
 
-	if err := w.writeOtherTransferInfo(fwm); err != nil {
+	mandatoryLines, err := w.writeMandatory(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, mandatoryLines...)
 
-	if err := w.writeBeneficiary(fwm); err != nil {
+	otherTransferLines, err := w.writeOtherTransferInfo(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, otherTransferLines...)
 
-	if err := w.writeOriginator(fwm); err != nil {
+	beneficiaryLines, err := w.writeBeneficiary(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, beneficiaryLines...)
 
-	if err := w.writeFinancialInstitution(fwm); err != nil {
+	originatorLines, err := w.writeOriginator(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, originatorLines...)
 
-	if err := w.writeCoverPayment(fwm); err != nil {
+	financialInstitutionLines, err := w.writeFinancialInstitution(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, financialInstitutionLines...)
+
+	coverPaymentLines, err := w.writeCoverPayment(fwm)
+	if err != nil {
+		return err
+	}
+	outputLines = append(outputLines, coverPaymentLines...)
 
 	if fwm.UnstructuredAddenda != nil {
-		if _, err := w.w.WriteString(fwm.UnstructuredAddenda.String() + w.NewlineCharacter); err != nil {
-			return err
-		}
+		outputLines = append(outputLines, fwm.UnstructuredAddenda.String())
 	}
 
-	if err := w.writeRemittance(fwm); err != nil {
+	remittanceLines, err := w.writeRemittance(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, remittanceLines...)
 
 	if fwm.ServiceMessage != nil {
-		if _, err := w.w.WriteString(fwm.ServiceMessage.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		outputLines = append(outputLines, fwm.ServiceMessage.Format(w.FormatOptions))
 	}
 
-	if err := w.writeFedAppended(fwm); err != nil {
+	fedAppendedLines, err := w.writeFedAppended(fwm)
+	if err != nil {
 		return err
 	}
+	outputLines = append(outputLines, fedAppendedLines...)
+
+	slices.Sort(outputLines)
+	w.w.WriteString(strings.Join(outputLines, w.NewlineCharacter))
+	w.w.WriteString(w.NewlineCharacter)
 
 	return nil
 }
 
-func (w *Writer) writeFedAppended(fwm FEDWireMessage) error {
+func (w *Writer) writeFedAppended(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.MessageDisposition != nil {
-		if _, err := w.w.WriteString(fwm.MessageDisposition.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.MessageDisposition.Format(w.FormatOptions))
 	}
 
 	if fwm.ReceiptTimeStamp != nil {
-		if _, err := w.w.WriteString(fwm.ReceiptTimeStamp.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.ReceiptTimeStamp.Format(w.FormatOptions))
 	}
 
 	if fwm.OutputMessageAccountabilityData != nil {
-		if _, err := w.w.WriteString(fwm.OutputMessageAccountabilityData.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.OutputMessageAccountabilityData.Format(w.FormatOptions))
 	}
 
 	if fwm.ErrorWire != nil {
-		if _, err := w.w.WriteString(fwm.ErrorWire.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.ErrorWire.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeMandatory(fwm FEDWireMessage) error {
+func (w *Writer) writeMandatory(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.SenderSupplied != nil {
-		if _, err := w.w.WriteString(fwm.SenderSupplied.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.SenderSupplied.Format(w.FormatOptions))
 	} else {
 		if fwm.requireSenderSupplied() {
-			return fieldError("SenderSupplied", ErrFieldRequired)
+			return nil, fieldError("SenderSupplied", ErrFieldRequired)
 		}
 	}
 
 	if fwm.TypeSubType != nil {
-		if _, err := w.w.WriteString(fwm.TypeSubType.String() + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.TypeSubType.String())
 	} else {
-		return fieldError("TypeSubType", ErrFieldRequired)
+		return nil, fieldError("TypeSubType", ErrFieldRequired)
 	}
 
 	if fwm.InputMessageAccountabilityData != nil {
-		if _, err := w.w.WriteString(fwm.InputMessageAccountabilityData.String() + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.InputMessageAccountabilityData.String())
 	} else {
-		return fieldError("InputMessageAccountabilityData", ErrFieldRequired)
+		return nil, fieldError("InputMessageAccountabilityData", ErrFieldRequired)
 	}
 
 	if fwm.Amount != nil {
-		if _, err := w.w.WriteString(fwm.Amount.String() + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.Amount.String())
 	} else {
-		return fieldError("Amount", ErrFieldRequired)
+		return nil, fieldError("Amount", ErrFieldRequired)
 	}
 
 	if fwm.SenderDepositoryInstitution != nil {
-		if _, err := w.w.WriteString(fwm.SenderDepositoryInstitution.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.SenderDepositoryInstitution.Format(w.FormatOptions))
 	} else {
-		return fieldError("SenderDepositoryInstitution", ErrFieldRequired)
+		return nil, fieldError("SenderDepositoryInstitution", ErrFieldRequired)
 	}
 
 	if fwm.ReceiverDepositoryInstitution != nil {
-		if _, err := w.w.WriteString(fwm.ReceiverDepositoryInstitution.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.ReceiverDepositoryInstitution.Format(w.FormatOptions))
 	} else {
-		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
+		return nil, fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
 
 	if fwm.BusinessFunctionCode != nil {
-		if _, err := w.w.WriteString(fwm.BusinessFunctionCode.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.BusinessFunctionCode.Format(w.FormatOptions))
 	} else {
-		return fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
+		return nil, fieldError("ReceiverDepositoryInstitution", ErrFieldRequired)
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeOtherTransferInfo(fwm FEDWireMessage) error {
+func (w *Writer) writeOtherTransferInfo(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.SenderReference != nil {
-		if _, err := w.w.WriteString(fwm.SenderReference.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.SenderReference.Format(w.FormatOptions))
 	}
 
 	if fwm.PreviousMessageIdentifier != nil {
-		if _, err := w.w.WriteString(fwm.PreviousMessageIdentifier.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.PreviousMessageIdentifier.Format(w.FormatOptions))
 	}
 
 	if fwm.LocalInstrument != nil {
-		if _, err := w.w.WriteString(fwm.LocalInstrument.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.LocalInstrument.Format(w.FormatOptions))
 	}
 
 	if fwm.PaymentNotification != nil {
-		if _, err := w.w.WriteString(fwm.PaymentNotification.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.PaymentNotification.Format(w.FormatOptions))
 	}
 
 	if fwm.Charges != nil {
-		if _, err := w.w.WriteString(fwm.Charges.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.Charges.Format(w.FormatOptions))
 	}
 
 	if fwm.InstructedAmount != nil {
-		if _, err := w.w.WriteString(fwm.InstructedAmount.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.InstructedAmount.Format(w.FormatOptions))
 	}
 
 	if fwm.ExchangeRate != nil {
-		if _, err := w.w.WriteString(fwm.ExchangeRate.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.ExchangeRate.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeBeneficiary(fwm FEDWireMessage) error {
+func (w *Writer) writeBeneficiary(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.BeneficiaryIntermediaryFI != nil {
-		if _, err := w.w.WriteString(fwm.BeneficiaryIntermediaryFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.BeneficiaryIntermediaryFI.Format(w.FormatOptions))
 	}
 
 	if fwm.BeneficiaryFI != nil {
-		if fwm.BeneficiaryFI != nil {
-			if _, err := w.w.WriteString(fwm.BeneficiaryFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-				return err
-			}
-		}
+		lines = append(lines, fwm.BeneficiaryFI.Format(w.FormatOptions))
 	}
 
 	if fwm.Beneficiary != nil {
-		if fwm.Beneficiary != nil {
-			if _, err := w.w.WriteString(fwm.Beneficiary.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-				return err
-			}
-		}
+		lines = append(lines, fwm.Beneficiary.Format(w.FormatOptions))
 	}
 
 	if fwm.BeneficiaryReference != nil {
-		if fwm.BeneficiaryReference != nil {
-			if _, err := w.w.WriteString(fwm.BeneficiaryReference.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-				return err
-			}
-		}
+		lines = append(lines, fwm.BeneficiaryReference.Format(w.FormatOptions))
 	}
 
 	if fwm.AccountDebitedDrawdown != nil {
-		if fwm.AccountDebitedDrawdown != nil {
-			if _, err := w.w.WriteString(fwm.AccountDebitedDrawdown.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-				return err
-			}
-		}
+		lines = append(lines, fwm.AccountDebitedDrawdown.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeOriginator(fwm FEDWireMessage) error {
+func (w *Writer) writeOriginator(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.Originator != nil {
-		if _, err := w.w.WriteString(fwm.Originator.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.Originator.Format(w.FormatOptions))
 	}
 
 	if fwm.OriginatorOptionF != nil {
-		if _, err := w.w.WriteString(fwm.OriginatorOptionF.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.OriginatorOptionF.Format(w.FormatOptions))
 	}
 
 	if fwm.OriginatorFI != nil {
-		if _, err := w.w.WriteString(fwm.OriginatorFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.OriginatorFI.Format(w.FormatOptions))
 	}
 
 	if fwm.InstructingFI != nil {
-		if _, err := w.w.WriteString(fwm.InstructingFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.InstructingFI.Format(w.FormatOptions))
 	}
 
 	if fwm.AccountCreditedDrawdown != nil {
-		if _, err := w.w.WriteString(fwm.AccountCreditedDrawdown.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.AccountCreditedDrawdown.Format(w.FormatOptions))
 	}
 
 	if fwm.OriginatorToBeneficiary != nil {
-		if _, err := w.w.WriteString(fwm.OriginatorToBeneficiary.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.OriginatorToBeneficiary.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeFinancialInstitution(fwm FEDWireMessage) error {
+func (w *Writer) writeFinancialInstitution(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.FIReceiverFI != nil {
-		if _, err := w.w.WriteString(fwm.FIReceiverFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIReceiverFI.Format(w.FormatOptions))
 	}
 
 	if fwm.FIDrawdownDebitAccountAdvice != nil {
-		if _, err := w.w.WriteString(fwm.FIDrawdownDebitAccountAdvice.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIDrawdownDebitAccountAdvice.Format(w.FormatOptions))
 	}
 
 	if fwm.FIIntermediaryFI != nil {
-		if _, err := w.w.WriteString(fwm.FIIntermediaryFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIIntermediaryFI.Format(w.FormatOptions))
 	}
 
 	if fwm.FIIntermediaryFIAdvice != nil {
-		if _, err := w.w.WriteString(fwm.FIIntermediaryFIAdvice.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIIntermediaryFIAdvice.Format(w.FormatOptions))
 	}
 
 	if fwm.FIBeneficiaryFI != nil {
-		if _, err := w.w.WriteString(fwm.FIBeneficiaryFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIBeneficiaryFI.Format(w.FormatOptions))
 	}
 
 	if fwm.FIBeneficiaryFIAdvice != nil {
-		if _, err := w.w.WriteString(fwm.FIBeneficiaryFIAdvice.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIBeneficiaryFIAdvice.Format(w.FormatOptions))
 	}
 
 	if fwm.FIBeneficiary != nil {
-		if _, err := w.w.WriteString(fwm.FIBeneficiary.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIBeneficiary.Format(w.FormatOptions))
 	}
 
 	if fwm.FIBeneficiaryAdvice != nil {
-		if _, err := w.w.WriteString(fwm.FIBeneficiaryAdvice.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIBeneficiaryAdvice.Format(w.FormatOptions))
 	}
 
 	if fwm.FIPaymentMethodToBeneficiary != nil {
-		if _, err := w.w.WriteString(fwm.FIPaymentMethodToBeneficiary.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIPaymentMethodToBeneficiary.Format(w.FormatOptions))
 	}
 
 	if fwm.FIAdditionalFIToFI != nil {
-		if _, err := w.w.WriteString(fwm.FIAdditionalFIToFI.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.FIAdditionalFIToFI.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeCoverPayment(fwm FEDWireMessage) error {
+func (w *Writer) writeCoverPayment(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	if fwm.CurrencyInstructedAmount != nil {
-		if _, err := w.w.WriteString(fwm.CurrencyInstructedAmount.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.CurrencyInstructedAmount.Format(w.FormatOptions))
 	}
 
 	if fwm.OrderingCustomer != nil {
-		if _, err := w.w.WriteString(fwm.OrderingCustomer.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.OrderingCustomer.Format(w.FormatOptions))
 	}
 
 	if fwm.OrderingInstitution != nil {
-		if _, err := w.w.WriteString(fwm.OrderingInstitution.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.OrderingInstitution.Format(w.FormatOptions))
 	}
 
 	if fwm.IntermediaryInstitution != nil {
-		if _, err := w.w.WriteString(fwm.IntermediaryInstitution.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.IntermediaryInstitution.Format(w.FormatOptions))
 	}
 
 	if fwm.InstitutionAccount != nil {
-		if _, err := w.w.WriteString(fwm.InstitutionAccount.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.InstitutionAccount.Format(w.FormatOptions))
 	}
 
 	if fwm.BeneficiaryCustomer != nil {
-		if _, err := w.w.WriteString(fwm.BeneficiaryCustomer.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.BeneficiaryCustomer.Format(w.FormatOptions))
 	}
 
 	if fwm.Remittance != nil {
-		if _, err := w.w.WriteString(fwm.Remittance.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.Remittance.Format(w.FormatOptions))
 	}
 
 	if fwm.SenderToReceiver != nil {
-		if _, err := w.w.WriteString(fwm.SenderToReceiver.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.SenderToReceiver.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }
 
-func (w *Writer) writeRemittance(fwm FEDWireMessage) error {
+func (w *Writer) writeRemittance(fwm FEDWireMessage) ([]string, error) {
+	var lines []string
 
 	// Related Remittance
 	if fwm.RelatedRemittance != nil {
-		if _, err := w.w.WriteString(fwm.RelatedRemittance.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.RelatedRemittance.Format(w.FormatOptions))
 	}
 
 	// Structured Remittance
 	if fwm.RemittanceOriginator != nil {
-		if _, err := w.w.WriteString(fwm.RemittanceOriginator.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.RemittanceOriginator.Format(w.FormatOptions))
 	}
 
 	if fwm.RemittanceBeneficiary != nil {
-		if _, err := w.w.WriteString(fwm.RemittanceBeneficiary.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.RemittanceBeneficiary.Format(w.FormatOptions))
 	}
 
 	if fwm.PrimaryRemittanceDocument != nil {
-		if _, err := w.w.WriteString(fwm.PrimaryRemittanceDocument.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.PrimaryRemittanceDocument.Format(w.FormatOptions))
 	}
 
 	if fwm.ActualAmountPaid != nil {
-		if _, err := w.w.WriteString(fwm.ActualAmountPaid.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.ActualAmountPaid.Format(w.FormatOptions))
 	}
 
 	if fwm.GrossAmountRemittanceDocument != nil {
-		if _, err := w.w.WriteString(fwm.GrossAmountRemittanceDocument.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.GrossAmountRemittanceDocument.Format(w.FormatOptions))
 	}
 
 	if fwm.AmountNegotiatedDiscount != nil {
-		if _, err := w.w.WriteString(fwm.AmountNegotiatedDiscount.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.AmountNegotiatedDiscount.Format(w.FormatOptions))
 	}
 
 	if fwm.Adjustment != nil {
-		if _, err := w.w.WriteString(fwm.Adjustment.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.Adjustment.Format(w.FormatOptions))
 	}
 
 	if fwm.DateRemittanceDocument != nil {
-		if _, err := w.w.WriteString(fwm.DateRemittanceDocument.String() + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.DateRemittanceDocument.String())
 	}
 
 	if fwm.SecondaryRemittanceDocument != nil {
-		if _, err := w.w.WriteString(fwm.SecondaryRemittanceDocument.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.SecondaryRemittanceDocument.Format(w.FormatOptions))
 	}
 
 	if fwm.RemittanceFreeText != nil {
-		if _, err := w.w.WriteString(fwm.RemittanceFreeText.Format(w.FormatOptions) + w.NewlineCharacter); err != nil {
-			return err
-		}
+		lines = append(lines, fwm.RemittanceFreeText.Format(w.FormatOptions))
 	}
 
-	return nil
+	return lines, nil
 }

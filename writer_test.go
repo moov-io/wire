@@ -356,6 +356,18 @@ func TestFEDWireMessageWriteCustomerTransfer(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+
+	// Verify the exact tags written
+	tags := getTagsFromContents(t, file)
+	expected := []string{
+		"{1500}", "{1510}", "{1520}",
+		"{2000}",
+		"{3100}", "{3320}", "{3400}", "{3500}", "{3600}", "{3700}", "{3710}", "{3720}",
+		"{4000}", "{4100}", "{4200}", "{4320}",
+		"{5000}", "{5100}", "{5200}",
+		"{6000}", "{6100}", "{6200}", "{6210}", "{6300}", "{6310}", "{6400}", "{6410}", "{6420}", "{6500}",
+	}
+	require.Equal(t, expected, tags)
 }
 
 // TestFEDWireMessageWriteCustomerTransferPlus writes a FEDWireMessage to a file with BusinessFunctionCode = CTP
@@ -1003,6 +1015,35 @@ func TestFEDWireMessageWriteServiceMessage(t *testing.T) {
 	file.AddFEDWireMessage(fwm)
 
 	require.NoError(t, writeFile(file))
+}
+
+func getTagsFromContents(t *testing.T, file *File) []string {
+	t.Helper()
+
+	err := file.Create()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = file.Validate()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	var buf bytes.Buffer
+	err = NewWriter(&buf).Write(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	lines := strings.Split(strings.TrimSpace(buf.String()), "\n")
+	for i := range lines {
+		idx := strings.Index(lines[i], "}")
+		if idx > 0 {
+			lines[i] = strings.TrimSpace(lines[i][:idx+1])
+		}
+	}
+	return lines
 }
 
 // writeFile writes a FEDWireMessage File and ensures the File can be read
