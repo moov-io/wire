@@ -12,6 +12,7 @@ package openapi
 // WireFile struct for WireFile
 type WireFile struct {
 	// File ID
-	ID             string         `json:"ID,omitempty"`
-	FedWireMessage FedWireMessage `json:"fedWireMessage"`
+	ID              string           `json:"ID,omitempty"`
+	FedWireMessages []FedWireMessage `json:"fedWireMessages"`
+	ValidateOptions *ValidateOptions `json:"validateOptions,omitempty"`
 }

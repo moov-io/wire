@@ -1273,7 +1273,7 @@ func TestFEDWireMessage_skipIMAD(t *testing.T) {
 	expected := fieldError("InputMessageAccountabilityData", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	file.SetValidation(ValidateOpts{SkipMandatoryIMAD: true})
+	file.ValidateOptions = ValidateOpts{SkipMandatoryIMAD: true}
 	err = file.Validate()
 	require.NoError(t, err)
 

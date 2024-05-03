@@ -129,7 +129,7 @@ func (r *Reader) read(opts *ValidateOpts) (*File, error) {
 
 	if r.errors.Empty() {
 		if opts != nil {
-			r.File.SetValidation(*opts)
+			r.File.ValidateOptions = *opts
 		}
 		err := r.File.Validate()
 		if err == nil {

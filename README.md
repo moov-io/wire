@@ -78,7 +78,7 @@ Create a file on the HTTP server:
 curl -X POST --data-binary "@./test/testdata/fedWireMessage-CustomerTransfer.txt" http://localhost:8088/files/create
 ```
 ```
-{"id":"<YOUR-UNIQUE-FILE-ID>","fedWireMessage":{"id":"","senderSupplied":{"formatVersion":"30", .....
+{"id":"<YOUR-UNIQUE-FILE-ID>","fedWireMessages":[{"id":"","senderSupplied":{"formatVersion":"30", .....
 ```
 
 Get the file in its original format:
