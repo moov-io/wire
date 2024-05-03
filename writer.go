@@ -22,6 +22,7 @@ type Writer struct {
 	w       *bufio.Writer
 	lineNum int // current line being written
 	FormatOptions
+	validateOpts ValidateOpts
 }
 
 type OptionFunc func(*Writer)
@@ -67,8 +68,10 @@ func (w *Writer) Write(file *File) error {
 		return err
 	}
 	w.lineNum = 0
+
 	// Iterate over all records in the file
-	if err := w.writeFEDWireMessage(file); err != nil {
+	w.validateOpts = file.ValidateOptions
+	if err := w.writeFEDWireMessages(file); err != nil {
 		return err
 	}
 	w.lineNum++
@@ -83,70 +86,74 @@ func (w *Writer) Flush() error {
 	return w.w.Flush()
 }
 
-func (w *Writer) writeFEDWireMessage(file *File) error {
-	fwm := file.FEDWireMessage
-
-	var outputLines []string
-
-	mandatoryLines, err := w.writeMandatory(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, mandatoryLines...)
-
-	otherTransferLines, err := w.writeOtherTransferInfo(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, otherTransferLines...)
-
-	beneficiaryLines, err := w.writeBeneficiary(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, beneficiaryLines...)
-
-	originatorLines, err := w.writeOriginator(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, originatorLines...)
-
-	financialInstitutionLines, err := w.writeFinancialInstitution(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, financialInstitutionLines...)
-
-	coverPaymentLines, err := w.writeCoverPayment(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, coverPaymentLines...)
-
-	if fwm.UnstructuredAddenda != nil {
-		outputLines = append(outputLines, fwm.UnstructuredAddenda.String())
+func (w *Writer) writeFEDWireMessages(file *File) error {
+	if file == nil {
+		return nil
 	}
 
-	remittanceLines, err := w.writeRemittance(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, remittanceLines...)
+	for _, fwm := range file.FEDWireMessages {
+		var outputLines []string
 
-	if fwm.ServiceMessage != nil {
-		outputLines = append(outputLines, fwm.ServiceMessage.Format(w.FormatOptions))
-	}
+		mandatoryLines, err := w.writeMandatory(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, mandatoryLines...)
 
-	fedAppendedLines, err := w.writeFedAppended(fwm)
-	if err != nil {
-		return err
-	}
-	outputLines = append(outputLines, fedAppendedLines...)
+		otherTransferLines, err := w.writeOtherTransferInfo(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, otherTransferLines...)
 
-	slices.Sort(outputLines)
-	w.w.WriteString(strings.Join(outputLines, w.NewlineCharacter))
-	w.w.WriteString(w.NewlineCharacter)
+		beneficiaryLines, err := w.writeBeneficiary(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, beneficiaryLines...)
+
+		originatorLines, err := w.writeOriginator(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, originatorLines...)
+
+		financialInstitutionLines, err := w.writeFinancialInstitution(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, financialInstitutionLines...)
+
+		coverPaymentLines, err := w.writeCoverPayment(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, coverPaymentLines...)
+
+		if fwm.UnstructuredAddenda != nil {
+			outputLines = append(outputLines, fwm.UnstructuredAddenda.String())
+		}
+
+		remittanceLines, err := w.writeRemittance(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, remittanceLines...)
+
+		if fwm.ServiceMessage != nil {
+			outputLines = append(outputLines, fwm.ServiceMessage.Format(w.FormatOptions))
+		}
+
+		fedAppendedLines, err := w.writeFedAppended(fwm)
+		if err != nil {
+			return err
+		}
+		outputLines = append(outputLines, fedAppendedLines...)
+
+		slices.Sort(outputLines)
+		w.w.WriteString(strings.Join(outputLines, w.NewlineCharacter))
+		w.w.WriteString(w.NewlineCharacter)
+	}
 
 	return nil
 }
@@ -179,7 +186,7 @@ func (w *Writer) writeMandatory(fwm FEDWireMessage) ([]string, error) {
 	if fwm.SenderSupplied != nil {
 		lines = append(lines, fwm.SenderSupplied.Format(w.FormatOptions))
 	} else {
-		if fwm.requireSenderSupplied() {
+		if !w.validateOpts.AllowMissingSenderSupplied {
 			return nil, fieldError("SenderSupplied", ErrFieldRequired)
 		}
 	}

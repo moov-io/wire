@@ -1,6 +1,6 @@
 {
 	"id": "77ed843dd88e3ace155ef0ea17b59aec349c6218",
-	"fedWireMessage": {
+	"fedWireMessages": [{
 		"id": "",
 		"messageDisposition": {
 			"formatVersion": "30",
@@ -218,5 +218,5 @@
 				"lineSix": "Line Six"
 			}
 		}
-	}
+	}]
 }

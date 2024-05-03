@@ -25,5 +25,5 @@ func TestFile__FileFromJSON(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Empty(t, file.ID, "id should not have been set")
-	require.NotNil(t, file.FEDWireMessage.FIAdditionalFIToFI, "FIAdditionalFIToFI shouldn't be nil")
+	require.NotNil(t, file.FEDWireMessages[0].FIAdditionalFIToFI, "FIAdditionalFIToFI shouldn't be nil")
 }

@@ -26,7 +26,7 @@ func FuzzReaderWriterWire(f *testing.F) {
 		}
 
 		// Write the file
-		wire.NewWriter(io.Discard).Write(&file)
+		wire.NewWriter(io.Discard).Write(file)
 
 		// Remove Validation override
 		// file.SetValidation(&ach.ValidateOpts{

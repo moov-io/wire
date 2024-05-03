@@ -18,7 +18,7 @@ func isJSON(input string) bool {
 
 func parseContents(input string) (*wire.File, error) {
 
-	var file wire.File
+	var file *wire.File
 	var err error
 
 	if isJSON(input) {
@@ -32,7 +32,7 @@ func parseContents(input string) (*wire.File, error) {
 		}
 	}
 
-	return &file, nil
+	return file, nil
 }
 
 func prettyJson(file *wire.File) (string, error) {

@@ -35,10 +35,6 @@ func TestFEDWireMessage_invalidAmount(t *testing.T) {
 	// Originator
 	fwm.Originator = mockOriginator()
 	file.AddFEDWireMessage(fwm)
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Fatalf("%T: %s", err, err)
-	}
 
 	// Validate File
 	err := file.Validate()
@@ -1267,21 +1263,17 @@ func TestFEDWireMessage_skipIMAD(t *testing.T) {
 	// Originator
 	fwm.Originator = mockOriginator()
 	file.AddFEDWireMessage(fwm)
-	// Create file
-	if err := file.Create(); err != nil {
-		t.Fatalf("%T: %s", err, err)
-	}
 
 	err := file.Validate()
 	require.NoError(t, err)
 
-	file.FEDWireMessage.InputMessageAccountabilityData = nil
+	file.FEDWireMessages[0].InputMessageAccountabilityData = nil
 
 	err = file.Validate()
 	expected := fieldError("InputMessageAccountabilityData", ErrFieldRequired).Error()
 	require.EqualError(t, err, expected)
 
-	file.SetValidation(&ValidateOpts{SkipMandatoryIMAD: true})
+	file.SetValidation(ValidateOpts{SkipMandatoryIMAD: true})
 	err = file.Validate()
 	require.NoError(t, err)
 
@@ -1291,9 +1283,9 @@ func TestFEDWireMessage_skipIMAD(t *testing.T) {
 	newFile, err := FileFromJSON(bs)
 	require.NoError(t, err)
 	require.NotNil(t, newFile, "Created file shouldn't be nil")
-	require.Nil(t, newFile.FEDWireMessage.InputMessageAccountabilityData)
+	require.Nil(t, newFile.FEDWireMessages[0].InputMessageAccountabilityData)
 
 	err = newFile.Validate()
 	require.NoError(t, err)
-	require.Equal(t, true, newFile.GetValidation().SkipMandatoryIMAD)
+	require.Equal(t, true, newFile.ValidateOptions.SkipMandatoryIMAD)
 }

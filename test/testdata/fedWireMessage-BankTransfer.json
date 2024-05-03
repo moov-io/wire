@@ -1,5 +1,5 @@
 {
-    "fedWireMessage": {
+    "fedWireMessages": [{
         "fiAdditionalFiToFi": {
             "additionalFiToFi": {
                 "lineSix": "Line Six",
@@ -194,6 +194,6 @@
             "formatVersion": "30"
         },
         "id": ""
-    },
+    }],
     "id": ""
 }

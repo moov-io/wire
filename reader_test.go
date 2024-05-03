@@ -1,7 +1,6 @@
 package wire
 
 import (
-	"bytes"
 	"os"
 	"path"
 	"path/filepath"
@@ -81,33 +80,4 @@ func TestRead_missingTag(t *testing.T) {
 
 	_, err = r.Read()
 	require.ErrorContains(t, err, ErrRequireDelimiter.Error())
-}
-
-func TestReadWithValidateOpts(t *testing.T) {
-	f, err := os.Open("./test/testdata/fedWireMessage-BankTransfer.txt")
-	if err != nil {
-		t.Fatalf("%T: %s", err, err)
-	}
-	defer f.Close()
-	r := NewReader(f)
-
-	file, err := r.Read()
-	require.NoError(t, err)
-	require.NotNil(t, file)
-
-	file.FEDWireMessage.InputMessageAccountabilityData = nil
-
-	b := &bytes.Buffer{}
-	w := NewWriter(b)
-	err = w.Write(&file)
-	require.Error(t, err)
-
-	r1 := NewReader(b)
-	file, err = r1.ReadWithOpts(&ValidateOpts{
-		SkipMandatoryIMAD: true,
-	})
-
-	require.Error(t, err)
-	require.NotNil(t, file)
-	require.Nil(t, file.FEDWireMessage.InputMessageAccountabilityData)
 }
