@@ -10,41 +10,33 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestIssue104(t *testing.T) {
 	bs, err := os.ReadFile(filepath.Join("test", "testdata", "fedWireMessage-BankTransfer.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, err)
 
 	file, err := FileFromJSON(bs)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if file == nil {
-		t.Fatal("nil File")
-	}
+	require.NoError(t, err)
+	require.NotNil(t, file)
 
 	var buf bytes.Buffer
-	if err := NewWriter(&buf).Write(file); err != nil {
-		t.Fatal(err)
-	}
+	require.NoError(t, NewWriter(&buf).Write(file))
 
 	// verify the output
 	lines := strings.Split(buf.String(), "\n")
-	if n := len(lines); n != 27 {
-		t.Errorf("got %d lines", n)
-	}
+	require.Len(t, lines, 26)
+
 	for i := range lines {
 		if lines[i] == "" {
 			continue
 		}
 
-		prefix := string(lines[i][0:6])
+		prefix := lines[i][0:6]
 		// tags are 4 digits surrounded by {..} - example: {1500}
-		if prefix[0] != '{' || prefix[5] != '}' {
-			t.Errorf("index #%d - missing tag: %q", i, prefix)
-		}
+		require.Equal(t, "{", string(prefix[0]), "tag missing opening bracket")
+		require.Equal(t, "}", string(prefix[5]), "tag missing closing bracket")
 	}
 }

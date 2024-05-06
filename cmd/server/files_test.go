@@ -130,7 +130,7 @@ func TestFiles_createFile(t *testing.T) {
 		router.ServeHTTP(w, req)
 		w.Flush()
 
-		assert.Equal(t, http.StatusCreated, w.Code, w.Body)
+		require.Equal(t, http.StatusCreated, w.Code, w.Body)
 		var resp wire.File
 		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
 		assert.NotEmpty(t, resp.ID)

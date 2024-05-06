@@ -41,13 +41,24 @@ func NewlineCharacter(newline string) OptionFunc {
 	}
 }
 
-// NewWriter returns a new Writer that writes to w.
-// If no opts are provided, the writer will default to fixed-length fields and use "\n" for newlines.
+// MessageDelimiter specify message delimiter
+func MessageDelimiter(delimiter string) OptionFunc {
+	return func(w *Writer) {
+		w.MessageDelimiter = delimiter
+	}
+}
+
+// NewWriter returns a new Writer that writes to w. If no opts are provided, the write will use the
+// following defaults:
+//   - Fixed-length elements within tags
+//   - "\n" between tags in a message
+//   - "\n" between messages within a file
 func NewWriter(w io.Writer, opts ...OptionFunc) *Writer {
 	writer := &Writer{
 		w: bufio.NewWriter(w),
 		FormatOptions: FormatOptions{
 			NewlineCharacter: "\n",
+			MessageDelimiter: "\n",
 		},
 	}
 
@@ -91,7 +102,7 @@ func (w *Writer) writeFEDWireMessages(file *File) error {
 		return nil
 	}
 
-	for _, fwm := range file.FEDWireMessages {
+	for i, fwm := range file.FEDWireMessages {
 		var outputLines []string
 
 		mandatoryLines, err := w.writeMandatory(fwm)
@@ -152,7 +163,11 @@ func (w *Writer) writeFEDWireMessages(file *File) error {
 
 		slices.Sort(outputLines)
 		w.w.WriteString(strings.Join(outputLines, w.NewlineCharacter))
-		w.w.WriteString(w.NewlineCharacter)
+
+		// write a message delimiter if not the last message
+		if len(file.FEDWireMessages) > i+1 {
+			w.w.WriteString(w.MessageDelimiter)
+		}
 	}
 
 	return nil

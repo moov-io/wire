@@ -106,12 +106,22 @@ func (r *Reader) read(opts *ValidateOpts) (*File, error) {
 	}
 
 	r.lineNum = 0
+
 	// read through the entire file
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		for _, subLine := range spiltString(line) {
 			r.lineNum++
 			r.line = subLine
+
+			// Check if this is the start of a new FEDWireMessage
+			if r.startOfMessage(r.line[:6]) {
+				if r.currentFEDWireMessage != (FEDWireMessage{}) {
+					r.File.AddFEDWireMessage(r.currentFEDWireMessage)
+					r.currentFEDWireMessage = FEDWireMessage{}
+				}
+			}
+
 			if err := r.parseLine(); err != nil {
 				r.errors.Add(err)
 			}
@@ -138,6 +148,20 @@ func (r *Reader) read(opts *ValidateOpts) (*File, error) {
 		r.errors.Add(fmt.Errorf("file validation failed: %v", err))
 	}
 	return r.File, r.errors
+}
+
+func (r *Reader) startOfMessage(currTag string) bool {
+	// This is a new incoming message if it starts with {1100} (MessageDisposition)
+	if currTag == TagMessageDisposition {
+		return true
+	}
+
+	// This is a new outgoing message if there was no {1100} (MessageDisposition) tag
+	// and current tag is {1500} (SenderSupplied)
+	if currTag == TagSenderSupplied && r.currentFEDWireMessage.MessageDisposition == nil {
+		return true
+	}
+	return false
 }
 
 func (r *Reader) parseLine() error { //nolint:gocyclo

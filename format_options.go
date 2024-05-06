@@ -4,4 +4,5 @@ package wire
 type FormatOptions struct {
 	VariableLengthFields bool   // set to true to use variable length fields instead of fixed-width
 	NewlineCharacter     string // determines line endings - "\n" by default
+	MessageDelimiter     string // separates messages within a file - "\n" by default
 }
