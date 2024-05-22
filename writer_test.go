@@ -28,9 +28,6 @@ func TestSenderSupplied_Mandatory(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	// Create file
-	require.NoError(t, file.Create())
-
 	err := file.Validate()
 
 	require.EqualError(t, err, fieldError("SenderSupplied", ErrFieldRequired).Error())
@@ -55,9 +52,6 @@ func TestTypeSubType_Mandatory(t *testing.T) {
 	fwm.BusinessFunctionCode = bfc
 
 	file.AddFEDWireMessage(fwm)
-
-	// Create file
-	require.NoError(t, file.Create())
 
 	err := file.Validate()
 
@@ -84,9 +78,6 @@ func TestInputMessageAccountabilityData_Mandatory(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	// Create file
-	require.NoError(t, file.Create())
-
 	err := file.Validate()
 
 	require.EqualError(t, err, fieldError("InputMessageAccountabilityData", ErrFieldRequired).Error())
@@ -111,9 +102,6 @@ func TestAmount_Mandatory(t *testing.T) {
 	fwm.BusinessFunctionCode = bfc
 
 	file.AddFEDWireMessage(fwm)
-
-	// Create file
-	require.NoError(t, file.Create())
 
 	err := file.Validate()
 
@@ -140,9 +128,6 @@ func TestSenderDepositoryInstitution_Mandatory(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	// Create file
-	require.NoError(t, file.Create())
-
 	err := file.Validate()
 
 	require.EqualError(t, err, fieldError("SenderDepositoryInstitution", ErrFieldRequired).Error())
@@ -168,9 +153,6 @@ func TestReceiverDepositoryInstitution_Mandatory(t *testing.T) {
 
 	file.AddFEDWireMessage(fwm)
 
-	// Create file
-	require.NoError(t, file.Create())
-
 	err := file.Validate()
 
 	require.EqualError(t, err, fieldError("ReceiverDepositoryInstitution", ErrFieldRequired).Error())
@@ -195,9 +177,6 @@ func TestBusinessFunctionCode_Mandatory(t *testing.T) {
 	fwm.ReceiverDepositoryInstitution = rdi
 
 	file.AddFEDWireMessage(fwm)
-
-	// Create file
-	require.NoError(t, file.Create())
 
 	err := file.Validate()
 
@@ -304,8 +283,8 @@ func TestFEDWireMessageWriteCustomerTransfer(t *testing.T) {
 	fwm.SenderReference = sr
 	pmi := mockPreviousMessageIdentifier()
 	fwm.PreviousMessageIdentifier = pmi
-	//li := mockLocalInstrument()
-	//fwm.LocalInstrument = li
+	// li := mockLocalInstrument()
+	// fwm.LocalInstrument = li
 	c := mockCharges()
 	fwm.Charges = c
 	ia := mockInstructedAmount()
@@ -1020,12 +999,7 @@ func TestFEDWireMessageWriteServiceMessage(t *testing.T) {
 func getTagsFromContents(t *testing.T, file *File) []string {
 	t.Helper()
 
-	err := file.Create()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = file.Validate()
+	err := file.Validate()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1048,9 +1022,6 @@ func getTagsFromContents(t *testing.T, file *File) []string {
 
 // writeFile writes a FEDWireMessage File and ensures the File can be read
 func writeFile(file *File) error {
-	if err := file.Create(); err != nil {
-		return err
-	}
 	if err := file.Validate(); err != nil {
 		return err
 	}

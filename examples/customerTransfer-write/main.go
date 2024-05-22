@@ -228,9 +228,6 @@ func main() {
 
 	file.AddFEDWireMessage(fwm)
 
-	if err := file.Create(); err != nil {
-		log.Fatalf("Could not create FEDWireMessage: %s\n", err)
-	}
 	if err := file.Validate(); err != nil {
 		log.Fatalf("Could not validate FEDWireMessage: %s\n", err)
 	}

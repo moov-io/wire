@@ -34,14 +34,6 @@ func TestFileId(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
 }
 
-func TestFEDWireMessageID(t *testing.T) {
-	w := httptest.NewRecorder()
-	req := httptest.NewRequest("GET", "/foo", nil)
-
-	assert.Empty(t, getFEDWireMessageID(w, req))
-	assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
-}
-
 func TestFiles_getFiles(t *testing.T) {
 	repo := &testWireFileRepository{
 		file: &wire.File{
@@ -81,7 +73,7 @@ func readFile(filename string) (*wire.File, error) {
 		return nil, err
 	}
 	f, err := wire.NewReader(fd).Read()
-	return &f, err
+	return f, err
 }
 
 func TestFiles_createWithInterfaceData(t *testing.T) {
@@ -138,11 +130,11 @@ func TestFiles_createFile(t *testing.T) {
 		router.ServeHTTP(w, req)
 		w.Flush()
 
-		assert.Equal(t, http.StatusCreated, w.Code, w.Body)
+		require.Equal(t, http.StatusCreated, w.Code, w.Body)
 		var resp wire.File
 		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
 		assert.NotEmpty(t, resp.ID)
-		assert.NotNil(t, resp.FEDWireMessage.FIAdditionalFIToFI)
+		assert.NotNil(t, resp.FEDWireMessages[0].FIAdditionalFIToFI)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
@@ -176,7 +168,7 @@ func TestFiles_createFileJSON(t *testing.T) {
 		var resp wire.File
 		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
 		assert.NotEmpty(t, resp.ID)
-		assert.NotNil(t, resp.FEDWireMessage.FIAdditionalFIToFI)
+		assert.NotNil(t, resp.FEDWireMessages[0].FIAdditionalFIToFI)
 	})
 
 	t.Run("creates file from JSON", func(t *testing.T) {
@@ -194,8 +186,8 @@ func TestFiles_createFileJSON(t *testing.T) {
 		var resp wire.File
 		require.NoError(t, json.NewDecoder(w.Body).Decode(&resp))
 		assert.NotEmpty(t, resp.ID)
-		assert.NotEmpty(t, resp.FEDWireMessage)
-		assert.Nil(t, resp.FEDWireMessage.ValidateOptions)
+		assert.NotEmpty(t, resp.FEDWireMessages)
+		assert.Empty(t, resp.ValidateOptions)
 	})
 
 	t.Run("invalid JSON", func(t *testing.T) {
@@ -217,7 +209,6 @@ func TestFiles_createFile_missingSenderSupplied(t *testing.T) {
 
 	// set up a message with no SenderSupplied field
 	fwm := mockFEDWireMessage()
-	fwm.ValidateOptions = nil
 	fwm.SenderSupplied = nil
 	file := wire.NewFile()
 	file.AddFEDWireMessage(fwm)
@@ -228,21 +219,20 @@ func TestFiles_createFile_missingSenderSupplied(t *testing.T) {
 	require.Contains(t, resp.Body.String(), "SenderSupplied")
 
 	// create from JSON, using validation options, should succeed without sender supplied
-	file.FEDWireMessage.ValidateOptions = &wire.ValidateOpts{
+	file.ValidateOptions = wire.ValidateOpts{
 		AllowMissingSenderSupplied: true,
 	}
 	resp, uploaded := routerUploadJSON(t, router, file)
 	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
 	assert.NotEmpty(t, uploaded.ID)
-	assert.Nil(t, uploaded.FEDWireMessage.SenderSupplied)
+	assert.Nil(t, uploaded.FEDWireMessages[0].SenderSupplied)
 
 	// make sure the file was saved
 	resp, found := routerGetFile(t, router, uploaded.ID)
 	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
 	assert.Equal(t, uploaded.ID, found.ID)
-	assert.Nil(t, found.FEDWireMessage.SenderSupplied)
-	assert.NotNil(t, found.FEDWireMessage.ValidateOptions)
-	assert.True(t, found.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied)
+	assert.Nil(t, found.FEDWireMessages[0].SenderSupplied)
+	assert.True(t, found.ValidateOptions.AllowMissingSenderSupplied)
 
 	// get file contents calls Validate()
 	// if isIncoming was passed properly, then the file should be valid
@@ -256,15 +246,14 @@ func TestFiles_createFile_missingSenderSupplied(t *testing.T) {
 	)
 	require.Equal(t, http.StatusCreated, resp.Code, resp.Body)
 	assert.NotEmpty(t, rawUpload.ID)
-	assert.Nil(t, rawUpload.FEDWireMessage.SenderSupplied)
-	assert.NotNil(t, rawUpload.FEDWireMessage.ValidateOptions)
-	assert.True(t, rawUpload.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied)
+	assert.Nil(t, rawUpload.FEDWireMessages[0].SenderSupplied)
+	assert.True(t, rawUpload.ValidateOptions.AllowMissingSenderSupplied)
 
 	// get new file
 	resp, found = routerGetFile(t, router, rawUpload.ID)
 	require.Equal(t, http.StatusOK, resp.Code, resp.Body)
 	assert.Equal(t, rawUpload.ID, found.ID)
-	assert.Nil(t, found.FEDWireMessage.SenderSupplied)
+	assert.Nil(t, found.FEDWireMessages[0].SenderSupplied)
 
 	// get new file contents
 	resp = routerGetFileContents(t, router, rawUpload.ID)
@@ -418,8 +407,8 @@ func TestFiles_getFileContents(t *testing.T) {
 	fwm := mockFEDWireMessage()
 	repo := &testWireFileRepository{
 		file: &wire.File{
-			ID:             base.ID(),
-			FEDWireMessage: fwm,
+			ID:              base.ID(),
+			FEDWireMessages: []wire.FEDWireMessage{fwm},
 		},
 	}
 	router := mux.NewRouter()
@@ -461,8 +450,8 @@ func TestFiles_getFileContentsWithFormatAndNewLineQueryParams(t *testing.T) {
 	fwm := mockFEDWireMessage()
 	repo := &testWireFileRepository{
 		file: &wire.File{
-			ID:             base.ID(),
-			FEDWireMessage: fwm,
+			ID:              base.ID(),
+			FEDWireMessages: []wire.FEDWireMessage{fwm},
 		},
 	}
 	router := mux.NewRouter()
@@ -574,7 +563,7 @@ func TestFiles_validateFile(t *testing.T) {
 
 func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 	f, err := readFile("fedWireMessage-NoMessage.txt")
-	require.Contains(t, err.Error(), "file validation failed")
+	require.ErrorContains(t, err, "file validation failed")
 	fwm := mockFEDWireMessage()
 	repo := &testWireFileRepository{file: f}
 	router := mux.NewRouter()
@@ -584,7 +573,7 @@ func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 		w := httptest.NewRecorder()
 		var buf bytes.Buffer
 		require.NoError(t, json.NewEncoder(&buf).Encode(fwm))
-		req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
+		req := httptest.NewRequest("POST", "/files/foo/messages", &buf)
 
 		router.ServeHTTP(w, req)
 		w.Flush()
@@ -592,7 +581,7 @@ func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 		assert.Equal(t, http.StatusOK, w.Code, w.Body)
 		var out wire.File
 		require.NoError(t, json.NewDecoder(w.Body).Decode(&out))
-		assert.NotNil(t, out.FEDWireMessage.SenderSupplied)
+		assert.NotNil(t, out.FEDWireMessages[0].SenderSupplied)
 	})
 
 	t.Run("repo error", func(t *testing.T) {
@@ -600,7 +589,7 @@ func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 		repo.err = errors.New("bad error")
 		var buf bytes.Buffer
 		require.NoError(t, json.NewEncoder(&buf).Encode(fwm))
-		req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
+		req := httptest.NewRequest("POST", "/files/foo/messages", &buf)
 
 		router.ServeHTTP(w, req)
 		w.Flush()
@@ -614,7 +603,7 @@ func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 		repo.err = nil
 		var buf bytes.Buffer
 		require.NoError(t, json.NewEncoder(&buf).Encode(fwm))
-		req := httptest.NewRequest("POST", "/files/foo/FEDWireMessage", &buf)
+		req := httptest.NewRequest("POST", "/files/foo/messages", &buf)
 
 		router.ServeHTTP(w, req)
 		w.Flush()
@@ -623,36 +612,36 @@ func TestFiles_addFEDWireMessageToFile(t *testing.T) {
 	})
 }
 
-/*func TestFiles_removeFEDWireMessageFromFile(t *testing.T) {
-	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
-	repo := &testWireFileRepository{file: f}
-
-	FEDWireMessageID := base.ID()
-	repo.file.FEDWireMessage.ID = FedWireMessageID
-
-	w := httptest.NewRecorder()
-	req := httptest.NewRequest("DELETE", fmt.Sprintf("/files/foo/FEDWireMessage/%s", FEDWireMessageID), nil)
-
-	router := mux.NewRouter()
-	addFileRoutes(log.NewNopLogger(), router, repo)
-	router.ServeHTTP(w, req)
-	w.Flush()
-
-	if w.Code != http.StatusOK {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-
-	// error case
-	repo.err = errors.New("bad error")
-
-	w = httptest.NewRecorder()
-	router.ServeHTTP(w, req)
-	w.Flush()
-
-	if w.Code != http.StatusBadRequest {
-		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
-	}
-}*/
+// func TestFiles_removeFEDWireMessageFromFile(t *testing.T) {
+// 	f, err := readFile("fedWireMessage-CustomerTransfer.txt")
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	repo := &testWireFileRepository{file: f}
+//
+// 	FEDWireMessageID := base.ID()
+// 	repo.file.FEDWireMessage[0].ID = FEDWireMessageID
+//
+// 	w := httptest.NewRecorder()
+// 	req := httptest.NewRequest("DELETE", fmt.Sprintf("/files/foo/FEDWireMessage/%s", FEDWireMessageID), nil)
+//
+// 	router := mux.NewRouter()
+// 	addFileRoutes(log.NewNopLogger(), router, repo)
+// 	router.ServeHTTP(w, req)
+// 	w.Flush()
+//
+// 	if w.Code != http.StatusOK {
+// 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+// 	}
+//
+// 	// error case
+// 	repo.err = errors.New("bad error")
+//
+// 	w = httptest.NewRecorder()
+// 	router.ServeHTTP(w, req)
+// 	w.Flush()
+//
+// 	if w.Code != http.StatusBadRequest {
+// 		t.Errorf("bogus HTTP status: %d: %v", w.Code, w.Body.String())
+// 	}
+// }

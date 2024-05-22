@@ -1,6 +1,6 @@
 {
     "id": "3fb14b9b12ccfe4662c56b61f4296eb286c91835",
-    "fedWireMessage": {
+    "fedWireMessages": [{
         "id": "",
         "senderSupplied": {
             "formatVersion": "30",
@@ -312,5 +312,5 @@
             "lineTwo": "Remittance Free Text Line Two",
             "lineThree": "Remittance Free Text Line Three"
         }
-    }
+    }]
 }

@@ -351,10 +351,14 @@ components:
           type: string
           description: File ID
           example: 3f2d23ee214
-        fedWireMessage:
-          $ref: '#/components/schemas/FEDWireMessage'
+        fedWireMessages:
+          type: array
+          items: 
+            $ref: '#/components/schemas/FEDWireMessage'
+        validateOptions:
+          $ref: '#/components/schemas/ValidateOptions'
       required:
-        - fedWireMessage
+        - fedWireMessages
     WireFiles:
       type: array
       items:
@@ -490,8 +494,6 @@ components:
           $ref: '#/components/schemas/RemittanceFreeText'
         serviceMessage:
           $ref: '#/components/schemas/ServiceMessage'
-        validateOptions:
-          $ref: '#/components/schemas/ValidateOptions'
       required:
         - senderSupplied
         - typeSubType

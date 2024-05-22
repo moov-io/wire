@@ -73,5 +73,4 @@ type FedWireMessage struct {
 	SecondaryRemittanceDocument     SecondaryRemittanceDocument     `json:"secondaryRemittanceDocument,omitempty"`
 	RemittanceFreeText              RemittanceFreeText              `json:"remittanceFreeText,omitempty"`
 	ServiceMessage                  ServiceMessage                  `json:"serviceMessage,omitempty"`
-	ValidateOptions                 *ValidateOptions                `json:"validateOptions,omitempty"`
 }

@@ -131,23 +131,13 @@ type FEDWireMessage struct {
 	RemittanceFreeText *RemittanceFreeText `json:"remittanceFreeText,omitempty"`
 	// ServiceMessage
 	ServiceMessage *ServiceMessage `json:"serviceMessage,omitempty"`
-	// ValidateOpts
-	ValidateOptions *ValidateOpts `json:"validateOptions,omitempty"`
-}
-
-func (fwm *FEDWireMessage) requireSenderSupplied() bool {
-	opts := &ValidateOpts{}
-	if fwm != nil && fwm.ValidateOptions != nil {
-		opts = fwm.ValidateOptions
-	}
-	return !opts.AllowMissingSenderSupplied
 }
 
 // verify checks basic WIRE rules. Assumes properly parsed records. Each validation func should
 // check for the expected relationships between fields within a FedWireMessage.
-func (fwm *FEDWireMessage) verify() error {
+func (fwm *FEDWireMessage) verifyWithOpts(opts ValidateOpts) error {
 
-	if err := fwm.mandatoryFields(); err != nil {
+	if err := fwm.mandatoryFields(opts); err != nil {
 		return err
 	}
 
@@ -220,8 +210,8 @@ func (fwm *FEDWireMessage) verify() error {
 //
 //		 	NOTE: Not specified mandatory elements in each incoming message
 //	          Need to specify mandatory elements in this case
-func (fwm *FEDWireMessage) mandatoryFields() error {
-	if fwm.requireSenderSupplied() {
+func (fwm *FEDWireMessage) mandatoryFields(opts ValidateOpts) error {
+	if !opts.AllowMissingSenderSupplied {
 		if err := fwm.validateSenderSupplied(); err != nil {
 			return err
 		}
@@ -230,7 +220,7 @@ func (fwm *FEDWireMessage) mandatoryFields() error {
 		return err
 	}
 
-	if fwm.ValidateOptions == nil || !fwm.ValidateOptions.SkipMandatoryIMAD {
+	if !opts.SkipMandatoryIMAD {
 		if err := fwm.validateIMAD(); err != nil {
 			return err
 		}

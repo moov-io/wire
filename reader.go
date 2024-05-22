@@ -6,6 +6,7 @@ package wire
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"regexp"
@@ -20,7 +21,7 @@ type Reader struct {
 	// r handles the IO.Reader sent to be parser.
 	scanner *bufio.Scanner
 	// file is ach.file model being built as r is parsed.
-	File File
+	File *File
 	// line is the current line being parsed from the input r
 	line string
 	// ToDo:  Do we need a current FEDWireMessage, just use FEDWireMessage
@@ -45,9 +46,11 @@ func (r *Reader) parseError(err error) error {
 	if err == nil {
 		return nil
 	}
-	if _, ok := err.(*base.ParseError); ok {
+	var parseError *base.ParseError
+	if errors.As(err, &parseError) {
 		return err
 	}
+
 	return &base.ParseError{
 		Line:   r.lineNum,
 		Record: r.tagName,
@@ -59,7 +62,7 @@ func (r *Reader) parseError(err error) error {
 func NewReader(r io.Reader, opts ...FilePropertyFunc) *Reader {
 	reader := &Reader{
 		scanner: bufio.NewScanner(r),
-		File:    *NewFile(opts...),
+		File:    NewFile(opts...),
 	}
 
 	reader.scanner.Split(scanLinesWithSegmentFormat)
@@ -76,15 +79,15 @@ func NewReader(r io.Reader, opts ...FilePropertyFunc) *Reader {
 // Read reads each line of the FED Wire file and defines which parser to use based
 // on the first character of each line. It also enforces FED Wire formatting rules and returns
 // the appropriate error if issues are found.
-func (r *Reader) Read() (File, error) {
+func (r *Reader) Read() (*File, error) {
 	return r.read(nil)
 }
 
-func (r *Reader) ReadWithOpts(opts *ValidateOpts) (File, error) {
+func (r *Reader) ReadWithOpts(opts *ValidateOpts) (*File, error) {
 	return r.read(opts)
 }
 
-func (r *Reader) read(opts *ValidateOpts) (File, error) {
+func (r *Reader) read(opts *ValidateOpts) (*File, error) {
 	spiltString := func(line string) []string {
 
 		// strip new lines
@@ -103,24 +106,40 @@ func (r *Reader) read(opts *ValidateOpts) (File, error) {
 	}
 
 	r.lineNum = 0
+
 	// read through the entire file
 	for r.scanner.Scan() {
 		line := r.scanner.Text()
 		for _, subLine := range spiltString(line) {
 			r.lineNum++
 			r.line = subLine
+
+			// Check if this is the start of a new FEDWireMessage
+			if r.startOfMessage(r.line[:6]) {
+				if r.currentFEDWireMessage != (FEDWireMessage{}) {
+					r.File.AddFEDWireMessage(r.currentFEDWireMessage)
+					r.currentFEDWireMessage = FEDWireMessage{}
+				}
+			}
+
 			if err := r.parseLine(); err != nil {
 				r.errors.Add(err)
 			}
 		}
 	}
 
-	r.File.AddFEDWireMessage(r.currentFEDWireMessage)
-	r.currentFEDWireMessage = FEDWireMessage{}
+	if err := r.scanner.Err(); err != nil {
+		r.errors.Add(err)
+	}
+
+	if r.currentFEDWireMessage != (FEDWireMessage{}) {
+		r.File.AddFEDWireMessage(r.currentFEDWireMessage)
+		r.currentFEDWireMessage = FEDWireMessage{}
+	}
 
 	if r.errors.Empty() {
 		if opts != nil {
-			r.File.SetValidation(opts)
+			r.File.ValidateOptions = *opts
 		}
 		err := r.File.Validate()
 		if err == nil {
@@ -129,6 +148,20 @@ func (r *Reader) read(opts *ValidateOpts) (File, error) {
 		r.errors.Add(fmt.Errorf("file validation failed: %v", err))
 	}
 	return r.File, r.errors
+}
+
+func (r *Reader) startOfMessage(currTag string) bool {
+	// This is a new incoming message if it starts with {1100} (MessageDisposition)
+	if currTag == TagMessageDisposition {
+		return true
+	}
+
+	// This is a new outgoing message if there was no {1100} (MessageDisposition) tag
+	// and current tag is {1500} (SenderSupplied)
+	if currTag == TagSenderSupplied && r.currentFEDWireMessage.MessageDisposition == nil {
+		return true
+	}
+	return false
 }
 
 func (r *Reader) parseLine() error { //nolint:gocyclo

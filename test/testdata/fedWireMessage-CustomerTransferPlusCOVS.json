@@ -1,6 +1,6 @@
 {
     "id": "7902a562d654fee194b70cfb14487d4bff01ad85",
-    "fedWireMessage": {
+    "fedWireMessages": [{
         "id": "",
         "senderSupplied": {
             "formatVersion": "30",
@@ -283,5 +283,5 @@
                 "swiftLineSix": "Swift Line Six"
             }
         }
-    }
+    }]
 }

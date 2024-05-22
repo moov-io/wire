@@ -1,6 +1,6 @@
 {
     "id": "5bf2233c6321e4c6a2ff896610b77b1011f2a22b",
-    "fedWireMessage": {
+    "fedWireMessages": [{
         "id": "",
         "senderSupplied": {
             "formatVersion": "30",
@@ -213,5 +213,5 @@
             "addendaLength": "0020",
             "addenda": "Unstructured Addenda"
         }
-    }
+    }]
 }

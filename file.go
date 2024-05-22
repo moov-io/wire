@@ -12,8 +12,9 @@ import (
 
 // File contains the structures of a parsed WIRE File.
 type File struct {
-	ID             string         `json:"id"`
-	FEDWireMessage FEDWireMessage `json:"fedWireMessage"`
+	ID              string           `json:"id"`
+	FEDWireMessages []FEDWireMessage `json:"fedWireMessages"`
+	ValidateOptions ValidateOpts     `json:"validateOptions,omitempty"`
 }
 
 // NewFile constructs a file template
@@ -27,41 +28,29 @@ func NewFile(opts ...FilePropertyFunc) *File {
 	return f
 }
 
-// SetValidation stores ValidateOpts on the FEDWireMessage's validation rules
-func (f *File) SetValidation(opts *ValidateOpts) {
-	if f == nil || opts == nil {
-		return
-	}
-	f.FEDWireMessage.ValidateOptions = opts
-}
-
-// GetValidation returns validation rules of FEDWireMessage
-func (f *File) GetValidation() *ValidateOpts {
-	if f == nil || f.FEDWireMessage.ValidateOptions == nil {
-		return nil
-	}
-	return f.FEDWireMessage.ValidateOptions
-}
-
 // AddFEDWireMessage appends a FEDWireMessage to the File
-func (f *File) AddFEDWireMessage(fwm FEDWireMessage) FEDWireMessage {
-	f.FEDWireMessage = fwm
-	return f.FEDWireMessage
-}
-
-// Create will tabulate and assemble an WIRE file into a valid state.
-//
-// Create implementations are free to modify computable fields in a file and should
-// call the Validate() function at the end of their execution.
-func (f *File) Create() error {
-	return nil
+func (f *File) AddFEDWireMessage(fwm FEDWireMessage) {
+	if f != nil {
+		f.FEDWireMessages = append(f.FEDWireMessages, fwm)
+	}
 }
 
 // Validate will never modify the file.
 func (f *File) Validate() error {
-	if err := f.FEDWireMessage.verify(); err != nil {
-		return err
+	if f == nil {
+		return nil
 	}
+
+	if len(f.FEDWireMessages) == 0 {
+		return fmt.Errorf("no FEDWireMessages")
+	}
+
+	for i := range f.FEDWireMessages {
+		if err := f.FEDWireMessages[i].verifyWithOpts(f.ValidateOptions); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -90,10 +79,7 @@ type FilePropertyFunc func(*File)
 func OutgoingFile() FilePropertyFunc {
 	return func(f *File) {
 		if f != nil {
-			if f.FEDWireMessage.ValidateOptions == nil {
-				f.FEDWireMessage.ValidateOptions = &ValidateOpts{}
-			}
-			f.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied = false
+			f.ValidateOptions.AllowMissingSenderSupplied = false
 		}
 	}
 }
@@ -102,10 +88,7 @@ func OutgoingFile() FilePropertyFunc {
 func IncomingFile() FilePropertyFunc {
 	return func(f *File) {
 		if f != nil {
-			if f.FEDWireMessage.ValidateOptions == nil {
-				f.FEDWireMessage.ValidateOptions = &ValidateOpts{}
-			}
-			f.FEDWireMessage.ValidateOptions.AllowMissingSenderSupplied = true
+			f.ValidateOptions.AllowMissingSenderSupplied = true
 		}
 	}
 }

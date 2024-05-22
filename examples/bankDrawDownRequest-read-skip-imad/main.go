@@ -35,15 +35,15 @@ func main() {
 		log.Fatalf("Could not validate FEDWireMessage: %s\n", err)
 	}
 
-	if fwmFile.FEDWireMessage.InputMessageAccountabilityData != nil {
+	if fwmFile.FEDWireMessages[0].InputMessageAccountabilityData != nil {
 		log.Fatalf("IMAD doesn't existed in FEDWireMessage")
 	}
 
-	fmt.Printf("Sender Supplied: %v \n", fwmFile.FEDWireMessage.SenderSupplied)
-	fmt.Printf("Type and Subtype: %v \n", fwmFile.FEDWireMessage.TypeSubType)
-	fmt.Printf("Input Message Accountability Data: %v \n", fwmFile.FEDWireMessage.InputMessageAccountabilityData)
-	fmt.Printf("Amount: %v \n", fwmFile.FEDWireMessage.Amount)
-	fmt.Printf("Sender Depository Institution: %v \n", fwmFile.FEDWireMessage.SenderDepositoryInstitution)
-	fmt.Printf("Receiver Depository Institution: %v \n", fwmFile.FEDWireMessage.ReceiverDepositoryInstitution)
-	fmt.Printf("Business Function Code: %v \n", fwmFile.FEDWireMessage.BusinessFunctionCode)
+	fmt.Printf("Sender Supplied: %v \n", fwmFile.FEDWireMessages[0].SenderSupplied)
+	fmt.Printf("Type and Subtype: %v \n", fwmFile.FEDWireMessages[0].TypeSubType)
+	fmt.Printf("Input Message Accountability Data: %v \n", fwmFile.FEDWireMessages[0].InputMessageAccountabilityData)
+	fmt.Printf("Amount: %v \n", fwmFile.FEDWireMessages[0].Amount)
+	fmt.Printf("Sender Depository Institution: %v \n", fwmFile.FEDWireMessages[0].SenderDepositoryInstitution)
+	fmt.Printf("Receiver Depository Institution: %v \n", fwmFile.FEDWireMessages[0].ReceiverDepositoryInstitution)
+	fmt.Printf("Business Function Code: %v \n", fwmFile.FEDWireMessages[0].BusinessFunctionCode)
 }

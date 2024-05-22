@@ -34,8 +34,7 @@ var (
 		Help: "The number of WIRE files deleted",
 	}, nil)
 
-	errNoFileId           = errors.New("no File ID found")
-	errNoFEDWireMessageID = errors.New("no FEDWireMessage ID found")
+	errNoFileId = errors.New("no File ID found")
 )
 
 func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
@@ -45,22 +44,13 @@ func addFileRoutes(logger log.Logger, r *mux.Router, repo WireFileRepository) {
 	r.Methods("DELETE").Path("/files/{fileId}").HandlerFunc(deleteFile(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/contents").HandlerFunc(getFileContents(logger, repo))
 	r.Methods("GET").Path("/files/{fileId}/validate").HandlerFunc(validateFile(logger, repo))
-	r.Methods("POST").Path("/files/{fileId}/FEDWireMessage").HandlerFunc(addFEDWireMessageToFile(logger, repo))
+	r.Methods("POST").Path("/files/{fileId}/messages").HandlerFunc(addFEDWireMessageToFile(logger, repo))
 }
 
 func getFileId(w http.ResponseWriter, r *http.Request) string {
 	v, ok := mux.Vars(r)["fileId"]
 	if !ok || v == "" {
 		moovhttp.Problem(w, errNoFileId)
-		return ""
-	}
-	return v
-}
-
-func getFEDWireMessageID(w http.ResponseWriter, r *http.Request) string {
-	v, ok := mux.Vars(r)["FEDWireMessageID"]
-	if !ok || v == "" {
-		moovhttp.Problem(w, errNoFEDWireMessageID)
 		return ""
 	}
 	return v
@@ -117,7 +107,7 @@ func createFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 				moovhttp.Problem(w, err)
 				return
 			}
-			file = &f
+			file = f
 		}
 
 		if file.ID == "" {
@@ -284,7 +274,7 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			return
 		}
 
-		if err := file.Create(); err != nil { // Create calls Validate
+		if err := file.Validate(); err != nil {
 			err = logger.LogErrorf("file was invalid: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
@@ -337,7 +327,7 @@ func addFEDWireMessageToFile(logger log.Logger, repo WireFileRepository) http.Ha
 			return
 		}
 
-		file.FEDWireMessage = file.AddFEDWireMessage(req)
+		file.AddFEDWireMessage(req)
 		if err := repo.saveFile(file); err != nil {
 			err = logger.LogErrorf("error saving file: %v", err).Err()
 			moovhttp.Problem(w, err)
