@@ -3,7 +3,7 @@
 - name: Go
   link: https://pkg.go.dev/github.com/moov-io/wire#section-documentation
 - name: Demo
-  link: https://moov-io.github.io/ach/webui/
+  link: https://moov-io.github.io/wire/webui/
 - name: Community
   dropdown:
     - name: Awesome Fintech
