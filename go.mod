@@ -2,8 +2,6 @@ module github.com/moov-io/wire
 
 go 1.21
 
-toolchain go1.22.3
-
 require (
 	github.com/antihax/optional v1.0.0
 	github.com/go-kit/kit v0.13.0

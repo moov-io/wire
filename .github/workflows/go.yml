@@ -17,7 +17,7 @@ jobs:
     - name: Set up Go 1.x
       uses: actions/setup-go@v5
       with:
-        go-version: ^1.22
+        go-version: stable
       id: go
 
     - name: Check out code into the Go module directory
@@ -33,9 +33,8 @@ jobs:
     - name: Check
       run: make check
 
-    - name: Upload Code Coverage
-      if: runner.os == 'Linux'
-      run: bash <(curl -s https://codecov.io/bash)
+    - name: WebUI
+      run: make build-webui
 
     - name: Docker Build
       if: runner.os == 'Linux'

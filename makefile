@@ -7,9 +7,8 @@ build:
 	CGO_ENABLED=0 go build -o ./bin/server github.com/moov-io/wire/cmd/server
 
 build-webui:
-	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./cmd/webui/assets/wasm_exec.js
-	GOOS=js GOARCH=wasm go build -o ./cmd/webui/assets/wire.wasm github.com/moov-io/wire/cmd/webui/wire/
-	CGO_ENABLED=0 go build -o ./bin/webui ./cmd/webui
+	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js
+	GOOS=js GOARCH=wasm go build -o ./docs/webui/assets/wire.wasm github.com/moov-io/wire/docs/webui/
 
 .PHONY: check
 check:
@@ -43,7 +42,14 @@ else
 	CGO_ENABLED=0 GOOS=$(PLATFORM) go build -o bin/wire-$(PLATFORM)-amd64 github.com/moov-io/wire/cmd/server
 endif
 
-docker: clean docker-hub docker-openshift docker-webui
+dist-webui: build-webui
+	git config user.name "moov-bot"
+	git config user.email "oss@moov.io"
+	git add ./docs/webui/assets/wasm_exec.js ./docs/webui/assets/wire.wasm
+	git commit -m "chore: updating wasm webui" || echo "No changes to commit"
+	git push origin master
+
+docker: clean docker-hub docker-openshift
 
 docker-hub:
 	docker build --pull -t moov/wire:$(VERSION) -f Dockerfile .
@@ -52,10 +58,6 @@ docker-hub:
 docker-openshift:
 	docker build --pull -t quay.io/moov/wire:$(VERSION) -f Dockerfile.openshift --build-arg VERSION=$(VERSION) .
 	docker tag quay.io/moov/wire:$(VERSION) quay.io/moov/wire:latest
-
-docker-webui:
-	docker build --pull -t moov/wire-webui:$(VERSION) -f Dockerfile.webui .
-	docker tag moov/wire-webui:$(VERSION) moov/wire-webui:latest
 
 .PHONY: clean-integration test-integration
 
@@ -76,7 +78,6 @@ release: docker AUTHORS
 release-push:
 	docker push moov/wire:$(VERSION)
 	docker push moov/wire:latest
-	docker push moov/wire-webui:$(VERSION)
 
 quay-push:
 	docker push quay.io/moov/wire:$(VERSION)
