@@ -2,5 +2,11 @@
   "extends": [
     "config:base"
   ],
-  "schedule": ["on monday"]
+  "groupName": "all",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    }
+  ]
 }
