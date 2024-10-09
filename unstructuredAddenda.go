@@ -74,7 +74,7 @@ func (ua *UnstructuredAddenda) String() string {
 	buf.WriteString(ua.tag)
 	buf.WriteString(ua.AddendaLengthField())
 
-	if size := ua.parseNumField(ua.AddendaLength); validSize(size) {
+	if size := ua.parseNumField(ua.AddendaLength); validSizeInt(size) {
 		buf.Grow(size)
 	}
 
@@ -123,5 +123,9 @@ func (ua *UnstructuredAddenda) AddendaLengthField() string {
 
 // AddendaField gets a string of the Addenda field
 func (ua *UnstructuredAddenda) AddendaField() string {
-	return ua.alphaField(ua.Addenda, uint(ua.parseNumField(ua.AddendaLength)))
+	max := ua.parseNumField(ua.AddendaLength)
+	if max < 0 || !validSizeInt(max) {
+		return ""
+	}
+	return ua.alphaField(ua.Addenda, uint(max))
 }

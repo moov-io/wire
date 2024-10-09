@@ -31,8 +31,12 @@ const (
 	maxBufferGrowth = 1e8
 )
 
-func validSize(n int) bool {
+func validSizeInt(n int) bool {
 	return n > 0 && n < maxBufferGrowth
+}
+
+func validSizeUint(n uint) bool {
+	return n < maxBufferGrowth
 }
 
 // validator is common validation and formatting of golang types to WIRE type strings
