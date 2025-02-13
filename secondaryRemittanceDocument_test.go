@@ -139,7 +139,7 @@ func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseSecondaryRemittanceDocument()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{8700}AROI                                   A                                                                     NNN"
 	r = NewReader(strings.NewReader(line))
@@ -160,7 +160,7 @@ func TestStringSecondaryRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSecondaryRemittanceDocument()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringSecondaryRemittanceDocumentOptions validates Format() formatted according to the FormatOptions
@@ -170,10 +170,10 @@ func TestStringSecondaryRemittanceDocumentOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseSecondaryRemittanceDocument()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.SecondaryRemittanceDocument
-	require.Equal(t, record.String(), "{8700}AROI                                   *A                                  *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8700}AROI*A*")
+	require.Equal(t, "{8700}AROI                                   *A                                  *                                   *", record.String())
+	require.Equal(t, "{8700}AROI*A*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

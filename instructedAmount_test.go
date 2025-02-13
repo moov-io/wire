@@ -104,7 +104,7 @@ func TestStringInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstructedAmount()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{3710}USD4567,89        NNN"
 	r = NewReader(strings.NewReader(line))
@@ -125,7 +125,7 @@ func TestStringInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstructedAmount()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringInstructedAmountOptions validates Format() formatted according to the FormatOptions
@@ -135,10 +135,10 @@ func TestStringInstructedAmountOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstructedAmount()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.InstructedAmount
-	require.Equal(t, record.String(), "{3710}USD4567,89        *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3710}USD4567,89*")
+	require.Equal(t, "{3710}USD4567,89        *", record.String())
+	require.Equal(t, "{3710}USD4567,89*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

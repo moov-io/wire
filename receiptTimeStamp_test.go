@@ -65,7 +65,7 @@ func TestStringReceiptTimeStampVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseReceiptTimeStamp()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{1110}            NNN"
 	r = NewReader(strings.NewReader(line))
@@ -86,7 +86,7 @@ func TestStringReceiptTimeStampVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseReceiptTimeStamp()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringReceiptTimeStampOptions validates Format() formatted according to the FormatOptions
@@ -96,10 +96,10 @@ func TestStringReceiptTimeStampOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseReceiptTimeStamp()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.ReceiptTimeStamp
-	require.Equal(t, record.String(), "{1110}            ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1110}            ")
+	require.Equal(t, "{1110}            ", record.String())
+	require.Equal(t, "{1110}            ", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

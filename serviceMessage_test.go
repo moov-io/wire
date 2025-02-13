@@ -363,7 +363,7 @@ func TestStringServiceMessageVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseServiceMessage()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{9000}A                                                                                                                                                                                                                                                                                                                                                                                                                                   NNN"
 	r = NewReader(strings.NewReader(line))
@@ -384,7 +384,7 @@ func TestStringServiceMessageVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseServiceMessage()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringServiceMessageOptions validates Format() formatted according to the FormatOptions
@@ -394,10 +394,10 @@ func TestStringServiceMessageOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseServiceMessage()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.ServiceMessage
-	require.Equal(t, record.String(), "{9000}A                                  *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{9000}A*")
+	require.Equal(t, "{9000}A                                  *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *                                   *", record.String())
+	require.Equal(t, "{9000}A*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

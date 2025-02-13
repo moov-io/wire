@@ -182,7 +182,7 @@ func TestStringOriginatorOptionFVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorOptionF()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{5010}TXID/123-45-6789                   1/Name                                                                                                                                      NNN"
 	r = NewReader(strings.NewReader(line))
@@ -203,7 +203,7 @@ func TestStringOriginatorOptionFVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOriginatorOptionF()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringOriginatorOptionFOptions validates Format() formatted according to the FormatOptions
@@ -213,10 +213,10 @@ func TestStringOriginatorOptionFOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorOptionF()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.OriginatorOptionF
-	require.Equal(t, record.String(), "{5010}TXID/123-45-6789                   *1/Name                             *                                   *                                   *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5010}TXID/123-45-6789*1/Name*")
+	require.Equal(t, "{5010}TXID/123-45-6789                   *1/Name                             *                                   *                                   *                                   *", record.String())
+	require.Equal(t, "{5010}TXID/123-45-6789*1/Name*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

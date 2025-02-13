@@ -73,7 +73,7 @@ func TestStringPreviousMessageIdentifierVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parsePreviousMessageIdentifier()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{3500}                      NNN"
 	r = NewReader(strings.NewReader(line))
@@ -94,7 +94,7 @@ func TestStringPreviousMessageIdentifierVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parsePreviousMessageIdentifier()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringPreviousMessageIdentifierOptions validates Format() formatted according to the FormatOptions
@@ -104,10 +104,10 @@ func TestStringPreviousMessageIdentifierOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parsePreviousMessageIdentifier()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.PreviousMessageIdentifier
-	require.Equal(t, record.String(), "{3500}                      ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3500}                      ")
+	require.Equal(t, "{3500}                      ", record.String())
+	require.Equal(t, "{3500}                      ", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

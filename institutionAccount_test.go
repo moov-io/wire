@@ -138,7 +138,7 @@ func TestStringInstitutionAccountVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstitutionAccount()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{7057}Swift                                                                                                                                                                               NNN"
 	r = NewReader(strings.NewReader(line))
@@ -159,7 +159,7 @@ func TestStringInstitutionAccountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstitutionAccount()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringInstitutionAccountOptions validates Format() formatted according to the FormatOptions
@@ -169,10 +169,10 @@ func TestStringInstitutionAccountOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstitutionAccount()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.InstitutionAccount
-	require.Equal(t, record.String(), "{7057}Swift*                                   *                                   *                                   *                                   *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7057}Swift*")
+	require.Equal(t, "{7057}Swift*                                   *                                   *                                   *                                   *                                   *", record.String())
+	require.Equal(t, "{7057}Swift*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

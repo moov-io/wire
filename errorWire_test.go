@@ -57,7 +57,7 @@ func TestStringErrorWireAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseErrorWire()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{1130}1XYZData Error                         NNN"
 	r = NewReader(strings.NewReader(line))
@@ -78,7 +78,7 @@ func TestStringErrorWireAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseErrorWire()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringErrorWireOptions validates Format() formatted according to the FormatOptions
@@ -88,10 +88,10 @@ func TestStringErrorWireOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseErrorWire()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.ErrorWire
-	require.Equal(t, record.String(), "{1130}1XYZData Error                         *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1130}1XYZData Error*")
+	require.Equal(t, "{1130}1XYZData Error                         *", record.String())
+	require.Equal(t, "{1130}1XYZData Error*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

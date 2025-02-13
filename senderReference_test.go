@@ -73,7 +73,7 @@ func TestStringSenderReferenceVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseSenderReference()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{3320}                NNN"
 	r = NewReader(strings.NewReader(line))
@@ -94,7 +94,7 @@ func TestStringSenderReferenceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseSenderReference()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringSenderReferenceOptions validates Format() formatted according to the FormatOptions
@@ -104,10 +104,10 @@ func TestStringSenderReferenceOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseSenderReference()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.SenderReference
-	require.Equal(t, record.String(), "{3320}                *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3320}*")
+	require.Equal(t, "{3320}                *", record.String())
+	require.Equal(t, "{3320}*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

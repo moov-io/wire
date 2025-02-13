@@ -89,7 +89,7 @@ func TestStringCurrencyInstructedAmountVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseCurrencyInstructedAmount()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{7033}B                                                            NNN"
 	r = NewReader(strings.NewReader(line))
@@ -106,10 +106,10 @@ func TestStringCurrencyInstructedAmountOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseCurrencyInstructedAmount()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.CurrencyInstructedAmount
-	require.Equal(t, record.String(), "{7033}     *000000000001500,49*")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7033}*000000000001500,49*")
+	require.Equal(t, "{7033}     *000000000001500,49*", record.String())
+	require.Equal(t, "{7033}*000000000001500,49*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

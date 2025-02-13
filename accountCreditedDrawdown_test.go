@@ -128,10 +128,10 @@ func TestStringAccountCreditedDrawdownOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseAccountCreditedDrawdown()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	acd := r.currentFEDWireMessage.AccountCreditedDrawdown
-	require.Equal(t, acd.String(), "{5400}1        ")
-	require.Equal(t, acd.Format(FormatOptions{VariableLengthFields: true}), "{5400}1        ")
+	require.Equal(t, "{5400}1        ", acd.String())
+	require.Equal(t, "{5400}1        ", acd.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, acd.String(), acd.Format(FormatOptions{VariableLengthFields: false}))
 }

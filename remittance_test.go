@@ -137,7 +137,7 @@ func TestStringRemittanceVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseRemittance()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{7070}                                                                                                                                                 NNN"
 	r = NewReader(strings.NewReader(line))
@@ -158,7 +158,7 @@ func TestStringRemittanceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseRemittance()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringRemittanceOptions validates Format() formatted according to the FormatOptions
@@ -168,10 +168,10 @@ func TestStringRemittanceOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseRemittance()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.Remittance
-	require.Equal(t, record.String(), "{7070}     *                                   *                                   *                                   *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{7070}*")
+	require.Equal(t, "{7070}     *                                   *                                   *                                   *                                   *", record.String())
+	require.Equal(t, "{7070}*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

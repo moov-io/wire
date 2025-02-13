@@ -187,7 +187,7 @@ func TestStringBeneficiaryIntermediaryFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseBeneficiaryIntermediaryFI()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringBeneficiaryIntermediaryFIOptions validates Format() formatted according to the FormatOptions
@@ -197,10 +197,10 @@ func TestStringBeneficiaryIntermediaryFIOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseBeneficiaryIntermediaryFI()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	bifi := r.currentFEDWireMessage.BeneficiaryIntermediaryFI
-	require.Equal(t, bifi.String(), "{4000}D123456789                         *                                   *                                   *                                   *                                   *")
-	require.Equal(t, bifi.Format(FormatOptions{VariableLengthFields: true}), "{4000}D123456789*")
+	require.Equal(t, "{4000}D123456789                         *                                   *                                   *                                   *                                   *", bifi.String())
+	require.Equal(t, "{4000}D123456789*", bifi.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, bifi.String(), bifi.Format(FormatOptions{VariableLengthFields: false}))
 }

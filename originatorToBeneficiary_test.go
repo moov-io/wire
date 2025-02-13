@@ -106,7 +106,7 @@ func TestStringOriginatorToBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorToBeneficiary()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{6000}                                                                                                                                            NNN"
 	r = NewReader(strings.NewReader(line))
@@ -127,7 +127,7 @@ func TestStringOriginatorToBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOriginatorToBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringOriginatorToBeneficiaryOptions validates Format() formatted according to the FormatOptions
@@ -137,11 +137,11 @@ func TestStringOriginatorToBeneficiaryOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorToBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.OriginatorToBeneficiary
-	require.Equal(t, record.String(), "{6000}                                   *                                   *                                   *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6000}*")
+	require.Equal(t, "{6000}                                   *                                   *                                   *                                   *", record.String())
+	require.Equal(t, "{6000}*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
 
@@ -152,12 +152,12 @@ func TestStringOriginatorToBeneficiaryOptionsWithExtraLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorToBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineOne, "Lorem ipsum dolor sit amet, co WOOD")
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineTwo, "adipiscing elit, sed do eiusmod 54F")
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineThree, "022/FROM MYCOMPY INC. VIA MYBANKNIF")
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineFour, "SUC INTERNAL BANK TO BANK TRANSFER,")
+	require.Equal(t, "Lorem ipsum dolor sit amet, co WOOD", r.currentFEDWireMessage.OriginatorToBeneficiary.LineOne)
+	require.Equal(t, "adipiscing elit, sed do eiusmod 54F", r.currentFEDWireMessage.OriginatorToBeneficiary.LineTwo)
+	require.Equal(t, "022/FROM MYCOMPY INC. VIA MYBANKNIF", r.currentFEDWireMessage.OriginatorToBeneficiary.LineThree)
+	require.Equal(t, "SUC INTERNAL BANK TO BANK TRANSFER,", r.currentFEDWireMessage.OriginatorToBeneficiary.LineFour)
 }
 
 // TestStringOriginatorToBeneficiaryOptionsWithSmallerLength // TestStringOriginatorToBeneficiaryOptionsWithExtraLength validates the length of each line if it is less than the limit of 35 chars per line
@@ -167,10 +167,10 @@ func TestStringOriginatorToBeneficiaryOptionsWithSmallerLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOriginatorToBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineOne, "Lorem ipsum dolor sit amet, co W")
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineTwo, "adipiscing elit, sed do eiusmod 54F")
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineThree, "022/FROM INC. VIA MYBANKNIF")
-	require.Equal(t, r.currentFEDWireMessage.OriginatorToBeneficiary.LineFour, "SUC INTERNAL BANK TO TRANSFER,")
+	require.Equal(t, "Lorem ipsum dolor sit amet, co W", r.currentFEDWireMessage.OriginatorToBeneficiary.LineOne)
+	require.Equal(t, "adipiscing elit, sed do eiusmod 54F", r.currentFEDWireMessage.OriginatorToBeneficiary.LineTwo)
+	require.Equal(t, "022/FROM INC. VIA MYBANKNIF", r.currentFEDWireMessage.OriginatorToBeneficiary.LineThree)
+	require.Equal(t, "SUC INTERNAL BANK TO TRANSFER,", r.currentFEDWireMessage.OriginatorToBeneficiary.LineFour)
 }

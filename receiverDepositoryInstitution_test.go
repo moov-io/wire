@@ -93,7 +93,7 @@ func TestStringReceiverDepositoryInstitutionVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseReceiverDepositoryInstitution()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{3400}1        A                 NNN*"
 	r = NewReader(strings.NewReader(line))
@@ -114,7 +114,7 @@ func TestStringReceiverDepositoryInstitutionVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseReceiverDepositoryInstitution()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringReceiverDepositoryInstitutionOptions validates Format() formatted according to the FormatOptions
@@ -124,11 +124,11 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseReceiverDepositoryInstitution()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.ReceiverDepositoryInstitution
-	require.Equal(t, record.String(), "{3400}1        A                 *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1        A*")
+	require.Equal(t, "{3400}1        A                 *", record.String())
+	require.Equal(t, "{3400}1        A*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 
 	line = "{3400}1        *"
@@ -136,11 +136,11 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	r.line = line
 
 	err = r.parseReceiverDepositoryInstitution()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record = r.currentFEDWireMessage.ReceiverDepositoryInstitution
-	require.Equal(t, record.String(), "{3400}1                          *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}1        *")
+	require.Equal(t, "{3400}1                          *", record.String())
+	require.Equal(t, "{3400}1        *", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 
 	line = "{3400}111111111*"
@@ -148,10 +148,10 @@ func TestStringReceiverDepositoryInstitutionOptions(t *testing.T) {
 	r.line = line
 
 	err = r.parseReceiverDepositoryInstitution()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record = r.currentFEDWireMessage.ReceiverDepositoryInstitution
-	require.Equal(t, record.String(), "{3400}111111111                  *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3400}111111111*")
+	require.Equal(t, "{3400}111111111                  *", record.String())
+	require.Equal(t, "{3400}111111111*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

@@ -26,11 +26,11 @@ func TestConverters__stripDelimiters(t *testing.T) {
 func TestConverters__parseFirstOption(t *testing.T) {
 	c := &converters{}
 
-	require.Equal(t, false, c.parseFirstOption([]bool{}))
-	require.Equal(t, false, c.parseFirstOption([]bool{false, false}))
-	require.Equal(t, false, c.parseFirstOption([]bool{false, true}))
-	require.Equal(t, true, c.parseFirstOption([]bool{true, false}))
-	require.Equal(t, true, c.parseFirstOption([]bool{true, true}))
+	require.False(t, c.parseFirstOption([]bool{}))
+	require.False(t, c.parseFirstOption([]bool{false, false}))
+	require.False(t, c.parseFirstOption([]bool{false, true}))
+	require.True(t, c.parseFirstOption([]bool{true, false}))
+	require.True(t, c.parseFirstOption([]bool{true, true}))
 }
 
 func TestConverters__parseVariableStringField(t *testing.T) {

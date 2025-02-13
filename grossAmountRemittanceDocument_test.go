@@ -98,7 +98,7 @@ func TestStringGrossAmountRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseGrossAmountRemittanceDocument()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{8500}USD1234.56            NNN"
 	r = NewReader(strings.NewReader(line))
@@ -119,7 +119,7 @@ func TestStringGrossAmountRemittanceDocumentVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseGrossAmountRemittanceDocument()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringGrossAmountRemittanceDocumentOptions validates Format() formatted according to the FormatOptions
@@ -129,10 +129,10 @@ func TestStringGrossAmountRemittanceDocumentOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseGrossAmountRemittanceDocument()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.GrossAmountRemittanceDocument
-	require.Equal(t, record.String(), "{8500}USD1234.56            *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8500}USD1234.56*")
+	require.Equal(t, "{8500}USD1234.56            *", record.String())
+	require.Equal(t, "{8500}USD1234.56*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

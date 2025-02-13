@@ -79,7 +79,7 @@ func TestStringErrorExchangeRateVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseExchangeRate()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{3720}123         NNN"
 	r = NewReader(strings.NewReader(line))
@@ -100,7 +100,7 @@ func TestStringErrorExchangeRateVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseExchangeRate()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringExchangeRateOptions validates Format() formatted according to the FormatOptions
@@ -110,10 +110,10 @@ func TestStringExchangeRateOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseExchangeRate()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.ExchangeRate
-	require.Equal(t, record.String(), "{3720}123         *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{3720}123*")
+	require.Equal(t, "{3720}123         *", record.String())
+	require.Equal(t, "{3720}123*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

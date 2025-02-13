@@ -151,10 +151,10 @@ func TestStringSenderSuppliedOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseSenderSupplied()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.SenderSupplied
-	require.Equal(t, record.String(), "{1500}301       T ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1500}301       T ")
+	require.Equal(t, "{1500}301       T ", record.String())
+	require.Equal(t, "{1500}301       T ", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

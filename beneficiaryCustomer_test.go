@@ -142,7 +142,7 @@ func TestStringBeneficiaryCustomerVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseBeneficiaryCustomer()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{7059}SwiftSwift ®ine One                     *Swift Line Two                     *Swift Line Three                   *Swift Line Four                    *Swift Line Five                    NN"
 	r = NewReader(strings.NewReader(line))
@@ -163,7 +163,7 @@ func TestStringBeneficiaryCustomerVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseBeneficiaryCustomer()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringBeneficiaryCustomerOptions validates Format() formatted according to the FormatOptions
@@ -173,10 +173,10 @@ func TestStringBeneficiaryCustomerOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseBeneficiaryCustomer()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	bc := r.currentFEDWireMessage.BeneficiaryCustomer
-	require.Equal(t, bc.String(), "{7059}     *                                   *                                   *                                   *                                   *                                   *")
-	require.Equal(t, bc.Format(FormatOptions{VariableLengthFields: true}), "{7059}*")
+	require.Equal(t, "{7059}     *                                   *                                   *                                   *                                   *                                   *", bc.String())
+	require.Equal(t, "{7059}*", bc.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, bc.String(), bc.Format(FormatOptions{VariableLengthFields: false}))
 }

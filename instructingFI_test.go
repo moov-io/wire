@@ -167,7 +167,7 @@ func TestStringInstructingFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstructingFI()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{5200}D12                                                                                                                                                                            NNN"
 	r = NewReader(strings.NewReader(line))
@@ -188,7 +188,7 @@ func TestStringInstructingFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseInstructingFI()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringInstructingFIOptions validates Format() formatted according to the FormatOptions
@@ -198,11 +198,11 @@ func TestStringInstructingFIOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstructingFI()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.InstructingFI
-	require.Equal(t, record.String(), "{5200}D12                                *                                   *                                   *                                   *                                   *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{5200}D12*")
+	require.Equal(t, "{5200}D12                                *                                   *                                   *                                   *                                   *", record.String())
+	require.Equal(t, "{5200}D12*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
 
@@ -213,8 +213,8 @@ func TestInstructingFIVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseInstructingFI()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	err = r.parseInstructingFI()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }

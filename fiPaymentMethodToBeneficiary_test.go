@@ -87,7 +87,7 @@ func TestStringFIPaymentMethodToBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIPaymentMethodToBeneficiary()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{6420}CHECK                              NNN"
 	r = NewReader(strings.NewReader(line))
@@ -108,7 +108,7 @@ func TestStringFIPaymentMethodToBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIPaymentMethodToBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringFIPaymentMethodToBeneficiaryOptions validates Format() formatted according to the FormatOptions
@@ -118,10 +118,10 @@ func TestStringFIPaymentMethodToBeneficiaryOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIPaymentMethodToBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.FIPaymentMethodToBeneficiary
-	require.Equal(t, record.String(), "{6420}CHECK                              *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6420}CHECK*")
+	require.Equal(t, "{6420}CHECK                              *", record.String())
+	require.Equal(t, "{6420}CHECK*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

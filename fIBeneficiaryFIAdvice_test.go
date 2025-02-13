@@ -143,7 +143,7 @@ func TestStringFIBeneficiaryFIAdviceVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIBeneficiaryFIAdvice()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{6310}HLD                                                                                                                                                                                                                  NNN"
 	r = NewReader(strings.NewReader(line))
@@ -164,7 +164,7 @@ func TestStringFIBeneficiaryFIAdviceVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseFIBeneficiaryFIAdvice()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringFIBeneficiaryFIAdviceOptions validates Format() formatted according to the FormatOptions
@@ -174,10 +174,10 @@ func TestStringFIBeneficiaryFIAdviceOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseFIBeneficiaryFIAdvice()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.FIBeneficiaryFIAdvice
-	require.Equal(t, record.String(), "{6310}HLD                          *                                 *                                 *                                 *                                 *                                 *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{6310}HLD*")
+	require.Equal(t, "{6310}HLD                          *                                 *                                 *                                 *                                 *                                 *", record.String())
+	require.Equal(t, "{6310}HLD*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

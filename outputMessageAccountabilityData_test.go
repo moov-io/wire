@@ -71,7 +71,7 @@ func TestStringOutputMessageAccountabilityDataVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseOutputMessageAccountabilityData()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{1120}                000001            NNN"
 	r = NewReader(strings.NewReader(line))
@@ -92,7 +92,7 @@ func TestStringOutputMessageAccountabilityDataVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseOutputMessageAccountabilityData()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 }
 
 // TestStringOutputMessageAccountabilityDataOptions validates Format() formatted according to the FormatOptions
@@ -102,10 +102,10 @@ func TestStringOutputMessageAccountabilityDataOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseOutputMessageAccountabilityData()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.OutputMessageAccountabilityData
-	require.Equal(t, record.String(), "{1120}                000001            ")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{1120}                000001            ")
+	require.Equal(t, "{1120}                000001            ", record.String())
+	require.Equal(t, "{1120}                000001            ", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }

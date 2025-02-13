@@ -382,7 +382,7 @@ func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err := r.parseRemittanceBeneficiary()
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	line = "{8350}Name                                                                                                                                        PIARNU                                                                                                                                                        ADDR                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      NNN"
 	r = NewReader(strings.NewReader(line))
@@ -403,7 +403,7 @@ func TestStringRemittanceBeneficiaryVariableLength(t *testing.T) {
 	r.line = line
 
 	err = r.parseRemittanceBeneficiary()
-	require.Nil(t, err)
+	require.NoError(t, err)
 }
 
 // TestStringRemittanceBeneficiaryOptions validates Format() formatted according to the FormatOptions
@@ -413,10 +413,10 @@ func TestStringRemittanceBeneficiaryOptions(t *testing.T) {
 	r.line = line
 
 	err := r.parseRemittanceBeneficiary()
-	require.Equal(t, err, nil)
+	require.NoError(t, err)
 
 	record := r.currentFEDWireMessage.RemittanceBeneficiary
-	require.Equal(t, record.String(), "{8350}Name                                                                                                                                        *PI*ARNU*                                   *                                   *                                                                                  *ADDR*                                                                      *                                                                      *                                                                      *                *                *                                   *                                   *  *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *  *")
-	require.Equal(t, record.Format(FormatOptions{VariableLengthFields: true}), "{8350}Name*PI*ARNU****ADDR*")
+	require.Equal(t, "{8350}Name                                                                                                                                        *PI*ARNU*                                   *                                   *                                                                                  *ADDR*                                                                      *                                                                      *                                                                      *                *                *                                   *                                   *  *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *                                                                      *  *", record.String())
+	require.Equal(t, "{8350}Name*PI*ARNU****ADDR*", record.Format(FormatOptions{VariableLengthFields: true}))
 	require.Equal(t, record.String(), record.Format(FormatOptions{VariableLengthFields: false}))
 }
