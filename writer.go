@@ -7,9 +7,8 @@ package wire
 import (
 	"bufio"
 	"io"
+	"slices"
 	"strings"
-
-	"golang.org/x/exp/slices"
 )
 
 // A Writer writes an fedWireMessage to an encoded file.
