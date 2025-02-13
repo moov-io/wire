@@ -7,7 +7,11 @@ build:
 	CGO_ENABLED=0 go build -o ./bin/server github.com/moov-io/wire/cmd/server
 
 build-webui:
-	cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js
+	@if [ -f "$(shell go env GOROOT)/lib/wasm/wasm_exec.js" ]; then \
+		cp $(shell go env GOROOT)/lib/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js; \
+	else \
+		cp $(shell go env GOROOT)/misc/wasm/wasm_exec.js ./docs/webui/assets/wasm_exec.js; \
+	fi
 	GOOS=js GOARCH=wasm go build -o ./docs/webui/assets/wire.wasm github.com/moov-io/wire/docs/webui/
 
 .PHONY: check
