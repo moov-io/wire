@@ -16,7 +16,6 @@
 
 [![GoDoc](https://godoc.org/github.com/moov-io/wire?status.svg)](https://godoc.org/github.com/moov-io/wire)
 [![Build Status](https://github.com/moov-io/wire/workflows/Go/badge.svg)](https://github.com/moov-io/wire/actions)
-[![Coverage Status](https://codecov.io/gh/moov-io/wire/branch/master/graph/badge.svg)](https://codecov.io/gh/moov-io/wire)
 [![Go Report Card](https://goreportcard.com/badge/github.com/moov-io/wire)](https://goreportcard.com/report/github.com/moov-io/wire)
 [![Repo Size](https://img.shields.io/github/languages/code-size/moov-io/wire?label=project%20size)](https://github.com/moov-io/wire)
 [![Apache 2 License](https://img.shields.io/badge/license-Apache2-blue.svg)](https://raw.githubusercontent.com/moov-io/wire/master/LICENSE)
@@ -224,7 +223,7 @@ To make a release of wire simply open a pull request with `CHANGELOG.md` and `ve
 
 ### Testing
 
-We maintain a comprehensive suite of unit tests and recommend table-driven testing when a particular function warrants several very similar test cases. To run all test files in the current directory, use `go test`. Current overall coverage can be found on [Codecov](https://app.codecov.io/gh/moov-io/wire/).
+We maintain a comprehensive suite of unit tests and recommend table-driven testing when a particular function warrants several very similar test cases. To run all test files in the current directory, use `go test`.
 
 ### Fuzzing
 
