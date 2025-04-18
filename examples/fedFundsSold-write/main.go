@@ -67,7 +67,6 @@ func main() {
 	pmi.PreviousMessageIdentifier = "Previous Message Ident"
 	fwm.PreviousMessageIdentifier = pmi
 
-	// Beneficiary
 	// Beneficiary Intermediary FI
 	bifi := wire.NewBeneficiaryIntermediaryFI()
 	bifi.FinancialInstitution.IdentificationCode = wire.DemandDepositAccountNumber
@@ -103,7 +102,6 @@ func main() {
 	br.BeneficiaryReference = "Reference"
 	fwm.BeneficiaryReference = br
 
-	// Originator
 	// Originator
 	o := wire.NewOriginator()
 	o.Personal.IdentificationCode = wire.PassportNumber
