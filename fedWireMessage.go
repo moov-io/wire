@@ -401,9 +401,6 @@ func (fwm *FEDWireMessage) checkProhibitedBankTransferTags() error {
 	if fwm.LocalInstrument != nil {
 		return fieldError("LocalInstrument", ErrInvalidProperty, fwm.LocalInstrument)
 	}
-	if fwm.PaymentNotification != nil {
-		return fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification)
-	}
 	if fwm.Charges != nil {
 		return fieldError("Charges", ErrInvalidProperty, fwm.Charges)
 	}
