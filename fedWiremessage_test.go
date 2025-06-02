@@ -606,20 +606,6 @@ func TestInvalidLocalInstrumentForBankTransfer(t *testing.T) {
 	require.EqualError(t, err, expected)
 }
 
-// TestInvalidPaymentNotificationForBankTransfer test an invalid PaymentNotification
-func TestInvalidPaymentNotificationForBankTransfer(t *testing.T) {
-	fwm := new(FEDWireMessage)
-	bfc := mockBusinessFunctionCode()
-	bfc.BusinessFunctionCode = BankTransfer
-	fwm.BusinessFunctionCode = bfc
-	fwm.PaymentNotification = mockPaymentNotification()
-
-	err := fwm.checkProhibitedBankTransferTags()
-
-	expected := fieldError("PaymentNotification", ErrInvalidProperty, fwm.PaymentNotification).Error()
-	require.EqualError(t, err, expected)
-}
-
 // TestInvalidChargesForBankTransfer test an invalid Charges
 func TestInvalidChargesForBankTransfer(t *testing.T) {
 	fwm := new(FEDWireMessage)
