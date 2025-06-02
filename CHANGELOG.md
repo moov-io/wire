@@ -1,3 +1,5 @@
+**Note:** Starting with version v0.15.6, changelog entries are maintained in [GitHub Releases](https://github.com/moov-io/wire/releases).
+
 ## v0.15.5 (Released 2024-04-19)
 
 IMPROVEMENTS
