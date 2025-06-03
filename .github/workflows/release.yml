@@ -73,6 +73,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release_url
+          path: release_url
 
       - name: Distribute
         run: make dist
