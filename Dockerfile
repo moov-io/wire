@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine as builder
+FROM golang:1.24-alpine as builder
 WORKDIR /go/src/github.com/moov-io/wire
 RUN apk add -U --no-cache make bash gcc git
 RUN adduser -D -g '' --shell /bin/false moov
