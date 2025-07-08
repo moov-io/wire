@@ -175,7 +175,7 @@ The package [`github.com/moov-io/wire`](https://pkg.go.dev/github.com/moov-io/wi
 </details>
 
 ### In-browser Wire file parser
-Using our [in-browser utility](http://oss.moov.io/wire/), you can instantly convert Wire files into JSON. Either paste in Wire file content directly or choose a file from your local machine. This tool is particulary useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the future.
+Using our [in-browser utility](http://oss.moov.io/wire/), you can instantly convert Wire files into JSON. Either paste in Wire file content directly or choose a file from your local machine. This tool is particularly useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the future.
 
 ## Learn about Fedwire
 - [Intro to Fedwire](https://www.americanexpress.com/us/foreign-exchange/articles/fedwire-transfers/)
