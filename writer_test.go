@@ -15,11 +15,11 @@ func TestSenderSupplied_Mandatory(t *testing.T) {
 	// Mandatory Fields
 	tst := mockTypeSubType()
 	fwm.TypeSubType = tst
-	imad := mockInputMessageAccountabilityData()
+	imad := mockInputMessageAccountabilityData(1328310018472)
 	fwm.InputMessageAccountabilityData = imad
-	amt := mockAmount()
+	amt := mockAmount(30000.00)
 	fwm.Amount = amt
-	rdi := mockReceiverDepositoryInstitution()
+	rdi := mockReceiverDepositoryInstitution(041215663)
 	fwm.ReceiverDepositoryInstitution = rdi
 	sdi := mockSenderDepositoryInstitution()
 	fwm.SenderDepositoryInstitution = sdi
