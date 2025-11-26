@@ -100,7 +100,7 @@ From your [Google Cloud dashboard](https://console.cloud.google.com/home/dashboa
 moov-wire-demo
 ```
 
-Enable the [Container Registry](https://cloud.google.com/container-registry) API for your project and associate a [billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account) if needed. Then, open the Cloud Shell terminal and run the following Docker commands, substituting your unique project ID:
+Enable the [Container. Registry](https://cloud.google.com/container-registry) API for your project and associate a [billing account](https://cloud.google.com/billing/docs/how-to/manage-billing-account) if needed. Then, open the Cloud Shell terminal and run the following Docker commands, substituting your unique project ID:
 
 ```
 docker pull moov/wire
