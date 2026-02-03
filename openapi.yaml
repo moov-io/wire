@@ -1859,7 +1859,6 @@ components:
           example: 'USD'
         amount:
           type: string
-          minLength: 19
           maxLength: 19
           description: |
             Amount
@@ -1940,7 +1939,6 @@ components:
           example: 'USD'
         amount:
           type: string
-          minLength: 19
           maxLength: 19
           description: |
             Amount
