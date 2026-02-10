@@ -11,9 +11,9 @@ require (
 	github.com/moov-io/base v0.61.0
 	github.com/prometheus/client_golang v1.23.2
 	github.com/stretchr/testify v1.11.1
-	golang.org/x/exp v0.0.0-20260112195511-716be5621a96
+	golang.org/x/exp v0.0.0-20260209203927-2842357ff358
 	golang.org/x/oauth2 v0.35.0
-	golang.org/x/text v0.33.0
+	golang.org/x/text v0.34.0
 )
 
 require (
