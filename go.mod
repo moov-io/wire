@@ -2,7 +2,7 @@ module github.com/moov-io/wire
 
 go 1.25.0
 
-toolchain go1.26.4
+toolchain go1.26.5
 
 require (
 	github.com/antihax/optional v1.0.0
@@ -12,7 +12,7 @@ require (
 	github.com/prometheus/client_golang v1.23.2
 	github.com/stretchr/testify v1.11.1
 	golang.org/x/oauth2 v0.36.0
-	golang.org/x/text v0.39.0
+	golang.org/x/text v0.40.0
 )
 
 require (
