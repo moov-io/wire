@@ -1,6 +1,6 @@
 module github.com/moov-io/wire
 
-go 1.23.0
+go 1.25.0
 
 toolchain go1.24.6
 

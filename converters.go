@@ -37,7 +37,7 @@ func (c *converters) parseAlphaField(r string, max uint) string {
 	if !validSizeUint(rem) {
 		return ""
 	} else {
-		r += strings.Repeat(" ", int(rem)) //nolint:gosec
+		r += strings.Repeat(" ", int(rem))
 	}
 	return r
 }
@@ -53,7 +53,7 @@ func (c *converters) numericStringField(s string, max uint) string {
 	if !validSizeUint(rem) {
 		return ""
 	} else {
-		s = strings.Repeat("0", int(rem)) + s //nolint:gosec
+		s = strings.Repeat("0", int(rem)) + s
 	}
 	return s
 }
@@ -77,7 +77,7 @@ func (c *converters) formatAlphaField(s string, max uint, options FormatOptions)
 		if !validSizeUint(rem) {
 			return ""
 		} else {
-			s += strings.Repeat(" ", int(rem)) //nolint:gosec
+			s += strings.Repeat(" ", int(rem))
 		}
 	}
 	return s
