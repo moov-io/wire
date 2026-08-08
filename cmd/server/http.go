@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/go-kit/kit/metrics/prometheus"
-	moovhttp "github.com/moov-io/base/http"
 	"github.com/moov-io/base/log"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 )
@@ -24,5 +23,5 @@ var (
 
 func wrapResponseWriter(logger log.Logger, w http.ResponseWriter, r *http.Request) http.ResponseWriter {
 	route := fmt.Sprintf("%s%s", strings.ToLower(r.Method), strings.Replace(r.URL.Path, "/", "-", -1)) // TODO: filter out random ID's later
-	return moovhttp.Wrap(logger, routeHistogram.With("route", route), w, r)
+	return wrapResponseWriterAllowlist(logger, routeHistogram.With("route", route), w, r)
 }
