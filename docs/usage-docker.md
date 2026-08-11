@@ -8,6 +8,8 @@ menubar: docs-menu
 
 # Docker
 
+> **Legacy FAIM API.** This image serves the FAIM format parser/writer. Live Fedwire Funds traffic requires ISO 20022 as of July 14, 2025 — see [moov-io/wire20022](https://github.com/moov-io/wire20022).
+
 We publish a [public Docker image `moov/wire`](https://hub.docker.com/r/moov/wire/tags) on Docker Hub with every tagged release of Wire. No configuration is required to serve on `:8088` and metrics at `:9098/metrics` in Prometheus format. We also have Docker images for [OpenShift](https://quay.io/repository/moov/wire?tab=tags) published as `quay.io/moov/wire`.
 
 Moov Wire is dependent on Docker being properly installed and running on your machine. Ensure that Docker is running. If your Docker client has issues connecting to the service, review the [Docker getting started guide](https://docs.docker.com/get-started/).

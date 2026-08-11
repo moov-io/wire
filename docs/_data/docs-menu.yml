@@ -5,7 +5,7 @@
     - name: What is Fedwire?
       link: /intro/
 
-- label: Usage
+- label: Usage (legacy FAIM)
   items:
     - name: Docker
       link: /usage-docker/
@@ -18,7 +18,7 @@
     - name: Go library
       link: /usage-go/
 
-- label: Wire message setup
+- label: FAIM message setup
   items:
     - name: File structure
       link: /message-structure/

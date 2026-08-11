@@ -28,7 +28,21 @@
 
 Moov's mission is to give developers an easy way to create and integrate bank processing into their own software products. Our open source projects are each focused on solving a single responsibility in financial services and designed around performance, scalability, and ease of use.
 
-Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire](https://en.wikipedia.org/wiki/Fedwire)) in an HTTP server and Go library. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available.
+**Moov Wire** implements a reader, writer, and validator for the **legacy Fedwire Funds Service message format (FAIM)** — the proprietary tag-based format described in the Fedwire Application Interface Manual. The HTTP server is available in a [Docker image](#docker) and the Go package `github.com/moov-io/wire` is available.
+
+> [!IMPORTANT]
+> **Fedwire Funds Service transitioned from FAIM to ISO 20022 on July 14, 2025.**
+>
+> The Federal Reserve Banks completed a [single-day cutover](https://www.frbservices.org/resources/financial-services/wires/iso-20022-implementation-center) to ISO 20022. FAIM is **no longer accepted** for live Fedwire Funds traffic. This repository remains available for historical FAIM files, archival processing, testing, and migration work.
+>
+> For **new Fedwire integrations**, use Moov's ISO 20022 libraries:
+>
+> | Project | Purpose |
+> |---------|---------|
+> | [`moov-io/wire20022`](https://github.com/moov-io/wire20022) | Read, write, and validate Fedwire ISO 20022 XML messages (recommended) |
+> | [`moov-io/fedwire20022`](https://github.com/moov-io/fedwire20022) | Generated Go types from the Fedwire ISO 20022 XSDs |
+>
+> Official resources: [ISO 20022 Implementation Center](https://www.frbservices.org/resources/financial-services/wires/iso-20022-implementation-center) · [Overview & implementation details](https://www.frbservices.org/resources/financial-services/wires/faq/iso-20022/overview-implementation-details)
 
 ## Table of contents
 
@@ -49,10 +63,17 @@ Wire implements a reader, writer, and validator for FED Wire Messages ([FEDWire]
 
 ## Project status
 
-Moov Wire is actively used in multiple production environments. Please star the project if you are interested in its progress. If you have layers above Wire to simplify tasks, perform business operations, or found bugs we would appreciate an issue or pull request. Thanks!
+**Moov Wire is in maintenance mode** for the legacy **FAIM** (Fedwire Application Interface Manual) format.
+
+| Format | Fedwire Funds support | Moov project |
+|--------|----------------------|--------------|
+| **ISO 20022** (XML) | Required as of **July 14, 2025** | [`wire20022`](https://github.com/moov-io/wire20022), [`fedwire20022`](https://github.com/moov-io/fedwire20022) |
+| **FAIM** (tag-based, format version 30) | **Deprecated** — not accepted for live traffic after July 11, 2025 | This repository (`moov-io/wire`) |
+
+This library continues to parse, write, and validate FAIM messages for existing integrations, historical files, and migration tooling. We accept bug fixes and security updates; new FAIM feature work is unlikely. Please star the project if you still rely on it, and open an issue or pull request for bugs you find. Thanks!
 
 ## Usage
-The Wire project implements an HTTP server and [Go library](https://pkg.go.dev/github.com/moov-io/wire) for creating and modifying Wire files. We also have some [examples](https://pkg.go.dev/github.com/moov-io/wire/examples) of the reader and writer.
+The Wire project implements an HTTP server and [Go library](https://pkg.go.dev/github.com/moov-io/wire) for creating and modifying **legacy FAIM** Fedwire files. We also have some [examples](https://pkg.go.dev/github.com/moov-io/wire/examples) of the reader and writer.
 
 ### Docker
 
@@ -178,14 +199,24 @@ The package [`github.com/moov-io/wire`](https://pkg.go.dev/github.com/moov-io/wi
 Using our [in-browser utility](http://oss.moov.io/wire/), you can instantly convert Wire files into JSON. Either paste in Wire file content directly or choose a file from your local machine. This tool is particularly useful if you're handling sensitive PII or want perform some quick tests, as operations are fully client-side with nothing stored in memory. We plan to support bidirectional conversion in the future.
 
 ## Learn about Fedwire
+- [Intro to Fedwire](./docs/intro.md) (includes the ISO 20022 transition)
+- [FAIM message structure](./docs/message-structure.md) (legacy format implemented by this project)
+- [Fedwire Funds Service ISO 20022 Implementation Center](https://www.frbservices.org/resources/financial-services/wires/iso-20022-implementation-center)
 - [Intro to Fedwire](https://www.americanexpress.com/us/foreign-exchange/articles/fedwire-transfers/)
-- [FedWire Message Structure](./docs/message-structure.md)
 - [Sending or Receiving International Wires via the Fedwire Funds Service](https://www.youtube.com/watch?v=GSd2gZ8-bzQ)
 
 ## FAQ
 <details open="true">
+<summary><b>Does this library support Fedwire ISO 20022?</b></summary>
+No. This project implements the legacy <strong>FAIM</strong> format only. For ISO 20022 Fedwire messages, use <a href="https://github.com/moov-io/wire20022">moov-io/wire20022</a> (and optionally <a href="https://github.com/moov-io/fedwire20022">moov-io/fedwire20022</a> for generated XSD types).
+</details>
+<details open="true">
+<summary><b>Is FAIM still valid on the Fedwire Funds Service?</b></summary>
+No. After the Federal Reserve's July 14, 2025 cutover, live Fedwire Funds traffic must use ISO 20022. FAIM is retained here for historical files, testing, and migration.
+</details>
+<details open="true">
 <summary ><b>Is there an in-browser tool for converting Wire files into JSON?</b></summary>
-Yes! You can find our browser utility at http://oss.moov.io/wire/.
+Yes! You can find our browser utility at http://oss.moov.io/wire/. It parses legacy FAIM files client-side.
 </details>
 <details open="true">
 <summary><b>Is my data being saved somewhere?</b></summary>
@@ -193,7 +224,7 @@ No, we do not save any data related to files or message details. All processing 
 </details>
 <details open="true">
 <summary><b>What Fedwire message types are supported?</b></summary>
-We support generating and parsing all Business Function codes.
+For FAIM, we support generating and parsing all Business Function codes listed below. ISO 20022 message types are covered by <a href="https://github.com/moov-io/wire20022">wire20022</a>.
 </details>
 
 ## Getting help
@@ -233,13 +264,17 @@ We currently run fuzzing over Wire in the form of a [Github Action](https://gith
 
 As part of Moov's initiative to offer open source fintech infrastructure, we have a large collection of active projects you may find useful:
 
+- [Moov Wire20022](https://github.com/moov-io/wire20022) reads, writes, and validates **Fedwire ISO 20022** XML messages (successor format to FAIM).
+
+- [Moov Fedwire20022](https://github.com/moov-io/fedwire20022) provides generated Go types from the Fedwire Funds ISO 20022 XSDs.
+
 - [Moov Watchman](https://github.com/moov-io/watchman) offers search functions over numerous trade sanction lists from the United States and European Union.
 
 - [Moov Fed](https://github.com/moov-io/fed) implements utility services for searching the United States Federal Reserve System such as ABA routing numbers, financial institution name lookup, and FedACH and Fedwire routing information.
 
-- [Moov Image Cash Letter](https://github.com/moov-io/imagecashletter) implements Image Cash Letter (ICL) files used for Check21, X.9 or check truncation files for exchange and remote deposit in the U.S.
+- [Moov Image Cash Letter](https://github.com/moov-io/imagecashletter) implements Image Cash Letter (ICL) files used for Check21, X.9 or check truncation files for exchange and remote deposit in the U.S.
 
-- [Moov ACH](https://github.com/moov-io/ach) provides ACH file generation and parsing, supporting all Standard Entry Codes for the primary method of money movement throughout the United States.
+- [Moov ACH](https://github.com/moov-io/ach) provides ACH file generation and parsing, supporting all Standard Entry Codes for the primary method of money movement throughout the United States.
 
 - [Moov Metro 2](https://github.com/moov-io/metro2) provides a way to easily read, create, and validate Metro 2 format, which is used for consumer credit history reporting by the United States credit bureaus.
 

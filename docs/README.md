@@ -4,7 +4,9 @@
 
 ## Purpose
 
-Moov Wire implements a reader, writer, and validator for FED Wire Messages (Fedwire) in an HTTP server and Go library. The HTTP server is available in a Docker image and the Go package `github.com/moov-io/wire` is available.
+Moov Wire implements a reader, writer, and validator for the **legacy FAIM** Fedwire Funds message format (Fedwire Application Interface Manual) in an HTTP server and Go library.
+
+The Fedwire Funds Service transitioned to **ISO 20022** on July 14, 2025. FAIM is no longer accepted for live traffic. For new integrations, use [moov-io/wire20022](https://github.com/moov-io/wire20022). This project remains available for historical FAIM files, testing, and migration.
 
 ## Getting help
 

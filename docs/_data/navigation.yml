@@ -14,6 +14,10 @@
       link: https://github.com/moov-io/terms-dictionary
 - name: Other Projects
   dropdown:
+    - name: Moov Wire20022 (ISO 20022)
+      link: https://github.com/moov-io/wire20022
+    - name: Moov Fedwire20022
+      link: https://github.com/moov-io/fedwire20022
     - name: Moov ACH
       link: https://moov-io.github.io/ach/
     - name: Moov ACHGateway

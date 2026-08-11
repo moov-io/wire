@@ -8,6 +8,8 @@ menubar: docs-menu
 
 # Go library
 
+> **Legacy FAIM only.** This package reads and writes the proprietary Fedwire **FAIM** format. Live Fedwire Funds traffic has used **ISO 20022** since July 14, 2025 — use [moov-io/wire20022](https://github.com/moov-io/wire20022) for new work. See [What is Fedwire?](/intro/) for the transition summary.
+
 This project uses [Go Modules](https://go.dev/blog/using-go-modules) and Go v1.18 or newer. See [Golang's install instructions](https://golang.org/doc/install) for help setting up Go. You can download the source code and we offer [tagged and released versions](https://github.com/moov-io/wire/releases/latest) as well. We highly recommend you use a tagged release for production.
 
 ```
@@ -18,7 +20,7 @@ $ go get -u github.com/moov-io/wire
 $ go doc github.com/moov-io/wire fedWireMessage
 ```
 
-The package [`github.com/moov-io/wire`](https://pkg.go.dev/github.com/moov-io/wire) offers a Go-based Wire file reader and writer. To get started, check out a specific example:
+The package [`github.com/moov-io/wire`](https://pkg.go.dev/github.com/moov-io/wire) offers a Go-based **FAIM** Wire file reader and writer. To get started, check out a specific example:
 
 ### Supported business function codes
 
