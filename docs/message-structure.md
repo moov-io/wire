@@ -6,6 +6,8 @@ show_sidebar: false
 menubar: docs-menu
 ---
 
+> **Legacy FAIM format.** This page documents the proprietary Fedwire Application Interface Manual (FAIM) tag structure implemented by `moov-io/wire`. The Fedwire Funds Service moved to **ISO 20022** on July 14, 2025 and no longer accepts FAIM for live traffic. For the current format, see [moov-io/wire20022](https://github.com/moov-io/wire20022) and the [FRB ISO 20022 Implementation Center](https://www.frbservices.org/resources/financial-services/wires/iso-20022-implementation-center).
+
 ## Mandatory tags
 
 Name |

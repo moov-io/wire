@@ -136,7 +136,10 @@ const (
 	// TagServiceMessage is ServiceMessage
 	TagServiceMessage = "{9000}"
 
-	// FormatVersion designates the FEDWIRE message format version
+	// FormatVersion designates the legacy FAIM Fedwire message format version.
+	// Format version "30" is the FAIM version implemented by this package.
+	// FAIM is no longer accepted for live Fedwire Funds traffic as of the July 14, 2025
+	// ISO 20022 cutover; see package documentation for migration guidance.
 	FormatVersion = "30"
 	// EnvironmentTest designates a test environment
 	EnvironmentTest = "T"

@@ -1,8 +1,16 @@
 openapi: 3.0.2
 info:
-  description: Moov Wire implements an HTTP API for creating, parsing, and validating Fedwire messages.
+  description: |
+    Moov Wire implements an HTTP API for creating, parsing, and validating **legacy FAIM** Fedwire Funds messages
+    (Fedwire Application Interface Manual format).
+
+    **Important:** The Fedwire Funds Service transitioned to ISO 20022 on July 14, 2025. FAIM is no longer accepted
+    for live Fedwire traffic. This API remains available for historical FAIM files, testing, and migration.
+
+    For ISO 20022 Fedwire messages, use [moov-io/wire20022](https://github.com/moov-io/wire20022).
+    Official cutover details: [FRB ISO 20022 Implementation Center](https://www.frbservices.org/resources/financial-services/wires/iso-20022-implementation-center).
   version: v1
-  title: Wire API
+  title: Wire API (legacy FAIM)
   contact:
     url: https://github.com/moov-io/wire
   license:
@@ -15,7 +23,7 @@ servers:
 tags:
   - name: 'Wire Files'
     description: |
-      File contains Fedwire Messages of a Wire File.
+      File contains legacy FAIM Fedwire messages. Not for live ISO 20022 Fedwire Funds traffic.
 
 paths:
   /ping:
