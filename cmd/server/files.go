@@ -284,7 +284,7 @@ func validateFile(logger log.Logger, repo WireFileRepository) http.HandlerFunc {
 			return
 		}
 
-		if err := file.Create(); err != nil { // Create calls Validate
+		if err := file.Validate(); err != nil {
 			err = logger.LogErrorf("file was invalid: %v", err).Err()
 			moovhttp.Problem(w, err)
 			return
