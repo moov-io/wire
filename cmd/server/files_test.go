@@ -570,6 +570,18 @@ func TestFiles_validateFile(t *testing.T) {
 
 		assert.Equal(t, http.StatusNotFound, w.Code, w.Body)
 	})
+
+	t.Run("rejects empty file", func(t *testing.T) {
+		w := httptest.NewRecorder()
+		repo.file = &wire.File{ID: "foo"}
+		repo.err = nil
+
+		router.ServeHTTP(w, req)
+		w.Flush()
+
+		assert.Equal(t, http.StatusBadRequest, w.Code, w.Body)
+		assert.NotContains(t, w.Body.String(), `{"error":null}`)
+	})
 }
 
 func TestFiles_addFEDWireMessageToFile(t *testing.T) {
